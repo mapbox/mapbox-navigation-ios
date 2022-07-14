@@ -261,9 +261,7 @@ open class NavigationMapView: UIView {
                 }
                 
                 if showsRestrictedAreasOnRoute {
-                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
-                                                                        below: parentLayerIdentifier,
-                                                                        reuseExistingLayer: true)
+                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route)
                 }
                 
                 pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
@@ -276,12 +274,10 @@ open class NavigationMapView: UIView {
             parentLayerIdentifier = addRouteLayer(route,
                                                   customLayerPosition: customLayerPosition,
                                                   below: parentLayerIdentifier,
-                                                  reuseExistingLayer: true,
                                                   isMainRoute: index == 0,
                                                   legIndex: currentLegIndex)
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         below: parentLayerIdentifier,
-                                                        reuseExistingLayer: true,
                                                         isMainRoute: index == 0)
         }
         
@@ -293,7 +289,6 @@ open class NavigationMapView: UIView {
             let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
                                                   below: parentLayerIdentifier,
-                                                  reuseExistingLayer: true,
                                                   isMainRoute: false,
                                                   legIndex: nil)
             if let altertiveRouteLayerIdentifier = parentLayerIdentifier {
@@ -302,7 +297,6 @@ open class NavigationMapView: UIView {
             
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         below: parentLayerIdentifier,
-                                                        reuseExistingLayer: true,
                                                         isMainRoute: false)
             if let altertiveRouteCasingIdentifier = parentLayerIdentifier {
                 setLayerLineGradient(for: altertiveRouteCasingIdentifier, with: offset)
@@ -551,10 +545,7 @@ open class NavigationMapView: UIView {
         pendingCoordinateForRouteLine = nil
     }
     
-    @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
-                                                        below parentLayerIndentifier: String? = nil,
-                                                        above aboveLayerIdentifier: String? = nil,
-                                                        reuseExistingLayer: Bool = false) -> String? {
+    @discardableResult func addRouteRestrictedAreaLayer(_ route: Route) -> String? {
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
         let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
         
@@ -588,8 +579,7 @@ open class NavigationMapView: UIView {
                                                     sourceIdentifier: sourceIdentifier)
 
         var layerAlreadyExists = false
-        if reuseExistingLayer && lineLayer == nil &&
-            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+        if lineLayer == nil && mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
             lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
             layerAlreadyExists = true
         }
@@ -613,16 +603,12 @@ open class NavigationMapView: UIView {
             do {
                 var layerPosition: MapboxMaps.LayerPosition? = nil
                 
-                if let belowLayerIdentifier = parentLayerIndentifier {
-                    layerPosition = .below(belowLayerIdentifier)
-                } else {
-                    let allIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
-                    if let aboveLayerIdentifier = aboveLayerIdentifier, allIds.contains(aboveLayerIdentifier) {
-                        layerPosition = .above(aboveLayerIdentifier)
-                    }
+                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
+                if allLayerIds.contains(NavigationMapView.LayerIdentifier.arrowStrokeLayer) {
+                    layerPosition = .below(NavigationMapView.LayerIdentifier.arrowStrokeLayer)
                 }
                 
-                if reuseExistingLayer && layerAlreadyExists {
+                if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
                     }
@@ -641,7 +627,6 @@ open class NavigationMapView: UIView {
     @discardableResult func addRouteLayer(_ route: Route,
                                           customLayerPosition: MapboxMaps.LayerPosition? = nil,
                                           below parentLayerIndentifier: String? = nil,
-                                          reuseExistingLayer: Bool = false,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
         guard let defaultShape = route.shape else { return nil }
@@ -668,8 +653,7 @@ open class NavigationMapView: UIView {
                                                     sourceIdentifier: sourceIdentifier)
         
         var layerAlreadyExists = false
-        if reuseExistingLayer && lineLayer == nil &&
-            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+        if lineLayer == nil && mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
             lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
             layerAlreadyExists = true
         }
@@ -719,7 +703,9 @@ open class NavigationMapView: UIView {
                     layerPosition = customLayerPosition
                 } else {
                     if isMainRoute {
-                        if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
+                        if showsRestrictedAreasOnRoute, let belowLayerIdentifier = parentLayerIndentifier {
+                            layerPosition = .below(belowLayerIdentifier)
+                        } else if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
                             layerPosition = .above(aboveLayerIdentifier)
                         }
                     } else {
@@ -728,7 +714,7 @@ open class NavigationMapView: UIView {
                         }
                     }
                 }
-                if reuseExistingLayer && layerAlreadyExists {
+                if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
                     }
@@ -746,7 +732,6 @@ open class NavigationMapView: UIView {
     
     @discardableResult func addRouteCasingLayer(_ route: Route,
                                                 below parentLayerIndentifier: String? = nil,
-                                                reuseExistingLayer: Bool = false,
                                                 isMainRoute: Bool = true) -> String? {
         guard let defaultShape = route.shape else { return nil }
         let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
@@ -772,8 +757,7 @@ open class NavigationMapView: UIView {
                                                     sourceIdentifier: sourceIdentifier)
         
         var layerAlreadyExists = false
-        if reuseExistingLayer && lineLayer == nil &&
-            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+        if lineLayer == nil && mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
             lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
             layerAlreadyExists = true
         }
@@ -803,7 +787,7 @@ open class NavigationMapView: UIView {
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
                 }
-                if reuseExistingLayer && layerAlreadyExists {
+                if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
                     }
