@@ -239,7 +239,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationService = navigationOptions?.navigationService
             ?? MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
-                                       routeOptions: routeOptions,
                                        customRoutingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: navigationOptions?.simulationMode)
@@ -324,7 +323,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter routeOptions: The route options used to get the route.
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
-    required public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+    @available(*, deprecated, renamed: "init(for:routeIndex:navigationOptions:)")
+    public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         guard case .route(_) = routeResponse.options else {
             preconditionFailure("NavigationViewController was created with `routeOptions` and a `routeResponse` without `RouteOptions`.")
         }
@@ -365,24 +365,16 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     required public init(for routeResponse: RouteResponse, routeIndex: Int, navigationOptions: NavigationOptions? = nil) {
         var routeOptions: RouteOptions!
-        var validatedRouteResponse: RouteResponse!
         switch routeResponse.options {
         case let .match(matchOptions):
             routeOptions = RouteOptions(matchOptions: matchOptions)
-            validatedRouteResponse = RouteResponse(httpResponse: routeResponse.httpResponse,
-                                                   identifier: routeResponse.identifier,
-                                                   routes: routeResponse.routes,
-                                                   waypoints: routeResponse.waypoints,
-                                                   options: .route(routeOptions),
-                                                   credentials: routeResponse.credentials)
         case let .route(options):
             routeOptions = options
-            validatedRouteResponse = routeResponse
         }
         
         super.init(nibName: nil, bundle: nil)
         
-        _ = prepareViewLoading(routeResponse: validatedRouteResponse,
+        _ = prepareViewLoading(routeResponse: routeResponse,
                                routeIndex: routeIndex,
                                routeOptions: routeOptions,
                                navigationOptions: navigationOptions)
@@ -394,13 +386,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationService: The navigation service that manages navigation along the route. Route data and options will be extracted from this instance.
      */
     public convenience init(navigationService service: NavigationService) {
-        guard case let .route(routeOptions) = service.indexedRouteResponse.routeResponse.options else {
-            preconditionFailure("NavigationViewController(navigationService:) must recieve `navigationService` created with `RouteOptions`.")
-        }
         let navigationOptions = NavigationOptions(navigationService: service)
         self.init(for: service.indexedRouteResponse.routeResponse,
                   routeIndex: service.indexedRouteResponse.routeIndex,
-                  routeOptions: routeOptions,
                   navigationOptions: navigationOptions)
     }
     

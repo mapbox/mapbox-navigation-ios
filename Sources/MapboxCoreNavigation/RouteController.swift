@@ -593,7 +593,7 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -601,14 +601,12 @@ open class RouteController: NSObject {
                                      dataSource source: RouterDataSource) {
         self.init(alongRouteAtIndex:routeIndex,
                   in: routeResponse,
-                  options: options,
                   customRoutingProvider: routingProvider,
                   dataSource: source)
     }
     
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
-                         options: RouteOptions,
                          customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
         Self.instanceLock.lock()
@@ -665,6 +663,18 @@ open class RouteController: NSObject {
         Self.instanceLock.lock()
         Self.instance = self
         Self.instanceLock.unlock()
+    }
+    
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:customRoutingProvider:dataSource:)")
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     customRoutingProvider: RoutingProvider? = nil,
+                                     dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex: routeIndex,
+                  in: routeResponse,
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
     }
     
     deinit {
@@ -819,15 +829,23 @@ extension RouteController: Router {
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      completion: ((Bool) -> Void)?) {
+        updateRoute(with: indexedRouteResponse,
+                    isProactive: isProactive,
+                    completion: completion)
+    }
+    
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     isProactive: Bool,
+                     completion: ((Bool) -> Void)?) {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
+        let routeOptions = indexedRouteResponse.getRouteOptions()
         if shouldStartNewBillingSession(for: route, routeOptions: routeOptions) {
             BillingHandler.shared.stopBillingSession(with: sessionUUID)
             BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         }
 
-        let routeOptions = routeOptions ?? routeProgress.routeOptions
         let routeProgress = RouteProgress(route: route, options: routeOptions)
         updateNavigator(with: indexedRouteResponse,
                         fromLegIndex: routeProgress.legIndex) { [weak self] result in

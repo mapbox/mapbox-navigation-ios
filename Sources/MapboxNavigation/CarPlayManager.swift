@@ -715,7 +715,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                  desiredSimulationMode: desiredSimulationMode) ??
         MapboxNavigationService(routeResponse: routeResponse.response,
                                 routeIndex: routeResponse.routeIndex,
-                                routeOptions: routeOptions,
                                 customRoutingProvider: customRoutingProvider,
                                 credentials: NavigationSettings.shared.directions.credentials,
                                 simulating: desiredSimulationMode)

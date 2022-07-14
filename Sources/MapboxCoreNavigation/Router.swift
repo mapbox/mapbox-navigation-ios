@@ -37,6 +37,15 @@ public struct IndexedRouteResponse {
         return routeResponse.routes?[routeIndex]
     }
     
+    func getRouteOptions() -> RouteOptions {
+        switch routeResponse.options {
+        case .route(let routeOptions):
+            return routeOptions
+        case .match(let matchOptios):
+            return RouteOptions(matchOptions: matchOptios)
+        }
+    }
+    
     /**
      Initializes a new `IndexedRouteResponse` object.
      
@@ -97,7 +106,7 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
@@ -112,12 +121,25 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource)
     
+    /**
+     Intializes a new `RouteController`.
+     
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter source: The data source for the RouteController.
+     */
+    init(alongRouteAtIndex routeIndex: Int,
+         in routeResponse: RouteResponse,
+         customRoutingProvider: RoutingProvider?,
+         dataSource source: RouterDataSource)
     /**
      `RoutingProvider`, used to create a route during refreshing or rerouting.
      */

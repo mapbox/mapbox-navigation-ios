@@ -233,7 +233,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -241,21 +241,47 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                                      dataSource source: RouterDataSource) {
         self.init(alongRouteAtIndex:routeIndex,
                   in: routeResponse,
-                  options: options,
-                  routingProvider: routingProvider,
+                  customRoutingProvider: routingProvider,
                   dataSource: source)
     }
     
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:customRoutingProvider:dataSource:)")
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     customRoutingProvider: RoutingProvider? = nil,
+                                     dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex: routeIndex,
+                  in: routeResponse,
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
+    }
+
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
-                         options: RouteOptions,
                          customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
+        var routeOptions: RouteOptions!
+        var validatedRouteResponse: RouteResponse!
+        switch routeResponse.options {
+        case let .match(matchOptions):
+            routeOptions = RouteOptions(matchOptions: matchOptions)
+            validatedRouteResponse = RouteResponse(httpResponse: routeResponse.httpResponse,
+                                                   identifier: routeResponse.identifier,
+                                                   routes: routeResponse.routes,
+                                                   waypoints: routeResponse.waypoints,
+                                                   options: .route(routeOptions),
+                                                   credentials: routeResponse.credentials)
+        case let .route(options):
+            routeOptions = options
+            validatedRouteResponse = routeResponse
+        }
+        
         self.customRoutingProvider = customRoutingProvider
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.indexedRouteResponse = .init(routeResponse: validatedRouteResponse, routeIndex: routeIndex)
+        self.routeProgress = RouteProgress(route: validatedRouteResponse.routes![routeIndex], options: routeOptions)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = routeOptions.profileIdentifier == .automobileAvoidingTraffic && routeOptions.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
@@ -263,7 +289,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         checkForUpdates()
         checkForLocationUsageDescription()
     }
-
+        
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         
