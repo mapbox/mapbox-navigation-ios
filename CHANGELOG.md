@@ -17,6 +17,10 @@
 
 * During active navigation, the user can tap the "Alternatives" button in the navigation bar to switch to an alternative route. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
+### Banners and guidance instructions
+
+* Added the `WayNameView.cornerRadius` property for customizing how the current road name is labeled. ([#4004](https://github.com/mapbox/mapbox-navigation-ios/pull/4004))
+
 ### Other changes
 
 * Fixed the unmatched language issue of some localized strings in the feedback view. ([#4007](https://github.com/mapbox/mapbox-navigation-ios/pull/4007))
