@@ -34,8 +34,8 @@
 	<string>Get user location</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
-		<key>CPSupportsDashboardNavigationScene</key>
-		<false/>
+        <key>CPSupportsDashboardNavigationScene</key>
+        <true/>
 		<key>UISceneConfigurations</key>
 		<dict>
 			<key>CPTemplateApplicationSceneSessionRoleApplication</key>
@@ -49,6 +49,17 @@
 					<string>Example.CarPlaySceneDelegate</string>
 				</dict>
 			</array>
+            <key>CPTemplateApplicationDashboardSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneClassName</key>
+                    <string>CPTemplateApplicationDashboardScene</string>
+                    <key>UISceneConfigurationName</key>
+                    <string>CarPlay-Dashboard</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>Example.CarPlaySceneDelegate</string>
+                </dict>
+            </array>
 			<key>UIWindowSceneSessionRoleApplication</key>
 			<array>
 				<dict>
@@ -91,8 +102,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
-	<key>UIFileSharingEnabled</key>
 	<true/>
 </dict>
 </plist>

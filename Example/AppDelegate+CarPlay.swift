@@ -503,3 +503,27 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
                                                             from: window)
     }
 }
+
+@available(iOS 13.4, *)
+extension CarPlaySceneDelegate: CPTemplateApplicationDashboardSceneDelegate {
+    
+    func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene,
+                                           didConnect dashboardController: CPDashboardController,
+                                           to window: UIWindow) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        appDelegate.carPlayManager.templateApplicationDashboardScene(templateApplicationDashboardScene,
+                                                                     didConnect: dashboardController,
+                                                                     to: window)
+    }
+    
+    func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene,
+                                           didDisconnect dashboardController: CPDashboardController,
+                                           from window: UIWindow) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        appDelegate.carPlayManager.templateApplicationDashboardScene(templateApplicationDashboardScene,
+                                                                     didDisconnect: dashboardController,
+                                                                     from: window)
+    }
+}

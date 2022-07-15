@@ -1204,6 +1204,8 @@ extension CarPlayManager {
         eventsManager.sendCarPlayConnectEvent()
         
         subscribeForNotifications()
+        
+        print("!!! \(UIScreen.mainCarPlay?.scale)")
     }
 
     public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
@@ -1224,6 +1226,36 @@ extension CarPlayManager {
         idleTimerCancellable = nil
         
         unsubscribeFromNotifications()
+    }
+}
+
+// MARK: CPTemplateApplicationDashboardSceneDelegate Methods
+
+@available(iOS 13.4, *)
+extension CarPlayManager {
+    
+    public func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene,
+                                                  didConnect dashboardController: CPDashboardController,
+                                                  to window: UIWindow) {
+        dashboardController.shortcutButtons = [
+            
+        ]
+        
+        // let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        // carPlayMapViewController.delegate = self
+        // window.rootViewController = carPlayMapViewController
+        
+        let viewController = UIViewController()
+        viewController.view.backgroundColor = .red
+        window.rootViewController = viewController
+    }
+    
+    public func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene,
+                                                  didDisconnect dashboardController: CPDashboardController,
+                                                  from window: UIWindow) {
+        window.rootViewController = nil
+        window.isHidden = true
+        window.removeFromSuperview()
     }
 }
 
