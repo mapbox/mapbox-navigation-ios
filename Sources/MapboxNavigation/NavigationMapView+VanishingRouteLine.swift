@@ -97,7 +97,7 @@ extension NavigationMapView {
             allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].count
         } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,
                   lineString.coordinates.indices.contains(startIndex) {
-            allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).count
+            allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).dropLast().count
         }
         
         /**
