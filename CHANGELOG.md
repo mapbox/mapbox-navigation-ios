@@ -57,7 +57,6 @@
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
 * Added `NavigationViewController.showsContinuousAlternatives` and `CarPlayNavigationViewController.showsContinuousAlternatives` flags to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
-* Each alternative route shown during turn-by-turn navigation is now annotated with the amount of time it saves or adds to the trip. To hide these annotations, set the `NavigationMapView.showsRelativeDurationOnContinuousAlternativeRoutes` property to `false`. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
 ### CarPlay
 

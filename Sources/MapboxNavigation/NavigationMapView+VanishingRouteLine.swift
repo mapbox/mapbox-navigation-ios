@@ -92,7 +92,7 @@ extension NavigationMapView {
          Find the count of remaining points in the current step.
          */
         let lineString = currentStepProgress.step.shape ?? LineString([])
-        // If user hasn't arrived at current step. All the coordinates will be included to the remaiining points.
+        // If user hasn't arrived at current step. All the coordinates will be included to the remaining points.
         if currentStepProgress.distanceTraveled < 0 {
             allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].count
         } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,

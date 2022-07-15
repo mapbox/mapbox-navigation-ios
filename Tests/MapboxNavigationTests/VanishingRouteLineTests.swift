@@ -6,7 +6,7 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class VanishingRouteLineTests: TestCase {
-    let errorAllowed = 1e-6
+    let accuracyThreshold = 1e-6
     var navigationMapView: NavigationMapView!
     var window = UIWindow()
     
@@ -139,8 +139,8 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertEqual(routePoints.nestedList.flatMap{$0}.count, 15)
         XCTAssertEqual(routePoints.flatList[1].latitude, routePoints.flatList[2].latitude)
         XCTAssertEqual(routePoints.flatList[1].longitude, routePoints.flatList[2].longitude)
-        XCTAssertEqual(routePoints.flatList[128].latitude, routePoints.flatList[129].latitude, accuracy: errorAllowed)
-        XCTAssertEqual(routePoints.flatList[128].longitude, routePoints.flatList[129].longitude, accuracy: errorAllowed)
+        XCTAssertEqual(routePoints.flatList[128].latitude, routePoints.flatList[129].latitude, accuracy: accuracyThreshold)
+        XCTAssertEqual(routePoints.flatList[128].longitude, routePoints.flatList[129].longitude, accuracy: accuracyThreshold)
         
         route = getStraightLineRoute()
         routePoints = navigationMapView.parseRoutePoints(route: route)
@@ -221,7 +221,7 @@ class VanishingRouteLineTests: TestCase {
         // When `routeLineTracksTraversal` enabled, the `fractionTraveled` is expected to be updated after
         // the upcoming route point index update and a location update.
         var expectedFractionTraveled = 0.3240769449298392
-        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: errorAllowed)
+        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold)
         
         route = getStraightLineRoute()
         routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
@@ -244,7 +244,7 @@ class VanishingRouteLineTests: TestCase {
         let traveledDistance = firstCoordinate.distance(to: coordinate)
         expectedFractionTraveled = traveledDistance / totalDistance
         // Compare the Haversine calculated result with the project distance calculated result.
-        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: errorAllowed)
+        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold)
     }
     
     func testEmptyRouteWithValidRouteProgress() {
@@ -309,7 +309,7 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.travelAlongRouteLine(to: coordinate)
         let expectedFractionTraveled = 0.3240769449298392
         let actualFractionTraveled = navigationMapView.fractionTraveled
-        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: errorAllowed, "Failed to update route line when routeLineTracksTraversal enabled.")
+        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
         
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
