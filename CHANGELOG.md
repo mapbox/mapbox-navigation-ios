@@ -11,6 +11,7 @@
 
 * Fixed `MapView` rendering issues that occur after the application returns to the foreground. ([#1402](https://github.com/mapbox/mapbox-maps-ios/pull/1402))
 * Each alternative route shown during turn-by-turn navigation is now annotated with the amount of time it saves or adds to the trip. To hide these annotations, set the `NavigationMapView.showsRelativeDurationOnContinuousAlternativeRoutes` property to `false`. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
+* Fixed the issue where the route line endpoint is ahead of user location indicator on short straight-line route step when `NavigationViewController.routeLineTracksTraversal` enabled in active navigation. ([#3992](https://github.com/mapbox/mapbox-navigation-ios/pull/3992))
 
 ### CarPlay
 
