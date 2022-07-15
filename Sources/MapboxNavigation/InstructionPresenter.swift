@@ -106,7 +106,7 @@ class InstructionPresenter {
             guard let key = component?.cacheKey else { return false }
             switch component {
             case .image(let representation, _):
-                let image = spriteRepository.getShieldIcon(shield: representation.shield)
+                let image = spriteRepository.roadShieldImage(from: representation.shield)
                 ?? spriteRepository.legacyCache.image(forKey: key)
                 return image != nil
             default:
@@ -216,7 +216,7 @@ class InstructionPresenter {
                                         in repository: SpriteRepository,
                                         dataSource: DataSource) -> NSAttributedString? {
         guard let shield = representation.shield,
-              let cachedImage = repository.getShieldIcon(shield: shield) else { return nil }
+              let cachedImage = repository.roadShieldImage(from: shield) else { return nil }
 
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font

@@ -161,9 +161,9 @@ class SpriteRepository {
         })
     }
     
-    func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
-        guard let shield = shield, let styleID = styleID else { return nil }
-
+    func roadShieldImage(from shieldRepresentation: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
+        guard let shield = shieldRepresentation, let styleID = styleID else { return nil }
+        
         let iconLeght = max(shield.text.count, 2)
         let shieldKey = shield.name + "-\(iconLeght)" + "-\(styleID)"
         
@@ -188,7 +188,7 @@ class SpriteRepository {
         return nil
     }
     
-    func getLegacyShield(with cacheKey: String?) -> UIImage? {
+    func legacyRoadShieldImage(from cacheKey: String?) -> UIImage? {
         return legacyCache.image(forKey: cacheKey)
     }
     

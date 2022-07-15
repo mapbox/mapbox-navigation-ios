@@ -53,10 +53,10 @@ open class DayStyle: Style {
             
             DismissButton.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             DismissButton.appearance(for: phoneTraitCollection).textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
-            DismissButton.appearance(for: phoneTraitCollection).textFont = UIFont.systemFont(ofSize: 20, weight: .medium).adjustedFont
+            DismissButton.appearance(for: phoneTraitCollection).textFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
             
             EndOfRouteButton.appearance(for: phoneTraitCollection).textColor = .darkGray
-            EndOfRouteButton.appearance(for: phoneTraitCollection).textFont = .systemFont(ofSize: 15)
+            EndOfRouteButton.appearance(for: phoneTraitCollection).textFont = .systemFont(ofSize: 15.0)
             EndOfRouteContentView.appearance(for: phoneTraitCollection).backgroundColor = .white
             EndOfRouteStaticLabel.appearance(for: phoneTraitCollection).normalFont = .systemFont(ofSize: 14.0)
             EndOfRouteStaticLabel.appearance(for: phoneTraitCollection).normalTextColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
@@ -66,14 +66,14 @@ open class DayStyle: Style {
             EndOfRouteCommentView.appearance(for: phoneTraitCollection).normalTextColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
             EndOfRouteCommentView.appearance(for: phoneTraitCollection).tintColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
             
-            PrimaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 30, weight: .medium).adjustedFont
+            PrimaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 30.0, weight: .medium).adjustedFont
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).textColorHighlighted = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalFont = UIFont.boldSystemFont(ofSize: 24.0).adjustedFont
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             
-            SecondaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
+            SecondaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).textColorHighlighted = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -89,7 +89,7 @@ open class DayStyle: Style {
             InstructionLabel.appearance(for: phoneTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
             InstructionLabel.appearance(for: phoneTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
             
-            WayNameLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
+            WayNameLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
             WayNameLabel.appearance(for: phoneTraitCollection).normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
             WayNameLabel.appearance(for: phoneTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
             WayNameLabel.appearance(for: phoneTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
@@ -133,8 +133,8 @@ open class DayStyle: Style {
             UserHaloCourseView.appearance(for: phoneTraitCollection).haloRingColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3)
             UserHaloCourseView.appearance(for: phoneTraitCollection).haloRadius = 100.0
             
-            DistanceLabel.appearance(for: phoneTraitCollection).unitFont = UIFont.systemFont(ofSize: 14, weight: .medium).adjustedFont
-            DistanceLabel.appearance(for: phoneTraitCollection).valueFont = UIFont.systemFont(ofSize: 22, weight: .medium).adjustedFont
+            DistanceLabel.appearance(for: phoneTraitCollection).unitFont = UIFont.systemFont(ofSize: 14.0, weight: .medium).adjustedFont
+            DistanceLabel.appearance(for: phoneTraitCollection).valueFont = UIFont.systemFont(ofSize: 22.0, weight: .medium).adjustedFont
             DistanceLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).unitTextColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
             DistanceLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
             DistanceLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
@@ -155,7 +155,7 @@ open class DayStyle: Style {
             InstructionsCardContainerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).separatorColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
             InstructionsCardContainerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).highlightedSeparatorColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             InstructionsCardContainerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).clipsToBounds = true
-            InstructionsCardContainerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).cornerRadius = 20
+            InstructionsCardContainerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).cornerRadius = 20.0
             
             // On iOS, for Day style, regardless of currently used `UIUserInterfaceStyle`, `ExitView` and
             // `GenericRouteShield` use black color as a default one.
@@ -204,11 +204,11 @@ open class DayStyle: Style {
                 UITraitCollection(horizontalSizeClass: .compact)
             ])
             
-            TimeRemainingLabel.appearance(for: regularAndRegularSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-            TimeRemainingLabel.appearance(for: regularAndCompactSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-            TimeRemainingLabel.appearance(for: compactAndRegularSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-            TimeRemainingLabel.appearance(for: compactAndCompactSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
-            TimeRemainingLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
+            TimeRemainingLabel.appearance(for: regularAndRegularSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+            TimeRemainingLabel.appearance(for: regularAndCompactSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+            TimeRemainingLabel.appearance(for: compactAndRegularSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+            TimeRemainingLabel.appearance(for: compactAndCompactSizeClassPhoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
+            TimeRemainingLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
             TimeRemainingLabel.appearance(for: phoneTraitCollection).normalTextColor = .defaultPrimaryText
             TimeRemainingLabel.appearance(for: phoneTraitCollection).trafficHeavyColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
             TimeRemainingLabel.appearance(for: phoneTraitCollection).trafficLowColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
@@ -226,7 +226,7 @@ open class DayStyle: Style {
             FloatingButton.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             FloatingButton.appearance(for: phoneTraitCollection).tintColor = tintColor
             
-            DistanceRemainingLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
+            DistanceRemainingLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
             DistanceRemainingLabel.appearance(for: phoneTraitCollection).normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
             
             NavigationView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
@@ -249,10 +249,10 @@ open class DayStyle: Style {
             BottomBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             InstructionsBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             
-            ArrivalTimeLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
+            ArrivalTimeLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
             ArrivalTimeLabel.appearance(for: phoneTraitCollection).normalTextColor = .defaultPrimaryText
             
-            NextInstructionLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 20, weight: .medium).adjustedFont
+            NextInstructionLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
             NextInstructionLabel.appearance(for: phoneTraitCollection).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             NextInstructionLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [NextBannerView.self]).normalTextColor = UIColor(red: 0.15, green: 0.24, blue: 0.34, alpha: 1.0)
             NextInstructionLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [NextBannerView.self]).textColorHighlighted = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -287,12 +287,12 @@ open class DayStyle: Style {
             CarPlayCompassView.appearance(for: carPlayTraitCollection).borderColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 0.6009573063)
             
             // `StylableLabel` is used in `CarPlayCompassView` to show compass direction.
-            StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12, weight: .medium).adjustedFont
+            StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12.0, weight: .medium).adjustedFont
             StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             
-            PrimaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 30, weight: .medium).adjustedFont
+            PrimaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 30.0, weight: .medium).adjustedFont
             
-            SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
+            SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
             
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
@@ -303,7 +303,7 @@ open class DayStyle: Style {
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
             
-            WayNameLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
+            WayNameLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
             WayNameLabel.appearance(for: carPlayTraitCollection).normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor

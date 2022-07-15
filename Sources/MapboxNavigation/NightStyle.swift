@@ -130,7 +130,7 @@ open class NightStyle: DayStyle {
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
             PrimaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
             
-            SecondaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
+            SecondaryLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
             SecondaryLabel.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
@@ -183,7 +183,7 @@ open class NightStyle: DayStyle {
             NavigationMapView.appearance(for: carPlayTraitCollection).buildingDefaultColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             NavigationMapView.appearance(for: carPlayTraitCollection).buildingHighlightColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             
-            SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
+            SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
             
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = #colorLiteral(red: 0.18, green: 0.26, blue: 0.66, alpha: 1)

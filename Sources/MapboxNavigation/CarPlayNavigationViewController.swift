@@ -237,7 +237,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         NSLayoutConstraint.activate([
             wayNameView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: -8),
             wayNameView.centerXAnchor.constraint(equalTo: view.safeCenterXAnchor),
-            wayNameView.widthAnchor.constraint(lessThanOrEqualTo: view.safeWidthAnchor, multiplier: 0.95)
+            wayNameView.widthAnchor.constraint(lessThanOrEqualTo: view.safeWidthAnchor, multiplier: 0.95),
+            wayNameView.heightAnchor.constraint(equalToConstant: 30.0)
         ])
         
         self.wayNameView = wayNameView
