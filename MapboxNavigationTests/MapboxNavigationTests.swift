@@ -35,7 +35,7 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testHighlightBuildings() {
-        let timeout: TimeInterval = 10.0
+        let timeout: TimeInterval = 30.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
@@ -68,7 +68,7 @@ class MapboxNavigationTests: XCTestCase {
             }
         })
         
-        wait(for: [featureQueryExpectation], timeout: 2.0)
+        wait(for: [featureQueryExpectation], timeout: 5.0)
         
         let buildingExtrusionLayerIdentifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         guard let _ = try? navigationMapView.mapView.mapboxMap.style.layer(withId: buildingExtrusionLayerIdentifier) else {
