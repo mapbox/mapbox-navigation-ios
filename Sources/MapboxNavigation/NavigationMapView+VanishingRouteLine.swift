@@ -215,6 +215,7 @@ extension NavigationMapView {
     }
     
     func updateRouteLineOffset(along route: Route, offset: Double) {
+        guard offset >= 0.0 else { return }
         let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
         let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
         let restrictedAreaLayerIdentifier = route.identifier(.restrictedRouteAreaRoute)
@@ -331,7 +332,8 @@ extension NavigationMapView {
                     
                     if index + 1 < routeLineFeatures.count {
                         let segmentEndPercentTraveled = distanceTraveled / routeDistance
-                        let currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                        var currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                        currentGradientStop = max(currentGradientStop, 0.0)
                         gradientStops[currentGradientStop] = associatedFeatureColor
                         lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                     }
@@ -344,7 +346,8 @@ extension NavigationMapView {
                         gradientStops[lastRecordSegment.0] = nil
                     } else {
                         let segmentStartPercentTraveled = distanceTraveled / routeDistance
-                        let currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                        var currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                        currentGradientStop = min(currentGradientStop, 1.0)
                         gradientStops[currentGradientStop] = associatedFeatureColor
                     }
                     
@@ -355,13 +358,15 @@ extension NavigationMapView {
                     gradientStops[lastRecordSegment.0] = nil
                 } else {
                     let segmentStartPercentTraveled = distanceTraveled / routeDistance
-                    let currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                    var currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                    currentGradientStop = min(currentGradientStop, 1.0)
                     gradientStops[currentGradientStop] = associatedFeatureColor
                 }
                 
                 distanceTraveled = distanceTraveled + distance
                 let segmentEndPercentTraveled = distanceTraveled / routeDistance
-                let currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                var currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                currentGradientStop = max(currentGradientStop, 0.0)
                 gradientStops[currentGradientStop] = associatedFeatureColor
                 lastRecordSegment = (currentGradientStop, associatedFeatureColor)
             }
