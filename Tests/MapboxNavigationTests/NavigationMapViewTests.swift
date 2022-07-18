@@ -410,10 +410,16 @@ class NavigationMapViewTests: TestCase {
         
         let featureBorderStop = 0.75.nextUp
         let routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features)
-        XCTAssertEqual(routeLineGradient[0.0], navigationMapView.routeRestrictedAreaColor)
-        XCTAssertEqual(routeLineGradient[0.25.nextUp], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[0.25.nextDown], navigationMapView.routeRestrictedAreaColor)
-        XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
+        let expectedGradientStops: [Double: UIColor] = [
+            0.0: navigationMapView.routeRestrictedAreaColor,
+            0.25.nextDown: navigationMapView.routeRestrictedAreaColor,
+            0.25.nextUp: navigationMapView.traversedRouteColor,
+            0.5.nextDown: navigationMapView.traversedRouteColor,
+            0.5.nextUp: navigationMapView.routeRestrictedAreaColor,
+            0.75: navigationMapView.routeRestrictedAreaColor,
+            featureBorderStop.nextUp: navigationMapView.traversedRouteColor
+        ]
+        XCTAssertEqual(routeLineGradient, expectedGradientStops)
     }
     
     func testRoadClassesWithOverriddenCongestionLevelsRemovesDuplicates() {
