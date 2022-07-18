@@ -244,6 +244,7 @@ extension NavigationMapView {
     }
     
     func setLayerLineGradient(for layerId: String, with offset: Double) {
+        guard offset >= 0.0 else { return }
         do {
             try mapView.mapboxMap.style.setLayerProperty(for: layerId, property: "line-trim-offset", value: [0.0, Double.minimum(1.0, offset)])
         } catch {
