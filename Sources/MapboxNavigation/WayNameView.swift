@@ -5,163 +5,6 @@ import MapboxMaps
 import MapboxDirections
 
 /**
- A label that is used to show a road name and a shield icon.
- */
-@objc(MBWayNameLabel)
-open class WayNameLabel: StylableLabel {
-    var spriteRepository: SpriteRepository = .shared
-    var representation: VisualInstruction.Component.ImageRepresentation?
-    
-    @objc dynamic public var roadShieldBlackColor: UIColor = .roadShieldBlackColor
-    @objc dynamic public var roadShieldBlueColor: UIColor = .roadShieldBlueColor
-    @objc dynamic public var roadShieldGreenColor: UIColor = .roadShieldGreenColor
-    @objc dynamic public var roadShieldRedColor: UIColor = .roadShieldRedColor
-    @objc dynamic public var roadShieldWhiteColor: UIColor = .roadShieldWhiteColor
-    @objc dynamic public var roadShieldYellowColor: UIColor = .roadShieldYellowColor
-    @objc dynamic public var roadShieldOrangeColor: UIColor = .roadShieldOrangeColor
-    @objc dynamic public var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
-    
-    // When the map style changes, update the sprite repository and the label.
-    func updateStyle(styleURI: StyleURI?) {
-        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
-            guard let self = self else { return }
-            if let roadName = self.text {
-                self.setUpWith(roadName: roadName)
-            }
-        }
-    }
-    
-    func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
-        // When the imageRepresentation of road shield changes, update the sprite repository and the label.
-        if representation != self.representation {
-            spriteRepository.updateRepresentation(for: representation) { [weak self] in
-                guard let self = self else { return }
-                self.representation = representation
-                self.setUpWith(roadName: roadName)
-            }
-        }
-        setUpWith(roadName: roadName)
-    }
-    
-    // Set up the `WayNameLabel` with the road name. Try to use the Mapbox designed shield first, if failed, fall back to use the legacy road shield icon.
-    // If there's no valid shield image, display the road name only.
-    private func setUpWith(roadName: String) {
-        if let shield = representation?.shield {
-            // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
-            // The shield name for US state road is `circle-white` in Streets source v8 style.
-            // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
-            if shield.name == "circle-white",
-               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
-            if setAttributedText(roadName: roadName, shield: shield) { return }
-        }
-        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
-        
-        text = roadName
-    }
-
-    /**
-     Fills contents of the `WayNameLabel` with the road name and legacy shield icon.
-     
-     - parameter roadName: The road name `String` that should be presented on the view.
-     - returns: `true` if operation was successful, `false` otherwise.
-     */
-    @discardableResult
-    private func setAttributedText(roadName: String, cacheKey: String?) -> Bool {
-        guard let shieldIcon = spriteRepository.getLegacyShield(with: cacheKey) else { return false }
-        var currentShieldName: NSAttributedString?, currentRoadName: String?
-        var didSetup = false
-
-        let attachment = ShieldAttachment()
-        let fontSize = frame.size.height / 2.5
-        attachment.image = shieldIcon.withFontSize(font: UIFont.boldSystemFont(ofSize: fontSize),
-                                                   size: frame.size)
-        currentShieldName = NSAttributedString(attachment: attachment)
-
-        if !roadName.isEmpty {
-            currentRoadName = roadName
-            text = roadName
-            didSetup = true
-        }
-
-        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
-            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
-            compositeShield.insert(compositeShieldImage, at: 0)
-            attributedText = compositeShield
-            didSetup = true
-        }
-        return didSetup
-    }
-    
-    /**
-     Fills contents of the `WayNameLabel` with the road name and road shield.
-     
-     - parameter roadName: The road name `String` that should be presented on the view.
-     - parameter shield: The  `ShieldRepresentation`object that represents the current road shield.
-     - returns: `true` if operation was successful, `false` otherwise.
-     */
-    @discardableResult
-    private func setAttributedText(roadName: String, shield: VisualInstruction.Component.ShieldRepresentation) -> Bool {
-        guard let shieldIcon = spriteRepository.getShieldIcon(shield: shield) else { return false }
-
-        var currentShieldName: NSAttributedString?, currentRoadName: String?
-        var didSetup = false
-        
-        currentShieldName = roadShieldAttributedText(for: shield.text, textColor: shield.textColor, image: shieldIcon)
-
-        if !roadName.isEmpty {
-            currentRoadName = roadName
-            text = roadName
-            didSetup = true
-        }
-        
-        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
-            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
-            compositeShield.insert(compositeShieldImage, at: 0)
-            attributedText = compositeShield
-            didSetup = true
-        }
-        
-        return didSetup
-    }
-    
-    private func shieldColor(from shieldTextColor: String) -> UIColor {
-        switch shieldTextColor {
-        case "black":
-            return roadShieldBlackColor
-        case "blue":
-            return roadShieldBlueColor
-        case "green":
-            return roadShieldGreenColor
-        case "red":
-            return roadShieldRedColor
-        case "white":
-            return roadShieldWhiteColor
-        case "yellow":
-            return roadShieldYellowColor
-        case "orange":
-            return roadShieldOrangeColor
-        default:
-            return roadShieldDefaultColor
-        }
-    }
-    
-    private func roadShieldAttributedText(for text: String,
-                                          textColor: String,
-                                          image: UIImage) -> NSAttributedString? {
-        let attachment = ShieldAttachment()
-        // To correctly scale size of the font its height is based on the label where it is shown.
-        let fontSize = frame.size.height / 2.5
-        let shieldColor = shieldColor(from: textColor)
-        attachment.image = image.withCenteredText(text,
-                                                  color: shieldColor,
-                                                  font: UIFont.boldSystemFont(ofSize: fontSize),
-                                                  size: frame.size)
-        return NSAttributedString(attachment: attachment)
-    }
-    
-}
-
-/**
  A host view for `WayNameLabel` that shows a road name and a shield icon.
  
  `WayNameView` is hidden or shown depending on the road name information availability. In case if
@@ -170,8 +13,6 @@ open class WayNameLabel: StylableLabel {
  */
 @objc(MBWayNameView)
 open class WayNameView: UIView {
-    
-    private static let textInsets = UIEdgeInsets(top: 3, left: 14, bottom: 3, right: 14)
     
     lazy var label: WayNameLabel = .forAutoLayout()
     
@@ -219,7 +60,7 @@ open class WayNameView: UIView {
     /**
      The color of the `WayNameView`'s border.
      */
-    @objc dynamic public var borderColor: UIColor? {
+    @objc public dynamic var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }
             return UIColor(cgColor: color)
@@ -233,13 +74,30 @@ open class WayNameView: UIView {
     /**
      The width of the `WayNameView`'s border.
      */
-    @objc dynamic public var borderWidth: CGFloat {
+    @objc public dynamic var borderWidth: CGFloat {
         get {
             layer.borderWidth
         }
         
         set {
             layer.borderWidth = newValue
+        }
+    }
+    
+    var _cornerRadius: CGFloat?
+    
+    /**
+     The radius of the `WayNameView`'s corner. By default corner radius is set to half of
+     `WayNameView`'s height.
+     */
+    @objc public dynamic var cornerRadius: CGFloat {
+        get {
+            layer.cornerRadius
+        }
+        
+        set {
+            _cornerRadius = newValue
+            layer.cornerRadius = newValue
         }
     }
     
@@ -255,7 +113,7 @@ open class WayNameView: UIView {
     
     private func commonInit() {
         addSubview(containerView)
-        containerView.pinInSuperview(respectingMargins: false)
+        containerView.pinInSuperview()
         
         containerView.addSubview(label)
         label.pinInSuperview(respectingMargins: true)
@@ -263,6 +121,7 @@ open class WayNameView: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        containerView.layer.cornerRadius = bounds.midY
+        
+        containerView.layer.cornerRadius = _cornerRadius ?? bounds.midY
     }
 }

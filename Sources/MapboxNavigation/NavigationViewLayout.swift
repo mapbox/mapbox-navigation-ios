@@ -84,17 +84,24 @@ extension NavigationView {
         
         layoutConstraints.append(contentsOf: resumeButtonConstraints)
         
-        let wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.centerXAnchor)
-        let wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
-                                                                              constant: -10)
-        let wayNameViewWidthConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.widthAnchor)
+        let wayNameViewConstraints: [NSLayoutConstraint]
+        if let wayNameViewLayoutGuide = wayNameViewLayoutGuide {
+            wayNameViewConstraints = wayNameViewLayoutGuide.layoutConstraints(for: wayNameView)
+        } else {
+            let wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.centerXAnchor)
+            let wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
+                                                                                  constant: -10)
+            let wayNameViewWidthConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.widthAnchor)
+            let wayNameViewHeightConstraint = wayNameView.heightAnchor.constraint(equalToConstant: 40.0)
+            
+            wayNameViewConstraints = [
+                wayNameViewCenterXConstraint,
+                wayNameViewBottomConstraint,
+                wayNameViewWidthConstraint,
+                wayNameViewHeightConstraint
+            ]
+        }
         
-        let wayNameViewConstraints = [
-            wayNameViewCenterXConstraint,
-            wayNameViewBottomConstraint,
-            wayNameViewWidthConstraint
-        ]
-
         layoutConstraints.append(contentsOf: wayNameViewConstraints)
         
         let speedLimitViewTopContraint = speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor,
@@ -231,16 +238,23 @@ extension NavigationView {
         
         layoutConstraints.append(contentsOf: resumeButtonConstraints)
         
-        let wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.centerXAnchor)
-        let wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
-                                                                              constant: -10)
-        let wayNameViewWidthConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.widthAnchor)
-        
-        let wayNameViewConstraints = [
-            wayNameViewCenterXConstraint,
-            wayNameViewBottomConstraint,
-            wayNameViewWidthConstraint
-        ]
+        let wayNameViewConstraints: [NSLayoutConstraint]
+        if let wayNameViewLayoutGuide = wayNameViewLayoutGuide {
+            wayNameViewConstraints = wayNameViewLayoutGuide.layoutConstraints(for: wayNameView)
+        } else {
+            let wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.centerXAnchor)
+            let wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
+                                                                                  constant: -10)
+            let wayNameViewWidthConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: bottomBannerContainerView.widthAnchor)
+            let wayNameViewHeightConstraint = wayNameView.heightAnchor.constraint(equalToConstant: 40.0)
+            
+            wayNameViewConstraints = [
+                wayNameViewCenterXConstraint,
+                wayNameViewBottomConstraint,
+                wayNameViewWidthConstraint,
+                wayNameViewHeightConstraint
+            ]
+        }
         
         layoutConstraints.append(contentsOf: wayNameViewConstraints)
         

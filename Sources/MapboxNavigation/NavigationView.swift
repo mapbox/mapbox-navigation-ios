@@ -138,6 +138,12 @@ open class NavigationView: UIView {
     
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
+    var wayNameViewLayoutGuide: UILayoutGuide? {
+        didSet {
+            setupConstraints()
+        }
+    }
+    
     lazy var wayNameView: WayNameView = {
         let wayNameView: WayNameView = .forAutoLayout()
         wayNameView.containerView.isHidden = true

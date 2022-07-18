@@ -169,11 +169,11 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertNotNil(sprite)
         XCTAssertTrue((sprite?.isKind(of: UIImage.self))!, "Failed to update the Sprite.")
         
-        let legacyShield = repository.getLegacyShield(with: cacheKey)
+        let legacyShield = repository.legacyRoadShieldImage(from: cacheKey)
         XCTAssertNotNil(legacyShield)
         XCTAssertTrue((legacyShield?.isKind(of: UIImage.self))!, "Failed to download the legacy shield.")
         
-        let shieldIcon = repository.getShieldIcon(shield: shield)
+        let shieldIcon = repository.roadShieldImage(from: shield)
         XCTAssertNotNil(shieldIcon)
         XCTAssertTrue((shieldIcon?.isKind(of: UIImage.self))!, "Failed to cut the shield icon.")
     }

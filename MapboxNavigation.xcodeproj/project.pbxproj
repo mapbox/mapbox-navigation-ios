@@ -226,6 +226,8 @@
 		8A88FF74274C252100B9995C /* BuildingHighlighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A88FF73274C252100B9995C /* BuildingHighlighting.swift */; };
 		8A8C3D98260175D20071D274 /* CLLocationDirection+Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */; };
 		8A9270EA2704F6CC00B606D9 /* BundleAdditionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */; };
+		8A99F18928821AA80034F5BD /* UILayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A99F18828821AA70034F5BD /* UILayoutGuide.swift */; };
+		8A99F18B28821AB80034F5BD /* WayNameLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A99F18A28821AB80034F5BD /* WayNameLabel.swift */; };
 		8AA0385D27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0385C27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */; };
@@ -800,6 +802,8 @@
 		8A88FF73274C252100B9995C /* BuildingHighlighting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingHighlighting.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDirection+Camera.swift"; sourceTree = "<group>"; };
 		8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleAdditionsTests.swift; sourceTree = "<group>"; };
+		8A99F18828821AA70034F5BD /* UILayoutGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILayoutGuide.swift; sourceTree = "<group>"; };
+		8A99F18A28821AB80034F5BD /* WayNameLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WayNameLabel.swift; sourceTree = "<group>"; };
 		8AA0385C27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -1842,6 +1846,7 @@
 		C51923B41EA55C5E002AF9E1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8A99F18828821AA70034F5BD /* UILayoutGuide.swift */,
 				8A50A3D026EC0AA300894A8E /* StyleURI.swift */,
 				F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */,
 				8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */,
@@ -1908,6 +1913,7 @@
 				DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */,
 				1FFDFD91249C1AA70091746A /* JunctionView.swift */,
 				2BDD653C2614BCA1005B8B55 /* WayNameView.swift */,
+				8A99F18A28821AB80034F5BD /* WayNameLabel.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2700,6 +2706,7 @@
 				8AD2211927C43B66000734A5 /* ResumeButton.swift in Sources */,
 				2BDD65472615B93C005B8B55 /* VectorSource.swift in Sources */,
 				8AC4091E279918470075248E /* NavigationViewLayout.swift in Sources */,
+				8A99F18928821AA80034F5BD /* UILayoutGuide.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
 				AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */,
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
@@ -2794,6 +2801,7 @@
 				1FFDFD92249C1AA80091746A /* JunctionView.swift in Sources */,
 				B4FD842827ED1980002662C4 /* UserPuckStyleKit.swift in Sources */,
 				8A41F63D25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift in Sources */,
+				8A99F18B28821AB80034F5BD /* WayNameLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

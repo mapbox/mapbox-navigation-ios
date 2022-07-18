@@ -296,11 +296,14 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         let attributed = presenter.attributedText()
         
-        let key = [
+        let cacheKey = [
             exitCodeAttribute.cacheKey!,
-            ExitView.criticalHash(side: .right, styleID: spriteRepository.styleID, dataSource: label, traitCollection: traitCollection)
+            ExitView.criticalHash(side: .right,
+                                  styleID: spriteRepository.styleID,
+                                  dataSource: label,
+                                  traitCollection: traitCollection)
         ].joined(separator: "-")
-        XCTAssertNotNil(spriteRepository.getLegacyShield(with: key), "Expected cached image")
+        XCTAssertNotNil(spriteRepository.legacyRoadShieldImage(from: cacheKey), "Expected cached image")
         
         let spaceRange = NSMakeRange(1, 1)
         let space = attributed.attributedSubstring(from: spaceRange)
