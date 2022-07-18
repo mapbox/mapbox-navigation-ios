@@ -1,7 +1,6 @@
 import XCTest
 import CarPlay
 import MapboxDirections
-import MapboxMobileEvents
 import MapboxMaps
 import CarPlayTestHelper
 @testable import TestHelper
@@ -31,10 +30,10 @@ class CarPlayManagerTests: TestCase {
     
     func testEventsEnqueuedAndFlushedWhenCarPlayConnectedAndDisconnected() {
         simulateCarPlayConnection(carPlayManager)
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayConnect))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.carplayConnect.rawValue))
         
         simulateCarPlayDisconnection(carPlayManager)
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayDisconnect))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.carplayDisconnect    .rawValue))
     }
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {

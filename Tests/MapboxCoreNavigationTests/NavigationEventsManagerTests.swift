@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMobileEvents
+import CoreLocation
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -63,11 +63,11 @@ class NavigationEventsManagerTests: TestCase {
         
         XCTAssertEqual(events.count, 3, "There should be one depart, one reroute, and one arrive event.")
         
-        guard let departEvent = events.filter({ $0.event == MMEEventTypeNavigationDepart }).first else { XCTFail(); return }
-        guard let rerouteEvent = events.filter({ $0.event == MMEEventTypeNavigationReroute }).first else { XCTFail(); return }
+        guard let departEvent = events.filter({ $0.event == EventType.depart.rawValue }).first else { XCTFail(); return }
+        guard let rerouteEvent = events.filter({ $0.event == EventType.reroute.rawValue }).first else { XCTFail(); return }
         guard let arriveEvent = events
-                .filter({ $0.event == MMEEventTypeNavigationArrive })
-                .first as? ActiveNavigationEventDetails else { XCTFail(); return }
+            .filter({ $0.event == EventType.arrive.rawValue })
+            .first as? ActiveNavigationEventDetails else { XCTFail(); return }
         
         let durationBetweenDepartAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
         let durationBetweenDepartAndReroute = rerouteEvent.created.timeIntervalSince(departEvent.startTimestamp!)

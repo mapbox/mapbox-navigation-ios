@@ -9,6 +9,7 @@ enum EventKey: String {
 }
 
 enum EventType: String {
+    case turnstile = "appUserTurnstile"
     case depart = "navigation.depart"
     case arrive = "navigation.arrive"
     case cancel = "navigation.cancel"

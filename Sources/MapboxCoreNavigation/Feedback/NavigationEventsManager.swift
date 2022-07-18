@@ -449,7 +449,7 @@ open class NavigationEventsManager {
             
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
 
-            eventsAPI.sendQueuedEvent(with: eventDictionary)
+            eventsAPI.sendImmediateEvent(with: eventDictionary)
         }
         mobileEventsManager.flush()
     }
