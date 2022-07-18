@@ -285,11 +285,18 @@ class VanishingRouteLineTests: TestCase {
         
         navigationMapView.travelAlongRouteLine(to: coordinate)
         let expectedFractionTraveled = 0.3240769449298392
-        let actualFractionTraveled = navigationMapView.fractionTraveled
+        var actualFractionTraveled = navigationMapView.fractionTraveled
         XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
         
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
+            guard let trackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
+            var expectedTrimOffset: Value<[Double]> = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, trackingRouteLineLayer.lineTrimOffset, "Failed to update the lineTrimOffset when routeLineTracksTraversal enabled.")
+            
             // During the active navigation, when disabling `routeLineTracksTraversal`, the new route line will be generated,
             // and the `fractionTraveled` will be 0.0.
             navigationMapView.routeLineTracksTraversal = false
@@ -297,9 +304,9 @@ class VanishingRouteLineTests: TestCase {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            var gradientExpression = nonTrackingRouteLineLayer.lineGradient.debugDescription
-            XCTAssertEqual(navigationMapView.fractionTraveled, 0.0)
-            XCTAssert(!gradientExpression.contains(actualFractionTraveled.description), "Failed to stop vanishing effect when routeLineTracksTraversal disabled.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, 0.0, "Failed to reset fractionTraveled when routeLineTracksTraversal disabled.")
+            XCTAssertNil(nonTrackingRouteLineLayer.lineTrimOffset, "Failed to nil the lineTrimOffset when routeLineTracksTraversal disabled.")
             
             // During the active navigation, when enabling `routeLineTracksTraversal`, the new line gradient stops of current route will be generated.
             // The `fractionTraveled` and the route line are expected to be updated after a new `routeProgress` and location update comes in
@@ -310,8 +317,10 @@ class VanishingRouteLineTests: TestCase {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            gradientExpression = trackingRouteLineLayer.lineGradient.debugDescription
-            XCTAssert(gradientExpression.contains(actualFractionTraveled.description), "Failed to restore vanishing effect when routeLineTracksTraversal enabled.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
+            expectedTrimOffset = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, trackingRouteLineLayer.lineTrimOffset, "Failed to update the lineTrimOffset when routeLineTracksTraversal enabled.")
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -321,13 +330,25 @@ class VanishingRouteLineTests: TestCase {
         let route = getRoute()
         
         // When different congestion levels have same color, the line gradient stops are expected to combine these congestion level.
+        navigationMapView.trafficUnknownColor = UIColor.blue
         navigationMapView.trafficModerateColor = navigationMapView.trafficUnknownColor
         navigationMapView.routes = [route]
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.show([route], legIndex: 0)
         
-        let expectedGradientStops = [0.0 : navigationMapView.trafficUnknownColor]
-        XCTAssertEqual(expectedGradientStops, navigationMapView.currentLineGradientStops, "Failed to combine the same color of congestion segment.")
+        // The moderate and unknow traffic congestion share the same color, so the line gradient is expected to combine same feature color into one stop.
+        let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0]]"
+        let layerIdentifier = route.identifier(.route(isMainRoute: true))
+        do {
+            guard let lineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
+            let lineGradientString = lineGradientToString(lineGradient: lineLayer.lineGradient)
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to combine the same color of congestion segment.")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
     
     func testSwitchCrossfadesCongestionSegments() {
@@ -346,10 +367,14 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.travelAlongRouteLine(to: coordinate)
 
-        let fractionTraveled = navigationMapView.fractionTraveled
-        let fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
+        let expectedFractionTraveled = 0.3240769449298392
+        var actualFractionTraveled = navigationMapView.fractionTraveled
+        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
         
-        var expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+        // The line gradient is expected to have two parts. The first is from 0.0 to unknow traffic congestion feature end with trafficUnknownColor.
+        // The last part is from moderate congestion feature start to the end with trafficModerateColor.
+        // When the crossfadesCongestionSegments is false, the gap between the two congestion colors is small to generate the steep color change.
+        let expectedSteppedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
 
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
@@ -358,25 +383,29 @@ class VanishingRouteLineTests: TestCase {
                 return
             }
             var lineGradientString = lineGradientToString(lineGradient: steppedRouteLineLayer.lineGradient)
-            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level.")
+            XCTAssertEqual(lineGradientString, expectedSteppedExpressionString, "Failed to apply step color transition between two different congestion level.")
+            var expectedTrimOffset: Value<[Double]> = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, steppedRouteLineLayer.lineTrimOffset, "Failed to update the lineTrimOffset when routeLineTracksTraversal enabled.")
 
             // During active navigation with `routeLineTracksTraversal` and `crossfadesCongestionSegments` both enabled,
-            // the route line should re-generate the gradient stops and update the line gradient expression
-            // when there's a location update comes in.
-            expectedExpressionString = "[interpolate, [linear], [line-progress], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.8482948363463217, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9482948363463218, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+            // the route line should re-generate the gradient stops and update the line gradient expression.
+            // When the crossfadesCongestionSegments is true, the gap between the two congestion colors is larger to generate the fading color change
+            let expectedSoftExpressionString = "[interpolate, [linear], [line-progress], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.8482948363463217, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9482948363463218, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.crossfadesCongestionSegments = true
-            navigationMapView.travelAlongRouteLine(to: coordinate)
             
             guard let crossfadingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
             lineGradientString = lineGradientToString(lineGradient: crossfadingRouteLineLayer.lineGradient)
-            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
+            XCTAssertEqual(lineGradientString, expectedSoftExpressionString, "Failed to apply soft color transition between two different congestion level.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to keep fractionTraveled when switch crossfadesCongestionSegments with routeLineTracksTraversal enabled.")
+            expectedTrimOffset = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, crossfadingRouteLineLayer.lineTrimOffset, "Failed to keep the lineTrimOffset when switch crossfadesCongestionSegments with routeLineTracksTraversal enabled.")
             
             // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled,
             // the route line should be re-generated directly.
-            expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.routeLineTracksTraversal = false
             navigationMapView.crossfadesCongestionSegments = false
             
@@ -385,7 +414,11 @@ class VanishingRouteLineTests: TestCase {
                 return
             }
             lineGradientString = lineGradientToString(lineGradient: trackingRouteLineLayer.lineGradient)
-            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level and show a whole new route line.")
+            XCTAssertEqual(lineGradientString, expectedSteppedExpressionString, "Failed to apply step color transition between two different congestion level and show a whole new route line.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, 0.0, "Failed to reset fractionTraveled when routeLineTracksTraversal disabled.")
+            expectedTrimOffset = .constant([0.0, actualFractionTraveled])
+            XCTAssertNil(trackingRouteLineLayer.lineTrimOffset, "Failed to nil the lineTrimOffset when routeLineTracksTraversal disabled.")
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -413,8 +446,7 @@ class VanishingRouteLineTests: TestCase {
         // the route line is expcted to apply `trafficUnknownColor` for the main route.
         let congestionFeatures = route.congestionFeatures(legIndex: 0)
         let currentLineGradientStops = navigationMapView.routeLineCongestionGradient(route,
-                                                                                     congestionFeatures: congestionFeatures,
-                                                                                     fractionTraveled: 0.0)
+                                                                                     congestionFeatures: congestionFeatures)
         XCTAssertEqual(currentLineGradientStops[0.0], navigationMapView.trafficUnknownColor, "Failed to use trafficUnknownColor for route line when no congestion level found.")
     }
     
@@ -452,7 +484,7 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertTrue(expectedFractionTraveled == navigationMapView.fractionTraveled, "Failed to stop updating fractionTraveled when user off the route line.")
     }
     
-    func testSwitchshowsRestrictedAreasOnRoute() {
+    func testSwitchShowsRestrictedAreasOnRoute() {
         let routeProgress = getRouteProgress()
         let route = routeProgress.route
         let coordinate = route.shape!.coordinates[1]
@@ -468,9 +500,12 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.travelAlongRouteLine(to: coordinate)
 
-        let fractionTraveled = navigationMapView.fractionTraveled
-        let fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
-        let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+        let expectedFractionTraveled = 0.3240769449298392
+        var actualFractionTraveled = navigationMapView.fractionTraveled
+        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
+        // The line gradient is expected to have two parts. The first is from 0.0 to unknow traffic congestion feature end with trafficUnknownColor.
+        // The last part is from moderate congestion feature start to the end with trafficModerateColor.
+        let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
 
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         
@@ -492,7 +527,21 @@ class VanishingRouteLineTests: TestCase {
                 return
             }
             let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
-            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns on.")
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to generate route line gradient the vanishing effect when showsRestrictedAreasOnRoute turns on.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to keep fractionTraveled when switch showsRestrictedAreasOnRoute with routeLineTracksTraversal enabled.")
+            let expectedTrimOffset: Value<[Double]> = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, layer.lineTrimOffset, "Failed to keep the lineTrimOffset when switch showsRestrictedAreasOnRoute with routeLineTracksTraversal enabled.")
+            
+            // When the route has no restricted road class, the line gradient for the restricted layer should have only one gradien stop,
+            // with traversedRouteColor for base color and the gradient stop color.
+            let expectedRestrictedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 0.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0]]"
+            guard let restrictedLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: route.identifier(.restrictedRouteAreaRoute)) as? LineLayer else {
+                XCTFail("Restricted route line layer should be added.")
+                return
+            }
+            let restrictedLineGradientString = lineGradientToString(lineGradient: restrictedLayer.lineGradient)
+            XCTAssertEqual(restrictedLineGradientString, expectedRestrictedExpressionString, "Failed to generate restricted route line gradient when showsRestrictedAreasOnRoute turns on.")
             
             allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
             guard let indexOfMainRouteLayer = allLayerIds.firstIndex(of: route.identifier(.route(isMainRoute: true))),
@@ -517,10 +566,33 @@ class VanishingRouteLineTests: TestCase {
             }
             let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns off.")
+            actualFractionTraveled = navigationMapView.fractionTraveled
+            XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to keep fractionTraveled when switch showsRestrictedAreasOnRoute with routeLineTracksTraversal enabled.")
+            let expectedTrimOffset: Value<[Double]> = .constant([0.0, actualFractionTraveled])
+            XCTAssertEqual(expectedTrimOffset, layer.lineTrimOffset, "Failed to keep the lineTrimOffset when switch showsRestrictedAreasOnRoute with routeLineTracksTraversal enabled.")
             XCTAssertFalse(navigationMapView.mapView.mapboxMap.style.layerExists(withId: route.identifier(.restrictedRouteAreaRoute)), "Failed to remove restricted areas route layer.")
             XCTAssertFalse(navigationMapView.mapView.mapboxMap.style.sourceExists(withId: route.identifier(.restrictedRouteAreaSource)), "Failed to remove restricted areas route source.")
         } catch {
             XCTFail(error.localizedDescription)
         }
+    }
+    
+    func testEmptyRouteLineGradient() {
+        let congestionFeatures = [Turf.Feature]()
+        var lineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures: congestionFeatures,
+                                                                         isMain: true,
+                                                                         isSoft: true)
+        var expectedLineGradient: [Double: UIColor] = [0.0: navigationMapView.trafficUnknownColor]
+        XCTAssertEqual(lineGradient, expectedLineGradient, "Failed to generate main route line gradient for empty congestion features.")
+        
+        lineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures: congestionFeatures,
+                                                                     isMain: false)
+        expectedLineGradient = [0.0: navigationMapView.alternativeTrafficUnknownColor]
+        XCTAssertEqual(lineGradient, expectedLineGradient, "Failed to generate alternative route line gradient for empty congestion features.")
+        
+        
+        lineGradient = navigationMapView.routeLineRestrictionsGradient(congestionFeatures)
+        expectedLineGradient = [0.0: navigationMapView.traversedRouteColor]
+        XCTAssertEqual(lineGradient, expectedLineGradient, "Failed to generate restricted area line gradient for empty congestion features.")
     }
 }
