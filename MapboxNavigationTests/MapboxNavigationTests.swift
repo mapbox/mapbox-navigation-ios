@@ -35,6 +35,10 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testHighlightBuildings() {
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
+            XCTFail("Map loading failed with error: \(event.payload.error).")
+        }
+        
         let timeout: TimeInterval = 30.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
@@ -83,6 +87,10 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testPuck3DLayerPosition() {
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
+            XCTFail("Map loading failed with error: \(event.payload.error).")
+        }
+        
         // Change authorization and accuracy to simulate its approval by the user.
         navigationMapView._locationChangesAllowed = false
         navigationMapView.authorizationStatus = .authorizedAlways
@@ -160,6 +168,10 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testUserLocationStyle() {
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
+            XCTFail("Map loading failed with error: \(event.payload.error).")
+        }
+        
         // Change authorization and accuracy to simulate its approval by the user.
         navigationMapView._locationChangesAllowed = false
         navigationMapView.authorizationStatus = .authorizedAlways
@@ -188,6 +200,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
+        wait(for: [mapLoadedExpectation], timeout: timeout)
         
         navigationMapView.userLocationStyle = nil
         wait()
@@ -227,6 +240,10 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testRoutePresentationAndRemoval() {
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
+            XCTFail("Map loading failed with error: \(event.payload.error).")
+        }
+        
         // Change authorization and accuracy to simulate its approval by the user.
         navigationMapView._locationChangesAllowed = false
         navigationMapView.authorizationStatus = .denied
@@ -247,7 +264,6 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
-        
         wait(for: [mapLoadedExpectation], timeout: timeout)
         
         var coordinates = [
