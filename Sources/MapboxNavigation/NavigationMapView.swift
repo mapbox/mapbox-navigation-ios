@@ -305,15 +305,15 @@ open class NavigationMapView: UIView {
                                                   below: parentLayerIdentifier,
                                                   isMainRoute: false,
                                                   legIndex: nil)
-            if let altertiveRouteLayerIdentifier = parentLayerIdentifier {
-                setLayerLineGradient(for: altertiveRouteLayerIdentifier, with: offset)
+            if let alternativeRouteLayerIdentifier = parentLayerIdentifier {
+                setLayerLineGradient(for: alternativeRouteLayerIdentifier, with: offset)
             }
             
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         below: parentLayerIdentifier,
                                                         isMainRoute: false)
-            if let altertiveRouteCasingIdentifier = parentLayerIdentifier {
-                setLayerLineGradient(for: altertiveRouteCasingIdentifier, with: offset)
+            if let alternativeRouteCasingIdentifier = parentLayerIdentifier {
+                setLayerLineGradient(for: alternativeRouteCasingIdentifier, with: offset)
             }
         }
     }
