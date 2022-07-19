@@ -109,7 +109,7 @@ class MapboxNavigationTests: XCTestCase {
         
         var model = MapboxMaps.Model()
         // Setting asset URL is required for successful 3D puck placement.
-        model.uri = URL(string: "http://asset.gltf")!
+        model.uri = Bundle.main.url(forResource: "custom_puck", withExtension: "gltf")
         let puck3DConfiguration = Puck3DConfiguration(model: model)
         navigationMapView.userLocationStyle = .puck3D(configuration: puck3DConfiguration)
         
