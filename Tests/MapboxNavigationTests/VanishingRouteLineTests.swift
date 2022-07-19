@@ -336,7 +336,7 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.show([route], legIndex: 0)
         
-        // The moderate and unknow traffic congestion share the same color, so the line gradient is expected to combine same feature color into one stop.
+        // The moderate and unknown traffic congestion share the same color, so the line gradient is expected to combine same feature color into one stop.
         let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0]]"
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
@@ -371,7 +371,7 @@ class VanishingRouteLineTests: TestCase {
         var actualFractionTraveled = navigationMapView.fractionTraveled
         XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
         
-        // The line gradient is expected to have two parts. The first is from 0.0 to unknow traffic congestion feature end with trafficUnknownColor.
+        // The line gradient is expected to have two parts. The first is from 0.0 to unknown traffic congestion feature end with trafficUnknownColor.
         // The last part is from moderate congestion feature start to the end with trafficModerateColor.
         // When the crossfadesCongestionSegments is false, the gap between the two congestion colors is small to generate the steep color change.
         let expectedSteppedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
@@ -503,7 +503,7 @@ class VanishingRouteLineTests: TestCase {
         let expectedFractionTraveled = 0.3240769449298392
         var actualFractionTraveled = navigationMapView.fractionTraveled
         XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: accuracyThreshold, "Failed to update route line when routeLineTracksTraversal enabled.")
-        // The line gradient is expected to have two parts. The first is from 0.0 to unknow traffic congestion feature end with trafficUnknownColor.
+        // The line gradient is expected to have two parts. The first is from 0.0 to unknown traffic congestion feature end with trafficUnknownColor.
         // The last part is from moderate congestion feature start to the end with trafficModerateColor.
         let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
 
