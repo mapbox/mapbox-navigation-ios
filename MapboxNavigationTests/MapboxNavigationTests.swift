@@ -96,7 +96,13 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.authorizationStatus = .authorizedAlways
         navigationMapView.accuracyAuthorization = .fullAccuracy
         
-        let timeout: TimeInterval = 2.0
+        let timeout: TimeInterval = 30.0
+        let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        wait(for: [styleLoadedExpectation], timeout: timeout)
+        
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
