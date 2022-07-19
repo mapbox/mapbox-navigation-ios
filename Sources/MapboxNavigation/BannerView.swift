@@ -1,12 +1,6 @@
 import UIKit
 
 // :nodoc:
-@objc(MBBannerContainerView)
-open class BannerContainerView: UIView {
-    
-}
-
-// :nodoc:
 @objc(MBTopBannerView)
 open class TopBannerView: UIView {
     

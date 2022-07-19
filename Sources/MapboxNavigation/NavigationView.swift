@@ -129,7 +129,7 @@ open class NavigationView: UIView {
         }
     }
     
-    var floatingButtons : [UIButton]? {
+    var floatingButtons: [UIButton]? {
         didSet {
             clearStackViews()
             setupStackViews()
@@ -153,9 +153,19 @@ open class NavigationView: UIView {
     
     lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
-    lazy var topBannerContainerView: BannerContainerView = .forAutoLayout()
+    // :nodoc:
+    public lazy var topBannerContainerView: BannerContainerView = {
+        let topBannerContainerView = BannerContainerView(.top)
+        topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return topBannerContainerView
+    }()
     
-    lazy var bottomBannerContainerView: BannerContainerView = .forAutoLayout()
+    // :nodoc:
+    public lazy var bottomBannerContainerView: BannerContainerView = {
+        let bottomBannerContainerView = BannerContainerView(.bottom)
+        bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return bottomBannerContainerView
+    }()
     
     func clearStackViews() {
         let oldFloatingButtons: [UIView] = floatingStackView.subviews
