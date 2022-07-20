@@ -5,10 +5,44 @@ import UIKit
 @objc(MBResumeButton)
 public class ResumeButton: UIControl {
     
+    /**
+     The tint color of the `ResumeButton`'s icon and title.
+     */
     public override dynamic var tintColor: UIColor! {
         didSet {
             imageView.tintColor = tintColor
             titleLabel.textColor = tintColor
+        }
+    }
+    
+    /**
+     The width of the `ResumeButton`'s border.
+     */
+    @objc public dynamic var borderWidth: CGFloat = 0.0 {
+        didSet {
+            layer.borderWidth = borderWidth
+        }
+    }
+    
+    /**
+     The radius of the `ResumeButton`'s corner.
+     */
+    @objc public dynamic var cornerRadius: CGFloat = 0.0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
+    
+    /**
+     The color of the `ResumeButton`'s border.
+     */
+    @objc public dynamic var borderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
         }
     }
     
