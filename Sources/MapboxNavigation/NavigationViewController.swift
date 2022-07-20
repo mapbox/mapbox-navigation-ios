@@ -56,8 +56,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var mapTileStore: TileStoreConfiguration.Location? {
         NavigationSettings.shared.tileStoreConfiguration.mapLocation
     }
-        
-    var navigationView: NavigationView {
+    
+    // :nodoc:
+    public var navigationView: NavigationView {
         return (view as! NavigationView)
     }
     

@@ -144,7 +144,8 @@ open class NavigationView: UIView {
         }
     }
     
-    lazy var wayNameView: WayNameView = {
+    // :nodoc:
+    public lazy var wayNameView: WayNameView = {
         let wayNameView: WayNameView = .forAutoLayout()
         wayNameView.containerView.isHidden = true
         wayNameView.containerView.clipsToBounds = true

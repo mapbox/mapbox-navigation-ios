@@ -334,8 +334,10 @@ class ViewController: UIViewController {
         
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
-        
-        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
+
+        presentAndRemoveNavigationMapView(navigationViewController,
+                                          animated: false,
+                                          completion: beginCarPlayNavigation)
     }
     
     func startCustomNavigation() {
@@ -576,16 +578,30 @@ class ViewController: UIViewController {
     }
     
     func presentAndRemoveNavigationMapView(_ navigationViewController: NavigationViewController,
+                                           animated: Bool = true,
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
-        present(navigationViewController, animated: true) {
+        // Hide top and bottom container views before animating their presentation.
+        navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
+        navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
+        
+        navigationViewController.navigationView.wayNameView.isHidden = true
+        
+        present(navigationViewController, animated: animated) {
             completion?()
             // Cleaning up the `PassiveLocationManager`. The `PassiveLocationManager` during active navigation may lead to location jump.
             self.navigationMapView = nil
             self.passiveLocationManager = nil
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
+            
+            // Animate top and bottom banner views presentation.
+            navigationViewController.navigationView.bottomBannerContainerView.show(duration: 2.0, completion: { _ in
+                // Show `WayNameView` only after fully presenting bottom banner container view.
+                navigationViewController.navigationView.wayNameView.isHidden = false
+            })
+            navigationViewController.navigationView.topBannerContainerView.show(duration: 2.0)
         }
     }
     
