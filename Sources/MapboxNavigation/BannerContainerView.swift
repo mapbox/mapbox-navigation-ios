@@ -70,7 +70,6 @@ open class BannerContainerView: UIView {
     
     weak var delegate: BannerContainerViewDelegate? {
         didSet {
-            // TODO: Improve process of notifying users about state changes.
             delegate?.bannerContainerView(self, stateDidChangeTo: state)
         }
     }
@@ -220,12 +219,11 @@ open class BannerContainerView: UIView {
         layoutIfNeeded()
         
         if animated {
-            // TODO: Improve animation for devices with notch.
             switch type {
             case .top:
-                expansionConstraint.constant = -frame.height //+ self.topSafeAreaInset
+                expansionConstraint.constant = -frame.height
             case .bottom:
-                expansionConstraint.constant = frame.height //- self.bottomSafeAreaInset
+                expansionConstraint.constant = frame.height
             }
             
             isHidden = false
