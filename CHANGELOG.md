@@ -20,6 +20,7 @@
 ### Banners and guidance instructions
 
 * Added the `WayNameView.cornerRadius` property for customizing how the current road name is labeled. ([#4004](https://github.com/mapbox/mapbox-navigation-ios/pull/4004))
+* Reduced memory footprint while downloading road shield images. ([#4020](https://github.com/mapbox/mapbox-navigation-ios/pull/4020))
 
 ### Other changes
 
@@ -27,7 +28,6 @@
 * Added `NavigationSettings.utilizeSensorData` toggle to allow navigator to use additional device sensors data for better positioning. ([#3973](https://github.com/mapbox/mapbox-navigation-ios/pull/3973))
 * Fixed the issue of restricted layer over the whole route after the removal of continuous alternative route with a small portion of restricted road class at start. ([#4009](https://github.com/mapbox/mapbox-navigation-ios/pull/4009))
 * Added `ResumeButton.borderWidth`, `ResumeButton.cornerRadius` and `ResumeButton.borderColor` properties that allow `ResumeButton`'s style modification. ([#3996](https://github.com/mapbox/mapbox-navigation-ios/pull/3996))
-* Reduced the downloading of road shield images. ([#4020](https://github.com/mapbox/mapbox-navigation-ios/pull/4020))
 
 ## v2.6.0
 
