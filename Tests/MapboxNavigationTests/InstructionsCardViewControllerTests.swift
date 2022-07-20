@@ -31,9 +31,8 @@ class InstructionsCardViewControllerTests: TestCase {
             hostViewController.view.addSubview(containerView)
             constrain(containerView, to: hostViewController.view)
             
-            embed(parent: hostViewController,
-                  child: instructionsCardViewController,
-                  in: containerView) { (parent, instructionsCard) -> [NSLayoutConstraint] in
+            hostViewController.embed(instructionsCardViewController,
+                                     in: containerView) { (parent, instructionsCard) -> [NSLayoutConstraint] in
                 instructionsCard.view.translatesAutoresizingMaskIntoConstraints = false
                 return instructionsCard.view.constraintsForPinning(to: containerView)
             }
