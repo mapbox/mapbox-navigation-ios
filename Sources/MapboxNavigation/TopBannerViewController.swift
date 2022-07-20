@@ -426,15 +426,6 @@ extension TopBannerViewController: NavigationComponent {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
     }
-    
-    private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
-        addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
-            view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: self)
-    }
 }
 
 // MARK: InstructionsBannerViewDelegate Conformance

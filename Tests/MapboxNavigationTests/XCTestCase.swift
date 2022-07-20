@@ -41,13 +41,4 @@ extension XCTestCase {
         ]
         NSLayoutConstraint.activate(constraints)
     }
-
-    func embed(parent:UIViewController, child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        parent.addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(parent, child) {
-            parent.view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: parent)
-    }
 }

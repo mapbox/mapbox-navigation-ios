@@ -30,7 +30,7 @@ class InstructionsCardSnapshotTests: TestCase {
         host.view.addSubview(container)
         constrain(container, to: host.view)
         
-        embed(parent: host, child: subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
+        host.embed(subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
             cards.view.translatesAutoresizingMaskIntoConstraints = false
             return cards.view.constraintsForPinning(to: container)
         }
@@ -51,7 +51,7 @@ class InstructionsCardSnapshotTests: TestCase {
         host.view.addSubview(container)
         constrain(container, to: host.view)
         
-        embed(parent: host, child: subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
+        host.embed(subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
             cards.view.translatesAutoresizingMaskIntoConstraints = false
             return cards.view.constraintsForPinning(to: container)
         }
@@ -74,7 +74,7 @@ class InstructionsCardSnapshotTests: TestCase {
         host.view.addSubview(container)
         constrain(container, to: host.view)
         
-        embed(parent: host, child: subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
+        host.embed(subject, in: container) { (parent, cards) -> [NSLayoutConstraint] in
             cards.view.translatesAutoresizingMaskIntoConstraints = false
             return cards.view.constraintsForPinning(to: container)
         }
