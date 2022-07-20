@@ -14,7 +14,8 @@ public protocol BannerContainerViewDelegate: AnyObject, UnimplementedLogging {
                              didExpandTo fraction: CGFloat)
 }
 
-extension BannerContainerViewDelegate {
+// :nodoc:
+public extension BannerContainerViewDelegate {
     
     func bannerContainerView(_ bannerContainerView: BannerContainerView,
                              stateWillChangeTo state: BannerContainerView.State) {

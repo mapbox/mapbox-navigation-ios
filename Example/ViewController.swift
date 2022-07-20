@@ -587,7 +587,9 @@ class ViewController: UIViewController {
         navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
         navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
         
-        navigationViewController.navigationView.wayNameView.isHidden = true
+        // Hide `WayNameView` and `FloatingStackView` to smoothly present them.
+        navigationViewController.navigationView.wayNameView.alpha = 0.0
+        navigationViewController.navigationView.floatingStackView.alpha = 0.0
         
         present(navigationViewController, animated: animated) {
             completion?()
@@ -597,11 +599,12 @@ class ViewController: UIViewController {
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
             
             // Animate top and bottom banner views presentation.
-            navigationViewController.navigationView.bottomBannerContainerView.show(duration: 2.0, completion: { _ in
-                // Show `WayNameView` only after fully presenting bottom banner container view.
-                navigationViewController.navigationView.wayNameView.isHidden = false
+            navigationViewController.navigationView.bottomBannerContainerView.show(duration: 1.0,
+                                                                                   animations: {
+                navigationViewController.navigationView.wayNameView.alpha = 1.0
+                navigationViewController.navigationView.floatingStackView.alpha = 1.0
             })
-            navigationViewController.navigationView.topBannerContainerView.show(duration: 2.0)
+            navigationViewController.navigationView.topBannerContainerView.show(duration: 1.0)
         }
     }
     
@@ -614,9 +617,13 @@ class ViewController: UIViewController {
     func dismissActiveNavigationViewController(animated: Bool = false) {
         guard let activeNavigationViewController = activeNavigationViewController else { return }
         
-        activeNavigationViewController.navigationView.wayNameView.isHidden = true
-        activeNavigationViewController.navigationView.bottomBannerContainerView.hide(duration: 2.0)
-        activeNavigationViewController.navigationView.topBannerContainerView.hide(duration: 2.0, completion: { _ in
+        activeNavigationViewController.navigationView.bottomBannerContainerView.hide(duration: 1.0)
+        activeNavigationViewController.navigationView.topBannerContainerView.hide(duration: 1.0,
+                                                                                  animations: {
+            activeNavigationViewController.navigationView.wayNameView.alpha = 0.0
+            activeNavigationViewController.navigationView.floatingStackView.alpha = 0.0
+        },
+                                                                                  completion: { _ in
             activeNavigationViewController.dismiss(animated: animated) {
                 self.activeNavigationViewController = nil
             }

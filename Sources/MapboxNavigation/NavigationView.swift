@@ -112,7 +112,8 @@ open class NavigationView: UIView {
     
     // MARK: Overlay Views
     
-    lazy var floatingStackView: UIStackView = {
+    // :nodoc:
+    public lazy var floatingStackView: UIStackView = {
         let stackView = UIStackView(orientation: .vertical, autoLayout: true)
         stackView.distribution = .equalSpacing
         stackView.spacing = Constants.buttonSpacing

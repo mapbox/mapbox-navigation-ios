@@ -68,7 +68,8 @@ open class BannerContainerView: UIView {
     
     var initialOffset: CGFloat = 0.0
     
-    weak var delegate: BannerContainerViewDelegate? {
+    // :nodoc:
+    public weak var delegate: BannerContainerViewDelegate? {
         didSet {
             delegate?.bannerContainerView(self, stateDidChangeTo: state)
         }
