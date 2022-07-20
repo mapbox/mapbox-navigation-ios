@@ -51,35 +51,27 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         updateMapViewOrnaments()
     }
     
-    func embedBanners(topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
-        let topContainer = navigationViewData.navigationView.topBannerContainerView
+    func embedBanners(topBannerViewController: ContainerViewController,
+                      bottomBannerViewController: ContainerViewController) {
+        let topBannerContainerView = navigationViewData.navigationView.topBannerContainerView
         
-        embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
+        navigationViewData.containerViewController.embed(topBannerViewController, in: topBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationViewData.navigationView.topBannerContainerView)
         }
         
-        topContainer.backgroundColor = .clear
+        topBannerContainerView.backgroundColor = .clear
         
-        let bottomContainer = navigationViewData.navigationView.bottomBannerContainerView
-        embed(bottomBanner, in: bottomContainer) { (parent, banner) -> [NSLayoutConstraint] in
+        let bottomBannerContainerView = navigationViewData.navigationView.bottomBannerContainerView
+        
+        navigationViewData.containerViewController.embed(bottomBannerViewController, in: bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationViewData.navigationView.bottomBannerContainerView)
         }
         
-        bottomContainer.backgroundColor = .clear
+        bottomBannerContainerView.backgroundColor = .clear
         
         navigationViewData.containerViewController.view.bringSubviewToFront(navigationViewData.navigationView.topBannerContainerView)
-    }
-    
-    private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParent: navigationViewData.containerViewController)
-        navigationViewData.containerViewController.addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(navigationViewData.containerViewController, child) {
-            navigationViewData.containerViewController.view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: navigationViewData.containerViewController)
     }
     
     // MARK: Feedback Collection

@@ -56,8 +56,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var mapTileStore: TileStoreConfiguration.Location? {
         NavigationSettings.shared.tileStoreConfiguration.mapLocation
     }
-        
-    var navigationView: NavigationView {
+    
+    // :nodoc:
+    public var navigationView: NavigationView {
         return (view as! NavigationView)
     }
     
@@ -574,10 +575,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         ]
         
         subviewInits.append { [weak self] in
-            if let topBanner = self?.addTopBanner(navigationOptions),
-               let bottomBanner = self?.addBottomBanner(navigationOptions) {
-                self?.ornamentsController?.embedBanners(topBanner: topBanner,
-                                                        bottomBanner: bottomBanner)
+            if let topBannerViewController = self?.addTopBanner(navigationOptions),
+               let bottomBannerViewController = self?.addBottomBanner(navigationOptions) {
+                self?.ornamentsController?.embedBanners(topBannerViewController: topBannerViewController,
+                                                        bottomBannerViewController: bottomBannerViewController)
             }
         }
         

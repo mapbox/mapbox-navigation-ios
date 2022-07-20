@@ -250,6 +250,7 @@ open class DayStyle: Style {
             
             TopBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             BottomBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            BottomPaddingView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             InstructionsBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             
             ArrivalTimeLabel.appearance(for: phoneTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont

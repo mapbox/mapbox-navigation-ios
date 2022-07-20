@@ -21,7 +21,7 @@ class BottomBannerSnapshotTests: TestCase {
         host.view.addSubview(container)
         constrain(container, to: host.view, side: .bottom)
         
-        embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
+        host.embed(subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: container)
         }
@@ -40,7 +40,7 @@ class BottomBannerSnapshotTests: TestCase {
         host.view.addSubview(container)
         constrain(container, to: host.view, side: .bottom)
         
-        embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
+        host.embed(subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: container)
         }

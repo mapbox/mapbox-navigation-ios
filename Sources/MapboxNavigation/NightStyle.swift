@@ -81,6 +81,7 @@ open class NightStyle: DayStyle {
             
             TopBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             BottomBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
+            BottomPaddingView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             InstructionsBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             
             WayNameView.appearance(for: phoneTraitCollection).borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)

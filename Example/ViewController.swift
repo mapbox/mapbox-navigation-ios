@@ -334,8 +334,10 @@ class ViewController: UIViewController {
         
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
-        
-        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
+
+        presentAndRemoveNavigationMapView(navigationViewController,
+                                          animated: false,
+                                          completion: beginCarPlayNavigation)
     }
     
     func startCustomNavigation() {
@@ -576,16 +578,33 @@ class ViewController: UIViewController {
     }
     
     func presentAndRemoveNavigationMapView(_ navigationViewController: NavigationViewController,
+                                           animated: Bool = true,
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
-        present(navigationViewController, animated: true) {
+        // Hide top and bottom container views before animating their presentation.
+        navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
+        navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
+        
+        // Hide `WayNameView` and `FloatingStackView` to smoothly present them.
+        navigationViewController.navigationView.wayNameView.alpha = 0.0
+        navigationViewController.navigationView.floatingStackView.alpha = 0.0
+        
+        present(navigationViewController, animated: animated) {
             completion?()
             // Cleaning up the `PassiveLocationManager`. The `PassiveLocationManager` during active navigation may lead to location jump.
             self.navigationMapView = nil
             self.passiveLocationManager = nil
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
+            
+            // Animate top and bottom banner views presentation.
+            navigationViewController.navigationView.bottomBannerContainerView.show(duration: 1.0,
+                                                                                   animations: {
+                navigationViewController.navigationView.wayNameView.alpha = 1.0
+                navigationViewController.navigationView.floatingStackView.alpha = 1.0
+            })
+            navigationViewController.navigationView.topBannerContainerView.show(duration: 1.0)
         }
     }
     
@@ -595,10 +614,20 @@ class ViewController: UIViewController {
         }
     }
     
-    func dismissActiveNavigationViewController() {
-        activeNavigationViewController?.dismiss(animated: true) {
-            self.activeNavigationViewController = nil
-        }
+    func dismissActiveNavigationViewController(animated: Bool = false) {
+        guard let activeNavigationViewController = activeNavigationViewController else { return }
+        
+        activeNavigationViewController.navigationView.bottomBannerContainerView.hide(duration: 1.0)
+        activeNavigationViewController.navigationView.topBannerContainerView.hide(duration: 1.0,
+                                                                                  animations: {
+            activeNavigationViewController.navigationView.wayNameView.alpha = 0.0
+            activeNavigationViewController.navigationView.floatingStackView.alpha = 0.0
+        },
+                                                                                  completion: { _ in
+            activeNavigationViewController.dismiss(animated: animated) {
+                self.activeNavigationViewController = nil
+            }
+        })
     }
 
     func navigationService(response: RouteResponse, routeIndex: Int, options: RouteOptions) -> NavigationService {
