@@ -12,7 +12,12 @@ open class DayStyle: Style {
         mapStyleURL = URL(string: StyleURI.navigationDay.rawValue)!
         previewMapStyleURL = mapStyleURL
         styleType = .day
-        statusBarStyle = .default
+        
+        if #available(iOS 13.0, *) {
+            statusBarStyle = .darkContent
+        } else {
+            statusBarStyle = .default
+        }
     }
     
     open override func apply() {
