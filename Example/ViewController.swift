@@ -611,10 +611,16 @@ class ViewController: UIViewController {
         }
     }
     
-    func dismissActiveNavigationViewController() {
-        activeNavigationViewController?.dismiss(animated: true) {
-            self.activeNavigationViewController = nil
-        }
+    func dismissActiveNavigationViewController(animated: Bool = false) {
+        guard let activeNavigationViewController = activeNavigationViewController else { return }
+        
+        activeNavigationViewController.navigationView.wayNameView.isHidden = true
+        activeNavigationViewController.navigationView.bottomBannerContainerView.hide(duration: 2.0)
+        activeNavigationViewController.navigationView.topBannerContainerView.hide(duration: 2.0, completion: { _ in
+            activeNavigationViewController.dismiss(animated: animated) {
+                self.activeNavigationViewController = nil
+            }
+        })
     }
 
     func navigationService(response: RouteResponse, routeIndex: Int, options: RouteOptions) -> NavigationService {
