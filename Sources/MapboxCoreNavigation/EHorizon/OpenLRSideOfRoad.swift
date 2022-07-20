@@ -27,7 +27,7 @@ public enum OpenLRSideOfRoad {
      */
     case both
 
-    init(_ native: MapboxNavigationNative.OpenLRSideOfRoad) {
+    init(_ native: MapboxNavigationNative.SideOfRoad) {
         switch native {
         case .onRoadOrUnknown:
             self = .unknown

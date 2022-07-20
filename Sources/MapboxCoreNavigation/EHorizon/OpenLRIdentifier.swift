@@ -22,7 +22,7 @@ public enum OpenLRIdentifier {
     case tpeg(reference: RoadObject.Identifier)
 }
 
-extension MapboxNavigationNative.OpenLRStandard {
+extension MapboxNavigationNative.Standard {
     init(identifier: OpenLRIdentifier) {
         switch identifier {
         case .tomTom(_):

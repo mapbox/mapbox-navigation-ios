@@ -23,7 +23,7 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func matchOpenLR(location: String, identifier: OpenLRIdentifier) {
-        let standard = MapboxNavigationNative.OpenLRStandard(identifier: identifier)
+        let standard = MapboxNavigationNative.Standard(identifier: identifier)
         let reference: RoadObject.Identifier
         switch identifier {
         case .tomTom(let ref):
