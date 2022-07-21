@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.7.0-alpha.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0-alpha.1). ([#3978](https://github.com/mapbox/mapbox-navigation-ios/pull/3978))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v108._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/108.0.0). ([#3978](https://github.com/mapbox/mapbox-navigation-ios/pull/3978))
+* MapboxNavigation now requires [MapboxMaps v10.7.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0-rc.1). ([#4012](https://github.com/mapbox/mapbox-navigation-ios/pull/4012))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v109._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/109.0.0). ([#4012](https://github.com/mapbox/mapbox-navigation-ios/pull/4012))
 
 ### Map
 
@@ -21,6 +21,10 @@
 
 * Added the `WayNameView.cornerRadius` property for customizing how the current road name is labeled. ([#4004](https://github.com/mapbox/mapbox-navigation-ios/pull/4004))
 * Reduced memory footprint while downloading road shield images. ([#4020](https://github.com/mapbox/mapbox-navigation-ios/pull/4020))
+
+### Location tracking
+
+* Fixed an issue where the user’s location continued to be snapped to a roadway even after the user’s course deviated significantly from that roadway, for example because the user was actually on a parallel road. ([#4012](https://github.com/mapbox/mapbox-navigation-ios/pull/4012))
 
 ### Other changes
 

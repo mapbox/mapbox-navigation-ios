@@ -26,7 +26,7 @@ public enum OpenLROrientation {
      */
     case both
 
-    init(_ native: MapboxNavigationNative.OpenLROrientation) {
+    init(_ native: MapboxNavigationNative.Orientation) {
         switch native {
         case .noOrientationOrUnknown:
             self = .unknown
