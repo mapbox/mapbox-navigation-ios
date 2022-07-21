@@ -238,13 +238,7 @@ open class NavigationView: UIView {
         
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
-        
-        NSLayoutConstraint.activate([
-            navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            navigationMapView.topAnchor.constraint(equalTo: topAnchor),
-            navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        navigationMapView.pinTo(parentView: self)
         
         resumeButton.isHidden = true
     }
