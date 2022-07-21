@@ -33,7 +33,14 @@ class SpriteRepository {
             completion()
             return
         }
-        updateSprite(styleURI: newStyleURI, completion: completion)
+        
+        spriteCache.clearMemory()
+        infoCache.clearMemory()
+        
+        // Update the styleURI just after the Sprite memory reset. When the connection is poor, the next round of style update
+        // or the representation update could use the correct ones.
+        self.styleURI = newStyleURI
+        updateSprite(completion: completion)
     }
 
     func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
@@ -41,7 +48,7 @@ class SpriteRepository {
 
         if getSpriteImage() == nil {
             dispatchGroup.enter()
-            updateSprite(styleURI: styleURI) {
+            updateSprite() {
                 dispatchGroup.leave()
             }
         }
@@ -56,13 +63,7 @@ class SpriteRepository {
         }
     }
     
-    func updateSprite(styleURI: StyleURI, completion: @escaping CompletionHandler) {
-        spriteCache.clearMemory()
-        infoCache.clearMemory()
-        
-        // Update the styleURI just after the Sprite memory reset. When the connection is poor, the next round of style update
-        // or the representation update could use the correct ones.
-        self.styleURI = styleURI
+    func updateSprite(completion: @escaping CompletionHandler) {
         guard let styleID = styleID,
               let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
               let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else {

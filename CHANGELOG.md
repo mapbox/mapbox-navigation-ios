@@ -20,6 +20,7 @@
 ### Banners and guidance instructions
 
 * Added the `WayNameView.cornerRadius` property for customizing how the current road name is labeled. ([#4004](https://github.com/mapbox/mapbox-navigation-ios/pull/4004))
+* Reduced memory footprint while downloading road shield images. ([#4020](https://github.com/mapbox/mapbox-navigation-ios/pull/4020))
 
 ### Other changes
 
