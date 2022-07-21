@@ -73,16 +73,9 @@ open class NavigationView: UIView {
             insertSubview(navigationMapView, at: 0)
             
             navigationMapView.isHidden = false
-            navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
             navigationMapView.delegate = delegate
-            
-            NSLayoutConstraint.activate([
-                navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                navigationMapView.topAnchor.constraint(equalTo: topAnchor),
-                navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
+            navigationMapView.pinTo(parentView: self)
         }
     }
     
@@ -159,7 +152,8 @@ open class NavigationView: UIView {
         return wayNameView
     }()
     
-    lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
+    // :nodoc:
+    public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
     // :nodoc:
     public lazy var topBannerContainerView: BannerContainerView = {
@@ -243,8 +237,14 @@ open class NavigationView: UIView {
         addSubviews(children)
         
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        navigationMapView.mapView.ornaments.compassView.isHidden = true
-        navigationMapView.mapView.ornaments.scaleBarView.isHidden = true
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+        
+        NSLayoutConstraint.activate([
+            navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            navigationMapView.topAnchor.constraint(equalTo: topAnchor),
+            navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
         
         resumeButton.isHidden = true
     }

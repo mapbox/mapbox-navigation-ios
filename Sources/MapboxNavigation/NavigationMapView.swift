@@ -12,6 +12,9 @@ import Turf
  */
 open class NavigationMapView: UIView {
     
+    // :nodoc:
+    public typealias AnimationCompletionHandler = (_ animatingPosition: UIViewAnimatingPosition) -> Void
+    
     // MARK: Traffic and Congestion Visualization
     
     /**
@@ -203,10 +206,15 @@ open class NavigationMapView: UIView {
      updated to fit all routes.
      - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
      zoom and pan the map.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once routes presentation completes.
      */
     public func showcase(_ routes: [Route],
                          routesPresentationStyle: RoutesPresentationStyle = .all(),
-                         animated: Bool = false) {
+                         animated: Bool = false,
+                         duration: TimeInterval = 1.0,
+                         completion: AnimationCompletionHandler? = nil) {
         guard let activeRoute = routes.first,
               let coordinates = activeRoute.shape?.coordinates,
               !coordinates.isEmpty else { return }
@@ -228,7 +236,9 @@ open class NavigationMapView: UIView {
         navigationCamera.stop()
         fitCamera(to: routes,
                   routesPresentationStyle: routesPresentationStyle,
-                  animated: animated)
+                  animated: animated,
+                  duration: duration,
+                  completion: completion)
     }
     
     /**
@@ -2146,7 +2156,8 @@ open class NavigationMapView: UIView {
     func fitCamera(to routes: [Route],
                    routesPresentationStyle: RoutesPresentationStyle = .all(),
                    animated: Bool = false,
-                   duration: TimeInterval = 1.0) {
+                   duration: TimeInterval = 1.0,
+                   completion: AnimationCompletionHandler? = nil) {
         let geometry: Geometry
         let customCameraOptions: MapboxMaps.CameraOptions?
         
@@ -2165,7 +2176,11 @@ open class NavigationMapView: UIView {
                                                          padding: customCameraOptions?.padding ?? edgeInsets,
                                                          bearing: bearing,
                                                          pitch: customCameraOptions?.pitch) {
-            mapView?.camera.ease(to: cameraOptions, duration: animated ? duration : 0.0)
+            mapView?.camera.ease(to: cameraOptions,
+                                 duration: animated ? duration : 0.0,
+                                 completion: { animatingPosition in
+                completion?(animatingPosition)
+            })
         }
     }
     
