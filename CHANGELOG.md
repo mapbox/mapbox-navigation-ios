@@ -32,6 +32,7 @@
 * Added `NavigationSettings.utilizeSensorData` toggle to allow navigator to use additional device sensors data for better positioning. ([#3973](https://github.com/mapbox/mapbox-navigation-ios/pull/3973))
 * Fixed the issue of restricted layer over the whole route after the removal of continuous alternative route with a small portion of restricted road class at start. ([#4009](https://github.com/mapbox/mapbox-navigation-ios/pull/4009))
 * Added `ResumeButton.borderWidth`, `ResumeButton.cornerRadius` and `ResumeButton.borderColor` properties that allow `ResumeButton`'s style modification. ([#3996](https://github.com/mapbox/mapbox-navigation-ios/pull/3996))
+* Fixed a crash when dismissing `NavigationViewController`. ([#4029](https://github.com/mapbox/mapbox-navigation-ios/pull/4029))
 
 ## v2.6.0
 
