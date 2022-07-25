@@ -138,7 +138,11 @@ extension NavigationMapView {
             }
         }
         
-        internal func locationUpdate(newLocation: Location) {
+        func locationUpdate(newLocation: Location) {
+            // Since `navigationViewData` is stored weakly in rare cases it might be deallocated before
+            // running current method. Such check prevents crash in such situations.
+            if navigationViewData == nil { return }
+            
             if routeLineTracksTraversal {
                 navigationMapView.travelAlongRouteLine(to: newLocation.coordinate)
             }
