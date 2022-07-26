@@ -397,7 +397,8 @@ extension InternalRouter where Self: Router {
         routeTask?.cancel()
         let options = progress.reroutingOptions(from: origin)
         
-        if isRerouting {
+        // https://github.com/mapbox/mapbox-navigation-ios/issues/3966
+        if isRerouting && (options.profileIdentifier == .automobile || options.profileIdentifier == .automobileAvoidingTraffic) {
             options.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius * origin.speed
         }
         
