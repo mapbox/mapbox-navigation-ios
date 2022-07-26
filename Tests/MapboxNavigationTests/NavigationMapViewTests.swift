@@ -597,4 +597,38 @@ class NavigationMapViewTests: TestCase {
         
         navigationMapView.removeRoutes()
     }
+    
+    func testAddedLayerPosition() {
+        let multilegRoute = Fixture.route(from: "multileg-route", options: routeOptions)
+        
+        navigationMapView.show([multilegRoute])
+        navigationMapView.showWaypoints(on: multilegRoute)
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 1)
+        
+        var allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        guard let indexOfMainRouteLayer = allLayerIds.firstIndex(of: multilegRoute.identifier(.route(isMainRoute: true))),
+              let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
+              let indexOfWaypointCircle = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.waypointCircleLayer) else {
+                  XCTFail("Failed to find all the layers")
+                  return
+              }
+        XCTAssert(indexOfMainRouteLayer < indexOfArrowStrokeLayer, "Arrow stroke layer should be above main route layer")
+        XCTAssert(indexOfArrowStrokeLayer < indexOfWaypointCircle, "Waypoint circle layer should be arrow stroke layer")
+        
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
+        navigationMapView.show([multilegRoute])
+        navigationMapView.showsRestrictedAreasOnRoute = true
+        
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        guard let indexOfMainRouteLayer = allLayerIds.firstIndex(of: multilegRoute.identifier(.route(isMainRoute: true))),
+              let indexOfRestrictedAreas = allLayerIds.firstIndex(of: multilegRoute.identifier(.restrictedRouteAreaRoute)),
+              let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
+              let indexOfWaypointCircle = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.waypointCircleLayer) else {
+                  XCTFail("Failed to find all the layers")
+                  return
+              }
+        XCTAssert(indexOfMainRouteLayer < indexOfRestrictedAreas, "Restricted area layer should be above main route layer")
+        XCTAssert(indexOfRestrictedAreas < indexOfArrowStrokeLayer, "Arrow stroke layer should be above restricted area layer")
+        XCTAssert(indexOfArrowStrokeLayer < indexOfWaypointCircle, "Waypoint circle layer should be arrow stroke layer")
+    }
 }

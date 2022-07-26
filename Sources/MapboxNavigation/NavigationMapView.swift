@@ -432,7 +432,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if let puckLayer = puckLayerIdentifier {
+                    if let puckLayer = puckLayerIdentifier, mapView.mapboxMap.style.layerExists(withId: puckLayer) {
                         try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(puckLayer))
                     } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
                         try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
@@ -459,7 +459,8 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
                     
-                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
+                    let arrowStrokeLayerPosition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -1355,7 +1356,7 @@ open class NavigationMapView: UIView {
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
                     var layerPosition: MapboxMaps.LayerPosition? = nil
-                    if let puckLayer = puckLayerIdentifier {
+                    if let puckLayer = puckLayerIdentifier, mapView.mapboxMap.style.layerExists(withId: puckLayer) {
                         layerPosition = .below(puckLayer)
                     } else if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
                         layerPosition = .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer)
