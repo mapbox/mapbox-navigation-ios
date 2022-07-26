@@ -175,50 +175,93 @@ extension MapView {
         return datasets
     }
     
-    func mainRoutelayerPosition(for identifier: String, route: Route, customLayerPosition: LayerPosition? = nil) -> LayerPosition? {
+    func layerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: LayerPosition? = nil) -> LayerPosition? {
         guard customLayerPosition == nil else { return customLayerPosition }
         
-        let layerSequence: [String] = [
-            route.identifier(.route(isMainRoute: true)),
-            route.identifier(.restrictedRouteAreaRoute),
+        let belowSymbolLayers: [String] = [
+            route?.identifier(.routeCasing(isMainRoute: false)),
+            route?.identifier(.route(isMainRoute: false)),
+            route?.identifier(.routeCasing(isMainRoute: true)),
+            route?.identifier(.route(isMainRoute: true)),
+            route?.identifier(.restrictedRouteAreaRoute),
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
-            NavigationMapView.LayerIdentifier.waypointCircleLayer
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer
+        ].compactMap{ $0 }
+        let aboveSymbolLayers: [String] = [
+            NavigationMapView.LayerIdentifier.buildingExtrusionLayer,
+            NavigationMapView.LayerIdentifier.waypointCircleLayer,
+            NavigationMapView.LayerIdentifier.waypointSymbolLayer,
+            NavigationMapView.LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer,
+            NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer,
+            NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer,
+            NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer,
+            NavigationMapView.LayerIdentifier.puck2DLayer,
+            NavigationMapView.LayerIdentifier.puck3DLayer
         ]
+        let belowSymbol = !aboveSymbolLayers.contains(layerIdentifier)
+        let allAddedLayers: [String] = belowSymbolLayers + aboveSymbolLayers
         
         var layerPosition: MapboxMaps.LayerPosition? = nil
-        var lowerLayers = ArraySlice<String>()
-        var upperLayers = ArraySlice<String>()
-        var foundUpmostNonSymbolLayer: Bool = false
-        var upmostNonSymbolLayer: String? = nil
+        var lowerLayers = Set<String>()
+        var upperLayers = Set<String>()
+        var foundLayer: Bool = false
+        var targetLayer: String? = nil
         
-        if let indice = layerSequence.firstIndex(of: identifier) {
-            lowerLayers = layerSequence.prefix(upTo: indice)
-            if layerSequence.indices.contains(indice + 1) {
-                upperLayers = layerSequence.suffix(from: indice + 1)
+        if let indice = allAddedLayers.firstIndex(of: layerIdentifier) {
+            lowerLayers = Set(allAddedLayers.prefix(upTo: indice))
+            if allAddedLayers.indices.contains(indice + 1) {
+                upperLayers = Set(allAddedLayers.suffix(from: indice + 1))
             }
         }
         
         for layerInfo in mapboxMap.style.allLayerIdentifiers.reversed() {
             if lowerLayers.contains(layerInfo.id) {
+                // find the topmost layer that should be below the layerIdentifier.
                 layerPosition = .above(layerInfo.id)
                 break
             } else if upperLayers.contains(layerInfo.id) {
+                // find the bottommost layer that should be above the layerIdentifier.
                 layerPosition = .below(layerInfo.id)
-            } else if !foundUpmostNonSymbolLayer,
-                      layerInfo.type.rawValue != "symbol",
-                      let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
-                      !sourceLayer.isEmpty {
-                upmostNonSymbolLayer = layerInfo.id
-                foundUpmostNonSymbolLayer = true
+            } else if belowSymbol {
+                // find the topmost non symbol layer for identifier in belowSymbolLayers.
+                if !foundLayer,
+                   layerInfo.type.rawValue != "symbol",
+                   let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
+                   !sourceLayer.isEmpty {
+                    targetLayer = layerInfo.id
+                    foundLayer = true
+                }
+            } else {
+                // find the topmost symbol layer for identifier in aboveSymbolLayers.
+                if !foundLayer,
+                   layerInfo.type.rawValue == "symbol",
+                   let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
+                   !sourceLayer.isEmpty {
+                    targetLayer = layerInfo.id
+                    foundLayer = true
+                }
             }
         }
         
-        if layerPosition != nil {
-            return layerPosition
-        } else if let upmostNonSymbolLayer = upmostNonSymbolLayer {
-            return .above(upmostNonSymbolLayer)
+        guard let targetLayer = targetLayer else { return layerPosition }
+        guard let layerPosition = layerPosition else { return .above(targetLayer) }
+        
+        if belowSymbol {
+            // for route line and arrow layers
+            if case let .below(sequenceLayer) = layerPosition, aboveSymbolLayers.contains(sequenceLayer) {
+                return .above(targetLayer)
+            } else {
+                return layerPosition
+            }
         } else {
-            return nil
+            // for other layers
+            if case let .above(sequenceLayer) = layerPosition, belowSymbolLayers.contains(sequenceLayer) {
+                return .above(targetLayer)
+            } else {
+                return layerPosition
+            }
         }
     }
     

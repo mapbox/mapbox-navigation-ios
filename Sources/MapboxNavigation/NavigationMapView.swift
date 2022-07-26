@@ -409,8 +409,6 @@ open class NavigationMapView: UIView {
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
             if shaftPolyline.coordinates.count > 1 {
-                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
-                let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
                 let minimumZoomLevel: Double = 14.5
                 let shaftStrokeCoordinates = shaftPolyline.coordinates
                 let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
@@ -432,13 +430,8 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if let puckLayer = puckLayerIdentifier, mapView.mapboxMap.style.layerExists(withId: puckLayer) {
-                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(puckLayer))
-                    } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
-                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
-                    } else {
-                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer)
-                    }
+                    let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
                 }
                 
                 var arrowStrokeSource = GeoJSONSource()
@@ -459,8 +452,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
                     
-                    let arrowStrokeLayerPosition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
-                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -502,13 +494,10 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
-                        try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
-                    } else {
-                        try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer)
-                    }
+                    let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
-                                                         layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                                                                   layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
             }
         } catch {
@@ -618,7 +607,7 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                let layerPosition = mapView.mainRoutelayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                let layerPosition = mapView.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
@@ -713,7 +702,7 @@ open class NavigationMapView: UIView {
                 if let belowLayerIdentifier = parentLayerIndentifier {
                     layerPosition = .below(belowLayerIdentifier)
                 } else {
-                    layerPosition = mapView.mainRoutelayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                    layerPosition = mapView.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -787,6 +776,8 @@ open class NavigationMapView: UIView {
                 var layerPosition: MapboxMaps.LayerPosition? = nil
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
+                } else {
+                    layerPosition = mapView.layerPosition(for: layerIdentifier, route: route)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -1355,12 +1346,7 @@ open class NavigationMapView: UIView {
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
-                    var layerPosition: MapboxMaps.LayerPosition? = nil
-                    if let puckLayer = puckLayerIdentifier, mapView.mapboxMap.style.layerExists(withId: puckLayer) {
-                        layerPosition = .below(puckLayer)
-                    } else if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
-                        layerPosition = .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer)
-                    }
+                    let layerPosition = mapView.layerPosition(for: waypointCircleLayerIdentifier, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
@@ -1368,7 +1354,7 @@ open class NavigationMapView: UIView {
                                                                    waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
                     
-                    try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
+                    try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(waypointCircleLayerIdentifier))
                 }
             } catch {
                 Log.error("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).",
@@ -1533,7 +1519,8 @@ open class NavigationMapView: UIView {
         shapeLayer.iconOffset = .expression(offsetExpression)
         shapeLayer.textOffset = .expression(offsetExpression)
         
-        try style.addPersistentLayer(shapeLayer)
+        let layerPosition = mapView.layerPosition(for: layerIdentifier)
+        try style.addPersistentLayer(shapeLayer, layerPosition: layerPosition)
     }
     
     /**
@@ -1748,14 +1735,15 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
-                try mapView.mapboxMap.style.addPersistentLayer(symbolLayer)
+                let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
+                try mapView.mapboxMap.style.addPersistentLayer(symbolLayer, layerPosition: layerPosition)
                 
                 var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
                 circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
                 circleLayer.circleRadius = .constant(5)
                 circleLayer.circleOpacity = .constant(0.75)
                 circleLayer.circleColor = .constant(.init(.white))
-                try mapView.mapboxMap.style.addPersistentLayer(circleLayer)
+                try mapView.mapboxMap.style.addPersistentLayer(circleLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer))
             }
         } catch {
             Log.error("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).",
