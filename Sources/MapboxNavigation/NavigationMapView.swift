@@ -285,7 +285,8 @@ open class NavigationMapView: UIView {
                 }
                 
                 if showsRestrictedAreasOnRoute {
-                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route)
+                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
+                                                                        customLayerPosition: layerPosition)
                 }
                 
                 pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
@@ -431,7 +432,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                    if let puckLayer = puckLayerIdentifier {
                         try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(puckLayer))
                     } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
                         try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
@@ -458,8 +459,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
                     
-                    let arrowStrokeLayerPosition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
-                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -560,7 +560,8 @@ open class NavigationMapView: UIView {
         pendingCoordinateForRouteLine = nil
     }
     
-    @discardableResult func addRouteRestrictedAreaLayer(_ route: Route) -> String? {
+    @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
+                                                        customLayerPosition: MapboxMaps.LayerPosition? = nil ) -> String? {
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
         let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
         
@@ -616,17 +617,7 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                var layerPosition: MapboxMaps.LayerPosition? = nil
-                
-                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
-                if allLayerIds.contains(NavigationMapView.LayerIdentifier.arrowStrokeLayer) {
-                    layerPosition = .below(NavigationMapView.LayerIdentifier.arrowStrokeLayer)
-                } else if allLayerIds.contains(NavigationMapView.LayerIdentifier.waypointCircleLayer) {
-                    layerPosition = .below(NavigationMapView.LayerIdentifier.waypointCircleLayer)
-                } else if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
-                    layerPosition = .below(puckLayer)
-                }
-                
+                let layerPosition = mapView.mainRoutelayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
@@ -718,20 +709,10 @@ open class NavigationMapView: UIView {
                 // In case if custom layer position was set - use it, otherwise in case if the route
                 // is the main one place it above `MapView.mainRouteLineParentLayerIdentifier`. All
                 // other alternative routes will be placed below it.
-                if let customLayerPosition = customLayerPosition {
-                    layerPosition = customLayerPosition
+                if let belowLayerIdentifier = parentLayerIndentifier {
+                    layerPosition = .below(belowLayerIdentifier)
                 } else {
-                    if isMainRoute {
-                        if showsRestrictedAreasOnRoute, let belowLayerIdentifier = parentLayerIndentifier {
-                            layerPosition = .below(belowLayerIdentifier)
-                        } else if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
-                            layerPosition = .above(aboveLayerIdentifier)
-                        }
-                    } else {
-                        if let belowLayerIdentifier = parentLayerIndentifier {
-                            layerPosition = .below(belowLayerIdentifier)
-                        }
-                    }
+                    layerPosition = mapView.mainRoutelayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -1373,12 +1354,13 @@ open class NavigationMapView: UIView {
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
-                    if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
-                        try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
-                    } else {
-                        let layerIdentifier = route.identifier(.route(isMainRoute: true))
-                        try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(layerIdentifier))
+                    var layerPosition: MapboxMaps.LayerPosition? = nil
+                    if let puckLayer = puckLayerIdentifier {
+                        layerPosition = .below(puckLayer)
+                    } else if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
+                        layerPosition = .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer)
                     }
+                    try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
                     let symbolsLayer = delegate?.navigationMapView(self,

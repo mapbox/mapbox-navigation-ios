@@ -174,33 +174,52 @@ extension MapView {
         
         return datasets
     }
-
-    var mainRouteLineParentLayerIdentifier: String? {
-        var parentLayer: String? = nil
-        let identifiers = [
-            NavigationMapView.LayerIdentifier.arrowLayer,
-            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+    
+    func mainRoutelayerPosition(for identifier: String, route: Route, customLayerPosition: LayerPosition? = nil) -> LayerPosition? {
+        guard customLayerPosition == nil else { return customLayerPosition }
+        
+        let layerSequence: [String] = [
+            route.identifier(.route(isMainRoute: true)),
+            route.identifier(.restrictedRouteAreaRoute),
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
-            NavigationMapView.LayerIdentifier.waypointCircleLayer,
-            NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+            NavigationMapView.LayerIdentifier.waypointCircleLayer
         ]
         
-        for layer in mapboxMap.style.allLayerIdentifiers.reversed() {
-            if !(layer.type.rawValue == "symbol") && !identifiers.contains(layer.id) {
-                let sourceLayer = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer").value as? String
-                
-                if let sourceLayer = sourceLayer,
-                   sourceLayer.isEmpty {
-                    continue
-                }
-                
-                parentLayer = layer.id
-                break
+        var layerPosition: MapboxMaps.LayerPosition? = nil
+        var lowerLayers = ArraySlice<String>()
+        var upperLayers = ArraySlice<String>()
+        var foundUpmostNonSymbolLayer: Bool = false
+        var upmostNonSymbolLayer: String? = nil
+        
+        if let indice = layerSequence.firstIndex(of: identifier) {
+            lowerLayers = layerSequence.prefix(upTo: indice)
+            if layerSequence.indices.contains(indice + 1) {
+                upperLayers = layerSequence.suffix(from: indice + 1)
             }
         }
         
-        return parentLayer
+        for layerInfo in mapboxMap.style.allLayerIdentifiers.reversed() {
+            if lowerLayers.contains(layerInfo.id) {
+                layerPosition = .above(layerInfo.id)
+                break
+            } else if upperLayers.contains(layerInfo.id) {
+                layerPosition = .below(layerInfo.id)
+            } else if !foundUpmostNonSymbolLayer,
+                      layerInfo.type.rawValue != "symbol",
+                      let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
+                      !sourceLayer.isEmpty {
+                upmostNonSymbolLayer = layerInfo.id
+                foundUpmostNonSymbolLayer = true
+            }
+        }
+        
+        if layerPosition != nil {
+            return layerPosition
+        } else if let upmostNonSymbolLayer = upmostNonSymbolLayer {
+            return .above(upmostNonSymbolLayer)
+        } else {
+            return nil
+        }
     }
     
     /**
