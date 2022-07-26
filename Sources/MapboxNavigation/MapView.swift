@@ -225,7 +225,7 @@ extension MapView {
                 // find the bottommost layer that should be above the layerIdentifier.
                 layerPosition = .below(layerInfo.id)
             } else if belowSymbol {
-                // find the topmost non symbol layer for identifier in belowSymbolLayers.
+                // find the topmost non symbol layer for layerIdentifier in belowSymbolLayers.
                 if !foundLayer,
                    layerInfo.type.rawValue != "symbol",
                    let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
@@ -234,9 +234,8 @@ extension MapView {
                     foundLayer = true
                 }
             } else {
-                // find the topmost symbol layer for identifier in aboveSymbolLayers.
+                // find the topmost layer for layerIdentifier in aboveSymbolLayers.
                 if !foundLayer,
-                   layerInfo.type.rawValue == "symbol",
                    let sourceLayer = mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
