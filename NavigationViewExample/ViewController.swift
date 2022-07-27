@@ -37,9 +37,14 @@ class ViewController: UIViewController {
                                                                         routeOptions: self.navigationRouteOptions,
                                                                         navigationOptions: navigationOptions)
                 navigationViewController.modalPresentationStyle = .fullScreen
-                navigationViewController.transitioningDelegate = self
                 navigationViewController.delegate = self
                 
+                // `ViewController` should assign `transitioningDelegate` to `self` for
+                // `PresentationAnimator` and `DismissalAnimator` to work correctly.
+                navigationViewController.transitioningDelegate = self
+                
+                // `NavigationViewController` should be presented with animation for
+                // `PresentationAnimator` to work correctly.
                 self.present(navigationViewController, animated: true)
             }
         }
@@ -83,11 +88,11 @@ class ViewController: UIViewController {
                                                                         viewportDataSourceType: .raw)
         navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
         navigationView.navigationMapView.navigationCamera.follow()
-        
         navigationView.navigationMapView.delegate = self
         
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-        navigationView.navigationMapView.addGestureRecognizer(gesture)
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self,
+                                                                      action: #selector(handleLongPress(_:)))
+        navigationView.navigationMapView.addGestureRecognizer(longPressGestureRecognizer)
     }
     
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -143,6 +148,8 @@ extension ViewController: NavigationViewControllerDelegate {
 
     public func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController,
                                                    byCanceling canceled: Bool) {
+        // `NavigationViewController` should be dismissed with animation for
+        // `DismissalAnimator` to work correctly.
         navigationViewController.dismiss(animated: true)
     }
 }
