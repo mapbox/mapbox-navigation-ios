@@ -49,9 +49,8 @@ extension BuildingHighlighting {
         
         // In case if not all buildings were found and user is within allowed destination
         // threshold - attempt to highlight buildings based on destination coordinate.
-        let destination = progress.currentLeg.destination
         if !buildingWasFound, passedApproachingDestinationThreshold,
-           let currentLegWaypoint = destination?.targetCoordinate ?? destination?.coordinate {
+           let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
             navigationMapView.highlightBuildings(at: [currentLegWaypoint],
                                                  in3D: waypointStyle == .extrudedBuilding ? true : false,
                                                  completion: { found in
