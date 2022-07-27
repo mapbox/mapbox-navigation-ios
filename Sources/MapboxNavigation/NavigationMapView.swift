@@ -140,20 +140,6 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
-    /**
-     Layer identifier for userLocationStyle that is used to track the layer position.
-     */
-    var puckLayerIdentifier: String? {
-        switch userLocationStyle {
-        case .puck2D(configuration: _):
-            return NavigationMapView.LayerIdentifier.puck2DLayer
-        case .puck3D(configuration: _):
-            return NavigationMapView.LayerIdentifier.puck3DLayer
-        default:
-            return nil
-        }
-    }
-    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
