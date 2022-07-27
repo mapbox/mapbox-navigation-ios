@@ -66,20 +66,25 @@ open class NavigationView: UIView {
         navigationMapView.delegate = delegate
     }
     
-    var tileStoreLocation: TileStoreConfiguration.Location? = .default
-    private var _navigationMapView: NavigationMapView? = nil
-    lazy var navigationMapView: NavigationMapView = {
-        _navigationMapView?.frame = bounds
-        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
-        navigationMapView.isHidden = false
-        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
-        
-        navigationMapView.delegate = delegate
-        navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
-                                                                                             viewportDataSourceType: .active)
-        
-        return navigationMapView
-    }()
+    // :nodoc:
+    public var navigationMapView: NavigationMapView {
+        didSet {
+            oldValue.removeFromSuperview()
+            insertSubview(navigationMapView, at: 0)
+            
+            navigationMapView.isHidden = false
+            navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+            navigationMapView.delegate = delegate
+            navigationMapView.pinTo(parentView: self)
+            
+            // FIXME: Provide a reliable way of notifying dependants (e.g. `CameraController`,
+            // `ArrivalController` might need to re-subscribe to notifications that are sent from
+            // injected `NavigationMapView` instance).
+            if oldValue != navigationMapView {
+                delegate?.navigationView(self, didReplace: navigationMapView)
+            }
+        }
+    }
     
     // MARK: End of Route UI
     
@@ -130,7 +135,8 @@ open class NavigationView: UIView {
         }
     }
     
-    var floatingButtons: [UIButton]? {
+    // :nodoc:
+    public var floatingButtons: [UIButton]? {
         didSet {
             clearStackViews()
             setupStackViews()
@@ -153,7 +159,8 @@ open class NavigationView: UIView {
         return wayNameView
     }()
     
-    lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
+    // :nodoc:
+    public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
     // :nodoc:
     public lazy var topBannerContainerView: BannerContainerView = {
@@ -185,7 +192,26 @@ open class NavigationView: UIView {
     
     // MARK: Initialization methods
     
-    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
+    // :nodoc:
+    public init(frame: CGRect,
+                tileStoreLocation: TileStoreConfiguration.Location? = .default,
+                navigationMapView: NavigationMapView? = nil) {
+        self.navigationMapView = navigationMapView ?? NavigationMapView(frame: frame, tileStoreLocation: tileStoreLocation)
+        
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder decoder: NSCoder) {
+        navigationMapView = NavigationMapView(frame: .zero)
+        super.init(coder: decoder)
+        commonInit()
+    }
+    
+    convenience init(delegate: NavigationViewDelegate,
+                     frame: CGRect = .zero,
+                     tileStoreLocation: TileStoreConfiguration.Location? = .default,
+                     navigationMapView: NavigationMapView? = nil) {
         self.init(frame: frame, tileStoreLocation: tileStoreLocation, navigationMapView: navigationMapView)
         self.delegate = delegate
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
@@ -197,20 +223,8 @@ open class NavigationView: UIView {
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
     
-    // TODO: Refine public APIs, which are exposed by `NavigationView`.
-    public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
-        self.tileStoreLocation = tileStoreLocation
-        self._navigationMapView = navigationMapView
-        super.init(frame: frame)
-        commonInit()
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
     func commonInit() {
+        DayStyle().apply()
         floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
@@ -228,6 +242,12 @@ open class NavigationView: UIView {
         ]
         
         addSubviews(children)
+        
+        navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+        navigationMapView.pinTo(parentView: self)
+        
+        resumeButton.isHidden = true
     }
     
     open override func prepareForInterfaceBuilder() {
