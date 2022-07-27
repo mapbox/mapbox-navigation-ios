@@ -26,10 +26,17 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                                                                          completion: { _ in
             transitionContext.containerView.addSubview(toViewController.view)
             
+            // `NavigationMapView` should be transfered back from `NavigationViewController` to `ViewController`.
             toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
             
+            // To receive gesture events delegate should be re-assigned back to `ViewController`.
+            toViewController.navigationView.navigationMapView.delegate = toViewController
+            
+            // Use default puck style.
             toViewController.navigationView.navigationMapView.userLocationStyle = .puck2D()
             
+            // Show routes that were originally requested and remove the ones that were added during
+            // active navigation (along with waypoints, continuous alternatives, route durations etc).
             if let routes = toViewController.routes {
                 let cameraOptions = CameraOptions(bearing: 0.0, pitch: 0.0)
                 toViewController.navigationView.navigationMapView.showcase(routes,

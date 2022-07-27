@@ -14,9 +14,11 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     private var navigationMapView: NavigationMapView {
         return navigationViewData.navigationView.navigationMapView
     }
+    
     private var router: Router {
         navigationViewData.router
     }
+    
     private var topBannerContainerView: BannerContainerView {
         return navigationViewData.navigationView.topBannerContainerView
     }
@@ -29,10 +31,9 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     
     init(_ navigationViewData: NavigationViewData) {
         self.navigationViewData = navigationViewData
-        
     }
     
-    private func resumeNotifications() {
+    func resumeNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(orientationDidChange(_:)),
                                                name: UIDevice.orientationDidChangeNotification,
@@ -43,7 +44,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                                                object: navigationMapView.navigationCamera)
     }
 
-    private func suspendNotifications() {
+    func suspendNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: UIDevice.orientationDidChangeNotification,
                                                   object: nil)

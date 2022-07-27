@@ -741,9 +741,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 }
 
+// MARK: - NavigationViewDelegate methods
+
 extension NavigationViewController: NavigationViewDelegate {
-    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
+    
+    func navigationView(_ view: NavigationView, didTap cancelButton: CancelButton) {
         handleCancelAction()
+    }
+    
+    func navigationView(_ navigationView: NavigationView, didReplace navigationMapView: NavigationMapView) {
+        cameraController?.navigationViewData.navigationView.navigationMapView = navigationMapView
+        
+        // `CameraController` is subscribing for a certain changes in `NavigationMapView`.
+        // In case if `NavigationMapView` is injected re-subscription should be performed.
+        cameraController?.suspendNotifications()
+        cameraController?.resumeNotifications()
     }
 }
 

@@ -76,6 +76,13 @@ open class NavigationView: UIView {
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
             navigationMapView.delegate = delegate
             navigationMapView.pinTo(parentView: self)
+            
+            // FIXME: Provide a reliable way of notifying dependants (e.g. `CameraController`,
+            // `ArrivalController` might need to re-subscribe to notifications that are sent from
+            // injected `NavigationMapView` instance).
+            if oldValue != navigationMapView {
+                delegate?.navigationView(self, didReplace: navigationMapView)
+            }
         }
     }
     
