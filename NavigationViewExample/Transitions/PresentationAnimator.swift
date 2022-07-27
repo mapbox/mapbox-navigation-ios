@@ -15,7 +15,7 @@ class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         }
         
         // Replace already exisiting `NavigationMapView` from `NavigationViewController` with `NavigationMapView`
-        // that was used in `PreviewViewController`.
+        // that was used in `ViewController`.
         toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
         
         // Switch navigation camera to active navigation mode.
