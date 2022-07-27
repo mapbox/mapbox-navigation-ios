@@ -30,10 +30,13 @@ extension NavigationMapView {
             .filter({ $0.contains("building") })
         let layerPosition = identifiers.last.map { LayerPosition.above($0) }
         
-        coordinates.forEach { coordinate in
-            group.enter()
-            
+        for coordinate in coordinates {
             let screenCoordinate = mapView.mapboxMap.point(for: coordinate)
+            if screenCoordinate == CGPoint(x: -1.0, y: -1.0) {
+                continue
+            }
+            
+            group.enter()
             let options = RenderedQueryOptions(layerIds: identifiers, filter: nil)
             
             mapView.mapboxMap.queryRenderedFeatures(with: screenCoordinate,
