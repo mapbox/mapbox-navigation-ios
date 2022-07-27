@@ -896,6 +896,11 @@ open class NavigationMapView: UIView {
      */
     var mostRecentUserCourseViewLocation: CLLocation?
     
+    /**
+     The coordinates and corresponding identifiers for highlight buildings.
+     */
+    var highlightBuildings = [CLLocationCoordinate2D: Int64]()
+    
     func setupUserLocation() {
         if !isAuthorized() { return }
         

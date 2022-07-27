@@ -529,17 +529,6 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate, Style
     }
 }
 
-extension CLLocationCoordinate2D: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(latitude)
-        hasher.combine(longitude)
-    }
-    
-    static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
-    }
-}
-
 extension NavigationViewControllerTests {
     fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
         return CLLocation(coordinate: coordinate,

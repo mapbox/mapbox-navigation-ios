@@ -23,17 +23,17 @@ extension NavigationMapView {
                                    in3D extrudesBuildings: Bool = true,
                                    extrudeAll: Bool = false,
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
-        var foundBuildingIds = Set<Int64>()
+        highlightBuildings = highlightBuildings.filter{ coordinates.contains($0.key) }
         let group = DispatchGroup()
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
             .filter({ $0.contains("building") })
         let layerPosition = identifiers.last.map { LayerPosition.above($0) }
         
-        coordinates.forEach {
+        coordinates.forEach { coordinate in
             group.enter()
             
-            let screenCoordinate = mapView.mapboxMap.point(for: $0)
+            let screenCoordinate = mapView.mapboxMap.point(for: coordinate)
             let options = RenderedQueryOptions(layerIds: identifiers, filter: nil)
             
             mapView.mapboxMap.queryRenderedFeatures(with: screenCoordinate,
@@ -43,22 +43,23 @@ extension NavigationMapView {
                     group.leave()
                 }
                 
-                guard let _ = self else { return }
+                guard let self = self else { return }
                 
                 if case .success(let queriedFeatures) = result {
                     if let identifier = queriedFeatures.first?.feature.featureIdentifier {
-                        foundBuildingIds.insert(identifier)
+                        self.highlightBuildings[coordinate] = identifier
                     }
                 }
             })
         }
 
-        group.notify(queue: DispatchQueue.main) {
-            self.addBuildingsLayer(with: foundBuildingIds,
+        group.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let self = self else { return }
+            self.addBuildingsLayer(with: Set(self.highlightBuildings.values),
                                    in3D: extrudesBuildings,
                                    extrudeAll: extrudeAll,
                                    layerPosition: layerPosition)
-            completion?(foundBuildingIds.count == coordinates.count)
+            completion?(self.highlightBuildings.keys.count == coordinates.count)
         }
     }
     
@@ -66,6 +67,7 @@ extension NavigationMapView {
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:completion:)`.
      */
     public func unhighlightBuildings() {
+        highlightBuildings.removeAll()
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
