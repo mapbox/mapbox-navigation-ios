@@ -92,18 +92,15 @@ extension NavigationMapView {
             highlightedBuildingsLayer.source = "composite"
             highlightedBuildingsLayer.sourceLayer = "building"
             
-            let extrudeExpression: Expression = Exp(.eq) {
-                Exp(.get) {
-                    "extrude"
-                }
-                "true"
-            }
-            
             if extrudeAll {
-                highlightedBuildingsLayer.filter = extrudeExpression
+                highlightedBuildingsLayer.filter = Exp(.eq) {
+                    Exp(.get) {
+                        "extrude"
+                    }
+                    "true"
+                }
             } else {
                 highlightedBuildingsLayer.filter = Exp(.all) {
-                    extrudeExpression
                     Exp(.inExpression) {
                         Exp(.id)
                         Exp(.literal) {
