@@ -416,7 +416,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
+                    let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
                 }
                 
@@ -480,7 +480,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
+                    let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                                    layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
@@ -593,7 +593,7 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                let layerPosition = mapView.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                let layerPosition = addLayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
@@ -688,7 +688,7 @@ open class NavigationMapView: UIView {
                 if let belowLayerIdentifier = parentLayerIndentifier {
                     layerPosition = .below(belowLayerIdentifier)
                 } else {
-                    layerPosition = mapView.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                    layerPosition = addLayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -763,7 +763,7 @@ open class NavigationMapView: UIView {
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
                 } else {
-                    layerPosition = mapView.layerPosition(for: layerIdentifier, route: route)
+                    layerPosition = addLayerPosition(for: layerIdentifier, route: route)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -1332,7 +1332,7 @@ open class NavigationMapView: UIView {
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
-                    let layerPosition = mapView.layerPosition(for: waypointCircleLayerIdentifier, route: route)
+                    let layerPosition = addLayerPosition(for: waypointCircleLayerIdentifier, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
@@ -1505,7 +1505,7 @@ open class NavigationMapView: UIView {
         shapeLayer.iconOffset = .expression(offsetExpression)
         shapeLayer.textOffset = .expression(offsetExpression)
         
-        let layerPosition = mapView.layerPosition(for: layerIdentifier)
+        let layerPosition = addLayerPosition(for: layerIdentifier)
         try style.addPersistentLayer(shapeLayer, layerPosition: layerPosition)
     }
     
@@ -1721,7 +1721,7 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
-                let layerPosition = mapView.layerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
+                let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
                 try mapView.mapboxMap.style.addPersistentLayer(symbolLayer, layerPosition: layerPosition)
                 
                 var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
@@ -1734,6 +1734,97 @@ open class NavigationMapView: UIView {
         } catch {
             Log.error("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).",
                       category: .navigationUI)
+        }
+    }
+    
+    func addLayerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {
+        guard customLayerPosition == nil else { return customLayerPosition }
+        
+        let belowSymbolLayers: [String] = [
+            route?.identifier(.routeCasing(isMainRoute: false)),
+            route?.identifier(.route(isMainRoute: false)),
+            route?.identifier(.routeCasing(isMainRoute: true)),
+            route?.identifier(.route(isMainRoute: true)),
+            route?.identifier(.restrictedRouteAreaRoute),
+            LayerIdentifier.arrowStrokeLayer,
+            LayerIdentifier.arrowLayer,
+            LayerIdentifier.arrowSymbolCasingLayer,
+            LayerIdentifier.arrowSymbolLayer,
+            LayerIdentifier.buildingExtrusionLayer
+        ].compactMap{ $0 }
+        let aboveSymbolLayers: [String] = [
+            LayerIdentifier.waypointCircleLayer,
+            LayerIdentifier.waypointSymbolLayer,
+            LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer,
+            LayerIdentifier.routeDurationAnnotationsLayer,
+            LayerIdentifier.voiceInstructionLabelLayer,
+            LayerIdentifier.voiceInstructionCircleLayer,
+            LayerIdentifier.puck2DLayer,
+            LayerIdentifier.puck3DLayer
+        ]
+        let belowSymbol = !aboveSymbolLayers.contains(layerIdentifier)
+        let allAddedLayers: [String] = belowSymbolLayers + aboveSymbolLayers
+        
+        var layerPosition: MapboxMaps.LayerPosition? = nil
+        var lowerLayers = Set<String>()
+        var upperLayers = Set<String>()
+        var targetLayer: String? = nil
+        
+        if let index = allAddedLayers.firstIndex(of: layerIdentifier) {
+            lowerLayers = Set(allAddedLayers.prefix(upTo: index))
+            if allAddedLayers.indices.contains(index + 1) {
+                upperLayers = Set(allAddedLayers.suffix(from: index + 1))
+            }
+        }
+        
+        for layerInfo in mapView.mapboxMap.style.allLayerIdentifiers.reversed() {
+            if lowerLayers.contains(layerInfo.id) {
+                // find the topmost layer that should be below the layerIdentifier.
+                layerPosition = .above(layerInfo.id)
+                break
+            } else if upperLayers.contains(layerInfo.id) {
+                // find the bottommost layer that should be above the layerIdentifier.
+                layerPosition = .below(layerInfo.id)
+            } else if belowSymbol {
+                // find the topmost non symbol layer for layerIdentifier in belowSymbolLayers.
+                if targetLayer == nil,
+                   layerInfo.type.rawValue != "symbol",
+                   let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
+                   !sourceLayer.isEmpty {
+                    targetLayer = layerInfo.id
+                }
+            } else {
+                // find the topmost layer for layerIdentifier in aboveSymbolLayers.
+                if targetLayer == nil,
+                   let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
+                   !sourceLayer.isEmpty {
+                    targetLayer = layerInfo.id
+                }
+            }
+        }
+        
+        guard let targetLayer = targetLayer else { return layerPosition }
+        guard let layerPosition = layerPosition else { return .above(targetLayer) }
+        
+        if belowSymbol {
+            // For layers should be below symbol layers.
+            if case let .below(sequenceLayer) = layerPosition, aboveSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in aboveSymbolLayers, it's above symbol layers as well.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost non symbol layer,
+                // but under the symbol layers.
+                return .above(targetLayer)
+            } else {
+                return layerPosition
+            }
+        } else {
+            // For other layers.
+            if case let .above(sequenceLayer) = layerPosition, belowSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in belowSymbolLayers, it's below symbol layers as well.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost layer.
+                return .above(targetLayer)
+            } else {
+                return layerPosition
+            }
         }
     }
     
