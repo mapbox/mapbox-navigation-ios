@@ -31,8 +31,10 @@ final public class RoadObjectMatcher {
         case .tpeg(let ref):
             reference = ref
         }
-        let openLR = MatchableOpenLr(base64Encoded: location, standard: standard, id: reference)
-        native.matchOpenLRs(for: [openLR], useOnlyPreloadedTiles: false)
+        let openLR = MatchableOpenLr(openlr: OpenLR(base64Encoded: location, standard: standard),
+                                     id: reference)
+        native.matchOpenLRs(for: [openLR], options: MatchingOptions(useOnlyPreloadedTiles: false,
+                                                                    allowPartialMatching: false))
     }
 
     /**
@@ -45,7 +47,9 @@ final public class RoadObjectMatcher {
      */
     public func match(polyline: LineString, identifier: RoadObject.Identifier) {
         let polyline = MatchableGeometry(id: identifier, coordinates: polyline.coordinates.map(CLLocation.init))
-        native.matchPolylines(forPolylines: [polyline], useOnlyPreloadedTiles: false)
+        native.matchPolylines(forPolylines: [polyline],
+                              options: MatchingOptions(useOnlyPreloadedTiles: false,
+                                                       allowPartialMatching: false))
     }
 
     /**
@@ -58,7 +62,8 @@ final public class RoadObjectMatcher {
      */
     public func match(polygon: Polygon, identifier: RoadObject.Identifier) {
         let polygone = MatchableGeometry(id: identifier, coordinates: polygon.outerRing.coordinates.map(CLLocation.init))
-        native.matchPolygons(forPolygons: [polygone], useOnlyPreloadedTiles: false)
+        native.matchPolygons(forPolygons: [polygone], options: MatchingOptions(useOnlyPreloadedTiles: false,
+                                                                               allowPartialMatching: false))
     }
 
     /**
@@ -71,7 +76,9 @@ final public class RoadObjectMatcher {
      */
     public func match(gantry: MultiPoint, identifier: RoadObject.Identifier) {
         let gantry = MatchableGeometry(id: identifier, coordinates: gantry.coordinates.map(CLLocation.init))
-        native.matchGantries(forGantries: [gantry], useOnlyPreloadedTiles: false)
+        native.matchGantries(forGantries: [gantry],
+                             options: MatchingOptions(useOnlyPreloadedTiles: false,
+                                                      allowPartialMatching: false))
     }
 
     /**
@@ -88,7 +95,9 @@ final public class RoadObjectMatcher {
         }
         
         let matchablePoint = MatchablePoint(id: identifier, coordinate: point, heading: trueHeading)
-        native.matchPoints(for: [matchablePoint], useOnlyPreloadedTiles: false)
+        native.matchPoints(for: [matchablePoint],
+                           options: MatchingOptions(useOnlyPreloadedTiles: false,
+                                                    allowPartialMatching: false))
     }
 
     /**
