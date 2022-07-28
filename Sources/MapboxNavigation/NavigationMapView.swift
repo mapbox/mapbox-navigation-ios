@@ -1741,6 +1741,7 @@ open class NavigationMapView: UIView {
         guard customLayerPosition == nil else { return customLayerPosition }
         
         let belowSymbolLayers: [String] = [
+            LayerIdentifier.buildingExtrusionLayer,
             route?.identifier(.routeCasing(isMainRoute: false)),
             route?.identifier(.route(isMainRoute: false)),
             route?.identifier(.routeCasing(isMainRoute: true)),
@@ -1749,8 +1750,7 @@ open class NavigationMapView: UIView {
             LayerIdentifier.arrowStrokeLayer,
             LayerIdentifier.arrowLayer,
             LayerIdentifier.arrowSymbolCasingLayer,
-            LayerIdentifier.arrowSymbolLayer,
-            LayerIdentifier.buildingExtrusionLayer
+            LayerIdentifier.arrowSymbolLayer
         ].compactMap{ $0 }
         let aboveSymbolLayers: [String] = [
             LayerIdentifier.waypointCircleLayer,
