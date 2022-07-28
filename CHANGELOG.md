@@ -18,7 +18,7 @@
 * Fixed the issue where the route line endpoint is ahead of user location indicator on short straight-line route step when `NavigationViewController.routeLineTracksTraversal` enabled in active navigation. ([#3992](https://github.com/mapbox/mapbox-navigation-ios/pull/3992))
 * Added the ability to provide duration and completion handler while visualizing routes using `NavigationMapView.showcase(_:animated:duration:completion:)`. ([#4022](https://github.com/mapbox/mapbox-navigation-ios/pull/4022))
 * Fixed an issue where the maneuver arrow is not removed after arriving to the final destination. ([#4040](https://github.com/mapbox/mapbox-navigation-ios/pull/4040))
-* Fixed the issue of unexpected building highlighted when the coordinate is out of map boundary. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
+* Fixed an issue where the incorrect destination building is highlighted after panning the correct building off screen. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 
 ### CarPlay
 

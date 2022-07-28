@@ -23,7 +23,7 @@ extension NavigationMapView {
                                    in3D extrudesBuildings: Bool = true,
                                    extrudeAll: Bool = false,
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
-        highlightBuildings = highlightBuildings.filter{ coordinates.contains($0.key) }
+        highlightedBuildingIdentifiersByCoordinate = highlightedBuildingIdentifiersByCoordinate.filter{ coordinates.contains($0.key) }
         let group = DispatchGroup()
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
@@ -50,7 +50,7 @@ extension NavigationMapView {
                 
                 if case .success(let queriedFeatures) = result {
                     if let identifier = queriedFeatures.first?.feature.featureIdentifier {
-                        self.highlightBuildings[coordinate] = identifier
+                        self.highlightedBuildingIdentifiersByCoordinate[coordinate] = identifier
                     }
                 }
             })
@@ -58,11 +58,11 @@ extension NavigationMapView {
 
         group.notify(queue: DispatchQueue.main) { [weak self] in
             guard let self = self else { return }
-            self.addBuildingsLayer(with: Set(self.highlightBuildings.values),
+            self.addBuildingsLayer(with: Set(self.highlightedBuildingIdentifiersByCoordinate.values),
                                    in3D: extrudesBuildings,
                                    extrudeAll: extrudeAll,
                                    layerPosition: layerPosition)
-            completion?(self.highlightBuildings.keys.count == coordinates.count)
+            completion?(self.highlightedBuildingIdentifiersByCoordinate.keys.count == coordinates.count)
         }
     }
     
@@ -70,7 +70,7 @@ extension NavigationMapView {
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:completion:)`.
      */
     public func unhighlightBuildings() {
-        highlightBuildings.removeAll()
+        highlightedBuildingIdentifiersByCoordinate.removeAll()
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
