@@ -497,7 +497,7 @@ open class RouteController: NSObject {
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult) {
-        progress.updateDistanceTraveled(with: rawLocation)
+        progress.updateDistanceTraveled(with: location)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         
         //Fire the delegate method
