@@ -864,10 +864,14 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         let legIndex = progress.legIndex
         let nextStep = progress.currentLegProgress.stepIndex + 1
         
-        navigationMapView?.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
         navigationMapView?.updateRouteLine(routeProgress: progress,
                                            coordinate: navigationService.router.location?.coordinate,
                                            shouldRedraw: true)
+        if navigationMapView?.routes != nil {
+            navigationMapView?.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
+        } else {
+            navigationMapView?.removeArrow()
+        }
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
     }
     

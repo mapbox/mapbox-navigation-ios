@@ -46,7 +46,8 @@ extension NavigationMapView {
             let currentLegProgress = router.routeProgress.currentLegProgress
             let nextStepIndex = currentLegProgress.stepIndex + 1
             
-            if nextStepIndex <= currentLegProgress.leg.steps.count {
+            if nextStepIndex <= currentLegProgress.leg.steps.count,
+               navigationMapView.routes != nil {
                 navigationMapView.addArrow(route: router.route, legIndex: router.routeProgress.legIndex, stepIndex: nextStepIndex)
             }
             
