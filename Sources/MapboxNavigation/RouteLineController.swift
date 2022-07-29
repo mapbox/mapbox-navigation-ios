@@ -46,7 +46,8 @@ extension NavigationMapView {
             let currentLegProgress = router.routeProgress.currentLegProgress
             let nextStepIndex = currentLegProgress.stepIndex + 1
             
-            if nextStepIndex <= currentLegProgress.leg.steps.count {
+            if nextStepIndex <= currentLegProgress.leg.steps.count,
+               navigationMapView.routes != nil {
                 navigationMapView.addArrow(route: router.route, legIndex: router.routeProgress.legIndex, stepIndex: nextStepIndex)
             }
             
@@ -106,7 +107,8 @@ extension NavigationMapView {
         }
         
         private func updateMapOverlays(for routeProgress: RouteProgress) {
-            if routeProgress.currentLegProgress.followOnStep != nil {
+            if routeProgress.currentLegProgress.followOnStep != nil,
+               navigationMapView.routes != nil {
                 navigationMapView.addArrow(route: routeProgress.route,
                                            legIndex: routeProgress.legIndex,
                                            stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
