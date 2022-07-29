@@ -63,6 +63,7 @@ extension NavigationMapView {
         guard !routeProgress.routeIsComplete else {
             removeRoutes()
             removeContinuousAlternativesRoutes()
+            removeArrow()
             return
         }
         
