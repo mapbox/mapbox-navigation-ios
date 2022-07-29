@@ -44,7 +44,10 @@ open class Style: NSObject {
      */
     @objc open var previewMapStyleURL = URL(string: StyleURI.navigationDay.rawValue)!
     
-    var traitCollection: UITraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+    var traitCollection: UITraitCollection = UITraitCollection(traitsFrom: [
+        UITraitCollection(userInterfaceIdiom: .phone),
+        UITraitCollection(userInterfaceIdiom: .pad),
+    ])
     
     /**
      Applies the style for all changed properties.
