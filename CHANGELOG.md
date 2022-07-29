@@ -41,6 +41,7 @@
 * Fixed the issue of restricted layer over the whole route after the removal of continuous alternative route with a small portion of restricted road class at start. ([#4009](https://github.com/mapbox/mapbox-navigation-ios/pull/4009))
 * Added `ResumeButton.borderWidth`, `ResumeButton.cornerRadius` and `ResumeButton.borderColor` properties that allow `ResumeButton`'s style modification. ([#3996](https://github.com/mapbox/mapbox-navigation-ios/pull/3996))
 * Fixed a crash when dismissing `NavigationViewController`. ([#4029](https://github.com/mapbox/mapbox-navigation-ios/pull/4029))
+* Fixed an issue where `StyleManager` was not applying style on iPad. ([#4039](https://github.com/mapbox/mapbox-navigation-ios/pull/4039))
 
 ## v2.6.0
 
