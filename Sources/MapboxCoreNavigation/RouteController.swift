@@ -264,10 +264,15 @@ open class RouteController: NSObject {
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
                                  completion: ((Result<RouteInfo?, Error>) -> Void)?) {
-        guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
-            completion?(.failure(RouteControllerError.internalError))
-            return
-        }
+        let routeOptions: DirectionsOptions = {
+            switch indexedRouteResponse.routeResponse.options {
+
+            case let .route(options):
+                return options
+            case let .match(options):
+                return options
+            }
+        }()
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
