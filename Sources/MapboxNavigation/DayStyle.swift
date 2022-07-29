@@ -34,183 +34,23 @@ open class DayStyle: Style {
         let padTraitCollection = UITraitCollection(userInterfaceIdiom: .pad)
         let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
         
+        // Style is applied similarly on iPhone and iPad. Since it's possible to change appearance on CarPlay, style
+        // for it is applied separately.
         if traitCollection.containsTraits(in: phoneTraitCollection) || traitCollection.containsTraits(in: padTraitCollection) {
-            applyPhoneOrPadStyling(phoneTraitCollection)
-            applyPhoneOrPadStyling(padTraitCollection)
+            applyPhoneOrPadStyling(for: phoneTraitCollection)
+            applyPhoneOrPadStyling(for: padTraitCollection)
         } else if traitCollection.containsTraits(in: carPlayTraitCollection) {
-            // `CarPlayCompassView` appearance styling. `CarPlayCompassView` is only used on CarPlay
-            // and is not shared across other platforms.
-            CarPlayCompassView.appearance(for: carPlayTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.6022227113)
-            CarPlayCompassView.appearance(for: carPlayTraitCollection).cornerRadius = 4
-            CarPlayCompassView.appearance(for: carPlayTraitCollection).borderWidth = 1.0 / (UIScreen.mainCarPlay?.scale ?? 2.0)
-            CarPlayCompassView.appearance(for: carPlayTraitCollection).borderColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 0.6009573063)
-            
-            // `StylableLabel` is used in `CarPlayCompassView` to show compass direction.
-            StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12.0, weight: .medium).adjustedFont
-            StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
-            
-            PrimaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 30.0, weight: .medium).adjustedFont
-            
-            SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
-            
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldGreenColor = .roadShieldGreenColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldRedColor = .roadShieldRedColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldWhiteColor = .roadShieldWhiteColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldYellowColor = .roadShieldYellowColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
-            InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
-            
-            WayNameLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 13.0, weight: .medium).adjustedFont
-            WayNameLabel.appearance(for: carPlayTraitCollection).normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldGreenColor = .roadShieldGreenColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldRedColor = .roadShieldRedColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldWhiteColor = .roadShieldWhiteColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldYellowColor = .roadShieldYellowColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
-            WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
-            
-            WayNameView.appearance(for: carPlayTraitCollection).backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
-            WayNameView.appearance(for: carPlayTraitCollection).borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
-            WayNameView.appearance(for: carPlayTraitCollection).borderWidth = 1.0
-            
-            NavigationMapView.appearance(for: carPlayTraitCollection).maneuverArrowColor = .defaultManeuverArrow
-            NavigationMapView.appearance(for: carPlayTraitCollection).maneuverArrowStrokeColor = .defaultManeuverArrowStroke
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeAlternateColor = .defaultAlternateLine
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeCasingColor = .defaultRouteCasing
-            NavigationMapView.appearance(for: carPlayTraitCollection).traversedRouteColor = .defaultTraversedRouteColor
-            NavigationMapView.appearance(for: carPlayTraitCollection).trafficHeavyColor = .trafficHeavy
-            NavigationMapView.appearance(for: carPlayTraitCollection).trafficLowColor = .trafficLow
-            NavigationMapView.appearance(for: carPlayTraitCollection).trafficModerateColor = .trafficModerate
-            NavigationMapView.appearance(for: carPlayTraitCollection).trafficSevereColor = .trafficSevere
-            NavigationMapView.appearance(for: carPlayTraitCollection).trafficUnknownColor = .trafficUnknown
-            NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficHeavyColor = .alternativeTrafficHeavy
-            NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficLowColor = .alternativeTrafficLow
-            NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficModerateColor = .alternativeTrafficModerate
-            NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficSevereColor = .alternativeTrafficSevere
-            NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficUnknownColor = .alternativeTrafficUnknown
-            NavigationMapView.appearance(for: carPlayTraitCollection).buildingDefaultColor = .defaultBuildingColor
-            NavigationMapView.appearance(for: carPlayTraitCollection).buildingHighlightColor = .defaultBuildingHighlightColor
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationColor = .routeDurationAnnotationColor
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontNames
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
-            NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            
-            UserPuckCourseView.appearance(for: carPlayTraitCollection).puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
-            
-            UserHaloCourseView.appearance(for: carPlayTraitCollection).haloColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
-            UserHaloCourseView.appearance(for: carPlayTraitCollection).haloRingColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3)
-            UserHaloCourseView.appearance(for: carPlayTraitCollection).haloRadius = 100.0
-            
-            SpeedLimitView.appearance(for: carPlayTraitCollection).signBackColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            SpeedLimitView.appearance(for: carPlayTraitCollection).textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            SpeedLimitView.appearance(for: carPlayTraitCollection).regulatoryBorderColor = #colorLiteral(red: 0.800, green: 0, blue: 0, alpha: 1)
-            
-            ManeuverView.appearance(for: carPlayTraitCollection).backgroundColor = .clear
-            ManeuverView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultTurnArrowPrimaryHighlighted
-            ManeuverView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultTurnArrowSecondaryHighlighted
-            
-            // In case if CarPlay supports `UIUserInterfaceStyle` styling will be applied for a
-            // `UITraitCollection`, which contains both `UIUserInterfaceIdiom` and `UIUserInterfaceStyle`.
-            // If not, `UITraitCollection` will only contain `UIUserInterfaceIdiom`.
-            if #available(iOS 12.0, *) {
-                let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
-                    carPlayTraitCollection,
-                    UITraitCollection(userInterfaceStyle: .light)
-                ])
-                applyCarPlayStyling(for: carPlayLightTraitCollection)
-                
-                let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
-                    carPlayTraitCollection,
-                    UITraitCollection(userInterfaceStyle: .dark)
-                ])
-                applyCarPlayStyling(for: carPlayDarkTraitCollection)
-            } else {
-                applyDefaultCarPlayStyling()
-            }
+            applyCarPlayStyling()
         }
     }
     
-    @available(iOS 12.0, *)
-    func applyCarPlayStyling(for traitCollection: UITraitCollection) {
-        // On CarPlay, `ExitView` and `GenericRouteShield` styling depends on `UIUserInterfaceStyle`,
-        // which was set on CarPlay external screen.
-        // In case if it was set to `UIUserInterfaceStyle.light` white color will be used, otherwise
-        // black.
-        // Due to iOS issue (`UIScreen.screens` returns CarPlay screen `traitCollection`
-        // property of which returns incorrect value), this property has to be taken from callbacks
-        // similar to: `UITraitEnvironment.traitCollectionDidChange(_:)`, or by creating `UITraitCollection`
-        // directly.
-        let defaultInstructionColor: UIColor
-        
-        let defaultLaneViewPrimaryColor: UIColor
-        let defaultLaneViewSecondaryColor: UIColor
-        
-        let defaultLaneArrowPrimaryHighlightedColor: UIColor
-        let defaultLaneArrowSecondaryHighlightedColor: UIColor
-        
-        switch traitCollection.userInterfaceStyle {
-        case .light, .unspecified:
-            defaultInstructionColor = UIColor.black
-            
-            defaultLaneViewPrimaryColor = .defaultLaneArrowPrimary
-            defaultLaneViewSecondaryColor = .defaultLaneArrowSecondary
-            
-            defaultLaneArrowPrimaryHighlightedColor = .defaultLaneArrowPrimaryHighlighted
-            defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
-        case .dark:
-            defaultInstructionColor = UIColor.white
-            
-            defaultLaneViewPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            defaultLaneViewSecondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
-            
-            defaultLaneArrowPrimaryHighlightedColor = .defaultLaneArrowPrimaryHighlighted
-            defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
-        @unknown default:
-            fatalError("Unknown userInterfaceStyle.")
-        }
-        
-        ExitView.appearance(for: traitCollection).backgroundColor = .clear
-        ExitView.appearance(for: traitCollection).borderWidth = 1.0
-        ExitView.appearance(for: traitCollection).cornerRadius = 5.0
-        ExitView.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
-        ExitView.appearance(for: traitCollection).borderColor = defaultInstructionColor
-
-        GenericRouteShield.appearance(for: traitCollection).backgroundColor = .clear
-        GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
-        GenericRouteShield.appearance(for: traitCollection).cornerRadius = 5.0
-        GenericRouteShield.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
-        GenericRouteShield.appearance(for: traitCollection).borderColor = defaultInstructionColor
-
-        LaneView.appearance(for: traitCollection).primaryColor = defaultLaneViewPrimaryColor
-        LaneView.appearance(for: traitCollection).secondaryColor = defaultLaneViewSecondaryColor
-
-        LaneView.appearance(for: traitCollection).primaryColorHighlighted = defaultLaneArrowPrimaryHighlightedColor
-        LaneView.appearance(for: traitCollection).secondaryColorHighlighted = defaultLaneArrowSecondaryHighlightedColor
-    }
-    
-    func applyDefaultCarPlayStyling() {
-        let defaultColor = UIColor.black
-        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
-        
-        ExitView.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
-        ExitView.appearance(for: carPlayTraitCollection).borderColor = defaultColor
-        
-        GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
-        GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
-        
-        LaneView.appearance(for: carPlayTraitCollection).primaryColor = .defaultLaneArrowPrimary
-        LaneView.appearance(for: carPlayTraitCollection).secondaryColor = .defaultLaneArrowSecondary
-        
-        LaneView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
-        LaneView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
-    }
-    
-    func applyPhoneOrPadStyling(_ traitCollection: UITraitCollection) {
+    /**
+     Applies default style for `.phone` and `.pad` trait collections.
+     
+     Beware that `ExitView` and `GenericRouteShield` directly access appearance values while caching
+     their styles.
+     */
+    func applyPhoneOrPadStyling(for traitCollection: UITraitCollection) {
         StepsBackgroundView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         StepInstructionsView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
@@ -462,5 +302,194 @@ open class DayStyle: Style {
         ManeuverView.appearance(for: traitCollection, whenContainedInInstancesOf: [NextBannerView.self]).secondaryColor = .defaultTurnArrowSecondary
         ManeuverView.appearance(for: traitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).primaryColor = .defaultTurnArrowPrimary
         ManeuverView.appearance(for: traitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).secondaryColor = .defaultTurnArrowSecondary
+    }
+    
+    /**
+     Applies default style for CarPlay.
+     
+     Since it's possible to apply different appearances on iOS and CarPlay and some views are
+     re-used on both platforms, style for iOS and CarPlay views that are common is applied
+     independently.
+     */
+    func applyCarPlayStyling() {
+        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+        
+        // `CarPlayCompassView` appearance styling. `CarPlayCompassView` is only used on CarPlay
+        // and is not shared across other platforms.
+        CarPlayCompassView.appearance(for: carPlayTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.6022227113)
+        CarPlayCompassView.appearance(for: carPlayTraitCollection).cornerRadius = 4
+        CarPlayCompassView.appearance(for: carPlayTraitCollection).borderWidth = 1.0 / (UIScreen.mainCarPlay?.scale ?? 2.0)
+        CarPlayCompassView.appearance(for: carPlayTraitCollection).borderColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 0.6009573063)
+        
+        // `StylableLabel` is used in `CarPlayCompassView` to show compass direction.
+        StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12.0, weight: .medium).adjustedFont
+        StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        
+        PrimaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 30.0, weight: .medium).adjustedFont
+        
+        SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26.0, weight: .medium).adjustedFont
+        
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldGreenColor = .roadShieldGreenColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldRedColor = .roadShieldRedColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldWhiteColor = .roadShieldWhiteColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldYellowColor = .roadShieldYellowColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
+        InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
+        
+        WayNameLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 13.0, weight: .medium).adjustedFont
+        WayNameLabel.appearance(for: carPlayTraitCollection).normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = .roadShieldBlackColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = .roadShieldBlueColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldGreenColor = .roadShieldGreenColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldRedColor = .roadShieldRedColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldWhiteColor = .roadShieldWhiteColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldYellowColor = .roadShieldYellowColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldOrangeColor = .roadShieldOrangeColor
+        WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = .roadShieldDefaultColor
+        
+        WayNameView.appearance(for: carPlayTraitCollection).backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
+        WayNameView.appearance(for: carPlayTraitCollection).borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+        WayNameView.appearance(for: carPlayTraitCollection).borderWidth = 1.0
+        
+        NavigationMapView.appearance(for: carPlayTraitCollection).maneuverArrowColor = .defaultManeuverArrow
+        NavigationMapView.appearance(for: carPlayTraitCollection).maneuverArrowStrokeColor = .defaultManeuverArrowStroke
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeAlternateColor = .defaultAlternateLine
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeCasingColor = .defaultRouteCasing
+        NavigationMapView.appearance(for: carPlayTraitCollection).traversedRouteColor = .defaultTraversedRouteColor
+        NavigationMapView.appearance(for: carPlayTraitCollection).trafficHeavyColor = .trafficHeavy
+        NavigationMapView.appearance(for: carPlayTraitCollection).trafficLowColor = .trafficLow
+        NavigationMapView.appearance(for: carPlayTraitCollection).trafficModerateColor = .trafficModerate
+        NavigationMapView.appearance(for: carPlayTraitCollection).trafficSevereColor = .trafficSevere
+        NavigationMapView.appearance(for: carPlayTraitCollection).trafficUnknownColor = .trafficUnknown
+        NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficHeavyColor = .alternativeTrafficHeavy
+        NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficLowColor = .alternativeTrafficLow
+        NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficModerateColor = .alternativeTrafficModerate
+        NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficSevereColor = .alternativeTrafficSevere
+        NavigationMapView.appearance(for: carPlayTraitCollection).alternativeTrafficUnknownColor = .alternativeTrafficUnknown
+        NavigationMapView.appearance(for: carPlayTraitCollection).buildingDefaultColor = .defaultBuildingColor
+        NavigationMapView.appearance(for: carPlayTraitCollection).buildingHighlightColor = .defaultBuildingHighlightColor
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationColor = .routeDurationAnnotationColor
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontNames
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        NavigationMapView.appearance(for: carPlayTraitCollection).routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        UserPuckCourseView.appearance(for: carPlayTraitCollection).puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
+        
+        UserHaloCourseView.appearance(for: carPlayTraitCollection).haloColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
+        UserHaloCourseView.appearance(for: carPlayTraitCollection).haloRingColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3)
+        UserHaloCourseView.appearance(for: carPlayTraitCollection).haloRadius = 100.0
+        
+        SpeedLimitView.appearance(for: carPlayTraitCollection).signBackColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        SpeedLimitView.appearance(for: carPlayTraitCollection).textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        SpeedLimitView.appearance(for: carPlayTraitCollection).regulatoryBorderColor = #colorLiteral(red: 0.800, green: 0, blue: 0, alpha: 1)
+        
+        ManeuverView.appearance(for: carPlayTraitCollection).backgroundColor = .clear
+        ManeuverView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultTurnArrowPrimaryHighlighted
+        ManeuverView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultTurnArrowSecondaryHighlighted
+        
+        // In case if CarPlay supports `UIUserInterfaceStyle` styling will be applied for a
+        // `UITraitCollection`, which contains both `UIUserInterfaceIdiom` and `UIUserInterfaceStyle`.
+        // If not, `UITraitCollection` will only contain `UIUserInterfaceIdiom`.
+        if #available(iOS 12.0, *) {
+            let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
+                carPlayTraitCollection,
+                UITraitCollection(userInterfaceStyle: .light)
+            ])
+            applyCarPlayManeuversStyling(for: carPlayLightTraitCollection)
+            
+            let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
+                carPlayTraitCollection,
+                UITraitCollection(userInterfaceStyle: .dark)
+            ])
+            applyCarPlayManeuversStyling(for: carPlayDarkTraitCollection)
+        } else {
+            applyDefaultCarPlayManeuversStyling()
+        }
+    }
+    
+    /**
+     Applies default styling for lane views, exit views and shields on CarPlay versions that support
+     light and dark appearance changes.
+     */
+    @available(iOS 12.0, *)
+    func applyCarPlayManeuversStyling(for traitCollection: UITraitCollection) {
+        // On CarPlay, `ExitView` and `GenericRouteShield` styling depends on `UIUserInterfaceStyle`,
+        // which was set on CarPlay external screen.
+        // In case if it was set to `UIUserInterfaceStyle.light` white color will be used, otherwise
+        // black.
+        // Due to iOS issue (`UIScreen.screens` returns CarPlay screen `traitCollection`
+        // property of which returns incorrect value), this property has to be taken from callbacks
+        // similar to: `UITraitEnvironment.traitCollectionDidChange(_:)`, or by creating `UITraitCollection`
+        // directly.
+        let defaultInstructionColor: UIColor
+        
+        let defaultLaneViewPrimaryColor: UIColor
+        let defaultLaneViewSecondaryColor: UIColor
+        
+        let defaultLaneArrowPrimaryHighlightedColor: UIColor
+        let defaultLaneArrowSecondaryHighlightedColor: UIColor
+        
+        switch traitCollection.userInterfaceStyle {
+        case .light, .unspecified:
+            defaultInstructionColor = UIColor.black
+            
+            defaultLaneViewPrimaryColor = .defaultLaneArrowPrimary
+            defaultLaneViewSecondaryColor = .defaultLaneArrowSecondary
+            
+            defaultLaneArrowPrimaryHighlightedColor = .defaultLaneArrowPrimaryHighlighted
+            defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
+        case .dark:
+            defaultInstructionColor = UIColor.white
+            
+            defaultLaneViewPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            defaultLaneViewSecondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
+            
+            defaultLaneArrowPrimaryHighlightedColor = .defaultLaneArrowPrimaryHighlighted
+            defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
+        @unknown default:
+            fatalError("Unknown userInterfaceStyle.")
+        }
+        
+        ExitView.appearance(for: traitCollection).backgroundColor = .clear
+        ExitView.appearance(for: traitCollection).borderWidth = 1.0
+        ExitView.appearance(for: traitCollection).cornerRadius = 5.0
+        ExitView.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
+        ExitView.appearance(for: traitCollection).borderColor = defaultInstructionColor
+        
+        GenericRouteShield.appearance(for: traitCollection).backgroundColor = .clear
+        GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
+        GenericRouteShield.appearance(for: traitCollection).cornerRadius = 5.0
+        GenericRouteShield.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
+        GenericRouteShield.appearance(for: traitCollection).borderColor = defaultInstructionColor
+        
+        LaneView.appearance(for: traitCollection).primaryColor = defaultLaneViewPrimaryColor
+        LaneView.appearance(for: traitCollection).secondaryColor = defaultLaneViewSecondaryColor
+        
+        LaneView.appearance(for: traitCollection).primaryColorHighlighted = defaultLaneArrowPrimaryHighlightedColor
+        LaneView.appearance(for: traitCollection).secondaryColorHighlighted = defaultLaneArrowSecondaryHighlightedColor
+    }
+    
+    /**
+     Applies default styling for lane views, exit views and shields on CarPlay versions that do not support
+     light and dark appearance changes.
+     */
+    func applyDefaultCarPlayManeuversStyling() {
+        let defaultColor = UIColor.black
+        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+        
+        ExitView.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+        ExitView.appearance(for: carPlayTraitCollection).borderColor = defaultColor
+        
+        GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+        GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
+        
+        LaneView.appearance(for: carPlayTraitCollection).primaryColor = .defaultLaneArrowPrimary
+        LaneView.appearance(for: carPlayTraitCollection).secondaryColor = .defaultLaneArrowSecondary
+        
+        LaneView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
+        LaneView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
     }
 }
