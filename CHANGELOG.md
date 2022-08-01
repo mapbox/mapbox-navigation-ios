@@ -4,8 +4,12 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.7.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0-rc.1). ([#4012](https://github.com/mapbox/mapbox-navigation-ios/pull/4012))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v110._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/110.0.0). ([#4037](https://github.com/mapbox/mapbox-navigation-ios/pull/4037))
+* MapboxNavigation now requires [MapboxMaps v10.7._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0). ([#4044](https://github.com/mapbox/mapbox-navigation-ios/pull/4044))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v111._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/111.0.0). ([#4044](https://github.com/mapbox/mapbox-navigation-ios/pull/4044))
+
+### Routing
+
+* Fixed lost target and name fields in waypoints after rerouting, and the bearing calculation error during tunnel dead reckoning. ([#4044](https://github.com/mapbox/mapbox-navigation-ios/pull/4044))
 
 ### Map
 

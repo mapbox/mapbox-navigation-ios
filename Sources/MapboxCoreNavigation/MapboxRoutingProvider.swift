@@ -305,7 +305,8 @@ public class MapboxRoutingProvider: RoutingProvider {
         let refreshOptions = RouteRefreshOptions(requestId: responseIdentifier,
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
-                                                 routingProfile: routeOptions.profileIdentifier.nativeProfile)
+                                                 routingProfile: routeOptions.profileIdentifier.nativeProfile,
+                                                 currentRouteGeometryIndex: nil)
         
         requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
