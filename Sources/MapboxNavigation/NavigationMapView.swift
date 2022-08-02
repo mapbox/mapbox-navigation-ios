@@ -416,7 +416,11 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
+                    var layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
+                    if let roadLabelIdentifier = mapView.mapboxMap.style.allLayerIdentifiers.compactMap({ $0.id }).filter({ $0.contains("road-label") }).last,
+                       mapView.mapboxMap.style.layerExists(withId: roadLabelIdentifier) {
+                        layerPosition = .above(roadLabelIdentifier)
+                    }
                     try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
                 }
                 
@@ -480,7 +484,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
+                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                                    layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
@@ -593,7 +597,7 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                let layerPosition = addLayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                let layerPosition = layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
@@ -688,7 +692,7 @@ open class NavigationMapView: UIView {
                 if let belowLayerIdentifier = parentLayerIndentifier {
                     layerPosition = .below(belowLayerIdentifier)
                 } else {
-                    layerPosition = addLayerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
+                    layerPosition = self.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -763,7 +767,7 @@ open class NavigationMapView: UIView {
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
                 } else {
-                    layerPosition = addLayerPosition(for: layerIdentifier, route: route)
+                    layerPosition = self.layerPosition(for: layerIdentifier, route: route)
                 }
                 if layerAlreadyExists {
                     if let layerPosition = layerPosition {
@@ -1332,7 +1336,7 @@ open class NavigationMapView: UIView {
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
-                    let layerPosition = addLayerPosition(for: waypointCircleLayerIdentifier, route: route)
+                    let layerPosition = layerPosition(for: waypointCircleLayerIdentifier, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
@@ -1505,7 +1509,7 @@ open class NavigationMapView: UIView {
         shapeLayer.iconOffset = .expression(offsetExpression)
         shapeLayer.textOffset = .expression(offsetExpression)
         
-        let layerPosition = addLayerPosition(for: layerIdentifier)
+        let layerPosition = layerPosition(for: layerIdentifier)
         try style.addPersistentLayer(shapeLayer, layerPosition: layerPosition)
     }
     
@@ -1721,7 +1725,7 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
-                let layerPosition = addLayerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
+                let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
                 try mapView.mapboxMap.style.addPersistentLayer(symbolLayer, layerPosition: layerPosition)
                 
                 var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
@@ -1737,7 +1741,7 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func addLayerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {
+    func layerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {
         guard customLayerPosition == nil else { return customLayerPosition }
         
         let belowSymbolLayers: [String] = [
