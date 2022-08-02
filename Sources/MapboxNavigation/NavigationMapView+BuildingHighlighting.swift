@@ -23,17 +23,20 @@ extension NavigationMapView {
                                    in3D extrudesBuildings: Bool = true,
                                    extrudeAll: Bool = false,
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
-        var foundBuildingIds = Set<Int64>()
+        highlightedBuildingIdentifiersByCoordinate = highlightedBuildingIdentifiersByCoordinate.filter{ coordinates.contains($0.key) }
         let group = DispatchGroup()
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
             .filter({ $0.contains("building") })
         let layerPosition = identifiers.last.map { LayerPosition.above($0) }
         
-        coordinates.forEach {
-            group.enter()
+        for coordinate in coordinates {
+            let screenCoordinate = mapView.mapboxMap.point(for: coordinate)
+            if screenCoordinate == .pointOutOfMapViewBounds {
+                continue
+            }
             
-            let screenCoordinate = mapView.mapboxMap.point(for: $0)
+            group.enter()
             let options = RenderedQueryOptions(layerIds: identifiers, filter: nil)
             
             mapView.mapboxMap.queryRenderedFeatures(with: screenCoordinate,
@@ -43,22 +46,23 @@ extension NavigationMapView {
                     group.leave()
                 }
                 
-                guard let _ = self else { return }
+                guard let self = self else { return }
                 
                 if case .success(let queriedFeatures) = result {
                     if let identifier = queriedFeatures.first?.feature.featureIdentifier {
-                        foundBuildingIds.insert(identifier)
+                        self.highlightedBuildingIdentifiersByCoordinate[coordinate] = identifier
                     }
                 }
             })
         }
 
-        group.notify(queue: DispatchQueue.main) {
-            self.addBuildingsLayer(with: foundBuildingIds,
+        group.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let self = self else { return }
+            self.addBuildingsLayer(with: Set(self.highlightedBuildingIdentifiersByCoordinate.values),
                                    in3D: extrudesBuildings,
                                    extrudeAll: extrudeAll,
                                    layerPosition: layerPosition)
-            completion?(foundBuildingIds.count == coordinates.count)
+            completion?(self.highlightedBuildingIdentifiersByCoordinate.keys.count == coordinates.count)
         }
     }
     
@@ -66,6 +70,7 @@ extension NavigationMapView {
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:completion:)`.
      */
     public func unhighlightBuildings() {
+        highlightedBuildingIdentifiersByCoordinate.removeAll()
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
@@ -90,18 +95,15 @@ extension NavigationMapView {
             highlightedBuildingsLayer.source = "composite"
             highlightedBuildingsLayer.sourceLayer = "building"
             
-            let extrudeExpression: Expression = Exp(.eq) {
-                Exp(.get) {
-                    "extrude"
-                }
-                "true"
-            }
-            
             if extrudeAll {
-                highlightedBuildingsLayer.filter = extrudeExpression
+                highlightedBuildingsLayer.filter = Exp(.eq) {
+                    Exp(.get) {
+                        "extrude"
+                    }
+                    "true"
+                }
             } else {
                 highlightedBuildingsLayer.filter = Exp(.all) {
-                    extrudeExpression
                     Exp(.inExpression) {
                         Exp(.id)
                         Exp(.literal) {

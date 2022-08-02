@@ -338,6 +338,7 @@
 		B4319F2F27A35EA8005A706E /* SpriteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4319F2E27A35EA8005A706E /* SpriteRepository.swift */; };
 		B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44177F72649B08400781319 /* UserLocationStyle.swift */; };
 		B443A48B27BB0CB8000AF101 /* sprite-info.json in Resources */ = {isa = PBXBuildFile; fileRef = B443A48A27BB0CB8000AF101 /* sprite-info.json */; };
+		B44E1A802891DD350093743C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44E1A7F2891DD350093743C /* CLLocationCoordinate2D.swift */; };
 		B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */; };
 		B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B456A8EB2620D26A00FD86D8 /* LeakTest.swift */; };
@@ -932,6 +933,7 @@
 		B4319F2E27A35EA8005A706E /* SpriteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRepository.swift; sourceTree = "<group>"; };
 		B44177F72649B08400781319 /* UserLocationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStyle.swift; sourceTree = "<group>"; };
 		B443A48A27BB0CB8000AF101 /* sprite-info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sprite-info.json"; sourceTree = "<group>"; };
+		B44E1A7F2891DD350093743C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "MMEEventsManager+Spy.m"; path = "include/MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
 		B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MMEEventsManager+Spy.h"; path = "include/MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
@@ -1963,6 +1965,7 @@
 				3A8187C824BDAE9C00708F19 /* URLSession.swift */,
 				11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */,
 				8AC85EA328628E4F003F8FC8 /* UIDevice.swift */,
+				B44E1A7F2891DD350093743C /* CLLocationCoordinate2D.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -3026,6 +3029,7 @@
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				41B901EB271048BD007F9F78 /* HistoryRecording.swift in Sources */,
 				DA5F44C825F07AB700F573EC /* MapboxStreetsRoadClass.swift in Sources */,
+				B44E1A802891DD350093743C /* CLLocationCoordinate2D.swift in Sources */,
 				2B5A4AC728099FA900170A2B /* AlternativeRoute.swift in Sources */,
 				2E50E0C0264E35CA009D3848 /* RoadObjectMatcher.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,

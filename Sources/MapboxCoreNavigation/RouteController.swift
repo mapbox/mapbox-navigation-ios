@@ -930,6 +930,15 @@ extension RouteController: ReroutingControllerDelegate {
     }
     
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions, routeOrigin: RouterOrigin) {
+        // The response and options after reroute lost waypoint targetCoordinate.
+        if response.waypoints?.count == routeProgress.routeOptions.waypoints.count,
+           options.waypoints.count == routeProgress.routeOptions.waypoints.count {
+            for (index, previousWayoint) in routeProgress.routeOptions.waypoints.enumerated() {
+                response.waypoints?[index].targetCoordinate = previousWayoint.targetCoordinate
+                options.waypoints[index].targetCoordinate = previousWayoint.targetCoordinate
+            }
+        }
+        
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
                                                         routeIndex: 0,
                                                         responseOrigin: routeOrigin)

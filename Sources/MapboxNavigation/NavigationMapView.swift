@@ -896,6 +896,11 @@ open class NavigationMapView: UIView {
      */
     var mostRecentUserCourseViewLocation: CLLocation?
     
+    /**
+     The coordinates and corresponding identifiers for highlight buildings.
+     */
+    var highlightedBuildingIdentifiersByCoordinate = [CLLocationCoordinate2D: Int64]()
+    
     func setupUserLocation() {
         if !isAuthorized() { return }
         
@@ -1017,7 +1022,7 @@ open class NavigationMapView: UIView {
               animated: Bool = false) {
         // If the point is outside of the bounds of `MapView` - hide user course view.
         let point = mapView.mapboxMap.point(for: location.coordinate)
-        if point.x == -1.0 && point.y == -1.0 {
+        if point == .pointOutOfMapViewBounds {
             userCourseView.isHidden = true
             return
         } else {
