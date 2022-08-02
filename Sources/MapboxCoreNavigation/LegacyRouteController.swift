@@ -433,7 +433,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        progress.updateDistanceTraveled(with: rawLocation)
+        progress.updateDistanceTraveled(with: location)
         
         //Fire the delegate method
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)

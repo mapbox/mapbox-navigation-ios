@@ -32,6 +32,7 @@
 
 * Fixed an error when rerouting the user with `NavigationRouteOptions.profileIdentifier` set to `ProfileIdentifier.walking` or `ProfileIdentifier.cycling`. ([#4024](https://github.com/mapbox/mapbox-navigation-ios/pull/4024))
 * Fixed an issue where the user’s location continued to be snapped to a roadway even after the user’s course deviated significantly from that roadway, for example because the user was actually on a parallel road. ([#4012](https://github.com/mapbox/mapbox-navigation-ios/pull/4012))
+* Fixed an issue when `RouteController` didn't update `RouteProgress.distanceTraveled` property during simulation. ([#4043](https://github.com/mapbox/mapbox-navigation-ios/pull/4043))
 
 ### Other changes
 
