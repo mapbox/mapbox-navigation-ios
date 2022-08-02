@@ -70,13 +70,21 @@ open class StyleManager {
         commonInit()
     }
     
-    init(traitCollection: UITraitCollection = UITraitCollection(userInterfaceIdiom: .phone)) {
+    init(traitCollection: UITraitCollection = UITraitCollection(traitsFrom: [
+        UITraitCollection(userInterfaceIdiom: .phone),
+        UITraitCollection(userInterfaceIdiom: .pad),
+    ])) {
         commonInit()
         self.traitCollection = traitCollection
     }
     
     func commonInit() {
-        traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+        let phoneAndPadTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceIdiom: .phone),
+            UITraitCollection(userInterfaceIdiom: .pad),
+        ])
+        
+        traitCollection = phoneAndPadTraitCollection
         resumeNotifications()
         resetTimeOfDayTimer()
     }
