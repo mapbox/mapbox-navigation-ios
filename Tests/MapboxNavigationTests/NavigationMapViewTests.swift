@@ -598,7 +598,7 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.removeRoutes()
     }
     
-    func testlayerPosition() {
+    func testLayerPosition() {
         let multilegRoute = Fixture.route(from: "multileg-route", options: routeOptions)
         
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
@@ -681,11 +681,22 @@ class NavigationMapViewTests: TestCase {
         ]
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
         
+        navigationMapView.removeWaypoints()
         navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
         navigationMapView.showsRestrictedAreasOnRoute = false
         
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
-        expectedLayerSequence = expectedLayerSequence.filter{ $0 != multilegRoute.identifier(.restrictedRouteAreaRoute)}
+        expectedLayerSequence = [
+            buildingLayer["id"]!,
+            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
+            multilegRoute.identifier(.route(isMainRoute: true)),
+            roadLabelLayer["id"]!,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            roadExitLayer["id"]!
+        ]
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
     }
 }

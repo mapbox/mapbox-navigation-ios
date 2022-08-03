@@ -1740,7 +1740,7 @@ open class NavigationMapView: UIView {
     func layerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {
         guard customLayerPosition == nil else { return customLayerPosition }
         
-        let belowSymbolLayers: [String] = [
+        let lowermostSymbolLayers: [String] = [
             LayerIdentifier.buildingExtrusionLayer,
             route?.identifier(.routeCasing(isMainRoute: false)),
             route?.identifier(.route(isMainRoute: false)),
@@ -1754,7 +1754,7 @@ open class NavigationMapView: UIView {
             LayerIdentifier.arrowSymbolCasingLayer,
             LayerIdentifier.arrowSymbolLayer
         ]
-        let aboveSymbolLayers: [String] = [
+        let uppermostSymbolLayers: [String] = [
             LayerIdentifier.waypointCircleLayer,
             LayerIdentifier.waypointSymbolLayer,
             LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer,
@@ -1764,9 +1764,9 @@ open class NavigationMapView: UIView {
             LayerIdentifier.puck2DLayer,
             LayerIdentifier.puck3DLayer
         ]
-        let belowSymbol = belowSymbolLayers.contains(layerIdentifier)
-        let aboveRoadName = arrowLayers.contains(layerIdentifier)
-        let allAddedLayers: [String] = belowSymbolLayers + arrowLayers + aboveSymbolLayers
+        let isLowermostLayer = lowermostSymbolLayers.contains(layerIdentifier)
+        let isAboveRoadLayer = arrowLayers.contains(layerIdentifier)
+        let allAddedLayers: [String] = lowermostSymbolLayers + arrowLayers + uppermostSymbolLayers
         
         var layerPosition: MapboxMaps.LayerPosition? = nil
         var lowerLayers = Set<String>()
@@ -1788,15 +1788,15 @@ open class NavigationMapView: UIView {
             } else if upperLayers.contains(layerInfo.id) {
                 // find the bottommost layer that should be above the layerIdentifier.
                 layerPosition = .below(layerInfo.id)
-            } else if belowSymbol {
-                // find the topmost non symbol layer for layerIdentifier in belowSymbolLayers.
+            } else if isLowermostLayer {
+                // find the topmost non symbol layer for layerIdentifier in lowermostSymbolLayers.
                 if targetLayer == nil,
                    layerInfo.type.rawValue != "symbol",
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
                 }
-            } else if aboveRoadName {
+            } else if isAboveRoadLayer {
                 // find the topmost road name label layer for layerIdentifier in arrowLayers.
                 if targetLayer == nil,
                    layerInfo.id.contains("road-label"),
@@ -1804,7 +1804,7 @@ open class NavigationMapView: UIView {
                     targetLayer = layerInfo.id
                 }
             } else {
-                // find the topmost layer for layerIdentifier in aboveSymbolLayers.
+                // find the topmost layer for layerIdentifier in uppermostSymbolLayers.
                 if targetLayer == nil,
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
@@ -1816,39 +1816,35 @@ open class NavigationMapView: UIView {
         guard let targetLayer = targetLayer else { return layerPosition }
         guard let layerPosition = layerPosition else { return .above(targetLayer) }
         
-        if belowSymbol {
+        if isLowermostLayer {
             // For layers should be below symbol layers.
-            if case let .below(sequenceLayer) = layerPosition, !belowSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer isn't in belowSymbolLayers, it's above symbol layer.
+            if case let .below(sequenceLayer) = layerPosition, !lowermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in lowermostSymbolLayers, it's above symbol layer.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost non symbol layer,
                 // but under the symbol layers.
                 return .above(targetLayer)
-            } else {
-                return layerPosition
             }
-        } else if aboveRoadName {
+        } else if isAboveRoadLayer {
             // For layers should be above road name labels but below other symbol layers.
-            if case let .below(sequenceLayer) = layerPosition, aboveSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer is in aboveSymbolLayers, it's above all symbol layers.
+            if case let .below(sequenceLayer) = layerPosition, uppermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in uppermostSymbolLayers, it's above all symbol layers.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name symbol layer.
                 return .above(targetLayer)
-            } else if case let .above(sequenceLayer) = layerPosition, belowSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer is in belowSymbolLayers, it's below all symbol layers.
+            } else if case let .above(sequenceLayer) = layerPosition, lowermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in lowermostSymbolLayers, it's below all symbol layers.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name symbol layer.
                 return .above(targetLayer)
-            } else {
-                return layerPosition
             }
         } else {
-            // For other layers.
-            if case let .above(sequenceLayer) = layerPosition, !aboveSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer isn't in aboveSymbolLayers, it's below some symbol layers.
+            // For other layers should be uppermost and above symbol layers.
+            if case let .above(sequenceLayer) = layerPosition, !uppermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in uppermostSymbolLayers, it's below some symbol layers.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost layer.
                 return .above(targetLayer)
-            } else {
-                return layerPosition
             }
         }
+        
+        return layerPosition
     }
     
     /**
