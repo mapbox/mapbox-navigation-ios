@@ -323,6 +323,9 @@ extension NavigationMapView {
 
                 guard case let .lineString(lineString) = feature.geometry,
                       let distance = lineString.distance() else {
+                    if gradientStops.isEmpty {
+                        gradientStops[0.0] = lineSettings.baseColor
+                    }
                     return gradientStops
                 }
                 let minimumPercentGap = 2e-16
@@ -335,7 +338,7 @@ extension NavigationMapView {
                     if index + 1 < routeLineFeatures.count {
                         let segmentEndPercentTraveled = distanceTraveled / routeDistance
                         var currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
-                        currentGradientStop = max(currentGradientStop, 0.0)
+                        currentGradientStop = min(max(currentGradientStop, 0.0), 1.0)
                         gradientStops[currentGradientStop] = associatedFeatureColor
                         lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                     }
@@ -349,7 +352,7 @@ extension NavigationMapView {
                     } else {
                         let segmentStartPercentTraveled = distanceTraveled / routeDistance
                         var currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                        currentGradientStop = min(currentGradientStop, 1.0)
+                        currentGradientStop = min(max(currentGradientStop, 0.0), 1.0)
                         gradientStops[currentGradientStop] = associatedFeatureColor
                     }
                     
@@ -361,14 +364,14 @@ extension NavigationMapView {
                 } else {
                     let segmentStartPercentTraveled = distanceTraveled / routeDistance
                     var currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                    currentGradientStop = min(currentGradientStop, 1.0)
+                    currentGradientStop = min(max(currentGradientStop, 0.0), 1.0)
                     gradientStops[currentGradientStop] = associatedFeatureColor
                 }
                 
                 distanceTraveled = distanceTraveled + distance
                 let segmentEndPercentTraveled = distanceTraveled / routeDistance
                 var currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
-                currentGradientStop = max(currentGradientStop, 0.0)
+                currentGradientStop = min(max(currentGradientStop, 0.0), 1.0)
                 gradientStops[currentGradientStop] = associatedFeatureColor
                 lastRecordSegment = (currentGradientStop, associatedFeatureColor)
             }
