@@ -236,6 +236,26 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
     }
     
+    func testEmptyRouteGradientStops() {
+        let route = getRoute()
+        var congestionFeatures = route.congestionFeatures(legIndex: 0)
+        congestionFeatures.indices.forEach{ congestionFeatures[$0].geometry = .lineString(LineString([])) }
+        
+        congestionFeatures.forEach { feature in
+            guard case let .lineString(lineString) = feature.geometry,
+                  lineString.distance() == nil else {
+                XCTFail("Failed to generate nil distance features with empty coordinates shape route.")
+                return
+            }
+        }
+        
+        navigationMapView.trafficUnknownColor = UIColor.blue
+        let gradientStops = navigationMapView.routeLineCongestionGradient(route,
+                                                                          congestionFeatures: congestionFeatures)
+        let expectedGradientStops: [Double: UIColor] = [0.0: navigationMapView.trafficUnknownColor]
+        XCTAssertEqual(gradientStops, expectedGradientStops,  "Failed to generate non-empty gradient stops for empty coordinates shape route.")
+    }
+    
     func testUnstartedRouteProgressWithValidRoute() {
         let route = getRoute()
         let routeProgress = getUnstartedRouteProgress(route: route)

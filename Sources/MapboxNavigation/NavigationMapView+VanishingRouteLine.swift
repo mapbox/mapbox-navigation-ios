@@ -396,7 +396,7 @@ extension NavigationMapView {
         let baseColor: UIColor
         if let _ = congestionFeatures {
             overriddenLineLayerColor = lineLayerColorIfPresent(from: route)
-            baseColor = overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown)
+            baseColor = overriddenLineLayerColor ?? (isMain ? trafficUnknownColor : alternativeTrafficUnknownColor)
         } else {
             overriddenLineLayerColor = lineLayerCasingColorIfPresent(from: route)
             baseColor = overriddenLineLayerColor ?? routeCasingColor
