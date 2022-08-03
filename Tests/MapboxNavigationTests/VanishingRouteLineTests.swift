@@ -90,7 +90,7 @@ class VanishingRouteLineTests: TestCase {
                                 distance: routeLeg.distance,
                                 expectedTravelTime: routeLeg.expectedTravelTime,
                                 profileIdentifier: routeLeg.profileIdentifier)
-        let emptyRoute = Route(legs: [emptyLeg], shape: route.shape, distance: route.distance, expectedTravelTime: route.expectedTravelTime)
+        let emptyRoute = Route(legs: [emptyLeg], shape: LineString([]), distance: route.distance, expectedTravelTime: route.expectedTravelTime)
         return emptyRoute
     }
     
@@ -237,9 +237,9 @@ class VanishingRouteLineTests: TestCase {
     }
     
     func testEmptyRouteGradientStops() {
-        let route = getRoute()
-        var congestionFeatures = route.congestionFeatures(legIndex: 0)
-        congestionFeatures.indices.forEach{ congestionFeatures[$0].geometry = .lineString(LineString([])) }
+        let route = getEmptyRoute()
+        let congestionFeatures = route.congestionFeatures(legIndex: 0)
+        XCTAssertFalse(congestionFeatures.isEmpty, "Failed to generate features for empty route.")
         
         congestionFeatures.forEach { feature in
             guard case let .lineString(lineString) = feature.geometry,
