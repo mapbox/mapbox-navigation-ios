@@ -44,6 +44,7 @@
 * Added `ResumeButton.borderWidth`, `ResumeButton.cornerRadius` and `ResumeButton.borderColor` properties that allow `ResumeButton`'s style modification. ([#3996](https://github.com/mapbox/mapbox-navigation-ios/pull/3996))
 * Fixed a crash when dismissing `NavigationViewController`. ([#4029](https://github.com/mapbox/mapbox-navigation-ios/pull/4029))
 * Fixed an issue where `StyleManager` was not applying style on iPad. ([#4039](https://github.com/mapbox/mapbox-navigation-ios/pull/4039))
+* Added filling of `Incident` properties `countryCodeAlpha3`, `countryCode`, `roadIsClosed`, `longDescription`, `numberOfBlockedLanes`, `congestionLevel`, `affectedRoadNames` when receiving `RoadObject` via Electronic Horizon. ([#4045](https://github.com/mapbox/mapbox-navigation-ios/pull/4045))
 
 ## v2.6.0
 

@@ -33,7 +33,7 @@ extension Incident {
         @unknown default:
             fatalError("Unknown IncidentInfo type.")
         }
-        
+
         self.init(identifier: incidentInfo.id,
                   type: incidentType,
                   description: incidentInfo.description ?? "",
@@ -45,7 +45,15 @@ extension Incident {
                   subtypeDescription: incidentInfo.subTypeDescription,
                   alertCodes: Set(incidentInfo.alertcCodes.map { $0.intValue }),
                   lanesBlocked: BlockedLanes(descriptions: incidentInfo.lanesBlocked),
-                  shapeIndexRange: -1 ..< -1)
+                  shapeIndexRange: -1 ..< -1,
+                  countryCodeAlpha3: incidentInfo.iso_3166_1_alpha3,
+                  countryCode: incidentInfo.iso_3166_1_alpha2,
+                  roadIsClosed: incidentInfo.isRoadClosed,
+                  longDescription: incidentInfo.longDescription,
+                  numberOfBlockedLanes: incidentInfo.numLanesBlocked?.intValue,
+                  congestionLevel: incidentInfo.congestion?.value?.intValue,
+                  affectedRoadNames: incidentInfo.affectedRoadNames
+        )
     }
 }
 
