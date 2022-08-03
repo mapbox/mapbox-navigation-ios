@@ -597,4 +597,106 @@ class NavigationMapViewTests: TestCase {
         
         navigationMapView.removeRoutes()
     }
+    
+    func testLayerPosition() {
+        let multilegRoute = Fixture.route(from: "multileg-route", options: routeOptions)
+        
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
+        
+        let buildingLayer: [String: String] = [
+            "id": "building-outline",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "building"
+        ]
+        let roadLabelLayer: [String: String] = [
+            "id": "road-label",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "road"
+        ]
+        let roadExitLayer: [String: String] = [
+            "id": "road-exit-label",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "road-exit"
+        ]
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.385563, 37.763330
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
+                    "type": "vector"
+                ],
+                "custom": [
+                    "url": "http://api.example.com/tilejson.json",
+                    "type": "raster"
+                ]
+            ],
+            "layers": [
+                buildingLayer,
+                roadLabelLayer,
+                roadExitLayer
+            ]
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+        
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
+            mapLoadingErrorExpectation.fulfill()
+        })
+        
+        navigationMapView.mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
+        
+        navigationMapView.show([multilegRoute])
+        navigationMapView.showsRestrictedAreasOnRoute = true
+        navigationMapView.showWaypoints(on: multilegRoute)
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 1)
+        
+        var allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        var expectedLayerSequence = [
+            buildingLayer["id"]!,
+            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
+            multilegRoute.identifier(.route(isMainRoute: true)),
+            multilegRoute.identifier(.restrictedRouteAreaRoute),
+            roadLabelLayer["id"]!,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            roadExitLayer["id"]!,
+            NavigationMapView.LayerIdentifier.waypointCircleLayer,
+            NavigationMapView.LayerIdentifier.waypointSymbolLayer
+        ]
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
+        
+        navigationMapView.removeWaypoints()
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
+        navigationMapView.showsRestrictedAreasOnRoute = false
+        
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        expectedLayerSequence = [
+            buildingLayer["id"]!,
+            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
+            multilegRoute.identifier(.route(isMainRoute: true)),
+            roadLabelLayer["id"]!,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            roadExitLayer["id"]!
+        ]
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
+    }
 }

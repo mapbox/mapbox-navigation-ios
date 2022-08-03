@@ -174,34 +174,6 @@ extension MapView {
         
         return datasets
     }
-
-    var mainRouteLineParentLayerIdentifier: String? {
-        var parentLayer: String? = nil
-        let identifiers = [
-            NavigationMapView.LayerIdentifier.arrowLayer,
-            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
-            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
-            NavigationMapView.LayerIdentifier.waypointCircleLayer,
-            NavigationMapView.LayerIdentifier.buildingExtrusionLayer
-        ]
-        
-        for layer in mapboxMap.style.allLayerIdentifiers.reversed() {
-            if !(layer.type.rawValue == "symbol") && !identifiers.contains(layer.id) {
-                let sourceLayer = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer").value as? String
-                
-                if let sourceLayer = sourceLayer,
-                   sourceLayer.isEmpty {
-                    continue
-                }
-                
-                parentLayer = layer.id
-                break
-            }
-        }
-        
-        return parentLayer
-    }
     
     /**
      Method, which returns list of source identifiers, which contain streets tile set.

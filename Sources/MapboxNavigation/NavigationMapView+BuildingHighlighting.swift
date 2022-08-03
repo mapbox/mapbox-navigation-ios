@@ -28,7 +28,8 @@ extension NavigationMapView {
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
             .filter({ $0.contains("building") })
-        let layerPosition = identifiers.last.map { LayerPosition.above($0) }
+        let layerIdentifier = LayerIdentifier.buildingExtrusionLayer
+        let layerPosition = layerPosition(for: layerIdentifier) ?? identifiers.last.map { LayerPosition.above($0) }
         
         for coordinate in coordinates {
             let screenCoordinate = mapView.mapboxMap.point(for: coordinate)
