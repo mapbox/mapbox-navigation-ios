@@ -416,11 +416,7 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    var layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
-                    if let roadLabelIdentifier = mapView.mapboxMap.style.allLayerIdentifiers.compactMap({ $0.id }).filter({ $0.contains("road-label") }).last,
-                       mapView.mapboxMap.style.layerExists(withId: roadLabelIdentifier) {
-                        layerPosition = .above(roadLabelIdentifier)
-                    }
+                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
                 }
                 
@@ -1750,12 +1746,14 @@ open class NavigationMapView: UIView {
             route?.identifier(.route(isMainRoute: false)),
             route?.identifier(.routeCasing(isMainRoute: true)),
             route?.identifier(.route(isMainRoute: true)),
-            route?.identifier(.restrictedRouteAreaRoute),
+            route?.identifier(.restrictedRouteAreaRoute)
+        ].compactMap{ $0 }
+        let arrowLayers: [String] = [
             LayerIdentifier.arrowStrokeLayer,
             LayerIdentifier.arrowLayer,
             LayerIdentifier.arrowSymbolCasingLayer,
             LayerIdentifier.arrowSymbolLayer
-        ].compactMap{ $0 }
+        ]
         let aboveSymbolLayers: [String] = [
             LayerIdentifier.waypointCircleLayer,
             LayerIdentifier.waypointSymbolLayer,
@@ -1766,8 +1764,9 @@ open class NavigationMapView: UIView {
             LayerIdentifier.puck2DLayer,
             LayerIdentifier.puck3DLayer
         ]
-        let belowSymbol = !aboveSymbolLayers.contains(layerIdentifier)
-        let allAddedLayers: [String] = belowSymbolLayers + aboveSymbolLayers
+        let belowSymbol = belowSymbolLayers.contains(layerIdentifier)
+        let aboveRoadName = arrowLayers.contains(layerIdentifier)
+        let allAddedLayers: [String] = belowSymbolLayers + arrowLayers + aboveSymbolLayers
         
         var layerPosition: MapboxMaps.LayerPosition? = nil
         var lowerLayers = Set<String>()
@@ -1797,6 +1796,13 @@ open class NavigationMapView: UIView {
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
                 }
+            } else if aboveRoadName {
+                // find the topmost road name label layer for layerIdentifier in arrowLayers.
+                if targetLayer == nil,
+                   layerInfo.id.contains("road-label"),
+                   mapView.mapboxMap.style.layerExists(withId: layerInfo.id) {
+                    targetLayer = layerInfo.id
+                }
             } else {
                 // find the topmost layer for layerIdentifier in aboveSymbolLayers.
                 if targetLayer == nil,
@@ -1812,18 +1818,31 @@ open class NavigationMapView: UIView {
         
         if belowSymbol {
             // For layers should be below symbol layers.
-            if case let .below(sequenceLayer) = layerPosition, aboveSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer is in aboveSymbolLayers, it's above symbol layers as well.
+            if case let .below(sequenceLayer) = layerPosition, !belowSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in belowSymbolLayers, it's above symbol layer.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost non symbol layer,
                 // but under the symbol layers.
                 return .above(targetLayer)
             } else {
                 return layerPosition
             }
+        } else if aboveRoadName {
+            // For layers should be above road name labels but below other symbol layers.
+            if case let .below(sequenceLayer) = layerPosition, aboveSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in aboveSymbolLayers, it's above all symbol layers.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name symbol layer.
+                return .above(targetLayer)
+            } else if case let .above(sequenceLayer) = layerPosition, belowSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in belowSymbolLayers, it's below all symbol layers.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name symbol layer.
+                return .above(targetLayer)
+            } else {
+                return layerPosition
+            }
         } else {
             // For other layers.
-            if case let .above(sequenceLayer) = layerPosition, belowSymbolLayers.contains(sequenceLayer) {
-                // If the sequenceLayer is in belowSymbolLayers, it's below symbol layers as well.
+            if case let .above(sequenceLayer) = layerPosition, !aboveSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in aboveSymbolLayers, it's below some symbol layers.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost layer.
                 return .above(targetLayer)
             } else {
