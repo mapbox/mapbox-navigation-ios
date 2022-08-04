@@ -90,7 +90,7 @@ class VanishingRouteLineTests: TestCase {
                                 distance: routeLeg.distance,
                                 expectedTravelTime: routeLeg.expectedTravelTime,
                                 profileIdentifier: routeLeg.profileIdentifier)
-        let emptyRoute = Route(legs: [emptyLeg], shape: route.shape, distance: route.distance, expectedTravelTime: route.expectedTravelTime)
+        let emptyRoute = Route(legs: [emptyLeg], shape: LineString([]), distance: route.distance, expectedTravelTime: route.expectedTravelTime)
         return emptyRoute
     }
     
@@ -234,6 +234,26 @@ class VanishingRouteLineTests: TestCase {
         // Route without coordinates inside its steps would lead to 0 routeRemainingDistancesIndex.
         XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, 0)
         XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
+    }
+    
+    func testEmptyRouteGradientStops() {
+        let route = getEmptyRoute()
+        let congestionFeatures = route.congestionFeatures(legIndex: 0)
+        XCTAssertFalse(congestionFeatures.isEmpty, "Failed to generate features for empty route.")
+        
+        congestionFeatures.forEach { feature in
+            guard case let .lineString(lineString) = feature.geometry,
+                  lineString.distance() == nil else {
+                XCTFail("Failed to generate nil distance features with empty coordinates shape route.")
+                return
+            }
+        }
+        
+        navigationMapView.trafficUnknownColor = UIColor.blue
+        let gradientStops = navigationMapView.routeLineCongestionGradient(route,
+                                                                          congestionFeatures: congestionFeatures)
+        let expectedGradientStops: [Double: UIColor] = [0.0: navigationMapView.trafficUnknownColor]
+        XCTAssertEqual(gradientStops, expectedGradientStops,  "Failed to generate non-empty gradient stops for empty coordinates shape route.")
     }
     
     func testUnstartedRouteProgressWithValidRoute() {
