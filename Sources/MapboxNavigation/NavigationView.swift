@@ -196,6 +196,7 @@ open class NavigationView: UIView {
     public init(frame: CGRect,
                 tileStoreLocation: TileStoreConfiguration.Location? = .default,
                 navigationMapView: NavigationMapView? = nil) {
+        navigationMapView?.translatesAutoresizingMaskIntoConstraints = false
         self.navigationMapView = navigationMapView ?? NavigationMapView(frame: frame, tileStoreLocation: tileStoreLocation)
         
         super.init(frame: frame)

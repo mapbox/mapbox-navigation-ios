@@ -1,3 +1,9 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Thay Tuyến";
+
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Đã đến nơi rồi";
 
@@ -76,6 +82,12 @@
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Chúng tôi có thể cải thiện bằng cách nào?";
 
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "Nhanh hơn %@";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Đã Tìm thấy Đường Nhanh Hơn";
 
@@ -121,6 +133,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "Dài hơn %@";
+
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
 "NAVIGATION_REPORT_CANCEL" = "Hủy";
 
@@ -151,7 +166,7 @@
 /* Feedback that a street is permanently blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Đường chặn cố định";
 
-/* Feedback that a street is temporary blocked off. */
+/* Feedback that a street is temporarily blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Đường chặn tạm thời";
 
 /* Feedback that there is a congestion on the road. */
@@ -225,6 +240,18 @@
 
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Tuyến đường đi theo đường quá hẹp";
+
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Cùng Chiều dài";
+
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "Cùng Thời gian";
+
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "Ngắn hơn %@";
+
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "Chậm hơn %@";
 
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "T.đa";

@@ -21,6 +21,8 @@
 * Fixed an issue where the destination building is not highlighted after rerouting. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the incorrect destination building is highlighted after panning the correct building off screen. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the maneuver arrow on the route line overlapped labels for points of interest. ([#4030](https://github.com/mapbox/mapbox-navigation-ios/pull/4030))
+* Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049)) 
+* Fixed the crash caused by showing a route that doesn't contain coordinates. ([#4046](https://github.com/mapbox/mapbox-navigation-ios/pull/4046))
 
 ### CarPlay
 
