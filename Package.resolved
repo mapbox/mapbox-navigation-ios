@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": "maxim/mapbox-common-spm-update-to-v21.4.0",
-          "revision": "eca8d011f80c513cc630e9f75036ad3ea6037b1c",
+          "revision": "64c90f0a0bdfd76beaffee0401b03a82fa73b572",
           "version": null
         }
       },
