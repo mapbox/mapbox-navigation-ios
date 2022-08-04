@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "59b81d4f6316a661c322e8c47bc3310f8a1bdd4a",
-          "version": "21.3.0"
+          "revision": "507c2661ec71e1c2a6cb28383b60a19fab3c10fd",
+          "version": "21.4.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "9984e5f6218ce3b5e5ad540218085e6743e133b2",
-          "version": "10.5.1"
+          "revision": "1dc45cca0509087df9fbd6f914b5c0633f9ba287",
+          "version": "10.5.3"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "0e450290ea041ce8c1f5b7aba86fec7ac4df1150",
-          "version": "2.5.0"
+          "revision": "ad9ae364b2ec706886394e1ac460df7758222d93",
+          "version": "2.6.0"
         }
       },
       {
@@ -59,9 +59,9 @@
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": null,
-          "revision": "592aa782e7ac2a51c8d8a54231eaa13b4778674d",
-          "version": "10.5.0"
+          "branch": "maxim/mapbox-common-spm-update-to-v21.4.0",
+          "revision": "eca8d011f80c513cc630e9f75036ad3ea6037b1c",
+          "version": null
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "b0a6008c184c1010dac11e14bf20afe4261d8c36",
-          "version": "2.0.0"
+          "revision": "04751d420bb7de3d0481776839ff77d2e274a0e3",
+          "version": "2.0.1"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "f3c9084a71ef4376f2fabbdf1d3d90a49f1fabdb",
-          "version": "1.1.2"
+          "revision": "df9ee6676cd5b3bf5b330ec7568a5644f547201b",
+          "version": "1.1.3"
         }
       },
       {
