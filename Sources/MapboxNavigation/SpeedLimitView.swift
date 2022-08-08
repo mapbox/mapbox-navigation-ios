@@ -89,9 +89,11 @@ public class SpeedLimitView: UIView {
     }
     
     /**
-     Allows to show the legend of the speed limit for MUTCD-style signs.
+     Allows to show only the legend of the speed limit for MUTCD-style signs.
      */
-    public var isLegendShowing: Bool = true
+    public var onlyShowLegend: Bool = false
+    
+    public var legend: String? = "Speed Limit"
     
     let measurementFormatter: MeasurementFormatter = {
         let formatter = MeasurementFormatter()
@@ -148,12 +150,16 @@ public class SpeedLimitView: UIView {
         
         switch signStandard {
         case .mutcd:
-            if locale.identifier == "en_US" {
-                let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Speed Limit", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
-                SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
+            let unit: String = locale.usesMetricSystem ? "KM/H" : "MPH"
+            if let legend = legend {
+                let legendForSign = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: legend, comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
+                if onlyShowLegend {
+                    SpeedLimitStyleKit.drawMUTCDLegendOnly(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legendForSign, showLegend: true)
+                } else {
+                    SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legendForSign)
+                }
             } else {
-                let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Max", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
-                SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
+                SpeedLimitStyleKit.drawMUTCDUnitOnly(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: "", showLegend: false, unit: unit)
             }
         case .viennaConvention:
             if formattedSpeedLimit == "∞" {
