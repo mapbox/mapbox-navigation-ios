@@ -445,7 +445,7 @@ extension NavigationMapView {
     func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature]) -> [Double: UIColor] {
         // If there's no restricted feature, hide the restricted route line layer.
         guard restrictionFeatures.count > 0 else {
-            let gradientStops: [Double: UIColor] = [0.0: traversedRouteColor]
+            let gradientStops: [Double: UIColor] = [0.0: .defaultTraversedRouteColor]
             return gradientStops
         }
         
