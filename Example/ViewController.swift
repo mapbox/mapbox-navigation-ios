@@ -99,6 +99,8 @@ class ViewController: UIViewController {
     }
     
     weak var activeNavigationViewController: NavigationViewController?
+    
+    var profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic
 
     // MARK: - Initializer methods
     
@@ -448,6 +450,9 @@ class ViewController: UIViewController {
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
         let requestFollowCamera: ActionHandler = { _ in self.requestFollowCamera() }
         let requestIdleCamera: ActionHandler = { _ in self.requestIdleCamera() }
+        let requestCyclingDirections: ActionHandler = { _ in self.requestCyclingDirections() }
+        let requestWalkingDirections: ActionHandler = { _ in self.requestWalkingDirections() }
+        let requestAutoDirections: ActionHandler = { _ in self.requestAutoDirections() }
         let turnOnHistoryRecording: ActionHandler = { _ in self.turnOnHistoryRecording() }
         let turnOffHistoryRecording: ActionHandler = { _ in self.turnOffHistoryRecording() }
         
@@ -455,6 +460,9 @@ class ViewController: UIViewController {
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
             ("Request Following Camera", .default, requestFollowCamera),
             ("Request Idle Camera", .default, requestIdleCamera),
+            ("Request Cycling Directions", .default, requestCyclingDirections),
+            ("Request Walking Directions", .default, requestWalkingDirections),
+            ("Request Automobile Directions", .default, requestAutoDirections),
             ("Turn On History Recording", .default, turnOnHistoryRecording),
             ("Turn Off History Recording", .default, turnOffHistoryRecording),
             ("Cancel", .cancel, nil),
@@ -486,7 +494,22 @@ class ViewController: UIViewController {
     func requestIdleCamera() {
         navigationMapView.navigationCamera.stop()
     }
+    
+    func requestAutoDirections() {
+        profileIdentifier = .automobileAvoidingTraffic
+        requestRoute()
+    }
+    
+    func requestCyclingDirections() {
+        profileIdentifier = .cycling
+        requestRoute()
+    }
 
+    func requestWalkingDirections() {
+        profileIdentifier = .walking
+        requestRoute()
+    }
+    
     func turnOnHistoryRecording() {
         PassiveLocationManager.startRecordingHistory()
     }
@@ -519,7 +542,7 @@ class ViewController: UIViewController {
         }
         waypoints.insert(userWaypoint, at: 0)
 
-        let navigationRouteOptions = NavigationRouteOptions(waypoints: waypoints)
+        let navigationRouteOptions = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
         
         // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
         RouteControllerProactiveReroutingInterval = 30
