@@ -621,6 +621,18 @@ class NavigationMapViewTests: TestCase {
             "source": "composite",
             "source-layer": "road-exit"
         ]
+        let poiLabelLayer: [String: String] = [
+            "id": "poi-label",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "poi"
+        ]
+        let poiLabelCircleLayer: [String: String] = [
+            "id": "poi-label copy",
+            "type": "circle",
+            "source": "composite",
+            "source-layer": "poi"
+        ]
         
         let styleJSONObject: [String: Any] = [
             "version": 8,
@@ -641,7 +653,9 @@ class NavigationMapViewTests: TestCase {
             "layers": [
                 buildingLayer,
                 roadLabelLayer,
-                roadExitLayer
+                roadExitLayer,
+                poiLabelLayer,
+                poiLabelCircleLayer
             ]
         ]
         
@@ -676,6 +690,8 @@ class NavigationMapViewTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
             roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
             NavigationMapView.LayerIdentifier.waypointSymbolLayer
         ]
@@ -684,6 +700,7 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.removeWaypoints()
         navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
         navigationMapView.showsRestrictedAreasOnRoute = false
+        navigationMapView.show(continuousAlternatives: [])
         
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         expectedLayerSequence = [
@@ -695,7 +712,9 @@ class NavigationMapViewTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            roadExitLayer["id"]!
+            roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!
         ]
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
     }

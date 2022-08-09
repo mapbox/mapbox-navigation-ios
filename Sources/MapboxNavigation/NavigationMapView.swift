@@ -252,6 +252,7 @@ open class NavigationMapView: UIView {
                      layerPosition: MapboxMaps.LayerPosition? = nil,
                      legIndex: Int? = nil) {
         removeRoutes()
+        removeContinuousAlternativesRoutesLayers()
         
         self.routes = routes
         currentLegIndex = legIndex
@@ -685,7 +686,7 @@ open class NavigationMapView: UIView {
                 // In case if custom layer position was set - use it, otherwise in case if the route
                 // is the main one place it above `MapView.mainRouteLineParentLayerIdentifier`. All
                 // other alternative routes will be placed below it.
-                if let belowLayerIdentifier = parentLayerIndentifier {
+                if let belowLayerIdentifier = parentLayerIndentifier, mapView.mapboxMap.style.layerExists(withId: belowLayerIdentifier) {
                     layerPosition = .below(belowLayerIdentifier)
                 } else {
                     layerPosition = self.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
@@ -760,7 +761,7 @@ open class NavigationMapView: UIView {
         if let lineLayer = lineLayer {
             do {
                 var layerPosition: MapboxMaps.LayerPosition? = nil
-                if let parentLayerIndentifier = parentLayerIndentifier {
+                if let parentLayerIndentifier = parentLayerIndentifier, mapView.mapboxMap.style.layerExists(withId: parentLayerIndentifier) {
                     layerPosition = .below(parentLayerIndentifier)
                 } else {
                     layerPosition = self.layerPosition(for: layerIdentifier, route: route)
@@ -1792,6 +1793,7 @@ open class NavigationMapView: UIView {
                 // find the topmost non symbol layer for layerIdentifier in lowermostSymbolLayers.
                 if targetLayer == nil,
                    layerInfo.type.rawValue != "symbol",
+                   !layerInfo.id.contains("copy"),
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
