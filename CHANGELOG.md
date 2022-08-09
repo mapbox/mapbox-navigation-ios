@@ -30,6 +30,7 @@
 * Fixed an issue where the maneuver arrow on the route line overlapped labels for points of interest. ([#4030](https://github.com/mapbox/mapbox-navigation-ios/pull/4030))
 * Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049)) 
 * Fixed the crash caused by showing a route that doesn't contain coordinates. ([#4046](https://github.com/mapbox/mapbox-navigation-ios/pull/4046))
+* Fixed an issue where the route line layer is above poi label. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
 
 ### CarPlay
 
