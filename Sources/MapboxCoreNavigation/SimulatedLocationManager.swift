@@ -59,6 +59,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.currentSpeed = currentSpeed
         self.currentDistance = currentDistance
         self.route = route
+        if currentDistance != 0 {
+            self.remainingRouteShape = route.shape?.trimmed(from: currentDistance, to: LocationDistance.infinity)
+        }
 
         self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: queue) { [weak self] in
             self?.tick()

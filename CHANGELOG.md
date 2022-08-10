@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.6.1
+
+* Fixed and issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
+
 ## v2.6.0
 
 ### Packaging
