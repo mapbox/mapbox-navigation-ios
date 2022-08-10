@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+### Location Tracking
+
+* Exposed `RouteOptions.activityType` for subclassing which controls the location manager's activity type. Changed it's default value from `automotiveNavigation` to `otherNavigation`. ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
+
 ## 2.7.0
 
 ### Packaging
