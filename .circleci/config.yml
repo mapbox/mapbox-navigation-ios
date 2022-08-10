@@ -757,12 +757,6 @@ workflows:
         - build-example:
             name: "Build Example"
             context: Slack Orb
-        - spm-test-job:
-            name: "swift test; Xcode 12.5; iOS 14.5"
-            xcode: "12.5.0"
-            iOS: "14.5"
-            device: "iPhone 12 Pro Max"
-            context: Slack Orb
         - spm-core-integration-test-job:
             name: "Xcode 13; iOS 15.0; SPM Core test"
         - generate-docs-job:
