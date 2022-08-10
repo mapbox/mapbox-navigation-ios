@@ -213,12 +213,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
                 let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
-                let stepCoordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...]
-                    .map({ $0.shape?.coordinates })
                 
                 var totalDistance: CLLocationDistance = 0.0
-                for (index,stepCoordinates) in stepCoordinatesAfterCurrentStep.enumerated() {
-                    guard let stepCoordinates = stepCoordinates,
+                for (index, step) in routeProgress.currentLeg.steps.suffix(from: nextStepIndex).enumerated() {
+                    guard let stepCoordinates = step.shape?.coordinates,
                           let distance = stepCoordinates.distance() else { continue }
                     
                     if index == 0 {
@@ -231,14 +229,14 @@ public class NavigationViewportDataSource: ViewportDataSource {
                             totalDistance += distance
                         }
                     } else if distance >= 0.0 && totalDistance < geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
-                        if distance + totalDistance < geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
-                            compoundManeuvers.append(stepCoordinates)
-                            totalDistance += distance
-                        } else {
+                        if distance + totalDistance >= geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
                             let remanentDistance = geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers - totalDistance
                             let trimmedStepCoordinates = stepCoordinates.trimmed(distance: remanentDistance)
                             compoundManeuvers.append(trimmedStepCoordinates)
                             break
+                        } else {
+                            compoundManeuvers.append(stepCoordinates)
+                            totalDistance += distance
                         }
                     }
                 }
