@@ -3,6 +3,7 @@ PODS:
   - MapboxCoreMaps (10.5.3):
     - MapboxCommon (~> 21.3)
   - MapboxCoreNavigation (2.5.2):
+    - MapboxCommon (= 21.3.0)
     - MapboxDirections (~> 2.5.0)
     - MapboxMobileEvents (~> 1.0)
     - MapboxNavigationNative (< 102.0.0, >= 101.0.1)
@@ -54,7 +55,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: a336e40b53e3fda5c419fe093c9c40aff4f4dd2b
   MapboxCoreMaps: 259135c413370d63e998b6eb4acf888b5f292cc1
-  MapboxCoreNavigation: 47f99b462ea13bc9d149cccf40cdeef1126cd756
+  MapboxCoreNavigation: 86b8ad3703a3da7dae4c8e2262edf42e3aaffc49
   MapboxDirections: a5ca101fe80e5f39dfe38e4d5131572890d797c4
   MapboxMaps: 7668203e0b731c6d5e31d982f3bd4bb245950061
   MapboxMobileEvents: f7f3e8daeb4b83688ae62a4172dce79169a97233
