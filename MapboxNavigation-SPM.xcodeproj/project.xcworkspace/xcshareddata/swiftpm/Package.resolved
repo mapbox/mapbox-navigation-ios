@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "a85b353688f7ffb22809fbc890518f9f1dff7c43",
-          "version": "2.4.0"
+          "revision": "ad9ae364b2ec706886394e1ac460df7758222d93",
+          "version": "2.6.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "b0a6008c184c1010dac11e14bf20afe4261d8c36",
-          "version": "2.0.0"
+          "revision": "04751d420bb7de3d0481776839ff77d2e274a0e3",
+          "version": "2.0.1"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "f3c9084a71ef4376f2fabbdf1d3d90a49f1fabdb",
-          "version": "1.1.2"
+          "revision": "df9ee6676cd5b3bf5b330ec7568a5644f547201b",
+          "version": "1.1.3"
         }
       },
       {

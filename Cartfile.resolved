@@ -1,4 +1,4 @@
-binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "21.2.0"
+binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "21.3.0"
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "94.0.5"
 github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v3.1.2"
