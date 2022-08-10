@@ -16,7 +16,7 @@ extension Directions {
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
      */
-    @discardableResult open func calculateWithCache(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask? {
+    @discardableResult public func calculateWithCache(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask? {
         return calculate(options) { (session, result) in
             switch result {
             case .success(_):
@@ -43,7 +43,7 @@ extension Directions {
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
+    public func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         MapboxRoutingProvider(.offline).calculateRoutes(options: options,
                                                         completionHandler: completionHandler)
     }

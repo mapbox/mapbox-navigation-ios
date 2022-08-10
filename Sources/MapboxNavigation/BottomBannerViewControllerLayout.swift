@@ -134,7 +134,7 @@ extension BottomBannerViewController {
         layoutConstraints.append(trailingSeparatorView.leadingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
     }
     
-    open func reinstallConstraints() {
+    public func reinstallConstraints() {
         NSLayoutConstraint.deactivate(verticalCompactConstraints)
         NSLayoutConstraint.deactivate(verticalRegularConstraints)
         
