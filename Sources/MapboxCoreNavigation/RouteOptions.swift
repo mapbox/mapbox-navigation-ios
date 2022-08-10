@@ -2,12 +2,17 @@ import CoreLocation
 import MapboxDirections
 
 extension RouteOptions {
-    internal var activityType: CLActivityType {
+    /**
+     The type of user activity associated with the location updates.
+     
+     SDK configures this value judging by `profileIdentifier`. You can subclass and override this property if needed.
+     */
+    open var activityType: CLActivityType {
         switch self.profileIdentifier {
         case .cycling, .walking:
             return .fitness
         default:
-            return .automotiveNavigation
+            return .otherNavigation
         }
     }
     
