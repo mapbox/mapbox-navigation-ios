@@ -315,7 +315,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.0.0"
       device:
         type: string
         default: "iPhone 12 Pro Max"
@@ -416,7 +416,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.0.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -429,7 +429,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.0.0"
       device:
         type: string
       iOS:
@@ -488,7 +488,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.0.0"
       device:
         type: string
         default: "iPhone 12 Pro Max"
@@ -622,7 +622,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.0.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -666,15 +666,15 @@ workflows:
   extended-workflow:
     jobs:
       - spm-test-job:
-          name: "swift test; Xcode 12.5.1; iOS 14.5"
-          xcode: "12.5.1"
+          name: "swift test; Xcode 13.0.0; iOS 14.5"
+          xcode: "13.0.0"
           iOS: "14.5"
           device: "iPhone 12 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-test-job:
-          name: "swift test; Xcode 12.5.1; iOS 13.7"
-          xcode: "12.5.1"
+          name: "swift test; Xcode 13.0.0; iOS 13.7"
+          xcode: "13.0.0"
           iOS: "13.7"
           device: "iPhone 11 Pro Max"
           context: Slack Orb
@@ -756,12 +756,6 @@ workflows:
             context: Slack Orb
         - build-example:
             name: "Build Example"
-            context: Slack Orb
-        - spm-test-job:
-            name: "swift test; Xcode 12.5; iOS 14.5"
-            xcode: "12.5.1"
-            iOS: "14.5"
-            device: "iPhone 12 Pro Max"
             context: Slack Orb
         - spm-core-integration-test-job:
             name: "Xcode 13; iOS 15.0; SPM Core test"
