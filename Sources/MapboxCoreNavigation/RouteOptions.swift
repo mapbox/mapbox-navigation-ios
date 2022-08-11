@@ -7,7 +7,7 @@ extension RouteOptions {
      
      SDK configures this value judging by `profileIdentifier`. You can subclass and override this property if needed.
      */
-    open var activityType: CLActivityType {
+    @objc open var activityType: CLActivityType {
         switch self.profileIdentifier {
         case .cycling, .walking:
             return .fitness
