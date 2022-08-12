@@ -511,21 +511,25 @@ class ViewController: UIViewController {
     
     func requestAutoDirections() {
         profileIdentifier = .automobile
+        startButton.setTitle("Start Driving", for: .normal)
         requestRoute()
     }
     
     func requestAutoAvoidingTrafficDirections() {
         profileIdentifier = .automobileAvoidingTraffic
+        startButton.setTitle("Start Driving", for: .normal)
         requestRoute()
     }
     
     func requestCyclingDirections() {
         profileIdentifier = .cycling
+        startButton.setTitle("Start Cycling", for: .normal)
         requestRoute()
     }
 
     func requestWalkingDirections() {
         profileIdentifier = .walking
+        startButton.setTitle("Start Walking", for: .normal)
         requestRoute()
     }
     
