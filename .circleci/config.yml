@@ -759,7 +759,7 @@ workflows:
             context: Slack Orb
         - spm-test-job:
             name: "swift test; Xcode 12.5; iOS 14.5"
-            xcode: "12.5.0"
+            xcode: "12.5.1"
             iOS: "14.5"
             device: "iPhone 12 Pro Max"
             context: Slack Orb
