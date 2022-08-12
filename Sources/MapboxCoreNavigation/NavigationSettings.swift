@@ -14,7 +14,7 @@ public typealias RoutingProviderSource = MapboxRoutingProvider.Source
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
  */
 public class NavigationSettings {
     
@@ -39,7 +39,8 @@ public class NavigationSettings {
                   tileStoreConfiguration: .default,
                   routingProviderSource: .hybrid,
                   alternativeRouteDetectionStrategy: .init(),
-                  utilizeSensorData: false)
+                  utilizeSensorData: false,
+                  navigatorPredictionInterval: nil)
         }
 
         var directions: Directions
@@ -47,6 +48,7 @@ public class NavigationSettings {
         var routingProviderSource: RoutingProviderSource
         var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy?
         var utilizeSensorData: Bool
+        var navigatorPredictionInterval: TimeInterval?
     }
 
     /// Protects access to `_state`.
@@ -70,7 +72,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -79,15 +81,14 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
     }
 
     /**
-     Default `routingProviderSource` used for rerouting during navigation. By default, `.hybrid` is used.
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
      */
     public var routingProviderSource: RoutingProviderSource {
         state.routingProviderSource
@@ -96,7 +97,7 @@ public class NavigationSettings {
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
      
      If set to `nil`, the detection is turned off.
      */
@@ -116,6 +117,17 @@ public class NavigationSettings {
     }
     
     /**
+     Defines approximate navigator prediction between location ticks.
+     
+     If not specified, default value will be used.
+     
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
+     */
+    public var navigatorPredictionInterval: TimeInterval? {
+        state.navigatorPredictionInterval
+    }
+    
+    /**
      Initializes the settings with custom instances of globally used types.
 
      If you don't provide custom values, they will be initialized with the defaults.
@@ -131,23 +143,26 @@ public class NavigationSettings {
        - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of onlive vs. offline data for routing.
        - alternativeRouteDetectionStrategy: Configures how `AlternativeRoute`s will be detected during navigation process.
        - utilizeSensorData: Enables using sensors data to improve positioning.
+       - navigatorPredictionInterval: Defines approximate navigator prediction between location ticks.
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
                            routingProviderSource: RoutingProviderSource = .hybrid,
                            alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? = .init(),
-                           utilizeSensorData: Bool = false) {
+                           utilizeSensorData: Bool = false,
+                           navigatorPredictionInterval: TimeInterval? = nil) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`. This might result in an undefined behaviour.", category: .settings)
+            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`, `navigatorPredictionInterval`. This might result in an undefined behaviour.", category: .settings)
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
                        routingProviderSource: routingProviderSource,
                        alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy,
-                       utilizeSensorData: utilizeSensorData)
+                       utilizeSensorData: utilizeSensorData,
+                       navigatorPredictionInterval: navigatorPredictionInterval)
     }
     
     /**

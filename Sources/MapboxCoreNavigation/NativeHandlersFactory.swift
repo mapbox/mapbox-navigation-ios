@@ -104,7 +104,11 @@ class NativeHandlersFactory {
     static var navigatorConfig: NavigatorConfig {
         return NavigatorConfig(voiceInstructionThreshold: nil,
                                electronicHorizonOptions: nil,
-                               polling: nil,
+                               polling: NavigationSettings.shared.navigatorPredictionInterval.map {
+                                    PollingConfig(lookAhead: NSNumber(value: $0),
+                                                  unconditionalPatience: nil,
+                                                  unconditionalInterval: nil)
+                                },
                                incidentsOptions: nil,
                                noSignalSimulationEnabled: nil,
                                avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
