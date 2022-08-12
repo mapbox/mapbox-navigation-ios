@@ -101,6 +101,10 @@ class ViewController: UIViewController {
     weak var activeNavigationViewController: NavigationViewController?
     
     var profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
+    let drivingProfileText = NSLocalizedString("Start Driving", comment: "")
+    let drivingAvoidingTrafficProfileText = NSLocalizedString("Start Driving Avoiding Traffic", comment: "")
+    let cyclingProfileText = NSLocalizedString("Start Cycling", comment: "")
+    let walkingProfileText = NSLocalizedString("Start Walking", comment: "")
 
     // MARK: - Initializer methods
     
@@ -275,14 +279,16 @@ class ViewController: UIViewController {
     private func presentActionsAlertController() {
         var title: String?
         switch profileIdentifier {
-        case .automobile, .automobileAvoidingTraffic:
-            title = "Start Driving"
+        case .automobile:
+            title = drivingProfileText
+        case .automobileAvoidingTraffic:
+            title = drivingAvoidingTrafficProfileText
         case .cycling:
-            title = "Start Cycling"
+            title = cyclingProfileText
         case .walking:
-            title = "Start Walking"
+            title = walkingProfileText
         default:
-            title = "Start Navigation"
+            title = NSLocalizedString("Start Navigation", comment: "")
         }
         
         let alertController = UIAlertController(title: title, message: "Select the navigation type", preferredStyle: .actionSheet)
@@ -511,25 +517,25 @@ class ViewController: UIViewController {
     
     func requestAutoDirections() {
         profileIdentifier = .automobile
-        startButton.setTitle("Start Driving", for: .normal)
+        startButton.setTitle(drivingProfileText, for: .normal)
         requestRoute()
     }
     
     func requestAutoAvoidingTrafficDirections() {
         profileIdentifier = .automobileAvoidingTraffic
-        startButton.setTitle("Start Driving", for: .normal)
+        startButton.setTitle(drivingAvoidingTrafficProfileText, for: .normal)
         requestRoute()
     }
     
     func requestCyclingDirections() {
         profileIdentifier = .cycling
-        startButton.setTitle("Start Cycling", for: .normal)
+        startButton.setTitle(cyclingProfileText, for: .normal)
         requestRoute()
     }
 
     func requestWalkingDirections() {
         profileIdentifier = .walking
-        startButton.setTitle("Start Walking", for: .normal)
+        startButton.setTitle(walkingProfileText, for: .normal)
         requestRoute()
     }
     
