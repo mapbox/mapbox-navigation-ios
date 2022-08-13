@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "569e0f0e96fda86e1a1dcefaefa68cfa9491ffc1",
-          "version": "2.4.0"
+          "revision": "dbc07b0a298d642414d3abec59c9eaba1fb3367f",
+          "version": "2.5.0"
         }
       }
     ]
