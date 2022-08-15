@@ -67,11 +67,16 @@ class CustomViewController: UIViewController {
         navigationService.start()
         
         navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded, handler: { [weak self] _ in
-            guard let route = self?.navigationService.route else { return }
+            guard let self = self else { return }
             // By setting the `NavigationMapView.routeLineTracksTraversal` to `true`, it would allow the main route shown with
             // traversed part disappearing effect in a standalone `NavigationMapView` during active navigation.
-            self?.navigationMapView.routeLineTracksTraversal = true
-            self?.navigationMapView.show([route], legIndex: 0)
+            self.navigationMapView.routeLineTracksTraversal = true
+            if self.navigationMapView.mapView.mapboxMap.style.layerExists(withId: "road-intersection") {
+                // Provide the custom layer position for route line in active navigation.
+                self.navigationMapView.show([self.navigationService.route], layerPosition: .below("road-intersection") ,legIndex: 0)
+            } else {
+                self.navigationMapView.show([self.navigationService.route], legIndex: 0)
+            }
         })
         
         // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationManager`, to consume
