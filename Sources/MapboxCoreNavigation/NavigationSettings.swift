@@ -119,7 +119,9 @@ public class NavigationSettings {
     /**
      Defines approximate navigator prediction between location ticks.
      
-     If not specified, default value will be used.
+     Due to discrete location updates, Navigator always operates data "in the past" so it has to make prediction about user's current real position. This interval controls how far ahead Navigator will try to predict user location.
+     
+     If not specified (`nilled`), default value will be used.
      
      You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:)` method.
      */
