@@ -4,7 +4,7 @@
 
 ### Location Tracking
 
-* Exposed `RouteOptions.activityType` for subclassing which controls the location manager's activity type. Changed it's default value from `automotiveNavigation` to `otherNavigation`. ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
+* Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
 
 ## 2.7.0
 
