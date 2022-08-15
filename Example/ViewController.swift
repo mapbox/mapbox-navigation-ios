@@ -99,6 +99,12 @@ class ViewController: UIViewController {
     }
     
     weak var activeNavigationViewController: NavigationViewController?
+    
+    var profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
+    let drivingProfileText = NSLocalizedString("Start Driving", comment: "")
+    let drivingAvoidingTrafficProfileText = NSLocalizedString("Start Driving Avoiding Traffic", comment: "")
+    let cyclingProfileText = NSLocalizedString("Start Cycling", comment: "")
+    let walkingProfileText = NSLocalizedString("Start Walking", comment: "")
 
     // MARK: - Initializer methods
     
@@ -271,7 +277,21 @@ class ViewController: UIViewController {
     }
     
     private func presentActionsAlertController() {
-        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+        var title: String?
+        switch profileIdentifier {
+        case .automobile:
+            title = drivingProfileText
+        case .automobileAvoidingTraffic:
+            title = drivingAvoidingTrafficProfileText
+        case .cycling:
+            title = cyclingProfileText
+        case .walking:
+            title = walkingProfileText
+        default:
+            title = NSLocalizedString("Start Navigation", comment: "")
+        }
+        
+        let alertController = UIAlertController(title: title, message: "Select the navigation type", preferredStyle: .actionSheet)
         
         let basic: ActionHandler = { _ in self.startBasicNavigation() }
         let day: ActionHandler = { _ in self.startNavigation(styles: [DayStyle()]) }
@@ -448,6 +468,10 @@ class ViewController: UIViewController {
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
         let requestFollowCamera: ActionHandler = { _ in self.requestFollowCamera() }
         let requestIdleCamera: ActionHandler = { _ in self.requestIdleCamera() }
+        let requestAutoDirections: ActionHandler = { _ in self.requestAutoDirections() }
+        let requestAutoAvoidingTrafficDirections: ActionHandler = { _ in self.requestAutoAvoidingTrafficDirections() }
+        let requestCyclingDirections: ActionHandler = { _ in self.requestCyclingDirections() }
+        let requestWalkingDirections: ActionHandler = { _ in self.requestWalkingDirections() }
         let turnOnHistoryRecording: ActionHandler = { _ in self.turnOnHistoryRecording() }
         let turnOffHistoryRecording: ActionHandler = { _ in self.turnOffHistoryRecording() }
         
@@ -455,6 +479,10 @@ class ViewController: UIViewController {
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
             ("Request Following Camera", .default, requestFollowCamera),
             ("Request Idle Camera", .default, requestIdleCamera),
+            ("Request Auto Directions", .default, requestAutoDirections),
+            ("Request Auto Avoiding Traffic Directions", .default, requestAutoAvoidingTrafficDirections),
+            ("Request Cycling Directions", .default, requestCyclingDirections),
+            ("Request Walking Directions", .default, requestWalkingDirections),
             ("Turn On History Recording", .default, turnOnHistoryRecording),
             ("Turn Off History Recording", .default, turnOffHistoryRecording),
             ("Cancel", .cancel, nil),
@@ -486,7 +514,31 @@ class ViewController: UIViewController {
     func requestIdleCamera() {
         navigationMapView.navigationCamera.stop()
     }
+    
+    func requestAutoDirections() {
+        profileIdentifier = .automobile
+        startButton.setTitle(drivingProfileText, for: .normal)
+        requestRoute()
+    }
+    
+    func requestAutoAvoidingTrafficDirections() {
+        profileIdentifier = .automobileAvoidingTraffic
+        startButton.setTitle(drivingAvoidingTrafficProfileText, for: .normal)
+        requestRoute()
+    }
+    
+    func requestCyclingDirections() {
+        profileIdentifier = .cycling
+        startButton.setTitle(cyclingProfileText, for: .normal)
+        requestRoute()
+    }
 
+    func requestWalkingDirections() {
+        profileIdentifier = .walking
+        startButton.setTitle(walkingProfileText, for: .normal)
+        requestRoute()
+    }
+    
     func turnOnHistoryRecording() {
         PassiveLocationManager.startRecordingHistory()
     }
@@ -519,7 +571,7 @@ class ViewController: UIViewController {
         }
         waypoints.insert(userWaypoint, at: 0)
 
-        let navigationRouteOptions = NavigationRouteOptions(waypoints: waypoints)
+        let navigationRouteOptions = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
         
         // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
         RouteControllerProactiveReroutingInterval = 30
