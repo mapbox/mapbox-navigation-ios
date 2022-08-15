@@ -90,8 +90,6 @@ extension NavigationMapView {
             navigationMapView.updatePreferredFrameRate(for: progress)
             if currentLegIndexMapped != legIndex {
                 navigationMapView.showWaypoints(on: route, legIndex: legIndex)
-                navigationMapView.show([route], legIndex: legIndex)
-                currentLegIndexMapped = legIndex
             }
             
             if currentStepIndexMapped != stepIndex {
@@ -103,7 +101,8 @@ extension NavigationMapView {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
             }
             
-            navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate)
+            navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate, shouldRedraw: currentLegIndexMapped != legIndex)
+            currentLegIndexMapped = legIndex
         }
         
         private func updateMapOverlays(for routeProgress: RouteProgress) {

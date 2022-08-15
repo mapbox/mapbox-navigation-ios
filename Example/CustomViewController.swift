@@ -136,8 +136,6 @@ class CustomViewController: UIViewController {
         
         if routeProgress.legIndex != currentLegIndex {
             navigationMapView.showWaypoints(on: routeProgress.route, legIndex: routeProgress.legIndex)
-            navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
-            currentLegIndex = routeProgress.legIndex
         }
         
         // Update the top banner with progress updates
@@ -150,7 +148,8 @@ class CustomViewController: UIViewController {
         // Update the main route line during active navigation when `NavigationMapView.routeLineTracksTraversal` set to `true`
         // and route progress change, by calling `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
         // without redrawing the main route.
-        navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate)
+        navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: routeProgress.legIndex != currentLegIndex)
+        currentLegIndex = routeProgress.legIndex
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {

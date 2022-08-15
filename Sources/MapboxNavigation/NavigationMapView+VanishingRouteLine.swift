@@ -56,7 +56,7 @@ extension NavigationMapView {
      */
     public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, shouldRedraw: Bool = false) {
         if shouldRedraw {
-            show([routeProgress.route], legIndex: routeProgress.legIndex)
+            show([routeProgress.route], layerPosition: customRouteLineLayerPosition, legIndex: routeProgress.legIndex)
         }
         
         guard routeLineTracksTraversal && routes != nil else { return }

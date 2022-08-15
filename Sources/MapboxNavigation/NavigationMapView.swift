@@ -140,6 +140,11 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
+    /**
+     A custom route line layer position.
+     */
+    var customRouteLineLayerPosition: MapboxMaps.LayerPosition? = nil
+    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -163,7 +168,7 @@ open class NavigationMapView: UIView {
     func updateRouteLineWithRouteLineTracksTraversal() {
         if let routes = self.routes {
             let offset = fractionTraveled
-            show(routes, legIndex: currentLegIndex)
+            show(routes, layerPosition: customRouteLineLayerPosition, legIndex: currentLegIndex)
             if let route = routes.first, routeLineTracksTraversal {
                 updateRouteLineOffset(along: route, offset: offset)
             }
@@ -212,9 +217,9 @@ open class NavigationMapView: UIView {
         
         switch routesPresentationStyle {
         case .single:
-            show([activeRoute])
+            show([activeRoute], layerPosition: customRouteLineLayerPosition)
         case .all:
-            show(routes)
+            show(routes, layerPosition: customRouteLineLayerPosition)
         }
         
         showWaypoints(on: activeRoute)
@@ -256,6 +261,7 @@ open class NavigationMapView: UIView {
         
         self.routes = routes
         currentLegIndex = legIndex
+        customRouteLineLayerPosition = layerPosition
         
         applyRoutesDisplay(layerPosition: layerPosition)
     }
@@ -528,7 +534,7 @@ open class NavigationMapView: UIView {
     func removeLineGradientStops() {
         fractionTraveled = 0.0
         if let routes = self.routes {
-            show(routes, legIndex: currentLegIndex)
+            show(routes, layerPosition: customRouteLineLayerPosition, legIndex: currentLegIndex)
         }
         
         routePoints = nil
@@ -1793,7 +1799,7 @@ open class NavigationMapView: UIView {
                 // find the topmost non symbol layer for layerIdentifier in lowermostSymbolLayers.
                 if targetLayer == nil,
                    layerInfo.type.rawValue != "symbol",
-                   !layerInfo.id.contains("copy"),
+                   !layerInfo.id.contains("label"),
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
