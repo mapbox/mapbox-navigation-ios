@@ -115,71 +115,43 @@ extension UIView {
     // MARK: Anchors Access
     
     var safeArea: UIEdgeInsets {
-        guard #available(iOS 11.0, *) else { return .zero }
         return safeAreaInsets
     }
     
     var safeTopAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.topAnchor
-        }
-        return topAnchor
+        return safeAreaLayoutGuide.topAnchor
     }
     
     var safeLeadingAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.leadingAnchor
-        }
-        return leadingAnchor
+        return safeAreaLayoutGuide.leadingAnchor
     }
     
     var safeBottomAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.bottomAnchor
-        }
-        return bottomAnchor
+        return safeAreaLayoutGuide.bottomAnchor
     }
     
     var safeRightAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.rightAnchor
-        }
-        return rightAnchor
+        return safeAreaLayoutGuide.rightAnchor
     }
     
     var safeTrailingAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.trailingAnchor
-        }
-        return trailingAnchor
+        return safeAreaLayoutGuide.trailingAnchor
     }
     
     var safeWidthAnchor: NSLayoutDimension {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.widthAnchor
-        }
-        return widthAnchor
+        return safeAreaLayoutGuide.widthAnchor
     }
     
     var safeHeightAnchor: NSLayoutDimension {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.heightAnchor
-        }
-        return heightAnchor
+        return safeAreaLayoutGuide.heightAnchor
     }
     
     var safeCenterXAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.centerXAnchor
-        }
-        return centerXAnchor
+        return safeAreaLayoutGuide.centerXAnchor
     }
     
     var safeCenterYAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.centerYAnchor
-        }
-        return centerYAnchor
+        return safeAreaLayoutGuide.centerYAnchor
     }
 }
 
