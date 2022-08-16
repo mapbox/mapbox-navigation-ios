@@ -55,7 +55,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var availableWidth = collectionView.bounds.width
         
-        if #available(iOS 11.0, *), let keyWindow = UIApplication.shared.keyWindow {
+        if let keyWindow = UIApplication.shared.keyWindow {
             availableWidth = keyWindow.safeAreaLayoutGuide.layoutFrame.size.width
         }
         

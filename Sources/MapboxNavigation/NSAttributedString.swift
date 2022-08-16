@@ -10,7 +10,7 @@ extension NSMutableAttributedString {
             
             let sanitizedAttachment = NSTextAttachment()
             let maximumHeight = maximumImageSize.height
-            if #available(iOS 11.0, *), let image = attachment.image, image.size.height > maximumHeight {
+            if let image = attachment.image, image.size.height > maximumHeight {
                 // Scale down any oversized images.
                 let size = CGSize(width: image.size.width * maximumHeight / image.size.height, height: maximumHeight)
                 let resizedImage = UIGraphicsImageRenderer(size: size, format: imageRendererFormat).image { (context) in
