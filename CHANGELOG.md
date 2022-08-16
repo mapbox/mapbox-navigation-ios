@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+### Location Tracking
+
+* Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
+
 ## 2.7.0
 
 ### Packaging

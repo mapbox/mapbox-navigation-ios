@@ -7,7 +7,7 @@ extension RouteOptions {
         case .cycling, .walking:
             return .fitness
         default:
-            return .automotiveNavigation
+            return .otherNavigation
         }
     }
     
