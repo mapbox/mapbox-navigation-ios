@@ -487,7 +487,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
+                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                                    layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
@@ -1787,11 +1787,14 @@ open class NavigationMapView: UIView {
             }
         }
         
+        var foundAboveLayer: Bool = false
         for layerInfo in mapView.mapboxMap.style.allLayerIdentifiers.reversed() {
             if lowerLayers.contains(layerInfo.id) {
                 // find the topmost layer that should be below the layerIdentifier.
-                layerPosition = .above(layerInfo.id)
-                break
+                if !foundAboveLayer {
+                    layerPosition = .above(layerInfo.id)
+                    foundAboveLayer = true
+                }
             } else if upperLayers.contains(layerInfo.id) {
                 // find the bottommost layer that should be above the layerIdentifier.
                 layerPosition = .below(layerInfo.id)

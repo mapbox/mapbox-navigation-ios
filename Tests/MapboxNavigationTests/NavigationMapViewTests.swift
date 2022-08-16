@@ -633,12 +633,6 @@ class NavigationMapViewTests: TestCase {
             "source": "composite",
             "source-layer": "poi"
         ]
-        let poiLabelCircleLayer: [String: String] = [
-            "id": "poi-label copy",
-            "type": "circle",
-            "source": "composite",
-            "source-layer": "poi"
-        ]
         
         let styleJSONObject: [String: Any] = [
             "version": 8,
@@ -661,8 +655,7 @@ class NavigationMapViewTests: TestCase {
                 roadTrafficLayer,
                 roadLabelLayer,
                 roadExitLayer,
-                poiLabelLayer,
-                poiLabelCircleLayer
+                poiLabelLayer
             ]
         ]
         
@@ -699,7 +692,6 @@ class NavigationMapViewTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
-            poiLabelCircleLayer["id"]!,
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
             NavigationMapView.LayerIdentifier.waypointSymbolLayer
         ]
@@ -722,8 +714,7 @@ class NavigationMapViewTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
             roadExitLayer["id"]!,
-            poiLabelLayer["id"]!,
-            poiLabelCircleLayer["id"]!
+            poiLabelLayer["id"]!
         ]
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
