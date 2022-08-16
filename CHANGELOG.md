@@ -54,8 +54,8 @@
 * Fixed a crash when dismissing `NavigationViewController`. ([#4029](https://github.com/mapbox/mapbox-navigation-ios/pull/4029))
 * Fixed an issue where `StyleManager` was not applying style on iPad. ([#4039](https://github.com/mapbox/mapbox-navigation-ios/pull/4039))
 * Added filling of `Incident` properties `countryCodeAlpha3`, `countryCode`, `roadIsClosed`, `longDescription`, `numberOfBlockedLanes`, `congestionLevel`, `affectedRoadNames` when receiving `RoadObject` via Electronic Horizon. ([#4045](https://github.com/mapbox/mapbox-navigation-ios/pull/4045))
-* Fixes bearing calculation error during tunnel dead reckoning.
-* Fixed and issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
+* Fixed an issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
+* Fixed an issue where the user location indicator moves out of view when approaching complex intersections. ([#4070](https://github.com/mapbox/mapbox-navigation-ios/pull/4070))
 
 ## v2.6.0
 

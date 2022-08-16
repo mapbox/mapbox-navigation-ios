@@ -213,18 +213,31 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
                 let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
-                let stepCoordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...]
-                    .map({ $0.shape?.coordinates })
                 
-                for stepCoordinates in stepCoordinatesAfterCurrentStep {
-                    guard let stepCoordinates = stepCoordinates,
+                var totalDistance: CLLocationDistance = 0.0
+                for (index, step) in routeProgress.currentLeg.steps.suffix(from: nextStepIndex).enumerated() {
+                    guard let stepCoordinates = step.shape?.coordinates,
                           let distance = stepCoordinates.distance() else { continue }
                     
-                    if distance > 0.0 && distance < geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
-                        compoundManeuvers.append(stepCoordinates)
-                    } else {
-                        compoundManeuvers.append(stepCoordinates.trimmed(distance: geometryFramingAfterManeuver.distanceToFrameAfterManeuver))
-                        break
+                    if index == 0 {
+                        if distance >= geometryFramingAfterManeuver.distanceToFrameAfterManeuver {
+                            let trimmedStepCoordinates = stepCoordinates.trimmed(distance: geometryFramingAfterManeuver.distanceToFrameAfterManeuver)
+                            compoundManeuvers.append(trimmedStepCoordinates)
+                            break
+                        } else {
+                            compoundManeuvers.append(stepCoordinates)
+                            totalDistance += distance
+                        }
+                    } else if distance >= 0.0 && totalDistance < geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
+                        if distance + totalDistance >= geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
+                            let remanentDistance = geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers - totalDistance
+                            let trimmedStepCoordinates = stepCoordinates.trimmed(distance: remanentDistance)
+                            compoundManeuvers.append(trimmedStepCoordinates)
+                            break
+                        } else {
+                            compoundManeuvers.append(stepCoordinates)
+                            totalDistance += distance
+                        }
                     }
                 }
             }
