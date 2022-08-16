@@ -1799,7 +1799,6 @@ open class NavigationMapView: UIView {
                 // find the topmost non symbol layer for layerIdentifier in lowermostSymbolLayers.
                 if targetLayer == nil,
                    layerInfo.type.rawValue != "symbol",
-                   !layerInfo.id.contains("label"),
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     targetLayer = layerInfo.id
