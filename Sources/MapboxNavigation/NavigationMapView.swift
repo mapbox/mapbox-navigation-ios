@@ -487,8 +487,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolLayer, route: route)
-                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowLayer))
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                                    layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
