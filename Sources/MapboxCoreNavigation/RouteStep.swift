@@ -16,7 +16,7 @@ extension RouteStep {
     /**
      Returns true if the route step is on a motorway.
      */
-    open var isMotorway: Bool {
+    public var isMotorway: Bool {
         return intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
     }
     
@@ -34,7 +34,7 @@ extension RouteStep {
     /**
      Returns the last instruction for a given step.
      */
-    open var lastInstruction: SpokenInstruction? {
+    public var lastInstruction: SpokenInstruction? {
         return instructionsSpokenAlongStep?.last
     }
 }
