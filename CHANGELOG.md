@@ -7,6 +7,10 @@
 * Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
 * Added `NavigationSettings.navigatorPredictionInterval` to control how far ahead Navigator will predict user current position. ([#4072](https://github.com/mapbox/mapbox-navigation-ios/pull/4072))
 
+### Map
+
+* Fixed an issue where the route line layer appears above point of interest labels. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
+
 ## 2.7.0
 
 ### Packaging
@@ -30,7 +34,6 @@
 * Fixed an issue where the maneuver arrow on the route line overlapped labels for points of interest. ([#4030](https://github.com/mapbox/mapbox-navigation-ios/pull/4030))
 * Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049)) 
 * Fixed the crash caused by showing a route that doesn't contain coordinates. ([#4046](https://github.com/mapbox/mapbox-navigation-ios/pull/4046))
-* Fixed an issue where the route line layer appears above point of interest labels. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
 
 ### CarPlay
 
