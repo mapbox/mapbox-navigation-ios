@@ -7,6 +7,10 @@
 * Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
 * Added `NavigationSettings.navigatorPredictionInterval` to control how far ahead Navigator will predict user current position. ([#4072](https://github.com/mapbox/mapbox-navigation-ios/pull/4072))
 
+### Map
+
+* Fixed an issue where the route line layer appears above point of interest labels. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
+
 ## 2.7.0
 
 ### Packaging

@@ -609,6 +609,12 @@ class NavigationMapViewTests: TestCase {
             "source": "composite",
             "source-layer": "building"
         ]
+        let roadTrafficLayer: [String: String] = [
+            "id": "road-traffic",
+            "type": "line",
+            "source": "composite",
+            "source-layer": "road"
+        ]
         let roadLabelLayer: [String: String] = [
             "id": "road-label",
             "type": "symbol",
@@ -620,6 +626,18 @@ class NavigationMapViewTests: TestCase {
             "type": "symbol",
             "source": "composite",
             "source-layer": "road-exit"
+        ]
+        let poiLabelLayer: [String: String] = [
+            "id": "poi-label",
+            "type": "symbol",
+            "source": "composite",
+            "source-layer": "poi"
+        ]
+        let poiLabelCircleLayer: [String: String] = [
+            "id": "poi-label copy",
+            "type": "circle",
+            "source": "composite",
+            "source-layer": "poi"
         ]
         
         let styleJSONObject: [String: Any] = [
@@ -640,8 +658,11 @@ class NavigationMapViewTests: TestCase {
             ],
             "layers": [
                 buildingLayer,
+                roadTrafficLayer,
                 roadLabelLayer,
-                roadExitLayer
+                roadExitLayer,
+                poiLabelLayer,
+                poiLabelCircleLayer
             ]
         ]
         
@@ -667,6 +688,7 @@ class NavigationMapViewTests: TestCase {
         var allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         var expectedLayerSequence = [
             buildingLayer["id"]!,
+            roadTrafficLayer["id"]!,
             multilegRoute.identifier(.routeCasing(isMainRoute: true)),
             multilegRoute.identifier(.route(isMainRoute: true)),
             multilegRoute.identifier(.restrictedRouteAreaRoute),
@@ -676,27 +698,39 @@ class NavigationMapViewTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
             roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
             NavigationMapView.LayerIdentifier.waypointSymbolLayer
         ]
-        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add route line layers below bottommost symbol layer.")
         
+        // When custom layer position for route line provided, use the custom layer position.
+        let customRouteLineLayerPosition = MapboxMaps.LayerPosition.below("road-traffic")
+        navigationMapView.show([multilegRoute], layerPosition: customRouteLineLayerPosition)
         navigationMapView.removeWaypoints()
-        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
         navigationMapView.showsRestrictedAreasOnRoute = false
         
-        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         expectedLayerSequence = [
             buildingLayer["id"]!,
             multilegRoute.identifier(.routeCasing(isMainRoute: true)),
             multilegRoute.identifier(.route(isMainRoute: true)),
+            roadTrafficLayer["id"]!,
             roadLabelLayer["id"]!,
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            roadExitLayer["id"]!
+            roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!
         ]
-        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add layers in sequence.")
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
+        
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
+        navigationMapView.show(continuousAlternatives: [])
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to keep layer positions in active navigation.")
     }
 }

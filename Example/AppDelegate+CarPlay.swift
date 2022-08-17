@@ -99,6 +99,15 @@ extension AppDelegate: CarPlayManagerDelegate {
         
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
+        
+        guard let navigationMapView = navigationViewController.navigationMapView else { return }
+        // Provide the custom layer position for route line in active navigation.
+        let route = navigationViewController.navigationService.route
+        if navigationMapView.mapView.mapboxMap.style.layerExists(withId: "road-intersection") {
+            navigationMapView.show([route], layerPosition: .below("road-intersection") ,legIndex: 0)
+        } else {
+            navigationMapView.show([route], legIndex: 0)
+        }
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,

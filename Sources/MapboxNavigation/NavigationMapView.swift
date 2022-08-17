@@ -140,6 +140,11 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
+    /**
+     A custom route line layer position.
+     */
+    var customRouteLineLayerPosition: MapboxMaps.LayerPosition? = nil
+    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -163,7 +168,7 @@ open class NavigationMapView: UIView {
     func updateRouteLineWithRouteLineTracksTraversal() {
         if let routes = self.routes {
             let offset = fractionTraveled
-            show(routes, legIndex: currentLegIndex)
+            show(routes, layerPosition: customRouteLineLayerPosition, legIndex: currentLegIndex)
             if let route = routes.first, routeLineTracksTraversal {
                 updateRouteLineOffset(along: route, offset: offset)
             }
@@ -212,9 +217,9 @@ open class NavigationMapView: UIView {
         
         switch routesPresentationStyle {
         case .single:
-            show([activeRoute])
+            show([activeRoute], layerPosition: customRouteLineLayerPosition)
         case .all:
-            show(routes)
+            show(routes, layerPosition: customRouteLineLayerPosition)
         }
         
         showWaypoints(on: activeRoute)
@@ -252,9 +257,11 @@ open class NavigationMapView: UIView {
                      layerPosition: MapboxMaps.LayerPosition? = nil,
                      legIndex: Int? = nil) {
         removeRoutes()
+        removeContinuousAlternativesRoutesLayers()
         
         self.routes = routes
         currentLegIndex = legIndex
+        customRouteLineLayerPosition = layerPosition
         
         applyRoutesDisplay(layerPosition: layerPosition)
     }
@@ -480,8 +487,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, route: route)
-                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: layerPosition)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowLayer))
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                                    layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
@@ -527,7 +533,7 @@ open class NavigationMapView: UIView {
     func removeLineGradientStops() {
         fractionTraveled = 0.0
         if let routes = self.routes {
-            show(routes, legIndex: currentLegIndex)
+            show(routes, layerPosition: customRouteLineLayerPosition, legIndex: currentLegIndex)
         }
         
         routePoints = nil
@@ -685,7 +691,7 @@ open class NavigationMapView: UIView {
                 // In case if custom layer position was set - use it, otherwise in case if the route
                 // is the main one place it above `MapView.mainRouteLineParentLayerIdentifier`. All
                 // other alternative routes will be placed below it.
-                if let belowLayerIdentifier = parentLayerIndentifier {
+                if let belowLayerIdentifier = parentLayerIndentifier, mapView.mapboxMap.style.layerExists(withId: belowLayerIdentifier) {
                     layerPosition = .below(belowLayerIdentifier)
                 } else {
                     layerPosition = self.layerPosition(for: layerIdentifier, route: route, customLayerPosition: customLayerPosition)
@@ -760,7 +766,7 @@ open class NavigationMapView: UIView {
         if let lineLayer = lineLayer {
             do {
                 var layerPosition: MapboxMaps.LayerPosition? = nil
-                if let parentLayerIndentifier = parentLayerIndentifier {
+                if let parentLayerIndentifier = parentLayerIndentifier, mapView.mapboxMap.style.layerExists(withId: parentLayerIndentifier) {
                     layerPosition = .below(parentLayerIndentifier)
                 } else {
                     layerPosition = self.layerPosition(for: layerIdentifier, route: route)
@@ -1780,11 +1786,14 @@ open class NavigationMapView: UIView {
             }
         }
         
+        var foundAboveLayer: Bool = false
         for layerInfo in mapView.mapboxMap.style.allLayerIdentifiers.reversed() {
             if lowerLayers.contains(layerInfo.id) {
                 // find the topmost layer that should be below the layerIdentifier.
-                layerPosition = .above(layerInfo.id)
-                break
+                if !foundAboveLayer {
+                    layerPosition = .above(layerInfo.id)
+                    foundAboveLayer = true
+                }
             } else if upperLayers.contains(layerInfo.id) {
                 // find the bottommost layer that should be above the layerIdentifier.
                 layerPosition = .below(layerInfo.id)
@@ -1794,6 +1803,11 @@ open class NavigationMapView: UIView {
                    layerInfo.type.rawValue != "symbol",
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
+                    if layerInfo.type.rawValue == "circle",
+                       let isPersistentCircle = try? mapView.mapboxMap.style.isPersistentLayer(id: layerInfo.id),
+                       !isPersistentCircle {
+                        continue
+                    }
                     targetLayer = layerInfo.id
                 }
             } else if isAboveRoadLayer {

@@ -775,11 +775,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         if legIndex != currentLegIndexMapped {
             navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
-            navigationMapView?.show([routeProgress.route], legIndex: legIndex)
-            currentLegIndexMapped = legIndex
         }
         
-        navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate)
+        navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: legIndex != currentLegIndexMapped)
+        currentLegIndexMapped = legIndex
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {

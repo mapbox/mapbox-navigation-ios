@@ -22,10 +22,7 @@ extension NavigationMapView {
         
         showContinuousAlternativeRoutesDurations()
         
-        guard let routes = self.routes,
-              !routes.isEmpty else { return }
-        
-        applyRoutesDisplay()
+        updateRouteLineWithRouteLineTracksTraversal()
     }
     
     func removeContinuousAlternativesRoutesLayers() {

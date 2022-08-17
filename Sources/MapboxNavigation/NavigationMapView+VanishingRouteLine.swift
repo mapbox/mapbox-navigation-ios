@@ -56,7 +56,7 @@ extension NavigationMapView {
      */
     public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, shouldRedraw: Bool = false) {
         if shouldRedraw {
-            show([routeProgress.route], legIndex: routeProgress.legIndex)
+            show([routeProgress.route], layerPosition: customRouteLineLayerPosition, legIndex: routeProgress.legIndex)
         }
         
         guard routeLineTracksTraversal && routes != nil else { return }
@@ -445,7 +445,7 @@ extension NavigationMapView {
     func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature]) -> [Double: UIColor] {
         // If there's no restricted feature, hide the restricted route line layer.
         guard restrictionFeatures.count > 0 else {
-            let gradientStops: [Double: UIColor] = [0.0: traversedRouteColor]
+            let gradientStops: [Double: UIColor] = [0.0: .defaultTraversedRouteColor]
             return gradientStops
         }
         
