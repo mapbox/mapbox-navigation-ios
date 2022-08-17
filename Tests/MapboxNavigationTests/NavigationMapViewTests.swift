@@ -637,7 +637,8 @@ class NavigationMapViewTests: TestCase {
             "id": "poi-label copy",
             "type": "circle",
             "source": "composite",
-            "source-layer": "poi"
+            "source-layer": "poi",
+            "circle-pitch-alignment": "viewport"
         ]
         
         let styleJSONObject: [String: Any] = [
@@ -732,5 +733,92 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.show(continuousAlternatives: [])
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to keep layer positions in active navigation.")
+        
+        let circleLabelLayer = "circleLabelLayer"
+        let circleMapLayer = "circleMapLayer"
+        addCircleLayerInRuntime(mapView: navigationMapView.mapView,
+                                circleLabelId: circleLabelLayer,
+                                isPersistent: true,
+                                circlePitchAlignment: .viewport)
+        addCircleLayerInRuntime(mapView: navigationMapView.mapView,
+                                circleLabelId: circleMapLayer,
+                                isPersistent: false,
+                                circlePitchAlignment: .map,
+                                layerPosition: .below(roadLabelLayer["id"]!))
+        navigationMapView.removeRoutes()
+        navigationMapView.removeArrow()
+
+        expectedLayerSequence = [
+            buildingLayer["id"]!,
+            roadTrafficLayer["id"]!,
+            circleMapLayer,
+            roadLabelLayer["id"]!,
+            roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
+            circleLabelLayer
+        ]
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add different circle layers at designed layer position.")
+        
+        navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 1)
+        navigationMapView.showWaypoints(on: multilegRoute)
+        navigationMapView.show([multilegRoute])
+        navigationMapView.showsRestrictedAreasOnRoute = true
+        
+        expectedLayerSequence = [
+            buildingLayer["id"]!,
+            roadTrafficLayer["id"]!,
+            circleMapLayer,
+            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
+            multilegRoute.identifier(.route(isMainRoute: true)),
+            multilegRoute.identifier(.restrictedRouteAreaRoute),
+            roadLabelLayer["id"]!,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
+            circleLabelLayer,
+            NavigationMapView.LayerIdentifier.waypointCircleLayer,
+            NavigationMapView.LayerIdentifier.waypointSymbolLayer
+        ]
+        allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add route line at certain position with different circle layers.")
+    }
+    
+    func addCircleLayerInRuntime(mapView: MapView,
+                                 circleLabelId: String,
+                                 isPersistent: Bool,
+                                 circlePitchAlignment: CirclePitchAlignment,
+                                 layerPosition: MapboxMaps.LayerPosition? = nil) {
+        do {
+            if !mapView.mapboxMap.style.sourceExists(withId: circleLabelId) {
+                var feature = Feature(geometry: .point(Point.init(.init(latitude: 30, longitude: 120))))
+                feature.properties = ["name": .string(circleLabelId)]
+                var circleLabelSource = GeoJSONSource()
+                circleLabelSource.data = .feature(feature)
+                try mapView.mapboxMap.style.addSource(circleLabelSource, id: circleLabelId)
+            }
+            
+            mapView.mapboxMap.style.removeLayers([circleLabelId])
+            var circleLabelLayer = CircleLayer(id: circleLabelId)
+            circleLabelLayer.sourceLayer = "poi"
+            circleLabelLayer.source = circleLabelId
+            circleLabelLayer.circleColor = .constant(.init(UIColor.black))
+            circleLabelLayer.circleOpacity = .constant(.init(1))
+            circleLabelLayer.circleRadius = .constant(.init(10))
+            circleLabelLayer.circlePitchAlignment = .constant(circlePitchAlignment)
+            
+            if isPersistent {
+                try mapView.mapboxMap.style.addPersistentLayer(circleLabelLayer, layerPosition: layerPosition)
+            } else {
+                try mapView.mapboxMap.style.addLayer(circleLabelLayer, layerPosition: layerPosition)
+            }
+        } catch {
+            XCTFail("Failed to add circle layer in runtime.")
+        }
     }
 }
