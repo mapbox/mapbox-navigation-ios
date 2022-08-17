@@ -1803,6 +1803,11 @@ open class NavigationMapView: UIView {
                    layerInfo.type.rawValue != "symbol",
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
+                    if layerInfo.type.rawValue == "circle",
+                       let isPersistentCircle = try? mapView.mapboxMap.style.isPersistentLayer(id: layerInfo.id),
+                       !isPersistentCircle {
+                        continue
+                    }
                     targetLayer = layerInfo.id
                 }
             } else if isAboveRoadLayer {

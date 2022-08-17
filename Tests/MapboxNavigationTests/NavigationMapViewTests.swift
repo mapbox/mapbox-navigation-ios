@@ -689,6 +689,9 @@ class NavigationMapViewTests: TestCase {
         var expectedLayerSequence = [
             buildingLayer["id"]!,
             roadTrafficLayer["id"]!,
+            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
+            multilegRoute.identifier(.route(isMainRoute: true)),
+            multilegRoute.identifier(.restrictedRouteAreaRoute),
             roadLabelLayer["id"]!,
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
             NavigationMapView.LayerIdentifier.arrowLayer,
@@ -698,12 +701,9 @@ class NavigationMapViewTests: TestCase {
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
-            NavigationMapView.LayerIdentifier.waypointSymbolLayer,
-            multilegRoute.identifier(.routeCasing(isMainRoute: true)),
-            multilegRoute.identifier(.route(isMainRoute: true)),
-            multilegRoute.identifier(.restrictedRouteAreaRoute)
+            NavigationMapView.LayerIdentifier.waypointSymbolLayer
         ]
-        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add route line layers at topmost when copy layer existed.")
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add route line layers below bottommost symbol layer.")
         
         // When custom layer position for route line provided, use the custom layer position.
         let customRouteLineLayerPosition = MapboxMaps.LayerPosition.below("road-traffic")
@@ -731,6 +731,6 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.addArrow(route: multilegRoute, legIndex: 0, stepIndex: 0)
         navigationMapView.show(continuousAlternatives: [])
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
-        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to keep layer positions.")
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to keep layer positions in active navigation.")
     }
 }
