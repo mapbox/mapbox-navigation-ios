@@ -20,7 +20,9 @@ class CustomDayStyle: DayStyle {
     override func apply() {
         super.apply()
         
-        BottomBannerView.appearance().backgroundColor = .orange
+        let traitCollection = UIScreen.main.traitCollection
+        BottomBannerView.appearance(for: traitCollection).backgroundColor = .orange
+        BottomPaddingView.appearance(for: traitCollection).backgroundColor = .orange
     }
 }
 
@@ -39,6 +41,8 @@ class CustomNightStyle: NightStyle {
     override func apply() {
         super.apply()
         
-        BottomBannerView.appearance().backgroundColor = .purple
+        let traitCollection = UIScreen.main.traitCollection
+        BottomBannerView.appearance(for: traitCollection).backgroundColor = .purple
+        BottomPaddingView.appearance(for: traitCollection).backgroundColor = .purple
     }
 }
