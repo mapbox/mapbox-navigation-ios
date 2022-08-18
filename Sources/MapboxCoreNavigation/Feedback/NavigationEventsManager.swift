@@ -511,6 +511,10 @@ open class NavigationEventsManager {
         sessionState.arrivalTimestamp = nil
     }
     
+    func arriveAtDestination() {
+        sessionState.arrivalTimestamp = nil
+    }
+    
     func record(_ locations: [CLLocation]) {
         locations.forEach(sessionState.pastLocations.push(_:))
     }
