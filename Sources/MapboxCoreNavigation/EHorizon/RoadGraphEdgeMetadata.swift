@@ -94,7 +94,7 @@ extension RoadGraph.Edge {
                     regionCode: String?,
                     drivingSide: DrivingSide,
                     directionality: Directionality,
-                    isUrban: Bool) {
+                    isUrban: Bool = false) {
             self.heading = heading
             self.length = length
             self.roadClasses = roadClasses
