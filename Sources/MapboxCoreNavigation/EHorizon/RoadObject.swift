@@ -25,6 +25,9 @@ public struct RoadObject {
 
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isUserDefined: Bool
+    
+    /** `true` if an object is in an urban area, `false` otherwise. */
+    public let isUrban: Bool?
 
     let native: MapboxNavigationNative.RoadObject?
 
@@ -34,12 +37,14 @@ public struct RoadObject {
     public init(identifier: RoadObject.Identifier,
                 length: CLLocationDistance?,
                 location: RoadObject.Location,
-                kind: RoadObject.Kind) {
+                kind: RoadObject.Kind,
+                isUrban: Bool?) {
         self.identifier = identifier
         self.length = length
         self.location = location
         self.kind = kind
         isUserDefined = true
+        self.isUrban = isUrban
         native = nil
     }
 
@@ -49,6 +54,7 @@ public struct RoadObject {
         location = RoadObject.Location(native.location)
         kind = RoadObject.Kind(type: native.type, metadata: native.metadata)
         isUserDefined = native.provider == .custom
+        isUrban = native.isUrban?.boolValue
         self.native = native
     }
 }

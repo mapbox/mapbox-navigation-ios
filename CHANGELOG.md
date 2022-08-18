@@ -15,6 +15,10 @@
 
 * Fixed an issue where the route line layer appears above point of interest labels. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
 
+### Electronic Horizon
+* Added `RoadObject.isUrban` and property which defines if an object is in an urban area. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Added `RoadGraph.Edge.Metadata` property which defines if an edge is in an urban area. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+
 ## 2.7.0
 
 ### Packaging
