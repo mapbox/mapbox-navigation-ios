@@ -2,6 +2,10 @@
 
 ## main
 
+### Packaging
+* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v112._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/112.0.0). ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+
 ### Location Tracking
 
 * Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
