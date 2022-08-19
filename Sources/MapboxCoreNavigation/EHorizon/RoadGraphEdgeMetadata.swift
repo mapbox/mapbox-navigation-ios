@@ -93,8 +93,7 @@ extension RoadGraph.Edge {
                     countryCode: String?,
                     regionCode: String?,
                     drivingSide: DrivingSide,
-                    directionality: Directionality,
-                    isUrban: Bool = false) {
+                    directionality: Directionality) {
             self.heading = heading
             self.length = length
             self.roadClasses = roadClasses
@@ -110,7 +109,26 @@ extension RoadGraph.Edge {
             self.regionCode = regionCode
             self.drivingSide = drivingSide
             self.directionality = directionality
+        }
+        
+        convenience init(heading: CLLocationDegrees,
+                         length: CLLocationDistance,
+                         roadClasses: RoadClasses,
+                         mapboxStreetsRoadClass: MapboxStreetsRoadClass,
+                         speedLimit: Measurement<UnitSpeed>?,
+                         speed: CLLocationSpeed,
+                         isBridge: Bool,
+                         names: [RoadName],
+                         laneCount: UInt?,
+                         altitude: CLLocationDistance?,
+                         curvature: UInt,
+                         countryCode: String?,
+                         regionCode: String?,
+                         drivingSide: DrivingSide,
+                         directionality: Directionality,
+                         isUrban: Bool) {
             self.isUrban = isUrban
+            self.init(heading: heading, length: length, roadClasses: roadClasses, mapboxStreetsRoadClass: mapboxStreetsRoadClass, speedLimit: speedLimit, speed: speed, isBridge: isBridge, names: names, laneCount: laneCount, altitude: altitude, curvature: curvature, countryCode: countryCode, regionCode: regionCode, drivingSide: drivingSide, directionality: directionality)
         }
 
         init(_ native: EdgeMetadata) {

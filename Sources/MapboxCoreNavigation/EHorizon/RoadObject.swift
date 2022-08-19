@@ -40,15 +40,22 @@ public struct RoadObject {
     public init(identifier: RoadObject.Identifier,
                 length: CLLocationDistance?,
                 location: RoadObject.Location,
-                kind: RoadObject.Kind,
-                isUrban: Bool?) {
+                kind: RoadObject.Kind) {
         self.identifier = identifier
         self.length = length
         self.location = location
         self.kind = kind
         isUserDefined = true
-        self.isUrban = isUrban
         native = nil
+    }
+    
+    convenience init(identifier: RoadObject.Identifier,
+                     length: CLLocationDistance?,
+                     location: RoadObject.Location,
+                     kind: RoadObject.Kind,
+                     isUrban: Bool? = nil) {
+        self.isUrban = isUrban
+        self.init(identifier: identifier, length: length, location: location, kind: kind)
     }
 
     init(_ native: MapboxNavigationNative.RoadObject) {
