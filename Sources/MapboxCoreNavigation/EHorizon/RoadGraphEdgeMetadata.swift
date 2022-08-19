@@ -73,6 +73,9 @@ extension RoadGraph.Edge {
         /** The number of parallel traffic lanes along the edge. */
         public let laneCount: UInt?
         
+        /** `True` if edge is considered to be in an urban area, `false` otherwise. */
+        public let isUrban: Bool
+        
         /**
          Initializes a new edge `Metadata` object.
          */
@@ -90,7 +93,8 @@ extension RoadGraph.Edge {
                     countryCode: String?,
                     regionCode: String?,
                     drivingSide: DrivingSide,
-                    directionality: Directionality) {
+                    directionality: Directionality,
+                    isUrban: Bool) {
             self.heading = heading
             self.length = length
             self.roadClasses = roadClasses
@@ -106,6 +110,28 @@ extension RoadGraph.Edge {
             self.regionCode = regionCode
             self.drivingSide = drivingSide
             self.directionality = directionality
+            self.isUrban = isUrban
+        }
+        
+        /**
+         Initializes a new edge `Metadata` object.
+         */
+        init(heading: CLLocationDegrees,
+                         length: CLLocationDistance,
+                         roadClasses: RoadClasses,
+                         mapboxStreetsRoadClass: MapboxStreetsRoadClass,
+                         speedLimit: Measurement<UnitSpeed>?,
+                         speed: CLLocationSpeed,
+                         isBridge: Bool,
+                         names: [RoadName],
+                         laneCount: UInt?,
+                         altitude: CLLocationDistance?,
+                         curvature: UInt,
+                         countryCode: String?,
+                         regionCode: String?,
+                         drivingSide: DrivingSide,
+                         directionality: Directionality) {
+            self.init(heading: heading, length: length, roadClasses: roadClasses, mapboxStreetsRoadClass: mapboxStreetsRoadClass, speedLimit: speedLimit, speed: speed, isBridge: isBridge, names: names, laneCount: laneCount, altitude: altitude, curvature: curvature, countryCode: countryCode, regionCode: regionCode, drivingSide: drivingSide, directionality: directionality, isUrban: false)
         }
 
         init(_ native: EdgeMetadata) {
@@ -142,6 +168,7 @@ extension RoadGraph.Edge {
             regionCode = native.stateCode
             drivingSide = native.isIsRightHandTraffic ? .right : .left
             directionality = native.isIsOneway ? .oneWay : .bothWays
+            isUrban = native.isIsUrban
         }
     }
 }

@@ -2,14 +2,47 @@
 
 ## main
 
+### Packaging
+* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v112._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/112.0.0). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* MapboxCoreNavigation now requires [MapboxDirections v2.7.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+
 ### Location Tracking
 
 * Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
 * Added `NavigationSettings.navigatorPredictionInterval` to control how far ahead Navigator will predict user current position. ([#4072](https://github.com/mapbox/mapbox-navigation-ios/pull/4072))
+* Added the `RoadGraph.Edge.Metadata.isUrban` and `RoadObject.isUrban` properties and accompanying convenience initializers to indicate whether the edge or road object is in an urban area. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where some incidents in Japan were associated with two disconnected road edges, causing the `RoadGraph.Path` in `RoadObject.Location.openLRLine(path:shape:)` to have the wrong `RoadGraph.Path.edgeIdentifiers`. ([valhalla/valhalla#3667](https://github.com/valhalla/valhalla/issues/3667), [#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 
 ### Map
 
 * Fixed an issue where the route line layer appears above point of interest labels. ([#4062](https://github.com/mapbox/mapbox-navigation-ios/pull/4062))
+* Fixed an issue where the destination building failed to highlight if the user has gotten rerouted at any time during the trip. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where the map would cut off a continuous alternative route to appear as if it began after the deviation point. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where the callout annotating a continuous alternative route appeared far away from the route and contained an inaccurate travel time. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where some roads were shown as restricted on the route line even if public access is allowed for “local traffic only”. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+
+### Guidance Instructions
+* Fixed an issue where the top banner and current road name label represented Mexican state highways with generic shields. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where the route would instruct the user to make a “U-turn” toward the passenger side wherever the user should actually make two successive turns toward the passenger side or take an exit ramp that curves 180°. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* `JunctionView` now appears after passing some toll booths or electronic toll collection points in Japan. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Improved the pronunciation of junction names in Japanese in Japan. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* At a fork or exit on an expressway in Japan, spoken instructions now mention the junction name and side of the road but no longer mention the expressway name or number that the user would stay on. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed confusing instructions to take the roundabout in the Russian localization. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+
+### Routing
+
+* After a fork in the road, if the user takes a different road than expected, RouteController now recognizes the actual road the user took more quickly than before. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where a route would U-turn outside the destination parking lot, avoiding a more direct parking lot entrance. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* If `RouteOptions.departAt` or `RouteOptions.arriveBy` is set, the resulting route now respects turn restrictions that depend on the date or time. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Eliminated the time penalty that was applied to barriers such as gates and border crossings, which was redundant to the effective time penalty from predicted speeds around the barrier. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* A multi-leg route that crosses an international border can now have alternative routes. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Curvy roads are penalized slightly more consistently. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* You can now set `Waypoint.allowsSnappingToStaticallyClosedRoad` to `true` to allow the waypoint to snap to a road that is fully closed for long-term construction. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+
+### Other changes
+
+* When launching the application, any stray files left over from old canceled offline tile downloads are cleaned up automatically to save storage space. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 
 ## 2.7.0
 
