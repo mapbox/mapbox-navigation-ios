@@ -116,7 +116,7 @@ extension RoadGraph.Edge {
         /**
          Initializes a new edge `Metadata` object.
          */
-        convenience init(heading: CLLocationDegrees,
+        init(heading: CLLocationDegrees,
                          length: CLLocationDistance,
                          roadClasses: RoadClasses,
                          mapboxStreetsRoadClass: MapboxStreetsRoadClass,

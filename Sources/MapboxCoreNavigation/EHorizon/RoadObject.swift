@@ -54,7 +54,7 @@ public struct RoadObject {
     /**
      Initializes a new `RoadObject` object.
      */
-    convenience init(identifier: RoadObject.Identifier,
+    init(identifier: RoadObject.Identifier,
                      length: CLLocationDistance?,
                      location: RoadObject.Location,
                      kind: RoadObject.Kind) {
