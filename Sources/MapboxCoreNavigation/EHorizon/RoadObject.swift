@@ -30,7 +30,7 @@ public struct RoadObject {
     Indicates whether the road object is located in an urban area.
     This property is set to `nil` if the road object comes from a call to the `RoadObjectStore.roadObject(identifier:)` method and `location` is set to `RoadObject.Location.point(_:)`.
     */
-    public let isUrban: Bool? = nil
+    public let isUrban: Bool?
 
     let native: MapboxNavigationNative.RoadObject?
 
@@ -40,12 +40,14 @@ public struct RoadObject {
     public init(identifier: RoadObject.Identifier,
                 length: CLLocationDistance?,
                 location: RoadObject.Location,
-                kind: RoadObject.Kind) {
+                kind: RoadObject.Kind,
+                isUrban: Bool?) {
         self.identifier = identifier
         self.length = length
         self.location = location
         self.kind = kind
         isUserDefined = true
+        self.isUrban = isUrban
         native = nil
     }
     
@@ -55,10 +57,8 @@ public struct RoadObject {
     convenience init(identifier: RoadObject.Identifier,
                      length: CLLocationDistance?,
                      location: RoadObject.Location,
-                     kind: RoadObject.Kind,
-                     isUrban: Bool?) {
-        self.isUrban = isUrban
-        self.init(identifier: identifier, length: length, location: location, kind: kind)
+                     kind: RoadObject.Kind) {
+        self.init(identifier: identifier, length: length, location: location, kind: kind, isUrban: nil)
     }
 
     init(_ native: MapboxNavigationNative.RoadObject) {
