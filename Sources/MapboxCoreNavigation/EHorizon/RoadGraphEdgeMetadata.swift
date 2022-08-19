@@ -111,6 +111,9 @@ extension RoadGraph.Edge {
             self.directionality = directionality
         }
         
+        /**
+         Initializes a new edge `Metadata` object.
+         */
         convenience init(heading: CLLocationDegrees,
                          length: CLLocationDistance,
                          roadClasses: RoadClasses,

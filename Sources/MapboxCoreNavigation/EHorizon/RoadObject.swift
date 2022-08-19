@@ -49,6 +49,9 @@ public struct RoadObject {
         native = nil
     }
     
+    /**
+     Initializes a new `RoadObject` object.
+     */
     convenience init(identifier: RoadObject.Identifier,
                      length: CLLocationDistance?,
                      location: RoadObject.Location,
