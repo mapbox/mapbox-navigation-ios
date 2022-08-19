@@ -383,6 +383,7 @@
 		B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFE261FD0A30078546C /* sthlm-double-back.json */; };
 		B4BB0AD52704D1D7006F502D /* short_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD42704D1D7006F502D /* short_route.json */; };
 		B4BB0AD72704D1E6006F502D /* multileg_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD62704D1E6006F502D /* multileg_route.json */; };
+		B4C4FFA028ADB19600C7C253 /* RouteLineLayerPositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C4FF9F28ADB19600C7C253 /* RouteLineLayerPositionTests.swift */; };
 		B4C8E39E286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */; };
 		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
 		B4E6711F27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */; };
@@ -981,6 +982,7 @@
 		B4B61B9627A882E200AA127E /* SpriteRepositoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteRepositoryTests.swift; sourceTree = "<group>"; };
 		B4BB0AD42704D1D7006F502D /* short_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = short_route.json; sourceTree = "<group>"; };
 		B4BB0AD62704D1E6006F502D /* multileg_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = multileg_route.json; sourceTree = "<group>"; };
+		B4C4FF9F28ADB19600C7C253 /* RouteLineLayerPositionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLineLayerPositionTests.swift; sourceTree = "<group>"; };
 		B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		B4E19C46268114840011581F /* NavigationLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLocationProvider.swift; sourceTree = "<group>"; };
@@ -1633,6 +1635,7 @@
 				169A9709216440820082A6A0 /* NavigationViewControllerTestDoubles.swift */,
 				B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */,
 				B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */,
+				B4C4FF9F28ADB19600C7C253 /* RouteLineLayerPositionTests.swift */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -2848,6 +2851,7 @@
 				8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				8A379B1127B5EADB00CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
+				B4C4FFA028ADB19600C7C253 /* RouteLineLayerPositionTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				8AF23ED527AA0B9C0038B40D /* CarPlayManagerSpec.swift in Sources */,
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
