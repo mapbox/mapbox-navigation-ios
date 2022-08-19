@@ -74,7 +74,7 @@ extension RoadGraph.Edge {
         public let laneCount: UInt?
         
         /** `True` if edge is considered to be in an urban area, `false` otherwise. */
-        public let isUrban: Bool
+        public let isUrban: Bool = false
         
         /**
          Initializes a new edge `Metadata` object.
