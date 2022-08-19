@@ -26,7 +26,10 @@ public struct RoadObject {
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isUserDefined: Bool
     
-    /** This property is set to `nil` if the road object comes from an electronic horizon and location is set to `RoadObject.Location.point(_:)`. */
+    /**
+    Indicates whether the road object is located in an urban area.
+    This property is set to `nil` if the road object comes from a call to the `RoadObjectStore.roadObject(identifier:)` method and `location` is set to `RoadObject.Location.point(_:)`.
+    */
     public let isUrban: Bool?
 
     let native: MapboxNavigationNative.RoadObject?
