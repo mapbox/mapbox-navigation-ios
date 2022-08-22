@@ -102,6 +102,13 @@ class NativeHandlersFactory {
     }()
     
     static var navigatorConfig: NavigatorConfig {
+        var nativeIncidentsOptions: MapboxNavigationNative.IncidentsOptions?
+        if let incidentsOptions = NavigationSettings.shared.liveIncidentsOptions,
+           !incidentsOptions.graph.isEmpty,
+           !incidentsOptions.apiURL.absoluteString.isEmpty {
+            nativeIncidentsOptions = .init(graph: incidentsOptions.graph,
+                                           apiUrl: incidentsOptions.apiURL.absoluteString)
+        }
         return NavigatorConfig(voiceInstructionThreshold: nil,
                                electronicHorizonOptions: nil,
                                polling: NavigationSettings.shared.navigatorPredictionInterval.map {
@@ -109,7 +116,7 @@ class NativeHandlersFactory {
                                                   unconditionalPatience: nil,
                                                   unconditionalInterval: nil)
                                 },
-                               incidentsOptions: nil,
+                               incidentsOptions: nativeIncidentsOptions,
                                noSignalSimulationEnabled: nil,
                                avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
                                useSensors: NSNumber(booleanLiteral: NavigationSettings.shared.utilizeSensorData))
