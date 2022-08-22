@@ -617,7 +617,18 @@ jobs:
       - run:
           name: Build SPM Core integration test
           command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
-      
+
+  spm-ui-integration-test-job:
+    macos:
+      xcode: "13.2.1"
+    steps:
+      - checkout
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - run:
+          name: Build and run SPM UI integration tests for already released Navigation SDK versions.
+          command: ./scripts/validate_releases.sh
+
   generate-docs-job:
     parameters:
       xcode:
@@ -711,62 +722,5 @@ workflows:
   #         context: Slack Orb
   main-workflow:
       jobs:
-        - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_Debug"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
-            context: Slack Orb
-        - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
-            spm: true
-            codecoverage: false
-            context: Slack Orb
-        - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_Release"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
-            context: Slack Orb
-            configuration: "Release"
-        - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_SPM_Release"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
-            spm: true
-            codecoverage: false
-            context: Slack Orb
-            configuration: "Release"
-        - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_install"
-            update: false
-            xcode: "13.2.1"
-            iOS: "15.2"
-            archive: true
-            context: Slack Orb
-        - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_update"
-            update: true
-            xcode: "13.2.1"
-            iOS: "15.2"
-            lint: true
-            context: Slack Orb
-        - build-example:
-            name: "Build Example"
-            context: Slack Orb
-        - spm-core-integration-test-job:
-            name: "Xcode 13; iOS 15.0; SPM Core test"
-        - generate-docs-job:
-            name: Generate / Publish Documentation
-            context: Slack Orb
-            filters:
-              tags:
-                only: /^v\d+\.\d+\.\d+(-.+)?$/
-        - ios-trigger-metrics:
-            filters:
-              branches:
-                only: main
+        - spm-ui-integration-test-job:
+          name: "Xcode 13.2.1; SPM UI test"
