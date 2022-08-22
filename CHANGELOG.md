@@ -39,6 +39,7 @@
 * A multi-leg route that crosses an international border can now have alternative routes. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Curvy roads are penalized slightly more consistently. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * You can now set `Waypoint.allowsSnappingToStaticallyClosedRoad` to `true` to allow the waypoint to snap to a road that is fully closed for long-term construction. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
 
 ### Other changes
 
