@@ -104,10 +104,9 @@ class NativeHandlersFactory {
     static var navigatorConfig: NavigatorConfig {
         var nativeIncidentsOptions: MapboxNavigationNative.IncidentsOptions?
         if let incidentsOptions = NavigationSettings.shared.liveIncidentsOptions,
-           !incidentsOptions.graph.isEmpty,
-           !incidentsOptions.apiURL.absoluteString.isEmpty {
+           !incidentsOptions.graph.isEmpty || incidentsOptions.apiURL != nil {
             nativeIncidentsOptions = .init(graph: incidentsOptions.graph,
-                                           apiUrl: incidentsOptions.apiURL.absoluteString)
+                                           apiUrl: incidentsOptions.apiURL?.absoluteString ?? "")
         }
         return NavigatorConfig(voiceInstructionThreshold: nil,
                                electronicHorizonOptions: nil,

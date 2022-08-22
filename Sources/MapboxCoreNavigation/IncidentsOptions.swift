@@ -12,7 +12,7 @@ public struct IncidentsOptions {
     /**
      LTS incidents service API url.
      
-     If empty line is supplied will use a default url.
+     If `nil` is supplied will use a default url.
      */
-    public var apiURL: URL
+    public var apiURL: URL?
 }
