@@ -2,11 +2,15 @@
 import Foundation
 
 /**
- Electronic Horizon supports live incidents on a most probable path. To enable live incidents `IncidentsOptions` should be provided to `NavigationSettings` before starting navigation. If both `graph` and `apiUrl` are empty, live incidents are disabled (by default).
+ Configures how Electronic Horizon supports live incidents on a most probable path.
+ 
+ To enable live incidents `IncidentsOptions` should be provided to `NavigationSettings` before starting navigation.
  */
 public struct IncidentsOptions {
     /**
      Incidents provider graph name.
+     
+     If empty - incidents will be disabled.
      */
     public var graph: String
     /**
