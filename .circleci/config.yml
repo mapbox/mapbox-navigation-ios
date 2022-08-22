@@ -37,6 +37,12 @@ commands:
             name: Install GitHub CLI
             command: |
               brew install gh
+  install-xcodegen:
+      steps:
+        - run:
+            name: Install XcodeGen
+            command: |
+              brew install xcodegen
   restore-carthage-cache:
     parameters:
       xcode:
@@ -625,6 +631,7 @@ jobs:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
+      - *install-xcodegen
       - run:
           name: Build and run SPM UI integration tests for already released Navigation SDK versions.
           command: ./scripts/validate_releases.sh
