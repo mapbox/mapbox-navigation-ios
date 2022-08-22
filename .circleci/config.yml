@@ -723,4 +723,4 @@ workflows:
   main-workflow:
       jobs:
         - spm-ui-integration-test-job:
-          name: "Xcode 13.2.1; SPM UI test"
+            name: "Xcode 13.2.1; SPM UI test"
