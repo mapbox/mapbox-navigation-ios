@@ -4,7 +4,7 @@ options:
 packages:
   mapbox-navigation-ios:
     url: https://github.com/mapbox/mapbox-navigation-ios.git
-    version: 2.4.0
+    version: NAVIGATION_SDK_VERSION
 targets:
   UISPMTest:
     type: application
