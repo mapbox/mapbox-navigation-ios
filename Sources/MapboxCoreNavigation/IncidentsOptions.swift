@@ -19,4 +19,12 @@ public struct IncidentsOptions {
      If `nil` is supplied will use a default url.
      */
     public var apiURL: URL?
+    
+    /**
+     Creates new `IncidentsOptions`
+     */
+    public init(graph: String, apiURL: URL?) {
+        self.graph = graph
+        self.apiURL = apiURL
+    }
 }
