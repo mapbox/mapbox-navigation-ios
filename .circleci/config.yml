@@ -666,7 +666,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.4.1"
     macos:
       xcode: << parameters.xcode >>
     environment:
