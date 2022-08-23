@@ -16,6 +16,10 @@ extension ViewController {
         let passiveLocationManager = PassiveLocationManager()
         self.passiveLocationManager = passiveLocationManager
         
+        // Provide the ElectronicHorizonOptions for PassiveLocationManager to start electronic horizon updates.
+        let options = ElectronicHorizonOptions(length: 100, expansionLevel: 1, branchLength: 20, minTimeDeltaBetweenUpdates: nil)
+        passiveLocationManager.startUpdatingElectronicHorizon(with: options)
+        
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         
