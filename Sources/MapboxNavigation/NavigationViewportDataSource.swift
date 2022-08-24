@@ -192,8 +192,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             if followingCameraOptions.paddingUpdatesAllowed || followingMobileCamera.padding == nil {
-                followingMobileCamera.padding = .zero
-                followingCarPlayCamera.padding = .zero
+                followingMobileCamera.padding = mapView.safeAreaInsets
+                followingCarPlayCamera.padding = mapView.safeAreaInsets
             }
             
             return
