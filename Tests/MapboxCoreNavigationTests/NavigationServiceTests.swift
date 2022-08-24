@@ -504,6 +504,9 @@ class NavigationServiceTests: TestCase {
         wait(for: [didRerouteNotificationExpectation], timeout: 3)
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
+        // MARK: Custom routing provider should not trigger RouteOptions customization
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+        
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [testLocation])
         waitForNavNativeCallbacks()
@@ -755,9 +758,42 @@ class NavigationServiceTests: TestCase {
         wait(for: [rerouteTriggeredExpectation, didRerouteExpectation], timeout: locationManager.expectedReplayTime)
         locationManager.stopUpdatingLocation()
         
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:willModify:)"))
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
     }
 
+    func testReroutingUpdatesRouteOptions() {
+        let trace = Fixture.generateTrace(for: initialRouteResponse.routes!.first!).shiftedToPresent()
+        guard let firstLoction = trace.first,
+              let lastLocation = trace.last,
+              firstLoction != lastLocation else {
+                  XCTFail("Invalid trace"); return
+              }
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.speedMultiplier = 100
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                              routeIndex: 0,
+                                              routeOptions: routeOptions,
+                                              customRoutingProvider: nil,
+                                              credentials: Fixture.credentials,
+                                              locationSource: locationManager)
+        service.delegate = delegate
+        let router = service.router
+
+        let didFailtToRerouteExpectation = expectation(forNotification: .routeControllerDidFailToReroute,
+                                                       object: router)
+        
+        service.start()
+        
+        router.reroute(from: firstLoction,
+                       along: router.routeProgress)
+
+        wait(for: [didFailtToRerouteExpectation], timeout: locationManager.expectedReplayTime)
+        locationManager.stopUpdatingLocation()
+        
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+    }
+    
     func testUnimplementedLogging() {
         _unimplementedLoggingState.clear()
         XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 0)
