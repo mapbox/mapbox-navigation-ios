@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 2.8.0
+## v2.8.0
 
 ### Packaging
 * MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
@@ -45,7 +45,7 @@
 
 * When launching the application, any stray files left over from old canceled offline tile downloads are cleaned up automatically to save storage space. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 
-## 2.7.0
+## v2.7.0
 
 ### Packaging
 
