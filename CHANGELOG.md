@@ -10,6 +10,7 @@
 ### Routing
 
 * Fixed lost target and name fields in waypoints after rerouting, and the bearing calculation error during tunnel dead reckoning. ([#4044](https://github.com/mapbox/mapbox-navigation-ios/pull/4044))
+* Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
 
 ### Map
 
