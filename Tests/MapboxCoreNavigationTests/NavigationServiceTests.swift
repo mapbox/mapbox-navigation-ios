@@ -781,12 +781,14 @@ class NavigationServiceTests: TestCase {
         let router = service.router
         
         let finishExpectation = expectation(description: "Reroute should finish either way.")
-        NotificationCenter.default.addObserver(forName: .routeControllerDidFailToReroute,
+        finishExpectation.assertForOverFulfill = false
+        
+        let failObserver = NotificationCenter.default.addObserver(forName: .routeControllerDidFailToReroute,
                                                object: nil,
                                                queue: .main) { _ in
             finishExpectation.fulfill()
         }
-        NotificationCenter.default.addObserver(forName: .routeControllerDidReroute,
+        let rerouteObserver = NotificationCenter.default.addObserver(forName: .routeControllerDidReroute,
                                                object: nil,
                                                queue: .main) { _ in
             finishExpectation.fulfill()
@@ -801,6 +803,9 @@ class NavigationServiceTests: TestCase {
         locationManager.stopUpdatingLocation()
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+        
+        NotificationCenter.default.removeObserver(failObserver)
+        NotificationCenter.default.removeObserver(rerouteObserver)
     }
     
     func testUnimplementedLogging() {
