@@ -46,6 +46,7 @@
 * You can now set `Waypoint.allowsSnappingToStaticallyClosedRoad` to `true` to allow the waypoint to snap to a road that is fully closed for long-term construction. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
 * Added `NavigationSettings.statusPollingConfig` to configure navigator status polling options. ([#4135](https://github.com/mapbox/mapbox-navigation-ios/pull/4135))
+* Added `RouterDelegate.router(_:willModify:)`, `NavigationServiceDelegate.navigationService(_:willModify:)` and `NavigationViewControllerDelegate.navigationViewController(_:willModify:)` methods to allow `RouteOptions` customization on reroutes. ([#4102](https://github.com/mapbox/mapbox-navigation-ios/pull/4102))
 * Fixed incorrect duration calculations and route refreshing when an arrival step’s geometry contained only one coordinate. Normally, an arrival step’s geometry is expected to be a zero-length `LineString`; that is, with two coincident coordinates. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 
 ### CarPlay

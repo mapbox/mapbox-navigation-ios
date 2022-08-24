@@ -779,16 +779,25 @@ class NavigationServiceTests: TestCase {
                                               locationSource: locationManager)
         service.delegate = delegate
         let router = service.router
-
-        let didFailtToRerouteExpectation = expectation(forNotification: .routeControllerDidFailToReroute,
-                                                       object: router)
+        
+        let finishExpectation = expectation(description: "Reroute should finish either way.")
+        NotificationCenter.default.addObserver(forName: .routeControllerDidFailToReroute,
+                                               object: nil,
+                                               queue: .main) { _ in
+            finishExpectation.fulfill()
+        }
+        NotificationCenter.default.addObserver(forName: .routeControllerDidReroute,
+                                               object: nil,
+                                               queue: .main) { _ in
+            finishExpectation.fulfill()
+        }
         
         service.start()
         
         router.reroute(from: firstLoction,
                        along: router.routeProgress)
 
-        wait(for: [didFailtToRerouteExpectation], timeout: locationManager.expectedReplayTime)
+        wait(for: [finishExpectation], timeout: locationManager.expectedReplayTime)
         locationManager.stopUpdatingLocation()
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willModify:)"))
