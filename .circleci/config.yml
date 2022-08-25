@@ -673,9 +673,9 @@ workflows:
           context: Slack Orb
           notify_success: true
       - spm-test-job:
-          name: "swift test; Xcode 13.0.0; iOS 13.7"
+          name: "swift test; Xcode 13.0.0; iOS 15.0"
           xcode: "13.0.0"
-          iOS: "13.7"
+          iOS: "15.0"
           device: "iPhone 11 Pro Max"
           context: Slack Orb
           notify_success: true
