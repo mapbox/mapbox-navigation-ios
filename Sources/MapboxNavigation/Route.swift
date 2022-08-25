@@ -142,6 +142,8 @@ extension Route {
             return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line"
         case .routeCasing(isMainRoute: let isMainRoute):
             return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line_casing"
+        case .traversedRoute:
+            return "\(identifier).traversed_route"
         case .restrictedRouteAreaSource:
             return "\(identifier).restricted_area_source"
         case .restrictedRouteAreaRoute:
