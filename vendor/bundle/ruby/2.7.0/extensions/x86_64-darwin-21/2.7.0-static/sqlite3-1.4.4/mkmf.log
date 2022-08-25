@@ -1,0 +1,549 @@
+package configuration for sqlite3 is not found
+find_header: checking for sqlite3.h... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib     -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc   "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return !!argv[argc];
+6: }
+/* end */
+
+"gcc -E -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe  conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sqlite3.h>
+/* end */
+
+--------------------
+
+find_library: checking for pthread_create() in -lpthread... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib     -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'pthread_create'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))pthread_create; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))pthread_create; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib     -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void pthread_create();
+15: int t(void) { pthread_create(); return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for -ldl... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: 
+15: int t(void) { ; return 0; }
+/* end */
+
+--------------------
+
+find_library: checking for sqlite3_libversion_number() in -lsqlite3... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_libversion_number'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_libversion_number; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_libversion_number; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_libversion_number();
+15: int t(void) { sqlite3_libversion_number(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_proc_arity()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_proc_arity; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_integer_pack()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_integer_pack; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_initialize()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_initialize'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_initialize; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_initialize; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_initialize();
+15: int t(void) { sqlite3_initialize(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_backup_init()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_backup_init'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_backup_init; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_backup_init; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_backup_init();
+15: int t(void) { sqlite3_backup_init(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_column_database_name()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_column_database_name'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_column_database_name; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_column_database_name; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_column_database_name();
+15: int t(void) { sqlite3_column_database_name(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_enable_load_extension()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_enable_load_extension'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_enable_load_extension; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_enable_load_extension; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_enable_load_extension();
+15: int t(void) { sqlite3_enable_load_extension(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_load_extension()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_load_extension'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_load_extension; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_load_extension; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_load_extension();
+15: int t(void) { sqlite3_load_extension(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_open_v2()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_open_v2'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_open_v2; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_open_v2; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_open_v2();
+15: int t(void) { sqlite3_open_v2(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for sqlite3_prepare_v2()... -------------------- yes
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+conftest.c:14:57: error: use of undeclared identifier 'sqlite3_prepare_v2'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_prepare_v2; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))sqlite3_prepare_v2; return !p; }
+/* end */
+
+"gcc -o conftest -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe conftest.c  -L. -L/Users/distiller/.rubies/ruby-2.7.6/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/gdbm/lib    -lsqlite3 -ldl -lpthread  -lruby.2.7-static -framework Security -framework Foundation -lpthread -ldl -lobjc -lsqlite3 -ldl -lpthread   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void sqlite3_prepare_v2();
+15: int t(void) { sqlite3_prepare_v2(); return 0; }
+/* end */
+
+--------------------
+
+have_type: checking for sqlite3_int64 in sqlite3.h... -------------------- yes
+
+"gcc -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sqlite3.h>
+4: 
+5: /*top*/
+6: typedef sqlite3_int64 conftest_type;
+7: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for sqlite3_uint64 in sqlite3.h... -------------------- yes
+
+"gcc -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/x86_64-darwin21 -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/distiller/.rubies/ruby-2.7.6/include/ruby-2.7.0 -I. -I/usr/local/opt/sqlite/include  -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include -I/usr/local/opt/libyaml/include -I/usr/local/opt/gdbm/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -pipe   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sqlite3.h>
+4: 
+5: /*top*/
+6: typedef sqlite3_uint64 conftest_type;
+7: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+

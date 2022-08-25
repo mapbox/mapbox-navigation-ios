@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+rake bootstrap
+
+# Do any other automated setup that you need to do here
