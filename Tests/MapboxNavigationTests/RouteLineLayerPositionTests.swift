@@ -298,12 +298,12 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.showWaypoints(on: multilegRoute)
         navigationMapView.show([multilegRoute])
         navigationMapView.showsRestrictedAreasOnRoute = true
+        navigationMapView.routeLineTracksTraversal = false
         
         expectedLayerSequence = [
             buildingLayer["id"]!,
             roadTrafficLayer["id"]!,
             circleMapLayer,
-            multilegRoute.identifier(.traversedRoute),
             multilegRoute.identifier(.routeCasing(isMainRoute: true)),
             multilegRoute.identifier(.route(isMainRoute: true)),
             multilegRoute.identifier(.restrictedRouteAreaRoute),
