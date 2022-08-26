@@ -367,14 +367,6 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.style.removeSources(sourceIdentifiers)
     }
     
-    func removeRestrictedRouteArea() {
-        guard let sourceIdentifier = routes?.first?.identifier(.restrictedRouteAreaSource),
-              let layerIdentifier = routes?.first?.identifier(.restrictedRouteAreaRoute) else { return }
-        
-        mapView.mapboxMap.style.removeLayers(Set([layerIdentifier]))
-        mapView.mapboxMap.style.removeSources(Set([sourceIdentifier]))
-    }
-    
     /**
      Shows the step arrow given the current `RouteProgress`.
      
