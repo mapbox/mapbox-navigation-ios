@@ -785,9 +785,21 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addTraversedRouteLayer(_ route: Route, below parentLayerIndentifier: String? = nil) -> String? {
+        guard let defaultShape = route.shape else { return nil }
+        
         // The traversed route layer should have the source as the main route casing source.
         let sourceIdentifier = route.identifier(.source(isMainRoute: true, isSourceCasing: true))
-        guard mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) else { return nil }
+        
+        if !mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
+            let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
+            let geoJSONSource = self.geoJSONSource(shape)
+            do {
+                try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            } catch {
+                Log.error("Failed to add route casing source \(sourceIdentifier) for traversed route with error: \(error.localizedDescription).",
+                          category: .navigationUI)
+            }
+        }
         
         var lineLayer: LineLayer? = nil
         let layerIdentifier = route.identifier(.traversedRoute)
