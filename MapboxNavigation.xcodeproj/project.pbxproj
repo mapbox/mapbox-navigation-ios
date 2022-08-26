@@ -250,6 +250,8 @@
 		8AC40920279918930075248E /* NavigationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091F279918930075248E /* NavigationViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
+		8ACFFE4028B9609400A10ADC /* MCSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACFFE3F28B9609400A10ADC /* MCSessionState.swift */; };
+		8ACFFE4228B960EC00A10ADC /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACFFE4128B960EC00A10ADC /* MultipeerSession.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
 		8AD220A727C08EA2000734A5 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220A627C08EA2000734A5 /* ProgressBar.swift */; };
@@ -835,6 +837,8 @@
 		8AC4091F279918930075248E /* NavigationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewDelegate.swift; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
+		8ACFFE3F28B9609400A10ADC /* MCSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCSessionState.swift; sourceTree = "<group>"; };
+		8ACFFE4128B960EC00A10ADC /* MultipeerSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
 		8AD220A627C08EA2000734A5 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
@@ -1285,6 +1289,7 @@
 		3507F9FD213430CB0086B39E /* CarPlay */ = {
 			isa = PBXGroup;
 			children = (
+				8ACFFE4128B960EC00A10ADC /* MultipeerSession.swift */,
 				8A50A3CE26EC0A8300894A8E /* CongestionLevel+CarPlay.swift */,
 				8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */,
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
@@ -1915,6 +1920,7 @@
 				8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */,
 				8AD220AA27C091EE000734A5 /* Solar.swift */,
 				8AD220AE27C09544000734A5 /* Date.swift */,
+				8ACFFE3F28B9609400A10ADC /* MCSessionState.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2733,6 +2739,7 @@
 				2B3ED3962609FB2300861A84 /* CameraController.swift in Sources */,
 				8AD2211927C43B66000734A5 /* ResumeButton.swift in Sources */,
 				2BDD65472615B93C005B8B55 /* VectorSource.swift in Sources */,
+				8ACFFE4228B960EC00A10ADC /* MultipeerSession.swift in Sources */,
 				8AC4091E279918470075248E /* NavigationViewLayout.swift in Sources */,
 				8A99F18928821AA80034F5BD /* UILayoutGuide.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
@@ -2747,6 +2754,7 @@
 				8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
+				8ACFFE4028B9609400A10ADC /* MCSessionState.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8AD2211327C43654000734A5 /* ManeuverContainerView.swift in Sources */,
 				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,

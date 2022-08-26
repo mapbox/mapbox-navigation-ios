@@ -1115,15 +1115,15 @@ extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
 extension CarPlayNavigationViewController: CPListTemplateDelegate {
     
     public func listTemplate(_ listTemplate: CPListTemplate,
-                      didSelect item: CPListItem,
-                      completionHandler: @escaping () -> Void) {
+                             didSelect item: CPListItem,
+                             completionHandler: @escaping () -> Void) {
         // Selected a list item for switching to alternative route.
         guard let userInfo = item.userInfo as? CarPlayUserInfo,
               let alternativeId = userInfo[CarPlayAlternativeIDKey] as? AlternativeRoute.ID,
               let alternativeRoute = continuousAlternatives.first(where: { $0.id == alternativeId})?.indexedRouteResponse else {
-                  completionHandler()
-                  return
-              }
+            completionHandler()
+            return
+        }
         
         navigationService.router.updateRoute(with: alternativeRoute,
                                              routeOptions: nil,

@@ -92,6 +92,16 @@ public class CarPlayManager: NSObject {
     private weak var navigationService: NavigationService?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
     
+    var _multipeerSession: Any? = nil
+    @available(iOS 14.0, *)
+    var multipeerSession: MultipeerSession {
+        if _multipeerSession == nil {
+            _multipeerSession = MultipeerSession()
+        }
+        
+        return _multipeerSession as! MultipeerSession
+    }
+    
     /**
      Programatically begins a CarPlay turn-by-turn navigation session.
      
@@ -793,6 +803,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                    animated: true)
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
+        
+        if #available(iOS 14.0, *) {
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
 
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
@@ -809,6 +824,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         delegate?.carPlayManagerDidEndNavigation(self)
         delegate?.carPlayManagerDidEndNavigation(self, byCanceling: false)
+        
+        if #available(iOS 14.0, *) {
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
@@ -867,12 +887,22 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         
         self.currentActivity = currentActivity
+        
+        if #available(iOS 14.0, *) {
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
         if let carPlayMapViewController = carPlayMapViewController {
             let shouldShowRecenterButton = carPlayMapViewController.navigationMapView.navigationCamera.state == .idle
             carPlayMapViewController.recenterButton.isHidden = !shouldShowRecenterButton
+        }
+        
+        if #available(iOS 14.0, *) {
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
         }
     }
     
@@ -1084,6 +1114,11 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         self.carPlayNavigationViewController = nil
         delegate?.carPlayManagerDidEndNavigation(self)
         delegate?.carPlayManagerDidEndNavigation(self, byCanceling: canceled)
+        
+        if #available(iOS 14.0, *) {
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
     
     public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
@@ -1207,6 +1242,13 @@ extension CarPlayManager {
         eventsManager.sendCarPlayConnectEvent()
         
         subscribeForNotifications()
+        
+        if #available(iOS 14.0, *) {
+            multipeerSession.send(.connected)
+            
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
 
     public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
@@ -1227,6 +1269,13 @@ extension CarPlayManager {
         idleTimerCancellable = nil
         
         unsubscribeFromNotifications()
+        
+        if #available(iOS 14.0, *) {
+            multipeerSession.send(.disconnected)
+            
+            let message = "[\(Date())]:\(#file):\(#function):\(#line)"
+            multipeerSession.send(message.data(using: .utf8)!)
+        }
     }
 }
 
