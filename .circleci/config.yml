@@ -638,10 +638,10 @@ jobs:
     shell: /usr/local/bin/bash # Use Bash 5 that is installed via Homebrew.
     steps:
       - checkout
+      - install-bash5
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - install-xcodegen
-      - install-bash5
       - run:
           name: Validate released Navigation SDK versions
           command: ./scripts/validate_releases.sh
