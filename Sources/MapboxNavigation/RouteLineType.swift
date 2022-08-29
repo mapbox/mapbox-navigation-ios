@@ -8,6 +8,8 @@ enum RouteLineType {
     
     case routeCasing(isMainRoute: Bool)
     
+    case traversedRoute
+    
     case restrictedRouteAreaSource
     
     case restrictedRouteAreaRoute
