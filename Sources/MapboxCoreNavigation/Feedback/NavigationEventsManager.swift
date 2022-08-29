@@ -110,8 +110,8 @@ open class NavigationEventsManager {
         accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
         self.mobileEventsManager = mobileEventsManager
 
-        let options = EventsServiceOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent, baseURL: "https://api-events-staging.tilestream.net")
-        self.eventsAPI = EventsService(options: options)
+        let options = EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent)
+        self.eventsAPI = EventsService.getOrCreate(for: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
