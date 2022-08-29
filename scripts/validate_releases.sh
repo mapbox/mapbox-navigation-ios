@@ -32,6 +32,9 @@ EXPECTED_XCODEBUILD_RESULTS=( \
     [2.5.1]=74 \
     [2.5.2]=74 \
     [2.5.3]=0 \
+    [2.6.0]=0 \
+    [2.7.0]=0 \
+    [2.7.1]=0 \
 )
 
 echo "Expected xcodebuild result for:"
@@ -82,6 +85,8 @@ do
         echo "Actual and expected xcodebuild exit codes for Navigation SDK v${NAVIGATION_SDK_VERSION} are equal."
     fi
 done
+
+echo "Navigation SDK versions were successfully validated."
 
 # Return back to initial directory.
 cd ${CURRENT_DIRECTORY}
