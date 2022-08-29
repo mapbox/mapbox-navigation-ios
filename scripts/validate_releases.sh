@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
 
 # Used for local testing to make sure that correct Xcode version is used.
 # sudo xcode-select --switch /Applications/Xcode_13.2.1.app/Contents/Developer/
@@ -28,7 +27,11 @@ declare -A EXPECTED_XCODEBUILD_RESULTS
 EXPECTED_XCODEBUILD_RESULTS=( \
     [2.4.0]=74 \
     [2.4.1]=74 \
-    [2.4.2]=13 \
+    [2.4.2]=0 \
+    [2.5.0]=74 \
+    [2.5.1]=74 \
+    [2.5.2]=74 \
+    [2.5.3]=0 \
 )
 
 echo "Expected xcodebuild result for:"
