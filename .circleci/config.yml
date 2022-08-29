@@ -43,6 +43,14 @@ commands:
             name: Install XcodeGen
             command: |
               brew install xcodegen
+  install-bash5:
+      steps:
+        - run:
+            name: Install Bash 5
+            command: |
+              brew install bash
+            environment:
+              HOMEBREW_NO_AUTO_UPDATE: 1
   restore-carthage-cache:
     parameters:
       xcode:
@@ -627,13 +635,15 @@ jobs:
   spm-ui-integration-test-job:
     macos:
       xcode: "13.2.1"
+    shell: /usr/local/bin/bash # Use Bash 5 that is installed via Homebrew.
     steps:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - install-xcodegen
+      - install-bash5
       - run:
-          name: Build and run SPM UI integration tests for already released Navigation SDK versions.
+          name: Validate released Navigation SDK versions
           command: ./scripts/validate_releases.sh
 
   generate-docs-job:

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-# set -x
+set -x
 
 # Used for local testing to make sure that correct Xcode version is used.
 # sudo xcode-select --switch /Applications/Xcode_13.2.1.app/Contents/Developer/
@@ -67,7 +67,8 @@ done
 echo "Resolved dependencies results:"
 for NAVIGATION_SDK_VERSION in "${!ACTUAL_XCODEBUILD_RESULTS[@]}"
 do 
-    if ${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} -ne ${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} do
+    if [ ${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} -ne ${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} ]
+    then
         echo "Actual (${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) and expected (${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) xcodebuild exit codes are not equal. Exiting..."
 
         # Return back to initial directory.
