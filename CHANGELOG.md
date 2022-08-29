@@ -22,7 +22,7 @@
 * Fixed an issue where the map would cut off a continuous alternative route to appear as if it began after the deviation point. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where the callout annotating a continuous alternative route appeared far away from the route and contained an inaccurate travel time. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where some roads were shown as restricted on the route line even if public access is allowed for “local traffic only”. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
-* Fixed an issue where the part of the route that has been traversed couldn't be customized through `NavigationMapView.traversedRouteColor`. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
+* Fixed an issue where the `NavigationMapView.traversedRouteColor` property had no effect on the traversed part of the route line. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
 
 ### Guidance Instructions
 
