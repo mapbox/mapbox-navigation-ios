@@ -635,7 +635,6 @@ jobs:
   spm-ui-integration-test-job:
     macos:
       xcode: "13.2.1"
-    shell: /usr/local/bin/bash # Use Bash 5 that is installed via Homebrew.
     steps:
       - checkout
       - install-bash5
@@ -644,7 +643,7 @@ jobs:
       - install-xcodegen
       - run:
           name: Validate released Navigation SDK versions
-          command: ./scripts/validate_releases.sh
+          command: /usr/local/bin/bash ./scripts/validate_releases.sh # Use Bash 5 that is installed via Homebrew.
 
   generate-docs-job:
     parameters:
