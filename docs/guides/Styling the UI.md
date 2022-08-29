@@ -23,7 +23,8 @@ class CustomDayStyle: DayStyle {
         super.apply()
 
         // Begin styling the UI
-        BottomBannerView.appearance().backgroundColor = .orange
+        BottomBannerView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone)).backgroundColor = .orange
+        BottomBannerView.appearance(for: UITraitCollection(userInterfaceIdiom: .pad)).backgroundColor = .orange
     }
 }
 ```
@@ -44,7 +45,8 @@ class CustomNightStyle: NightStyle {
         super.apply()
 
         // Begin styling the UI
-        BottomBannerView.appearance().backgroundColor = .purple
+        BottomBannerView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone)).backgroundColor = .purple
+        BottomBannerView.appearance(for: UITraitCollection(userInterfaceIdiom: .pad)).backgroundColor = .purple
     }
 }
 ```

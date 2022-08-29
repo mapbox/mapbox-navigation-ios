@@ -1,8 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 2.8.0
+## v2.8.0
 
 ### Packaging
+
 * MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v112._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/112.0.0). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * MapboxCoreNavigation now requires [MapboxDirections v2.7.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
@@ -21,8 +22,10 @@
 * Fixed an issue where the map would cut off a continuous alternative route to appear as if it began after the deviation point. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where the callout annotating a continuous alternative route appeared far away from the route and contained an inaccurate travel time. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where some roads were shown as restricted on the route line even if public access is allowed for “local traffic only”. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where the `NavigationMapView.traversedRouteColor` property had no effect on the traversed part of the route line. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
 
 ### Guidance Instructions
+
 * Fixed an issue where the top banner and current road name label represented Mexican state highways with generic shields. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where the route would instruct the user to make a “U-turn” toward the passenger side wherever the user should actually make two successive turns toward the passenger side or take an exit ramp that curves 180°. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * `JunctionView` now appears after passing some toll booths or electronic toll collection points in Japan. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
@@ -39,12 +42,17 @@
 * A multi-leg route that crosses an international border can now have alternative routes. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Curvy roads are penalized slightly more consistently. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * You can now set `Waypoint.allowsSnappingToStaticallyClosedRoad` to `true` to allow the waypoint to snap to a road that is fully closed for long-term construction. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
+
+### CarPlay
+
+* Fixed an issue where navigation camera viewport padding was not taking into account `MapView` safe area insets on CarPlay. ([#4098](https://github.com/mapbox/mapbox-navigation-ios/pull/4098))
 
 ### Other changes
 
 * When launching the application, any stray files left over from old canceled offline tile downloads are cleaned up automatically to save storage space. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 
-## 2.7.0
+## v2.7.0
 
 ### Packaging
 
