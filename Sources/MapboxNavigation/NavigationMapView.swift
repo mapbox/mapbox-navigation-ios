@@ -920,7 +920,7 @@ open class NavigationMapView: UIView {
     /**
      The coordinates and corresponding identifiers for highlight buildings.
      */
-    var highlightedBuildingIdentifiersByCoordinate = [CLLocationCoordinate2D: Int64]()
+    var highlightedBuildingIdentifiersByCoordinate = [CLLocationCoordinate2DHashable: Int64]()
     
     func setupUserLocation() {
         if !isAuthorized() { return }
