@@ -37,6 +37,20 @@ commands:
             name: Install GitHub CLI
             command: |
               brew install gh
+  install-xcodegen:
+      steps:
+        - run:
+            name: Install XcodeGen
+            command: |
+              brew install xcodegen
+  install-bash5:
+      steps:
+        - run:
+            name: Install Bash 5
+            command: |
+              brew install bash
+            environment:
+              HOMEBREW_NO_AUTO_UPDATE: 1
   restore-carthage-cache:
     parameters:
       xcode:
@@ -617,7 +631,20 @@ jobs:
       - run:
           name: Build SPM Core integration test
           command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
-      
+
+  spm-ui-integration-test-job:
+    macos:
+      xcode: "13.2.1"
+    steps:
+      - checkout
+      - install-bash5
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - install-xcodegen
+      - run:
+          name: Validate released Navigation SDK versions
+          command: /usr/local/bin/bash ./scripts/validate_releases.sh # Use Bash 5 that is installed via Homebrew.
+
   generate-docs-job:
     parameters:
       xcode:
@@ -707,6 +734,8 @@ workflows:
           device: "iPhone 11 Pro Max"
           context: Slack Orb
           notify_success: true
+      - spm-ui-integration-test-job:
+          name: "Xcode 13.2.1; SPM UI test"
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00

@@ -1,0 +1,18 @@
+name: UISPMTest
+options:
+  bundleIdPrefix: com.mapbox
+packages:
+  mapbox-navigation-ios:
+    url: https://github.com/mapbox/mapbox-navigation-ios.git
+    version: NAVIGATION_SDK_VERSION
+targets:
+  UISPMTest:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources: [UISPMTest]
+    dependencies:
+      - package: mapbox-navigation-ios
+        product: MapboxCoreNavigation
+      - package: mapbox-navigation-ios
+        product: MapboxNavigation
