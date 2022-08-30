@@ -4,6 +4,25 @@ import Turf
 
 extension NavigationMapView {
     
+    struct CLLocationCoordinate2DHashable: Hashable {
+        var coordinate: CLLocationCoordinate2D
+        
+        init(_ coordinate: CLLocationCoordinate2D) {
+            self.coordinate = coordinate
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(coordinate.latitude)
+            hasher.combine(coordinate.longitude)
+        }
+        
+        static func == (lhs: CLLocationCoordinate2DHashable,
+                        rhs: CLLocationCoordinate2DHashable) -> Bool {
+            return lhs.coordinate.latitude == rhs.coordinate.latitude &&
+            lhs.coordinate.longitude == rhs.coordinate.longitude
+        }
+    }
+    
     // MARK: Building Extrusion Highlighting
     
     /**
@@ -23,7 +42,9 @@ extension NavigationMapView {
                                    in3D extrudesBuildings: Bool = true,
                                    extrudeAll: Bool = false,
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
-        highlightedBuildingIdentifiersByCoordinate = highlightedBuildingIdentifiersByCoordinate.filter{ coordinates.contains($0.key) }
+        highlightedBuildingIdentifiersByCoordinate = highlightedBuildingIdentifiersByCoordinate.filter {
+            coordinates.contains($0.key.coordinate)
+        }
         let group = DispatchGroup()
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
@@ -51,7 +72,8 @@ extension NavigationMapView {
                 
                 if case .success(let queriedFeatures) = result {
                     if let identifier = queriedFeatures.first?.feature.featureIdentifier {
-                        self.highlightedBuildingIdentifiersByCoordinate[coordinate] = identifier
+                        let coordinate2DHashable = CLLocationCoordinate2DHashable.init(coordinate)
+                        self.highlightedBuildingIdentifiersByCoordinate[coordinate2DHashable] = identifier
                     }
                 }
             })
