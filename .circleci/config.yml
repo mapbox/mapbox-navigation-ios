@@ -734,6 +734,8 @@ workflows:
           device: "iPhone 11 Pro Max"
           context: Slack Orb
           notify_success: true
+      - spm-ui-integration-test-job:
+          name: "Xcode 13.2.1; SPM UI test"
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00
@@ -825,8 +827,6 @@ workflows:
             filters:
               branches:
                 only: main
-        - spm-ui-integration-test-job:
-            name: "Xcode 13.2.1; SPM UI test"
   update-version-workflow:
     jobs:
       - update-version-job:
