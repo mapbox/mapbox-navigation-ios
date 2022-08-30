@@ -27,6 +27,10 @@ public enum ReroutingError: Error {
     case unknown
     /// Reroute was cancelled by user.
     case cancelled
+    /// No routes or reroute controller was set to Navigator
+    case noRoutesOrController
+    /// Another reroute is in progress.
+    case anotherRerouteInProgress
 
     init(_ nativeError: RerouteError) {
         switch (nativeError.type) {
@@ -36,6 +40,12 @@ public enum ReroutingError: Error {
             self = .unknown
         case .cancelled:
             self = .cancelled
+        case .noRoutesOrController:
+            self = .noRoutesOrController
+        case .buildUriError:
+            self = .wrongRequest
+        case .rerouteInProgress:
+            self = .anotherRerouteInProgress
         @unknown default:
             fatalError("Unknown MapboxNavigationNative.RerouteError value.")
         }

@@ -267,7 +267,7 @@ open class RouteController: NSObject {
      */
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
-                                 completion: ((Result<RouteInfo?, Error>) -> Void)?) {
+                                 completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
         guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
             completion?(.failure(RouteControllerError.internalError))
             return
@@ -282,9 +282,6 @@ open class RouteController: NSObject {
         
         let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
                                 .url(forCalculating: routeOptions).absoluteString
-        if let route = indexedRouteResponse.currentRoute {
-            alternativeRoutesCenter?.mainRoute = route
-        }
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest,
@@ -295,8 +292,29 @@ open class RouteController: NSObject {
             self.sharedNavigator.setRoutes(routes.remove(at: indexedRouteResponse.routeIndex),
                                            uuid: sessionUUID,
                                            legIndex: UInt32(legIndex),
-                                           alternativeRoutes: routes) { result in
-                completion?(result)
+                                           alternativeRoutes: routes) { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let info):
+                    let alternativeRoutes = info.1.compactMap {
+                        AlternativeRoute(mainRoute: self.route,
+                                         alternativeRoute: $0)
+                    }
+                    completion?(.success((info.0, alternativeRoutes)))
+                    
+                    let removedRoutes = self.continuousAlternatives.filter { alternative in
+                        !alternativeRoutes.contains(where: {
+                            alternative.id == $0.id
+                        })
+                    }
+                    self.continuousAlternatives = alternativeRoutes
+                    self.report(newAlternativeRoutes: alternativeRoutes,
+                                removedAlternativeRoutes: removedRoutes)
+                    
+                case .failure(let error):
+                    completion?(.failure(error))
+                }
             }
         } else if parsedRoutes.isError() {
             let reason = (parsedRoutes.error as String?) ?? ""
@@ -627,13 +645,7 @@ open class RouteController: NSObject {
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
-        if NavigationSettings.shared.alternativeRouteDetectionStrategy != nil {
-            self.alternativeRoutesCenter = AlternativeRoutesCenter(mainRoute: routeProgress.route)
-        }
-        
         super.init()
-        
-        self.alternativeRoutesCenter?.delegate = self
         
         if let customRoutingProvider = customRoutingProvider {
             self.customRoutingProvider = customRoutingProvider
@@ -672,6 +684,14 @@ open class RouteController: NSObject {
                                                selector: #selector(navigationStatusDidChange),
                                                name: .navigationStatusDidChange,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigatorDidChangeAlternativeRoutes),
+                                               name: .navigatorDidChangeAlternativeRoutes,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigatorDidFailToChangeAlternativeRoutes),
+                                               name: .navigatorDidFailToChangeAlternativeRoutes,
+                                               object: nil)
         rerouteController.delegate = self
     }
     
@@ -696,9 +716,6 @@ open class RouteController: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return sharedNavigator.roadObjectMatcher
     }
-    
-    /// Provides access to detected `AlternativeRoute`s.
-    private var alternativeRoutesCenter: AlternativeRoutesCenter?
 }
 
 extension RouteController: HistoryRecording { }
@@ -950,23 +967,78 @@ extension RouteController: ReroutingControllerDelegate {
     }
 }
 
-extension RouteController: AlternativeRoutesCenterDelegate {
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
-        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-        userInfo[.updatedAlternativesKey] = updatedAlternatives
-        userInfo[.removedAlternativesKey] = removedAlternatives
+extension RouteController {
+    @objc private func navigatorDidChangeAlternativeRoutes(_ notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let alternatives = userInfo[Navigator.NotificationUserInfoKey.alternativesListKey] as? [RouteAlternative],
+              let removed = userInfo[Navigator.NotificationUserInfoKey.removedAlternativesKey] as? [RouteAlternative] else {
+            return
+        }
         
-        continuousAlternatives = updatedAlternatives
+        let removedIds = Set(removed.map(\.id))
+        var removedRoutes = continuousAlternatives.filter {
+            removedIds.contains($0.id)
+        }
+        
+        self.sharedNavigator.setAlternativeRoutes(with: alternatives.map(\.route),
+                                                  completion: { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let routeAlternatives):
+                let alternativeRoutes = routeAlternatives.compactMap {
+                    AlternativeRoute(mainRoute: self.route,
+                                     alternativeRoute: $0)
+                }
+                
+                removedRoutes.append(contentsOf: alternatives.filter { alternative in
+                    !routeAlternatives.contains(where: {
+                        alternative.id == $0.id
+                    })
+                }.compactMap {
+                    AlternativeRoute(mainRoute: self.route,
+                                     alternativeRoute: $0)
+                })
+                self.continuousAlternatives = alternativeRoutes
+                self.report(newAlternativeRoutes: alternativeRoutes,
+                            removedAlternativeRoutes: removedRoutes)
+            case .failure(let updateError):
+                let error = AlternativeRouteError.failedToUpdateAlternativeRoutes(reason: updateError.localizedDescription)
+                var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+                userInfo[.alternativesErrorKey] = error
+                NotificationCenter.default.post(name: .routeControllerDidFailToUpdateAlternatives,
+                                                object: self,
+                                                userInfo: userInfo)
+                self.delegate?.router(self, didFailToUpdateAlternatives: error)
+            }
+        })
+    }
+    
+    private func report(newAlternativeRoutes: [AlternativeRoute], removedAlternativeRoutes: [AlternativeRoute]) {
+        guard NavigationSettings.shared.alternativeRouteDetectionStrategy != nil else {
+            return
+        }
+        
+        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+        userInfo[.updatedAlternativesKey] = newAlternativeRoutes
+        userInfo[.removedAlternativesKey] = removedAlternativeRoutes
         
         NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
                                         object: self,
                                         userInfo: userInfo)
-        delegate?.router(self,
-                         didUpdateAlternatives: updatedAlternatives,
-                         removedAlternatives: removedAlternatives)
+        self.delegate?.router(self,
+                              didUpdateAlternatives: newAlternativeRoutes,
+                              removedAlternatives: removedAlternativeRoutes)
     }
     
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didFailToUpdateAlternatives error: AlternativeRouteError) {
+    @objc private func navigatorDidFailToChangeAlternativeRoutes(_ notification: NSNotification) {
+        guard NavigationSettings.shared.alternativeRouteDetectionStrategy != nil,
+              let originalUserInfo = notification.userInfo,
+              let message = originalUserInfo[Navigator.NotificationUserInfoKey.messageKey] as? String else {
+            return
+        }
+        
+        let error = AlternativeRouteError.failedToUpdateAlternativeRoutes(reason: message)
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
         userInfo[.alternativesErrorKey] = error
         NotificationCenter.default.post(name: .routeControllerDidFailToUpdateAlternatives,
@@ -981,4 +1053,10 @@ enum RouteControllerError: Error {
     case internalError
     case failedToChangeRouteLeg
     case failedToSerializeRoute
+}
+
+/// Error type, describing the reason alternative routes failed to update.
+public enum AlternativeRouteError: Swift.Error {
+    /// The navigation engine has failed to provide alternatives.
+    case failedToUpdateAlternativeRoutes(reason: String)
 }

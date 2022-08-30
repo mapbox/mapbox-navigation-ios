@@ -39,9 +39,10 @@ class Navigator {
             }
             
             self?.navigator.setRoutesFor(routesParams) { [weak self] result in
-                if result.isValue() {
-                    Log.info("Navigator has been updated", category: .navigation)
-                    completion(.success(route?.getRouteInfo()))
+                if result.isValue(),
+                   let routesResult = result.value {
+                    Log.info("Navigator has been updated, including \(routesResult.alternatives.count) alternatives.", category: .navigation)
+                    completion(.success((route?.getRouteInfo(), routesResult.alternatives)))
                 }
                 else if result.isError() {
                     let reason = (result.error as String?) ?? ""
@@ -53,6 +54,20 @@ class Navigator {
                     completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
                 }
             }
+        }, alternativeRoutesSetupHandler: {[weak self] routes, completion in
+            self?.navigator.setAlternativeRoutesForRoutes(routes, callback: { result in
+                if result.isValue(),
+                   let alternatives = result.value as? [RouteAlternative] {
+                    Log.info("Navigator alternative routes has been updated (\(alternatives.count) alternatives set).",
+                             category: .navigation)
+                    completion(.success(alternatives))
+                } else {
+                    let reason = (result.error as String?) ?? ""
+                    Log.error("Failed to update navigator alternative routes with reason: \(reason)",
+                              category: .navigation)
+                    completion(.failure(NavigatorError.failedToUpdateAlternativeRoutes(reason: reason)))
+                }
+            })
         })
     }()
     
@@ -237,11 +252,15 @@ class Navigator {
 
     // MARK: - Navigator Updates
 
-    func setRoutes(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, alternativeRoutes: [RouteInterface], completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
+    func setRoutes(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, alternativeRoutes: [RouteInterface], completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
         routeCoordinator.beginActiveNavigation(with: route, uuid: uuid, legIndex: legIndex, alternativeRoutes: alternativeRoutes, completion: completion)
     }
     
-    func unsetRoutes(uuid: UUID, completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
+    func setAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
+        routeCoordinator.updateAlternativeRoutes(with: routes, completion: completion)
+    }
+    
+    func unsetRoutes(uuid: UUID, completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
         routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
     }
 
@@ -375,13 +394,12 @@ class NavigatorStatusObserver: NavigatorObserver {
 
 class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
 
-    func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) -> [NSNumber] {
+    func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) {
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .alternativesListKey: routeAlternatives,
             .removedAlternativesKey: removed,
         ]
         NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
-        return [] //notify NN that we didn't discard any of the route alternatives
     }
 
     public func onError(forMessage message: String) {
@@ -390,8 +408,13 @@ class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
         ]
         NotificationCenter.default.post(name: .navigatorDidFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
     }
+    
+    func onOnlinePrimaryRouteAvailable(forOnlinePrimaryRoute onlinePrimaryRoute: RouteInterface) {
+        // TODO: support switching to online route
+    }
 }
 
 enum NavigatorError: Swift.Error {
     case failedToUpdateRoutes(reason: String)
+    case failedToUpdateAlternativeRoutes(reason: String)
 }

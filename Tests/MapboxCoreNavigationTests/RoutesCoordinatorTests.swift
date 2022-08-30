@@ -81,7 +81,7 @@ private extension RoutesCoordinatorTests {
     func runTestCases(_ testCases: [RoutesCoordinatorTestCase]) {
         var expectedRoutes: RouteInterface? = generateRoutes()
         var expectedRouteIndex = UInt32.max
-        var expectedResult: Result<RouteInfo?, RoutesCoordinatorError>!
+        var expectedResult: Result<RoutesCoordinator.RoutesResult, RoutesCoordinatorError>!
 
         let handler: RoutesCoordinator.RoutesSetupHandler = { routes, routeIndex, alternativeRoutes, completion in
             XCTAssertEqual(routes?.getRouteId(), expectedRoutes?.getRouteId())
@@ -92,19 +92,20 @@ private extension RoutesCoordinatorTests {
 
         let coordinator = RoutesCoordinator(routesSetupHandler: { route, routeIndex, alternativeRoutes, completion in
             handler(route, routeIndex, alternativeRoutes, completion)
-        })
+        }, alternativeRoutesSetupHandler: { _, _ in })
 
         for testCase in testCases {
             let expectation = expectation(description: "Test case finished")
             if let routes = testCase.routes {
                 expectedResult = testCase.expectedResult
-                    .map { .init(alerts: []) }
+                    .map { (.init(alerts: []), []) }
                 expectedRoutes = routes
                 expectedRouteIndex = testCase.routeIndex
                 coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid, legIndex: testCase.routeIndex, alternativeRoutes: []) { result in
                     switch (result, expectedResult) {
                     case (.success(let routeInfo), .success(let expectedRouteInfo)):
-                        XCTAssertEqual(routeInfo, expectedRouteInfo)
+                        XCTAssertEqual(routeInfo.0, expectedRouteInfo.0)
+                        XCTAssertEqual(routeInfo.1, expectedRouteInfo.1)
                     case (.failure(let error), .failure(let expectedError)):
                         XCTAssertEqual(error as? RoutesCoordinatorError, expectedError)
                     default:
@@ -115,12 +116,13 @@ private extension RoutesCoordinatorTests {
             }
             else {
                 expectedResult = testCase.expectedResult
-                    .map { .init(alerts: []) }
+                    .map { (.init(alerts: []), []) }
                 expectedRoutes = nil
                 coordinator.endActiveNavigation(with: testCase.uuid) { result in
                     switch (result, expectedResult) {
                     case (.success(let routeInfo), .success(let expectedRouteInfo)):
-                        XCTAssertEqual(routeInfo, expectedRouteInfo)
+                        XCTAssertEqual(routeInfo.0, expectedRouteInfo.0)
+                        XCTAssertEqual(routeInfo.1, expectedRouteInfo.1)
                     case (.failure(let error), .failure(let expectedError)):
                         XCTAssertEqual(error as? RoutesCoordinatorError, expectedError)
                     default:
