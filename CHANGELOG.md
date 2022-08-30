@@ -51,7 +51,7 @@
 ### Other changes
 
 * When launching the application, any stray files left over from old canceled offline tile downloads are cleaned up automatically to save storage space. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
-* Removed the hashable extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix the compiling issue. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
+* Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
 
 ## v2.7.0
 
