@@ -2,6 +2,7 @@
 
 ## v2.7.2
 
+* Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
 * Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
 * Fixed an issue where the `NavigationMapView.traversedRouteColor` property had no effect on the traversed part of the route line. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
 
