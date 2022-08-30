@@ -24,17 +24,20 @@ cd Tests/SPMTest/UISPMTest/
 # - EX_SOFTWARE if the commands given to xcodebuild fail.
 # It may exit with other codes in less common scenarios.
 declare -A EXPECTED_XCODEBUILD_RESULTS
+SUCCESS_CODE=0
+# xcodebuild exits with EX_IOERR (74) in case if it fails to resolve dependencies.
+ERROR_CODE=74
 EXPECTED_XCODEBUILD_RESULTS=( \
-    [2.4.0]=74 \
-    [2.4.1]=74 \
-    [2.4.2]=0 \
-    [2.5.0]=74 \
-    [2.5.1]=74 \
-    [2.5.2]=74 \
-    [2.5.3]=0 \
-    [2.6.0]=0 \
-    [2.7.0]=0 \
-    [2.7.1]=0 \
+    [2.4.0]=${ERROR_CODE} \
+    [2.4.1]=${ERROR_CODE} \
+    [2.4.2]=${SUCCESS_CODE} \
+    [2.5.0]=${ERROR_CODE} \
+    [2.5.1]=${ERROR_CODE} \
+    [2.5.2]=${ERROR_CODE} \
+    [2.5.3]=${SUCCESS_CODE} \
+    [2.6.0]=${SUCCESS_CODE} \
+    [2.7.0]=${SUCCESS_CODE} \
+    [2.7.1]=${SUCCESS_CODE} \
 )
 
 echo "Expected xcodebuild result for:"
@@ -48,13 +51,13 @@ declare -A ACTUAL_XCODEBUILD_RESULTS
 
 for NAVIGATION_SDK_VERSION in "${!EXPECTED_XCODEBUILD_RESULTS[@]}"
 do
-    # Used for local testing to make sure that cache is empty before building and resolving dependencies.
-    rm -rf /Users/maksimmakhun/Library/Caches/org.swift.swiftpm/repositories
+    # Make sure that cache is empty before building and resolving dependencies.
+    rm -rf /Users/$(whoami)/Library/Caches/org.swift.swiftpm/repositories
     rm -rf ~/Library/Developer/Xcode/DerivedData/*
     rm -rf ~/Library/Caches/com.apple.dt.Xcode/*
 
-    # Used for local testing to remove originally created file with resolved dependencies.
-    # Xcode 13.2.1 and Xcode 13.3 Package.resolved file formats are mot compatible.
+    # Remove originally created file with resolved dependencies.
+    # Xcode 13.2.1 and Xcode 13.3 Package.resolved file formats are not compatible.
     rm -rf *.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
     # Replace Navigation SDK version placeholder with the one that should be tested.
