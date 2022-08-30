@@ -133,6 +133,9 @@ open class NavigationEventsManager {
         }
         self.mobileEventsManager = mobileEventsManager
 
+        let settings = SettingsServiceFactory.getInstance(storageType: SettingsServiceStorageType.nonPersistent)
+        settings.set(key: "com.mapbox.common.telemetry.internal.use_staging_api", value: true)
+
         let accessTokenCoreTelemetry = Bundle.main.infoDictionary?["MBXEventsServiceAccessToken"]  as? String ?? possibleToken ?? ""
         let coreTelemetryOptions = EventsServerOptions(token: accessTokenCoreTelemetry, userAgentFragment: userAgent)
         self.coreTelemetry = EventsService.getOrCreate(for: coreTelemetryOptions)
