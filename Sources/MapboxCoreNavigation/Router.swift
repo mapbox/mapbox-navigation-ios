@@ -282,7 +282,7 @@ extension InternalRouter where Self: Router {
     
     func refreshAndCheckForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         if refreshesRoute {
-            refreshRoute(from: location, legIndex: routeProgress.legIndex) { [weak self] in
+            refreshRoute(from: location, legIndex: routeProgress.legIndex, shapeIndex: routeProgress.currentRouteShapeIndex) { [weak self] in
                 self?.checkForFasterRoute(from: location, routeProgress: routeProgress)
             }
         } else {
@@ -290,7 +290,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
+    func refreshRoute(from location: CLLocation, legIndex: Int, shapeIndex: Int?, completion: @escaping ()->()) {
         guard refreshesRoute else {
             completion()
             return
@@ -313,7 +313,8 @@ extension InternalRouter where Self: Router {
         }
         isRefreshing = true
         resolvedRoutingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
-                                             fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
+                                             fromLegAtIndex: UInt32(legIndex),
+                                             currentRouteShapeIndex: shapeIndex) { [weak self] session, result in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil

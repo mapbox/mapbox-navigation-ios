@@ -389,7 +389,8 @@ open class RouteController: NSObject {
                with: snappedLocation,
                rawLocation: rawLocation,
                upcomingRouteAlerts: status.upcomingRouteAlerts,
-               mapMatchingResult: MapMatchingResult(status: status))
+               mapMatchingResult: MapMatchingResult(status: status),
+               routeShapeIndex: Int(status.geometryIndex))
         
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
@@ -520,6 +521,8 @@ open class RouteController: NSObject {
             preconditionFailure("Route legs used for navigation must have destinations")
         }
         let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions ?? []
+
+        legProgress.shapeIndex = Int(status.shapeIndex)
         
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
@@ -543,9 +546,10 @@ open class RouteController: NSObject {
         }
     }
     
-    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult) {
+    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult, routeShapeIndex: Int) {
         progress.updateDistanceTraveled(with: location)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
+        progress.currentRouteShapeIndex = routeShapeIndex
         
         //Fire the delegate method
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)

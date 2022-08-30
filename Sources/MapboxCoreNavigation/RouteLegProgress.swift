@@ -175,6 +175,11 @@ open class RouteLegProgress: Codable {
             return speedLimit
         }
     }
+
+    /**
+     Index relative to leg shape, representing the point the user is currently located at.
+     */
+    public internal(set) var shapeIndex: Int?
     
     /**
      Intializes a new `RouteLegProgress`.
@@ -247,5 +252,6 @@ open class RouteLegProgress: Codable {
         case stepIndex
         case userHasArrivedAtWaypoint
         case currentStepProgress
+        case shapeIndex
     }
 }

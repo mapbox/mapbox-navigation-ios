@@ -322,6 +322,7 @@ public class MapboxRoutingProvider: RoutingProvider {
      */
     @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
                                                 fromLegAtIndex startLegIndex: UInt32 = 0,
+                                                currentRouteShapeIndex: Int? = nil,
                                                 completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
@@ -344,8 +345,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile,
-                                                 currentRouteGeometryIndex: nil)
-        
+                                                 currentRouteGeometryIndex: currentRouteShapeIndex as? NSNumber)
+
         requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
             

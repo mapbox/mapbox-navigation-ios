@@ -32,7 +32,7 @@ extension Directions: RoutingProvider {
         return calculate(options, completionHandler: completionHandler)
     }
     
-    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
+    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, currentRouteShapeIndex: Int?, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
