@@ -35,7 +35,7 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testNavigationMapEvents() {
-        let timeout: TimeInterval = 10.0
+        let timeout: TimeInterval = 60.0
         
         navigationMapView.mapView.mapboxMap.onEvery(event: .mapLoadingError) { event in
             XCTFail("Failed to load map with error: \(String(describing: event.payload))")
