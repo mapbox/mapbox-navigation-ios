@@ -740,6 +740,14 @@ workflows:
             codecoverage: false
             context: Slack Orb
             configuration: "Release"
+        - build-job:
+            name: "Xcode_13.4.1_iOS_13.7"
+            xcode: "13.4.1"
+            iOS: "13.7"
+            device: "iPhone 11 Pro Max"
+            spm: true
+            codecoverage: false
+            context: Slack Orb
         - pod-job:
             name: "Xcode_13.2.1_iOS_15.2_CP_install"
             update: false
