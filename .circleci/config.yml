@@ -802,7 +802,7 @@ workflows:
             name: "Xcode_13.4.1_iOS_13.7"
             xcode: "13.4.1"
             iOS: "13.7"
-            device: "iPhone 11"
+            device: "iPhone 11 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
