@@ -14,6 +14,7 @@
 * Added `NavigationSettings.navigatorPredictionInterval` to control how far ahead Navigator will predict user current position. ([#4072](https://github.com/mapbox/mapbox-navigation-ios/pull/4072))
 * Added the `RoadGraph.Edge.Metadata.isUrban` and `RoadObject.isUrban` properties and accompanying convenience initializers to indicate whether the edge or road object is in an urban area. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where some incidents in Japan were associated with two disconnected road edges, causing the `RoadGraph.Path` in `RoadObject.Location.openLRLine(path:shape:)` to have the wrong `RoadGraph.Path.edgeIdentifiers`. ([valhalla/valhalla#3667](https://github.com/valhalla/valhalla/issues/3667), [#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
 
 ### Map
 
