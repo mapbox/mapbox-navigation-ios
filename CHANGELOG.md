@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v112._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/112.0.0). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v113._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/113.0.0). ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 * MapboxCoreNavigation now requires [MapboxDirections v2.7.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 
 ### Location Tracking
@@ -43,6 +43,7 @@
 * Curvy roads are penalized slightly more consistently. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * You can now set `Waypoint.allowsSnappingToStaticallyClosedRoad` to `true` to allow the waypoint to snap to a road that is fully closed for long-term construction. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
+* Fixed incorrect duration calculations and route refreshing when an arrival step’s geometry contained only one coordinate. Normally, an arrival step’s geometry is expected to be a zero-length `LineString`; that is, with two coincident coordinates. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 
 ### CarPlay
 
@@ -51,6 +52,8 @@
 ### Other changes
 
 * When launching the application, any stray files left over from old canceled offline tile downloads are cleaned up automatically to save storage space. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed a “dereference error” when passing certain OpenLR identifiers into the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
+* Fixed an issue where the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method sometimes returned the wrong parallel roadway. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
 
 ## v2.7.0
