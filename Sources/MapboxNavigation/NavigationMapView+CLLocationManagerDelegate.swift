@@ -1,6 +1,11 @@
 import CoreLocation
 
 extension NavigationMapView: CLLocationManagerDelegate {
+
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if !_locationChangesAllowed { return }
+        authorizationStatus = status
+    }
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         // In case if location changes are not allowed - do not update authorization status and
