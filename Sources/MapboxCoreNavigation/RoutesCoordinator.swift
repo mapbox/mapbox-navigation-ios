@@ -8,21 +8,26 @@ final class RoutesCoordinator {
         case activeNavigation(UUID)
     }
 
-    typealias RoutesSetupHandler = (_ mainRoute: RouteInterface?, _ legIndex: UInt32, _ alternativeRoutes: [RouteInterface], _ completion: @escaping (Result<RouteInfo?, Error>) -> Void) -> Void
+    typealias RoutesResult = (mainRouteInfo: RouteInfo?, alternativeRoutes: [RouteAlternative])
+    typealias RoutesSetupHandler = (_ mainRoute: RouteInterface?, _ legIndex: UInt32, _ alternativeRoutes: [RouteInterface], _ completion: @escaping (Result<RoutesResult, Error>) -> Void) -> Void
+    typealias AlternativeRoutesSetupHandler = (_ routes: [RouteInterface], _ completion: @escaping (Result<[RouteAlternative], Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
         let uuid: UUID
     }
 
     private let routesSetupHandler: RoutesSetupHandler
+    private let alternativeRoutesSetupHandler: AlternativeRoutesSetupHandler
     /// The lock that protects mutable state in `RoutesCoordinator`.
     private let lock: NSLock
     private var state: State
     
     /// Create a new coordinator that will coordinate  requests to set main and alternative routes.
     /// - Parameter routesSetupHandler: The handler that passes main and alternative route's`RouteInterface` objects to underlying Navigator.
-    init(routesSetupHandler: @escaping RoutesSetupHandler) {
+    /// - Parameter alternativeRoutesSetupHandler: The handler that passes only alternative route's`RouteInterface` objects to underlying Navigator. Main route must be set before and it will remain unchanged.
+    init(routesSetupHandler: @escaping RoutesSetupHandler, alternativeRoutesSetupHandler: @escaping AlternativeRoutesSetupHandler) {
         self.routesSetupHandler = routesSetupHandler
+        self.alternativeRoutesSetupHandler = alternativeRoutesSetupHandler
         lock = .init()
         state = .passiveNavigation
     }
@@ -35,7 +40,7 @@ final class RoutesCoordinator {
                                uuid: UUID,
                                legIndex: UInt32,
                                alternativeRoutes: [RouteInterface],
-                               completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
+                               completion: @escaping (Result<RoutesResult, Error>) -> Void) {
         lock.lock()
         if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
             Log.fault("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController is deallocated once not in use.", category: .navigation)
@@ -49,7 +54,7 @@ final class RoutesCoordinator {
 
     /// - Parameters:
     ///   - uuid: The UUID that was passed to `RoutesCoordinator.beginActiveNavigation(with:uuid:completion:)` method.
-    func endActiveNavigation(with uuid: UUID, completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
+    func endActiveNavigation(with uuid: UUID, completion: @escaping (Result<RoutesResult, Error>) -> Void) {
         lock.lock()
         guard case .activeNavigation(let currentUUID) = state, currentUUID == uuid else {
             lock.unlock()
@@ -60,6 +65,10 @@ final class RoutesCoordinator {
         lock.unlock()
         // TODO: Is it safe to set the leg index to 0 when unsetting a route?
         routesSetupHandler(nil, 0, [], completion)
+    }
+    
+    func updateAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
+        alternativeRoutesSetupHandler(routes, completion)
     }
 }
 
