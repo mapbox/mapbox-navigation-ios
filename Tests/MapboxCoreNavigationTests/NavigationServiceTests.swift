@@ -763,6 +763,8 @@ class NavigationServiceTests: TestCase {
     }
 
     func testReroutingUpdatesRouteOptions() {
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .offline)
+        
         let trace = Fixture.generateTrace(for: initialRouteResponse.routes!.first!).shiftedToPresent()
         guard let firstLoction = trace.first,
               let lastLocation = trace.last,
