@@ -799,7 +799,7 @@ class NavigationServiceTests: TestCase {
         router.reroute(from: firstLoction,
                        along: router.routeProgress)
 
-        wait(for: [finishExpectation], timeout: locationManager.expectedReplayTime)
+        wait(for: [finishExpectation], timeout: locationManager.expectedReplayTime + 5)
         locationManager.stopUpdatingLocation()
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willModify:)"))
