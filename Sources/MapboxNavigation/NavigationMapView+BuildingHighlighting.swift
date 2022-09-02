@@ -36,7 +36,7 @@ extension NavigationMapView {
             let screenCoordinate = mapView.mapboxMap.point(for: $0)
             let options = RenderedQueryOptions(layerIds: identifiers, filter: nil)
             
-            mapView.mapboxMap.queryRenderedFeatures(at: screenCoordinate,
+            mapView.mapboxMap.queryRenderedFeatures(with: screenCoordinate,
                                                     options: options,
                                                     completion: { [weak self] result in
                 defer {
