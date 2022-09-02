@@ -29,7 +29,7 @@ To contribute code changes to this project, use Swift Package Manager to set up 
 
 ### Using Carthage
 
-To build this SDK, you need Xcode 12.4 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
+To build this SDK, you need Xcode 13.0 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
