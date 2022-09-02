@@ -290,6 +290,10 @@ open class NavigationMapView: UIView {
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         below: parentLayerIdentifier,
                                                         isMainRoute: index == 0)
+            
+            if index == 0 && routeLineTracksTraversal {
+                parentLayerIdentifier = addTraversedRouteLayer(route, below: parentLayerIdentifier)
+            }
         }
         
         continuousAlternatives?.forEach { routeAlternative in
@@ -329,6 +333,7 @@ open class NavigationMapView: UIView {
             sourceIdentifiers.insert($0.element.identifier(.restrictedRouteAreaSource))
             layerIdentifiers.insert($0.element.identifier(.route(isMainRoute: $0.offset == 0)))
             layerIdentifiers.insert($0.element.identifier(.routeCasing(isMainRoute: $0.offset == 0)))
+            layerIdentifiers.insert($0.element.identifier(.traversedRoute))
             layerIdentifiers.insert($0.element.identifier(.restrictedRouteAreaRoute))
         }
         
@@ -353,14 +358,6 @@ open class NavigationMapView: UIView {
         
         mapView.mapboxMap.style.removeLayers(layerIdentifiers)
         mapView.mapboxMap.style.removeSources(sourceIdentifiers)
-    }
-    
-    func removeRestrictedRouteArea() {
-        guard let sourceIdentifier = routes?.first?.identifier(.restrictedRouteAreaSource),
-              let layerIdentifier = routes?.first?.identifier(.restrictedRouteAreaRoute) else { return }
-        
-        mapView.mapboxMap.style.removeLayers(Set([layerIdentifier]))
-        mapView.mapboxMap.style.removeSources(Set([sourceIdentifier]))
     }
     
     /**
@@ -619,7 +616,7 @@ open class NavigationMapView: UIView {
         let shape = delegate?.navigationMapView(self, shapeFor: route) ?? defaultShape
         
         let geoJSONSource = self.geoJSONSource(shape)
-        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
+        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: false))
 
         do {
             if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
@@ -713,7 +710,7 @@ open class NavigationMapView: UIView {
         let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
         
         let geoJSONSource = self.geoJSONSource(shape)
-        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
+        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
         
         do {
             if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
@@ -774,6 +771,65 @@ open class NavigationMapView: UIView {
                 }
             } catch {
                 Log.error("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
+            }
+        }
+        
+        return layerIdentifier
+    }
+    
+    @discardableResult func addTraversedRouteLayer(_ route: Route, below parentLayerIndentifier: String? = nil) -> String? {
+        guard let defaultShape = route.shape else { return nil }
+        
+        // The traversed route layer should have the source as the main route casing source.
+        let sourceIdentifier = route.identifier(.source(isMainRoute: true, isSourceCasing: true))
+        
+        if !mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
+            let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
+            let geoJSONSource = self.geoJSONSource(shape)
+            do {
+                try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            } catch {
+                Log.error("Failed to add route casing source \(sourceIdentifier) for traversed route with error: \(error.localizedDescription).",
+                          category: .navigationUI)
+            }
+        }
+        
+        var lineLayer: LineLayer? = nil
+        let layerIdentifier = route.identifier(.traversedRoute)
+        
+        let layerAlreadyExists = mapView.mapboxMap.style.layerExists(withId: layerIdentifier)
+        if layerAlreadyExists {
+            lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
+        }
+        
+        if lineLayer == nil {
+            lineLayer = LineLayer(id: layerIdentifier)
+            lineLayer?.source = sourceIdentifier
+            lineLayer?.lineColor = .constant(.init(traversedRouteColor))
+            // The traversed route layer should have the same width as the main route casing layer.
+            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
+            lineLayer?.lineJoin = .constant(.round)
+            lineLayer?.lineCap = .constant(.round)
+        }
+        
+        if let lineLayer = lineLayer {
+            do {
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                if let parentLayerIndentifier = parentLayerIndentifier, mapView.mapboxMap.style.layerExists(withId: parentLayerIndentifier) {
+                    layerPosition = .below(parentLayerIndentifier)
+                } else {
+                    layerPosition = self.layerPosition(for: layerIdentifier, route: route)
+                }
+                if layerAlreadyExists {
+                    if let layerPosition = layerPosition {
+                        try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
+                    }
+                } else {
+                    try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                }
+            } catch {
+                Log.error("Failed to add traversed route layer \(layerIdentifier) with error: \(error.localizedDescription).",
                           category: .navigationUI)
             }
         }
@@ -858,7 +914,7 @@ open class NavigationMapView: UIView {
     /**
      The coordinates and corresponding identifiers for highlight buildings.
      */
-    var highlightedBuildingIdentifiersByCoordinate = [CLLocationCoordinate2D: Int64]()
+    var highlightedBuildingIdentifiersByCoordinate = [CLLocationCoordinate2DHashable: Int64]()
     
     func setupUserLocation() {
         if !isAuthorized() { return }
@@ -1744,6 +1800,7 @@ open class NavigationMapView: UIView {
             LayerIdentifier.buildingExtrusionLayer,
             route?.identifier(.routeCasing(isMainRoute: false)),
             route?.identifier(.route(isMainRoute: false)),
+            route?.identifier(.traversedRoute),
             route?.identifier(.routeCasing(isMainRoute: true)),
             route?.identifier(.route(isMainRoute: true)),
             route?.identifier(.restrictedRouteAreaRoute)
