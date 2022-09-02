@@ -118,6 +118,10 @@
 * Fixed an issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
 * Fixed an issue where the user location indicator moves out of view when approaching complex intersections. ([#4070](https://github.com/mapbox/mapbox-navigation-ios/pull/4070))
 
+## v2.6.1
+
+* Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
+
 ## v2.6.0
 
 ### Packaging
