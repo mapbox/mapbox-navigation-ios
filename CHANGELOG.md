@@ -57,6 +57,16 @@
 * Fixed an issue where the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method sometimes returned the wrong parallel roadway. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
 
+## v2.7.2
+
+* Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
+* Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
+* Fixed an issue where the `NavigationMapView.traversedRouteColor` property had no effect on the traversed part of the route line. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
+
+## v2.7.1
+
+* Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
+
 ## v2.7.0
 
 ### Packaging
@@ -107,6 +117,16 @@
 * Added filling of `Incident` properties `countryCodeAlpha3`, `countryCode`, `roadIsClosed`, `longDescription`, `numberOfBlockedLanes`, `congestionLevel`, `affectedRoadNames` when receiving `RoadObject` via Electronic Horizon. ([#4045](https://github.com/mapbox/mapbox-navigation-ios/pull/4045))
 * Fixed an issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
 * Fixed an issue where the user location indicator moves out of view when approaching complex intersections. ([#4070](https://github.com/mapbox/mapbox-navigation-ios/pull/4070))
+
+## v2.6.1
+
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.7._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0). ([#4125](https://github.com/mapbox/mapbox-navigation-ios/pull/4125))
+
+### Location tracking
+
+* Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
 
 ## v2.6.0
 
