@@ -526,7 +526,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
         // Reapply runtime styling changes each time the style changes.
-        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.navigationMapView?.localizeLabels()
             self.navigationMapView?.mapView.showsTraffic = false

@@ -1846,7 +1846,7 @@ open class NavigationMapView: UIView {
         mapView.ornaments.options.scaleBar.visibility = .hidden
         storeLocationProviderBeforeSimulation()
         
-        mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
+        mapView.mapboxMap.onEvery(event: .renderFrameFinished) { [weak self] _ in
             guard let self = self else { return }
             
             if let location = self.mostRecentUserCourseViewLocation {
@@ -1885,7 +1885,7 @@ open class NavigationMapView: UIView {
             }
         }
         
-        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
             
