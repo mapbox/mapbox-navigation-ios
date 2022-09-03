@@ -120,6 +120,12 @@
 
 ## v2.6.1
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.7._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0). ([#4125](https://github.com/mapbox/mapbox-navigation-ios/pull/4125))
+
+### Location tracking
+
 * Fixed an issue where the user location couldn't be determined on iOS 13 and older versions. ([#4113](https://github.com/mapbox/mapbox-navigation-ios/issues/4113))
 
 ## v2.6.0
