@@ -36,8 +36,10 @@ EXPECTED_XCODEBUILD_RESULTS=( \
     [2.5.2]=${ERROR_CODE} \
     [2.5.3]=${SUCCESS_CODE} \
     [2.6.0]=${SUCCESS_CODE} \
+    [2.6.1]=${SUCCESS_CODE} \
     [2.7.0]=${SUCCESS_CODE} \
     [2.7.1]=${SUCCESS_CODE} \
+    [2.7.2]=${SUCCESS_CODE}
 )
 
 echo "Expected xcodebuild result for:"
