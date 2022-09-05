@@ -66,14 +66,22 @@ class SpeechSynthesizersControllerTests: TestCase {
     
     var delegateErrorBlock: ((SpeechError) -> ())?
     var synthesizers: [SpeechSynthesizing] = []
-    let routeResponse: RouteResponse = {
-        var options = NavigationRouteOptions(coordinates: [
+    var navigationRouteOptions: NavigationRouteOptions {
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
             CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
         ])
         options.shapeFormat = .polyline
-        return Fixture.routeResponse(from: "route-with-instructions", options: options)
-    }()
+        return options
+    }
+    var routeResponse: RouteResponse {
+        return Fixture.routeResponse(from: "route-with-instructions", options: navigationRouteOptions)
+    }
+    var indexedRouteResponse: IndexedRouteResponse {
+        IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "route-with-instructions",
+                                                                  options: navigationRouteOptions),
+                             routeIndex: 0)
+    }
     
     override func setUp() {
         super.setUp()
@@ -130,9 +138,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         deinitExpectation.expectedFulfillmentCount = 2
         (synthesizers[0] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
         (synthesizers[1] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
-                                                   routeIndex: 0,
-                                                   routeOptions: routeOptions,
+        let dummyService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                    customRoutingProvider: nil,
                                                    credentials: Fixture.credentials)
         
@@ -150,9 +156,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = SystemSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
-                                                   routeIndex: 0,
-                                                   routeOptions: routeOptions,
+        let dummyService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                    customRoutingProvider: MapboxRoutingProvider(.offline),
                                                    credentials: Fixture.credentials,
                                                    simulating: .always)
@@ -169,9 +173,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = MapboxSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
-                                                   routeIndex: 0,
-                                                   routeOptions: routeOptions,
+        let dummyService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                    customRoutingProvider: MapboxRoutingProvider(.offline),
                                                    credentials: Fixture.credentials,
                                                    simulating: .always)

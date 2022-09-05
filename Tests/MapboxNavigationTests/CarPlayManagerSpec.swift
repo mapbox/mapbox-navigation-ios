@@ -64,8 +64,7 @@ class CarPlayManagerSpec: QuickSpec {
                                                    options: .route(navigationRouteOptions),
                                                    credentials: Fixture.credentials)
                 MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
-                    completionHandler(Directions.Session(options, Fixture.credentials),
-                                      .success(fasterResponse))
+                    completionHandler(.success(.init(routeResponse: fasterResponse, routeIndex: 0)))
                     return nil
                 }
                 

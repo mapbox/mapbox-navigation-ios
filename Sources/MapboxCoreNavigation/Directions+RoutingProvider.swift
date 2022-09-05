@@ -9,6 +9,21 @@ extension URLSessionDataTask: NavigationProviderRequest {
 
 extension Directions: RoutingProvider {
     
+    @discardableResult public func calculateRoutes(options: RouteOptions,
+                                                   completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {
+        return calculate(options, completionHandler: { _, result in
+            switch result {
+            case .success(let routeResponse):
+                completionHandler(.success(IndexedRouteResponse(routeResponse: routeResponse,
+                                                                routeIndex: 0,
+                                                                responseOrigin: .online)))
+            case .failure(let error):
+                completionHandler(.failure(error))
+            }
+        })
+    }
+    
+    @available(*, deprecated, renamed: "calculateRoutes(options:completionHandler:)")
     @discardableResult public func calculateRoutes(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
         return calculate(options, completionHandler: completionHandler)
     }

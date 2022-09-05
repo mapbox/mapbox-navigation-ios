@@ -8,6 +8,8 @@ import MapboxDirections
  */
 public protocol RoutingProvider {
     
+    typealias IndexedRouteResponseCompletionHandler = (_ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
+    
     /**
      Routing caluclation method.
      
@@ -15,6 +17,17 @@ public protocol RoutingProvider {
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
      */
+    @discardableResult func calculateRoutes(options: RouteOptions,
+                                            completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest?
+    
+    /**
+     Routing caluclation method.
+     
+     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
+     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
+     - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
+     */
+    @available(*, deprecated, renamed: "calculateRoutes(options:completionHandler:)")
     @discardableResult func calculateRoutes(options: RouteOptions,
                                             completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
     

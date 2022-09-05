@@ -27,7 +27,9 @@ extension RouteOptions {
         let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
         return (legWaypoints, subsequentWaypoints.flatMap { $0 })
     }
-    
+}
+
+extension DirectionsOptions {
     /**
      Returns a copy of the route options by roundtripping through JSON.
      
@@ -47,9 +49,9 @@ extension RouteOptions {
      - parameter waypoint: the Waypoint to exclude.
      - returns: a copy of self excluding the specified waypoint.
      */
-    public func without(_ waypoint: Waypoint) -> RouteOptions {
+    public func without(_ waypoint: Waypoint) -> DirectionsOptions {
         let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
-        let copy: RouteOptions
+        let copy: DirectionsOptions
         do {
             copy = try self.copy()
         } catch {

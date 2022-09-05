@@ -222,6 +222,15 @@ open class RouteController: NSObject {
     
     public private(set) var continuousAlternatives: [AlternativeRoute] = []
     
+    /**
+     Enables automatic switching to online version of the current route when possible.
+     
+     Indicates if `RouteController` will attempt to detect if current route was build offline and if there is an online route with the same path is available to automatically switch to it. Using online route is beneficial due to available live data like traffic congestion, incidents, etc. Check is not performed instantly and it is not guaranteed to receive an online version at any given period of time.
+     
+     Enabled by default.
+     */
+    public var prefersOnlineRoute: Bool = true
+    
     // MARK: Navigating
     
     private lazy var sharedNavigator: Navigator = {
@@ -268,10 +277,8 @@ open class RouteController: NSObject {
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
                                  completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
-        guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
-            completion?(.failure(RouteControllerError.internalError))
-            return
-        }
+        let routeOptions = indexedRouteResponse.validatedRouteOptions
+        
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
@@ -602,7 +609,7 @@ open class RouteController: NSObject {
     
     // MARK: Handling Lifecycle
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
     public convenience init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.init(alongRouteAtIndex: routeIndex,
                   in: routeResponse,
@@ -611,7 +618,7 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -624,11 +631,22 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int,
-                         in routeResponse: RouteResponse,
-                         options: RouteOptions,
-                         customRoutingProvider: RoutingProvider? = nil,
+    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     customRoutingProvider: RoutingProvider? = nil,
+                                     dataSource source: RouterDataSource) {
+        self.init(with: .init(routeResponse: routeResponse,
+                              routeIndex: routeIndex),
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
+    }
+    
+    required public init(with indexedRouteResponse: IndexedRouteResponse,
+                         customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
+        
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
         Self.instanceLock.unlock()
@@ -637,12 +655,18 @@ open class RouteController: NSObject {
                       category: .navigation)
         }
 
+        var isRouteOptions = false
+        if case .route = indexedRouteResponse.routeResponse.options {
+            isRouteOptions = true
+        }
+        let options = indexedRouteResponse.validatedRouteOptions
         Navigator.datasetProfileIdentifier = options.profileIdentifier
         
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.indexedRouteResponse = indexedRouteResponse
+        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!,
+                                           options: options)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = isRouteOptions && options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
@@ -691,6 +715,10 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigatorDidFailToChangeAlternativeRoutes),
                                                name: .navigatorDidFailToChangeAlternativeRoutes,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigatorWantsSwitchToCoincideOnlineRoute),
+                                               name: .navigatorWantsSwitchToCoincideOnlineRoute,
                                                object: nil)
         rerouteController.delegate = self
     }
@@ -787,7 +815,7 @@ extension RouteController: Router {
 
         announceImpendingReroute(at: location)
         
-        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (result) in
             guard let self = self else { return }
 
             switch result {
@@ -1049,6 +1077,40 @@ extension RouteController {
                                         object: self,
                                         userInfo: userInfo)
         delegate?.router(self, didFailToUpdateAlternatives: error)
+    }
+    
+    @objc private func navigatorWantsSwitchToCoincideOnlineRoute(_ notification: NSNotification) {
+        guard prefersOnlineRoute,
+              let userInfo = notification.userInfo,
+              let onlineRoute = userInfo[Navigator.NotificationUserInfoKey.coincideOnlineRouteKey] as? RouteInterface else {
+            return
+        }
+        guard let decoded = RerouteController.decode(routeRequest: onlineRoute.getRequestUri(),
+                                                     routeResponse: onlineRoute.getResponseJson()) else {
+            return
+        }
+        
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: decoded.routeResponse,
+                                                        routeIndex: 0,
+                                                        responseOrigin: onlineRoute.getRouterOrigin())
+        guard let newRoute = indexedRouteResponse.currentRoute else {
+            return
+        }
+        
+        updateNavigator(with: indexedRouteResponse,
+                        fromLegIndex: 0) { [weak self] result in
+            guard let self = self else { return }
+            self.routeProgress = RouteProgress(route: newRoute,
+                                                options: decoded.routeOptions)
+            self.indexedRouteResponse = indexedRouteResponse
+            
+            var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+            userInfo[.coincideRouteKey] = newRoute
+            NotificationCenter.default.post(name: .routeControllerDidSwitchToCoincideOnlineRoute,
+                                            object: self,
+                                            userInfo: userInfo)
+            self.delegate?.router(self, didSwitchToCoincideOnlineRoute: newRoute)
+        }
     }
 }
 

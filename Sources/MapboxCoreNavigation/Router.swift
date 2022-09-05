@@ -24,7 +24,7 @@ public struct IndexedRouteResponse {
     /**
      The index of the selected route within the `routeResponse`.
      */
-    public let routeIndex: Int
+    public var routeIndex: Int
     
     /**
      Returns a route from the `routeResponse` under given `routeIndex` if possible.
@@ -63,6 +63,15 @@ public struct IndexedRouteResponse {
         self.routeIndex = routeIndex
         self.responseOrigin = responseOrigin
     }
+    
+    internal var validatedRouteOptions: RouteOptions {
+        switch routeResponse.options {
+        case let .match(matchOptions):
+            return RouteOptions(matchOptions: matchOptions)
+        case let .route(options):
+            return options
+        }
+    }
 }
 
 /**
@@ -97,7 +106,7 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
@@ -112,9 +121,21 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
+    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
+         customRoutingProvider: RoutingProvider?,
+         dataSource source: RouterDataSource)
+    
+    /**
+     Intializes a new `RouteController`.
+     
+     - parameter indexedRouteResponse: `IndexedRouteResponse` object, containing selection of routes to follow.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter source: The data source for the RouteController.
+     */
+    init(with indexedRouteResponse: IndexedRouteResponse,
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource)
     
@@ -345,7 +366,7 @@ extension InternalRouter where Self: Router {
         if isRerouting { return }
         isRerouting = true
         
-        calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: routeProgress) { [weak self] (result) in
             guard let self = self else { return }
 
             guard case let .success(indexedResponse) = result else {
@@ -374,8 +395,7 @@ extension InternalRouter where Self: Router {
             }
 
             // Prefer the most optimal route (the first one) over the route that matched the original choice.
-            let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
-            self.updateRoute(with: indexedRouteResponse,
+            self.updateRoute(with: indexedResponse,
                              routeOptions: routeOptions ?? self.routeProgress.routeOptions,
                              isProactive: true) { [weak self] success in
                 self?.isRerouting = false
@@ -384,7 +404,7 @@ extension InternalRouter where Self: Router {
     }
     
     /// Like RouteCompletionHandler, but including the index of the route in the response that is most similar to the route in the route progress.
-    typealias IndexedRouteCompletionHandler = (_ session: Directions.Session, _ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
+    typealias IndexedRouteCompletionHandler = (_ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
     
     /**
      Asynchronously calculates route response from a location along an existing route tracked by the given route progress object.
@@ -404,18 +424,18 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = origin
         
-        routeTask = resolvedRoutingProvider.calculateRoutes(options: options) { [weak self] (session, result) in
+        routeTask = resolvedRoutingProvider.calculateRoutes(options: options) { [weak self] (result) in
             guard let self = self else { return }
             defer { self.routeTask = nil }
             switch result {
             case .failure(let error):
-                return completion(session, .failure(error))
-            case .success(let response):
-                guard let mostSimilarIndex = response.routes?.index(mostSimilarTo: progress.route) else {
-                    return completion(session, .failure(.unableToRoute))
+                return completion(.failure(error))
+            case .success(var response):
+                guard let mostSimilarIndex = response.routeResponse.routes?.index(mostSimilarTo: progress.route) else {
+                    return completion(.failure(.unableToRoute))
                 }
-                
-                return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
+                response.routeIndex = mostSimilarIndex
+                return completion(.success(response))
             }
         }
     }

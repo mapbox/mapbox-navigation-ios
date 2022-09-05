@@ -178,12 +178,11 @@ class NavigationCameraTests: TestCase {
         let navigationMapView = NavigationMapView(frame: .zero)
         XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
         
-        let routeResponse = Fixture.routeResponse(from: jsonFileName,
-                                                  options: routeOptions)
+        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName,
+                                                                                      options: routeOptions),
+                                                 routeIndex: 0)
         
-        let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                routeIndex: 0,
-                                                                routeOptions: routeOptions)
+        let navigationViewController = NavigationViewController(for: routeResponse)
         
         XCTAssertEqual(navigationViewController.navigationMapView?.navigationCamera.state, .following)
     }

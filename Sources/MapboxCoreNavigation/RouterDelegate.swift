@@ -130,6 +130,16 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?)
     
     /**
+     Called when router has automatically switched to the coincide online route.
+     
+     - note: `LegacyRouteController` will never do that.
+     
+     - parameter router: The router reporting an update.
+     - parameter coincideRoute: A route taken.
+     */
+    func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: Route)
+    
+    /**
      Called when the router fails to receive a new route.
      
      This method is called after `router(_:modifiedOptionsForReroute:)`.
@@ -299,6 +309,10 @@ public extension RouterDelegate {
     }
     
     func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+    
+    func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
 }

@@ -209,6 +209,13 @@ public extension Notification.Name {
     static let routeControllerDidFailToUpdateAlternatives: Notification.Name = .init(rawValue: "RouteControllerDidFailToUpdateAlternatives")
     
     /**
+     Posted when `RouteController` has switched to coincide online version of the current route.
+     
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.coincideRouteKey`.
+     */
+    static let routeControllerDidSwitchToCoincideOnlineRoute: Notification.Name = .init(rawValue: "RouteControllerDidSwitchToCoincideOnlineRoute")
+    
+    /**
      Posted when `RouteController` has detected user taking an alternative route and before updated the main route.
      
      The user info dictionary contains `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.routeKey` keys.
@@ -380,6 +387,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToUpdateAlternatives` notification. The corresponding value is a `AlternativeRouteError` object representing the error ocurred during alternatives list update.
          */
         public static let alternativesErrorKey: NotificationUserInfoKey = .init(rawValue: "alternativesError")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidSwitchToCoincideOnlineRoute` notification. The corresponding value is a `Route` object representing the selected route.
+         */
+        public static let coincideRouteKey: NotificationUserInfoKey = .init(rawValue: "coincideRoute")
     }
 }
 
@@ -585,6 +597,8 @@ extension Notification.Name {
     internal static let navigatorDidChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorDidChangeAlternativeRoutes")
 
     internal static let navigatorDidFailToChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorDidFailToChangeAlternativeRoutes")
+    
+    internal static let navigatorWantsSwitchToCoincideOnlineRoute: Notification.Name = .init(rawValue: "NavigatorWantsSwitchToCoincideOnlineRoute")
 }
 
 extension Navigator {
@@ -615,5 +629,7 @@ extension Navigator {
         static let removedAlternativesKey: NotificationUserInfoKey = .init(rawValue: "removedAlternatives")
         
         static let messageKey: NotificationUserInfoKey = .init(rawValue: "message")
+        
+        static let coincideOnlineRouteKey: NotificationUserInfoKey = .init(rawValue: "coincideOnlineRoute")
     }
 }

@@ -231,12 +231,13 @@ extension RerouteController: RerouteControllerInterface {
             return
         }
         
-        reroutingRequest = customRoutingProvider.calculateRoutes(options: routeOptions) { session, result in
+        reroutingRequest = customRoutingProvider.calculateRoutes(options: routeOptions) {result in
             switch result {
             case .failure(let error):
                 callback(.init(error: RerouteError(message: error.localizedDescription,
                                                    type: .routerError)))
-            case .success(let routeResponse):
+            case .success(let indexedRouteResponse):
+                let routeResponse = indexedRouteResponse.routeResponse
                 if let responseString = routeResponse.identifier {
                     self.latestRouteResponse = (routeResponse, routeOptions)
                     callback(.init(value: RerouteInfo(routeResponse: responseString,

@@ -42,12 +42,11 @@ func createValidRouteChoice() -> CPRouteChoice {
         CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
         CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
     ])
-    let routeResponseUserInfoKey = CPRouteChoice.RouteResponseUserInfo.key
+    let routeResponseUserInfoKey = CPRouteChoice.IndexedRouteResponseUserInfo.key
     let routeResponse = Fixture.routeResponse(from: "route-with-banner-instructions",
                                               options: navigationRouteOptions)
-    let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(response: routeResponse,
-                                                                           routeIndex: 0,
-                                                                           options: navigationRouteOptions)
+    let routeResponseUserInfo: CPRouteChoice.IndexedRouteResponseUserInfo = .init(indexedRouteResponse: .init(routeResponse: routeResponse,
+                                                                                                              routeIndex: 0))
     let userInfo: CarPlayUserInfo = [
         routeResponseUserInfoKey: routeResponseUserInfo
     ]
@@ -81,14 +80,12 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public fileprivate(set) var currentService: NavigationService?
 
     func carPlayManager(_ carPlayManager: CarPlayManager,
-                        navigationServiceFor routeResponse: RouteResponse,
-                        routeIndex: Int,
-                        routeOptions: RouteOptions,
+                        navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
                         desiredSimulationMode: SimulationMode) -> NavigationService? {
         let routeResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                        routeIndex: routeIndex,
-                                                        routeOptions: routeOptions,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: .init(routeResponse: routeResponse,
+                                                                                    routeIndex: 0,
+                                                                                    responseOrigin: indexedRouteResponse.responseOrigin),
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
                                                         locationSource: NavigationLocationManager(),
