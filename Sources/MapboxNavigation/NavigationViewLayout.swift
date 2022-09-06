@@ -3,6 +3,11 @@ import UIKit
 extension NavigationView {
     
     func setupConstraints() {
+        // There are some race conditions when superview of the `NavigationView` no longer exists
+        // (e.g. when device orientation changes and `NavigationView` is being removed at the same time).
+        // Do not apply layout constraints in such cases.
+        if superview == nil { return }
+        
         NSLayoutConstraint.deactivate(regularConstraints)
         regularConstraints = []
         setupRegularConstraints(&regularConstraints)
