@@ -5,6 +5,7 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 import TestHelper
 import MapboxNavigationNative
+@_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
     var replayManager: ReplayLocationManager?

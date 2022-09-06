@@ -8,6 +8,11 @@
 * MapboxCoreNavigation now requires [MapboxDirections v2.8.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-alpha.1). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 
+### Routing
+
+* `RouteController.prefersOnlineRoute` enables autmoatical switching from `onboard` generated to `online` generated route if it's geometry is the same. Use `NavigationViewControllerDelegate.navigationViewController(_:didSwitchToCoincideOnlineRoute:)`, `NavigationServiceDelegate.navigationService(_:didSwitchToCoincideOnlineRoute:)`, `RouterDelegate.router(_:didSwitchToCoincideOnlineRoute:)` or `.routeControllerDidSwitchToCoincideOnlineRoute` notification to track such events. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
+* Added `NavigationViewController.init(for:routeIndex:navigationOptions:)` to start navigation using map matching response. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
+
 ### Map
 
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
@@ -19,6 +24,7 @@
 ### Other changes
 
 * Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:imageEdgeInsets:cornerRadius)` to be able to provide button type, button image edge insets and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060), [#4157](https://github.com/mapbox/mapbox-navigation-ios/pull/4157))
+* `IndexedRouteResponse` is now the preferred way for setting up routing information for navigation. `NavigationViewController`, `MapboxNavigationService`, `Router` and `RoutingProvider` are updated to accomodate this change. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
 
 ## v2.8.0
