@@ -56,6 +56,7 @@
 * Fixed a “dereference error” when passing certain OpenLR identifiers into the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 * Fixed an issue where the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method sometimes returned the wrong parallel roadway. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
+* Fixed the crash that sometimes occurs when orientation of the view controller that contains `NavigationView` is being changed and `NavigationView`'s parent view is being deallocated at the same time. ([#4118](https://github.com/mapbox/mapbox-navigation-ios/pull/4118))
 
 ## v2.7.2
 

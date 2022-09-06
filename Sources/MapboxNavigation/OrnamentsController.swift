@@ -47,6 +47,11 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     }
     
     @objc func orientationDidChange(_ notification: Notification) {
+        // There are some race conditions when superview of the `NavigationView` no longer exists
+        // (e.g. when device orientation changes and `NavigationView` is being removed at the same time).
+        // Do not apply layout constraints in such cases.
+        if navigationViewData.navigationView.superview == nil { return }
+        
         navigationViewData.navigationView.setupConstraints()
         updateMapViewOrnaments()
     }
