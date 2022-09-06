@@ -26,6 +26,7 @@ open class NightStyle: DayStyle {
         
         FloatingButton.appearance(for: traitCollection).backgroundColor = .defaultDarkAppearanceBackgroundColor
         FloatingButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        FloatingButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
         
         InstructionsCardContainerView.appearance(for: traitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).customBackgroundColor = .defaultDarkAppearanceBackgroundColor
         InstructionsCardContainerView.appearance(for: traitCollection, whenContainedInInstancesOf: [InstructionsCardCell.self]).separatorColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)

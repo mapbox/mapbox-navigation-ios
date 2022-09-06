@@ -118,10 +118,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         }
     }
     
-    var reportButton: FloatingButton {
-        return navigationView.reportButton
-    }
-    
     @objc func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         
@@ -211,13 +207,24 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     // MARK: NavigationComponentDelegate implementation
     
     func navigationViewDidLoad(_: UIView) {
-        navigationView.muteButton.addTarget(self, action: #selector(toggleMute(_:)), for: .touchUpInside)
-        navigationView.reportButton.addTarget(self, action: #selector(feedback(_:)), for: .touchUpInside)
+        guard let navigationViewController = navigationViewData.containerViewController as? NavigationViewController else {
+            return
+        }
+        
+        navigationViewController.muteButton.addTarget(self,
+                                                      action: #selector(toggleMute(_:)),
+                                                      for: .touchUpInside)
+        
+        navigationViewController.reportButton.addTarget(self,
+                                                        action: #selector(feedback(_:)),
+                                                        for: .touchUpInside)
     }
     
     func navigationViewWillAppear(_: Bool) {
         resumeNotifications()
-        navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
+        
+        let navigationViewController = navigationViewData.containerViewController as? NavigationViewController
+        navigationViewController?.muteButton.isSelected = NavigationSettings.shared.voiceMuted
     }
     
     func navigationViewDidDisappear(_: Bool) {

@@ -488,13 +488,13 @@ class NavigationViewControllerTests: TestCase {
                        3,
                        "There should be three floating buttons by default.")
         XCTAssertEqual(navigationViewController.floatingButtons?[0],
-                       navigationViewController.navigationView.overviewButton,
+                       navigationViewController.overviewButton,
                        "Unexpected floating button.")
         XCTAssertEqual(navigationViewController.floatingButtons?[1],
-                       navigationViewController.navigationView.muteButton,
+                       navigationViewController.muteButton,
                        "Unexpected floating button.")
         XCTAssertEqual(navigationViewController.floatingButtons?[2],
-                       navigationViewController.navigationView.reportButton,
+                       navigationViewController.reportButton,
                        "Unexpected floating button.")
         
         navigationViewController.floatingButtons = []

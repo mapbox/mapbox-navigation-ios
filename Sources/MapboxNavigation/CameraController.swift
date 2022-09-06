@@ -105,20 +105,23 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
-        guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
+        guard let navigationViewController = navigationViewData.containerViewController as? NavigationViewController,
+              let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else {
+            return
+        }
         
         updateNavigationCameraViewport()
         
         switch navigationCameraState {
         case .transitionToFollowing, .following:
-            navigationViewData.navigationView.overviewButton.isHidden = false
+            navigationViewController.overviewButton.isHidden = false
             navigationViewData.navigationView.resumeButton.isHidden = true
             if let _ = navigationViewData.navigationView.wayNameView.text?.nonEmptyString {
                 navigationViewData.navigationView.wayNameView.containerView.isHidden = false
             }
             break
         case .idle, .transitionToOverview, .overview:
-            navigationViewData.navigationView.overviewButton.isHidden = true
+            navigationViewController.overviewButton.isHidden = true
             navigationViewData.navigationView.resumeButton.isHidden = false
             navigationViewData.navigationView.wayNameView.containerView.isHidden = true
             break
@@ -165,8 +168,14 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     // MARK: NavigationComponentDelegate Implementation
     
     func navigationViewDidLoad(_: UIView) {
-        navigationViewData.navigationView.overviewButton.addTarget(self, action: #selector(overview(_:)), for: .touchUpInside)
-        navigationViewData.navigationView.resumeButton.addTarget(self, action: #selector(recenter(_:)), for: .touchUpInside)
+        let navigationViewController = navigationViewData.containerViewController as? NavigationViewController
+        navigationViewController?.overviewButton.addTarget(self,
+                                                          action: #selector(overview(_:)),
+                                                          for: .touchUpInside)
+        
+        navigationViewData.navigationView.resumeButton.addTarget(self,
+                                                                 action: #selector(recenter(_:)),
+                                                                 for: .touchUpInside)
         
         navigationMapView.userLocationStyle = .courseView()
         navigationViewData.navigationView.resumeButton.isHidden = true

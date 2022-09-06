@@ -642,6 +642,7 @@ class ViewController: UIViewController {
         // Hide `WayNameView` and `FloatingStackView` to smoothly present them.
         navigationViewController.navigationView.wayNameView.alpha = 0.0
         navigationViewController.navigationView.floatingStackView.alpha = 0.0
+        navigationViewController.navigationView.speedLimitView.alpha = 0.0
         
         present(navigationViewController, animated: animated) {
             completion?()
@@ -655,6 +656,7 @@ class ViewController: UIViewController {
                                                                                    animations: {
                 navigationViewController.navigationView.wayNameView.alpha = 1.0
                 navigationViewController.navigationView.floatingStackView.alpha = 1.0
+                navigationViewController.navigationView.speedLimitView.alpha = 1.0
             })
             navigationViewController.navigationView.topBannerContainerView.show(duration: 1.0)
         }
@@ -674,6 +676,7 @@ class ViewController: UIViewController {
                                                                                   animations: {
             activeNavigationViewController.navigationView.wayNameView.alpha = 0.0
             activeNavigationViewController.navigationView.floatingStackView.alpha = 0.0
+            activeNavigationViewController.navigationView.speedLimitView.alpha = 0.0
         },
                                                                                   completion: { _ in
             activeNavigationViewController.dismiss(animated: animated) {

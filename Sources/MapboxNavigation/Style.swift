@@ -49,6 +49,14 @@ open class Style: NSObject {
         UITraitCollection(userInterfaceIdiom: .pad),
     ])
     
+    class var defaultBorderWidth: CGFloat {
+        1 / UIScreen.main.scale
+    }
+    
+    class var defaultCornerRadius: CGFloat {
+        10.0
+    }
+    
     /**
      Applies the style for all changed properties.
      */

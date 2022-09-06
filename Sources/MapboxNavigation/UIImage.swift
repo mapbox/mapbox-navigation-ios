@@ -2,6 +2,22 @@ import UIKit
 
 extension UIImage {
     
+    static let overview = UIImage(named: "overview",
+                                  in: .mapboxNavigation,
+                                  compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
+    static let volumeUp = UIImage(named: "volume_up",
+                                  in: .mapboxNavigation,
+                                  compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
+    static let volumeOff = UIImage(named: "volume_off",
+                                   in: .mapboxNavigation,
+                                   compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
+    static let feedback = UIImage(named: "feedback",
+                                  in: .mapboxNavigation,
+                                  compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
