@@ -32,7 +32,7 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         recentMessages.append(#function)
     }
     
-    public func navigationService(_ service: NavigationService, willModify options: RouteOptions) -> RouteOptions {
+    public func navigationService(_ service: NavigationService, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
         recentMessages.append(#function)
         return options
     }

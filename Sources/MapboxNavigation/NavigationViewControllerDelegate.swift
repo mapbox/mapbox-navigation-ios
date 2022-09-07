@@ -96,7 +96,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      - note: Multiple method calls will not interrupt the first ongoing request.
      
-     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:willModify:)` is called.
+     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:modifiedOptionsForReroute:)` is called.
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
      - parameter location: The user’s current location.
@@ -114,12 +114,12 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter options: Original `RouteOptions`.
      - returns: Modified `RouteOptions`.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, willModify options: RouteOptions) -> RouteOptions
+    func navigationViewController(_ navigationViewController: NavigationViewController, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions
     
     /**
      Called immediately after the navigation view controller receives a new route.
      
-     This method is called after `navigationViewController(_:willModify:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationViewController(_:modifiedOptionsForReroute:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
@@ -179,7 +179,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller fails to receive a new route.
      
-     This method is called after `navigationViewController(_:willModify:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationViewController(_:modifiedOptionsForReroute:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -360,7 +360,7 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
-    func navigationViewController(_ navigationViewController: NavigationViewController, willModify options: RouteOptions) -> RouteOptions {
+    func navigationViewController(_ navigationViewController: NavigationViewController, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return options
     }

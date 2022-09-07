@@ -32,7 +32,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the navigation service calculates a new route.
      
-     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:willModify:)` is called.
+     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:modifiedOptionsForReroute:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
@@ -50,7 +50,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      - parameter options: Original `RouteOptions`.
      - returns: Modified `RouteOptions`.
      */
-    func navigationService(_ service: NavigationService, willModify options: RouteOptions) -> RouteOptions
+    func navigationService(_ service: NavigationService, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions
     
     /**
      Called when navigation service has detected a change in alternative routes list.
@@ -116,7 +116,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the navigation service receives a new route.
      
-     This method is called after `navigationService(_:willModify:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationService(_:modifiedOptionsForReroute:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter route: The new route.
@@ -126,7 +126,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the navigation service fails to receive a new route.
      
-     This method is called after `navigationService(_:willModify:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationService(_:modifiedOptionsForReroute:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -291,7 +291,7 @@ public extension NavigationServiceDelegate {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
-    func navigationService(_ service: NavigationService, willModify options: RouteOptions) -> RouteOptions {
+    func navigationService(_ service: NavigationService, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return options
     }

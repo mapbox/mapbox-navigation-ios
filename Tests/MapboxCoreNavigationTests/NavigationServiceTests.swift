@@ -505,7 +505,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
         // MARK: Custom routing provider should not trigger RouteOptions customization
-        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
         
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [testLocation])
@@ -758,7 +758,7 @@ class NavigationServiceTests: TestCase {
         wait(for: [rerouteTriggeredExpectation, didRerouteExpectation], timeout: locationManager.expectedReplayTime)
         locationManager.stopUpdatingLocation()
         
-        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
     }
 
@@ -804,7 +804,7 @@ class NavigationServiceTests: TestCase {
         _ = XCTWaiter.wait(for: [finishExpectation], timeout: locationManager.expectedReplayTime + 5)
         locationManager.stopUpdatingLocation()
         
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willModify:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
         
         NotificationCenter.default.removeObserver(failObserver)
         NotificationCenter.default.removeObserver(rerouteObserver)

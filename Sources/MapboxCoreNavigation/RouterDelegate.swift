@@ -28,7 +28,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the router calculates a new route.
 
-     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:willModify:)` is called.
+     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:modifiedOptionsForReroute:)` is called.
      
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
@@ -46,7 +46,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      - parameter options: Original `RouteOptions`.
      - returns: Modified `RouteOptions`.
      */
-    func router(_ router: Router, willModify options: RouteOptions) -> RouteOptions
+    func router(_ router: Router, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -62,7 +62,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the router receives a new route.
      
-     This method is called after `router(_:willModify:)` method is called.
+     This method is called after `router(_:modifiedOptionsForReroute:)` method is called.
      
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
@@ -132,7 +132,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the router fails to receive a new route.
      
-     This method is called after `router(_:willModify:)`.
+     This method is called after `router(_:modifiedOptionsForReroute:)`.
      
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -233,7 +233,7 @@ public extension RouterDelegate {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
-    func router(_ router: Router, willModify options: RouteOptions) -> RouteOptions {
+    func router(_ router: Router, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return options
     }

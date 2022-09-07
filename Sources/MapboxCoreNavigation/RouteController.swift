@@ -967,7 +967,7 @@ extension RouteController: ReroutingControllerDelegate {
     }
     
     func rerouteControllerWillModify(options: RouteOptions) -> RouteOptions {
-        return delegate?.router(self, willModify: options) ?? options
+        return delegate?.router(self, modifiedOptionsForReroute: options) ?? options
     }
 }
 

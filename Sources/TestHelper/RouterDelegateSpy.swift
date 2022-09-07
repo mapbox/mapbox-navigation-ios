@@ -7,7 +7,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onDidRefresh: ((RouteProgress) -> Void)?
     public var onShouldRerouteFrom: ((CLLocation) -> Bool)?
     public var onWillRerouteFrom: ((CLLocation) -> Void)?
-    public var onWillModify: ((RouteOptions) -> RouteOptions)?
+    public var onModifiedOptionsForReroute: ((RouteOptions) -> RouteOptions)?
     public var onShouldDiscard: ((CLLocation) -> Bool)?
     public var onDidRerouteAlong: (((route: Route, location: CLLocation?, proactive: Bool)) -> Void)?
     public var onDidFailToRerouteWith: ((Error) -> Void)?
@@ -42,8 +42,8 @@ public final class RouterDelegateSpy: RouterDelegate {
         onWillRerouteFrom?(location)
     }
     
-    public func router(_ router: Router, willModify options: RouteOptions) -> RouteOptions {
-        return onWillModify?(options) ?? options
+    public func router(_ router: Router, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
+        return onModifiedOptionsForReroute?(options) ?? options
     }
     
     public func router(_ router: Router,

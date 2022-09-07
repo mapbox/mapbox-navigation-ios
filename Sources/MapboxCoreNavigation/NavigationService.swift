@@ -611,8 +611,8 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, willRerouteFrom: location)
     }
     
-    public func router(_ router: Router, willModify options: RouteOptions) -> RouteOptions {
-        return delegate?.navigationService(self, willModify: options) ?? options
+    public func router(_ router: Router, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
+        return delegate?.navigationService(self, modifiedOptionsForReroute: options) ?? options
     }
     
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
