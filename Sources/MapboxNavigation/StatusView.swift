@@ -25,11 +25,11 @@ public class StatusView: UIControl {
      */
     public struct Status {
         /**
-        A string that uniquely identifies the `Status`
+         A string that uniquely identifies the `Status`
          */
         public var identifier: String
         /**
-        The text that will appear on the `Status`
+         The text that will appear on the `Status`
          */
         public let title: String
         /**
@@ -57,6 +57,35 @@ public class StatusView: UIControl {
          A lower `priority` value corresponds to a higher priority
          */
         public var priority: Priority
+        
+        /**
+         Initializes `Status` instance.
+         
+         - parameter identifier: A string that uniquely identifies the `Status`.
+         - parameter title: The text that will appear on the `Status`.
+         - parameter spinner: A boolean that indicates whether a spinner is shown.
+         - parameter duration: A `TimeInterval` that designates the length of time the `Status`
+         will be displayed (in seconds).
+         - parameter animated: A boolean that indicates whether showing and hiding of the `Status`
+         should be animated.
+         - parameter interactive: Indicates whether the `Status` should respond to touch events.
+         - parameter priority: `Priority` that defines priority of the status view.
+         */
+        public init(identifier: String,
+                    title: String,
+                    spinner: Bool = false,
+                    duration: TimeInterval,
+                    animated: Bool = true,
+                    interactive: Bool = false,
+                    priority: Priority) {
+            self.identifier = identifier
+            self.title = title
+            self.spinner = spinner
+            self.duration = duration
+            self.animated = animated
+            self.interactive = interactive
+            self.priority = priority
+        }
     }
     
     /**
@@ -190,7 +219,11 @@ public class StatusView: UIControl {
         isEnabled = status.interactive
         textLabel.text = status.title
         activityIndicatorView.hidesWhenStopped = true
-        if (!status.spinner) { activityIndicatorView.stopAnimating() }
+        if (!status.spinner) {
+            activityIndicatorView.stopAnimating()
+        } else {
+            activityIndicatorView.startAnimating()
+        }
 
         guard !isCurrentlyVisible, isHidden else { return }
                 
