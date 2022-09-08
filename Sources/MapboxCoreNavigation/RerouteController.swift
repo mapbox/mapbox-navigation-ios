@@ -50,13 +50,13 @@ class RerouteController {
             }
 
             defaultRerouteController.requestConfig = { [weak delegate] in
-               guard let delegate = delegate,
-                     let url = URL(string: $0),
-                     let options = RouteOptions(url: url) else {
-                   return $0
-               }
+                guard let delegate = delegate,
+                      let url = URL(string: $0),
+                      let options = RouteOptions(url: url) else {
+                    return $0
+                }
                 return NavigationSettings.shared.directions.url(forCalculating: delegate.rerouteControllerWillModify(options: options)).absoluteString
-           }
+            }
         }
     }
 
