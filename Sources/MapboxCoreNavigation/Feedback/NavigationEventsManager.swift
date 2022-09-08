@@ -109,18 +109,6 @@ open class NavigationEventsManager {
 
     /// :nodoc: the internal lower-level telemetry events service is an implementation detail which should not be manipulated directly
     private var coreTelemetry: EventsService!
-
-    lazy var accessToken: String = {
-        guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
-                Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
-        else {
-            //we can assert here because if the token was passed in, it would of overriden this closure.
-            //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MBXAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
-            return ""
-        }
-        return token
-    }()
     
     public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
@@ -128,10 +116,14 @@ open class NavigationEventsManager {
                          mobileEventsManager: MMEEventsManager = .shared()) {
         self.activeNavigationDataSource = activeNavigationDataSource
         self.passiveNavigationDataSource = passiveNavigationDataSource
-        if let tokenOverride = possibleToken {
-            accessToken = tokenOverride
+        let accessToken = Bundle.main.infoDictionary?["MBXAccessToken"]  as? String ?? possibleToken ?? ""
+
+        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
+            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
+
         self.mobileEventsManager = mobileEventsManager
+        self.mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
 
         let settings = SettingsServiceFactory.getInstance(storageType: SettingsServiceStorageType.nonPersistent)
         settings.set(key: "com.mapbox.common.telemetry.internal.use_staging_api", value: true)
@@ -165,9 +157,8 @@ open class NavigationEventsManager {
         guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
-        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
-        mobileEventsManager.sendTurnstileEvent()
 
+        mobileEventsManager.sendTurnstileEvent()
         let turnstileEvent = TurnstileEvent.init(skuId: UserSKUIdentifier.nav2SesMAU, sdkIdentifier: userAgent, sdkVersion: String(describing:stringForShortVersion))
         coreTelemetry.sendTurnstileEvent(for: turnstileEvent)
     }
