@@ -108,13 +108,28 @@ class NativeHandlersFactory {
             nativeIncidentsOptions = .init(graph: incidentsOptions.graph,
                                            apiUrl: incidentsOptions.apiURL?.absoluteString ?? "")
         }
+        
+        var pollingConfig: PollingConfig? = nil
+        
+        if let predictionInterval = NavigationSettings.shared.navigatorPredictionInterval {
+            pollingConfig = PollingConfig(lookAhead: NSNumber(value:predictionInterval),
+                                          unconditionalPatience: nil,
+                                          unconditionalInterval: nil)
+        }
+        if let config = NavigationSettings.shared.statusPollingConfig {
+            if pollingConfig != nil {
+                pollingConfig?.unconditionalInterval = config.unconditionalPollingInterval.map { NSNumber(value: $0) }
+                pollingConfig?.unconditionalPatience = config.unconditionalPollingPatience.map { NSNumber(value: $0) }
+            } else if config.unconditionalPollingPatience != nil || config.unconditionalPollingInterval != nil {
+                pollingConfig = PollingConfig(lookAhead: nil,
+                                              unconditionalPatience: config.unconditionalPollingPatience.map { NSNumber(value: $0) },
+                                              unconditionalInterval: config.unconditionalPollingInterval.map { NSNumber(value: $0) })
+            }
+        }
+        
         return NavigatorConfig(voiceInstructionThreshold: nil,
                                electronicHorizonOptions: nil,
-                               polling: NavigationSettings.shared.navigatorPredictionInterval.map {
-                                    PollingConfig(lookAhead: NSNumber(value: $0),
-                                                  unconditionalPatience: nil,
-                                                  unconditionalInterval: nil)
-                                },
+                               polling: pollingConfig,
                                incidentsOptions: nativeIncidentsOptions,
                                noSignalSimulationEnabled: nil,
                                avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
