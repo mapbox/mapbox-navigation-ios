@@ -51,7 +51,12 @@ public protocol RoutingProvider {
      */
     @discardableResult func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
                                          fromLegAtIndex: UInt32,
-                                         currentRouteShapeIndex: Int?,
+                                         completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
+
+    @discardableResult func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
+                                         fromLegAtIndex: UInt32,
+                                         currentRouteShapeIndex: Int,
+                                         currentLegShapeIndex: Int,
                                          completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
 }
 

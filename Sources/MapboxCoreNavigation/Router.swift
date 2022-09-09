@@ -282,7 +282,7 @@ extension InternalRouter where Self: Router {
     
     func refreshAndCheckForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         if refreshesRoute {
-            refreshRoute(from: location, legIndex: routeProgress.legIndex, shapeIndex: routeProgress.currentRouteShapeIndex) { [weak self] in
+            refreshRoute(from: location, legIndex: routeProgress.legIndex, routeShapeIndex: routeProgress.currentRouteShapeIndex, legShapeIndex: routeProgress.currentLegProgress.shapeIndex) { [weak self] in
                 self?.checkForFasterRoute(from: location, routeProgress: routeProgress)
             }
         } else {
@@ -290,7 +290,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func refreshRoute(from location: CLLocation, legIndex: Int, shapeIndex: Int?, completion: @escaping ()->()) {
+    private func refreshRoute(from location: CLLocation, legIndex: Int, routeShapeIndex: Int, legShapeIndex: Int, completion: @escaping ()->()) {
         guard refreshesRoute else {
             completion()
             return
@@ -314,7 +314,8 @@ extension InternalRouter where Self: Router {
         isRefreshing = true
         resolvedRoutingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
                                              fromLegAtIndex: UInt32(legIndex),
-                                             currentRouteShapeIndex: shapeIndex) { [weak self] session, result in
+                                             currentRouteShapeIndex: routeShapeIndex,
+                                             currentLegShapeIndex: legShapeIndex) { [weak self] session, result in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
@@ -331,7 +332,9 @@ extension InternalRouter where Self: Router {
                 return
             }
             
-            self.routeProgress.refreshRoute(with: currentRoute, at: self.location ?? location)
+            self.routeProgress.refreshRoute(with: currentRoute, at: self.location ?? location,
+                                            legIndex: legIndex,
+                                            legShapeIndex: legShapeIndex)
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.routeProgressKey] = self.routeProgress

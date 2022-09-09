@@ -31,8 +31,24 @@ extension Directions: RoutingProvider {
     @discardableResult public func calculateRoutes(options: MatchOptions, completionHandler: @escaping MatchCompletionHandler) -> NavigationProviderRequest? {
         return calculate(options, completionHandler: completionHandler)
     }
+
+    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
+        _refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                      fromLegAtIndex: Int(fromLegAtIndex),
+                      currentRouteShapeIndex: nil,
+                      currentLegShapeIndex: nil,
+                      completionHandler: completionHandler)
+    }
+
+    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, currentRouteShapeIndex: Int, currentLegShapeIndex: Int, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
+        _refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                      fromLegAtIndex: Int(fromLegAtIndex),
+                      currentRouteShapeIndex: currentRouteShapeIndex,
+                      currentLegShapeIndex: currentLegShapeIndex,
+                      completionHandler: completionHandler)
+    }
     
-    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, currentRouteShapeIndex: Int?, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
+    private func _refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex startLegIndex: Int, currentRouteShapeIndex: Int?, currentLegShapeIndex: Int?, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
@@ -49,7 +65,7 @@ extension Directions: RoutingProvider {
         
         return refreshRoute(responseIdentifier: responseIdentifier,
                             routeIndex: indexedRouteResponse.routeIndex,
-                            fromLegAtIndex: Int(fromLegAtIndex),
+                            fromLegAtIndex: startLegIndex,
                             completionHandler: { credentials, result in
                                 switch result {
                                 case .failure(let error):
@@ -60,8 +76,19 @@ extension Directions: RoutingProvider {
                                     DispatchQueue.global().async {
                                         do {
                                             let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
-                                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegAttributes(from: routeRefreshResponse.route)
-                                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegIncidents(from: routeRefreshResponse.route)
+                                            let route = routeResponse.routes?[indexedRouteResponse.routeIndex]
+                                            if let currentLegShapeIndex = currentLegShapeIndex {
+                                                route?.refreshLegAttributes(from: routeRefreshResponse.route,
+                                                                            legIndex: startLegIndex,
+                                                                            legShapeIndex: currentLegShapeIndex)
+                                                route?.refreshLegIncidents(from: routeRefreshResponse.route,
+                                                                           legIndex: startLegIndex,
+                                                                           legShapeIndex: currentLegShapeIndex)
+                                            } else {
+                                                route?.refreshLegAttributes(from: routeRefreshResponse.route)
+                                                route?.refreshLegIncidents(from: routeRefreshResponse.route)
+                                            }
+
                                             DispatchQueue.main.async {
                                                 completionHandler(session, .success(routeResponse))
                                             }
