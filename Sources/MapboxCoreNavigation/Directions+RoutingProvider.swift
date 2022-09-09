@@ -62,44 +62,54 @@ extension Directions: RoutingProvider {
             }
             return nil
         }
-        
-        return refreshRoute(responseIdentifier: responseIdentifier,
-                            routeIndex: indexedRouteResponse.routeIndex,
-                            fromLegAtIndex: startLegIndex,
-                            completionHandler: { credentials, result in
-                                switch result {
-                                case .failure(let error):
-                                    DispatchQueue.main.async {
-                                        completionHandler(session, .failure(error))
-                                    }
-                                case .success(let routeRefreshResponse):
-                                    DispatchQueue.global().async {
-                                        do {
-                                            let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
-                                            let route = routeResponse.routes?[indexedRouteResponse.routeIndex]
-                                            if let currentLegShapeIndex = currentLegShapeIndex {
-                                                route?.refreshLegAttributes(from: routeRefreshResponse.route,
-                                                                            legIndex: startLegIndex,
-                                                                            legShapeIndex: currentLegShapeIndex)
-                                                route?.refreshLegIncidents(from: routeRefreshResponse.route,
-                                                                           legIndex: startLegIndex,
-                                                                           legShapeIndex: currentLegShapeIndex)
-                                            } else {
-                                                route?.refreshLegAttributes(from: routeRefreshResponse.route)
-                                                route?.refreshLegIncidents(from: routeRefreshResponse.route)
-                                            }
 
-                                            DispatchQueue.main.async {
-                                                completionHandler(session, .success(routeResponse))
-                                            }
-                                        } catch {
-                                            DispatchQueue.main.async {
-                                                completionHandler(session, .failure(.unknown(response: nil, underlying: error, code: nil, message: nil)))
-                                            }
-                                        }
-                                    }
-                                }
-                            })
+        let completionHandler: RouteRefreshCompletionHandler = { credentials, result in
+            switch result {
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completionHandler(session, .failure(error))
+                }
+            case .success(let routeRefreshResponse):
+                DispatchQueue.global().async {
+                    do {
+                        let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
+                        let route = routeResponse.routes?[indexedRouteResponse.routeIndex]
+                        if let currentLegShapeIndex = currentLegShapeIndex {
+                            route?.refreshLegAttributes(from: routeRefreshResponse.route,
+                                                        legIndex: startLegIndex,
+                                                        legShapeIndex: currentLegShapeIndex)
+                            route?.refreshLegIncidents(from: routeRefreshResponse.route,
+                                                       legIndex: startLegIndex,
+                                                       legShapeIndex: currentLegShapeIndex)
+                        } else {
+                            route?.refreshLegAttributes(from: routeRefreshResponse.route)
+                            route?.refreshLegIncidents(from: routeRefreshResponse.route)
+                        }
+
+                        DispatchQueue.main.async {
+                            completionHandler(session, .success(routeResponse))
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            completionHandler(session, .failure(.unknown(response: nil, underlying: error, code: nil, message: nil)))
+                        }
+                    }
+                }
+            }
+        }
+
+        if let currentRouteShapeIndex = currentRouteShapeIndex {
+            return refreshRoute(responseIdentifier: responseIdentifier,
+                                routeIndex: indexedRouteResponse.routeIndex,
+                                fromLegAtIndex: startLegIndex,
+                                currentRouteShapeIndex: currentRouteShapeIndex,
+                                completionHandler: completionHandler)
+        } else {
+            return refreshRoute(responseIdentifier: responseIdentifier,
+                                routeIndex: indexedRouteResponse.routeIndex,
+                                fromLegAtIndex: startLegIndex,
+                                completionHandler: completionHandler)
+        }
     }
 }
 
