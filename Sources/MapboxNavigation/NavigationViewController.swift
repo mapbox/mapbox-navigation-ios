@@ -444,6 +444,17 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigationService()
         setupVoiceController()
         setupNavigationCamera()
+        
+        if #available(iOS 12.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                print("!!! Dark mode enabled")
+                print("!!! style manager: \(String(describing: styleManager))")
+                styleManager?.applyStyle(type: .night)
+            }
+        } else {
+            // Fallback on earlier versions
+            styleManager?.applyStyle(type: .day)
+        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {
