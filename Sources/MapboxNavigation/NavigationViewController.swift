@@ -447,13 +447,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         if #available(iOS 12.0, *) {
             if self.traitCollection.userInterfaceStyle == .dark {
-                print("!!! Dark mode enabled")
-                print("!!! style manager: \(String(describing: styleManager))")
-                styleManager?.applyStyle(type: .night)
+                styleManager.applyStyle(type: .night)
             }
         } else {
             // Fallback on earlier versions
-            styleManager?.applyStyle(type: .day)
+            return
         }
     }
     
@@ -465,6 +463,19 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         notifyUserAboutLowVolumeIfNeeded()
+    }
+    
+    override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if #available(iOS 12.0, *) {
+            if newCollection.userInterfaceStyle == .dark {
+                styleManager.applyStyle(type: .night)
+            } else {
+                styleManager.applyStyle(type: .day)
+            }
+        } else {
+            // Fallback on earlier versions
+            return
+        }
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
