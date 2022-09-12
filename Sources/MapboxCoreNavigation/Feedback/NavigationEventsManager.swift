@@ -152,7 +152,11 @@ open class NavigationEventsManager {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
-        mobileEventsManager.sendTurnstileEvent()
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            self.mobileEventsManager.sendTurnstileEvent()
+        }
     }
     
     // MARK: Sending Feedback Events
