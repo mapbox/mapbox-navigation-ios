@@ -779,35 +779,24 @@ class NavigationServiceTests: TestCase {
                                               customRoutingProvider: nil,
                                               credentials: Fixture.credentials,
                                               locationSource: locationManager)
-        service.delegate = delegate
         let router = service.router
+        let routerSpy = RouterDelegateSpy()
+        let modifyExpectation = expectation(description: "Reroute should request options editing.")
+        modifyExpectation.assertForOverFulfill = false
         
-        let finishExpectation = expectation(description: "Reroute should finish either way.")
-        finishExpectation.assertForOverFulfill = false
-        
-        let failObserver = NotificationCenter.default.addObserver(forName: .routeControllerDidFailToReroute,
-                                               object: nil,
-                                               queue: .main) { _ in
-            finishExpectation.fulfill()
-        }
-        let rerouteObserver = NotificationCenter.default.addObserver(forName: .routeControllerDidReroute,
-                                               object: nil,
-                                               queue: .main) { _ in
-            finishExpectation.fulfill()
+        routerSpy.onModifiedOptionsForReroute = { options in
+            modifyExpectation.fulfill()
+            return options
         }
         
         service.start()
         
+        router.delegate = routerSpy
         router.reroute(from: firstLoction,
                        along: router.routeProgress)
 
-        _ = XCTWaiter.wait(for: [finishExpectation], timeout: locationManager.expectedReplayTime + 5)
+        wait(for: [modifyExpectation], timeout: locationManager.expectedReplayTime + 5)
         locationManager.stopUpdatingLocation()
-        
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
-        
-        NotificationCenter.default.removeObserver(failObserver)
-        NotificationCenter.default.removeObserver(rerouteObserver)
     }
     
     func testUnimplementedLogging() {
