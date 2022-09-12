@@ -123,12 +123,24 @@ class DistanceFormatterTests: TestCase {
         assertDistance(Measurement(value: 500,      unit: .meters),     displayed: "500 מ׳",     quantity: "500")
         assertDistance(Measurement(value: 949,      unit: .meters),     displayed: "950 מ׳",     quantity: "950")
         assertDistance(Measurement(value: 951,      unit: .meters),     displayed: "950 מ׳",     quantity: "950")
-        assertDistance(Measurement(value:   1,      unit: .kilometers), displayed: "1 ק״מ",      quantity: "1")
-        assertDistance(Measurement(value:   1.001,  unit: .kilometers), displayed: "1 ק״מ",      quantity: "1")
-        assertDistance(Measurement(value:   2.5,    unit: .kilometers), displayed: "2.5 ק״מ",    quantity: "2.5")
-        assertDistance(Measurement(value:   2.9,    unit: .kilometers), displayed: "2.9 ק״מ",    quantity: "2.9")
-        assertDistance(Measurement(value:   3,      unit: .kilometers), displayed: "3 ק״מ",      quantity: "3")
-        assertDistance(Measurement(value:   3.5,    unit: .kilometers), displayed: "4 ק״מ",      quantity: "4")
+
+        func iOS16Fix(_ input: String) -> String {
+            // Formatter in iOS 16 now returns U+202F NARROW NO-BREAK SPACE instead of simple space
+            if #available(iOS 16, *) {
+                return input.replacingOccurrences(
+                    of: "\u{0020}",
+                    with: "\u{202F}")
+            } else {
+                return input
+            }
+        }
+
+        assertDistance(Measurement(value: 1,     unit: .kilometers), displayed: iOS16Fix("1 ק״מ"),   quantity: "1")
+        assertDistance(Measurement(value: 1.001, unit: .kilometers), displayed: iOS16Fix("1 ק״מ"),   quantity: "1")
+        assertDistance(Measurement(value: 2.5,   unit: .kilometers), displayed: iOS16Fix("2.5 ק״מ"), quantity: "2.5")
+        assertDistance(Measurement(value: 2.9,   unit: .kilometers), displayed: iOS16Fix("2.9 ק״מ"), quantity: "2.9")
+        assertDistance(Measurement(value: 3,     unit: .kilometers), displayed: iOS16Fix("3 ק״מ"),   quantity: "3")
+        assertDistance(Measurement(value: 3.5,   unit: .kilometers), displayed: iOS16Fix("4 ק״מ"),   quantity: "4")
     }
 
     func testDistanceFormatters_hi_IN() {
