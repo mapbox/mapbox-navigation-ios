@@ -1861,10 +1861,11 @@ open class NavigationMapView: UIView {
                    let sourceLayer = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "source-layer").value as? String,
                    !sourceLayer.isEmpty {
                     if layerInfo.type.rawValue == "circle",
-                       let isPersistentCircle = try? mapView.mapboxMap.style.isPersistentLayer(id: layerInfo.id),
-                       let pitchAlignment = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "circle-pitch-alignment").value as? String,
-                       isPersistentCircle || (pitchAlignment == "viewport") {
-                        continue
+                       let isPersistentCircle = try? mapView.mapboxMap.style.isPersistentLayer(id: layerInfo.id) {
+                        let pitchAlignment = mapView.mapboxMap.style.layerProperty(for: layerInfo.id, property: "circle-pitch-alignment").value as? String
+                        if isPersistentCircle || (pitchAlignment != "map") {
+                            continue
+                        }
                     }
                     targetLayer = layerInfo.id
                 }
