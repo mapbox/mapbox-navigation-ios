@@ -12,18 +12,26 @@ class SpriteRepository {
     let infoCache =  SpriteInfoCache()
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     var styleURI: StyleURI = .navigationDay
-    fileprivate(set) var imageDownloader: ReentrantImageDownloader = ImageDownloader()
+    fileprivate(set) var imageDownloader: ReentrantImageDownloader
     
     static let shared = SpriteRepository.init()
+    
+    private let requestTimeOut: TimeInterval = 10
     
     var styleID: String? {
         styleURI.rawValue.components(separatedBy: "styles")[safe: 1]
     }
     
-    var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
+    var sessionConfiguration: URLSessionConfiguration {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
+    }
+    
+    init() {
+        sessionConfiguration = URLSessionConfiguration.default
+        sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
+        imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
     }
     
     func updateStyle(styleURI: StyleURI?, completion: @escaping (DownloadError?) -> Void) {
