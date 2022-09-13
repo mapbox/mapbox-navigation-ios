@@ -152,7 +152,15 @@ open class NavigationEventsManager {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
-        mobileEventsManager.sendTurnstileEvent()
+        
+        // FIXME: Running `MobileEventsManager.sendTurnstileEvent()` fixes such main thread checker
+        // warning in MapboxMobileEvents: This method can cause UI unresponsiveness if invoked on the main thread.
+        // Instead, consider waiting for the `-locationManagerDidChangeAuthorization:` callback
+        // and checking `authorizationStatus` first.
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            self.mobileEventsManager.sendTurnstileEvent()
+        }
     }
     
     // MARK: Sending Feedback Events

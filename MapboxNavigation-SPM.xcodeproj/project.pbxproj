@@ -480,7 +480,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					358D14621E5E3B7700ADE590 = {
@@ -625,6 +625,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		8A506BDB285A846F008A6082 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -644,6 +645,7 @@
 		};
 		8AB31424284837EC00348E52 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -663,6 +665,7 @@
 		};
 		C53F2F0320EBC95600D9798F /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -678,6 +681,7 @@
 		};
 		DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
