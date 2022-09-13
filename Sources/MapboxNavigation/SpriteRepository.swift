@@ -26,11 +26,11 @@ class SpriteRepository {
         }
     }
     
-    func updateStyle(styleURI: StyleURI?, completion: @escaping CompletionHandler) {
+    func updateStyle(styleURI: StyleURI?, completion: @escaping (DownloadError?) -> Void) {
         // If no valid StyleURI provided, use the default Day style.
         let newStyleURI = styleURI ?? self.styleURI
         guard newStyleURI != self.styleURI || getSpriteImage() == nil else {
-            completion()
+            completion(nil)
             return
         }
         
@@ -43,62 +43,69 @@ class SpriteRepository {
         updateSprite(completion: completion)
     }
 
-    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
+    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (DownloadError?) -> Void) {
         let dispatchGroup = DispatchGroup()
+        var downloadError: DownloadError? = nil
 
         if getSpriteImage() == nil {
             dispatchGroup.enter()
-            updateSprite() {
+            updateSprite() { (error) in
+                downloadError = error
                 dispatchGroup.leave()
             }
         }
         
         dispatchGroup.enter()
-        updateLegacy(representation: representation) {
+        updateLegacy(representation: representation) { (error) in
+            downloadError = error ?? downloadError
             dispatchGroup.leave()
         }
         
         dispatchGroup.notify(queue: .main) {
-            completion()
+            completion(downloadError)
         }
     }
     
-    func updateSprite(completion: @escaping CompletionHandler) {
+    func updateSprite(completion: @escaping (DownloadError?) -> Void) {
         guard let styleID = styleID,
               let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
               let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else {
-                  completion()
-                  return
-              }
+            completion(.clientError)
+            return
+        }
         
+        var downloadError: DownloadError? = nil
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        downloadInfo(infoRequestURL, spriteKey: styleID) { (_) in
+        downloadInfo(infoRequestURL, spriteKey: styleID) { (data) in
+            downloadError = (data == nil) ? .noImageData : downloadError
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        downloadSprite(spriteRequestURL, spriteKey: styleID) { (_) in
+        downloadSprite(spriteRequestURL, spriteKey: styleID) { (image) in
+            downloadError = (image == nil) ? .noImageData : downloadError
             dispatchGroup.leave()
         }
         
         dispatchGroup.notify(queue: .main) {
-            completion()
+            completion(downloadError)
         }
     }
     
-    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
+    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (DownloadError?) -> Void) {
         guard let cacheKey = representation?.legacyCacheKey else {
-            completion()
+            completion(.clientError)
             return
         }
         
         if let _ = legacyCache.image(forKey: cacheKey) {
-            completion()
+            completion(nil)
         } else {
-            downloadLegacyShield(representation: representation) { (_) in
-                completion()
+            downloadLegacyShield(representation: representation) { (image) in
+                let downloadError: DownloadError? = (image == nil) ? .noImageData : nil
+                completion(downloadError)
             }
         }
     }
