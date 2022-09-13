@@ -268,8 +268,7 @@ class RouteLineLayerPositionTests: TestCase {
         let circleMapLayer = "circleMapLayer"
         addCircleLayerInRuntime(mapView: navigationMapView.mapView,
                                 circleLabelId: circleLabelLayer,
-                                isPersistent: true,
-                                circlePitchAlignment: .viewport)
+                                isPersistent: true)
         addCircleLayerInRuntime(mapView: navigationMapView.mapView,
                                 circleLabelId: circleMapLayer,
                                 isPersistent: false,
@@ -326,7 +325,7 @@ class RouteLineLayerPositionTests: TestCase {
     func addCircleLayerInRuntime(mapView: MapView,
                                  circleLabelId: String,
                                  isPersistent: Bool,
-                                 circlePitchAlignment: CirclePitchAlignment,
+                                 circlePitchAlignment: CirclePitchAlignment? = nil,
                                  layerPosition: MapboxMaps.LayerPosition? = nil) {
         do {
             if !mapView.mapboxMap.style.sourceExists(withId: circleLabelId) {
@@ -344,7 +343,9 @@ class RouteLineLayerPositionTests: TestCase {
             circleLabelLayer.circleColor = .constant(.init(UIColor.black))
             circleLabelLayer.circleOpacity = .constant(.init(1))
             circleLabelLayer.circleRadius = .constant(.init(10))
-            circleLabelLayer.circlePitchAlignment = .constant(circlePitchAlignment)
+            if let circlePitchAlignment = circlePitchAlignment {
+                circleLabelLayer.circlePitchAlignment = .constant(circlePitchAlignment)
+            }
             
             if isPersistent {
                 try mapView.mapboxMap.style.addPersistentLayer(circleLabelLayer, layerPosition: layerPosition)
