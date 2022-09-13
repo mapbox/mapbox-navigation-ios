@@ -44,6 +44,7 @@
 * Improved the pronunciation of junction names in Japanese in Japan. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * At a fork or exit on an expressway in Japan, spoken instructions now mention the junction name and side of the road but no longer mention the expressway name or number that the user would stay on. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed confusing instructions to take the roundabout in the Russian localization. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* Fixed the crashes occured in guidance instructions during offline navigation. ([#4147](https://github.com/mapbox/mapbox-navigation-ios/pull/4147))
 
 ### Routing
 
