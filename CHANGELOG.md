@@ -4,10 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.0-beta.1). ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v114._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/114.0.0).
- ([#4131](https://github.com/mapbox/mapbox-navigation-ios/pull/4131))
-* MapboxCoreNavigation now requires [MapboxDirections v2.7.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-beta.1). ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
+* MapboxNavigation now requires [MapboxMaps v10.8._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.8.1). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v115._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/115.0.0). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
+* MapboxCoreNavigation now requires [MapboxDirections v2.7.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-rc.1). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 
 ### Location Tracking
 
@@ -47,6 +46,9 @@
 * Added `NavigationSettings.liveIncidentsOptions` to configure how incidents data is fetched. ([#4088](https://github.com/mapbox/mapbox-navigation-ios/pull/4088))
 * Added `NavigationSettings.statusPollingConfig` to configure navigator status polling options. ([#4135](https://github.com/mapbox/mapbox-navigation-ios/pull/4135))
 * Fixed incorrect duration calculations and route refreshing when an arrival step’s geometry contained only one coordinate. Normally, an arrival step’s geometry is expected to be a zero-length `LineString`; that is, with two coincident coordinates. ([#4110](https://github.com/mapbox/mapbox-navigation-ios/pull/4110))
+* Routes now respect conditional access restrictions that depend on the year. ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
+* Routes now respect conditional access restrictions that apply to [all vehicles](https://wiki.openstreetmap.org/wiki/Key:vehicle). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
+* Fixed an issue where the `Intersection.outletRoadClasses` and `Intersection.outletMapboxStreetsRoadClass` properties were set to `RoadClasses.restricted` for an entrance to a rest area because of its “[local traffic only](https://wiki.openstreetmap.org/wiki/Tag:access%3Ddestination)” restriction. ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 
 ### CarPlay
 
