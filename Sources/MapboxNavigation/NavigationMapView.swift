@@ -351,7 +351,10 @@ open class NavigationMapView: UIView {
         removeLineGradientStops()
     }
     
-    func removeAlternativeRoutes() {
+    /**
+     Removes all alternative routes that are currently shown on a map.
+     */
+    public func removeAlternativeRoutes() {
         var sourceIdentifiers = Set<String>()
         var layerIdentifiers = Set<String>()
         routes?.dropFirst().forEach {
@@ -1338,7 +1341,7 @@ open class NavigationMapView: UIView {
     /**
      Removes all visible continuous alternative routes duration callouts.
      */
-    func removeContinuousAlternativeRoutesDurations() {
+    public func removeContinuousAlternativeRoutesDurations() {
         let style = mapView.mapboxMap.style
         style.removeLayers([NavigationMapView.LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer])
         style.removeSources([NavigationMapView.SourceIdentifier.continuousAlternativeRoutesDurationAnnotationsSource])
