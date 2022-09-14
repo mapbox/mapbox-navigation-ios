@@ -264,6 +264,53 @@ class RouteControllerTests: TestCase {
         locationManager.startUpdatingLocation()
         wait(for: [routeExpectation], timeout: locationManager.expectedReplayTime)
     }
+    
+    func testReroutingUpdatesRouteOptions() {
+        let coordinates = [
+            CLLocationCoordinate2D(latitude: 37.750384, longitude: -122.387487),
+            CLLocationCoordinate2D(latitude: 37.764343, longitude: -122.388664),
+        ]
+        
+        let options = NavigationRouteOptions(coordinates: coordinates)
+        let route = Fixture.route(from: "route-for-off-route", options: options)
+        let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let routeResponse = RouteResponse(httpResponse: nil,
+                                          routes: [route],
+                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
+                                          credentials: .mocked)
+        
+        let offRouteLocation = CLLocationCoordinate2D(latitude: coordinates[1].latitude,
+                                                      longitude: -coordinates[1].longitude)
+        let offRouteReplayLocation = Fixture.generateCoordinates(between: coordinates[0],
+                                                                 and: offRouteLocation,
+                                                                 count: 100).map {
+            CLLocation(coordinate: $0)
+        }.shiftedToPresent()
+        
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: options,
+                                              customRoutingProvider: nil,
+                                              dataSource: self)
+        
+        let routerDelegateSpy = RouterDelegateSpy()
+        let modifyExpectation = expectation(description: "Reroute should request options editing.")
+        modifyExpectation.assertForOverFulfill = false
+        
+        routerDelegateSpy.onModifiedOptionsForReroute = { options in
+            modifyExpectation.fulfill()
+            return options
+        }
+        routeController.delegate = routerDelegateSpy
+        
+        let locationManager = ReplayLocationManager(locations: offRouteReplayLocation)
+        locationManager.startDate = Date()
+        locationManager.delegate = routeController
+        
+        locationManager.speedMultiplier = 50
+        locationManager.startUpdatingLocation()
+        wait(for: [modifyExpectation], timeout: locationManager.expectedReplayTime)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {

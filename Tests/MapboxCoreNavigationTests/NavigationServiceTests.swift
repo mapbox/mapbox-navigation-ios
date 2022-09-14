@@ -761,45 +761,6 @@ class NavigationServiceTests: TestCase {
         XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
     }
-
-    func testReroutingUpdatesRouteOptions() {
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .online)
-        
-        let trace = Fixture.generateTrace(for: initialRouteResponse.routes!.first!).shiftedToPresent()
-        guard let firstLoction = trace.first,
-              let lastLocation = trace.last,
-              firstLoction != lastLocation else {
-                  XCTFail("Invalid trace"); return
-              }
-        let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.speedMultiplier = 100
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                              routeIndex: 0,
-                                              routeOptions: routeOptions,
-                                              customRoutingProvider: nil,
-                                              credentials: Fixture.credentials,
-                                              locationSource: locationManager)
-        let router = service.router
-        (router as? RouteController)?.rerouteController.resetToDefaultSettings()
-        
-        let routerSpy = RouterDelegateSpy()
-        let modifyExpectation = expectation(description: "Reroute should request options editing.")
-        modifyExpectation.assertForOverFulfill = false
-        
-        routerSpy.onModifiedOptionsForReroute = { options in
-            modifyExpectation.fulfill()
-            return options
-        }
-        
-        service.start()
-        
-        router.delegate = routerSpy
-        router.reroute(from: firstLoction,
-                       along: router.routeProgress)
-
-        wait(for: [modifyExpectation], timeout: locationManager.expectedReplayTime + 5)
-        locationManager.stopUpdatingLocation()
-    }
     
     func testUnimplementedLogging() {
         _unimplementedLoggingState.clear()
