@@ -780,6 +780,8 @@ class NavigationServiceTests: TestCase {
                                               credentials: Fixture.credentials,
                                               locationSource: locationManager)
         let router = service.router
+        (router as? RouteController)?.rerouteController.resetToDefaultSettings()
+        
         let routerSpy = RouterDelegateSpy()
         let modifyExpectation = expectation(description: "Reroute should request options editing.")
         modifyExpectation.assertForOverFulfill = false
