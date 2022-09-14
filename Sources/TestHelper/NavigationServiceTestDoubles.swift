@@ -32,6 +32,11 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         recentMessages.append(#function)
     }
     
+    public func navigationService(_ service: NavigationService, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
+        recentMessages.append(#function)
+        return options
+    }
+    
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         recentMessages.append(#function)
         return false

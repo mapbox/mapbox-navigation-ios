@@ -38,6 +38,7 @@
 		2B01E4B7274671550002A5F7 /* RoutingProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B01E4B4274671540002A5F7 /* RoutingProvider.swift */; };
 		2B01E4B8274671550002A5F7 /* Directions+RoutingProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B01E4B5274671550002A5F7 /* Directions+RoutingProvider.swift */; };
 		2B02397728B37E2200C348D0 /* IncidentsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B02397628B37E2200C348D0 /* IncidentsOptions.swift */; };
+		2B02397928B6508700C348D0 /* DefaultRerouteControllerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B02397828B6508700C348D0 /* DefaultRerouteControllerInterface.swift */; };
 		2B07444124B4832400615E87 /* TokenTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B07444024B4832400615E87 /* TokenTestViewController.swift */; };
 		2B27557F2860B01A002D1CAD /* HistoryRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B27557E2860B01A002D1CAD /* HistoryRecorder.swift */; };
 		2B28AD7D284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD7C284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift */; };
@@ -609,6 +610,7 @@
 		2B01E4B4274671540002A5F7 /* RoutingProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingProvider.swift; sourceTree = "<group>"; };
 		2B01E4B5274671550002A5F7 /* Directions+RoutingProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Directions+RoutingProvider.swift"; sourceTree = "<group>"; };
 		2B02397628B37E2200C348D0 /* IncidentsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncidentsOptions.swift; sourceTree = "<group>"; };
+		2B02397828B6508700C348D0 /* DefaultRerouteControllerInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultRerouteControllerInterface.swift; sourceTree = "<group>"; };
 		2B07444024B4832400615E87 /* TokenTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTestViewController.swift; sourceTree = "<group>"; };
 		2B27557E2860B01A002D1CAD /* HistoryRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecorder.swift; sourceTree = "<group>"; };
 		2B28AD7C284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternativeRouteDetectionStrategy.swift; sourceTree = "<group>"; };
@@ -2017,6 +2019,7 @@
 				2BF398C0274BDEA8000C9A72 /* Directions.swift */,
 				2B01E4B5274671550002A5F7 /* Directions+RoutingProvider.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
+				2B02397828B6508700C348D0 /* DefaultRerouteControllerInterface.swift */,
 				B417913A2624F9EA001E0348 /* MBXInfo.plist */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
@@ -3013,6 +3016,7 @@
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */,
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
+				2B02397928B6508700C348D0 /* DefaultRerouteControllerInterface.swift in Sources */,
 				2B01E4B6274671550002A5F7 /* MapboxRoutingProvider.swift in Sources */,
 				2B28E22127EB48C60029E4C1 /* RerouteControllerDelegate.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
