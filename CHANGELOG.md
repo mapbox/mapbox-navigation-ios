@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.9.0
+
+### Map
+
+* `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
+
 ## v2.8.0
 
 ### Packaging
