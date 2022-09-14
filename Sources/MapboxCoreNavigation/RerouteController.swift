@@ -42,7 +42,23 @@ class RerouteController {
 
     // MARK: Reporting Data
     
-    weak var delegate: ReroutingControllerDelegate?
+    weak var delegate: ReroutingControllerDelegate? {
+        didSet {
+            guard delegate != nil else {
+                defaultRerouteController.requestConfig = nil
+                return
+            }
+
+            defaultRerouteController.requestConfig = { [weak delegate] in
+                guard let delegate = delegate,
+                      let url = URL(string: $0),
+                      let options = RouteOptions(url: url) else {
+                    return $0
+                }
+                return NavigationSettings.shared.directions.url(forCalculating: delegate.rerouteControllerWillModify(options: options)).absoluteString
+            }
+        }
+    }
 
     func userIsOnRoute() -> Bool {
         return !rerouteDetector.isReroute()
@@ -54,7 +70,7 @@ class RerouteController {
 
     // MARK: Internal State Management
     
-    private let defaultRerouteController: RerouteControllerInterface
+    private let defaultRerouteController: DefaultRerouteControllerInterface
     private let rerouteDetector: RerouteDetectorInterface
     
     private var reroutingRequest: NavigationProviderRequest?
@@ -67,20 +83,23 @@ class RerouteController {
         reroutesProactively = true
         isCancelled = false
         config.setAvoidManeuverSecondsForSeconds(NSNumber(value: Self.DefaultManeuverAvoidanceRadius))
-        customRoutingProvider = nil
+        if customRoutingProvider != nil {
+            customRoutingProvider = nil
+        }
     }
 
     required init(_ navigator: MapboxNavigationNative.Navigator, config: ConfigHandle) {
         self.navigator = navigator
         self.config = config
-        self.defaultRerouteController = navigator.getRerouteController()
+        self.defaultRerouteController = DefaultRerouteControllerInterface(nativeInterface: navigator.getRerouteController())
+        self.navigator?.setRerouteControllerForController(defaultRerouteController)
         self.rerouteDetector = navigator.getRerouteDetector()
         self.navigator?.addRerouteObserver(for: self)
     }
 
     deinit {
         self.navigator?.removeRerouteObserver(for: self)
-        self.navigator?.setRerouteControllerForController(defaultRerouteController)
+        self.navigator?.setRerouteControllerForController(defaultRerouteController.nativeInterface)
     }
 }
 

@@ -13,6 +13,7 @@ protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions, routeOrigin: RouterOrigin)
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
+    func rerouteControllerWillModify(options: RouteOptions) -> RouteOptions
 }
 
 /**
