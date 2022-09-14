@@ -363,6 +363,11 @@ class CustomRoutingProviderStub: RoutingProvider {
         return nil
     }
     
+    func calculateRoutes(options: RouteOptions, completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {
+        routeStub?()
+        return nil
+    }
+    
     func calculateRoutes(options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> NavigationProviderRequest? {
         matchStub?()
         return nil
