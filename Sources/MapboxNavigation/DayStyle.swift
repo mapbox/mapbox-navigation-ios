@@ -428,24 +428,17 @@ open class DayStyle: Style {
         ManeuverView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultTurnArrowPrimaryHighlighted
         ManeuverView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultTurnArrowSecondaryHighlighted
         
-        // In case if CarPlay supports `UIUserInterfaceStyle` styling will be applied for a
-        // `UITraitCollection`, which contains both `UIUserInterfaceIdiom` and `UIUserInterfaceStyle`.
-        // If not, `UITraitCollection` will only contain `UIUserInterfaceIdiom`.
-        if #available(iOS 12.0, *) {
-            let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
-                carPlayTraitCollection,
-                UITraitCollection(userInterfaceStyle: .light)
-            ])
-            applyCarPlayManeuversStyling(for: carPlayLightTraitCollection)
-            
-            let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
-                carPlayTraitCollection,
-                UITraitCollection(userInterfaceStyle: .dark)
-            ])
-            applyCarPlayManeuversStyling(for: carPlayDarkTraitCollection)
-        } else {
-            applyDefaultCarPlayManeuversStyling()
-        }
+        let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
+            carPlayTraitCollection,
+            UITraitCollection(userInterfaceStyle: .light)
+        ])
+        applyCarPlayManeuversStyling(for: carPlayLightTraitCollection)
+        
+        let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
+            carPlayTraitCollection,
+            UITraitCollection(userInterfaceStyle: .dark)
+        ])
+        applyCarPlayManeuversStyling(for: carPlayDarkTraitCollection)
     }
     
     /**
@@ -508,26 +501,5 @@ open class DayStyle: Style {
         
         LaneView.appearance(for: traitCollection).primaryColorHighlighted = defaultLaneArrowPrimaryHighlightedColor
         LaneView.appearance(for: traitCollection).secondaryColorHighlighted = defaultLaneArrowSecondaryHighlightedColor
-    }
-    
-    /**
-     Applies default styling for lane views, exit views and shields on CarPlay versions that do not support
-     light and dark appearance changes.
-     */
-    func applyDefaultCarPlayManeuversStyling() {
-        let defaultColor = UIColor.black
-        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
-        
-        ExitView.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
-        ExitView.appearance(for: carPlayTraitCollection).borderColor = defaultColor
-        
-        GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
-        GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
-        
-        LaneView.appearance(for: carPlayTraitCollection).primaryColor = .defaultLaneArrowPrimary
-        LaneView.appearance(for: carPlayTraitCollection).secondaryColor = .defaultLaneArrowSecondary
-        
-        LaneView.appearance(for: carPlayTraitCollection).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
-        LaneView.appearance(for: carPlayTraitCollection).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
     }
 }

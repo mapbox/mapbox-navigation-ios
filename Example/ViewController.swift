@@ -269,9 +269,8 @@ class ViewController: UIViewController {
     func beginCarPlayNavigation() {
         let delegate = UIApplication.shared.delegate as? AppDelegate
         
-        if #available(iOS 12.0, *),
-            let service = activeNavigationViewController?.navigationService,
-            let location = service.router.location {
+        if let service = activeNavigationViewController?.navigationService,
+           let location = service.router.location {
             delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate, navigationService: service)
         }
     }
@@ -663,7 +662,7 @@ class ViewController: UIViewController {
     }
     
     func endCarPlayNavigation(canceled: Bool) {
-        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
             delegate.carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: canceled)
         }
     }
@@ -766,8 +765,7 @@ extension ViewController: NavigationMapViewDelegate {
 extension ViewController: NavigationViewControllerDelegate {
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        if #available(iOS 12.0, *),
-           let delegate = UIApplication.shared.delegate as? AppDelegate,
+        if let delegate = UIApplication.shared.delegate as? AppDelegate,
            let carPlayNavigationViewController = delegate.carPlayManager.carPlayNavigationViewController {
             return carPlayNavigationViewController.navigationService(navigationViewController.navigationService, didArriveAt: waypoint)
         }

@@ -924,16 +924,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
         
         let imageColor: UIColor
-        if #available(iOS 12.0, *) {
-            switch traitCollection.userInterfaceStyle {
-            case .dark:
-                imageColor = .white
-            case .light, .unspecified:
-                imageColor = .black
-            @unknown default:
-                imageColor = .black
-            }
-        } else {
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            imageColor = .white
+        case .light, .unspecified:
+            imageColor = .black
+        @unknown default:
             imageColor = .black
         }
         

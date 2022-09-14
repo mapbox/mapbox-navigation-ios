@@ -150,18 +150,12 @@ public class ExitView: StylableView {
                              traitCollection: UITraitCollection) -> String {
         var appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
-            let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+            let traitCollection = UITraitCollection(traitsFrom: [
+                UITraitCollection(userInterfaceIdiom: .carPlay),
+                UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+            ])
             
-            if #available(iOS 12.0, *) {
-                let traitCollection = UITraitCollection(traitsFrom: [
-                    carPlayTraitCollection,
-                    UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
-                ])
-                
-                appearance = ExitView.appearance(for: traitCollection)
-            } else {
-                appearance = ExitView.appearance(for: carPlayTraitCollection)
-            }
+            appearance = ExitView.appearance(for: traitCollection)
         }
         
         var criticalProperties: [AnyHashable?] = [
@@ -173,11 +167,8 @@ public class ExitView: StylableView {
             appearance.borderWidth,
             appearance.cornerRadius,
             traitCollection.userInterfaceIdiom.rawValue,
+            traitCollection.userInterfaceStyle.rawValue
         ]
-        
-        if #available(iOS 12.0, *) {
-            criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
-        }
         
         if let styleID = styleID {
             criticalProperties.append(styleID)
