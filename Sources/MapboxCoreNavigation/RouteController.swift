@@ -965,6 +965,10 @@ extension RouteController: ReroutingControllerDelegate {
         announceReroutingError(with: error)
         self.isRerouting = false
     }
+    
+    func rerouteControllerWillModify(options: RouteOptions) -> RouteOptions {
+        return delegate?.router(self, modifiedOptionsForReroute: options) ?? options
+    }
 }
 
 extension RouteController {

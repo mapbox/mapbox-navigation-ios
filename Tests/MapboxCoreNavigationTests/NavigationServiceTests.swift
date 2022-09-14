@@ -504,6 +504,9 @@ class NavigationServiceTests: TestCase {
         wait(for: [didRerouteNotificationExpectation], timeout: 3)
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
+        // MARK: Custom routing provider should not trigger RouteOptions customization
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
+        
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [testLocation])
         waitForNavNativeCallbacks()
@@ -755,9 +758,10 @@ class NavigationServiceTests: TestCase {
         wait(for: [rerouteTriggeredExpectation, didRerouteExpectation], timeout: locationManager.expectedReplayTime)
         locationManager.stopUpdatingLocation()
         
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:modifiedOptionsForReroute:)"))
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
     }
-
+    
     func testUnimplementedLogging() {
         _unimplementedLoggingState.clear()
         XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 0)

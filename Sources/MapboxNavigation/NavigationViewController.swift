@@ -777,6 +777,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController(self, willRerouteFrom: location)
     }
     
+    public func navigationService(_ service: NavigationService, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
+        return delegate?.navigationViewController(self, modifiedOptionsForReroute: options) ?? options
+    }
+    
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         for component in navigationComponents {
             component.navigationService(service, didRerouteAlong: route, at: location, proactive: proactive)
