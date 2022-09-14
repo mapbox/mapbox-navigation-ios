@@ -3,6 +3,7 @@ import MapboxDirections
 import UIKit
 
 typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?) -> Void
+typealias ImageDownloadCompletionHandler = (DownloadError?) -> Void
 
 protocol ReentrantImageDownloader {
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) -> Void

@@ -34,7 +34,7 @@ class SpriteRepository {
         imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
     }
     
-    func updateStyle(styleURI: StyleURI?, completion: @escaping (DownloadError?) -> Void) {
+    func updateStyle(styleURI: StyleURI?, completion: @escaping ImageDownloadCompletionHandler) {
         // If no valid StyleURI provided, use the default Day style.
         let newStyleURI = styleURI ?? self.styleURI
         guard newStyleURI != self.styleURI || getSpriteImage() == nil else {
@@ -51,7 +51,8 @@ class SpriteRepository {
         updateSprite(completion: completion)
     }
 
-    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (DownloadError?) -> Void) {
+    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil,
+                              completion: @escaping ImageDownloadCompletionHandler) {
         let dispatchGroup = DispatchGroup()
         var downloadError: DownloadError? = nil
 
@@ -74,7 +75,7 @@ class SpriteRepository {
         }
     }
     
-    func updateSprite(completion: @escaping (DownloadError?) -> Void) {
+    func updateSprite(completion: @escaping ImageDownloadCompletionHandler) {
         guard let styleID = styleID,
               let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
               let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else {
@@ -102,7 +103,8 @@ class SpriteRepository {
         }
     }
     
-    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (DownloadError?) -> Void) {
+    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation? = nil,
+                      completion: @escaping ImageDownloadCompletionHandler) {
         guard let cacheKey = representation?.legacyCacheKey else {
             completion(.clientError)
             return
