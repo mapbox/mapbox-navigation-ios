@@ -18,17 +18,16 @@ class CameraModeFloatingButton: FloatingButton {
     weak var delegate: CameraModeFloatingButtonDelegate?
     
     func updateImage(for cameraMode: CameraModeFloatingButton.CameraMode) {
-        let imageName: String
+        let image: UIImage
         switch cameraMode {
         case .idle:
-            imageName = "recenter"
+            image = .recenter
         case .centered:
-            imageName = "follow"
+            image = .follow
         case .following:
-            imageName = "north-lock"
+            image = .northUp
         }
         
-        let image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
         setImage(image, for: .normal)
     }
     
@@ -42,19 +41,16 @@ class CameraModeFloatingButton: FloatingButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(_ cameraMode: CameraModeFloatingButton.CameraMode,
+    convenience init(_ frame: CGRect,
+                     cameraMode: CameraModeFloatingButton.CameraMode = .following,
                      delegate: CameraModeFloatingButtonDelegate? = nil) {
-        self.init(frame: .zero)
+        self.init(frame: frame)
         
         self.delegate = delegate
         self.cameraMode = cameraMode
     }
     
     func commonInit() {
-        constrainedSize = CGSize(width: 50.0, height: 50.0)
-        imageView?.contentMode = .scaleAspectFit
-        clipsToBounds = true
-        imageEdgeInsets = UIEdgeInsets(floatLiteral: 10.0)
         cameraMode = .following
         addTarget(self, action: #selector(didPress), for: .touchUpInside)
     }
