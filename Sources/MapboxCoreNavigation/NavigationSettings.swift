@@ -4,30 +4,30 @@ import MapboxDirections
 /// Defines source of routing engine (online or offline) to be used for requests.
 public typealias RoutingProviderSource = MapboxRoutingProvider.Source
 
-/// Configures Navigator status polling options.
-public struct StatusPollingConfig {
+/// Configures Navigator status polling.
+public struct StatusUpdatingSettings {
     /**
-     If new location is not provided during `unconditionalPollingPatience` - status will be polled unconditionally.
+     If new location is not provided during `updatingPatience` - status will be polled unconditionally.
      
      If `nil` - default value will be used.
      */
-    public var unconditionalPollingPatience: TimeInterval?
+    public var updatingPatience: TimeInterval?
     /**
      Interval of unconditional status polling.
      
      If `nil` - default value will be used.
      */
-    public var unconditionalPollingInterval: TimeInterval?
+    public var updatingInterval: TimeInterval?
     
     /**
-     Creates new `StatusPollingConfig`.
+     Creates new `StatusUpdatingSettings`.
      
-     - parameter unconditionalPollingPatience: patience time before unconditional status polling.
-     - parameter unconditionalPollingInterval: unconditional polling interval.
+     - parameter updatingPatience: patience time before unconditional status polling.
+     - parameter updatingInterval: unconditional polling interval.
      */
-    public init(unconditionalPollingPatience: TimeInterval? = nil, unconditionalPollingInterval: TimeInterval? = nil) {
-        self.unconditionalPollingPatience = unconditionalPollingPatience
-        self.unconditionalPollingInterval = unconditionalPollingInterval
+    public init(updatingPatience: TimeInterval? = nil, updatingInterval: TimeInterval? = nil) {
+        self.updatingPatience = updatingPatience
+        self.updatingInterval = updatingInterval
     }
 }
 
@@ -41,7 +41,7 @@ public struct StatusPollingConfig {
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
  */
 public class NavigationSettings {
     
@@ -69,7 +69,7 @@ public class NavigationSettings {
                   utilizeSensorData: false,
                   navigatorPredictionInterval: nil,
                   liveIncidentsOptions: nil,
-                  statusPollingConfig: nil)
+                  statusUpdatingSettings: nil)
         }
 
         var directions: Directions
@@ -79,7 +79,7 @@ public class NavigationSettings {
         var utilizeSensorData: Bool
         var navigatorPredictionInterval: TimeInterval?
         var liveIncidentsOptions: IncidentsOptions?
-        var statusPollingConfig: StatusPollingConfig?
+        var statusUpdatingSettings: StatusUpdatingSettings?
     }
 
     /// Protects access to `_state`.
@@ -103,7 +103,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -112,14 +112,14 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
     }
 
     /**
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      */
     public var routingProviderSource: RoutingProviderSource {
         state.routingProviderSource
@@ -128,7 +128,7 @@ public class NavigationSettings {
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      
      If set to `nil`, the detection is turned off.
      */
@@ -154,7 +154,7 @@ public class NavigationSettings {
      
      If not specified (`nilled`), default value will be used.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      */
     public var navigatorPredictionInterval: TimeInterval? {
         state.navigatorPredictionInterval
@@ -163,7 +163,7 @@ public class NavigationSettings {
     /**
      Configuration on how live incidents on a most probable path are detected.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      
      If set to `nil`, live incidents are turned off (by default).
      */
@@ -174,12 +174,12 @@ public class NavigationSettings {
     /**
      Configuration on how navigator status is polled.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
      
      If set to `nil`, default settings will be applied
      */
-    public var statusPollingConfig: StatusPollingConfig? {
-        state.statusPollingConfig
+    public var statusUpdatingSettings: StatusUpdatingSettings? {
+        state.statusUpdatingSettings
     }
     
     /**
@@ -208,12 +208,12 @@ public class NavigationSettings {
                            utilizeSensorData: Bool = false,
                            navigatorPredictionInterval: TimeInterval? = nil,
                            liveIncidentsOptions: IncidentsOptions? = nil,
-                           statusPollingConfig: StatusPollingConfig? = nil) {
+                           statusUpdatingSettings: StatusUpdatingSettings? = nil) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusPollingConfig:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`, `navigatorPredictionInterval`, `liveIncidentsOptions`, `statusPollingConfig`. This might result in an undefined behaviour.", category: .settings)
+            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`, `navigatorPredictionInterval`, `liveIncidentsOptions`, `statusUpdatingSettings`. This might result in an undefined behaviour.", category: .settings)
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
@@ -222,7 +222,7 @@ public class NavigationSettings {
                        utilizeSensorData: utilizeSensorData,
                        navigatorPredictionInterval: navigatorPredictionInterval,
                        liveIncidentsOptions: liveIncidentsOptions,
-                       statusPollingConfig: statusPollingConfig)
+                       statusUpdatingSettings: statusUpdatingSettings)
     }
     
     /**
