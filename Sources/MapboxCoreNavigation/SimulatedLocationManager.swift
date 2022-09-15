@@ -5,9 +5,9 @@ import Turf
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
-fileprivate var distanceFilter: CLLocationDistance = 10
-fileprivate var verticalAccuracy: CLLocationAccuracy = 10
-fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
+fileprivate let distanceFilter: CLLocationDistance = 10
+fileprivate let verticalAccuracy: CLLocationAccuracy = 10
+fileprivate let horizontalAccuracy: CLLocationAccuracy = 40
 // minimumSpeed will be used when a location have maximumTurnPenalty
 fileprivate let maximumTurnPenalty: CLLocationDirection = 90
 // maximumSpeed will be used when a location have minimumTurnPenalty
@@ -71,8 +71,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Specifying Simulation
@@ -135,8 +134,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var remainingRouteShape: LineString!
 
     private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
-    
-    var route: Route? {
+
+    private var route: Route? {
         didSet {
             reset()
         }
@@ -261,7 +260,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     @objc private func progressDidChange(_ notification: Notification) {
-        routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        queue.async { [weak self] in
+            self?.routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        }
     }
     
     @objc private func didReroute(_ notification: Notification) {
@@ -290,6 +291,18 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
 }
+
+// MARK: - Tests Support
+
+extension SimulatedLocationManager {
+    func __route() -> Route? {
+        return queue.sync {
+            route
+        }
+    }
+}
+
+// MARK: - Helpers
 
 extension Double {
     fileprivate func scale(minimumIn: Double, maximumIn: Double, minimumOut: Double, maximumOut: Double) -> Double {

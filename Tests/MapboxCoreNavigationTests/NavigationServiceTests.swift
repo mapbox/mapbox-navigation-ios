@@ -437,7 +437,7 @@ class NavigationServiceTests: TestCase {
 
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
 
-        XCTAssert(simulatedLocationManager.route == alternateRoute,
+        XCTAssert(simulatedLocationManager.__route() == alternateRoute,
                   "Simulated Location Manager should be updated with new route progress model")
     }
 
