@@ -3,7 +3,7 @@ binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/Ma
 github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v3.1.2"
 github "mapbox/mapbox-directions-swift" "v2.7.0-rc.1"
-github "mapbox/mapbox-events-ios" "v1.0.9"
+github "mapbox/mapbox-events-ios" "v1.0.8"
 github "mapbox/turf-swift" "v2.5.0"
 github "pointfreeco/swift-snapshot-testing" "1.9.0"
 github "raphaelmor/Polyline" "v5.0.3"
