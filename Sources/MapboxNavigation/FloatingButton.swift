@@ -46,6 +46,7 @@ open class FloatingButton: Button {
      - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
      - parameter type: `UIButton` type. Defaults to `.custom`.
      - parameter cornerRadius: Corner radius of the button.
+     - parameter imageEdgeInsets: Effective drawing rectangle for the button image.
      
      - returns: `FloatingButton` instance.
      */
@@ -53,12 +54,14 @@ open class FloatingButton: Button {
                                                  selectedImage: UIImage? = nil,
                                                  size: CGSize = FloatingButton.buttonSize,
                                                  type: UIButton.ButtonType = .custom,
+                                                 imageEdgeInsets: UIEdgeInsets = .zero,
                                                  cornerRadius: CGFloat = FloatingButton.buttonSize.width / 2.0) -> T {
         let button = T.init(type: type)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
         button.layer.cornerRadius = cornerRadius
         button.imageView?.contentMode = .scaleAspectFit
+        button.imageEdgeInsets = imageEdgeInsets
         
         if let image = image {
             button.setImage(image, for: .normal)

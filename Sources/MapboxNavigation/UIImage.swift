@@ -18,6 +18,18 @@ extension UIImage {
                                   in: .mapboxNavigation,
                                   compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     
+    static let northUp = UIImage(named: "north-lock",
+                                 in: .mapboxNavigation,
+                                 compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
+    static let recenter = UIImage(named: "recenter",
+                                  in: .mapboxNavigation,
+                                  compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
+    static let follow = UIImage(named: "follow",
+                                in: .mapboxNavigation,
+                                compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
