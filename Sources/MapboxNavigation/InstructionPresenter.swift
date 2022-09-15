@@ -183,7 +183,10 @@ class InstructionPresenter {
                 if let legacyIcon = repository.legacyCache.image(forKey: representation.legacyCacheKey) {
                     return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
                 } else if representation.legacyCacheKey != nil {
-                    spriteRepository.updateRepresentation(for: representation, completion: onImageDownload)
+                    spriteRepository.updateRepresentation(for: representation) { (error) in
+                        guard error == nil else { return }
+                        onImageDownload()
+                    }
                     return nil
                 }
             }
@@ -199,7 +202,10 @@ class InstructionPresenter {
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
         // Update the SpriteRepository with the ImageRepresentation only when it has valid shield or legacy shield.
         if representation.shield != nil || representation.legacyCacheKey != nil {
-            spriteRepository.updateRepresentation(for: representation, completion: onImageDownload)
+            spriteRepository.updateRepresentation(for: representation) { (error) in
+                guard error == nil else { return }
+                onImageDownload()
+            }
         }
         return nil
     }
