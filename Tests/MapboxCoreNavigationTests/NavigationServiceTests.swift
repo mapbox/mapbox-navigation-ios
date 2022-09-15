@@ -410,6 +410,9 @@ class NavigationServiceTests: TestCase {
         let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.turnstile.rawValue))
+            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile)
+        }
+        wait(for: [turnstileFlushedExpectation], timeout: 1)
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
