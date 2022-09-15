@@ -44,16 +44,30 @@ open class FloatingButton: Button {
      - parameter image: The `UIImage` of this button.
      - parameter selectedImage: The `UIImage` of this button when selected.
      - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
+     - parameter type: `UIButton` type. Defaults to `.custom`.
+     - parameter cornerRadius: Corner radius of the button.
+     
+     - returns: `FloatingButton` instance.
      */
     public class func rounded<T: FloatingButton>(image: UIImage? = nil,
                                                  selectedImage: UIImage? = nil,
-                                                 size: CGSize = FloatingButton.buttonSize) -> T {
-        let button = T.init(type: .custom)
+                                                 size: CGSize = FloatingButton.buttonSize,
+                                                 type: UIButton.ButtonType = .custom,
+                                                 cornerRadius: CGFloat = FloatingButton.buttonSize.width / 2.0) -> T {
+        let button = T.init(type: type)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
-        button.setImage(image, for: .normal)
-        if let selected = selectedImage { button.setImage(selected, for: .selected) }
-        button.applyDefaultCornerRadiusShadow(cornerRadius: size.width / 2)
+        button.layer.cornerRadius = cornerRadius
+        button.imageView?.contentMode = .scaleAspectFit
+        
+        if let image = image {
+            button.setImage(image, for: .normal)
+        }
+        
+        if let selectedImage = selectedImage {
+            button.setImage(selectedImage, for: .selected)
+        }
+        
         return button
     }
 }

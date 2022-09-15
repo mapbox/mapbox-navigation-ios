@@ -235,6 +235,28 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationService.router
     }
     
+    lazy var overviewButton: FloatingButton = {
+        let floatingButton = FloatingButton.rounded(image: .overview)
+        floatingButton.borderWidth = Style.defaultBorderWidth
+        
+        return floatingButton
+    }()
+    
+    lazy var muteButton: FloatingButton = {
+        let floatingButton = FloatingButton.rounded(image: .volumeUp,
+                                                    selectedImage: .volumeOff)
+        floatingButton.borderWidth = Style.defaultBorderWidth
+        
+        return floatingButton
+    }()
+    
+    lazy var reportButton: FloatingButton = {
+        let floatingButton = FloatingButton.rounded(image: .feedback)
+        floatingButton.borderWidth = Style.defaultBorderWidth
+        
+        return floatingButton
+    }()
+    
     func setupNavigationService() {
         guard let routeResponse = _routeResponse,
               let routeIndex = _routeIndex,
@@ -365,7 +387,16 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore, navigationMapView: self.navigationOptions?.navigationMapView)
+        view = NavigationView(delegate: self,
+                              frame: frame,
+                              tileStoreLocation: mapTileStore,
+                              navigationMapView: self.navigationOptions?.navigationMapView)
+        
+        navigationView.floatingButtons = [
+            overviewButton,
+            muteButton,
+            reportButton
+        ]
     }
     
     /**
@@ -503,7 +534,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var showsReportFeedback: Bool = true {
         didSet {
             loadViewIfNeeded()
-            ornamentsController?.reportButton.isHidden = !showsReportFeedback
+            reportButton.isHidden = !showsReportFeedback
             showsEndOfRouteFeedback = showsReportFeedback
         }
     }
@@ -603,7 +634,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         subviewInits.removeAll()
         
         arrivalController?.destination = route?.legs.last?.destination
-        ornamentsController?.reportButton.isHidden = !showsReportFeedback
+        reportButton.isHidden = !showsReportFeedback
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {

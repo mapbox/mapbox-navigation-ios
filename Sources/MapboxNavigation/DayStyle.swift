@@ -247,6 +247,8 @@ open class DayStyle: Style {
         
         FloatingButton.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance(for: traitCollection).tintColor = tintColor
+        FloatingButton.appearance(for: traitCollection).borderWidth = Style.defaultBorderWidth
+        FloatingButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
         
         DistanceRemainingLabel.appearance(for: traitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
@@ -262,7 +264,7 @@ open class DayStyle: Style {
         ResumeButton.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ResumeButton.appearance(for: traitCollection).tintColor = .defaultPrimaryText
         ResumeButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
-        ResumeButton.appearance(for: traitCollection).borderWidth = 1 / UIScreen.main.scale
+        ResumeButton.appearance(for: traitCollection).borderWidth = Style.defaultBorderWidth
         ResumeButton.appearance(for: traitCollection).cornerRadius = 5.0
         
         NextBannerView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)

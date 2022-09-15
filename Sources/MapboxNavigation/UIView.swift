@@ -48,13 +48,6 @@ extension UIView {
     
     // MARK: Layer Styling
     
-    func applyDefaultCornerRadiusShadow(cornerRadius: CGFloat? = 4, shadowOpacity: CGFloat? = 0.1) {
-        layer.cornerRadius = cornerRadius!
-        layer.shadowOffset = CGSize(width: 0, height: 0)
-        layer.shadowRadius = 4
-        layer.shadowOpacity = Float(shadowOpacity!)
-    }
-
     func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.bounds

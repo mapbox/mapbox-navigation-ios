@@ -44,13 +44,6 @@ open class NavigationView: UIView {
         static let buttonSpacing: CGFloat = 8.0
     }
     
-    private enum Images {
-        static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let volumeOff = UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-    }
-    
     var compactConstraints = [NSLayoutConstraint]()
     var regularConstraints = [NSLayoutConstraint]()
     
@@ -125,10 +118,6 @@ open class NavigationView: UIView {
         return stackView
     }()
     
-    lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
-    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
-    lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
-    
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
             setupConstraints()
@@ -143,7 +132,7 @@ open class NavigationView: UIView {
         }
     }
     
-    lazy var resumeButton: ResumeButton = .forAutoLayout()
+    lazy var resumeButton: ResumeButton = .forAutoLayout(hidden: true)
     
     var wayNameViewLayoutGuide: UILayoutGuide? {
         didSet {
@@ -226,7 +215,6 @@ open class NavigationView: UIView {
     
     func commonInit() {
         DayStyle().apply()
-        floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
     }
