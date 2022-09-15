@@ -22,7 +22,7 @@ open class WayNameLabel: StylableLabel {
     
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
-        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] _ in
             guard let self = self,
                   let roadName = self.text else { return }
             
@@ -33,7 +33,7 @@ open class WayNameLabel: StylableLabel {
     func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepresentation(for: representation) { [weak self] in
+            spriteRepository.updateRepresentation(for: representation) { [weak self] _ in
                 guard let self = self else { return }
                 self.representation = representation
                 self.setup(with: roadName)

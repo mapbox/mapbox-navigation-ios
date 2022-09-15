@@ -341,6 +341,7 @@ open class TopBannerViewController: UIViewController {
             }
             
             self.view.isUserInteractionEnabled = true
+            self.instructionsBannerView.update(for: self.currentInstruction)
             self.delegate?.topBanner(self, didDismissStepsController: steps)
             completion?()
         }
