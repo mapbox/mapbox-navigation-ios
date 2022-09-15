@@ -7,11 +7,11 @@ public typealias RoutingProviderSource = MapboxRoutingProvider.Source
 /// Configures Navigator status polling.
 public struct StatusUpdatingSettings {
     /**
-     If new location is not provided during `updatePatience` - status will be polled unconditionally.
+     If new location is not provided during `updatingPatience` - status will be polled unconditionally.
      
      If `nil` - default value will be used.
      */
-    public var updatePatience: TimeInterval?
+    public var updatingPatience: TimeInterval?
     /**
      Interval of unconditional status polling.
      
@@ -22,11 +22,11 @@ public struct StatusUpdatingSettings {
     /**
      Creates new `StatusUpdatingSettings`.
      
-     - parameter updatePatience: patience time before unconditional status polling.
+     - parameter updatingPatience: patience time before unconditional status polling.
      - parameter updateInterval: unconditional polling interval.
      */
-    public init(updatePatience: TimeInterval? = nil, updateInterval: TimeInterval? = nil) {
-        self.updatePatience = updatePatience
+    public init(updatingPatience: TimeInterval? = nil, updateInterval: TimeInterval? = nil) {
+        self.updatingPatience = updatingPatience
         self.updateInterval = updateInterval
     }
 }

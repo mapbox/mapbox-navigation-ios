@@ -119,10 +119,10 @@ class NativeHandlersFactory {
         if let config = NavigationSettings.shared.statusUpdatingSettings {
             if pollingConfig != nil {
                 pollingConfig?.unconditionalInterval = config.updateInterval.map { NSNumber(value: $0) }
-                pollingConfig?.unconditionalPatience = config.updatePatience.map { NSNumber(value: $0) }
-            } else if config.updatePatience != nil || config.updateInterval != nil {
+                pollingConfig?.unconditionalPatience = config.updatingPatience.map { NSNumber(value: $0) }
+            } else if config.updatingPatience != nil || config.updateInterval != nil {
                 pollingConfig = PollingConfig(lookAhead: nil,
-                                              unconditionalPatience: config.updatePatience.map { NSNumber(value: $0) },
+                                              unconditionalPatience: config.updatingPatience.map { NSNumber(value: $0) },
                                               unconditionalInterval: config.updateInterval.map { NSNumber(value: $0) })
             }
         }
