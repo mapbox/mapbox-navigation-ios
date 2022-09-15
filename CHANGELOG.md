@@ -6,6 +6,11 @@
 
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
 
+### Other changes
+
+* Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:cornerRadius)` to be able to provide button type and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
+* `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
+
 ## v2.8.0
 
 ### Packaging
