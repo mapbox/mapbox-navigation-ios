@@ -156,7 +156,7 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertNil(repository.legacyCache.image(forKey: cacheKey))
         
         let expectation = expectation(description: "Image Downloaded.")
-        repository.updateRepresentation(for: representation) {
+        repository.updateRepresentation(for: representation) { _ in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 3.0)
@@ -182,7 +182,7 @@ class SpriteRepositoryTests: TestCase {
         let styleURI = StyleURI.navigationNight
         
         let expectation = expectation(description: "Style updated.")
-        repository.updateStyle(styleURI: styleURI) {
+        repository.updateStyle(styleURI: styleURI) { _ in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 3.0)
@@ -202,7 +202,7 @@ class SpriteRepositoryTests: TestCase {
         var dataKey = "us-interstate-3" + "-\(styleID)"
         
         var downloadExpectation = expectation(description: "Representation updated.")
-        repository.updateRepresentation(for: representation) {
+        repository.updateRepresentation(for: representation) { _ in
             downloadExpectation.fulfill()
         }
         wait(for: [downloadExpectation], timeout: 3.0)
