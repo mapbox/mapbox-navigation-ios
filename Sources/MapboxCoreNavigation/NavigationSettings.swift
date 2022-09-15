@@ -17,17 +17,17 @@ public struct StatusUpdatingSettings {
      
      If `nil` - default value will be used.
      */
-    public var updateInterval: TimeInterval?
+    public var updatingInterval: TimeInterval?
     
     /**
      Creates new `StatusUpdatingSettings`.
      
      - parameter updatingPatience: patience time before unconditional status polling.
-     - parameter updateInterval: unconditional polling interval.
+     - parameter updatingInterval: unconditional polling interval.
      */
-    public init(updatingPatience: TimeInterval? = nil, updateInterval: TimeInterval? = nil) {
+    public init(updatingPatience: TimeInterval? = nil, updatingInterval: TimeInterval? = nil) {
         self.updatingPatience = updatingPatience
-        self.updateInterval = updateInterval
+        self.updatingInterval = updatingInterval
     }
 }
 
