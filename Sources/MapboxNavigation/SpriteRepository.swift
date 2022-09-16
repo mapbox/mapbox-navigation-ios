@@ -4,16 +4,12 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 class SpriteRepository {
-    // Caching the Sprite and single shield icon images.
-    let spriteCache = ImageCache()
-    // Caching the single legacy shield icon images.
-    let legacyCache = ImageCache()
-    // Caching the metadata info for Sprite.
-    let infoCache =  SpriteInfoCache()
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     var styleURI: StyleURI = .navigationDay
     fileprivate(set) var imageDownloader: ReentrantImageDownloader
     
+    let requestCache: URLCaching
+    let derivedCache: BimodalImageCache
     static let shared = SpriteRepository.init()
     
     private let requestTimeOut: TimeInterval = 10
@@ -27,23 +23,24 @@ class SpriteRepository {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
-    
+
     init() {
         sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
         imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
+        requestCache = URLDataCache()
+        derivedCache = ImageCache()
     }
     
     func updateStyle(styleURI: StyleURI?, completion: @escaping ImageDownloadCompletionHandler) {
         // If no valid StyleURI provided, use the default Day style.
         let newStyleURI = styleURI ?? self.styleURI
-        guard newStyleURI != self.styleURI || getSpriteImage() == nil else {
+        guard newStyleURI != self.styleURI || needToUpdateSprite() else {
             completion(nil)
             return
         }
         
-        spriteCache.clearMemory()
-        infoCache.clearMemory()
+        resetStyleCache()
         
         // Update the styleURI just after the Sprite memory reset. When the connection is poor, the next round of style update
         // or the representation update could use the correct ones.
@@ -51,12 +48,12 @@ class SpriteRepository {
         updateSprite(completion: completion)
     }
 
-    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil,
+    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation?,
                               completion: @escaping ImageDownloadCompletionHandler) {
         let dispatchGroup = DispatchGroup()
         var downloadError: DownloadError? = nil
 
-        if getSpriteImage() == nil {
+        if needToUpdateSprite() {
             dispatchGroup.enter()
             updateSprite() { (error) in
                 downloadError = error
@@ -64,10 +61,12 @@ class SpriteRepository {
             }
         }
         
-        dispatchGroup.enter()
-        updateLegacy(representation: representation) { (error) in
-            downloadError = error ?? downloadError
-            dispatchGroup.leave()
+        if getLegacyShield(with: representation) == nil {
+            dispatchGroup.enter()
+            updateLegacy(representation: representation) { (error) in
+                downloadError = error ?? downloadError
+                dispatchGroup.leave()
+            }
         }
         
         dispatchGroup.notify(queue: .main) {
@@ -87,13 +86,13 @@ class SpriteRepository {
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        downloadInfo(infoRequestURL, spriteKey: styleID) { (data) in
+        downloadInfo(infoRequestURL) { (data) in
             downloadError = (data == nil) ? .noImageData : downloadError
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        downloadSprite(spriteRequestURL, spriteKey: styleID) { (image) in
+        downloadImage(imageURL: spriteRequestURL) { (image) in
             downloadError = (image == nil) ? .noImageData : downloadError
             dispatchGroup.leave()
         }
@@ -103,21 +102,26 @@ class SpriteRepository {
         }
     }
     
-    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation? = nil,
+    func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation?,
                       completion: @escaping ImageDownloadCompletionHandler) {
-        guard let cacheKey = representation?.legacyCacheKey else {
-            completion(.clientError)
+        guard representation?.imageBaseURL != nil else {
+            completion(nil)
             return
         }
         
-        if let _ = legacyCache.image(forKey: cacheKey) {
-            completion(nil)
-        } else {
-            downloadLegacyShield(representation: representation) { (image) in
-                let downloadError: DownloadError? = (image == nil) ? .noImageData : nil
-                completion(downloadError)
-            }
+        guard let legacyURL = representation?.imageURL(scale: VisualInstruction.Component.scale, format: .png) else {
+            completion(.clientError)
+            return
         }
+
+        downloadImage(imageURL: legacyURL) { (image) in
+            let downloadError: DownloadError? = (image == nil) ? .noImageData : nil
+            completion(downloadError)
+        }
+    }
+    
+    func needToUpdateSprite() -> Bool {
+        return (getSpriteInfo() == nil || getSpriteImage() == nil)
     }
     
     func spriteURL(isImage: Bool, styleID: String) -> URL? {
@@ -131,51 +135,29 @@ class SpriteRepository {
         return urlComponent.url
     }
     
-    func downloadInfo(_ infoURL: URL, spriteKey: String, completion: @escaping (Data?) -> Void) {
-        let _ = imageDownloader.downloadImage(with: infoURL, completion: { [weak self] (_, data, error)  in
-            guard let strongSelf = self, let data = data else {
-                completion(nil)
-                return
-            }
-
-            guard strongSelf.infoCache.store(data, spriteKey: spriteKey) else {
+    func downloadInfo(_ infoURL: URL, completion: @escaping (Data?) -> Void) {
+        imageDownloader.download(with: infoURL, completion: { [weak self] (cachedResponse, error)  in
+            guard let strongSelf = self, let cachedResponse = cachedResponse else {
                 completion(nil)
                 return
             }
             
-            completion(data)
+            strongSelf.requestCache.store(cachedResponse, for: infoURL)
+            completion(cachedResponse.data)
         })
     }
     
-    func downloadSprite(_ spriteURL: URL, spriteKey: String, completion: @escaping (UIImage?) -> Void) {
-        let _ = imageDownloader.downloadImage(with: spriteURL, completion: { [weak self] (image, data, error) in
-            guard let strongSelf = self, let image = image else {
+    func downloadImage(imageURL: URL, completion: @escaping (UIImage?) -> Void) {
+        imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
+            guard let strongSelf = self,
+                  let cachedResponse = cachedResponse,
+                  let image = UIImage(data: cachedResponse.data, scale: VisualInstruction.Component.scale) else {
                 completion(nil)
                 return
             }
 
-            strongSelf.spriteCache.store(image, forKey: spriteKey, toDisk: false, completion: {
-                completion(image)
-            })
-        })
-    }
-    
-    func downloadLegacyShield(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (UIImage?) -> Void) {
-        guard let legacyURL = representation?.imageURL(scale: VisualInstruction.Component.scale, format: .png),
-              let cacheKey = representation?.legacyCacheKey else {
-                  completion(nil)
-                  return
-              }
-        
-        let _ = imageDownloader.downloadImage(with: legacyURL, completion: { [weak self] (image, data, error) in
-            guard let strongSelf = self, let image = image else {
-                completion(nil)
-                return
-            }
-
-            strongSelf.legacyCache.store(image, forKey: cacheKey, toDisk: false, completion: {
-                completion(image)
-            })
+            strongSelf.requestCache.store(cachedResponse, for: imageURL)
+            completion(image)
         })
     }
     
@@ -183,22 +165,23 @@ class SpriteRepository {
         guard let shield = shieldRepresentation, let styleID = styleID else { return nil }
         
         let iconLeght = max(shield.text.count, 2)
-        let shieldKey = shield.name + "-\(iconLeght)" + "-\(styleID)"
+        let shieldKey = shield.name + "-\(iconLeght)"
+        let compositeKey = shieldKey + "-\(styleID)"
         
         // Retrieve the single shield icon if it has been cached.
-        if let shieldIcon = spriteCache.image(forKey: shieldKey) {
+        if let shieldIcon = derivedCache.image(forKey: compositeKey) {
             return shieldIcon
         }
         
-        guard let spriteImage = spriteCache.image(forKey: styleID),
-              let spriteInfo = infoCache.spriteInfo(forKey: shieldKey) else { return nil }
+        guard let spriteImage = getSpriteImage(),
+              let spriteInfo = getSpriteInfo(with: shieldKey) else { return nil }
         
         let shieldRect = CGRect(x: spriteInfo.x, y: spriteInfo.y, width: spriteInfo.width, height: spriteInfo.height)
         if let croppedCGIImage = spriteImage.cgImage?.cropping(to: shieldRect) {
             
             // Cache the single shield icon if it hasn't been stored.
             let shieldIcon = UIImage(cgImage: croppedCGIImage)
-            spriteCache.store(shieldIcon, forKey: shieldKey, toDisk: false, completion: nil)
+            derivedCache.store(shieldIcon, forKey: compositeKey, toDisk: true, completion: nil)
             
             return shieldIcon
         }
@@ -206,20 +189,78 @@ class SpriteRepository {
         return nil
     }
     
-    func legacyRoadShieldImage(from cacheKey: String?) -> UIImage? {
-        return legacyCache.image(forKey: cacheKey)
+    func shieldCached(for representation: VisualInstruction.Component.ImageRepresentation?) -> Bool {
+        return (roadShieldImage(from: representation?.shield) != nil) || (getLegacyShield(with: representation) != nil)
+    }
+    
+    func getLegacyShield(with representation: VisualInstruction.Component.ImageRepresentation?) -> UIImage? {
+        guard let legacyURL = representation?.imageURL(scale: VisualInstruction.Component.scale, format: .png) else {
+            return nil
+        }
+        return getImage(with: legacyURL)
+    }
+    
+    func getImage(with url: URL) -> UIImage? {
+        guard let data = requestCache.response(for: url)?.data else {
+            return nil
+        }
+        return UIImage(data: data, scale: VisualInstruction.Component.scale)
     }
     
     func getSpriteImage() -> UIImage? {
         // Use the styleID of current repository to retrieve Sprite image.
-        guard let styleID = styleID else { return nil }
-        return spriteCache.image(forKey: styleID)
+        guard let styleID = styleID,
+              let spriteURL = spriteURL(isImage: true, styleID: styleID) else { return nil }
+        return getImage(with: spriteURL)
     }
     
-    func resetCache() {
-        spriteCache.clearMemory()
-        infoCache.clearMemory()
-        legacyCache.clearMemory()
+    func getSpriteInfo() -> Data? {
+        guard let styleID = styleID,
+              let infoURL = spriteURL(isImage: false, styleID: styleID) else { return nil }
+        return requestCache.response(for: infoURL)?.data
+    }
+    
+    func getSpriteInfo(with key: String) -> SpriteInfo? {
+        guard let data = getSpriteInfo(),
+              let spriteInfoDictionary = parseSpriteInfo(data: data) else {
+            return nil
+        }
+        
+        return spriteInfoDictionary[key]
+    }
+    
+    func parseSpriteInfo(data: Data) -> [String: SpriteInfo]? {
+        do {
+            let decodedObject = try JSONDecoder().decode([String : SpriteInfo].self, from: data)
+            return decodedObject
+        } catch {
+            Log.error("Failed to parse requested data to Sprite info due to: \(error.localizedDescription).", category: .navigationUI)
+        }
+        return nil
+    }
+    
+    func resetStyleCache() {
+        guard let styleID = styleID,
+              let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
+              let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else { return }
+        requestCache.removeCache(for: infoRequestURL)
+        requestCache.removeCache(for: spriteRequestURL)
+    }
+    
+    func resetCache(completion: CompletionHandler? = nil) {
+        requestCache.clearCache()
+        derivedCache.clearMemory()
+        derivedCache.clearDisk(completion: completion)
     }
 
+}
+
+struct SpriteInfo: Codable, Equatable {
+    var width: Double
+    var height: Double
+    var x: Double
+    var y: Double
+    var pixelRatio: Int
+    var placeholder: [Double]?
+    var visible: Bool
 }

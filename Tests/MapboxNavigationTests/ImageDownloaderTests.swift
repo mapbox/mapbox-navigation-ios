@@ -32,28 +32,27 @@ class ImageDownloaderTests: TestCase {
     }
 
     func testDownloadingAnImage() {
-        var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
         let semaphore = DispatchSemaphore(value: 0)
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
-            imageReturned = image
-            dataReturned = data
+        downloader.download(with: imageURL) { (cachedResponse, error) in
+            dataReturned = cachedResponse?.data
             errorReturned = error
             semaphore.signal()
         }
         let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
 
-        // The ImageDownloader is meant to be used with an external caching mechanism
-        let request = ImageLoadingURLProtocolSpy.pastRequestForURL(imageURL)!
-        XCTAssertEqual(request.cachePolicy, .reloadIgnoringCacheData)
-
+        guard let data = dataReturned else {
+            XCTFail("Failed to download requesr")
+            return
+        }
+        XCTAssertNil(errorReturned)
+        
+        let imageReturned = UIImage(data: data, scale: UIScreen.main.scale)
         XCTAssertNotNil(imageReturned)
         XCTAssertTrue(imageReturned!.isKind(of: UIImage.self))
-        XCTAssertNotNil(dataReturned)
-        XCTAssertNil(errorReturned)
     }
 
     func testDownloadingImageWhileAlreadyInProgressAddsCallbacksWithoutAddingAnotherRequest() {
@@ -64,12 +63,12 @@ class ImageDownloaderTests: TestCase {
         // URL loading is delayed in order to simulate conditions under which multiple requests for the same asset would be made
         ImageLoadingURLProtocolSpy.delayImageLoading()
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
+        downloader.download(with: imageURL) { (cachedResponse, error) in
             firstCallbackCalled = true
         }
         operation = downloader.activeOperation(with: imageURL)!
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
+        downloader.download(with: imageURL) { (cachedResponse, error) in
             secondCallbackCalled = true
         }
 
@@ -95,7 +94,7 @@ class ImageDownloaderTests: TestCase {
         var callbackCalled = false
         var spinCount = 0
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
+        downloader.download(with: imageURL) { (cachedResponse, error) in
             callbackCalled = true
         }
         var operation = downloader.activeOperation(with: imageURL)!
@@ -111,7 +110,7 @@ class ImageDownloaderTests: TestCase {
         callbackCalled = false
         spinCount = 0
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
+        downloader.download(with: imageURL) { (cachedResponse, error) in
             callbackCalled = true
         }
         operation = downloader.activeOperation(with: imageURL)!
@@ -126,36 +125,31 @@ class ImageDownloaderTests: TestCase {
     }
 
     func testDownloadImageWithIncorrectUrl() {
-        var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
         let imageDownloaded = expectation(description: "Image Downloaded")
 
         let incorrectUrl = URL(fileURLWithPath: "/incorrect_url")
-        downloader.downloadImage(with: incorrectUrl) { (image, data, error) in
-            imageReturned = image
-            dataReturned = data
+        downloader.download(with: incorrectUrl) { (cachedResponse, error) in
+            dataReturned = cachedResponse?.data
             errorReturned = error
             imageDownloaded.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
 
-        XCTAssertNil(imageReturned)
         XCTAssertNil(dataReturned)
         XCTAssertNotNil(errorReturned)
     }
 
     func testDownloadWith400StatusCode() {
-        var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
         let imageDownloaded = expectation(description: "Image Downloaded")
 
         let faultyUrl = URL(string: "https://www.mapbox.com")!
         ImageLoadingURLProtocolSpy.registerHttpStatusCodeError(404, for: faultyUrl)
-        downloader.downloadImage(with: faultyUrl) { (image, data, error) in
-            imageReturned = image
-            dataReturned = data
+        downloader.download(with: faultyUrl) { (cachedResponse, error) in
+            dataReturned = cachedResponse?.data
             errorReturned = error
             imageDownloaded.fulfill()
         }
@@ -164,7 +158,6 @@ class ImageDownloaderTests: TestCase {
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertTrue(operation.isFinished)
         XCTAssertFalse(operation.isExecuting)
-        XCTAssertNil(imageReturned)
         XCTAssertNil(dataReturned)
         XCTAssertNotNil(errorReturned)
         guard let downloadError = errorReturned as? DownloadError else {
@@ -175,7 +168,7 @@ class ImageDownloaderTests: TestCase {
 
     func testDownloadWithImmidiateCancel() {
         let incorrectUrl = URL(fileURLWithPath: "/incorrect_url")
-        downloader.downloadImage(with: incorrectUrl, completion: nil)
+        downloader.download(with: incorrectUrl, completion: nil)
         let operation = (downloader.activeOperation(with: incorrectUrl) as! ImageDownloadOperation)
         operation.cancel()
         
@@ -187,7 +180,7 @@ class ImageDownloaderTests: TestCase {
 
     func testDownloadWithImmidiateCancelFromAnotherThread() {
         let incorrectUrl = URL(fileURLWithPath: "/incorrect_url")
-        downloader.downloadImage(with: incorrectUrl, completion: nil)
+        downloader.download(with: incorrectUrl, completion: nil)
         let operation = (downloader.activeOperation(with: incorrectUrl) as! ImageDownloadOperation)
         DispatchQueue.global().sync {
             operation.cancel()
@@ -227,7 +220,11 @@ class ImageDownloaderTests: TestCase {
 
         for imageUrl in imageUrls {
             concurrentOvercommitQueue.async {
-                self.downloader.downloadImage(with: imageUrl) { image, data, error in
+                self.downloader.download(with: imageUrl) { cachedResponse, error in
+                    var image: UIImage? = nil
+                    if let data = cachedResponse?.data {
+                        image = UIImage(data: data, scale: UIScreen.main.scale)
+                    }
                     addDownloadedImage(image, for: imageUrl)
                     allImagesDownloaded.fulfill()
                 }

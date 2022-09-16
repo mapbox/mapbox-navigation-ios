@@ -52,7 +52,7 @@ open class WayNameLabel: StylableLabel {
      */
     private func setup(with roadName: String) {
         let shieldRepresentation = representation?.shield
-        let legacyRoadShieldImage = spriteRepository.legacyRoadShieldImage(from: representation?.legacyCacheKey)
+        let legacyRoadShieldImage = spriteRepository.getLegacyShield(with: representation)
         
         // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
         // The shield name for US state road is `circle-white` in Streets source v8 style.

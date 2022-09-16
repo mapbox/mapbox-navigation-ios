@@ -16,8 +16,18 @@ class SpriteRepositoryTests: TestCase {
 
     override func tearDown() {
         super.tearDown()
+        clearDiskCache()
         ImageLoadingURLProtocolSpy.reset()
         repository = nil
+    }
+    
+    func clearDiskCache() {
+        let semaphore = DispatchSemaphore(value: 0)
+        repository.resetCache() {
+            semaphore.signal()
+        }
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
     
     func generateRepository() {
@@ -45,17 +55,12 @@ class SpriteRepositoryTests: TestCase {
         let fakeURL = URL(string: "http://an.image.url/spriteInfo.json")!
         ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: fakeURL)
         
-        guard let styleID = repository.styleID else {
-            XCTFail("Failed to generate spriteKey.")
-            return
-        }
-        
-        let dataKey = "us-interstate-3" + "-\(styleID)"
-        XCTAssertNil(repository.infoCache.spriteInfo(forKey: dataKey))
+        let dataKey = "us-interstate-3"
+        XCTAssertNil(repository.getSpriteInfo(with: dataKey))
         
         let semaphore = DispatchSemaphore(value: 0)
         var requestedData: Data?
-        repository.downloadInfo(fakeURL, spriteKey: styleID) { (data) in
+        repository.downloadInfo(fakeURL) { (data) in
             requestedData = data
             semaphore.signal()
         }
@@ -68,57 +73,34 @@ class SpriteRepositoryTests: TestCase {
             return
         }
         
-        repository.infoCache.store(data, spriteKey: styleID)
+        guard let spriteInfoDictionary = repository.parseSpriteInfo(data: data) else {
+            XCTFail("Failed to parse Sprite Info.")
+            return
+        }
+        
         let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
-        let spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
+        let spriteInfo = spriteInfoDictionary[dataKey]
         XCTAssertEqual(expectedInfo, spriteInfo, "Failed to retrieve Sprite info from cache.")
     }
     
-    func testDownLoadingSprite() {
+    func testDownLoadingImage() {
         let fakeURL = URL(string: "http://an.image.url/sprite.png")!
         ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: fakeURL)
         XCTAssertNil(repository.getSpriteImage())
         
-        guard let styleID = repository.styleID else {
-            XCTFail("Failed to generate spriteKey.")
-            return
-        }
-        
         let semaphore = DispatchSemaphore(value: 0)
-        var sprite: UIImage?
+        var requestedImage: UIImage?
         
-        repository.downloadSprite(fakeURL, spriteKey: styleID) { (image) in
-            sprite = image
+        repository.downloadImage(imageURL: fakeURL) { (image) in
+            requestedImage = image
             semaphore.signal()
         }
 
         let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out.")
         
-        XCTAssertNotNil(sprite)
-        XCTAssertTrue((sprite?.isKind(of: UIImage.self))!)
-    }
-    
-    func testDownLoadingLegacyShield() {
-        let fakeBaseURL = "http://an.image.url/legacyShield"
-        let scale = Int(VisualInstruction.Component.scale)
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: URL(string: fakeBaseURL + "@\(scale)x.png")!)
-        
-        let semaphore = DispatchSemaphore(value: 0)
-        var legacyShield: UIImage?
-        
-        let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: URL(string: fakeBaseURL))
-        
-        repository.downloadLegacyShield(representation: representation) { (image) in
-            legacyShield = image
-            semaphore.signal()
-        }
-
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out.")
-        
-        XCTAssertNotNil(legacyShield)
-        XCTAssertTrue((legacyShield?.isKind(of: UIImage.self))!)
+        XCTAssertNotNil(requestedImage)
+        XCTAssertTrue((requestedImage?.isKind(of: UIImage.self))!)
     }
     
     func testGeneratingSpriteURL() {
@@ -141,19 +123,14 @@ class SpriteRepositoryTests: TestCase {
     
     func testUpdateRepresentation() {
         storeData()
-        guard let styleID = repository.styleID else {
-            XCTFail("Failed to form request to update SpriteRepository.")
-            return
-        }
         
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: repository.baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
-        let cacheKey = representation.legacyCacheKey
-        let dataKey = "us-interstate-3" + "-\(styleID)"
+        let dataKey = "us-interstate-3"
         
-        XCTAssertNil(repository.infoCache.spriteInfo(forKey:dataKey))
+        XCTAssertNil(repository.getSpriteInfo())
         XCTAssertNil(repository.getSpriteImage())
-        XCTAssertNil(repository.legacyCache.image(forKey: cacheKey))
+        XCTAssertNil(repository.getLegacyShield(with: representation))
         
         let expectation = expectation(description: "Image Downloaded.")
         repository.updateRepresentation(for: representation) { _ in
@@ -161,7 +138,7 @@ class SpriteRepositoryTests: TestCase {
         }
         wait(for: [expectation], timeout: 3.0)
         
-        let spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
+        let spriteInfo = repository.getSpriteInfo(with: dataKey)
         let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         
@@ -169,7 +146,7 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertNotNil(sprite)
         XCTAssertTrue((sprite?.isKind(of: UIImage.self))!, "Failed to update the Sprite.")
         
-        let legacyShield = repository.legacyRoadShieldImage(from: cacheKey)
+        let legacyShield = repository.getLegacyShield(with: representation)
         XCTAssertNotNil(legacyShield)
         XCTAssertTrue((legacyShield?.isKind(of: UIImage.self))!, "Failed to download the legacy shield.")
         
@@ -192,21 +169,17 @@ class SpriteRepositoryTests: TestCase {
     
     func testPartiallySpriteUpdate() {
         storeData()
-        guard let styleID = repository.styleID else {
-            XCTFail("Failed to form request to update SpriteRepository.")
-            return
-        }
         
         // Update representation of the repository and fully downloaded Sprite image and metadata.
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
-        var dataKey = "us-interstate-3" + "-\(styleID)"
+        let dataKey = "us-interstate-3"
         
         var downloadExpectation = expectation(description: "Representation updated.")
         repository.updateRepresentation(for: representation) { _ in
             downloadExpectation.fulfill()
         }
         wait(for: [downloadExpectation], timeout: 3.0)
-        var spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
+        var spriteInfo = repository.getSpriteInfo(with: dataKey)
         let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         
@@ -222,14 +195,13 @@ class SpriteRepositoryTests: TestCase {
         
         // Downloaded Sprite metadata without Sprite image to test the shield icon retrieval under poor network condition.
         downloadExpectation = expectation(description: "Sprite info updated.")
-        repository.downloadInfo(infoRequestURL, spriteKey: newStyleID) { (_) in
+        repository.downloadInfo(infoRequestURL) { (_) in
             downloadExpectation.fulfill()
         }
         wait(for: [downloadExpectation], timeout: 3.0)
         
         // The Sprite info should be ready for current Sprite repository without matched Sprite image.
-        dataKey = "us-interstate-3" + "-\(newStyleID)"
-        spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
+        spriteInfo = repository.getSpriteInfo(with: dataKey)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         XCTAssertNil(repository.getSpriteImage(), "Failed to match the Sprite image with the spriteKey.")
     }

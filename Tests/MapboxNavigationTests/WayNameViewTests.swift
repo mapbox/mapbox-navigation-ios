@@ -25,8 +25,14 @@ class WayNameViewTests: TestCase {
 
     override func tearDown() {
         super.tearDown()
+        let semaphore = DispatchSemaphore(value: 0)
+        wayNameView.label.spriteRepository.resetCache() {
+            semaphore.signal()
+        }
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         ImageLoadingURLProtocolSpy.reset()
-        wayNameView.label.spriteRepository.resetCache()
         wayNameView.label.representation = nil
     }
     

@@ -106,11 +106,9 @@ class InstructionPresenter {
             guard let key = component?.cacheKey else { return false }
             switch component {
             case .image(let representation, _):
-                let image = spriteRepository.roadShieldImage(from: representation.shield)
-                ?? spriteRepository.legacyCache.image(forKey: key)
-                return image != nil
+                return spriteRepository.shieldCached(for: representation)
             default:
-                return spriteRepository.legacyCache.image(forKey: key) != nil
+                return spriteRepository.derivedCache.image(forKey: key) != nil
             }
         }
         
@@ -180,7 +178,7 @@ class InstructionPresenter {
             // The shield name for US state road is `circle-white` in Streets source v8 style.
             // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
             if shield.name == "circle-white" {
-                if let legacyIcon = repository.legacyCache.image(forKey: representation.legacyCacheKey) {
+                if let legacyIcon = repository.getLegacyShield(with: representation) {
                     return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
                 } else if representation.legacyCacheKey != nil {
                     spriteRepository.updateRepresentation(for: representation) { (error) in
@@ -195,7 +193,7 @@ class InstructionPresenter {
             }
         }
 
-        if let legacyIcon = repository.legacyCache.image(forKey: representation.legacyCacheKey) {
+        if let legacyIcon = repository.getLegacyShield(with: representation) {
             return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
         }
 
@@ -243,7 +241,7 @@ class InstructionPresenter {
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = spriteRepository.legacyCache.image(forKey: key) {
+        if let image = spriteRepository.derivedCache.image(forKey: key) {
             attachment.image = image
         } else {
             let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
@@ -265,7 +263,7 @@ class InstructionPresenter {
             genericRouteShield.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
-            spriteRepository.legacyCache.store(image, forKey: key, toDisk: false, completion: nil)
+            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
             attachment.image = image
         }
         
@@ -285,7 +283,7 @@ class InstructionPresenter {
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = spriteRepository.legacyCache.image(forKey: key) {
+        if let image = spriteRepository.derivedCache.image(forKey: key) {
             attachment.image = image
         } else {
             let exitView = ExitView(pointSize: dataSource.font.pointSize,
@@ -308,7 +306,7 @@ class InstructionPresenter {
             exitView.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: exitView) else { return nil }
-            spriteRepository.legacyCache.store(image, forKey: key, toDisk: false, completion: nil)
+            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
             attachment.image = image
         }
         

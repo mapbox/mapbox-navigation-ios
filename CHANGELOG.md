@@ -22,6 +22,7 @@
 ### Banners and guidance instructions
 
 * Added replacement for `VisualInstruction.maneuverImageSet(side:)` method to generate a maneuver image on iOS 13 and above. ([#4161](https://github.com/mapbox/mapbox-navigation-ios/pull/4161))
+* Road shield images are now cached and re-used across multiple application sessions. ([#3930](https://github.com/mapbox/mapbox-navigation-ios/pull/3930))
 
 ### Other changes
 
