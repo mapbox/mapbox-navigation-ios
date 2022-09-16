@@ -412,7 +412,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.turnstile.rawValue))
             eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile)
         }
-        wait(for: [turnstileFlushedExpectation], timeout: 1)
+        wait(for: [turnstileFlushedExpectation], timeout: 2)
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
