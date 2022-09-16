@@ -8,7 +8,7 @@
 
 ### Other changes
 
-* Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:cornerRadius)` to be able to provide button type and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
+* Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:imageEdgeInsets:cornerRadius)` to be able to provide button type, button image edge insets and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060), [#4157](https://github.com/mapbox/mapbox-navigation-ios/pull/4157))
 * `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
 
 ## v2.8.0
