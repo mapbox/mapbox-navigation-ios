@@ -25,7 +25,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var customTraitCollection: UITraitCollection?
 
     var spriteRepository: SpriteRepository = .shared
-    
+
     var instruction: VisualInstruction? {
         didSet {
             updateLabelAttributedText()
@@ -49,7 +49,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                                              spriteRepository: spriteRepository,
                                              traitCollection: customTraitCollection ?? traitCollection,
                                              downloadCompletion: update)
-        
+        styleID = presenter.spriteRepository.styleID
         let attributed = presenter.attributedText()
         attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }

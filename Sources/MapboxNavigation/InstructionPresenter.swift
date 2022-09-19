@@ -45,7 +45,7 @@ class InstructionPresenter {
     
     let onShieldDownload: ShieldDownloadCompletion?
 
-    private let spriteRepository: SpriteRepository
+    let spriteRepository: SpriteRepository
     
     private let traitCollection: UITraitCollection
     
