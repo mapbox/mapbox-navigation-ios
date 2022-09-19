@@ -203,6 +203,20 @@
 * Update method deprecation for `HistoryRecording` protocol. Static methods are now preferred over instance ones. ([#3960](https://github.com/mapbox/mapbox-navigation-ios/pull/3960))
 * Fixed an issue where `UserPuckCourseView` is drawn in incorrect position if its location is outside of the bounds of `MapView`. ([#3988](https://github.com/mapbox/mapbox-navigation-ios/pull/3988))
 
+## v2.5.3
+
+### Packaging
+
+* Fixed an issue where dependencies couldn't be resolved when using Swift Package Manager and Xcode 13.2.1. ([#4054](https://github.com/mapbox/mapbox-navigation-ios/pull/4054))
+* MapboxNavigation now requires [MapboxMaps v10.5._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.1). ([#4054](https://github.com/mapbox/mapbox-navigation-ios/pull/4054))
+* MapboxCoreNavigation now requires [MapboxDirections v2.6._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0). ([#4054](https://github.com/mapbox/mapbox-navigation-ios/pull/4054))
+
+## v2.5.2
+
+### Other changes
+
+* Fixed an issue when rerouting to the route which does not originate on current user location, route line and camera jumped to route origin. ([#3943](https://github.com/mapbox/mapbox-navigation-ios/pull/3943))
+
 ## v2.5.1
 
 ### Packaging
