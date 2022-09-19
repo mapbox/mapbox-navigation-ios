@@ -889,7 +889,13 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         primaryManeuver.instructionVariants = [text]
         
         // Add maneuver arrow
-        primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
+        if #available(iOS 13.0, *) {
+            let userInterfaceStyle = traitCollection.userInterfaceStyle
+            primaryManeuver.symbolImage = visualInstruction.primaryInstruction.maneuverImage(side: visualInstruction.drivingSide,
+                                                                                             userInterfaceStyle: userInterfaceStyle)
+        } else {
+            primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
+        }
         
         // Estimating the width of Apple's maneuver view
         let bounds: () -> (CGRect) = {
