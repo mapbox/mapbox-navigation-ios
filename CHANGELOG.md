@@ -272,6 +272,15 @@
 * During turn-by-turn navigation, incidents along the route are now refreshed periodically along with traffic congestion.
 * When the user passes a named toll collection point, the `TollCollection` object obtained through the `Notification.Name.electronicHorizonDidPassRoadObject` notification now has the `TollCollection.name` property set.
 
+## v2.4.2
+
+### Packaging
+
+* Fixed an issue where dependencies couldn't be resolved when using Swift Package Manager and Xcode 13.2.1. ([#4048](https://github.com/mapbox/mapbox-navigation-ios/pull/4048))
+* MapboxNavigation now requires [MapboxMaps v10.5._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.1). ([#4048](https://github.com/mapbox/mapbox-navigation-ios/pull/4048))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v94._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/94.0.5). ([#4048](https://github.com/mapbox/mapbox-navigation-ios/pull/4048))
+* MapboxCoreNavigation now requires [MapboxDirections v2.6._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0). ([#4048](https://github.com/mapbox/mapbox-navigation-ios/pull/4048))
+
 ## v2.4.1
 
 * Fixed an issue where the current road name, speed limit, and compass were missing from the map in CarPlay’s navigating activity. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
