@@ -75,7 +75,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      - parameter service: The navigation service reporting an update.
      - parameter coincideRoute: A route taken.
      */
-    func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route)
+    func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route)
     
     /**
      Called when navigation service has detected user taking an alternative route.
@@ -336,7 +336,7 @@ public extension NavigationServiceDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
     }
     

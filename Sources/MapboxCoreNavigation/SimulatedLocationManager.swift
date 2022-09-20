@@ -66,7 +66,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         restartTimer()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidSwitchToCoincideOnlineRoute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     

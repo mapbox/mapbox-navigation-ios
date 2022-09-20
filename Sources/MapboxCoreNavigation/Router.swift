@@ -23,6 +23,8 @@ public struct IndexedRouteResponse {
     public let routeResponse: RouteResponse
     /**
      The index of the selected route within the `routeResponse`.
+     
+     Updating this value after turn-by-turn navigation has started will have no effect. To actually update the route, use `Router.updateRoute(with:routeOptions:completion:)` method from corresponding `router`.
      */
     public var routeIndex: Int
     
@@ -106,7 +108,7 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
-    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
@@ -121,7 +123,7 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
-    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
@@ -135,7 +137,7 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
-    init(with indexedRouteResponse: IndexedRouteResponse,
+    init(indexedRouteResponse: IndexedRouteResponse,
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource)
     

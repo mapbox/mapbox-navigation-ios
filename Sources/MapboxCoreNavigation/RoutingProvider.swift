@@ -11,7 +11,7 @@ public protocol RoutingProvider {
     typealias IndexedRouteResponseCompletionHandler = (_ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
     
     /**
-     Routing caluclation method.
+     Begins asynchronously calculating routes using the given options and delivers the results to a closure.
      
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
@@ -21,7 +21,7 @@ public protocol RoutingProvider {
                                             completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest?
     
     /**
-     Routing caluclation method.
+     Begins asynchronously calculating routes using the given options and delivers the results to a closure.
      
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
@@ -32,7 +32,7 @@ public protocol RoutingProvider {
                                             completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
     
     /**
-     Map matching calculation method.
+     Begins asynchronously calculating matches using the given options and delivers the results to a closure.
      
      - parameter options: A `MatchOptions` object specifying the requirements for the resulting matches.
      - parameter completionHandler: The closure (block) to call with the resulting matches. This closure is executed on the application’s main thread.
@@ -42,7 +42,7 @@ public protocol RoutingProvider {
                                             completionHandler: @escaping Directions.MatchCompletionHandler) -> NavigationProviderRequest?
     
     /**
-     Route refreshing method.
+     Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg along the route.
      
      - parameter indexedRouteResponse: The `RouteResponse` and selected `routeIndex` in it to be refreshed.
      - parameter fromLegAtIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted, the entire route is refreshed.

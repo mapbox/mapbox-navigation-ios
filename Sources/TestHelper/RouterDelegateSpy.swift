@@ -126,7 +126,7 @@ public final class RouterDelegateSpy: RouterDelegate {
         onDidFailToTakeAlternativeRoute?(location)
     }
     
-    public func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    public func router(_ router: Router, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         onDidSwitchToCoincideRoute?(coincideRoute)
     }
 }

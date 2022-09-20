@@ -439,7 +439,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(with: indexedRouteResponse,
+        _router = routerType.init(indexedRouteResponse: indexedRouteResponse,
                                   customRoutingProvider: customRoutingProvider,
                                   dataSource: self)
         let options = indexedRouteResponse.validatedRouteOptions
@@ -723,11 +723,11 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, didFailToUpdateAlternatives: error)
     }
     
-    public func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    public func router(_ router: Router, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         //update the route progress model of the simulated location manager, if applicable.
         simulatedLocationSource?.route = router.route
         
-        delegate?.navigationService(self, didSwitchToCoincideOnlineRoute: coincideRoute)
+        delegate?.navigationService(self, didSwitchToCoincidentOnlineRoute: coincideRoute)
     }
     
     public func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {

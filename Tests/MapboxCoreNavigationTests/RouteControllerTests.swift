@@ -30,7 +30,9 @@ class RouteControllerTests: TestCase {
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
-        let routeController = RouteController(with: routeResponse, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: self)
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
         locationManager.delegate = routeController
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
@@ -82,7 +84,7 @@ class RouteControllerTests: TestCase {
             return
         }
         
-        let routeController = RouteController(with: routeResponse,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
 
@@ -174,7 +176,7 @@ class RouteControllerTests: TestCase {
             }
         }
         
-        let routeController = RouteController(with: routeResponse,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
@@ -209,7 +211,7 @@ class RouteControllerTests: TestCase {
             alternativesExpectation.fulfill()
         }
         
-        let routeController = RouteController(with: routeResponse,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
@@ -249,7 +251,7 @@ class RouteControllerTests: TestCase {
         
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0)
-        let routeController = RouteController(with: indexedRouteResponse,
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: routingProviderStub,
                                               dataSource: self)
         
@@ -286,7 +288,7 @@ class RouteControllerTests: TestCase {
         
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0)
-        let routeController = RouteController(with: indexedRouteResponse,
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: nil,
                                               dataSource: self)
         
@@ -313,13 +315,13 @@ class RouteControllerTests: TestCase {
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
                                                         routeIndex: 0,
                                                         responseOrigin: .onboard)
-        let routeController = RouteController(with: indexedRouteResponse,
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
         
-        expectation(forNotification: .routeControllerDidSwitchToCoincideOnlineRoute, object: nil)
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
         
         let routeOptions = indexedRouteResponse.validatedRouteOptions
         let encoder = JSONEncoder()

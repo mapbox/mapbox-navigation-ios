@@ -611,7 +611,9 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(with: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            let routeController = RouteController(indexedRouteResponse: initialRouteResponse,
+                                                  customRoutingProvider: MapboxRoutingProvider(.offline),
+                                                  dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -623,7 +625,9 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(with: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            _ = RouteController(indexedRouteResponse: initialRouteResponse,
+                                customRoutingProvider: MapboxRoutingProvider(.offline),
+                                dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 

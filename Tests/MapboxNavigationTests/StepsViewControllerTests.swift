@@ -20,8 +20,8 @@ class StepsViewControllerTests: TestCase {
         dependencies = {
             let dataSource = RouteControllerDataSourceFake()
 
-            let routeController = RouteController(with: IndexedRouteResponse(routeResponse: response,
-                                                                             routeIndex: 0),
+            let routeController = RouteController(indexedRouteResponse: IndexedRouteResponse(routeResponse: response,
+                                                                                             routeIndex: 0),
                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                   dataSource: dataSource)
 

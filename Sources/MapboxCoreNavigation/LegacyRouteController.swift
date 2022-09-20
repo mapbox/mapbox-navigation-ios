@@ -246,19 +246,19 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
-    @available(*, deprecated, renamed: "init(with:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
                                      customRoutingProvider: RoutingProvider? = nil,
                                      dataSource source: RouterDataSource) {
-        self.init(with: .init(routeResponse: routeResponse,
-                              routeIndex: routeIndex),
+        self.init(indexedRouteResponse: .init(routeResponse: routeResponse,
+                                              routeIndex: routeIndex),
                   customRoutingProvider: customRoutingProvider,
                   dataSource: source)
     }
     
-    required public init(with indexedRouteResponse: IndexedRouteResponse,
+    required public init(indexedRouteResponse: IndexedRouteResponse,
                          customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
         self.customRoutingProvider = customRoutingProvider

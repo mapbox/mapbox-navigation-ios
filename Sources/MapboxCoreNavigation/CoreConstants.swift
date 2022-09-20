@@ -211,9 +211,9 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` has switched to coincide online version of the current route.
      
-     The user info dictionary contains `RouteController.NotificationUserInfoKey.coincideRouteKey`.
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.coincidentRouteKey`.
      */
-    static let routeControllerDidSwitchToCoincideOnlineRoute: Notification.Name = .init(rawValue: "RouteControllerDidSwitchToCoincideOnlineRoute")
+    static let routeControllerDidSwitchToCoincidentOnlineRoute: Notification.Name = .init(rawValue: "routeControllerDidSwitchToCoincidentOnlineRoute")
     
     /**
      Posted when `RouteController` has detected user taking an alternative route and before updated the main route.
@@ -389,9 +389,9 @@ extension RouteController {
         public static let alternativesErrorKey: NotificationUserInfoKey = .init(rawValue: "alternativesError")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.routeControllerDidSwitchToCoincideOnlineRoute` notification. The corresponding value is a `Route` object representing the selected route.
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidSwitchToCoincidentOnlineRoute` notification. The corresponding value is a `Route` object representing the selected route.
          */
-        public static let coincideRouteKey: NotificationUserInfoKey = .init(rawValue: "coincideRoute")
+        public static let coincidentRouteKey: NotificationUserInfoKey = .init(rawValue: "coincideRoute")
     }
 }
 

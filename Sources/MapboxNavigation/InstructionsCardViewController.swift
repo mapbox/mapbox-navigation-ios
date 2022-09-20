@@ -437,7 +437,7 @@ extension InstructionsCardViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService,
-                                  didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+                                  didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         currentStepIndex = nil
         routeProgress = service.routeProgress
         

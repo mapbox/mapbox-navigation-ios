@@ -149,7 +149,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter navigationViewController: The navigation view controller reporting an update.
      - parameter coincideRoute: A route taken.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSwitchToCoincideOnlineRoute coincideRoute: Route)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSwitchToCoincidentOnlineRoute coincideRoute: Route)
     
     /**
      Called when navigation view controller has detected user taking an alternative route.
@@ -397,7 +397,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     

@@ -403,7 +403,7 @@ extension TopBannerViewController: NavigationComponent {
         handleReroute(service, proactive: proactive)
     }
     
-    public func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    public func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         handleReroute(service, proactive: false)
     }
     

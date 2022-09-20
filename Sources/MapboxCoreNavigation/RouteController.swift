@@ -637,13 +637,13 @@ open class RouteController: NSObject {
                                      options: RouteOptions,
                                      customRoutingProvider: RoutingProvider? = nil,
                                      dataSource source: RouterDataSource) {
-        self.init(with: .init(routeResponse: routeResponse,
-                              routeIndex: routeIndex),
+        self.init(indexedRouteResponse: .init(routeResponse: routeResponse,
+                                              routeIndex: routeIndex),
                   customRoutingProvider: customRoutingProvider,
                   dataSource: source)
     }
     
-    required public init(with indexedRouteResponse: IndexedRouteResponse,
+    required public init(indexedRouteResponse: IndexedRouteResponse,
                          customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
         
@@ -1105,11 +1105,11 @@ extension RouteController {
             self.indexedRouteResponse = indexedRouteResponse
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-            userInfo[.coincideRouteKey] = newRoute
-            NotificationCenter.default.post(name: .routeControllerDidSwitchToCoincideOnlineRoute,
+            userInfo[.coincidentRouteKey] = newRoute
+            NotificationCenter.default.post(name: .routeControllerDidSwitchToCoincidentOnlineRoute,
                                             object: self,
                                             userInfo: userInfo)
-            self.delegate?.router(self, didSwitchToCoincideOnlineRoute: newRoute)
+            self.delegate?.router(self, didSwitchToCoincidentOnlineRoute: newRoute)
         }
     }
 }

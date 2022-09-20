@@ -1109,11 +1109,11 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
     }
     
-    public func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    public func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         for component in navigationComponents {
-            component.navigationService(service, didSwitchToCoincideOnlineRoute: coincideRoute)
+            component.navigationService(service, didSwitchToCoincidentOnlineRoute: coincideRoute)
         }
-        delegate?.navigationViewController(self, didSwitchToCoincideOnlineRoute: coincideRoute)
+        delegate?.navigationViewController(self, didSwitchToCoincidentOnlineRoute: coincideRoute)
     }
     
     public func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {

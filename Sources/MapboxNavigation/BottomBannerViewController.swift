@@ -161,7 +161,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         refreshETA()
     }
     
-    public func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+    public func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         refreshETA()
     }
     

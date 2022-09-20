@@ -67,7 +67,7 @@ extension NavigationMapView {
             handleReroute()
         }
         
-        func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: Route) {
+        func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
             handleReroute()
         }
         
