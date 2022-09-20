@@ -8,7 +8,7 @@
 * MapboxCoreNavigation now requires [MapboxNavigationNative v115._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/115.0.0). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 * MapboxCoreNavigation now requires [MapboxDirections v2.7.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.7.0-rc.1). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 
-### Location Tracking
+### Location tracking
 
 * Added `customActivityType` to `MapboxNavigationService` initialization to allow overriding default activity type for location updates during this navigation session. Changed default activity type from `automotiveNavigation` to `otherNavigation` for `.automobile` and `.automobileAvoidingTraffic` profiles.  ([#4068](https://github.com/mapbox/mapbox-navigation-ios/pull/4068))
 * Added `NavigationSettings.navigatorPredictionInterval` to control how far ahead Navigator will predict user current position. ([#4072](https://github.com/mapbox/mapbox-navigation-ios/pull/4072))
@@ -25,7 +25,7 @@
 * Fixed an issue where some roads were shown as restricted on the route line even if public access is allowed for “local traffic only”. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where the `NavigationMapView.traversedRouteColor` property had no effect on the traversed part of the route line. ([#4106](https://github.com/mapbox/mapbox-navigation-ios/pull/4106))
 
-### Guidance Instructions
+### Guidance instructions
 
 * Fixed an issue where the top banner and current road name label represented Mexican state highways with generic shields. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
 * Fixed an issue where the route would instruct the user to make a “U-turn” toward the passenger side wherever the user should actually make two successive turns toward the passenger side or take an exit ramp that curves 180°. ([#4085](https://github.com/mapbox/mapbox-navigation-ios/pull/4085))
