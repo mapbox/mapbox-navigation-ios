@@ -108,6 +108,33 @@ extension VisualInstruction {
         return CPImageSet(lightContentImage: maneuverIcons[1], darkContentImage: maneuverIcons[0])
     }
     
+    /**
+     Returns a `UIImage` representing the maneuver.
+     
+     - parameter side: Driving side of the road cars and traffic flow.
+     - parameter userInterfaceStyle: The `UIUserInterfaceStyle` that the maneuver will be displayed in.
+     
+     - returns: A `UIImage` representing the maneuver.
+     */
+    @available(iOS 13.0, *)
+    func maneuverImage(side: DrivingSide, userInterfaceStyle: UIUserInterfaceStyle) -> UIImage? {
+        let color: UIColor
+        switch userInterfaceStyle {
+        case .unspecified:
+            color = .black
+        case .light:
+            color = .black
+        case .dark:
+            color = .white
+        @unknown default:
+            Log.error("Error occured with unknown UIUserInterfaceStyle.", category: .navigationUI)
+            return nil
+        }
+        return maneuverViewImage(drivingSide: side,
+                                 color: color,
+                                 size: CGSize(width: 30, height: 30))
+    }
+    
     /// Returns whether the `VisualInstruction`’s maneuver image should be flipped according to the driving side.
     public func shouldFlipImage(side: DrivingSide) -> Bool {
         switch maneuverType ?? .turn {
