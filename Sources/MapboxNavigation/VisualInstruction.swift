@@ -117,8 +117,8 @@ extension VisualInstruction {
      - returns: A `UIImage` representing the maneuver.
      */
     @available(iOS 13.0, *)
-    public func maneuverImage(side: DrivingSide, userInterfaceStyle: UIUserInterfaceStyle) -> UIImage? {
-        var color: UIColor
+    func maneuverImage(side: DrivingSide, userInterfaceStyle: UIUserInterfaceStyle) -> UIImage? {
+        let color: UIColor
         switch userInterfaceStyle {
         case .unspecified:
             color = .black

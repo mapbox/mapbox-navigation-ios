@@ -6,9 +6,9 @@
 
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
 
-### Guidance Instructions
+### Banners and guidance instructions
 
-* Added `VisualInstruction.maneuverImage(side:userInterfaceStyle:)` to generate maneuver image for iOS 13 and above versions. ([#4161](https://github.com/mapbox/mapbox-navigation-ios/pull/4161))
+* Added replacement for `VisualInstruction.maneuverImageSet(side:)` method to generate a maneuver image on iOS 13 and above. ([#4161](https://github.com/mapbox/mapbox-navigation-ios/pull/4161))
 
 ### Other changes
 
