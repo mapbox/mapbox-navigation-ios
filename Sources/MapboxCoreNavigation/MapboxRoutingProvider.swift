@@ -368,7 +368,7 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile,
-                                                 currentRouteGeometryIndex: currentRouteShapeIndex as? NSNumber)
+                                                 currentRouteGeometryIndex: currentRouteShapeIndex.map { NSNumber(value: $0) })
 
         requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
