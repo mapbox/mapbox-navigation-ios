@@ -436,8 +436,7 @@ class InstructionBannerTest: TestCase {
     
     func cacheSprite(for styleURI: StyleURI = .navigationDay) {
         let shieldImage: ShieldImage = (styleURI == .navigationDay) ? .shieldDay : .shieldNight
-        spriteRepository.styleURI = styleURI
-        guard let styleID = spriteRepository.styleID,
+        guard let styleID = spriteRepository.styleID(for: styleURI),
               let spriteRequestURL = spriteRepository.spriteURL(isImage: true, styleID: styleID),
               let infoRequestURL = spriteRepository.spriteURL(isImage: false, styleID: styleID),
               let spriteData = shieldImage.image.pngData() else {

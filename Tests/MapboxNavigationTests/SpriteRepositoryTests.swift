@@ -39,7 +39,7 @@ class SpriteRepositoryTests: TestCase {
     
     func storeData() {
         let scale = Int(VisualInstruction.Component.scale)
-        guard let styleID = repository.styleID,
+        guard let styleID = repository.styleID(for: .navigationDay),
               let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
               let infoRequestURL = repository.spriteURL(isImage: false, styleID: styleID),
               let legacyRequestURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
@@ -56,7 +56,7 @@ class SpriteRepositoryTests: TestCase {
         ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: fakeURL)
         
         let dataKey = "us-interstate-3"
-        XCTAssertNil(repository.getSpriteInfo(with: dataKey))
+        XCTAssertNil(repository.getSpriteInfo(styleURI: .navigationDay, with: dataKey))
         
         let semaphore = DispatchSemaphore(value: 0)
         var requestedData: Data?
@@ -86,7 +86,7 @@ class SpriteRepositoryTests: TestCase {
     func testDownLoadingImage() {
         let fakeURL = URL(string: "http://an.image.url/sprite.png")!
         ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: fakeURL)
-        XCTAssertNil(repository.getSpriteImage())
+        XCTAssertNil(repository.getSpriteImage(styleURI: .navigationDay))
         
         let semaphore = DispatchSemaphore(value: 0)
         var requestedImage: UIImage?
@@ -104,7 +104,7 @@ class SpriteRepositoryTests: TestCase {
     }
     
     func testGeneratingSpriteURL() {
-        guard let styleID = repository.styleID,
+        guard let styleID = repository.styleID(for: .navigationDay),
               let accessToken = NavigationSettings.shared.directions.credentials.accessToken else {
             XCTFail("Failed to form request URL from SpriteRepository.")
             return
@@ -128,8 +128,8 @@ class SpriteRepositoryTests: TestCase {
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
         let dataKey = "us-interstate-3"
         
-        XCTAssertNil(repository.getSpriteInfo())
-        XCTAssertNil(repository.getSpriteImage())
+        XCTAssertNil(repository.getSpriteInfo(styleURI: .navigationDay))
+        XCTAssertNil(repository.getSpriteImage(styleURI: .navigationDay))
         XCTAssertNil(repository.getLegacyShield(with: representation))
         
         let expectation = expectation(description: "Image Downloaded.")
@@ -138,11 +138,11 @@ class SpriteRepositoryTests: TestCase {
         }
         wait(for: [expectation], timeout: 3.0)
         
-        let spriteInfo = repository.getSpriteInfo(with: dataKey)
+        let spriteInfo = repository.getSpriteInfo(styleURI: .navigationDay, with: dataKey)
         let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         
-        let sprite = repository.getSpriteImage()
+        let sprite = repository.getSpriteImage(styleURI: .navigationDay)
         XCTAssertNotNil(sprite)
         XCTAssertTrue((sprite?.isKind(of: UIImage.self))!, "Failed to update the Sprite.")
         
@@ -164,7 +164,8 @@ class SpriteRepositoryTests: TestCase {
         }
         wait(for: [expectation], timeout: 3.0)
         
-        XCTAssertEqual(styleURI, repository.styleURI, "Failed to update the styleURI.")
+        let defaultStyle = repository.userInterfaceIdiomStyles[.phone]
+        XCTAssertEqual(styleURI, defaultStyle, "Failed to update the styleURI.")
     }
     
     func testPartiallySpriteUpdate() {
@@ -179,14 +180,13 @@ class SpriteRepositoryTests: TestCase {
             downloadExpectation.fulfill()
         }
         wait(for: [downloadExpectation], timeout: 3.0)
-        var spriteInfo = repository.getSpriteInfo(with: dataKey)
+        var spriteInfo = repository.getSpriteInfo(styleURI: .navigationDay, with: dataKey)
         let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         
         // Partially update style of the repository after the representation update.
         let newStyleURI = StyleURI.navigationNight
-        repository.styleURI = newStyleURI
-        guard let newStyleID = repository.styleID,
+        guard let newStyleID = repository.styleID(for: newStyleURI),
               let infoRequestURL = repository.spriteURL(isImage: false, styleID: newStyleID) else {
                   XCTFail("Failed to form request to update SpriteRepository.")
                   return
@@ -201,9 +201,9 @@ class SpriteRepositoryTests: TestCase {
         wait(for: [downloadExpectation], timeout: 3.0)
         
         // The Sprite info should be ready for current Sprite repository without matched Sprite image.
-        spriteInfo = repository.getSpriteInfo(with: dataKey)
+        spriteInfo = repository.getSpriteInfo(styleURI: newStyleURI, with: dataKey)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
-        XCTAssertNil(repository.getSpriteImage(), "Failed to match the Sprite image with the spriteKey.")
+        XCTAssertNil(repository.getSpriteImage(styleURI: newStyleURI), "Failed to match the Sprite image with the spriteKey.")
     }
 
 }

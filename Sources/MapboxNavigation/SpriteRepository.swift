@@ -5,7 +5,7 @@ import MapboxDirections
 
 class SpriteRepository {
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
-    var styleURI: StyleURI = .navigationDay
+    let defaultStyleURI: StyleURI = .navigationDay
     fileprivate(set) var imageDownloader: ReentrantImageDownloader
     
     let requestCache: URLCaching
@@ -14,15 +14,13 @@ class SpriteRepository {
     
     private let requestTimeOut: TimeInterval = 10
     
-    var styleID: String? {
-        styleURI.rawValue.components(separatedBy: "styles")[safe: 1]
-    }
-    
     var sessionConfiguration: URLSessionConfiguration {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
+    
+    var userInterfaceIdiomStyles = [UIUserInterfaceIdiom: StyleURI]()
 
     init() {
         sessionConfiguration = URLSessionConfiguration.default
@@ -32,30 +30,47 @@ class SpriteRepository {
         derivedCache = ImageCache()
     }
     
-    func updateStyle(styleURI: StyleURI?, completion: @escaping ImageDownloadCompletionHandler) {
+    func updateStyle(styleURI: StyleURI?,
+                     idiom: UIUserInterfaceIdiom = .phone,
+                     completion: @escaping ImageDownloadCompletionHandler) {
         // If no valid StyleURI provided, use the default Day style.
-        let newStyleURI = styleURI ?? self.styleURI
-        guard newStyleURI != self.styleURI || needToUpdateSprite() else {
+        let newStyleURI = styleURI ?? defaultStyleURI
+        
+        if !userInterfaceIdiomStyles.values.contains(newStyleURI) {
+            updateUserInterfaceIdiomStyles(styleURI: newStyleURI, idiom: idiom)
+            updateSprite(styleURI: newStyleURI, completion: completion)
+        } else {
+            updateUserInterfaceIdiomStyles(styleURI: newStyleURI, idiom: idiom)
             completion(nil)
             return
         }
-        
-        resetStyleCache()
-        
-        // Update the styleURI just after the Sprite memory reset. When the connection is poor, the next round of style update
-        // or the representation update could use the correct ones.
-        self.styleURI = newStyleURI
-        updateSprite(completion: completion)
+    }
+    
+    func updateUserInterfaceIdiomStyles(styleURI: StyleURI, idiom: UIUserInterfaceIdiom) {
+        if let previousStyleURI = userInterfaceIdiomStyles[idiom],
+           previousStyleURI != styleURI {
+            userInterfaceIdiomStyles[idiom] = styleURI
+            if !userInterfaceIdiomStyles.values.contains(previousStyleURI) {
+                removeStyleCacheFor(previousStyleURI)
+            }
+        } else {
+            userInterfaceIdiomStyles[idiom] = styleURI
+        }
     }
 
     func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation?,
+                              idiom: UIUserInterfaceIdiom = .phone,
                               completion: @escaping ImageDownloadCompletionHandler) {
         let dispatchGroup = DispatchGroup()
         var downloadError: DownloadError? = nil
 
-        if needToUpdateSprite() {
+        if userInterfaceIdiomStyles[idiom] == nil {
+            userInterfaceIdiomStyles[idiom] = userInterfaceIdiomStyles.values.first ?? defaultStyleURI
+        }
+        
+        if let styleURI = userInterfaceIdiomStyles[idiom], needToUpdateSprite(styleURI: styleURI) {
             dispatchGroup.enter()
-            updateSprite() { (error) in
+            updateSprite(styleURI: styleURI) { (error) in
                 downloadError = error
                 dispatchGroup.leave()
             }
@@ -74,8 +89,8 @@ class SpriteRepository {
         }
     }
     
-    func updateSprite(completion: @escaping ImageDownloadCompletionHandler) {
-        guard let styleID = styleID,
+    func updateSprite(styleURI: StyleURI, completion: @escaping ImageDownloadCompletionHandler) {
+        guard let styleID = styleID(for: styleURI),
               let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
               let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else {
             completion(.clientError)
@@ -120,8 +135,8 @@ class SpriteRepository {
         }
     }
     
-    func needToUpdateSprite() -> Bool {
-        return (getSpriteInfo() == nil || getSpriteImage() == nil)
+    func needToUpdateSprite(styleURI: StyleURI) -> Bool {
+        return (getSpriteInfo(styleURI: styleURI) == nil || getSpriteImage(styleURI: styleURI) == nil)
     }
     
     func spriteURL(isImage: Bool, styleID: String) -> URL? {
@@ -161,8 +176,11 @@ class SpriteRepository {
         })
     }
     
-    func roadShieldImage(from shieldRepresentation: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
-        guard let shield = shieldRepresentation, let styleID = styleID else { return nil }
+    func roadShieldImage(from shieldRepresentation: VisualInstruction.Component.ShieldRepresentation?,
+                         idiom: UIUserInterfaceIdiom = .phone) -> UIImage? {
+        guard let styleURI = userInterfaceIdiomStyles[idiom],
+              let styleID = styleID(for: styleURI),
+              let shield = shieldRepresentation else { return nil }
         
         let iconLeght = max(shield.text.count, 2)
         let shieldKey = shield.name + "-\(iconLeght)"
@@ -173,8 +191,8 @@ class SpriteRepository {
             return shieldIcon
         }
         
-        guard let spriteImage = getSpriteImage(),
-              let spriteInfo = getSpriteInfo(with: shieldKey) else { return nil }
+        guard let spriteImage = getSpriteImage(styleURI: styleURI),
+              let spriteInfo = getSpriteInfo(styleURI: styleURI, with: shieldKey) else { return nil }
         
         let shieldRect = CGRect(x: spriteInfo.x, y: spriteInfo.y, width: spriteInfo.width, height: spriteInfo.height)
         if let croppedCGIImage = spriteImage.cgImage?.cropping(to: shieldRect) {
@@ -189,8 +207,10 @@ class SpriteRepository {
         return nil
     }
     
-    func shieldCached(for representation: VisualInstruction.Component.ImageRepresentation?) -> Bool {
-        return (roadShieldImage(from: representation?.shield) != nil) || (getLegacyShield(with: representation) != nil)
+    func shieldCached(for representation: VisualInstruction.Component.ImageRepresentation?,
+                      idiom: UIUserInterfaceIdiom = .phone) -> Bool {
+        let generalShieldCached = roadShieldImage(from: representation?.shield, idiom: idiom) != nil
+        return generalShieldCached || (getLegacyShield(with: representation) != nil)
     }
     
     func getLegacyShield(with representation: VisualInstruction.Component.ImageRepresentation?) -> UIImage? {
@@ -200,6 +220,15 @@ class SpriteRepository {
         return getImage(with: legacyURL)
     }
     
+    func styleID(for styleURI: StyleURI) -> String? {
+        return styleURI.rawValue.components(separatedBy: "styles")[safe: 1]
+    }
+    
+    func styleID(for idiom: UIUserInterfaceIdiom) -> String? {
+        guard let styleURI = userInterfaceIdiomStyles[idiom] else { return nil }
+        return styleID(for: styleURI)
+    }
+    
     func getImage(with url: URL) -> UIImage? {
         guard let data = requestCache.response(for: url)?.data else {
             return nil
@@ -207,21 +236,21 @@ class SpriteRepository {
         return UIImage(data: data, scale: VisualInstruction.Component.scale)
     }
     
-    func getSpriteImage() -> UIImage? {
+    func getSpriteImage(styleURI: StyleURI) -> UIImage? {
         // Use the styleID of current repository to retrieve Sprite image.
-        guard let styleID = styleID,
+        guard let styleID = styleID(for: styleURI),
               let spriteURL = spriteURL(isImage: true, styleID: styleID) else { return nil }
         return getImage(with: spriteURL)
     }
     
-    func getSpriteInfo() -> Data? {
-        guard let styleID = styleID,
-              let infoURL = spriteURL(isImage: false, styleID: styleID) else { return nil }
+    func getSpriteInfo(styleURI: StyleURI) -> Data? {
+        guard let styleID = styleID(for: styleURI),
+              let infoURL = spriteURL(isImage: false, styleID: styleID) else { return  nil }
         return requestCache.response(for: infoURL)?.data
     }
     
-    func getSpriteInfo(with key: String) -> SpriteInfo? {
-        guard let data = getSpriteInfo(),
+    func getSpriteInfo(styleURI: StyleURI, with key: String) -> SpriteInfo? {
+        guard let data = getSpriteInfo(styleURI: styleURI),
               let spriteInfoDictionary = parseSpriteInfo(data: data) else {
             return nil
         }
@@ -239,8 +268,8 @@ class SpriteRepository {
         return nil
     }
     
-    func resetStyleCache() {
-        guard let styleID = styleID,
+    func removeStyleCacheFor(_ styleURI: StyleURI) {
+        guard let styleID = styleID(for: styleURI),
               let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
               let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else { return }
         requestCache.removeCache(for: infoRequestURL)

@@ -70,7 +70,8 @@ class WayNameViewTests: TestCase {
         }
         waitForExpectations(timeout: 3, handler: nil)
         
-        XCTAssertEqual(wayNameView.label.spriteRepository.styleURI, styleURI, "Failed to update the styleURI of Sprite Repository.")
+        let defaultStyleURI = wayNameView.label.spriteRepository.userInterfaceIdiomStyles[.phone]
+        XCTAssertEqual(defaultStyleURI, styleURI, "Failed to update the styleURI of Sprite Repository.")
         
         guard let attributedText = wayNameView.label.attributedText else {
             XCTFail("Failed to update the label attributed string.")

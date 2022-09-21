@@ -101,12 +101,13 @@ class InstructionPresenter {
                                       spriteRepository: SpriteRepository,
                                       onImageDownload: @escaping CompletionHandler) -> NSAttributedString {
         var components = instruction.components
+        let idiom: UIUserInterfaceIdiom = (traitCollection.userInterfaceIdiom == .carPlay) ? .carPlay : .phone
         
         let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
             guard let key = component?.cacheKey else { return false }
             switch component {
             case .image(let representation, _):
-                return spriteRepository.shieldCached(for: representation)
+                return spriteRepository.shieldCached(for: representation, idiom: idiom)
             default:
                 return spriteRepository.derivedCache.image(forKey: key) != nil
             }
@@ -145,9 +146,16 @@ class InstructionPresenter {
                 return attributedString
             case .image(let representation, let alternativeText):
                 // Ideally represent the image component as a shield image.
-                return attributedString(for: representation, in: spriteRepository, dataSource: dataSource, onImageDownload: onImageDownload)
+                return attributedString(for: representation,
+                                        idiom: idiom,
+                                        in: spriteRepository,
+                                        dataSource: dataSource,
+                                        onImageDownload: onImageDownload)
                     // Fall back to a generic shield if no shield image is available.
-                    ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
+                    ?? genericShield(text: alternativeText.text,
+                                     idiom: idiom,
+                                     dataSource: dataSource,
+                                     cacheKey: component.cacheKey!)
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
                     ?? NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
             case .exit(_):
@@ -156,6 +164,7 @@ class InstructionPresenter {
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
                 return exitShield(side: exitSide,
                                   text: text.text,
+                                  idiom: idiom,
                                   dataSource: dataSource,
                                   cacheKey: component.cacheKey!)
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
@@ -170,6 +179,7 @@ class InstructionPresenter {
     }
     
     func attributedString(for representation: VisualInstruction.Component.ImageRepresentation,
+                          idiom: UIUserInterfaceIdiom,
                           in repository: SpriteRepository,
                           dataSource: DataSource,
                           onImageDownload: @escaping CompletionHandler) -> NSAttributedString? {
@@ -181,14 +191,14 @@ class InstructionPresenter {
                 if let legacyIcon = repository.getLegacyShield(with: representation) {
                     return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
                 } else if representation.legacyCacheKey != nil {
-                    spriteRepository.updateRepresentation(for: representation) { (error) in
+                    spriteRepository.updateRepresentation(for: representation, idiom: idiom) { (error) in
                         guard error == nil else { return }
                         onImageDownload()
                     }
                     return nil
                 }
             }
-            if let shieldAttributedString = shieldAttributedString(for: representation, in: repository, dataSource: dataSource) {
+            if let shieldAttributedString = shieldAttributedString(for: representation, idiom: idiom, in: repository, dataSource: dataSource) {
                 return shieldAttributedString
             }
         }
@@ -200,7 +210,7 @@ class InstructionPresenter {
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
         // Update the SpriteRepository with the ImageRepresentation only when it has valid shield or legacy shield.
         if representation.shield != nil || representation.legacyCacheKey != nil {
-            spriteRepository.updateRepresentation(for: representation) { (error) in
+            spriteRepository.updateRepresentation(for: representation, idiom: idiom) { (error) in
                 guard error == nil else { return }
                 onImageDownload()
             }
@@ -217,10 +227,11 @@ class InstructionPresenter {
     }
 
     private func shieldAttributedString(for representation: VisualInstruction.Component.ImageRepresentation,
+                                        idiom: UIUserInterfaceIdiom,
                                         in repository: SpriteRepository,
                                         dataSource: DataSource) -> NSAttributedString? {
         guard let shield = representation.shield,
-              let cachedImage = repository.roadShieldImage(from: shield) else { return nil }
+              let cachedImage = repository.roadShieldImage(from: shield, idiom: idiom) else { return nil }
 
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font
@@ -233,9 +244,10 @@ class InstructionPresenter {
     }
     
     private func genericShield(text: String,
+                               idiom: UIUserInterfaceIdiom,
                                dataSource: DataSource,
                                cacheKey: String) -> NSAttributedString? {
-        let additionalKey = GenericRouteShield.criticalHash(styleID: spriteRepository.styleID,
+        let additionalKey = GenericRouteShield.criticalHash(styleID: spriteRepository.styleID(for: idiom),
                                                             dataSource: dataSource,
                                                             traitCollection: traitCollection)
         let attachment = GenericShieldAttachment()
@@ -274,10 +286,11 @@ class InstructionPresenter {
     
     private func exitShield(side: ExitSide = .right,
                             text: String,
+                            idiom: UIUserInterfaceIdiom,
                             dataSource: DataSource,
                             cacheKey: String) -> NSAttributedString? {
         let additionalKey = ExitView.criticalHash(side: side,
-                                                  styleID: spriteRepository.styleID,
+                                                  styleID: spriteRepository.styleID(for: idiom),
                                                   dataSource: dataSource,
                                                   traitCollection: traitCollection)
         let attachment = ExitAttachment()
