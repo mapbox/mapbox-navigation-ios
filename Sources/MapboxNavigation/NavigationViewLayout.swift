@@ -102,34 +102,41 @@ extension NavigationView {
         
         layoutConstraints.append(contentsOf: wayNameViewConstraints)
         
-        let speedLimitViewTopContraint = speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor,
-                                                                             constant: 10)
-        let speedLimitViewWidthContraint = speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width)
-        let speedLimitViewHeightContraint = speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
-        
-        var speedLimitViewConstraints = [
-            speedLimitViewTopContraint,
-            speedLimitViewWidthContraint,
-            speedLimitViewHeightContraint
-        ]
-        
-        switch floatingButtonsPosition {
-        case .topLeading:
-            let speedLimitViewTrailingConstraint: NSLayoutConstraint
-            if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                            constant: -10)
-            } else {
-                speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                            constant: -10)
+        let speedLimitViewConstraints: [NSLayoutConstraint]
+        if let speedLimitViewLayoutGuide = speedLimitViewLayoutGuide {
+            speedLimitViewConstraints = speedLimitViewLayoutGuide.layoutConstraints(for: speedLimitView)
+        } else {
+            let speedLimitViewTopContraint = speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor,
+                                                                                 constant: 10)
+            let speedLimitViewWidthContraint = speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width)
+            let speedLimitViewHeightContraint = speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
+            
+            var defaultSpeedLimitViewConstraints = [
+                speedLimitViewTopContraint,
+                speedLimitViewWidthContraint,
+                speedLimitViewHeightContraint
+            ]
+            
+            switch floatingButtonsPosition {
+            case .topLeading:
+                let speedLimitViewTrailingConstraint: NSLayoutConstraint
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                    speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                constant: -10)
+                } else {
+                    speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                constant: -10)
+                }
+                
+                defaultSpeedLimitViewConstraints.append(speedLimitViewTrailingConstraint)
+            case .topTrailing:
+                let speedLimitViewLeadingContraint = speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor,
+                                                                                             constant: 10)
+                
+                defaultSpeedLimitViewConstraints.append(speedLimitViewLeadingContraint)
             }
             
-            speedLimitViewConstraints.append(speedLimitViewTrailingConstraint)
-        case .topTrailing:
-            let speedLimitViewLeadingContraint = speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor,
-                                                                                         constant: 10)
-            
-            speedLimitViewConstraints.append(speedLimitViewLeadingContraint)
+            speedLimitViewConstraints = defaultSpeedLimitViewConstraints
         }
         
         layoutConstraints.append(contentsOf: speedLimitViewConstraints)
@@ -254,34 +261,41 @@ extension NavigationView {
         
         layoutConstraints.append(contentsOf: wayNameViewConstraints)
         
-        let speedLimitViewTopContraint = speedLimitView.topAnchor.constraint(equalTo: safeTopAnchor,
-                                                                             constant: 10)
-        let speedLimitViewWidthContraint = speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width)
-        let speedLimitViewHeightContraint = speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
-        
-        var speedLimitViewConstraints = [
-            speedLimitViewTopContraint,
-            speedLimitViewWidthContraint,
-            speedLimitViewHeightContraint
-        ]
-        
-        switch floatingButtonsPosition {
-        case .topLeading:
-            let speedLimitViewTrailingConstraint: NSLayoutConstraint
-            if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                            constant: -10)
-            } else {
-                speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                            constant: -10)
+        let speedLimitViewConstraints: [NSLayoutConstraint]
+        if let speedLimitViewLayoutGuide = speedLimitViewLayoutGuide {
+            speedLimitViewConstraints = speedLimitViewLayoutGuide.layoutConstraints(for: speedLimitView)
+        } else {
+            let speedLimitViewTopContraint = speedLimitView.topAnchor.constraint(equalTo: safeTopAnchor,
+                                                                                 constant: 10)
+            let speedLimitViewWidthContraint = speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width)
+            let speedLimitViewHeightContraint = speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
+            
+            var defaultSpeedLimitViewConstraints = [
+                speedLimitViewTopContraint,
+                speedLimitViewWidthContraint,
+                speedLimitViewHeightContraint
+            ]
+            
+            switch floatingButtonsPosition {
+            case .topLeading:
+                let speedLimitViewTrailingConstraint: NSLayoutConstraint
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                    speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                constant: -10)
+                } else {
+                    speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                constant: -10)
+                }
+                
+                defaultSpeedLimitViewConstraints.append(speedLimitViewTrailingConstraint)
+            case .topTrailing:
+                let speedLimitViewLeadingContraint = speedLimitView.leadingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor,
+                                                                                             constant: 10)
+                
+                defaultSpeedLimitViewConstraints.append(speedLimitViewLeadingContraint)
             }
             
-            speedLimitViewConstraints.append(speedLimitViewTrailingConstraint)
-        case .topTrailing:
-            let speedLimitViewLeadingContraint = speedLimitView.leadingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor,
-                                                                                         constant: 10)
-            
-            speedLimitViewConstraints.append(speedLimitViewLeadingContraint)
+            speedLimitViewConstraints = defaultSpeedLimitViewConstraints
         }
         
         layoutConstraints.append(contentsOf: speedLimitViewConstraints)

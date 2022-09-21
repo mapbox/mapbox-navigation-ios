@@ -27,7 +27,7 @@ open class DayStyle: Style {
         if let color = UIApplication.shared.delegate?.window??.tintColor {
             tintColor = color
         } else {
-            tintColor = .defaultTint
+            tintColor = .defaultTintColor
         }
         
         let phoneTraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
@@ -231,27 +231,44 @@ open class DayStyle: Style {
         TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance(for: traitCollection).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryTextColor
         TimeRemainingLabel.appearance(for: traitCollection).trafficHeavyColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
         TimeRemainingLabel.appearance(for: traitCollection).trafficLowColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
         TimeRemainingLabel.appearance(for: traitCollection).trafficModerateColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
         TimeRemainingLabel.appearance(for: traitCollection).trafficSevereColor = #colorLiteral(red: 0.7705719471, green: 0.1753477752, blue: 0.1177056804, alpha: 1)
-        TimeRemainingLabel.appearance(for: traitCollection).trafficUnknownColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance(for: traitCollection).trafficUnknownColor = .defaultPrimaryTextColor
+        
+        TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection,
+                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection,
+                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection,
+                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection,
+                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
         
         StepsTableHeaderView.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StepsTableHeaderView.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        Button.appearance(for: traitCollection).textColor = .defaultPrimaryText
+        Button.appearance(for: traitCollection).textColor = .defaultPrimaryTextColor
         
-        CancelButton.appearance(for: traitCollection).tintColor = .defaultPrimaryText
+        CancelButton.appearance(for: traitCollection).tintColor = .defaultPrimaryTextColor
+        
+        PreviewButton.appearance(for: traitCollection).tintColor = .defaultPrimaryTextColor
+        StartButton.appearance(for: traitCollection).tintColor = .defaultPrimaryTextColor
         
         FloatingButton.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance(for: traitCollection).tintColor = tintColor
         FloatingButton.appearance(for: traitCollection).borderWidth = Style.defaultBorderWidth
-        FloatingButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
+        FloatingButton.appearance(for: traitCollection).borderColor = .defaultBorderColor
         
         DistanceRemainingLabel.appearance(for: traitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+        
+        DistanceRemainingLabel.appearance(for: traitCollection,
+                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
+        DistanceRemainingLabel.appearance(for: traitCollection,
+                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
         
         NavigationView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         
@@ -262,10 +279,17 @@ open class DayStyle: Style {
         RatingControl.appearance(for: traitCollection).selectedColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
         
         ResumeButton.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        ResumeButton.appearance(for: traitCollection).tintColor = .defaultPrimaryText
+        ResumeButton.appearance(for: traitCollection).tintColor = .defaultPrimaryTextColor
         ResumeButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
         ResumeButton.appearance(for: traitCollection).borderWidth = Style.defaultBorderWidth
         ResumeButton.appearance(for: traitCollection).cornerRadius = 5.0
+        
+        BackButton.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        BackButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
+        BackButton.appearance(for: traitCollection).borderWidth = Style.defaultBorderWidth
+        BackButton.appearance(for: traitCollection).cornerRadius = 5.0
+        BackButton.appearance(for: traitCollection).textFont = UIFont.systemFont(ofSize: 15, weight: .regular)
+        BackButton.appearance(for: traitCollection).tintColor = .defaultPrimaryTextColor
         
         NextBannerView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextBannerView.appearance(for: traitCollection, whenContainedInInstancesOf: [InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
@@ -278,7 +302,19 @@ open class DayStyle: Style {
         InstructionsBannerView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         ArrivalTimeLabel.appearance(for: traitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
-        ArrivalTimeLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryText
+        ArrivalTimeLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryTextColor
+        
+        ArrivalTimeLabel.appearance(for: traitCollection,
+                                    whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
+        ArrivalTimeLabel.appearance(for: traitCollection,
+                                    whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
+        
+        DestinationLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 25.0, weight: .medium).adjustedFont
+        DestinationLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 25.0, weight: .medium).adjustedFont
+        DestinationLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 25.0, weight: .medium).adjustedFont
+        DestinationLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 18.0, weight: .medium).adjustedFont
+        DestinationLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryTextColor
+        DestinationLabel.appearance(for: traitCollection).numberOfLines = 2
         
         NextInstructionLabel.appearance(for: traitCollection).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
         NextInstructionLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)

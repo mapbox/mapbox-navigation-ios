@@ -148,6 +148,12 @@ open class NavigationView: UIView {
         return wayNameView
     }()
     
+    var speedLimitViewLayoutGuide: UILayoutGuide? {
+        didSet {
+            setupConstraints()
+        }
+    }
+    
     // :nodoc:
     public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
@@ -235,8 +241,6 @@ open class NavigationView: UIView {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         navigationMapView.pinTo(parentView: self)
-        
-        resumeButton.isHidden = true
     }
     
     open override func prepareForInterfaceBuilder() {

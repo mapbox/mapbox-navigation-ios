@@ -42,10 +42,21 @@ open class NightStyle: DayStyle {
         
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
+        DistanceRemainingLabel.appearance(for: traitCollection,
+                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
         ArrivalTimeLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
+        ArrivalTimeLabel.appearance(for: traitCollection,
+                                       whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
+        DestinationLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         Button.appearance(for: traitCollection).textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        PreviewButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        StartButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         DismissButton.appearance(for: traitCollection).backgroundColor = .defaultDarkAppearanceBackgroundColor
         DismissButton.appearance(for: traitCollection).textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
@@ -152,6 +163,11 @@ open class NightStyle: DayStyle {
         ResumeButton.appearance(for: traitCollection).backgroundColor = .defaultDarkAppearanceBackgroundColor
         ResumeButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ResumeButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
+        
+        BackButton.appearance(for: traitCollection).backgroundColor = .defaultDarkAppearanceBackgroundColor
+        BackButton.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        BackButton.appearance(for: traitCollection).textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        BackButton.appearance(for: traitCollection).borderColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
         
         NextBannerView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         

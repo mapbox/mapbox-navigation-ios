@@ -6,7 +6,6 @@ typealias RatingClosure = (Int) -> Void //rating
 class RatingControl: UIStackView {
     // MARK: Constants
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
-    private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
     
     // MARK: Properties
     private var stars = [UIButton]()
@@ -64,7 +63,7 @@ class RatingControl: UIStackView {
     private func addStars() {
         for index in 0..<starCount {
             let button = UIButton(type: .custom)
-            button.setImage(starTemplate, for: .normal)
+            button.setImage(.starImage, for: .normal)
             button.adjustsImageWhenHighlighted = false
             addButtonSizeConstraints(to: button)
             

@@ -21,11 +21,11 @@ class CameraModeFloatingButton: FloatingButton {
         let image: UIImage
         switch cameraMode {
         case .idle:
-            image = .recenter
+            image = .recenterImage
         case .centered:
-            image = .follow
+            image = .followImage
         case .following:
-            image = .northUp
+            image = .northUpImage
         }
         
         setImage(image, for: .normal)
