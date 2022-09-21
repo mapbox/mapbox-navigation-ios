@@ -151,7 +151,7 @@ public class RoutesPreviewViewController: RoutesPreviewing {
             dateFormatter.timeStyle = .short
             
             let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance(for: phoneTraitCollection,
-                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                        whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
             arrivalTimeLabel.attributedText = attributedString(with: .timeImage.tint(arrivalTimeImageTintColor),
                                                                imageBounds: imageBounds,
                                                                text: dateFormatter.string(from: arrivalDate))
