@@ -73,7 +73,6 @@ open class PreviewViewController: UIViewController {
         navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationView.navigationMapView.delegate = self
         navigationView.navigationMapView.userLocationStyle = .courseView()
-        
         navigationView.navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
@@ -264,15 +263,16 @@ open class PreviewViewController: UIViewController {
     
     // :nodoc:
     public func preview(_ coordinates: [CLLocationCoordinate2D]) {
-        let destinationOptions = DestinationOptions(coordinates: coordinates)
-        state = .destinationPreviewing(destinationOptions)
-        
-        // TODO: Show intermediate waypoints differently.
-        addDestinationAnnotations(for: coordinates)
+        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
+        preview(waypoints)
     }
     
     // :nodoc:
-    public func preview(_ routeResponse: RouteResponse, routeIndex: Int = 0) {
+    public func preview(_ routeResponse: RouteResponse,
+                        routeIndex: Int = 0,
+                        animated: Bool = false,
+                        duration: TimeInterval = 1.0,
+                        completion: NavigationMapView.AnimationCompletionHandler? = nil) {
         let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
         state = .routesPreviewing(routesPreviewOptions)
         
@@ -281,17 +281,30 @@ open class PreviewViewController: UIViewController {
             addDestinationAnnotations(for: [destinationCoordinate])
         }
         
-        showcase(routeResponse: routeResponse, routeIndex: routeIndex)
+        showcase(routeResponse: routeResponse,
+                 routeIndex: routeIndex,
+                 animated: animated,
+                 duration: duration,
+                 completion: completion)
     }
     
-    func showcase(routeResponse: RouteResponse, routeIndex: Int) {
+    func showcase(routeResponse: RouteResponse,
+                  routeIndex: Int,
+                  animated: Bool = false,
+                  duration: TimeInterval = 1.0,
+                  completion: NavigationMapView.AnimationCompletionHandler? = nil) {
         guard var routes = routeResponse.routes else { return }
         
         routes.insert(routes.remove(at: routeIndex), at: 0)
         
+        let routesPresentationStyle: RoutesPresentationStyle = .all(shouldFit: true,
+                                                                    cameraOptions: routesPreviewCameraOptions)
+        
         navigationView.navigationMapView.showcase(routes,
-                                                  routesPresentationStyle: .all(shouldFit: true,
-                                                                                cameraOptions: routesPreviewCameraOptions))
+                                                  routesPresentationStyle: routesPresentationStyle,
+                                                  animated: animated,
+                                                  duration: duration,
+                                                  completion: completion)
     }
     
     // :nodoc:
