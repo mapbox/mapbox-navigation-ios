@@ -220,11 +220,12 @@ open class BannerContainerView: UIView {
         layoutIfNeeded()
         
         if animated {
+            // TODO: Improve animation for devices with notch.
             switch type {
             case .top:
-                expansionConstraint.constant = -frame.height
+                expansionConstraint.constant = -frame.height //+ self.topSafeAreaInset
             case .bottom:
-                expansionConstraint.constant = frame.height
+                expansionConstraint.constant = frame.height //- self.bottomSafeAreaInset
             }
             
             isHidden = false

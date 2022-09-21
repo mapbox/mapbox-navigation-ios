@@ -3,12 +3,13 @@ import MapboxMaps
 
 extension UIColor {
 
-    class var defaultTint: UIColor { #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) }
-    class var defaultTintStroke: UIColor { #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) }
-    class var defaultPrimaryText: UIColor { #colorLiteral(red: 0.176, green: 0.176, blue: 0.176, alpha: 1) }
+    class var defaultTintColor: UIColor { #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) }
+    class var defaultPrimaryTextColor: UIColor { #colorLiteral(red: 0.176, green: 0.176, blue: 0.176, alpha: 1) }
     class var defaultDarkAppearanceBackgroundColor: UIColor { #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1) }
+    class var defaultBorderColor: UIColor { #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1) }
+    class var defaultBackgroundColor: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     
-    class var defaultRouteCasing: UIColor { .defaultTintStroke }
+    class var defaultRouteCasing: UIColor { .defaultTintColor }
     class var defaultRouteLayer: UIColor { #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) }
     class var defaultAlternateLine: UIColor { #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) }
     class var defaultAlternateLineCasing: UIColor { #colorLiteral(red: 0.5019607843, green: 0.4980392157, blue: 0.5019607843, alpha: 1) }
