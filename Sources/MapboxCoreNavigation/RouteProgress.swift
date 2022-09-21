@@ -15,6 +15,8 @@ open class RouteProgress: Codable {
      - parameter route: The route to follow.
      - parameter options: The route options that were attached to the route request.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
+     - parameter currentRouteShapeIndex: Index relative to route shape, representing the point the user is currently located at.
+     - parameter currentLegShapeIndex: Index relative to leg shape, representing the point the user is currently located at.
      */
     public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0, currentRouteShapeIndex: Int = 0, currentLegShapeIndex: Int = 0) {
         self.route = route

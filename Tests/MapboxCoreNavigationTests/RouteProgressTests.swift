@@ -115,9 +115,9 @@ class RouteProgressTests: TestCase {
         return RouteLeg(steps: steps, name: "", distance: 0, expectedTravelTime: 0, profileIdentifier: .automobile)
     }
     
-    func routeLegProgress(options: RouteOptions, routeCoordinates: [CLLocationCoordinate2D]) -> RouteLegProgress {
+    func routeLegProgress(options: RouteOptions, routeCoordinates: [CLLocationCoordinate2D], shapeIndex: Int = 0) -> RouteLegProgress {
         let leg = routeLeg(options: options, routeCoordinates: routeCoordinates)
-        return RouteLegProgress(leg: leg)
+        return RouteLegProgress(leg: leg, shapeIndex: shapeIndex)
     }
     
     func testRemainingWaypointsAlongLeg() {
@@ -289,7 +289,10 @@ class RouteProgressTests: TestCase {
     }
     
     func testRouteProggressCodable() {
-        let routeProgress = RouteProgress(route: route, options: routeOptions)
+        let routeProgress = RouteProgress(route: route,
+                                          options: routeOptions,
+                                          currentRouteShapeIndex: 37,
+                                          currentLegShapeIndex: 13)
         
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
@@ -311,6 +314,8 @@ class RouteProgressTests: TestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.leg.source, decoded.currentLegProgress.leg.source)
         XCTAssertEqual(routeProgress.congestionTravelTimesSegmentsByStep.count, decoded.congestionTravelTimesSegmentsByStep.count)
         XCTAssertEqual(routeProgress.congestionTimesPerStep, decoded.congestionTimesPerStep)
+        XCTAssertEqual(routeProgress.currentRouteShapeIndex, decoded.currentRouteShapeIndex)
+        XCTAssertEqual(routeProgress.currentLegProgress.shapeIndex, decoded.currentLegProgress.shapeIndex)
     }
     
     func testRouteLegProgressCodable() {
@@ -324,7 +329,7 @@ class RouteProgressTests: TestCase {
             CLLocationCoordinate2D(latitude: 12, longitude: 18),
         ]
         let options = RouteOptions(coordinates: [coordinates.first!, coordinates.last!])
-        let legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
+        let legProgress = routeLegProgress(options: options, routeCoordinates: coordinates, shapeIndex: 11)
         
         let data = try! JSONEncoder().encode(legProgress)
         let decoded = try! JSONDecoder().decode(RouteLegProgress.self, from: data)
@@ -334,6 +339,7 @@ class RouteProgressTests: TestCase {
         XCTAssertEqual(legProgress.userHasArrivedAtWaypoint, decoded.userHasArrivedAtWaypoint)
         XCTAssertEqual(legProgress.currentStepProgress.step, decoded.currentStepProgress.step)
         XCTAssertEqual(legProgress.currentStepProgress.distanceTraveled, decoded.currentStepProgress.distanceTraveled)
+        XCTAssertEqual(legProgress.shapeIndex, decoded.shapeIndex)
     }
     
     func testRouteStepProgressCodable() {
