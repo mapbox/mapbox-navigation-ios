@@ -116,7 +116,7 @@ extension UIImage {
         }
     }
     
-    func scale(to height: Double) -> UIImage? {
+    func scale(to height: Double) -> UIImage {
         let ratio = height / size.height
         let newSize = CGSize(width: ratio * size.width, height: ratio * size.height)
         return UIGraphicsImageRenderer(size: newSize).image { _ in
