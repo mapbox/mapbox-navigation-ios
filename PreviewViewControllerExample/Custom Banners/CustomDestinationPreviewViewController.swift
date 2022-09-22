@@ -6,7 +6,7 @@ protocol CustomDestinationPreviewViewControllerDelegate: AnyObject {
     func didPressDirectionsButton()
 }
 
-class CustomDestinationPreviewViewController: DestinationPreviewing {
+class CustomDestinationPreviewViewController: UIViewController, DestinationPreviewing {
     
     var directionsButton: UIButton!
     

@@ -31,14 +31,14 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerViewControllerFor state: PreviewViewController.State) -> UIViewController? {
+                               bottomBannerFor state: PreviewViewController.State) -> Previewing? {
         switch state {
         case .browsing:
             if useCustomBannerViews {
-                let customViewController = UIViewController()
-                customViewController.view.backgroundColor = .green
+                let customBrowsingViewController = CustomBrowsingViewController()
+                customBrowsingViewController.view.backgroundColor = .green
                 
-                return customViewController
+                return customBrowsingViewController
             }
         case .destinationPreviewing(let destinationOptions):
             if useCustomBannerViews {
@@ -60,7 +60,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               stateDidChangeTo state: PreviewViewController.State) {
+                               stateWillChangeTo state: PreviewViewController.State) {
         switch state {
         case .browsing:
             routeResponse = nil
@@ -71,6 +71,11 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         case .routesPreviewing:
             break
         }
+    }
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               stateDidChangeTo state: PreviewViewController.State) {
+        // No-op
     }
     
     func previewViewControllerWillBeginNavigation(_ previewViewController: PreviewViewController) {
@@ -85,7 +90,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               didLongPressFor coordinates: [CLLocationCoordinate2D]) {
+                               didAddDestinationBetween coordinates: [CLLocationCoordinate2D]) {
         self.coordinates = coordinates
         
         guard let destinationCoordinate = coordinates.last else {
@@ -141,12 +146,13 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               willPresent destinationText: NSAttributedString) -> NSAttributedString? {
-        guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController else {
+                               willPresent destinationText: NSAttributedString,
+                               in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString? {
+        guard case .destinationPreviewing(let destinationOptions) = previewViewController.state else {
             return nil
         }
         
-        let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoint.coordinate
+        let destinationCoordinate = destinationOptions.waypoint.coordinate
         let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
         reverseGeocodeOptions.focalLocation = CLLocationManager().location
         reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent

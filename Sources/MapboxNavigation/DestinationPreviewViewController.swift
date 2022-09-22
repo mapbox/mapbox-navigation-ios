@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public class DestinationPreviewViewController: DestinationPreviewing {
+public class DestinationPreviewViewController: UIViewController, DestinationPreviewing {
     
     var bottomBannerView: BottomBannerView!
     

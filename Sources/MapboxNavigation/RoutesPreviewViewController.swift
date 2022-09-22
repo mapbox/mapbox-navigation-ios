@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 // :nodoc:
-public class RoutesPreviewViewController: RoutesPreviewing {
+public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
     var bottomBannerView: BottomBannerView!
     

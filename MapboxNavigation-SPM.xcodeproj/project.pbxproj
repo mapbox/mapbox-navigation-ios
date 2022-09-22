@@ -43,6 +43,7 @@
 		8A8EDF1C284ABE55009DE805 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A8EDF1B284ABE55009DE805 /* route.json */; };
 		8A9C67F02891F06500C28B2B /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9C67EE2891F06500C28B2B /* DismissalAnimator.swift */; };
 		8A9C67F12891F06500C28B2B /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9C67EF2891F06500C28B2B /* PresentationAnimator.swift */; };
+		8AAE13CD28DCD249007E01D4 /* CustomBrowsingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE13CC28DCD249007E01D4 /* CustomBrowsingViewController.swift */; };
 		8AC81F5A284832E000662395 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F59284832E000662395 /* AppDelegate.swift */; };
 		8AC81F5C284832E000662395 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5B284832E000662395 /* SceneDelegate.swift */; };
 		8AC81F5E284832E000662395 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5D284832E000662395 /* ViewController.swift */; };
@@ -137,6 +138,7 @@
 		8A8EDF1B284ABE55009DE805 /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		8A9C67EE2891F06500C28B2B /* DismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
 		8A9C67EF2891F06500C28B2B /* PresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
+		8AAE13CC28DCD249007E01D4 /* CustomBrowsingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomBrowsingViewController.swift; sourceTree = "<group>"; };
 		8AC81F57284832E000662395 /* MapboxNavigationTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigationTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC81F59284832E000662395 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AC81F5B284832E000662395 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 		8A506BA8285A7E50008A6082 /* Custom Banners */ = {
 			isa = PBXGroup;
 			children = (
+				8AAE13CC28DCD249007E01D4 /* CustomBrowsingViewController.swift */,
 				8A506BA9285A7E50008A6082 /* CustomRoutesPreviewViewController.swift */,
 				8A506BAA285A7E50008A6082 /* CustomDestinationPreviewViewController.swift */,
 			);
@@ -856,6 +859,7 @@
 				8A506BB6285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
 				8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */,
 				8A506BB7285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
+				8AAE13CD28DCD249007E01D4 /* CustomBrowsingViewController.swift in Sources */,
 				8A506BB9285A7E50008A6082 /* PresentationAnimator.swift in Sources */,
 				8A506BBA285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
 				8A506BB5285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,

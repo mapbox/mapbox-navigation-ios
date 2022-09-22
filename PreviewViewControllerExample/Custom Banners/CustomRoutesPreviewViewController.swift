@@ -6,7 +6,7 @@ protocol CustomRoutesPreviewViewControllerDelegate: AnyObject {
     func didPressStartNavigationButton()
 }
 
-class CustomRoutesPreviewViewController: RoutesPreviewing {
+class CustomRoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
     var startNavigationButton: UIButton!
     

@@ -9,7 +9,8 @@ open class PreviewViewController: UIViewController {
     
     var previousState: State? = nil
     
-    var state: State = .browsing {
+    // :nodoc:
+    public private(set) var state: State = .browsing {
         didSet {
             updateInternalComponents(to: state)
         }
@@ -30,8 +31,8 @@ open class PreviewViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    // :nodoc:
-    public private(set) var presentedBottomBannerViewController: UIViewController?
+    // TODO: Consider retrieving bottom banner view controller from actual view where it was embedded.
+    var presentedBottomBannerViewController: Previewing?
     
     var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
@@ -90,7 +91,7 @@ open class PreviewViewController: UIViewController {
         switch state {
         case .browsing:
             break
-        case .destinationPreviewing(_):
+        case .destinationPreviewing:
             navigationView.bottomBannerContainerView.show()
         case .routesPreviewing(let routesPreviewOptions):
             showcase(routeResponse: routesPreviewOptions.routeResponse,
@@ -127,6 +128,7 @@ open class PreviewViewController: UIViewController {
         let navigationView = NavigationView(frame: frame)
         navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationView.navigationMapView.delegate = self
+        // TODO: Move final destination annotation placement logic to `MapView` or `NavigationMapView`.
         navigationView.navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
@@ -302,10 +304,13 @@ open class PreviewViewController: UIViewController {
         
         addDestinationAnnotation(waypoint.coordinate)
         
-        if let primaryText = destinationOptions.primaryText {
+        if let primaryText = destinationOptions.primaryText,
+           let destinationPreviewViewController = presentedBottomBannerViewController as? DestinationPreviewViewController {
             let primaryAttributedString = NSAttributedString(string: primaryText)
-            (presentedBottomBannerViewController as? DestinationPreviewViewController)?.destinationLabel.attributedText =
-            delegate?.previewViewController(self, willPresent: primaryAttributedString) ?? primaryAttributedString
+            destinationPreviewViewController.destinationLabel.attributedText =
+            delegate?.previewViewController(self,
+                                            willPresent: primaryAttributedString,
+                                            in: destinationPreviewViewController) ?? primaryAttributedString
         }
     }
     
@@ -366,51 +371,27 @@ open class PreviewViewController: UIViewController {
                                                    animated: true)
     }
     
-    func updateInternalComponents(to state: State) {
-        delegate?.previewViewController(self, stateDidChangeTo: state)
-        
+    // TODO: Refactor bottom banner view controller creation logic.
+    func updateBottomBannerContainerView(to state: State) {
         switch state {
         case .browsing:
-            backButton.isHidden = true
-            pointAnnotationManager?.annotations = []
-            navigationView.resumeButton.isHidden = true
-            
-            navigationView.navigationMapView.removeWaypoints()
-            navigationView.navigationMapView.removeRoutes()
-            
-            // Speed limit, road name and floating buttons should be shown.
-            navigationView.speedLimitView.isAlwaysHidden = false
-            navigationView.wayNameView.isHidden = false
-            
-            cameraModeFloatingButton.cameraMode = .centered
-            
             if let customBottomBannerViewController = delegate?.previewViewController(self,
-                                                                                      bottomBannerViewControllerFor: state) {
+                                                                                      bottomBannerFor: state) {
                 navigationView.bottomBannerContainerView.isHidden = false
-                embed(customBottomBannerViewController, in: navigationView.bottomBannerContainerView)
+                embed(customBottomBannerViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
                 
                 presentedBottomBannerViewController = customBottomBannerViewController
             } else {
                 navigationView.bottomBannerContainerView.hide()
             }
         case .destinationPreviewing(let destinationOptions):
-            // Speed limit, road name and floating buttons should be hidden.
-            navigationView.speedLimitView.isAlwaysHidden = true
-            navigationView.wayNameView.isHidden = true
-            
-            navigationView.navigationMapView.removeWaypoints()
-            navigationView.navigationMapView.removeRoutes()
-            
-            navigationView.bottomBannerContainerView.show()
-            backButton.isHidden = false
-            
             navigationView.bottomBannerContainerView.subviews.forEach {
                 $0.removeFromSuperview()
             }
             
             let destinationPreviewViewController: DestinationPreviewing
             if let customDestinationPreviewViewController = delegate?.previewViewController(self,
-                                                                                            bottomBannerViewControllerFor: state) {
+                                                                                            bottomBannerFor: state) {
                 guard let customDestinationPreviewViewController = customDestinationPreviewViewController as? DestinationPreviewing else {
                     preconditionFailure("UIViewController should conform to DestinationPreviewing protocol.")
                 }
@@ -422,25 +403,15 @@ open class PreviewViewController: UIViewController {
             }
             
             presentedBottomBannerViewController = destinationPreviewViewController
-            embed(destinationPreviewViewController, in: navigationView.bottomBannerContainerView)
+            embed(destinationPreviewViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
         case .routesPreviewing(let routesPreviewOptions):
-            // Speed limit, road name and floating buttons should be hidden.
-            navigationView.speedLimitView.isAlwaysHidden = true
-            navigationView.wayNameView.isHidden = true
-            
-            navigationView.navigationMapView.removeWaypoints()
-            navigationView.navigationMapView.removeRoutes()
-            
-            navigationView.bottomBannerContainerView.isHidden = false
-            backButton.isHidden = false
-            
             navigationView.bottomBannerContainerView.subviews.forEach {
                 $0.removeFromSuperview()
             }
             
             let routesPreviewViewController: RoutesPreviewing
             if let customRoutesPreviewViewController = delegate?.previewViewController(self,
-                                                                                       bottomBannerViewControllerFor: state) {
+                                                                                       bottomBannerFor: state) {
                 guard let customRoutesPreviewViewController = customRoutesPreviewViewController as? RoutesPreviewing else {
                     preconditionFailure("UIViewController should conform to RoutesPreviewing protocol.")
                 }
@@ -452,8 +423,43 @@ open class PreviewViewController: UIViewController {
             }
             
             presentedBottomBannerViewController = routesPreviewViewController
-            embed(routesPreviewViewController, in: navigationView.bottomBannerContainerView)
+            embed(routesPreviewViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
         }
+    }
+    
+    func updateInternalComponents(to state: State) {
+        delegate?.previewViewController(self, stateWillChangeTo: state)
+        
+        updateBottomBannerContainerView(to: state)
+        
+        switch state {
+        case .browsing:
+            navigationView.speedLimitView.show()
+            navigationView.wayNameView.show()
+            
+            backButton.hide()
+            navigationView.resumeButton.hide()
+            
+            pointAnnotationManager?.annotations = []
+            cameraModeFloatingButton.cameraMode = .centered
+        case .destinationPreviewing:
+            backButton.show()
+            navigationView.bottomBannerContainerView.show()
+            
+            navigationView.wayNameView.hide()
+            navigationView.speedLimitView.hide()
+        case .routesPreviewing:
+            backButton.show()
+            navigationView.bottomBannerContainerView.show()
+            
+            navigationView.wayNameView.hide()
+            navigationView.speedLimitView.hide()
+        }
+        
+        navigationView.navigationMapView.removeWaypoints()
+        navigationView.navigationMapView.removeRoutes()
+        
+        delegate?.previewViewController(self, stateDidChangeTo: state)
     }
     
     // MARK: - Gesture recognizers
@@ -461,8 +467,7 @@ open class PreviewViewController: UIViewController {
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         guard gesture.state == .began,
               let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider,
-              let originCoordinate = passiveLocationProvider.locationManager.location?.coordinate,
-              case _ = State.browsing else { return }
+              let originCoordinate = passiveLocationProvider.locationManager.location?.coordinate else { return }
         
         let destinationCoordinate = navigationView.navigationMapView.mapView.mapboxMap.coordinate(for: gesture.location(in: navigationView.navigationMapView.mapView))
         let coordinates = [
@@ -470,7 +475,7 @@ open class PreviewViewController: UIViewController {
             destinationCoordinate,
         ]
         
-        delegate?.previewViewController(self, didLongPressFor: coordinates)
+        delegate?.previewViewController(self, didAddDestinationBetween: coordinates)
     }
     
     // MARK: - Event handlers
@@ -479,9 +484,9 @@ open class PreviewViewController: UIViewController {
         if case let .destinationPreviewing(destinationOptions) = previousState {
             previousState = nil
             preview(destinationOptions.waypoint)
-        } else if case .destinationPreviewing(_) = state {
+        } else if case .destinationPreviewing = state {
             state = .browsing
-        } else if case .routesPreviewing(_) = state {
+        } else if case .routesPreviewing = state {
             state = .browsing
         }
     }

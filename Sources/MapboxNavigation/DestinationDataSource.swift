@@ -1,7 +1,7 @@
 import UIKit
 
 // :nodoc:
-public typealias DestinationPreviewing = UIViewController & DestinationDataSource
+public typealias DestinationPreviewing = Previewing & DestinationDataSource
 
 // :nodoc:
 public protocol DestinationDataSource: AnyObject {
