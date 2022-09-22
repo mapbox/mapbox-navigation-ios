@@ -63,6 +63,14 @@ open class DismissButton: Button {
 
 class BackButton: Button {
     
+    // TODO: Implement animated showing and hiding functionality.
+    func show() {
+        isHidden = false
+    }
+    
+    func hide() {
+        isHidden = true
+    }
 }
 
 class PreviewButton: Button {
