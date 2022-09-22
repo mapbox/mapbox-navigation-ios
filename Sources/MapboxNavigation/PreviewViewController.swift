@@ -169,6 +169,16 @@ open class PreviewViewController: UIViewController {
         navigationView.floatingButtons = [
             cameraModeFloatingButton
         ]
+        
+#if DEBUG
+        let debugFloatingButton = FloatingButton.rounded(image: .debugImage,
+                                                         imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0))
+        debugFloatingButton.addTarget(self,
+                                      action: #selector(didPressDebugButton),
+                                      for: .touchUpInside)
+        
+        navigationView.floatingButtons?.append(debugFloatingButton)
+#endif
     }
     
     func setupTopBannerContainerView() {
@@ -489,6 +499,10 @@ open class PreviewViewController: UIViewController {
         } else if case .routesPreviewing = state {
             state = .browsing
         }
+    }
+    
+    @objc func didPressDebugButton() {
+        // TODO: Implement debug view presentation.
     }
     
     @objc func resetCameraState() {
