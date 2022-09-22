@@ -12,7 +12,7 @@ import MapboxMaps
  If no delegate is set, a default built-in `MapboxNavigationService` will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
-public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
+public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlayManagerDelegateDeprecations {
     
     // MARK: Customizing the Bar Buttons
     
@@ -635,4 +635,18 @@ public extension CarPlayManagerDelegate {
                         in mapTemplate: CPMapTemplate) -> Bool {
         return false
     }
+}
+
+/**
+ :nodoc:
+ 
+ This protocol redeclares the deprecated methods of the `CarPlayManagerDelegate` protocol for the purpose of calling implementations of these methods that have not been upgraded yet.
+ */
+@available(iOS 12.0, *)
+public protocol CarPlayManagerDelegateDeprecations {
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        navigationServiceFor routeResponse: RouteResponse,
+                        routeIndex: Int,
+                        routeOptions: RouteOptions,
+                        desiredSimulationMode: SimulationMode) -> NavigationService?
 }

@@ -720,11 +720,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
         var navigationServiceWithRouteOptions: (() -> NavigationService?)? = nil
         if case let .route(routeOptions) = indexedRouteResponse.routeResponse.options {
             navigationServiceWithRouteOptions = {
-                self.delegate?.carPlayManager(self,
-                                              navigationServiceFor: indexedRouteResponse.routeResponse,
-                                              routeIndex: indexedRouteResponse.routeIndex,
-                                              routeOptions: routeOptions,
-                                              desiredSimulationMode: desiredSimulationMode)
+                (self.delegate as CarPlayManagerDelegateDeprecations?)?
+                    .carPlayManager(self,
+                                    navigationServiceFor: indexedRouteResponse.routeResponse,
+                                    routeIndex: indexedRouteResponse.routeIndex,
+                                    routeOptions: routeOptions,
+                                    desiredSimulationMode: desiredSimulationMode)
             }
         }
         
