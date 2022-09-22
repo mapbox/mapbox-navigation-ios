@@ -220,9 +220,10 @@ class InstructionPresenter {
     
     private func legacyAttributedString(for legacyIcon: UIImage,
                                         dataSource: DataSource) -> NSAttributedString {
+        let image = legacyIcon.scale(to: dataSource.font.pointSize * 1.2) ?? legacyIcon
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font
-        attachment.image = legacyIcon
+        attachment.image = image
         return NSAttributedString(attachment: attachment)
     }
 
@@ -237,9 +238,11 @@ class InstructionPresenter {
         attachment.font = dataSource.font
         let shieldColor = dataSource.shieldColor(from: shield.textColor)
         let fontSize = dataSource.font.with(multiplier: 0.4)
-        attachment.image = cachedImage.withCenteredText(shield.text,
-                                                        color: shieldColor,
-                                                        font: fontSize)
+        let shieldWithCenteredText = cachedImage.withCenteredText(shield.text,
+                                                                  color: shieldColor,
+                                                                  font: fontSize)
+        let image = shieldWithCenteredText.scale(to: dataSource.font.pointSize * 1.2) ?? shieldWithCenteredText
+        attachment.image = image
         return NSAttributedString(attachment: attachment)
     }
     
