@@ -18,9 +18,19 @@ class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         // that was used in `PreviewViewController`.
         toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
         
+        toViewController.navigationMapView?.userLocationStyle = .courseView()
+        
         // Switch navigation camera to active navigation mode.
         toViewController.navigationMapView?.navigationCamera.viewportDataSource = NavigationViewportDataSource(toViewController.navigationView.navigationMapView.mapView,
                                                                                                                viewportDataSourceType: .active)
+        
+        let navigationViewportDataSource = toViewController.navigationMapView?.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        navigationViewportDataSource?.options.followingCameraOptions.centerUpdatesAllowed = true
+        navigationViewportDataSource?.options.followingCameraOptions.bearingUpdatesAllowed = true
+        navigationViewportDataSource?.options.followingCameraOptions.pitchUpdatesAllowed = true
+        navigationViewportDataSource?.options.followingCameraOptions.paddingUpdatesAllowed = true
+        navigationViewportDataSource?.options.followingCameraOptions.zoomUpdatesAllowed = true
+        
         toViewController.navigationMapView?.navigationCamera.follow()
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.

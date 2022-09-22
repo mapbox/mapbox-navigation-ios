@@ -14,14 +14,9 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             return
         }
         
+        toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
+        
         transitionContext.containerView.addSubview(toViewController.view)
         transitionContext.completeTransition(true)
-        
-        toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
-        toViewController.setupNavigationViewportDataSource()
-        toViewController.setupPassiveLocationManager()
-        toViewController.navigationView.navigationMapView.removeArrow()
-        toViewController.fitCamera(to: fromViewController.routeResponse)
-        toViewController.navigationView.bottomBannerContainerView.show()
     }
 }

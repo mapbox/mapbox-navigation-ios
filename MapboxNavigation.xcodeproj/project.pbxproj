@@ -176,6 +176,8 @@
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
+		8A01B15C28DBC22A006A50AF /* PreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */; };
+		8A01B16028DBF048006A50AF /* NavigationCamera+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */; };
 		8A04BDF227DC043F00B8F76C /* PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */; };
 		8A04DFBC275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */; };
 		8A0DA5F726A23FF800E7D360 /* route-for-navigation-camera.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */; };
@@ -266,6 +268,7 @@
 		8AC40920279918930075248E /* NavigationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091F279918930075248E /* NavigationViewDelegate.swift */; };
 		8AC5070928D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
+		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
@@ -778,6 +781,8 @@
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
+		8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerLayout.swift; sourceTree = "<group>"; };
+		8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationCamera+Preview.swift"; sourceTree = "<group>"; };
 		8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera.json"; sourceTree = "<group>"; };
@@ -869,6 +874,7 @@
 		8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButton.swift; sourceTree = "<group>"; };
 		8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButtonDelegate.swift; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
+		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
@@ -1587,8 +1593,9 @@
 				8AB97C15280A30A800792939 /* Destination Preview */,
 				8AB97C16280A30C500792939 /* Routes Preview */,
 				8AD2210327C1A668000734A5 /* PreviewViewController.swift */,
-				8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */,
+				8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */,
 				8AB97C1D280A364E00792939 /* PreviewViewControllerState.swift */,
+				8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */,
 			);
 			name = Preview;
 			sourceTree = "<group>";
@@ -1986,6 +1993,8 @@
 				8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */,
 				8AD220AA27C091EE000734A5 /* Solar.swift */,
 				8AD220AE27C09544000734A5 /* Date.swift */,
+				8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */,
+				8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2732,6 +2741,7 @@
 				8A50A3CD26EC0A3100894A8E /* DialogViewController.swift in Sources */,
 				8A7FD08A28D9369C000C448F /* UIViewController.swift in Sources */,
 				8AD635BB278F667300218D5A /* StepTableViewCell.swift in Sources */,
+				8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */,
 				AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */,
 				8AD2211B27C43BB1000734A5 /* StylableLabel.swift in Sources */,
 				2BDD65512615C0E0005B8B55 /* RouteLineController.swift in Sources */,
@@ -2859,6 +2869,7 @@
 				8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */,
 				B41299CF26D7101F004031A3 /* CLLocationCoordinate2D.swift in Sources */,
 				8AD2210F27C434CD000734A5 /* TitleLabel.swift in Sources */,
+				8A01B15C28DBC22A006A50AF /* PreviewViewControllerLayout.swift in Sources */,
 				8AA0386127F7B3DF0007BD2D /* BottomBannerViewControllerLayout.swift in Sources */,
 				8A50A3CB26EC09FB00894A8E /* FeedbackSubtypeCollectionViewCell.swift in Sources */,
 				8AB97C20280E021800792939 /* BannerContainerView.swift in Sources */,
@@ -2907,6 +2918,7 @@
 				8AC5070928D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				8A11FEF027A3514C00285B6F /* CPRouteChoice.swift in Sources */,
+				8A01B16028DBF048006A50AF /* NavigationCamera+Preview.swift in Sources */,
 				8AD220AB27C091EE000734A5 /* Solar.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
 				8A8C3D98260175D20071D274 /* CLLocationDirection+Camera.swift in Sources */,

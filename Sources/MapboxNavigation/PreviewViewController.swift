@@ -15,35 +15,6 @@ open class PreviewViewController: UIViewController {
         }
     }
     
-    var routesPreviewCameraOptions: CameraOptions {
-        let topInset: CGFloat
-        let bottomInset: CGFloat
-        let leftInset: CGFloat
-        let rightInset: CGFloat
-        let spacing: CGFloat = 50.0
-        
-        if traitCollection.verticalSizeClass == .regular {
-            topInset = 150.0
-            bottomInset = navigationView.bottomBannerContainerView.frame.height + spacing
-            leftInset = view.safeAreaInsets.left + spacing
-            rightInset = view.safeAreaInsets.right + spacing
-        } else {
-            topInset = 50.0
-            bottomInset = 50.0
-            leftInset = navigationView.bottomBannerContainerView.frame.width + spacing
-            rightInset = view.safeAreaInsets.right + spacing
-        }
-        
-        let padding = UIEdgeInsets(top: topInset,
-                                   left: leftInset,
-                                   bottom: bottomInset,
-                                   right: rightInset)
-        
-        let pitch: CGFloat = 0.0
-        
-        return CameraOptions(padding: padding, pitch: pitch)
-    }
-    
     var backButton: BackButton!
     
     // :nodoc:
@@ -51,7 +22,7 @@ open class PreviewViewController: UIViewController {
         view as! NavigationView
     }
     
-    var finalDestinationAnnotations: [PointAnnotation]? = nil
+    var finalDestinationAnnotation: PointAnnotation? = nil
     
     var pointAnnotationManager: PointAnnotationManager?
     
@@ -62,48 +33,35 @@ open class PreviewViewController: UIViewController {
     // :nodoc:
     public private(set) var presentedBottomBannerViewController: UIViewController?
     
-    var topBannerContainerViewHeightConstraint: NSLayoutConstraint!
+    var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
+    var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
     
+    deinit {
+        unsubscribeFromNotifications()
+    }
+    
+    // MARK: - UIViewController lifecycle methods
+    
     open override func loadView() {
-        let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        let navigationView = NavigationView(frame: frame)
-        navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        navigationView.navigationMapView.delegate = self
-        navigationView.navigationMapView.userLocationStyle = .courseView()
-        navigationView.navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
-            
-            if let finalDestinationAnnotations = self.finalDestinationAnnotations,
-               let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = finalDestinationAnnotations
-                
-                self.finalDestinationAnnotations = nil
-            }
-        }
-        
-        view = navigationView
+        view = setupNavigationView()
     }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         setupBackButton()
-        setupSpeedLimitView()
-        setupWayNameView()
         setupFloatingButtons()
         setupTopBannerContainerView()
         setupBottomBannerContainerView()
-        
-        setupNavigationViewportDataSource()
-        setupPassiveLocationManager()
-        setupStyleManager()
         setupOrnaments()
+        setupConstraints()
+        
+        setupStyleManager()
         setupGestureRecognizers()
-        subscribeForNotifications()
         
         state = .browsing
     }
@@ -111,30 +69,98 @@ open class PreviewViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Style should be applied each time to prevent usage of the styles that were set via
-        // `NavigationViewController`.
-        styleManager.applyStyle()
+        setupPassiveLocationManager()
+        setupNavigationViewportDataSource()
+        subscribeForNotifications()
     }
     
-    func setupStyleManager() {
-        styleManager = StyleManager()
-        styleManager.delegate = self
-        styleManager.styles = [DayStyle(), NightStyle()]
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        setupBottomBannerContainerViewLayoutConstraints()
+        
+        // TODO: Implement public method that completely cleans-up `NavigationMapView`.
+        navigationView.navigationMapView.removeRoutes()
+        navigationView.navigationMapView.removeAlternativeRoutes()
+        navigationView.navigationMapView.removeArrow()
+        navigationView.navigationMapView.removeRouteDurations()
+        navigationView.navigationMapView.removeContinuousAlternativesRoutes()
+        navigationView.navigationMapView.removeContinuousAlternativeRoutesDurations()
+        
+        switch state {
+        case .browsing:
+            break
+        case .destinationPreviewing(_):
+            navigationView.bottomBannerContainerView.show()
+        case .routesPreviewing(let routesPreviewOptions):
+            showcase(routeResponse: routesPreviewOptions.routeResponse,
+                     routeIndex: 0)
+            fitCamera(to: routesPreviewOptions.routeResponse)
+            navigationView.bottomBannerContainerView.show()
+        }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        unsubscribeFromNotifications()
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
+            setupBottomBannerContainerViewLayoutConstraints()
+        }
     }
     
     open override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        if topBannerContainerViewHeightConstraint != nil {
-            let heightInset = view.safeAreaInsets.top
-            topBannerContainerViewHeightConstraint.constant = heightInset
+        setupTopBannerContainerViewLayoutConstraints()
+    }
+    
+    // MARK: - UIViewController setting-up methods
+    
+    func setupNavigationView() -> NavigationView {
+        let frame = parent?.view.bounds ?? UIScreen.main.bounds
+        let navigationView = NavigationView(frame: frame)
+        navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        navigationView.navigationMapView.delegate = self
+        navigationView.navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
+            
+            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
+               let pointAnnotationManager = self.pointAnnotationManager {
+                pointAnnotationManager.annotations = [finalDestinationAnnotation]
+                
+                self.finalDestinationAnnotation = nil
+            }
         }
+        
+        return navigationView
+    }
+    
+    func setupBackButton() {
+        let backButton = BackButton(type: .system)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        // TODO: Add localization.
+        backButton.setTitle("Back", for: .normal)
+        backButton.clipsToBounds = true
+        backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
+        backButton.setImage(.backImage, for: .normal)
+        backButton.imageView?.contentMode = .scaleAspectFit
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 10,
+                                                  left: 0,
+                                                  bottom: 10,
+                                                  right: 15)
+        navigationView.addSubview(backButton)
+        
+        self.backButton = backButton
     }
     
     func setupFloatingButtons() {
-        navigationView.floatingStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
-                                                                   constant: -10.0).isActive = true
-        
         cameraModeFloatingButton = FloatingButton.rounded(imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0)) as CameraModeFloatingButton
         cameraModeFloatingButton.delegate = self
         
@@ -143,11 +169,56 @@ open class PreviewViewController: UIViewController {
         ]
     }
     
-    deinit {
-        unsubscribeFromNotifications()
+    func setupTopBannerContainerView() {
+        navigationView.topBannerContainerView.isHidden = false
+        navigationView.topBannerContainerView.backgroundColor = .clear
     }
     
-    // MARK: Notifications Observer Methods
+    func setupBottomBannerContainerView() {
+        navigationView.bottomBannerContainerView.isHidden = true
+        navigationView.bottomBannerContainerView.backgroundColor = .defaultBackgroundColor
+    }
+    
+    // TODO: Implement the ability to set default positions for logo and attribution button.
+    func setupOrnaments() {
+        navigationView.navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+    }
+    
+    func setupPassiveLocationManager() {
+        let passiveLocationManager = PassiveLocationManager()
+        let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
+        navigationView.navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
+    }
+    
+    func setupNavigationViewportDataSource() {
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationView.navigationMapView.mapView,
+                                                                        viewportDataSourceType: .passive)
+        navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+    }
+    
+    func setupStyleManager() {
+        styleManager = StyleManager()
+        styleManager.delegate = self
+        // TODO: Provide the ability to set custom styles.
+        styleManager.styles = [DayStyle(), NightStyle()]
+    }
+    
+    // TODO: Implement the ability to remove gesture recognizers in case when `NavigationMapView` is reused.
+    func setupGestureRecognizers() {
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGestureRecognizer.name = "preview_long_press_gesture_recognizer"
+        navigationView.addGestureRecognizer(longPressGestureRecognizer)
+        
+        // In case if map view is panned, rotated or pinched, camera state should be reset.
+        for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
+        where gestureRecognizer is UIPanGestureRecognizer
+        || gestureRecognizer is UIRotationGestureRecognizer
+        || gestureRecognizer is UIPinchGestureRecognizer {
+            gestureRecognizer.addTarget(self, action: #selector(resetCameraState))
+        }
+    }
+    
+    // MARK: - Notifications observer methods
     
     func subscribeForNotifications() {
         NotificationCenter.default.addObserver(self,
@@ -179,9 +250,11 @@ open class PreviewViewController: UIViewController {
         // Update user puck to the most recent location.
         navigationView.navigationMapView.moveUserLocation(to: location, animated: true)
         
+        // Update current speed limit. In case if speed limit is not available `SpeedLimitView` is hidden.
         navigationView.speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         navigationView.speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
+        // Update current road name. In case if road name is not available `WayNameView` is hidden.
         let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
@@ -192,12 +265,12 @@ open class PreviewViewController: UIViewController {
             navigationView.wayNameView.containerView.isHidden = true
         }
         
-        updateViewportDataSource(for: location)
+        // Update camera options based on current location and camera mode.
+        navigationView.navigationMapView.navigationCamera.update(to: cameraModeFloatingButton.cameraMode)
     }
     
     @objc func orientationDidChange(_ notification: Notification) {
-        let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider
-        updateViewportDataSource(for: passiveLocationProvider?.locationManager.location)
+        navigationView.navigationMapView.navigationCamera.update(to: cameraModeFloatingButton.cameraMode)
         
         // In case if routes are already shown and orientation changes - fit camera so that all
         // routes fit into available space.
@@ -206,53 +279,28 @@ open class PreviewViewController: UIViewController {
         }
     }
     
-    func updateViewportDataSource(for location: CLLocation?) {
-        guard let location = location,
-              let navigationViewportDataSource = navigationView.navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
-        
-        let topInset: CGFloat = UIScreen.main.bounds.height - view.safeAreaInsets.bottom - 150.0
-        let bottomInset: CGFloat = 149.0 + view.safeAreaInsets.bottom
-        let leftInset: CGFloat = 50.0
-        let rightInset: CGFloat = 50.0
-        
-        navigationViewportDataSource.followingMobileCamera.padding = UIEdgeInsets(top: topInset,
-                                                                                  left: leftInset,
-                                                                                  bottom: bottomInset,
-                                                                                  right: rightInset)
-        
-        navigationViewportDataSource.followingMobileCamera.bearing = location.course
-        navigationViewportDataSource.followingMobileCamera.pitch = 40.0
-    }
-    
-    func addDestinationAnnotations(for coordinates: [CLLocationCoordinate2D]) {
-        let markerImage = UIImage(named: "default_marker", in: .mapboxNavigation, compatibleWith: nil)!
-        
-        let destinationAnnotations: [PointAnnotation] = coordinates.enumerated().map {
-            let identifier = "\(NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation)_\($0.offset)"
-            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: $0.element)
-            destinationAnnotation.image = .init(image: markerImage, name: "default_marker")
-            
-            return destinationAnnotation
-        }
+    func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D) {
+        let destinationIdentifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+        var destinationAnnotation = PointAnnotation(id: destinationIdentifier,
+                                                    coordinate: coordinate)
+        destinationAnnotation.image = .init(image: .defaultMarkerImage,
+                                            name: "default_marker")
         
         // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
         // and add it only after fully loading `MapView` style.
         if let pointAnnotationManager = self.pointAnnotationManager {
-            pointAnnotationManager.annotations = destinationAnnotations
+            pointAnnotationManager.annotations = [destinationAnnotation]
         } else {
-            finalDestinationAnnotations = destinationAnnotations
+            finalDestinationAnnotation = destinationAnnotation
         }
     }
     
     // :nodoc:
-    public func preview(_ waypoints: [Waypoint]) {
-        let destinationOptions = DestinationOptions(waypoints: waypoints)
+    public func preview(_ waypoint: Waypoint) {
+        let destinationOptions = DestinationOptions(waypoint: waypoint)
         state = .destinationPreviewing(destinationOptions)
         
-        let coordinates = waypoints.map({ $0.coordinate })
-        
-        // TODO: Show intermediate waypoints differently.
-        addDestinationAnnotations(for: coordinates)
+        addDestinationAnnotation(waypoint.coordinate)
         
         if let primaryText = destinationOptions.primaryText {
             let primaryAttributedString = NSAttributedString(string: primaryText)
@@ -262,9 +310,8 @@ open class PreviewViewController: UIViewController {
     }
     
     // :nodoc:
-    public func preview(_ coordinates: [CLLocationCoordinate2D]) {
-        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
-        preview(waypoints)
+    public func preview(_ coordinate: CLLocationCoordinate2D) {
+        preview(Waypoint(coordinate: coordinate))
     }
     
     // :nodoc:
@@ -278,7 +325,7 @@ open class PreviewViewController: UIViewController {
         
         if let lastLeg = routesPreviewOptions.routeResponse.routes?.first?.legs.last,
            let destinationCoordinate = lastLeg.destination?.coordinate {
-            addDestinationAnnotations(for: [destinationCoordinate])
+            addDestinationAnnotation(destinationCoordinate)
         }
         
         showcase(routeResponse: routeResponse,
@@ -297,8 +344,9 @@ open class PreviewViewController: UIViewController {
         
         routes.insert(routes.remove(at: routeIndex), at: 0)
         
+        let cameraOptions = navigationView.defaultRoutesPreviewCameraOptions()
         let routesPresentationStyle: RoutesPresentationStyle = .all(shouldFit: true,
-                                                                    cameraOptions: routesPreviewCameraOptions)
+                                                                    cameraOptions: cameraOptions)
         
         navigationView.navigationMapView.showcase(routes,
                                                   routesPresentationStyle: routesPresentationStyle,
@@ -307,20 +355,15 @@ open class PreviewViewController: UIViewController {
                                                   completion: completion)
     }
     
-    // :nodoc:
-    public func fitCamera(to routeResponse: RouteResponse?) {
-        guard let routes = routeResponse?.routes else { return }
+    func fitCamera(to routeResponse: RouteResponse) {
+        guard let routes = routeResponse.routes else { return }
         
         navigationView.navigationMapView.navigationCamera.stop()
+        let cameraOptions = navigationView.defaultRoutesPreviewCameraOptions()
         navigationView.navigationMapView.fitCamera(to: routes,
                                                    routesPresentationStyle: .all(shouldFit: true,
-                                                                                 cameraOptions: routesPreviewCameraOptions),
-                                                   animated: true,
-                                                   duration: 1.0)
-    }
-    
-    func setupOrnaments() {
-        navigationView.navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+                                                                                 cameraOptions: cameraOptions),
+                                                   animated: true)
     }
     
     func updateInternalComponents(to state: State) {
@@ -339,7 +382,7 @@ open class PreviewViewController: UIViewController {
             navigationView.speedLimitView.isAlwaysHidden = false
             navigationView.wayNameView.isHidden = false
             
-            cameraModeFloatingButton.cameraMode = .following
+            cameraModeFloatingButton.cameraMode = .centered
             
             if let customBottomBannerViewController = delegate?.previewViewController(self,
                                                                                       bottomBannerViewControllerFor: state) {
@@ -413,138 +456,6 @@ open class PreviewViewController: UIViewController {
         }
     }
     
-    // :nodoc:
-    public func setupNavigationViewportDataSource() {
-        let navigationViewportDataSource = NavigationViewportDataSource(navigationView.navigationMapView.mapView,
-                                                                        viewportDataSourceType: .passive)
-        
-        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
-        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
-        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
-        navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-    }
-    
-    // :nodoc:
-    public func setupPassiveLocationManager() {
-        let passiveLocationManager = PassiveLocationManager()
-        let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
-        navigationView.navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
-    }
-    
-    func setupSpeedLimitView() {
-        let layoutGuide = UILayoutGuide()
-        navigationView.addLayoutGuide(layoutGuide)
-        NSLayoutConstraint.activate([
-            layoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                             constant: 10),
-            layoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                                                 constant: 10),
-            layoutGuide.widthAnchor.constraint(equalToConstant: 50),
-            layoutGuide.heightAnchor.constraint(equalToConstant: 50)
-        ])
-        
-        navigationView.speedLimitViewLayoutGuide = layoutGuide
-    }
-    
-    func setupWayNameView() {
-        let layoutGuide = UILayoutGuide()
-        navigationView.addLayoutGuide(layoutGuide)
-        NSLayoutConstraint.activate([
-            layoutGuide.bottomAnchor.constraint(equalTo: navigationView.safeBottomAnchor,
-                                                constant: -60.0),
-            layoutGuide.centerXAnchor.constraint(equalTo: navigationView.safeCenterXAnchor),
-            layoutGuide.widthAnchor.constraint(lessThanOrEqualTo: navigationView.safeWidthAnchor,
-                                               multiplier: 0.95),
-            layoutGuide.heightAnchor.constraint(equalToConstant: 40.0),
-        ])
-        
-        navigationView.wayNameViewLayoutGuide = layoutGuide
-    }
-    
-    func setupBackButton() {
-        let backButton = BackButton(type: .system)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        // TODO: Add localization.
-        backButton.setTitle("Back", for: .normal)
-        backButton.clipsToBounds = true
-        backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
-        
-        let backImage = UIImage(named: "back", in: .mapboxNavigation, compatibleWith: nil)!
-        backButton.setImage(backImage, for: .normal)
-        backButton.imageView?.contentMode = .scaleAspectFit
-        backButton.imageEdgeInsets = UIEdgeInsets(top: 10,
-                                                  left: 0,
-                                                  bottom: 10,
-                                                  right: 10)
-        navigationView.addSubview(backButton)
-        
-        let backButtonLayoutConstraints = [
-            backButton.widthAnchor.constraint(equalToConstant: 110),
-            backButton.heightAnchor.constraint(equalToConstant: 50),
-            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                                                constant: 10.0),
-            backButton.topAnchor.constraint(equalTo: navigationView.topBannerContainerView.bottomAnchor,
-                                            constant: 10.0)
-        ]
-        
-        NSLayoutConstraint.activate(backButtonLayoutConstraints)
-        
-        self.backButton = backButton
-    }
-    
-    @objc func didPressBackButton() {
-        if case let .destinationPreviewing(destinationOptions) = previousState {
-            previousState = nil
-            preview(destinationOptions.waypoints)
-        } else if case .destinationPreviewing(_) = state {
-            state = .browsing
-        } else if case .routesPreviewing(_) = state {
-            state = .browsing
-        }
-    }
-    
-    func setupTopBannerContainerView() {
-        let topBannerContainerViewHeight = view.safeAreaInsets.top
-        topBannerContainerViewHeightConstraint = navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight)
-        topBannerContainerViewHeightConstraint.isActive = true
-        navigationView.topBannerContainerView.isHidden = false
-        navigationView.topBannerContainerView.backgroundColor = .clear
-    }
-    
-    func setupBottomBannerContainerView() {
-        // Round top left and top right corners of the bottom container view.
-        navigationView.bottomBannerContainerView.clipsToBounds = true
-        navigationView.bottomBannerContainerView.layer.cornerRadius = 10.0
-        navigationView.bottomBannerContainerView.layer.maskedCorners = [
-            .layerMinXMinYCorner,
-            .layerMaxXMinYCorner
-        ]
-        
-        navigationView.bottomBannerContainerView.isHidden = true
-        navigationView.bottomBannerContainerView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        
-        let bottomBannerContainerViewHeight = 120.0 + view.safeAreaInsets.bottom
-        
-        let bottomBannerContainerViewLayoutConstraints = [
-            navigationView.bottomBannerContainerView.heightAnchor.constraint(equalToConstant: bottomBannerContainerViewHeight)
-        ]
-        
-        NSLayoutConstraint.activate(bottomBannerContainerViewLayoutConstraints)
-    }
-    
-    func setupGestureRecognizers() {
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-        navigationView.addGestureRecognizer(longPressGestureRecognizer)
-        
-        // In case if map view is panned, rotated or pinched, camera state should be reset.
-        for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
-        where gestureRecognizer is UIPanGestureRecognizer
-        || gestureRecognizer is UIRotationGestureRecognizer
-        || gestureRecognizer is UIPinchGestureRecognizer {
-            gestureRecognizer.addTarget(self, action: #selector(resetCameraState))
-        }
-    }
-    
     // MARK: - Gesture recognizers
     
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -562,6 +473,19 @@ open class PreviewViewController: UIViewController {
         delegate?.previewViewController(self, didLongPressFor: coordinates)
     }
     
+    // MARK: - Event handlers
+    
+    @objc func didPressBackButton() {
+        if case let .destinationPreviewing(destinationOptions) = previousState {
+            previousState = nil
+            preview(destinationOptions.waypoint)
+        } else if case .destinationPreviewing(_) = state {
+            state = .browsing
+        } else if case .routesPreviewing(_) = state {
+            state = .browsing
+        }
+    }
+    
     @objc func resetCameraState() {
         if cameraModeFloatingButton.cameraMode == .idle { return }
         cameraModeFloatingButton.cameraMode = .idle
@@ -577,48 +501,44 @@ extension PreviewViewController: NavigationMapViewDelegate {
     }
 }
 
+// MARK: - DestinationPreviewViewControllerDelegate and RoutesPreviewViewControllerDelegate methods
+
 extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate {
     
-    func didPressPreviewButton() {
+    func willPreviewRoutes(_ destinationPreviewViewController: DestinationPreviewViewController) {
         previousState = state
         delegate?.previewViewControllerWillPreviewRoutes(self)
     }
     
-    func didPressStartButton() {
+    func willStartNavigation(_ destinationPreviewViewController: DestinationPreviewViewController) {
+        delegate?.previewViewControllerWillBeginNavigation(self)
+    }
+    
+    func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController) {
         delegate?.previewViewControllerWillBeginNavigation(self)
     }
 }
 
+// MARK: - CameraModeFloatingButtonDelegate methods
+
 extension PreviewViewController: CameraModeFloatingButtonDelegate {
     
     func cameraModeFloatingButton(_ cameraModeFloatingButton: CameraModeFloatingButton,
-                                  cameraModeDidChangeTo mode: CameraModeFloatingButton.CameraMode) {
-        switch mode {
+                                  cameraModeDidChangeTo cameraMode: CameraModeFloatingButton.CameraMode) {
+        navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
+        
+        switch cameraMode {
         case .idle:
-            navigationView.navigationMapView.navigationCamera.stop()
-            
-            let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider
-            let centerCoordinate = passiveLocationProvider?.locationManager.location?.coordinate
-            let padding = UIEdgeInsets(floatLiteral: 10.0)
-            let cameraOptions = CameraOptions(center: centerCoordinate,
-                                              padding: padding,
-                                              bearing: 0.0,
-                                              pitch: 0.0)
-            navigationView.navigationMapView.mapView.camera.ease(to: cameraOptions,
-                                                                 duration: 1.0)
+            fallthrough
         case .centered:
-            let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider
-            let centerCoordinate = passiveLocationProvider?.locationManager.location?.coordinate
-            let padding = UIEdgeInsets(floatLiteral: 10.0)
-            let cameraOptions = CameraOptions(center: centerCoordinate,
-                                              padding: padding)
-            navigationView.navigationMapView.mapView.camera.ease(to: cameraOptions,
-                                                                 duration: 1.0)
+            navigationView.navigationMapView.userLocationStyle = .puck2D()
         case .following:
-            navigationView.navigationMapView.navigationCamera.follow()
+            navigationView.navigationMapView.userLocationStyle = .courseView()
         }
     }
 }
+
+// MARK: - StyleManagerDelegate methods
 
 extension PreviewViewController: StyleManagerDelegate {
     

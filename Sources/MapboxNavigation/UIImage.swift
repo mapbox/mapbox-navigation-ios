@@ -54,6 +54,14 @@ extension UIImage {
                                    in: .mapboxNavigation,
                                    compatibleWith: nil)
     
+    static let backImage = UIImage(named: "back",
+                                   in: .mapboxNavigation,
+                                   compatibleWith: nil)
+    
+    static let defaultMarkerImage = UIImage(named: "default_marker",
+                                            in: .mapboxNavigation,
+                                            compatibleWith: nil)!
+    
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)

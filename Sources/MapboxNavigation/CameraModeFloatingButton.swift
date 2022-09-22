@@ -62,7 +62,7 @@ class CameraModeFloatingButton: FloatingButton {
         case .centered:
             cameraMode = .following
         case .following:
-            cameraMode = .idle
+            cameraMode = .centered
         }
     }
 }

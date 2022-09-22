@@ -7,7 +7,7 @@ import MapboxGeocoder
 
 extension SceneDelegate: PreviewViewControllerDelegate {
     
-    func previewViewControllerWillPreviewRoutes(_ previewViewController: PreviewViewController) {
+    func requestRoutes(_ completion: @escaping (_ routeResponse: RouteResponse) -> Void) {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         
         Directions.shared.calculate(navigationRouteOptions) { [weak self] (_, result) in
@@ -19,8 +19,14 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                 
                 self.routeResponse = routeResponse
                 
-                previewViewController.preview(routeResponse)
+                completion(routeResponse)
             }
+        }
+    }
+    
+    func previewViewControllerWillPreviewRoutes(_ previewViewController: PreviewViewController) {
+        requestRoutes { routeResponse in
+            previewViewController.preview(routeResponse)
         }
     }
     
@@ -68,7 +74,14 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewControllerWillBeginNavigation(_ previewViewController: PreviewViewController) {
-        startActiveNavigation(for: routeResponse)
+        if let routeResponse = routeResponse {
+            startActiveNavigation(for: routeResponse)
+        } else {
+            requestRoutes { [weak self] routeResponse in
+                guard let self = self else { return }
+                self.startActiveNavigation(for: routeResponse)
+            }
+        }
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
@@ -83,7 +96,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                      coordinateAccuracy: nil,
                                      name: "Final destination")
         
-        previewViewController.preview([finalWaypoint])
+        previewViewController.preview(finalWaypoint)
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
@@ -129,14 +142,13 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                willPresent destinationText: NSAttributedString) -> NSAttributedString? {
-        guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController,
-              let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoints.last?.coordinate else {
+        guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController else {
             return nil
         }
         
-        let locationManager = CLLocationManager()
+        let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoint.coordinate
         let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
-        reverseGeocodeOptions.focalLocation = locationManager.location
+        reverseGeocodeOptions.focalLocation = CLLocationManager().location
         reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
         let allowedScopes: PlacemarkScope = .all
         reverseGeocodeOptions.allowedScopes = allowedScopes

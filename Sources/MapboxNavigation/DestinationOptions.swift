@@ -11,26 +11,24 @@ public struct DestinationOptions {
     public var secondaryText: String?
     
     // :nodoc:
-    public private(set) var waypoints: [Waypoint]
+    public private(set) var waypoint: Waypoint
     
     // :nodoc:
-    public init(coordinates: [CLLocationCoordinate2D]) {
-        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
-        self.init(waypoints: waypoints)
+    public init(coordinate: CLLocationCoordinate2D) {
+        let waypoint = Waypoint(coordinate: coordinate)
+        self.init(waypoint: waypoint)
     }
     
     // :nodoc:
-    public init(waypoints: [Waypoint]) {
-        self.waypoints = waypoints
+    public init(waypoint: Waypoint) {
+        self.waypoint = waypoint
         
-        if let destinationName = waypoints.last?.name {
+        if let destinationName = waypoint.name {
             primaryText = destinationName
         }
         
-        if let destinationCoordinate = waypoints.last?.coordinate {
-            secondaryText = String(format: "(%.5f, %.5f)",
-                                   destinationCoordinate.latitude,
-                                   destinationCoordinate.longitude)
-        }
+        secondaryText = String(format: "(%.5f, %.5f)",
+                               waypoint.coordinate.latitude,
+                               waypoint.coordinate.longitude)
     }
 }

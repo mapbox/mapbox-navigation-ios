@@ -66,9 +66,8 @@ class CustomDestinationPreviewViewController: DestinationPreviewing {
         destinationLabel.font = UIFont.systemFont(ofSize: 15.0)
         destinationLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        if let coordinate = destinationOptions.waypoints.last?.coordinate {
-            destinationLabel.text = String(format: "(%.5f, %.5f)", coordinate.latitude, coordinate.longitude)
-        }
+        let coordinate = destinationOptions.waypoint.coordinate
+        destinationLabel.text = String(format: "(%.5f, %.5f)", coordinate.latitude, coordinate.longitude)
         
         view.addSubview(destinationLabel)
         
