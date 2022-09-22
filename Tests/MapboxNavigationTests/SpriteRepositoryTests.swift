@@ -37,9 +37,10 @@ class SpriteRepositoryTests: TestCase {
         repository.sessionConfiguration = config
     }
     
-    func storeData() {
+    func storeData(styleType: StyleType = .day) {
         let scale = Int(VisualInstruction.Component.scale)
-        guard let styleID = repository.styleID(for: .navigationDay),
+        let styleURI: StyleURI = (styleType == .day) ? .navigationDay : .navigationNight
+        guard let styleID = repository.styleID(for: styleURI),
               let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
               let infoRequestURL = repository.spriteURL(isImage: false, styleID: styleID),
               let legacyRequestURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
@@ -155,6 +156,35 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertTrue((shieldIcon?.isKind(of: UIImage.self))!, "Failed to cut the shield icon.")
     }
     
+    func testUpdateRepresentationOnDifferentDevices() {
+        storeData()
+        
+        let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: repository.baseURL, name: "us-interstate", textColor: "white", text: "280")
+        let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
+        
+        let defaultExpectation = expectation(description: "Representation updated on default phone.")
+        repository.updateRepresentation(for: representation) { _ in
+            defaultExpectation.fulfill()
+        }
+        wait(for: [defaultExpectation], timeout: 3.0)
+        
+        var expectedCachedStyles: [UIUserInterfaceIdiom: StyleURI] = [.phone: .navigationDay]
+        XCTAssertEqual(repository.userInterfaceIdiomStyles, expectedCachedStyles)
+        var shieldIcon = repository.roadShieldImage(from: shield)
+        XCTAssertNotNil(shieldIcon)
+        
+        let carPlayExpectation = expectation(description: "Representation updated on CarPlay.")
+        repository.updateRepresentation(for: representation, idiom: .carPlay) { _ in
+            carPlayExpectation.fulfill()
+        }
+        wait(for: [carPlayExpectation], timeout: 3.0)
+        
+        expectedCachedStyles = [.phone: .navigationDay, .carPlay: .navigationDay]
+        XCTAssertEqual(repository.userInterfaceIdiomStyles, expectedCachedStyles, "Failed to use cached style data when no styleURI provided.")
+        shieldIcon = repository.roadShieldImage(from: shield, idiom: .carPlay)
+        XCTAssertNotNil(shieldIcon)
+    }
+    
     func testUpdateStyle() {
         let styleURI = StyleURI.navigationNight
         
@@ -166,6 +196,37 @@ class SpriteRepositoryTests: TestCase {
         
         let defaultStyle = repository.userInterfaceIdiomStyles[.phone]
         XCTAssertEqual(styleURI, defaultStyle, "Failed to update the styleURI.")
+    }
+    
+    func testUpdateStylesOnDifferentDevices() {
+        storeData(styleType: .day)
+        storeData(styleType: .night)
+        
+        var expectedCachedStyles = [UIUserInterfaceIdiom: StyleURI]()
+        XCTAssertEqual(repository.userInterfaceIdiomStyles, expectedCachedStyles)
+        
+        let nightStyleURI = StyleURI.navigationNight
+        let nightStyleExpectation = expectation(description: "Night style updated.")
+        repository.updateStyle(styleURI: nightStyleURI) { _ in
+            nightStyleExpectation.fulfill()
+        }
+        wait(for: [nightStyleExpectation], timeout: 3.0)
+        
+        expectedCachedStyles = [.phone : nightStyleURI]
+        XCTAssertEqual(expectedCachedStyles, repository.userInterfaceIdiomStyles, "Failed to update styleURI for default phone.")
+        XCTAssertNotNil(repository.getSpriteImage(styleURI: nightStyleURI), "Failed to download Sprite image for default phone.")
+        
+        let dayStyleURI = StyleURI.navigationDay
+        let dayStyleExpectation = expectation(description: "Day style updated.")
+        repository.updateStyle(styleURI: dayStyleURI, idiom: .carPlay) { _ in
+            dayStyleExpectation.fulfill()
+        }
+        wait(for: [dayStyleExpectation], timeout: 3.0)
+        
+        expectedCachedStyles = [.phone: nightStyleURI, .carPlay: dayStyleURI]
+        XCTAssertEqual(expectedCachedStyles, repository.userInterfaceIdiomStyles, "Failed to update the styleURI on CarPlay.")
+        XCTAssertNotNil(repository.getSpriteImage(styleURI: nightStyleURI), "Failed to keep Sprite image for default phone.")
+        XCTAssertNotNil(repository.getSpriteImage(styleURI: dayStyleURI), "Failed to download Sprite image for CarPlay.")
     }
     
     func testPartiallySpriteUpdate() {
