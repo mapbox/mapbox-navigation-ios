@@ -109,6 +109,7 @@ open class NavigationEventsManager {
 
     /// :nodoc: the internal lower-level telemetry events service is an implementation detail which should not be manipulated directly
     private var coreTelemetry: EventsService!
+    private var telemetryService: TelemetryService!
     
     public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
@@ -129,8 +130,9 @@ open class NavigationEventsManager {
         settings.set(key: "com.mapbox.common.telemetry.internal.use_staging_api", value: true)
 
         let accessTokenCoreTelemetry = Bundle.main.infoDictionary?["MBXEventsServiceAccessToken"]  as? String ?? possibleToken ?? ""
-        let coreTelemetryOptions = EventsServerOptions(token: accessTokenCoreTelemetry, userAgentFragment: userAgent)
+        let coreTelemetryOptions = EventsServerOptions(token: accessTokenCoreTelemetry, userAgentFragment: userAgent, deferredDeliveryServiceOptions: nil)
         self.coreTelemetry = EventsService.getOrCreate(for: coreTelemetryOptions)
+        self.telemetryService = TelemetryService.getOrCreate(for: coreTelemetryOptions)
 
         start()
         resumeNotifications()
@@ -345,7 +347,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayConnect, attributes: attributes)
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes)
+        let ctEvent = Event(priority: .immediate, attributes: attributes, deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
 
@@ -356,7 +358,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayDisconnect, attributes: attributes)
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes)
+        let ctEvent = Event(priority: .immediate, attributes: attributes, deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
     
@@ -365,7 +367,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: NavigationEventTypeRouteRetrieval, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
 
@@ -374,7 +376,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
     
@@ -383,7 +385,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
     
@@ -392,7 +394,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
 
@@ -406,7 +408,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
 
@@ -415,7 +417,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
 
-        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:], deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
     
@@ -431,7 +433,7 @@ open class NavigationEventsManager {
             
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
 
-            let ctEvent = Event(priority: .immediate, attributes: eventDictionary)
+            let ctEvent = Event(priority: .immediate, attributes: eventDictionary, deferredOptions: nil)
             coreTelemetry.sendEvent(for: ctEvent)
         }
         mobileEventsManager.flush()
