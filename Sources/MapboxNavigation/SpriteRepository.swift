@@ -119,11 +119,6 @@ class SpriteRepository {
     
     func updateLegacy(representation: VisualInstruction.Component.ImageRepresentation?,
                       completion: @escaping ImageDownloadCompletionHandler) {
-        guard representation?.imageBaseURL != nil else {
-            completion(nil)
-            return
-        }
-        
         guard let legacyURL = representation?.imageURL(scale: VisualInstruction.Component.scale, format: .png) else {
             completion(.clientError)
             return
