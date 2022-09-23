@@ -11,11 +11,9 @@ final class EndOfRouteFeedbackTests: TestCase {
         let endLocation = CLLocationCoordinate2D(latitude: 32.714721,
                                                  longitude: -117.149314)
 
-        let route = Fixture.route(between: startLocation, and: endLocation)
-        let options = NavigationRouteOptions(coordinates: [startLocation, endLocation])
-        let service = MapboxNavigationService(routeResponse: route.response,
-                                              routeIndex: 0,
-                                              routeOptions: options,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.route(between: startLocation, and: endLocation).response,
+                                                        routeIndex: 0)
+        let service = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               locationSource: nil,

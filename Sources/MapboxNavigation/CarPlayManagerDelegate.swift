@@ -12,7 +12,7 @@ import MapboxMaps
  If no delegate is set, a default built-in `MapboxNavigationService` will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
-public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
+public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlayManagerDelegateDeprecations {
     
     // MARK: Customizing the Bar Buttons
     
@@ -120,6 +120,8 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      Asks the delegate to provide a navigation service. In multi-screen applications this should be
      the same instance used to guide the user along the route on the phone.
      
+     - important: this method is superseeded by `carPlayManager(_:navigationServiceFor:desiredSimulationMode:)`, and it's call result will be preferred over current method's.
+     
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter routeResponse: The `RouteResponse` containing a route for which the returned route
      controller will manage location updates.
@@ -128,10 +130,27 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
+    @available(*, deprecated, renamed: "carPlayManager(_:navigationServiceFor:desiredSimulationMode:)")
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor routeResponse: RouteResponse,
                         routeIndex: Int,
                         routeOptions: RouteOptions,
+                        desiredSimulationMode: SimulationMode) -> NavigationService?
+    
+    /**
+     Asks the delegate to provide a navigation service. In multi-screen applications this should be
+     the same instance used to guide the user along the route on the phone.
+     
+     - important: Implementing this method will suppress `carPlayManager(_:navigationServiceFor:routeIndex:routeOptions:desiredSimulationMode:)` being called, using current one as the source of truth for providing navigation service.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter indexedRouteResponse: The `IndexedRouteResponse` containing a route, index and options for which the returned route
+     controller will manage location updates.
+     - parameter desiredSimulationMode: The desired simulation mode to use.
+     - returns: A navigation service that manages location updates along `route`.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
                         desiredSimulationMode: SimulationMode) -> NavigationService?
     
     /**
@@ -421,6 +440,15 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
+                        navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
+                        desiredSimulationMode: SimulationMode) -> NavigationService? {
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
                         didFailToFetchRouteBetween waypoints: [Waypoint]?,
                         options: RouteOptions,
                         error: DirectionsError) -> CPNavigationAlert? {
@@ -607,4 +635,18 @@ public extension CarPlayManagerDelegate {
                         in mapTemplate: CPMapTemplate) -> Bool {
         return false
     }
+}
+
+/**
+ :nodoc:
+ 
+ This protocol redeclares the deprecated methods of the `CarPlayManagerDelegate` protocol for the purpose of calling implementations of these methods that have not been upgraded yet.
+ */
+@available(iOS 12.0, *)
+public protocol CarPlayManagerDelegateDeprecations {
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        navigationServiceFor routeResponse: RouteResponse,
+                        routeIndex: Int,
+                        routeOptions: RouteOptions,
+                        desiredSimulationMode: SimulationMode) -> NavigationService?
 }

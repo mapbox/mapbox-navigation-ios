@@ -19,8 +19,6 @@ class CustomViewController: UIViewController {
     var currentLegIndex: Int = 0
 
     var indexedUserRouteResponse: IndexedRouteResponse?
-        
-    var userRouteOptions: RouteOptions?
     
     var stepsViewController: StepsViewController?
 
@@ -47,9 +45,7 @@ class CustomViewController: UIViewController {
         navigationMapView.userLocationStyle = .courseView()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: indexedUserRouteResponse!.routeResponse.routes!.first!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
-                                                    routeIndex: indexedUserRouteResponse!.routeIndex,
-                                                    routeOptions: userRouteOptions!,
+        navigationService = MapboxNavigationService(indexedRouteResponse: indexedUserRouteResponse!,
                                                     customRoutingProvider: nil,
                                                     credentials: NavigationSettings.shared.directions.credentials,
                                                     locationSource: locationManager,

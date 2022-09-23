@@ -161,6 +161,10 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         refreshETA()
     }
     
+    public func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
+        refreshETA()
+    }
+    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         resetETATimer()
         updateETA(routeProgress: progress)

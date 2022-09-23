@@ -1,23 +1,21 @@
 import MapboxDirections
+import MapboxCoreNavigation
 import CarPlay
 
 @available(iOS 12.0, *)
 extension CPTrip {
     
-    convenience init(routeResponse: RouteResponse) {
+    convenience init(indexedRouteResponse: IndexedRouteResponse) {
         var waypoints: [Waypoint]
-        var directionsOptions: DirectionsOptions
         
-        switch routeResponse.options {
+        switch indexedRouteResponse.routeResponse.options {
         case .route(let routeOptions):
             waypoints = routeOptions.waypoints
-            directionsOptions = routeOptions
         case .match(let matchOptions):
             waypoints = matchOptions.waypoints
-            directionsOptions = matchOptions
         }
         
-        let routeChoices = routeResponse.routes?.enumerated().map { (routeIndex, route) -> CPRouteChoice in
+        let routeChoices = indexedRouteResponse.routeResponse.routes?.enumerated().map { (routeIndex, route) -> CPRouteChoice in
             let summaryVariants = [
                 DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
                 DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
@@ -27,10 +25,10 @@ extension CPTrip {
                                             additionalInformationVariants: [route.description],
                                             selectionSummaryVariants: [route.description])
             
-            let key: String = CPRouteChoice.RouteResponseUserInfo.key
-            let value: CPRouteChoice.RouteResponseUserInfo = .init(response: routeResponse,
-                                                                   routeIndex: routeIndex,
-                                                                   options: directionsOptions)
+            let key: String = CPRouteChoice.IndexedRouteResponseUserInfo.key
+            var selectedResponse = indexedRouteResponse
+            selectedResponse.routeIndex = routeIndex
+            let value: CPRouteChoice.IndexedRouteResponseUserInfo = .init(indexedRouteResponse: selectedResponse)
             let userInfo: CarPlayUserInfo = [key: value]
             routeChoice.userInfo = userInfo
             return routeChoice

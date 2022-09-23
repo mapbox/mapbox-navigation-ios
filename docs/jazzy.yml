@@ -54,7 +54,7 @@ custom_categories:
       - ReplayLocationManager
       - SimulatedLocationManager
       - NavigationRouteOptions
-      - RouteOptions
+      - DirectionsOptions
       - NavigationMatchOptions
       - SimulationMode
       - PassiveLocationManager

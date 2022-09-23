@@ -5,6 +5,8 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 import TestHelper
 import MapboxNavigationNative
+@_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
     var replayManager: ReplayLocationManager?
@@ -24,12 +26,13 @@ class RouteControllerTests: TestCase {
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.33865, longitude: 18.074935),
         ])
-        let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
+        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options), routeIndex: 0)
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
-        let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: self)
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
         locationManager.delegate = routeController
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
@@ -70,19 +73,18 @@ class RouteControllerTests: TestCase {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         let route = Fixture.route(from: "route-for-off-route", options: navigationRouteOptions)
         var replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let routeResponse = RouteResponse(httpResponse: nil,
-                                          routes: [route],
-                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
-                                          credentials: .mocked)
+        let routeResponse = IndexedRouteResponse(routeResponse: RouteResponse(httpResponse: nil,
+                                                                              routes: [route],
+                                                                              options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
+                                                                              credentials: .mocked),
+                                                 routeIndex: 0)
         
         guard let lastReplayLocation = replayLocations.last else {
             XCTFail("First and last route locations should be valid.")
             return
         }
         
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: navigationRouteOptions,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
 
@@ -132,8 +134,7 @@ class RouteControllerTests: TestCase {
         
         MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
             DispatchQueue.main.async {
-                completionHandler(Directions.Session(options, .mocked),
-                                  .success(routeResponse))
+                completionHandler(.success(routeResponse))
                 
                 calculateRouteCalled.fulfill()
             }
@@ -159,8 +160,9 @@ class RouteControllerTests: TestCase {
                                                             longitude: -122.03148874952787)],
                                         profileIdentifier: .automobileAvoidingTraffic)
         routeOptions.shapeFormat = .geoJSON
-        let routeResponse = Fixture.routeResponse(from: "routeResponseWithAlternatives",
-                                                  options: routeOptions)
+        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "routeResponseWithAlternatives",
+                                                                                      options: routeOptions),
+                                                 routeIndex: 0)
         
         let alternativesExpectation = XCTestExpectation(description: "Alternative route should be reported")
         alternativesExpectation.assertForOverFulfill = true
@@ -174,9 +176,7 @@ class RouteControllerTests: TestCase {
             }
         }
         
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: routeOptions,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
@@ -197,8 +197,9 @@ class RouteControllerTests: TestCase {
                                                             longitude: -122.03148874952787)],
                                         profileIdentifier: .automobileAvoidingTraffic)
         routeOptions.shapeFormat = .geoJSON
-        let routeResponse = Fixture.routeResponse(from: "routeResponseWithAlternatives",
-                                                  options: routeOptions)
+        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "routeResponseWithAlternatives",
+                                                                                      options: routeOptions),
+                                                 routeIndex: 0)
         
         let alternativesExpectation = XCTestExpectation(description: "Alternative route should not be reported")
         alternativesExpectation.assertForOverFulfill = true
@@ -210,9 +211,7 @@ class RouteControllerTests: TestCase {
             alternativesExpectation.fulfill()
         }
         
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: routeOptions,
+        let routeController = RouteController(indexedRouteResponse: routeResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
@@ -250,9 +249,9 @@ class RouteControllerTests: TestCase {
             CLLocation(coordinate: $0)
         }.shiftedToPresent()
         
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: options,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                        routeIndex: 0)
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: routingProviderStub,
                                               dataSource: self)
         
@@ -287,9 +286,9 @@ class RouteControllerTests: TestCase {
             CLLocation(coordinate: $0)
         }.shiftedToPresent()
         
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: options,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                        routeIndex: 0)
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
                                               customRoutingProvider: nil,
                                               dataSource: self)
         
@@ -311,6 +310,39 @@ class RouteControllerTests: TestCase {
         locationManager.startUpdatingLocation()
         wait(for: [modifyExpectation], timeout: locationManager.expectedReplayTime)
     }
+    
+    func testSwitchToOnlineRoute() {
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                        routeIndex: 0,
+                                                        responseOrigin: .onboard)
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
+        let routerDelegateSpy = RouterDelegateSpy()
+        routeController.delegate = routerDelegateSpy
+        
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
+        
+        let routeOptions = indexedRouteResponse.validatedRouteOptions
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
+        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  XCTFail()
+                  return
+        }
+        let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
+                                .url(forCalculating: routeOptions).absoluteString
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                               request: routeRequest,
+                                                               routeOrigin: indexedRouteResponse.responseOrigin)
+        let userInfo: [MapboxCoreNavigation.Navigator.NotificationUserInfoKey: Any] = [
+            .coincideOnlineRouteKey: (parsedRoutes.value as! [RouteInterface]).first!
+        ]
+        NotificationCenter.default.post(name: .navigatorWantsSwitchToCoincideOnlineRoute, object: nil, userInfo: userInfo)
+        
+        waitForExpectations(timeout: 2)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {
@@ -329,6 +361,11 @@ class CustomRoutingProviderStub: RoutingProvider {
     var refreshStub: (() -> Void)?
     
     func calculateRoutes(options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        routeStub?()
+        return nil
+    }
+    
+    func calculateRoutes(options: RouteOptions, completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {
         routeStub?()
         return nil
     }

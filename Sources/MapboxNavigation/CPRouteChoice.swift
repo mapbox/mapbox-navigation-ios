@@ -1,34 +1,25 @@
 import CarPlay
 import MapboxDirections
+import MapboxCoreNavigation
 
 @available(iOS 12.0, *)
 extension CPRouteChoice {
     
-    struct RouteResponseUserInfo {
+    struct IndexedRouteResponseUserInfo {
         
-        static let key = "\(Bundle.mapboxNavigation.bundleIdentifier!).cpRouteChoice.routeResponse"
-        
-        /**
-         Route response from the Mapbox Directions service.
-         */
-        let response: RouteResponse
+        static let key = "\(Bundle.mapboxNavigation.bundleIdentifier!).cpRouteChoice.indexedRouteResponse"
         
         /**
-         Index of the route.
+         Route response from the Mapbox Directions service with a selected route.
          */
-        let routeIndex: Int
-        
-        /**
-         Options, which were used for calculating results from the Mapbox Directions service.
-         */
-        let options: DirectionsOptions
+        let indexedRouteResponse: IndexedRouteResponse
     }
     
-    var routeResponseFromUserInfo: RouteResponseUserInfo? {
+    var indexedRouteResponseUserInfo: IndexedRouteResponseUserInfo? {
         guard let userInfo = userInfo as? CarPlayUserInfo else {
             return nil
         }
         
-        return userInfo[RouteResponseUserInfo.key] as? RouteResponseUserInfo
+        return userInfo[IndexedRouteResponseUserInfo.key] as? IndexedRouteResponseUserInfo
     }
 }

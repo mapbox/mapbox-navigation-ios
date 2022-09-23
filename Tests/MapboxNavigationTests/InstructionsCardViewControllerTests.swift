@@ -45,9 +45,8 @@ class InstructionsCardViewControllerTests: TestCase {
             let route = Fixture.route(from: "route-with-banner-instructions",
                                       options: navigationRouteOptions)
             
-            let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                            routeIndex: 0,
-                                                            routeOptions: navigationRouteOptions,
+            let navigationService = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions),
+                                                                                                       routeIndex: 0),
                                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                                             credentials: Fixture.credentials,
                                                             simulating: .never)

@@ -97,16 +97,12 @@ public class GenericRouteShield: StylableView {
     static func criticalHash(styleID: String?, dataSource: DataSource, traitCollection: UITraitCollection) -> String {
         var appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
-            if #available(iOS 12.0, *) {
-                let carPlayTraitCollection = UITraitCollection(traitsFrom: [
-                    UITraitCollection(userInterfaceIdiom: .carPlay),
-                    UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
-                ])
-                
-                appearance = GenericRouteShield.appearance(for: carPlayTraitCollection)
-            } else {
-                appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay))
-            }
+            let carPlayTraitCollection = UITraitCollection(traitsFrom: [
+                UITraitCollection(userInterfaceIdiom: .carPlay),
+                UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+            ])
+            
+            appearance = GenericRouteShield.appearance(for: carPlayTraitCollection)
         }
         
         var criticalProperties: [AnyHashable?] = [
@@ -116,12 +112,9 @@ public class GenericRouteShield: StylableView {
             appearance.borderColor,
             appearance.borderWidth,
             appearance.cornerRadius,
-            traitCollection.userInterfaceIdiom.rawValue
+            traitCollection.userInterfaceIdiom.rawValue,
+            traitCollection.userInterfaceStyle.rawValue
         ]
-        
-        if #available(iOS 12.0, *) {
-            criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
-        }
         
         if let styleID = styleID {
             criticalProperties.append(styleID)

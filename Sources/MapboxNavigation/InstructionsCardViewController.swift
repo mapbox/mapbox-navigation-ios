@@ -435,6 +435,14 @@ extension InstructionsCardViewController: NavigationComponent {
         
         reloadDataSource()
     }
+    
+    public func navigationService(_ service: NavigationService,
+                                  didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
+        currentStepIndex = nil
+        routeProgress = service.routeProgress
+        
+        reloadDataSource()
+    }
 }
 
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {

@@ -111,7 +111,7 @@ public class CarPlayManager: NSObject {
             }
         }
         
-        var trip = CPTrip(routeResponse: navigationService.indexedRouteResponse.routeResponse)
+        var trip = CPTrip(indexedRouteResponse: navigationService.indexedRouteResponse)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
         
         self.navigationService = navigationService
@@ -587,14 +587,13 @@ extension CarPlayManager {
      - parameter completionHandler: A closure to be executed when the calculation completes.
      */
     public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
-        calculate(options) { [weak self] (session, result) in
+        calculate(options) { [weak self] (result) in
             guard let self = self else {
                 completionHandler()
                 return
             }
             
             self.didCalculate(result,
-                              in: session,
                               for: options,
                               completionHandler: completionHandler)
         }
@@ -606,8 +605,20 @@ extension CarPlayManager {
      - parameter routeResponse: `RouteResponse` object, containing selection of routes that will be
      previewed.
      */
+    @available(*, deprecated, renamed: "previewRoutes(for:)")
     public func previewRoutes(for routeResponse: RouteResponse) {
-        let trip = CPTrip(routeResponse: routeResponse)
+        let trip = CPTrip(indexedRouteResponse: .init(routeResponse: routeResponse, routeIndex: 0))
+        previewRoutes(for: trip)
+    }
+    
+    /**
+     Allows to preview routes for a specific `IndexedRouteResponse` object.
+     
+     - parameter indexedRouteResponse: `IndexedRouteResponse` object, containing selection of routes that will be
+     previewed.
+     */
+    public func previewRoutes(for indexedRouteResponse: IndexedRouteResponse) {
+        let trip = CPTrip(indexedRouteResponse: indexedRouteResponse)
         previewRoutes(for: trip)
     }
     
@@ -632,12 +643,11 @@ extension CarPlayManager {
         interfaceController.pushTemplate(previewMapTemplate, animated: true)
     }
     
-    func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
+    func calculate(_ options: RouteOptions, completionHandler: @escaping RoutingProvider.IndexedRouteResponseCompletionHandler) {
         resolvedRoutingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
     }
     
-    func didCalculate(_ result: Result<RouteResponse, DirectionsError>,
-                      in session: Directions.Session,
+    func didCalculate(_ result: Result<IndexedRouteResponse, DirectionsError>,
                       for routeOptions: RouteOptions,
                       completionHandler: CompletionHandler) {
         defer {
@@ -658,8 +668,8 @@ extension CarPlayManager {
             popToRootTemplate(interfaceController: interfaceController, animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
-        case let .success(routeResponse):
-            previewRoutes(for: routeResponse)
+        case let .success(indexedRouteResponse):
+            previewRoutes(for: indexedRouteResponse)
         }
     }
 
@@ -699,24 +709,32 @@ extension CarPlayManager: CPMapTemplateDelegate {
                   return
               }
         
-        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
-              let routeOptions = routeResponse.options as? RouteOptions else {
-                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
-              }
+        guard let indexedRouteResponse = routeChoice.indexedRouteResponseUserInfo?.indexedRouteResponse else {
+            preconditionFailure("CPRouteChoice should contain `IndexedRouteResponseUserInfo` struct.")
+        }
 
         mapTemplate.hideTripPreviews()
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .inTunnels
         
+        var navigationServiceWithRouteOptions: (() -> NavigationService?)? = nil
+        if case let .route(routeOptions) = indexedRouteResponse.routeResponse.options {
+            navigationServiceWithRouteOptions = {
+                (self.delegate as CarPlayManagerDelegateDeprecations?)?
+                    .carPlayManager(self,
+                                    navigationServiceFor: indexedRouteResponse.routeResponse,
+                                    routeIndex: indexedRouteResponse.routeIndex,
+                                    routeOptions: routeOptions,
+                                    desiredSimulationMode: desiredSimulationMode)
+            }
+        }
+        
         let navigationService = self.navigationService ??
         delegate?.carPlayManager(self,
-                                 navigationServiceFor: routeResponse.response,
-                                 routeIndex: routeResponse.routeIndex,
-                                 routeOptions: routeOptions,
+                                 navigationServiceFor: indexedRouteResponse,
                                  desiredSimulationMode: desiredSimulationMode) ??
-        MapboxNavigationService(routeResponse: routeResponse.response,
-                                routeIndex: routeResponse.routeIndex,
-                                routeOptions: routeOptions,
+        navigationServiceWithRouteOptions?() ??
+        MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                 customRoutingProvider: customRoutingProvider,
                                 credentials: NavigationSettings.shared.directions.credentials,
                                 simulating: desiredSimulationMode)
@@ -771,13 +789,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
                             using routeChoice: CPRouteChoice) {
         guard let carPlayMapViewController = carPlayMapViewController else { return }
         
-        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
-              var routes = routeResponse.response.routes,
-              routes.indices.contains(routeResponse.routeIndex) else {
-                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+        guard let indexedRouteResponse = routeChoice.indexedRouteResponseUserInfo?.indexedRouteResponse,
+              let route = indexedRouteResponse.currentRoute,
+              var routes = indexedRouteResponse.routeResponse.routes else {
+                  preconditionFailure("CPRouteChoice should contain `IndexedRouteResponseUserInfo` struct.")
               }
         
-        let route = routes[routeResponse.routeIndex]
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)

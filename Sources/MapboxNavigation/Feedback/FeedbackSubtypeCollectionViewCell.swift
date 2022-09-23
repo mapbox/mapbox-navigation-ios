@@ -145,8 +145,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        if #available(iOS 12.0, *),
-           previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             circleOutlineColor = showSelectedColor ? normalCircleColor : selectedCircleColor
         }
     }
