@@ -2120,12 +2120,60 @@ open class NavigationMapView: UIView {
         if let selected = waypointTest?.first {
             delegate?.navigationMapView(self, didSelect: selected)
             return
-        } else if let routes = self.routes(closeTo: tapPoint),
-                  let selectedRoute = routes.first {
-            delegate?.navigationMapView(self, didSelect: selectedRoute)
-        } else if let alternativeRoutes = self.continuousAlternativeRoutes(closeTo: tapPoint),
-                  let selectedRoute = alternativeRoutes.first {
-            delegate?.navigationMapView(self, didSelect: selectedRoute)
+        }
+        
+        routeFromTappedPoint(point: tapPoint)  { [weak self] (routeFoundByPoint) in
+            guard !routeFoundByPoint, let self = self else { return }
+            if let routes = self.routes(closeTo: tapPoint),
+               let selectedRoute = routes.first {
+                self.delegate?.navigationMapView(self, didSelect: selectedRoute)
+            } else if let alternativeRoutes = self.continuousAlternativeRoutes(closeTo: tapPoint),
+                      let selectedRoute = alternativeRoutes.first {
+                self.delegate?.navigationMapView(self, didSelect: selectedRoute)
+            }
+        }
+    }
+    
+    func routeFromTappedPoint(point: CGPoint, completion: @escaping (Bool) -> Void) {
+        let group = DispatchGroup()
+        var routeFoundByPoint: Bool = false
+        let layerIds: [String] = [
+            LayerIdentifier.routeDurationAnnotationsLayer,
+            LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer]
+    
+        for layerId in layerIds {
+            group.enter()
+            let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
+            routeIndexFromMapQuery(with: options, at: point) { [weak self] (routeIndex) in
+                defer { group.leave() }
+                guard let self = self, let routeIndex = routeIndex else { return }
+                if layerId == layerIds.first {
+                    if let route = self.routes?[safe: routeIndex] {
+                        routeFoundByPoint = true
+                        self.delegate?.navigationMapView(self, didSelect: route)
+                    }
+                } else if let alternativeRoute = self.continuousAlternatives?[safe: routeIndex] {
+                    routeFoundByPoint = true
+                    self.delegate?.navigationMapView(self, didSelect: alternativeRoute)
+                }
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(routeFoundByPoint)
+        }
+    }
+    
+    func routeIndexFromMapQuery(with options: RenderedQueryOptions, at point: CGPoint, completion: @escaping (Int?) -> Void) {
+        mapView.mapboxMap.queryRenderedFeatures(with: [point], options: options) { result in
+            if case .success(let queriedFeatures) = result,
+               let indexValue = queriedFeatures.first?.feature.properties?["sortOrder"] as? JSONValue,
+               case .number(let number) = indexValue {
+                let routeIndex = abs(Int(number))
+                completion(routeIndex)
+            } else {
+                completion(nil)
+            }
         }
     }
     

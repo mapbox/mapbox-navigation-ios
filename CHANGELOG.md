@@ -16,6 +16,7 @@
 ### Map
 
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
+* Fixed an issue where users tap on the route duration bubble, the wrong route or continuous alternative route is selected. ([#4133](https://github.com/mapbox/mapbox-navigation-ios/pull/4133))
 
 ### Banners and guidance instructions
 
