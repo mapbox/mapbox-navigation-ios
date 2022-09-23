@@ -14,6 +14,7 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             return
         }
         
+        // Use `NavigationMapView` that was used in `NavigationViewController` in `PreviewViewController`.
         toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
         
         transitionContext.containerView.addSubview(toViewController.view)
