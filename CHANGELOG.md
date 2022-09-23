@@ -4,7 +4,7 @@
 
 ### Packaging
 
-* This library now requires a minimum deployment target of iOS 12.0 or above. Older operating system versions are no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
+* This library now requires a minimum deployment target of iOS 12.0 or above. iOS 11._x_ is no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 * MapboxCoreNavigation now requires [MapboxDirections v2.8.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-alpha.1). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 * MapboxNavigation now requires [MapboxSpeech v2.1.0](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 
