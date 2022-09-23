@@ -428,11 +428,7 @@ extension InstructionsBannerViewSnapshotTests {
 }
 
 class InstructionBannerTest: TestCase {
-    lazy var spriteRepository: SpriteRepository = {
-        let repo = SpriteRepository.shared
-        repo.sessionConfiguration = URLSessionConfiguration.default
-        return repo
-    }()
+    var spriteRepository: SpriteRepository = .shared
     
     func cacheSprite(for styleURI: StyleURI = .navigationDay) {
         let shieldImage: ShieldImage = (styleURI == .navigationDay) ? .shieldDay : .shieldNight

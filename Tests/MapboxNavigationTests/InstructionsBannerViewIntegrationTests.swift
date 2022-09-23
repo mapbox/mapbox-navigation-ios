@@ -113,6 +113,15 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
+        clearDiskCache()
+        cacheSprite()
+        
+        let representation280 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
+        let representation101 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.us101.baseURL)
+        XCTAssertNil(spriteRepository.getLegacyShield(with: representation280), "Failed to clear cache.")
+        XCTAssertNil(spriteRepository.getLegacyShield(with: representation101), "Failed to clear cache.")
+        XCTAssertFalse(spriteRepository.needToUpdateSprite(styleURI: .navigationDay))
+        
         let view = instructionsView()
         
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
@@ -169,6 +178,15 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
     }
     
     func testRouteShieldsAreGenericUntilTheyLoad() {
+        clearDiskCache()
+        cacheSprite()
+        
+        let representation280 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
+        let representation101 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.us101.baseURL)
+        XCTAssertNil(spriteRepository.getLegacyShield(with: representation280), "Failed to clear cache.")
+        XCTAssertNil(spriteRepository.getLegacyShield(with: representation101), "Failed to clear cache.")
+        XCTAssertFalse(spriteRepository.needToUpdateSprite(styleURI: .navigationDay))
+        
         let view = instructionsView()
         
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
