@@ -410,7 +410,10 @@ class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
     }
     
     func onOnlinePrimaryRouteAvailable(forOnlinePrimaryRoute onlinePrimaryRoute: RouteInterface) {
-        // TODO: support switching to online route
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .coincideOnlineRouteKey: onlinePrimaryRoute,
+        ]
+        NotificationCenter.default.post(name: .navigatorWantsSwitchToCoincideOnlineRoute, object: nil, userInfo: userInfo)
     }
 }
 

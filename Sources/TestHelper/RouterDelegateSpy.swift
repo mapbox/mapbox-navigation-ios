@@ -25,6 +25,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onWillTakeAlternativeRoute: ((Route, CLLocation?) -> Void)?
     public var onDidTakeAlternativeRoute: ((CLLocation?) -> Void)?
     public var onDidFailToTakeAlternativeRoute: ((CLLocation?) -> Void)?
+    public var onDidSwitchToCoincideRoute: ((Route) -> Void)?
     
     public init() {}
 
@@ -123,5 +124,9 @@ public final class RouterDelegateSpy: RouterDelegate {
     
     public func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
         onDidFailToTakeAlternativeRoute?(location)
+    }
+    
+    public func router(_ router: Router, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
+        onDidSwitchToCoincideRoute?(coincideRoute)
     }
 }

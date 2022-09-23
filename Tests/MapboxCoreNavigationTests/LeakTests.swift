@@ -6,9 +6,8 @@ import TestHelper
 final class LeakTests: TestCase {
     func testNavigationService() {
         let leakTester = LeakTest {
-            MapboxNavigationService(routeResponse: response,
-                                    routeIndex: 0,
-                                    routeOptions: routeOptions,
+            MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: response,
+                                                                               routeIndex: 0),
                                     customRoutingProvider: MapboxRoutingProvider(.offline),
                                     credentials: .mocked)
         }

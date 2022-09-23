@@ -33,12 +33,11 @@ class CarPlayNavigationViewControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
         
-        let routeResponse = Fixture.routeResponse(from: "multileg-route",
-                                                  options: navigationRouteOptions)
+        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "multileg-route",
+                                                                                      options: navigationRouteOptions),
+                                                 routeIndex: 0)
         
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                        routeIndex: 0,
-                                                        routeOptions: navigationRouteOptions,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: routeResponse,
                                                         customRoutingProvider: nil,
                                                         credentials: Fixture.credentials)
         

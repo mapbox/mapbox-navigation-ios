@@ -21,9 +21,8 @@ final class LeaksTests: TestCase {
     }
 
     func testRouteVoiceController() {
-        let dummySvc = MapboxNavigationService(routeResponse: response,
-                                               routeIndex: 0,
-                                               routeOptions: initialOptions,
+        let dummySvc = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: response,
+                                                                                          routeIndex: 0),
                                                customRoutingProvider: nil,
                                                credentials: Fixture.credentials)
 
@@ -39,19 +38,17 @@ final class LeaksTests: TestCase {
 
     func testNavigationViewController() {
         let leakTester = LeakTest {
-            let service = MapboxNavigationService(routeResponse: response,
-                                                  routeIndex: 0,
-                                                  routeOptions: self.initialOptions,
+            let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                            routeIndex: 0)
+            let service = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                   credentials: Fixture.credentials,
                                                   eventsManagerType: NavigationEventsManagerSpy.self)
             let navOptions = NavigationOptions(navigationService: service, voiceController:
                                                 RouteVoiceControllerStub(navigationService: service))
 
-            return NavigationViewController(for: response,
-                                               routeIndex: 0,
-                                               routeOptions: self.initialOptions,
-                                               navigationOptions: navOptions)
+            return NavigationViewController(for: indexedRouteResponse,
+                                            navigationOptions: navOptions)
         }
         XCTAssertFalse(leakTester.isLeaking())
     }

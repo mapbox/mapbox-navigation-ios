@@ -54,7 +54,7 @@ class NavigationViewControllerTests: TestCase {
     
     var updatedStyleNumberOfTimes = 0
     var initialRoute: Route!
-    var initialRouteResponse: RouteResponse!
+    var initialRouteResponse: IndexedRouteResponse!
     
     var newRoute: Route!
     var newRouteResponse: RouteResponse!
@@ -64,23 +64,22 @@ class NavigationViewControllerTests: TestCase {
         UNUserNotificationCenter.replaceWithMock()
         customRoadName.removeAll()
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
-        initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+        initialRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions),
+                                                    routeIndex: 0)
         newRoute = Fixture.route(from: "route-with-banner-instructions", options: routeOptions)
         newRouteResponse = Fixture.routeResponse(from: "route-with-banner-instructions", options: routeOptions)
     }
 
     private func createDependencies() -> (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)? {
         return {
-            let fakeService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                      routeIndex: 0,
-                                                      routeOptions: routeOptions,
+            let fakeService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                                       customRoutingProvider: MapboxRoutingProvider(.offline),
                                                       credentials: Fixture.credentials,
                                                       locationSource: NavigationLocationManagerStub(),
                                                       simulating: .never)
             let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
             let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
-            let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+            let navigationViewController = NavigationViewController(for: initialRouteResponse, navigationOptions: options)
 
             navigationViewController.delegate = self
             _ = navigationViewController.view // trigger view load
@@ -159,7 +158,7 @@ class NavigationViewControllerTests: TestCase {
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let navigationViewController = NavigationViewController(for: initialRouteResponse, navigationOptions: options)
         let service = dependencies.navigationService
         _ = navigationViewController.view // trigger view load
         navigationViewController.styleManager.delegate = self
@@ -203,7 +202,7 @@ class NavigationViewControllerTests: TestCase {
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let navigationViewController = NavigationViewController(for: initialRouteResponse, navigationOptions: options)
         let service = dependencies.navigationService
         _ = navigationViewController.view // trigger view load
 
@@ -222,7 +221,7 @@ class NavigationViewControllerTests: TestCase {
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let navigationViewController = NavigationViewController(for: initialRouteResponse, navigationOptions: options)
         let service = dependencies.navigationService
         _ = navigationViewController.view // trigger view load
 
@@ -283,25 +282,23 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testDestinationAnnotationUpdatesUponReroute() {
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                              routeIndex: 0,
-                                              routeOptions: routeOptions,
+        let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
-        let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let navigationViewController = NavigationViewController(for: initialRouteResponse, navigationOptions: options)
         expectation(description: "Style Loaded") {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
         waitForExpectations(timeout: 5, handler: nil)
         navigationViewController.navigationService.router
-            .updateRoute(with: .init(routeResponse: initialRouteResponse, routeIndex: 0), routeOptions: nil) {
+            .updateRoute(with: initialRouteResponse, routeOptions: nil) {
                 success in
                 XCTAssertTrue(success)
                 XCTAssertFalse(navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty)
             }
-        XCTAssertEqual(navigationViewController.routeResponse.identifier, initialRouteResponse.identifier)
+        XCTAssertEqual(navigationViewController.routeResponse.identifier, initialRouteResponse.routeResponse.identifier)
 
         let annotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
 
@@ -339,8 +336,9 @@ class NavigationViewControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         
-        let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: options)
-        let navigationViewController = NavigationViewController(for: routeResponse, routeIndex: 0, routeOptions: options)
+        let routeResponse = IndexedRouteResponse(routeResponse:  Fixture.routeResponse(from: "DCA-Arboretum", options: options),
+                                                 routeIndex: 0)
+        let navigationViewController = NavigationViewController(for: routeResponse)
         
         _ = navigationViewController.view
         
@@ -359,19 +357,12 @@ class NavigationViewControllerTests: TestCase {
         let top = TopBannerFake(nibName: nil, bundle: nil)
         let bottom = BottomBannerFake(nibName: nil, bundle: nil)
 
-        let routeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ])
-
-        let navService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                 routeIndex: 0,
-                                                 routeOptions: routeOptions,
+        let navService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                                  customRoutingProvider: nil,
                                                  credentials: Fixture.credentials)
         let navOptions = NavigationOptions(navigationService: navService, topBanner: top, bottomBanner: bottom)
 
-        let subject = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
+        let subject = NavigationViewController(for: initialRouteResponse, navigationOptions: navOptions)
         _ = subject.view // trigger view load
         XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
@@ -384,19 +375,12 @@ class NavigationViewControllerTests: TestCase {
         
         let injected = CustomNavigationMapView()
         
-        let routeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ])
-
-        let navService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                 routeIndex: 0,
-                                                 routeOptions: routeOptions,
+        let navService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                                  customRoutingProvider: nil,
                                                  credentials: Fixture.credentials)
         let navOptions = NavigationOptions(navigationService: navService, navigationMapView: injected)
 
-        let subject = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
+        let subject = NavigationViewController(for: initialRouteResponse, navigationOptions: navOptions)
         _ = subject.view // trigger view load
         
         XCTAssert(subject.navigationMapView == injected, "NavigtionMapView not injected properly.")
@@ -404,23 +388,14 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func navigationViewControllerMock() -> NavigationViewController {
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ])
-        
-        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                        routeIndex: 0,
-                                                        routeOptions: navigationRouteOptions,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                                         customRoutingProvider: nil,
                                                         credentials: Fixture.credentials)
         
         let navigationOptions = NavigationOptions(navigationService: navigationService)
         
         let navigationViewController = NavigationViewController(for: initialRouteResponse,
-                                                                   routeIndex: 0,
-                                                                   routeOptions: routeOptions,
-                                                                   navigationOptions: navigationOptions)
+                                                                navigationOptions: navigationOptions)
         
         return navigationViewController
     }

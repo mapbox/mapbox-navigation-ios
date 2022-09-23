@@ -260,7 +260,6 @@ class CarPlayManagerTests: TestCase {
         carPlayManager.delegate = carPlayManagerDelegateMock
         let testError = DirectionsError.requestTooLarge
         carPlayManager.didCalculate(.failure(testError),
-                                    in: (options: routeOptions, credentials: Fixture.credentials),
                                     for: routeOptions,
                                     completionHandler: {})
         XCTAssertEqual(carPlayManagerDelegateMock.routeCalculationError,

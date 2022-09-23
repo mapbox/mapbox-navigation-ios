@@ -400,6 +400,14 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        handleReroute(service, proactive: proactive)
+    }
+    
+    public func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
+        handleReroute(service, proactive: false)
+    }
+    
+    private func handleReroute(_ service: NavigationService, proactive: Bool) {
         instructionsBannerView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
         
         dismissStepsTable()

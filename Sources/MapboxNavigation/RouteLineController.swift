@@ -64,6 +64,14 @@ extension NavigationMapView {
         // MARK: NavigationComponent implementation
         
         func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+            handleReroute()
+        }
+        
+        func navigationService(_ service: NavigationService, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
+            handleReroute()
+        }
+        
+        private func handleReroute() {
             currentStepIndexMapped = 0
             let route = router.route
             let stepIndex = router.routeProgress.currentLegProgress.stepIndex
@@ -73,7 +81,7 @@ extension NavigationMapView {
             
             navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
             navigationMapView.updateRouteLine(routeProgress: router.routeProgress,
-                                              coordinate: location?.coordinate,
+                                              coordinate: router.location?.coordinate,
                                               shouldRedraw: true)
             navigationMapView.showWaypoints(on: route)
             

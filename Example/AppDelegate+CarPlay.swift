@@ -71,9 +71,7 @@ extension AppDelegate: CPApplicationDelegate {
 extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
-                        navigationServiceFor routeResponse: RouteResponse,
-                        routeIndex: Int,
-                        routeOptions: RouteOptions,
+                        navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
                         desiredSimulationMode: SimulationMode) -> NavigationService? {
         if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,
            let navigationService = navigationViewController.navigationService {
@@ -81,9 +79,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             return navigationService
         }
         
-        return MapboxNavigationService(routeResponse: routeResponse,
-                                       routeIndex: routeIndex,
-                                       routeOptions: routeOptions,
+        return MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                        customRoutingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: desiredSimulationMode)

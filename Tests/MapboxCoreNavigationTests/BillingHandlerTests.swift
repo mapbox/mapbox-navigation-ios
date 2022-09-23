@@ -539,9 +539,7 @@ final class BillingHandlerUnitTests: TestCase {
         let (newRouteResponse, _) = Fixture.route(waypoints: newRouteWaypoints)
 
         let dataSource = DataSource()
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: initialRouteResponse,
-                                              options: NavigationRouteOptions(coordinates: initialRouteWaypoints),
+        let routeController = RouteController(indexedRouteResponse: IndexedRouteResponse(routeResponse: initialRouteResponse, routeIndex: 0),
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: dataSource)
 
@@ -655,14 +653,13 @@ final class BillingHandlerUnitTests: TestCase {
         
         autoreleasepool {
             let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent()
-            let routeResponse = RouteResponse(httpResponse: nil,
-                                              routes: [route],
-                                              options: .route(.init(coordinates: waypointCoordinates)),
-                                              credentials: .mocked)
+            let routeResponse = IndexedRouteResponse(routeResponse: RouteResponse(httpResponse: nil,
+                                                                                  routes: [route],
+                                                                                  options: .route(.init(coordinates: waypointCoordinates)),
+                                                                                  credentials: .mocked),
+                                                     routeIndex: 0)
 
-            let routeController = RouteController(alongRouteAtIndex: 0,
-                                                  in: routeResponse,
-                                                  options: routeOptions,
+            let routeController = RouteController(indexedRouteResponse: routeResponse,
                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                   dataSource: self)
 
