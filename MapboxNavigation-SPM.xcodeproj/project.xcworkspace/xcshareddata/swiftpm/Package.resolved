@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "cfeeaf9dab95527e43408b507319226a2f45e677",
-          "version": "2.7.0-rc.1"
+          "revision": "38be094231ed30969e3751946104b8d0193ae9f7",
+          "version": "2.8.0-alpha.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "d636f95505488fec4a8025ed240987c191420521",
-          "version": "115.0.0"
+          "revision": "6d15299dc45e4b2ca956247b27fc31528a1c95f0",
+          "version": "115.0.1"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "04751d420bb7de3d0481776839ff77d2e274a0e3",
-          "version": "2.0.1"
+          "revision": "285622fa9734d4b28c9eca10fa59a47699ca39fd",
+          "version": "2.1.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/mapbox/MapboxGeocoder.swift.git",
         "state": {
           "branch": null,
-          "revision": "91fb908bb57c0fcddc0062b5d64ea2002e0ea789",
-          "version": "0.14.0"
+          "revision": "10c497840c9e1142194563f402ddc903310a935d",
+          "version": "0.15.0"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
         "state": {
           "branch": null,
-          "revision": "554a15b15ff33cf6757f4cb693c5c285fe58694e",
-          "version": "5.0.3"
+          "revision": "353f80378dcd8f17eefe8550090c6b1ae3c9da23",
+          "version": "5.1.0"
         }
       },
       {
@@ -146,12 +146,12 @@
         }
       },
       {
-        "package": "SnapshotTesting",
+        "package": "swift-snapshot-testing",
         "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
         "state": {
           "branch": null,
-          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
-          "version": "1.9.0"
+          "revision": "f29e2014f6230cf7d5138fc899da51c7f513d467",
+          "version": "1.10.0"
         }
       },
       {
