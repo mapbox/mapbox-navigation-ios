@@ -1,6 +1,7 @@
 import UIKit
 
-class CameraModeFloatingButton: FloatingButton {
+// :nodoc:
+public class CameraModeFloatingButton: FloatingButton {
     
     enum CameraMode {
         case idle
@@ -8,7 +9,7 @@ class CameraModeFloatingButton: FloatingButton {
         case following
     }
     
-    var cameraMode: CameraMode = .following {
+    var cameraMode: CameraMode = .centered {
         didSet {
             updateImage(for: cameraMode)
             delegate?.cameraModeFloatingButton(self, cameraModeDidChangeTo: cameraMode)
