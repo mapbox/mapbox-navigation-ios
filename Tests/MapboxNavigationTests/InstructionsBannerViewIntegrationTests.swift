@@ -285,6 +285,7 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
         
         let presenter = InstructionPresenter(exitInstruction,
                                              dataSource: label,
+                                             spriteRepository: spriteRepository,
                                              traitCollection: traitCollection,
                                              downloadCompletion: nil)
         
@@ -293,7 +294,7 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
         let cacheKey = [
             exitCodeAttribute.cacheKey!,
             ExitView.criticalHash(side: .right,
-                                  styleID: spriteRepository.styleID(for: .navigationDay),
+                                  styleID: spriteRepository.styleID(for: .phone),
                                   dataSource: label,
                                   traitCollection: traitCollection)
         ].joined(separator: "-")
