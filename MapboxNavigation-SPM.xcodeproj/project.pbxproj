@@ -44,6 +44,8 @@
 		8A9C67F02891F06500C28B2B /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9C67EE2891F06500C28B2B /* DismissalAnimator.swift */; };
 		8A9C67F12891F06500C28B2B /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9C67EF2891F06500C28B2B /* PresentationAnimator.swift */; };
 		8AAE13CD28DCD249007E01D4 /* CustomBrowsingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE13CC28DCD249007E01D4 /* CustomBrowsingViewController.swift */; };
+		8AC0241028DD1D0800A2BF3A /* PreviewDayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC0240F28DD1D0800A2BF3A /* PreviewDayStyle.swift */; };
+		8AC0241228DD1D1B00A2BF3A /* PreviewNightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC0241128DD1D1B00A2BF3A /* PreviewNightStyle.swift */; };
 		8AC81F5A284832E000662395 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F59284832E000662395 /* AppDelegate.swift */; };
 		8AC81F5C284832E000662395 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5B284832E000662395 /* SceneDelegate.swift */; };
 		8AC81F5E284832E000662395 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5D284832E000662395 /* ViewController.swift */; };
@@ -139,6 +141,8 @@
 		8A9C67EE2891F06500C28B2B /* DismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
 		8A9C67EF2891F06500C28B2B /* PresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
 		8AAE13CC28DCD249007E01D4 /* CustomBrowsingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomBrowsingViewController.swift; sourceTree = "<group>"; };
+		8AC0240F28DD1D0800A2BF3A /* PreviewDayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDayStyle.swift; sourceTree = "<group>"; };
+		8AC0241128DD1D1B00A2BF3A /* PreviewNightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewNightStyle.swift; sourceTree = "<group>"; };
 		8AC81F57284832E000662395 /* MapboxNavigationTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigationTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC81F59284832E000662395 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AC81F5B284832E000662395 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 		8A506B95285A7AE8008A6082 /* PreviewViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
+				8AAE13D028DD1A99007E01D4 /* Styles */,
 				8A506BAD285A7E50008A6082 /* Transitions */,
 				8A506BA8285A7E50008A6082 /* Custom Banners */,
 				8A506BB1285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */,
@@ -343,6 +348,15 @@
 				8A9C67EF2891F06500C28B2B /* PresentationAnimator.swift */,
 			);
 			path = Transitions;
+			sourceTree = "<group>";
+		};
+		8AAE13D028DD1A99007E01D4 /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				8AC0240F28DD1D0800A2BF3A /* PreviewDayStyle.swift */,
+				8AC0241128DD1D1B00A2BF3A /* PreviewNightStyle.swift */,
+			);
+			path = Styles;
 			sourceTree = "<group>";
 		};
 		8AC81F58284832E000662395 /* MapboxNavigationTestHost */ = {
@@ -859,8 +873,10 @@
 				8A506BB6285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
 				8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */,
 				8A506BB7285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
+				8AC0241028DD1D0800A2BF3A /* PreviewDayStyle.swift in Sources */,
 				8AAE13CD28DCD249007E01D4 /* CustomBrowsingViewController.swift in Sources */,
 				8A506BB9285A7E50008A6082 /* PresentationAnimator.swift in Sources */,
+				8AC0241228DD1D1B00A2BF3A /* PreviewNightStyle.swift in Sources */,
 				8A506BBA285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
 				8A506BB5285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,
 				8A506BB8285A7E50008A6082 /* DismissalAnimator.swift in Sources */,

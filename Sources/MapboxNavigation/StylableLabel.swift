@@ -81,6 +81,7 @@ open class ArrivalTimeLabel: StylableLabel {
     
 }
 
-class DestinationLabel: StylableLabel {
+// :nodoc:
+public class DestinationLabel: StylableLabel {
     
 }
