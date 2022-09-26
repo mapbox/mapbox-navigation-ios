@@ -272,6 +272,7 @@ class SpriteRepository {
     }
     
     func resetCache(completion: CompletionHandler? = nil) {
+        userInterfaceIdiomStyles.removeAll()
         requestCache.clearCache()
         derivedCache.clearMemory()
         derivedCache.clearDisk(completion: completion)
