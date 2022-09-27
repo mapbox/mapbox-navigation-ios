@@ -51,6 +51,7 @@
 * Routes now respect conditional access restrictions that depend on the year. ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 * Routes now respect conditional access restrictions that apply to [all vehicles](https://wiki.openstreetmap.org/wiki/Key:vehicle). ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
 * Fixed an issue where the `Intersection.outletRoadClasses` and `Intersection.outletMapboxStreetsRoadClass` properties were set to `RoadClasses.restricted` for an entrance to a rest area because of its “[local traffic only](https://wiki.openstreetmap.org/wiki/Tag:access%3Ddestination)” restriction. ([#4144](https://github.com/mapbox/mapbox-navigation-ios/pull/4144))
+* Fixed an issue where after manually switching to alternative route it's duration delta in callout text was nullified. ([#4177](https://github.com/mapbox/mapbox-navigation-ios/pull/4177))
 
 ### CarPlay
 
