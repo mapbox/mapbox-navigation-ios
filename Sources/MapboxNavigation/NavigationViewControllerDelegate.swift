@@ -483,13 +483,6 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
-
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-    }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
