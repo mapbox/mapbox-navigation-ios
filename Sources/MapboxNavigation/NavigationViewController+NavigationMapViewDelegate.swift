@@ -63,9 +63,18 @@ extension NavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  didSelect waypoint: Waypoint) {
+        delegate?.navigationViewController(self,
+                                           didSelect: waypoint)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   didSelect continuousAlternative: AlternativeRoute) {
         router.updateRoute(with: continuousAlternative.indexedRouteResponse,
                            routeOptions: nil,
                            completion: nil)
+        
+        delegate?.navigationViewController(self,
+                                           didSelect: continuousAlternative)
     }
 }
