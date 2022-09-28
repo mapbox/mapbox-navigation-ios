@@ -466,15 +466,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if #available(iOS 12.0, *) {
-            if newCollection.userInterfaceStyle == .dark {
-                styleManager.applyStyle(type: .night)
-            } else {
-                styleManager.applyStyle(type: .day)
-            }
-        } else {
-            // Fallback on earlier versions
-            return
+        if usesNightStyleInDarkMode {
+            transitionStyle(to: newCollection)
         }
     }
     
@@ -813,6 +806,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var waypointStyle: WaypointStyle = .annotation
     
+    /**
+     Allows to control whether night style is used in dark mode or not.
+     */
+    public var usesNightStyleInDarkMode = true
+    
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
     var currentLeg: RouteLeg?
@@ -840,6 +838,19 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
             return currentStatusBarStyle
+        }
+    }
+    
+    func transitionStyle(to newCollection: UITraitCollection) {
+        if #available(iOS 12.0, *) {
+            if newCollection.userInterfaceStyle == .dark {
+                styleManager.applyStyle(type: .night)
+            } else {
+                styleManager.applyStyle(type: .day)
+            }
+        } else {
+            // Fallback on earlier versions
+            return
         }
     }
 }
