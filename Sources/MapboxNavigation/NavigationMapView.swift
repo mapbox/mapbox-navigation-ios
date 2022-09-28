@@ -1323,6 +1323,7 @@ open class NavigationMapView: UIView {
             "text": .string(labelText),
             "imageName": .string(imageName),
             "sortOrder": .number(Double(isSelected ? index : -index)),
+            "routeIndex": .number(Double(index))
         ]
         
         return feature
@@ -2122,7 +2123,7 @@ open class NavigationMapView: UIView {
             return
         }
         
-        routeFromTappedPoint(point: tapPoint)  { [weak self] (routeFoundByPoint) in
+        route(at: tapPoint)  { [weak self] (routeFoundByPoint) in
             guard !routeFoundByPoint, let self = self else { return }
             if let routes = self.routes(closeTo: tapPoint),
                let selectedRoute = routes.first {
@@ -2134,7 +2135,7 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func routeFromTappedPoint(point: CGPoint, completion: @escaping (Bool) -> Void) {
+    func route(at point: CGPoint, completion: @escaping (Bool) -> Void) {
         let group = DispatchGroup()
         var routeFoundByPoint: Bool = false
         let layerIds: [String] = [
@@ -2167,10 +2168,9 @@ open class NavigationMapView: UIView {
     func routeIndexFromMapQuery(with options: RenderedQueryOptions, at point: CGPoint, completion: @escaping (Int?) -> Void) {
         mapView.mapboxMap.queryRenderedFeatures(with: [point], options: options) { result in
             if case .success(let queriedFeatures) = result,
-               let indexValue = queriedFeatures.first?.feature.properties?["sortOrder"] as? JSONValue,
-               case .number(let number) = indexValue {
-                let routeIndex = abs(Int(number))
-                completion(routeIndex)
+               let indexValue = queriedFeatures.first?.feature.properties?["routeIndex"] as? JSONValue,
+               case .number(let routeIndex) = indexValue {
+                completion(Int(routeIndex))
             } else {
                 completion(nil)
             }
