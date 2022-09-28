@@ -445,13 +445,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupVoiceController()
         setupNavigationCamera()
         
-        if #available(iOS 12.0, *) {
-            if self.traitCollection.userInterfaceStyle == .dark {
-                styleManager.applyStyle(type: .night)
-            }
-        } else {
-            // Fallback on earlier versions
-            return
+        if usesNightStyleInDarkMode && self.traitCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
         }
     }
     
@@ -842,15 +837,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func transitionStyle(to newCollection: UITraitCollection) {
-        if #available(iOS 12.0, *) {
-            if newCollection.userInterfaceStyle == .dark {
-                styleManager.applyStyle(type: .night)
-            } else {
-                styleManager.applyStyle(type: .day)
-            }
+        if newCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
         } else {
-            // Fallback on earlier versions
-            return
+            styleManager.applyStyle(type: .day)
         }
     }
 }
