@@ -83,7 +83,8 @@ extension Route {
     }
     
     func congestionFeatures(legIndex: Int? = nil,
-                            roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [Feature] {
+                            roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil,
+                            congestionMapping: CongestionMapping? = nil) -> [Feature] {
         guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
         var features: [Feature] = []
         
@@ -91,7 +92,8 @@ extension Route {
             let legFeatures: [Feature]
             let currentLegAttribute = (legIndex != nil) ? index == legIndex : true
 
-            if let congestionLevels = leg.resolvedCongestionLevels, congestionLevels.count < coordinates.count + 2 {
+            if let congestionLevels = leg.resolvedCongestionLevels(congestionMapping: congestionMapping),
+                congestionLevels.count < coordinates.count + 2 {
                 // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
                 let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
                     let index = current.offset

@@ -177,6 +177,7 @@ class ViewController: UIViewController {
 
     private func configure(_ navigationMapView: NavigationMapView) {
         setupPassiveLocationProvider()
+        setupCongestionMapping()
         
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

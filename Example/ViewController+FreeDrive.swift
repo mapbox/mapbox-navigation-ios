@@ -26,6 +26,20 @@ extension ViewController {
         subscribeForFreeDriveNotifications()
     }
     
+    func setupCongestionMapping() {
+        let congestionMapping: CongestionMapping = { (numericLevel, roadClass) in
+            switch roadClass {
+            case .motorway, .primary:
+                CongestionRange.setCongestionRanges(low: 0..<40, moderate: 40..<60, heavy: 60..<80, severe: 80..<101)
+            default:
+                CongestionRange.setCongestionRanges(low: 0..<15, moderate: 15..<30, heavy: 30..<45, severe: 45..<101)
+            }
+            return CongestionLevel.init(numericValue: numericLevel)
+        }
+        
+        navigationMapView.congestionMapping = congestionMapping
+    }
+    
     func subscribeForFreeDriveNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didUpdatePassiveLocation),

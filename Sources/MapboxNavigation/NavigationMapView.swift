@@ -27,6 +27,8 @@ open class NavigationMapView: UIView {
      */
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
+    public var congestionMapping: CongestionMapping? = nil
+    
     /**
      Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
      
@@ -661,7 +663,9 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             
             if isMainRoute {
-                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                let congestionFeatures = route.congestionFeatures(legIndex: legIndex,
+                                                                  roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels,
+                                                                  congestionMapping: congestionMapping)
                 let gradientStops = routeLineCongestionGradient(route,
                                                                 congestionFeatures: congestionFeatures,
                                                                 isSoft: crossfadesCongestionSegments)

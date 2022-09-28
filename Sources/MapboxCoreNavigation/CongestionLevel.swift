@@ -9,6 +9,11 @@ import MapboxDirections
  */
 public typealias CongestionRange = Range<NumericCongestionLevel>
 
+/**
+ The method to map the `NumericCongestionLevel` to `CongestionLevel` with the consideration of `MapboxStreetsRoadClass`.
+ */
+public typealias CongestionMapping = (NumericCongestionLevel, MapboxStreetsRoadClass) -> CongestionLevel
+
 public extension CongestionRange {
 
     /// The range for low congestion traffic. Default value is 0..39
@@ -51,7 +56,10 @@ public extension CongestionRange {
 }
 
 extension CongestionLevel {
-    init(numericValue: NumericCongestionLevel?) {
+    /**
+     Set a `CongestionLevel` value from `NumericCongestionLevel`.
+     */
+    public init(numericValue: NumericCongestionLevel?) {
         guard let numericValue = numericValue else {
             self = .unknown
             return
@@ -95,6 +103,31 @@ extension RouteLeg {
             congestionLevels = nil
         }
 
+        return congestionLevels
+    }
+    
+    /**
+     Return an array containing the traffic congestion level along each road segment in the route leg geometry.
+
+     The array is formed either by converting values of `segmentNumericCongestionLevels` to `CongestionLevel` type by congestionMapping,
+     or by taking `segmentCongestionLevels`, depening whether `AttributeOptions.numericCongestionLevel` or `AttributeOptions.congestionLevel`
+     was specified in `DirectionsOptions.attributes` during Directions request.
+
+     - parameter congestionMapping: The `CongestionMapping` closure to map `NumericCongestionLevel` and `MapboxStreetsRoadClass` to `CongestionLevel`.
+     - returns: An array containing the traffic congestion level along each road segment in the route leg geometry.
+     */
+    public func resolvedCongestionLevels(congestionMapping: CongestionMapping? = nil) -> [CongestionLevel]? {
+        guard let numericLevels = segmentNumericCongestionLevels,
+              let congestionMapping = congestionMapping,
+              numericLevels.count == streetsRoadClasses.count else {
+            return segmentCongestionLevels
+        }
+        
+        var congestionLevels = [CongestionLevel]()
+        for (index, numeric) in numericLevels.enumerated() {
+            guard let numeric = numeric, let roadClass = streetsRoadClasses[index] else { continue }
+            congestionLevels.append(congestionMapping(numeric, roadClass))
+        }
         return congestionLevels
     }
 }
