@@ -3,7 +3,6 @@ import CoreLocation
 import UIKit
 import MapboxMobileEvents
 import MapboxDirections
-
 @_implementationOnly import MapboxCommon_Private
 
 private let secondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
@@ -100,6 +99,7 @@ open class NavigationEventsManager {
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private let mobileEventsManager: MMEEventsManager
     private let eventsAPI: EventsAPI
+    private let telemetryService: TelemetryService
 
     private let accessToken: String
 
@@ -112,6 +112,7 @@ open class NavigationEventsManager {
 
         let options = EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent)
         self.eventsAPI = EventsService.getOrCreate(for: options)
+        self.telemetryService = TelemetryService(options: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
@@ -125,6 +126,8 @@ open class NavigationEventsManager {
         accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
         self.mobileEventsManager = mobileEventsManager
         self.eventsAPI = eventsAPI
+        let options = EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent)
+        self.telemetryService = TelemetryService(options: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
