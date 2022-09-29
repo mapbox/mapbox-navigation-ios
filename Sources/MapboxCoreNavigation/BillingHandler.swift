@@ -82,7 +82,7 @@ private final class ProductionBillingService: BillingService {
 
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
                              onError: @escaping (BillingServiceError) -> Void) {
-        Log.info(">>> begin for \(sessionType)")
+        Log.info(">>> begin for \(sessionType)", category: .billing)
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.beginBillingSession(forAccessToken: accessToken,
                                                                userAgent: userAgent,
@@ -93,14 +93,14 @@ private final class ProductionBillingService: BillingService {
     }
 
     func pauseBillingSession(for sessionType: BillingHandler.SessionType) {
-        Log.info(">>> pause for \(sessionType)")
+        Log.info(">>> pause for \(sessionType)", category: .billing)
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.pauseBillingSession(for: skuToken)
     }
 
     func resumeBillingSession(for sessionType: BillingHandler.SessionType,
                               onError: @escaping (BillingServiceError) -> Void) {
-        Log.info(">>> resume for \(sessionType)")
+        Log.info(">>> resume for \(sessionType)", category: .billing)
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.resumeBillingSession(for: skuToken) { nativeBillingServiceError in
             onError(BillingServiceError(nativeBillingServiceError))
@@ -108,13 +108,13 @@ private final class ProductionBillingService: BillingService {
     }
 
     func stopBillingSession(for sessionType: BillingHandler.SessionType) {
-        Log.info(">>> stop for \(sessionType)")
+        Log.info(">>> stop for \(sessionType)", category: .billing)
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.stopBillingSession(for: skuToken)
     }
 
     func triggerBillingEvent(onError: @escaping (BillingServiceError) -> Void) {
-        Log.info(">>> MAU")
+        Log.info(">>> MAU", category: .billing)
         NativeBillingService.shared.triggerUserBillingEvent(forAccessToken: accessToken,
                                                                    userAgent: userAgent,
                                                                    skuIdentifier: mauSku) { nativeBillingServiceError in
