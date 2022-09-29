@@ -77,11 +77,12 @@ private final class ProductionBillingService: BillingService {
     }
 
     func getSKUTokenIfValid(for sessionType: BillingHandler.SessionType) -> String {
-        NativeBillingService.shared.getSessionSKUTokenIfValid(for: tripSku(for: sessionType))
+        return NativeBillingService.shared.getSessionSKUTokenIfValid(for: tripSku(for: sessionType))
     }
 
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
                              onError: @escaping (BillingServiceError) -> Void) {
+        Log.info(">>> begin for \(sessionType)")
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.beginBillingSession(forAccessToken: accessToken,
                                                                userAgent: userAgent,
@@ -92,12 +93,14 @@ private final class ProductionBillingService: BillingService {
     }
 
     func pauseBillingSession(for sessionType: BillingHandler.SessionType) {
+        Log.info(">>> pause for \(sessionType)")
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.pauseBillingSession(for: skuToken)
     }
 
     func resumeBillingSession(for sessionType: BillingHandler.SessionType,
                               onError: @escaping (BillingServiceError) -> Void) {
+        Log.info(">>> resume for \(sessionType)")
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.resumeBillingSession(for: skuToken) { nativeBillingServiceError in
             onError(BillingServiceError(nativeBillingServiceError))
@@ -105,11 +108,13 @@ private final class ProductionBillingService: BillingService {
     }
 
     func stopBillingSession(for sessionType: BillingHandler.SessionType) {
+        Log.info(">>> stop for \(sessionType)")
         let skuToken = tripSku(for: sessionType)
         NativeBillingService.shared.stopBillingSession(for: skuToken)
     }
 
     func triggerBillingEvent(onError: @escaping (BillingServiceError) -> Void) {
+        Log.info(">>> MAU")
         NativeBillingService.shared.triggerUserBillingEvent(forAccessToken: accessToken,
                                                                    userAgent: userAgent,
                                                                    skuIdentifier: mauSku) { nativeBillingServiceError in
@@ -172,9 +177,9 @@ final class BillingHandler {
         var maxSessionInterval: TimeInterval {
             switch self {
             case .activeGuidance:
-                return 43200 /*12h*/
+                return 1 /*12h*/
             case .freeDrive:
-                return 3600 /*1h*/
+                return 1 /*1h*/
             }
         }
     }
