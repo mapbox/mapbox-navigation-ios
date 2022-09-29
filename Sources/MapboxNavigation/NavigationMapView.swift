@@ -303,12 +303,14 @@ open class NavigationMapView: UIView {
             }
         }
         
-        continuousAlternatives?.forEach { routeAlternative in
-            guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+        guard let continuousAlternatives = continuousAlternatives else { return }
+        for (index, routeAlternative) in continuousAlternatives.enumerated() {
+            guard let route = routeAlternative.indexedRouteResponse.currentRoute,
+                  alternativesRouteLineDeviationOffsets?.count ?? 0 > index,
+                  let offset = alternativesRouteLineDeviationOffsets?[index] else {
                 return
             }
             
-            let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
                                                   below: parentLayerIdentifier,
                                                   isMainRoute: false,
@@ -1152,14 +1154,11 @@ open class NavigationMapView: UIView {
         var features = [Turf.Feature]()
         
         for (index, alternativeRoute) in routes.enumerated() {
-            guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape else { return }
-            
-            var annotationCoordinate: LocationCoordinate2D!
-            if let mainRoute = self.routes?.first {
-                let offset = mainRoute.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset
-                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: offset)?.coordinate
-            } else {
-                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset)?.coordinate
+            guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape,
+                  let annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance
+                                                                                   - alternativeRoute.infoFromDeviationPoint.distance
+                                                                                   + continuousAlternativeDurationAnnotationOffset)?.coordinate else {
+                return
             }
             
             // Form the appropriate text string for the annotation.
@@ -1693,7 +1692,19 @@ open class NavigationMapView: UIView {
     // MARK: Map Rendering and Observing
     
     var routes: [Route]?
-    var continuousAlternatives: [AlternativeRoute]?
+    var continuousAlternatives: [AlternativeRoute]? {
+        didSet {
+            alternativesRouteLineDeviationOffsets = continuousAlternatives?.map {
+                guard let coordinates = $0.indexedRouteResponse.currentRoute?.shape?.coordinates,
+                      let projectedOffset = calculateGranularDistanceOffset(coordinates,
+                                                                            splitPoint: $0.alternativeRouteIntersection.location) else {
+                    return 0.0
+                }
+                return projectedOffset
+            }
+        }
+    }
+    var alternativesRouteLineDeviationOffsets: [Double]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
