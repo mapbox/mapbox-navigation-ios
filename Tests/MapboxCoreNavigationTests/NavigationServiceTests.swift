@@ -409,7 +409,7 @@ class NavigationServiceTests: TestCase {
 
         let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.turnstile.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.turnstile.rawValue))
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
@@ -425,7 +425,7 @@ class NavigationServiceTests: TestCase {
         navigationService.start()
 
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.routeRetrieval.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
 
         let routeUpdated = expectation(description: "Route updated")
         router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil) {
@@ -513,8 +513,7 @@ class NavigationServiceTests: TestCase {
         // MARK: It enqueues and flushes a NavigationRerouteEvent
         let expectedEventName = EventType.reroute.rawValue
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
         XCTAssertEqual(eventsManagerSpy.immediateEventCount(with: expectedEventName), 1)
     }
 
@@ -536,7 +535,7 @@ class NavigationServiceTests: TestCase {
 
         // It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.depart.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.depart.rawValue))
         // When at a valid location just before the last location
         XCTAssertTrue(self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
         // It tells the delegate that the user did arrive
@@ -544,7 +543,7 @@ class NavigationServiceTests: TestCase {
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
     }
 
     func testNoReroutesAfterArriving() {
@@ -568,7 +567,7 @@ class NavigationServiceTests: TestCase {
 
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         expectation(description: "Depart Event Flushed") {
-            eventsManagerSpy.hasFlushedEvent(with: EventType.depart.rawValue)
+            eventsManagerSpy.hasImmediateEvent(with: EventType.depart.rawValue)
         }
 
         // MARK: It tells the delegate that the user did arrive
@@ -603,7 +602,7 @@ class NavigationServiceTests: TestCase {
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
     }
 
     func testRouteControllerDoesNotHaveRetainCycle() {

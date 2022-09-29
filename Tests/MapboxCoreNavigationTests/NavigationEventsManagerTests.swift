@@ -4,14 +4,6 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 
 class NavigationEventsManagerTests: TestCase {
-    func testMobileEventsManagerIsInitializedImmediately() {
-        let mobileEventsManagerSpy = MMEEventsManagerSpy()
-        let _ = NavigationEventsManager(accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)
-
-        let config = UserDefaults.mme_configuration()
-        let token = config.mme_accessToken
-        XCTAssertEqual(token, "example token")
-    }
     
     func skipped_testDepartRerouteArrive() {
         
