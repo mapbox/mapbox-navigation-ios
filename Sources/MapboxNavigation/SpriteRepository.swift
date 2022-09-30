@@ -35,27 +35,14 @@ class SpriteRepository {
                      completion: @escaping ImageDownloadCompletionHandler) {
         // If no valid StyleURI provided, use the default Day style.
         let newStyleURI = styleURI ?? defaultStyleURI
+        userInterfaceIdiomStyles[idiom] = newStyleURI
         
-        if !userInterfaceIdiomStyles.values.contains(newStyleURI) {
-            updateUserInterfaceIdiomStyles(styleURI: newStyleURI, idiom: idiom)
-            updateSprite(styleURI: newStyleURI, completion: completion)
-        } else {
-            updateUserInterfaceIdiomStyles(styleURI: newStyleURI, idiom: idiom)
+        guard needToUpdateSprite(styleURI: newStyleURI) else {
             completion(nil)
             return
         }
-    }
-    
-    func updateUserInterfaceIdiomStyles(styleURI: StyleURI, idiom: UIUserInterfaceIdiom) {
-        if let previousStyleURI = userInterfaceIdiomStyles[idiom],
-           previousStyleURI != styleURI {
-            userInterfaceIdiomStyles[idiom] = styleURI
-            if !userInterfaceIdiomStyles.values.contains(previousStyleURI) {
-                removeStyleCacheFor(previousStyleURI)
-            }
-        } else {
-            userInterfaceIdiomStyles[idiom] = styleURI
-        }
+        
+        updateSprite(styleURI: newStyleURI, completion: completion)
     }
 
     func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation?,
