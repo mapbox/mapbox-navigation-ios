@@ -1,7 +1,7 @@
 import UIKit
 
 class ImageRepository {
-    public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
+    public var sessionConfiguration: URLSessionConfiguration {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
@@ -11,12 +11,17 @@ class ImageRepository {
 
     let imageCache: BimodalImageCache
     fileprivate(set) var imageDownloader: ReentrantImageDownloader
+    private let requestTimeOut: TimeInterval = 10
 
     var useDiskCache: Bool
 
-    required init(withDownloader downloader: ReentrantImageDownloader = ImageDownloader(), cache: BimodalImageCache = ImageCache(), useDisk: Bool = true) {
-        imageDownloader = downloader
-        imageCache = cache
+    required init(withDownloader downloader: ReentrantImageDownloader? = nil,
+                  cache: BimodalImageCache? = nil,
+                  useDisk: Bool = true) {
+        sessionConfiguration = URLSessionConfiguration.default
+        sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
+        imageDownloader = downloader ?? ImageDownloader(sessionConfiguration: sessionConfiguration)
+        imageCache = cache ?? ImageCache()
         useDiskCache = useDisk
     }
 
@@ -39,8 +44,10 @@ class ImageRepository {
             return
         }
 
-        let _ = imageDownloader.downloadImage(with: imageURL, completion: { [weak self] (image, data, error) in
-            guard let strongSelf = self, let image = image else {
+        let _ = imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
+            guard let strongSelf = self,
+                  let data = cachedResponse?.data,
+                  let image = UIImage(data: data, scale: UIScreen.main.scale) else {
                 completion(nil)
                 return
             }

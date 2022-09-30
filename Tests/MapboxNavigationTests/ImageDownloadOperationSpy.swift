@@ -11,7 +11,7 @@ class ImageDownloadOperationSpy: Operation, ImageDownload {
     private(set) var request: URLRequest?
     weak private var session: URLSession?
 
-    private var completionBlocks: Array<ImageDownloadCompletionBlock> = []
+    private var completionBlocks: Array<CachedResponseCompletionHandler> = []
 
     required init(request: URLRequest, in session: URLSession) {
         self.request = request
@@ -33,32 +33,18 @@ class ImageDownloadOperationSpy: Operation, ImageDownload {
         return operations[URL]
     }
 
-    func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
-        let wrappedCompletion = { (image: UIImage?, data: Data?, error: Error?) in
-            completion(image, data, error)
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler) {
+        let wrappedCompletion = { (cachedResponse: CachedURLResponse?, error: Error?) in
+            completion(cachedResponse, error)
             // Sadly we need to tick the run loop here to deal with the fact that the underlying implementations hop between queues. This has a similar effect to using XCTestCase's async expectations.
             RunLoop.current.run(until: Date())
         }
         self.completionBlocks.append(wrappedCompletion)
     }
 
-    func shouldDecompressImages() -> Bool {
-        return false
-    }
-
-    func setShouldDecompressImages(_ value: Bool) {
-    }
-
-    func credential() -> URLCredential? {
-        fatalError("credential() has not been implemented")
-    }
-
-    func setCredential(_ value: URLCredential?) {
-    }
-
-    func fireAllCompletions(_ image: UIImage, data: Data?, error: Error?) {
+    func fireAllCompletions(_ cachedResponse: CachedURLResponse?, error: Error?) {
         completionBlocks.forEach { completion in
-            completion(image, data, error)
+            completion(cachedResponse, error)
         }
     }
 }

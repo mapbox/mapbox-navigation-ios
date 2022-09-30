@@ -8,7 +8,7 @@ enum DownloadError: Error {
 
 protocol ImageDownload: URLSessionDataDelegate {
     init(request: URLRequest, in session: URLSession)
-    func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock)
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler)
     var isFinished: Bool { get }
 }
 
@@ -77,7 +77,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
 
     private var dataTask: URLSessionDataTask?
     private var incomingData: Data?
-    private var completionBlocks: [ImageDownloadCompletionBlock] = .init()
+    private var completionBlocks: [CachedResponseCompletionHandler] = .init()
     private let lock: NSLock = .init()
 
     required init(request: URLRequest, in session: URLSession) {
@@ -85,7 +85,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
         self.session = session
     }
 
-    func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler) {
         withLock {
             completionBlocks.append(completion)
         }
@@ -145,41 +145,36 @@ final class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        let (incomingData, completions) = withLock { () -> (Data?, [ImageDownloadCompletionBlock]) in
+        let (incomingData, completions) = withLock { () -> (Data?, [CachedResponseCompletionHandler]) in
             let returnData = (self.incomingData, self.completionBlocks)
             self.completionBlocks.removeAll()
             return returnData
         }
 
-        let completionData: (UIImage?, Data?, Error?)
+        let completionData: (CachedURLResponse?, Error?)
 
         if error != nil {
             if let urlResponse = task.response as? HTTPURLResponse,
                urlResponse.statusCode >= 400 {
-                completionData = (nil, nil, DownloadError.serverError)
+                completionData = (nil, DownloadError.serverError)
 
             }
             else {
-                completionData = (nil, nil, DownloadError.clientError)
+                completionData = (nil, DownloadError.clientError)
             }
         }
         else {
-            if let data = incomingData {
-                if let image = UIImage(data: data, scale: UIScreen.main.scale) {
-                    completionData = (image, data,  nil)
-                }
-                else {
-                    completionData = (nil, data,  nil)
-                }
+            if let data = incomingData, let urlResponse = task.response {
+                completionData = (CachedURLResponse(response: urlResponse, data: data), nil)
             }
             else {
-                completionData = (nil, nil,  nil)
+                completionData = (nil,  nil)
             }
         }
 
         // The motivation is to call completions outside the lock to reduce the likehood of a deadlock.
         for completion in completions {
-            completion(completionData.0, completionData.1, completionData.2)
+            completion(completionData.0, completionData.1)
         }
 
         withLock {

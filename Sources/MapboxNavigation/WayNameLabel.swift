@@ -21,25 +21,26 @@ open class WayNameLabel: StylableLabel {
     @objc dynamic public var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
     
     // When the map style changes, update the sprite repository and the label.
-    func updateStyle(styleURI: StyleURI?) {
-        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] _ in
-            guard let self = self,
-                  let roadName = self.text else { return }
+    func updateStyle(styleURI: StyleURI?, idiom: UIUserInterfaceIdiom = .phone) {
+        spriteRepository.updateStyle(styleURI: styleURI, idiom: idiom) { [weak self] _ in
+            guard let self = self, let roadName = self.text else { return }
             
-            self.setup(with: roadName)
+            self.setup(with: roadName, idiom: idiom)
         }
     }
     
-    func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
+    func updateRoad(roadName: String,
+                    representation: VisualInstruction.Component.ImageRepresentation? = nil,
+                    idiom: UIUserInterfaceIdiom = .phone) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepresentation(for: representation) { [weak self] _ in
+            spriteRepository.updateRepresentation(for: representation, idiom: idiom) { [weak self] _ in
                 guard let self = self else { return }
                 self.representation = representation
-                self.setup(with: roadName)
+                self.setup(with: roadName, idiom: idiom)
             }
         }
-        setup(with: roadName)
+        setup(with: roadName, idiom: idiom)
     }
     
     /**
@@ -49,10 +50,11 @@ open class WayNameLabel: StylableLabel {
      If there's no valid shield images, only road name is displayed.
      
      - parameter roadName: Name of the road, that is going to be displayed inside `WayNameLabel`.
+     - parameter idiom: The `UIUserInterfaceIdiom` that the `WayNameLabel` is going to be displayed in.
      */
-    private func setup(with roadName: String) {
+    private func setup(with roadName: String, idiom: UIUserInterfaceIdiom) {
         let shieldRepresentation = representation?.shield
-        let legacyRoadShieldImage = spriteRepository.legacyRoadShieldImage(from: representation?.legacyCacheKey)
+        let legacyRoadShieldImage = spriteRepository.getLegacyShield(with: representation)
         
         // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
         // The shield name for US state road is `circle-white` in Streets source v8 style.
@@ -66,7 +68,7 @@ open class WayNameLabel: StylableLabel {
         }
         
         // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
-        if let roadShieldImage = spriteRepository.roadShieldImage(from: shieldRepresentation) {
+        if let roadShieldImage = spriteRepository.roadShieldImage(from: shieldRepresentation, idiom: idiom) {
             setAttributedText(roadName: roadName,
                               roadShieldImage: roadShieldImage,
                               roadShieldText: shieldRepresentation?.text,

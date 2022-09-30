@@ -109,7 +109,7 @@ public class ExitView: StylableView {
     }
     
     func buildConstraints() {
-        let height = heightAnchor.constraint(equalToConstant: pointSize * 1.2)
+        let height = heightAnchor.constraint(equalToConstant: pointSize * InstructionPresenter.labelShieldScaleFactor)
 
         let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4)
         let imageAspect = imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: imageView.image?.size.aspectRatio ?? 1.0)
