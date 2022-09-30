@@ -96,7 +96,6 @@ open class NavigationEventsManager {
         }
     }
 
-    /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private let eventsAPI: EventsAPI
     private let telemetryService: TelemetryService
 
