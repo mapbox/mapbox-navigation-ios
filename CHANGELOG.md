@@ -5,8 +5,10 @@
 ### Packaging
 
 * This library now requires a minimum deployment target of iOS 12.0 or above. iOS 11._x_ is no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-alpha.1). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
+* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-alpha.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-alpha.2). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v116._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/116.0.0). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
+* MapboxNavigation now requires [MapboxMaps v10.9.0-beta.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0-beta.2). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
 
 ### Routing
 
@@ -32,6 +34,8 @@
 * `IndexedRouteResponse` is now the preferred way for setting up routing information for navigation. `NavigationViewController`, `MapboxNavigationService`, `Router` and `RoutingProvider` are updated to accomodate this change. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
+* MapboxMobileEvents dependency is replaced with CoreTelemetry (part of MapboxCommon). ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
+* Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favour of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 
 ## v2.8.0
 

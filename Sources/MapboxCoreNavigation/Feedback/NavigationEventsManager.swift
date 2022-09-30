@@ -117,7 +117,7 @@ open class NavigationEventsManager {
 
         let options = NavigationEventsManager.createEventsServerOptions(accessToken: accessToken)
         self.eventsAPI = EventsService.getOrCreate(for: options)
-        self.telemetryService = TelemetryService(options: options)
+        self.telemetryService = TelemetryService.getOrCreate(for: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
@@ -131,7 +131,7 @@ open class NavigationEventsManager {
 
         let options = NavigationEventsManager.createEventsServerOptions(accessToken: accessToken)
         self.eventsAPI = eventsAPI
-        self.telemetryService = TelemetryService(options: options)
+        self.telemetryService = TelemetryService.getOrCreate(for: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
@@ -159,7 +159,7 @@ open class NavigationEventsManager {
     }
 
     private static func createEventsServerOptions(accessToken: String) -> EventsServerOptions {
-        EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent)
+        EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent, deferredDeliveryServiceOptions: nil)
     }
 
     private static var userAgent: String = {

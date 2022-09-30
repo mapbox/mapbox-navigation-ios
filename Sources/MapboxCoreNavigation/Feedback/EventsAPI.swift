@@ -14,10 +14,10 @@ extension EventsService: EventsAPI {
     }
 
     func sendQueuedEvent(with attributes: [String : Any]) {
-        sendEvent(for: Event(priority: .queued, attributes: attributes))
+        sendEvent(for: Event(priority: .queued, attributes: attributes, deferredOptions: nil))
     }
 
     func sendImmediateEvent(with attributes: [String : Any]) {
-        sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        sendEvent(for: Event(priority: .immediate, attributes: attributes, deferredOptions: nil))
     }
 }
