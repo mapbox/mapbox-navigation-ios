@@ -32,6 +32,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
+    // MARK: Interaction With Waypoints
+    
     /**
      Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
      
@@ -64,6 +66,14 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    /**
+     Tells the receiver that a waypoint was selected.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter waypoint: The waypoint that was selected.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect waypoint: Waypoint)
     
     // MARK: Rerouting and Refreshing the Route
     
@@ -136,7 +146,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute])
     
     /**
-     Called when navigation view controller has failed to  change alternative routes list.
+     Called when navigation view controller has failed to change alternative routes list.
      
      - parameter navigationViewController: The navigation view controller reporting an update.
      - parameter error: An error occured.
@@ -183,6 +193,16 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter location: The user’s current location.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
+     Tells the receiver that the user has selected a continuous alternative route by interacting with the map view.
+     
+     Continuous alternatives are all non-primary routes, reported during the navigation session.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter continuousAlternative: The route that was selected.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect continuousAlternative: AlternativeRoute)
     
     /**
      Called when the navigation view controller fails to receive a new route.
@@ -323,41 +343,51 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .info)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .info)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.didArriveAtWaypoint
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect waypoint: Waypoint) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
 
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
@@ -365,11 +395,14 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationViewController(_ navigationViewController: NavigationViewController, modifiedOptionsForReroute options: RouteOptions) -> RouteOptions {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return options
     }
     
@@ -377,56 +410,63 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToUpdateAlternatives error: AlternativeRouteError) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didTakeAlternativeRouteAt location: CLLocation?) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToTakeAlternativeRouteAt location: CLLocation?) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect continuousAlternative: AlternativeRoute) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**
@@ -440,7 +480,7 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
     
@@ -448,7 +488,7 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
     
@@ -456,7 +496,7 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
     
@@ -483,19 +523,12 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
-
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-    }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
     }
     
@@ -503,7 +536,7 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
     
@@ -511,7 +544,7 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
 
     /**
