@@ -11,7 +11,7 @@ class ImageDownloadOperationSpy: Operation, ImageDownload {
     private(set) var request: URLRequest?
     weak private var session: URLSession?
 
-    private var completionBlocks: Array<CachedResponseCompletionBlock> = []
+    private var completionBlocks: Array<CachedResponseCompletionHandler> = []
 
     required init(request: URLRequest, in session: URLSession) {
         self.request = request
@@ -33,7 +33,7 @@ class ImageDownloadOperationSpy: Operation, ImageDownload {
         return operations[URL]
     }
 
-    func addCompletion(_ completion: @escaping CachedResponseCompletionBlock) {
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler) {
         let wrappedCompletion = { (cachedResponse: CachedURLResponse?, error: Error?) in
             completion(cachedResponse, error)
             // Sadly we need to tick the run loop here to deal with the fact that the underlying implementations hop between queues. This has a similar effect to using XCTestCase's async expectations.

@@ -2,11 +2,11 @@ import Foundation
 import MapboxDirections
 import UIKit
 
-typealias CachedResponseCompletionBlock = (CachedURLResponse?, Error?) -> Void
+typealias CachedResponseCompletionHandler = (CachedURLResponse?, Error?) -> Void
 typealias ImageDownloadCompletionHandler = (DownloadError?) -> Void
 
 protocol ReentrantImageDownloader {
-    func download(with url: URL, completion: CachedResponseCompletionBlock?) -> Void
+    func download(with url: URL, completion: CachedResponseCompletionHandler?) -> Void
     func activeOperation(with url: URL) -> ImageDownload?
     func setOperationType(_ operationType: ImageDownload.Type?)
 }
@@ -42,7 +42,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         urlSession.invalidateAndCancel()
     }
 
-    func download(with url: URL, completion: CachedResponseCompletionBlock?) {
+    func download(with url: URL, completion: CachedResponseCompletionHandler?) {
         accessQueue.sync {
             let request = URLRequest(url)
             var operation: ImageDownload

@@ -38,7 +38,7 @@ protocol URLCaching {
  A general purpose URLCache used by `SpriteRepository` implementations.
  */
 internal class URLDataCache: URLCaching {
-    let diskCacheURL: URL = {
+    let defaultDiskCacheURL: URL = {
         let fileManager = FileManager.default
         let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let identifier = Bundle.mapboxNavigation.bundleIdentifier!
@@ -48,9 +48,10 @@ internal class URLDataCache: URLCaching {
     let urlCache: URLCache
     let defaultCapacity = 5 * 1024 * 1024
     
-    init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil) {
+    init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
         let memoryCapacity = memoryCapacity ?? defaultCapacity
         let diskCapacity = diskCapacity ?? defaultCapacity
+        let diskCacheURL = diskCacheURL ?? defaultDiskCacheURL
         if #available(iOS 13.0, *) {
             urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: diskCacheURL)
         } else {

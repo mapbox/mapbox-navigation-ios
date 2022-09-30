@@ -8,7 +8,7 @@ enum DownloadError: Error {
 
 protocol ImageDownload: URLSessionDataDelegate {
     init(request: URLRequest, in session: URLSession)
-    func addCompletion(_ completion: @escaping CachedResponseCompletionBlock)
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler)
     var isFinished: Bool { get }
 }
 
@@ -77,7 +77,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
 
     private var dataTask: URLSessionDataTask?
     private var incomingData: Data?
-    private var completionBlocks: [CachedResponseCompletionBlock] = .init()
+    private var completionBlocks: [CachedResponseCompletionHandler] = .init()
     private let lock: NSLock = .init()
 
     required init(request: URLRequest, in session: URLSession) {
@@ -85,7 +85,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
         self.session = session
     }
 
-    func addCompletion(_ completion: @escaping CachedResponseCompletionBlock) {
+    func addCompletion(_ completion: @escaping CachedResponseCompletionHandler) {
         withLock {
             completionBlocks.append(completion)
         }
@@ -145,7 +145,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        let (incomingData, completions) = withLock { () -> (Data?, [CachedResponseCompletionBlock]) in
+        let (incomingData, completions) = withLock { () -> (Data?, [CachedResponseCompletionHandler]) in
             let returnData = (self.incomingData, self.completionBlocks)
             self.completionBlocks.removeAll()
             return returnData

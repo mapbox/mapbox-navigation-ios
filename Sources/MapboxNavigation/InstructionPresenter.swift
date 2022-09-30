@@ -49,6 +49,8 @@ class InstructionPresenter {
     
     private let traitCollection: UITraitCollection
     
+    static let labelShieldScaleFactor: CGFloat = 1.2
+    
     func attributedText() -> NSAttributedString {
         guard let source = self.dataSource,
               let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction,
@@ -220,7 +222,7 @@ class InstructionPresenter {
     
     private func legacyAttributedString(for legacyIcon: UIImage,
                                         dataSource: DataSource) -> NSAttributedString {
-        let image = legacyIcon.scale(to: dataSource.font.pointSize * 1.2)
+        let image = legacyIcon.scale(to: dataSource.font.pointSize * InstructionPresenter.labelShieldScaleFactor)
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font
         attachment.image = image
@@ -241,7 +243,7 @@ class InstructionPresenter {
         let shieldWithCenteredText = cachedImage.withCenteredText(shield.text,
                                                                   color: shieldColor,
                                                                   font: fontSize)
-        let image = shieldWithCenteredText.scale(to: dataSource.font.pointSize * 1.2)
+        let image = shieldWithCenteredText.scale(to: dataSource.font.pointSize * InstructionPresenter.labelShieldScaleFactor)
         attachment.image = image
         return NSAttributedString(attachment: attachment)
     }
