@@ -250,7 +250,7 @@ open class NavigationEventsManager {
         event.event = EventType.cancel.rawValue
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
-        let validRating: Bool = (rating >= EventRating.unrated && rating <= 100)
+        let validRating: Bool = (rating >= EventRating.unrated && rating <= EventRating.topRated)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(EventRating.unrated) (none) and 100.")
         guard validRating else { return event }
         

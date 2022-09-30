@@ -24,4 +24,5 @@ enum EventType: String {
 // :nodoc:
 public enum EventRating {
     public static let unrated = -1
+    public static let topRated = 100
 }
