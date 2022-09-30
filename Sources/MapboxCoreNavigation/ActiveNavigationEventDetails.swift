@@ -3,7 +3,6 @@ import Polyline
 import UIKit
 import AVFoundation
 import MapboxDirections
-import MapboxMobileEvents
 
 struct ActiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?

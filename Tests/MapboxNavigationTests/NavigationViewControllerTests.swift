@@ -128,8 +128,7 @@ class NavigationViewControllerTests: TestCase {
     func testDefaultUserInterfaceUsage() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
-        let service = dependencies.navigationService
-        XCTAssertTrue(service.eventsManager.usesDefaultUserInterface, "MapboxNavigationTests should run inside the Example application target.")
+        XCTAssertTrue(Bundle.usesDefaultUserInterface, "MapboxNavigationTests should run inside the Example application target.")
         _ = navigationViewController
     }
     

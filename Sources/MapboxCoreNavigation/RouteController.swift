@@ -5,10 +5,10 @@ import Foundation
 import CoreLocation
 import MapboxCommon
 import MapboxNavigationNative
-import MapboxMobileEvents
 import MapboxDirections
 import Polyline
 import Turf
+import UIKit
 
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
