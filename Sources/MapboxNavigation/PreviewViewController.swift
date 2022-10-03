@@ -308,6 +308,11 @@ open class PreviewViewController: UIViewController {
     }
     
     // :nodoc:
+    public func preview(_ coordinate: CLLocationCoordinate2D) {
+        preview(Waypoint(coordinate: coordinate))
+    }
+    
+    // :nodoc:
     public func preview(_ waypoint: Waypoint) {
         let destinationOptions = DestinationOptions(waypoint: waypoint)
         state = .destinationPreviewing(destinationOptions)
@@ -322,11 +327,6 @@ open class PreviewViewController: UIViewController {
                                             willPresent: primaryAttributedString,
                                             in: destinationPreviewViewController) ?? primaryAttributedString
         }
-    }
-    
-    // :nodoc:
-    public func preview(_ coordinate: CLLocationCoordinate2D) {
-        preview(Waypoint(coordinate: coordinate))
     }
     
     // :nodoc:
