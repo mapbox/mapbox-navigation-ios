@@ -1,4 +1,4 @@
-extension PreviewViewController {
+extension Preview {
     
     // :nodoc:
     public enum State {

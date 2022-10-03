@@ -7,10 +7,15 @@ import MapboxDirections
 // :nodoc:
 open class PreviewViewController: UIViewController {
     
-    var previousState: State? = nil
+    // :nodoc:
+    public private(set) var cameraMode: Preview.CameraMode = .centered {
+        didSet {
+            navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
+        }
+    }
     
     // :nodoc:
-    public private(set) var state: State = .browsing {
+    public private(set) var state: Preview.State = .browsing {
         didSet {
             update(to: state)
         }
@@ -27,7 +32,7 @@ open class PreviewViewController: UIViewController {
     // :nodoc:
     public private(set) var backButton: BackButton!
     
-    var previousState: State? = nil
+    var previousState: Preview.State? = nil
     
     var finalDestinationAnnotation: PointAnnotation? = nil
     
@@ -37,7 +42,7 @@ open class PreviewViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var previewOptions: PreviewOptions
+    let previewOptions: PreviewOptions
     
     // TODO: Consider retrieving bottom banner view controller from actual view where it was embedded.
     var presentedBottomBanner: BannerPreviewing?
@@ -414,7 +419,7 @@ open class PreviewViewController: UIViewController {
     }
     
     // TODO: Refactor bottom banner view controller creation logic.
-    func updateBottomBannerContainerView(to state: State) {
+    func updateBottomBannerContainerView(to state: Preview.State) {
         switch state {
         case .browsing:
             if let customBottomBannerViewController = delegate?.previewViewController(self,
@@ -469,7 +474,7 @@ open class PreviewViewController: UIViewController {
         }
     }
     
-    func update(to state: State) {
+    func update(to state: Preview.State) {
         delegate?.previewViewController(self, stateWillChangeTo: state)
         
         updateBottomBannerContainerView(to: state)
@@ -490,12 +495,16 @@ open class PreviewViewController: UIViewController {
             
             navigationView.wayNameView.hide()
             navigationView.speedLimitView.hide()
+            
+            cameraModeFloatingButton.cameraMode = .idle
         case .routesPreviewing:
             backButton.show()
             navigationView.bottomBannerContainerView.show()
             
             navigationView.wayNameView.hide()
             navigationView.speedLimitView.hide()
+            
+            cameraModeFloatingButton.cameraMode = .idle
         }
         
         delegate?.previewViewController(self, stateDidChangeTo: state)
@@ -535,7 +544,7 @@ open class PreviewViewController: UIViewController {
     }
     
     @objc func resetCameraState() {
-        if cameraModeFloatingButton.cameraMode == .idle { return }
+        if case .idle = cameraModeFloatingButton.cameraMode { return }
         cameraModeFloatingButton.cameraMode = .idle
     }
 }
@@ -572,7 +581,7 @@ extension PreviewViewController: DestinationPreviewViewControllerDelegate, Route
 extension PreviewViewController: CameraModeFloatingButtonDelegate {
     
     func cameraModeFloatingButton(_ cameraModeFloatingButton: CameraModeFloatingButton,
-                                  cameraModeDidChangeTo cameraMode: CameraModeFloatingButton.CameraMode) {
+                                  cameraModeDidChangeTo cameraMode: Preview.CameraMode) {
         navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
         
         switch cameraMode {

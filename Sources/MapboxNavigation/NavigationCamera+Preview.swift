@@ -2,7 +2,7 @@ import UIKit
 
 extension NavigationCamera {
     
-    func move(to cameraMode: CameraModeFloatingButton.CameraMode) {
+    func move(to cameraMode: Preview.CameraMode) {
         switch cameraMode {
         case .idle:
             stop()
@@ -14,7 +14,7 @@ extension NavigationCamera {
         }
     }
     
-    func update(to cameraMode: CameraModeFloatingButton.CameraMode) {
+    func update(to cameraMode: Preview.CameraMode) {
         let navigationViewportDataSource = viewportDataSource as? NavigationViewportDataSource
         let passiveLocationProvider = mapView?.location.locationProvider as? PassiveLocationProvider
         let location = passiveLocationProvider?.locationManager.location

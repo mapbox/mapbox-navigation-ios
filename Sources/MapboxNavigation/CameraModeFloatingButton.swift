@@ -3,13 +3,7 @@ import UIKit
 // :nodoc:
 public class CameraModeFloatingButton: FloatingButton {
     
-    enum CameraMode {
-        case idle
-        case centered
-        case following
-    }
-    
-    var cameraMode: CameraMode = .centered {
+    var cameraMode: Preview.CameraMode = .centered {
         didSet {
             updateImage(for: cameraMode)
             delegate?.cameraModeFloatingButton(self, cameraModeDidChangeTo: cameraMode)
@@ -18,7 +12,7 @@ public class CameraModeFloatingButton: FloatingButton {
     
     weak var delegate: CameraModeFloatingButtonDelegate?
     
-    func updateImage(for cameraMode: CameraModeFloatingButton.CameraMode) {
+    func updateImage(for cameraMode: Preview.CameraMode) {
         let image: UIImage
         switch cameraMode {
         case .idle:
@@ -43,7 +37,7 @@ public class CameraModeFloatingButton: FloatingButton {
     }
     
     convenience init(_ frame: CGRect,
-                     cameraMode: CameraModeFloatingButton.CameraMode = .following,
+                     cameraMode: Preview.CameraMode = .following,
                      delegate: CameraModeFloatingButtonDelegate? = nil) {
         self.init(frame: frame)
         

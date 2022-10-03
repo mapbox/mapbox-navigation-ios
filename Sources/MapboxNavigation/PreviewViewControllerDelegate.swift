@@ -11,10 +11,10 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
     func previewViewControllerWillBeginNavigation(_ previewViewController: PreviewViewController)
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               stateWillChangeTo state: PreviewViewController.State)
+                               stateWillChangeTo state: Preview.State)
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               stateDidChangeTo state: PreviewViewController.State)
+                               stateDidChangeTo state: Preview.State)
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didAddDestinationBetween coordinates: [CLLocationCoordinate2D])
@@ -23,7 +23,7 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
                                didSelect route: Route)
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerFor state: PreviewViewController.State) -> BannerPreviewing?
+                               bottomBannerFor state: Preview.State) -> BannerPreviewing?
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                willPresent destinationText: NSAttributedString,
@@ -42,12 +42,12 @@ public extension PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               stateWillChangeTo state: PreviewViewController.State) {
+                               stateWillChangeTo state: Preview.State) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               stateDidChangeTo state: PreviewViewController.State) {
+                               stateDidChangeTo state: Preview.State) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
@@ -62,7 +62,7 @@ public extension PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerxFor state: PreviewViewController.State) -> BannerPreviewing? {
+                               bottomBannerFor state: Preview.State) -> BannerPreviewing? {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
         return nil
     }
