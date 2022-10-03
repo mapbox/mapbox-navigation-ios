@@ -5,10 +5,10 @@ import Foundation
 import CoreLocation
 import MapboxCommon
 import MapboxNavigationNative
-import MapboxMobileEvents
 import MapboxDirections
 import Polyline
 import Turf
+import UIKit
 
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
@@ -281,7 +281,8 @@ open class RouteController: NSObject {
         
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
+        guard let newMainRoute = indexedRouteResponse.currentRoute,
+              let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
@@ -305,7 +306,7 @@ open class RouteController: NSObject {
                 switch result {
                 case .success(let info):
                     let alternativeRoutes = info.1.compactMap {
-                        AlternativeRoute(mainRoute: self.route,
+                        AlternativeRoute(mainRoute: newMainRoute,
                                          alternativeRoute: $0)
                     }
                     completion?(.success((info.0, alternativeRoutes)))

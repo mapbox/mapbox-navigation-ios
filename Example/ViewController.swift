@@ -744,7 +744,8 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        guard let index = routes?.firstIndex(where: { $0 === route }) else { return }
+        guard let index = routes?.firstIndex(where: { $0 === route }),
+              index != indexedRouteResponse?.routeIndex else { return }
         indexedRouteResponse?.routeIndex = index
     }
 

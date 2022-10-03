@@ -83,6 +83,13 @@ extension Bundle {
             #endif
         }
     }
+
+    /**
+     Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
+     */
+    class var usesDefaultUserInterface: Bool {
+        return mapboxNavigationIfInstalled != nil
+    }
     
     /**
      Returns a dictionary of `MBXInfo.plist` in Mapbox Core Navigation.

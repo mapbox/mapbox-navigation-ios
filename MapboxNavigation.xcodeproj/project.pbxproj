@@ -81,6 +81,9 @@
 		2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0D1264E468B009D3848 /* RoadObjectMatcherError.swift */; };
 		2E50E0DC264E49C8009D3848 /* RoadObjectMatcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0DB264E49C8009D3848 /* RoadObjectMatcherDelegate.swift */; };
 		2E50E0E6264E49EF009D3848 /* OpenLRIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0E5264E49EF009D3848 /* OpenLRIdentifier.swift */; };
+		2E5ACEE8288E877A00300ECA /* EventsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5ACEE6288E877A00300ECA /* EventsAPI.swift */; };
+		2E5ACEE9288E877A00300ECA /* EventConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5ACEE7288E877A00300ECA /* EventConstants.swift */; };
+		2E5ACEEB288E888500300ECA /* EventsAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5ACEEA288E888500300ECA /* EventsAPIMock.swift */; };
 		2E6656F9264EC912009463EE /* Result+Expected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6656F8264EC912009463EE /* Result+Expected.swift */; };
 		2E82B9DC26E61F4600B7837F /* CongestionLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E82B9DB26E61F4600B7837F /* CongestionLevel.swift */; };
 		2E82B9DE26E6237600B7837F /* CongestionLevelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E82B9DD26E6237600B7837F /* CongestionLevelTests.swift */; };
@@ -267,6 +270,7 @@
 		8AC4091E279918470075248E /* NavigationViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091D279918470075248E /* NavigationViewLayout.swift */; };
 		8AC40920279918930075248E /* NavigationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091F279918930075248E /* NavigationViewDelegate.swift */; };
 		8AC5070928D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */; };
+		8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
 		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
 		8ACCD6B728DC3BA6008224D3 /* Previewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B628DC3BA6008224D3 /* Previewing.swift */; };
@@ -359,6 +363,9 @@
 		B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */; };
 		B430D2FA25534FDC0088CC23 /* UserHaloCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */; };
 		B4319F2F27A35EA8005A706E /* SpriteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4319F2E27A35EA8005A706E /* SpriteRepository.swift */; };
+		B432985D28D53A6F005AFB98 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B432985C28D53A6F005AFB98 /* URLRequest.swift */; };
+		B432985F28D53AB8005AFB98 /* URLSessionDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B432985E28D53AB8005AFB98 /* URLSessionDelegateProxy.swift */; };
+		B432986228D53AF4005AFB98 /* URLDataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B432986028D53AEB005AFB98 /* URLDataCacheTests.swift */; };
 		B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44177F72649B08400781319 /* UserLocationStyle.swift */; };
 		B443A48B27BB0CB8000AF101 /* sprite-info.json in Resources */ = {isa = PBXBuildFile; fileRef = B443A48A27BB0CB8000AF101 /* sprite-info.json */; };
 		B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -408,8 +415,6 @@
 		B4C4FFA028ADB19600C7C253 /* RouteLineLayerPositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C4FF9F28ADB19600C7C253 /* RouteLineLayerPositionTests.swift */; };
 		B4C8E39E286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */; };
 		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
-		B4E6711F27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */; };
-		B4E6712227BB0A56004EE9C1 /* SpriteInfoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6712027BB09EF004EE9C1 /* SpriteInfoCache.swift */; };
 		B4F4FEAD27AB1E11003915A9 /* SpriteRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B61B9627A882E200AA127E /* SpriteRepositoryTests.swift */; };
 		B4FD842827ED1980002662C4 /* UserPuckStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FD842727ED1980002662C4 /* UserPuckStyleKit.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
@@ -437,7 +442,6 @@
 		C5C94C1B1DDCD22B0097296A /* MapboxCoreNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */; };
 		C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */; };
-		C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */; };
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */; };
@@ -675,6 +679,9 @@
 		2E50E0D1264E468B009D3848 /* RoadObjectMatcherError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectMatcherError.swift; sourceTree = "<group>"; };
 		2E50E0DB264E49C8009D3848 /* RoadObjectMatcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectMatcherDelegate.swift; sourceTree = "<group>"; };
 		2E50E0E5264E49EF009D3848 /* OpenLRIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLRIdentifier.swift; sourceTree = "<group>"; };
+		2E5ACEE6288E877A00300ECA /* EventsAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsAPI.swift; sourceTree = "<group>"; };
+		2E5ACEE7288E877A00300ECA /* EventConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventConstants.swift; sourceTree = "<group>"; };
+		2E5ACEEA288E888500300ECA /* EventsAPIMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsAPIMock.swift; sourceTree = "<group>"; };
 		2E6656F8264EC912009463EE /* Result+Expected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Expected.swift"; sourceTree = "<group>"; };
 		2E82B9DB26E61F4600B7837F /* CongestionLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CongestionLevel.swift; sourceTree = "<group>"; };
 		2E82B9DD26E6237600B7837F /* CongestionLevelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CongestionLevelTests.swift; sourceTree = "<group>"; };
@@ -874,6 +881,7 @@
 		8AC4091F279918930075248E /* NavigationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewDelegate.swift; sourceTree = "<group>"; };
 		8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButton.swift; sourceTree = "<group>"; };
 		8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButtonDelegate.swift; sourceTree = "<group>"; };
+		8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationViewController+NavigationMapViewDelegate.swift"; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
 		8ACCD6B628DC3BA6008224D3 /* Previewing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewing.swift; sourceTree = "<group>"; };
@@ -978,6 +986,9 @@
 		B419BFF125F00A9C0086639B /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
 		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
 		B4319F2E27A35EA8005A706E /* SpriteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRepository.swift; sourceTree = "<group>"; };
+		B432985C28D53A6F005AFB98 /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
+		B432985E28D53AB8005AFB98 /* URLSessionDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDelegateProxy.swift; sourceTree = "<group>"; };
+		B432986028D53AEB005AFB98 /* URLDataCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLDataCacheTests.swift; sourceTree = "<group>"; };
 		B44177F72649B08400781319 /* UserLocationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStyle.swift; sourceTree = "<group>"; };
 		B443A48A27BB0CB8000AF101 /* sprite-info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sprite-info.json"; sourceTree = "<group>"; };
 		B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "MMEEventsManager+Spy.m"; path = "include/MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
@@ -1031,8 +1042,6 @@
 		B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		B4E19C46268114840011581F /* NavigationLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLocationProvider.swift; sourceTree = "<group>"; };
-		B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteInfoCacheTests.swift; sourceTree = "<group>"; };
-		B4E6712027BB09EF004EE9C1 /* SpriteInfoCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteInfoCache.swift; sourceTree = "<group>"; };
 		B4FD842727ED1980002662C4 /* UserPuckStyleKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPuckStyleKit.swift; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -1070,7 +1079,6 @@
 		C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyRouteController.swift; sourceTree = "<group>"; };
 		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
 		C5BF7370206AB0DE00CDBB6D /* MapboxCoreNavigationTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapboxCoreNavigationTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMEEventsManager.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
 		C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayNavigationViewController.swift; sourceTree = "<group>"; };
@@ -1292,6 +1300,8 @@
 				118D882E26F8CA0700B2ED7B /* ActiveNavigationFeedbackType.swift */,
 				118D883126F8CA0700B2ED7B /* CoreFeedbackEvent.swift */,
 				118D882D26F8CA0700B2ED7B /* EndOfRouteFeedback.swift */,
+				2E5ACEE7288E877A00300ECA /* EventConstants.swift */,
+				2E5ACEE6288E877A00300ECA /* EventsAPI.swift */,
 				118D882C26F8CA0700B2ED7B /* FeedbackEvent.swift */,
 				118D883226F8CA0700B2ED7B /* FeedbackScreenshotOption.swift */,
 				118D882F26F8CA0700B2ED7B /* FeedbackType.swift */,
@@ -1401,7 +1411,6 @@
 				354A9BCA20EA9BDA00F03325 /* EventDetails.swift */,
 				11B3D6D526A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift */,
 				110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */,
-				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				354A9BC520EA991900F03325 /* SessionState.swift */,
 				417D127626E24D0800E0AB16 /* FreeDriveEventDetails.swift */,
 				DA4A8EBF2704FF950071C85C /* EventLocation.swift */,
@@ -1555,7 +1564,6 @@
 		8A0E0A6D257AE4B300C2E924 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
-				B4E6712027BB09EF004EE9C1 /* SpriteInfoCache.swift */,
 				3EA93A10227A7DAF1861D9F5 /* Cache.swift */,
 				160D8278205996DA00D278D6 /* DataCache.swift */,
 				3EA938479CF48D7AD1B6369B /* ImageCache.swift */,
@@ -1663,7 +1671,7 @@
 		8AB316C126BC9FFC00C3AC76 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
-				B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */,
+				B432986028D53AEB005AFB98 /* URLDataCacheTests.swift */,
 				160D827A2059973C00D278D6 /* DataCacheTests.swift */,
 				1662244A2029059C00EA4824 /* ImageCacheTests.swift */,
 			);
@@ -1884,6 +1892,7 @@
 				B47C1AD3261FD0A30078546C /* DummyLocationManager.swift */,
 				B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */,
 				B47C1B00261FD0A30078546C /* Fixture.swift */,
+				2E5ACEEA288E888500300ECA /* EventsAPIMock.swift */,
 				B47C1B03261FD0A30078546C /* Info.plist */,
 				B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */,
 				B47C1B01261FD0A30078546C /* NavigationPlotter.swift */,
@@ -1948,6 +1957,8 @@
 			isa = PBXGroup;
 			children = (
 				8A7FD08928D9369C000C448F /* UIViewController.swift */,
+				B432985E28D53AB8005AFB98 /* URLSessionDelegateProxy.swift */,
+				B432985C28D53A6F005AFB98 /* URLRequest.swift */,
 				8A99F18828821AA70034F5BD /* UILayoutGuide.swift */,
 				8A50A3D026EC0AA300894A8E /* StyleURI.swift */,
 				F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */,
@@ -1998,6 +2009,7 @@
 				8AD220AE27C09544000734A5 /* Date.swift */,
 				8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */,
 				8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */,
+				8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2812,6 +2824,7 @@
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,
 				8A50A3C426EC09FB00894A8E /* FeedbackViewController.swift in Sources */,
 				B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */,
+				8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */,
 				16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */,
 				8AA0386327F7B3F50007BD2D /* BottomBannerViewControllerDelegate.swift in Sources */,
 				8D53136B20653FA20044891E /* ExitView.swift in Sources */,
@@ -2838,6 +2851,7 @@
 				8A285E242637859800B11ECD /* OrnamentsController.swift in Sources */,
 				8A1943A92685DC680066E2F8 /* NavigationGeocodedPlacemark.swift in Sources */,
 				8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */,
+				B432985D28D53A6F005AFB98 /* URLRequest.swift in Sources */,
 				8A50A3C526EC09FB00894A8E /* FeedbackViewControllerType.swift in Sources */,
 				8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */,
 				8A12E864282484B20071AF00 /* BannerContainerViewDelegate.swift in Sources */,
@@ -2887,11 +2901,11 @@
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
 				8A2354F028877890003E42B4 /* BottomBannerViewControllerLayout.swift in Sources */,
-				B4E6712227BB0A56004EE9C1 /* SpriteInfoCache.swift in Sources */,
 				8A17635B25CC89D800737520 /* Expression.swift in Sources */,
 				8A04DFBC275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift in Sources */,
 				8AB97C1E280A364E00792939 /* PreviewViewControllerState.swift in Sources */,
 				8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */,
+				B432985F28D53AB8005AFB98 /* URLSessionDelegateProxy.swift in Sources */,
 				2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */,
 				8AD2212327C43DEB000734A5 /* StylableView.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
@@ -2970,6 +2984,7 @@
 				8AD6F25B272216A500326D13 /* MapViewStyleTests.swift in Sources */,
 				2E82B9DE26E6237600B7837F /* CongestionLevelTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewSnapshotTests.swift in Sources */,
+				B432986228D53AF4005AFB98 /* URLDataCacheTests.swift in Sources */,
 				8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */,
 				DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
@@ -2996,7 +3011,6 @@
 				B4F4FEAD27AB1E11003915A9 /* SpriteRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
-				B4E6711F27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift in Sources */,
 				B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */,
@@ -3028,6 +3042,7 @@
 				B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */,
 				B47C1B1E261FD3290078546C /* CoreLocation.swift in Sources */,
 				E2F08C70269DB17C002EFDC5 /* AccessToken.swift in Sources */,
+				2E5ACEEB288E888500300ECA /* EventsAPIMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3040,6 +3055,7 @@
 				E2108B30285866C200CB0875 /* NavigationLog.swift in Sources */,
 				414119FF26C5269A00402B5D /* RoadSubgraphEdge.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
+				2E5ACEE8288E877A00300ECA /* EventsAPI.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */,
 				2EFADFFB264C1F9200B618C4 /* DistancedRoadObject.swift in Sources */,
@@ -3114,6 +3130,7 @@
 				DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */,
 				2E50E0E6264E49EF009D3848 /* OpenLRIdentifier.swift in Sources */,
 				2BF398C1274BDEA8000C9A72 /* Directions.swift in Sources */,
+				2E5ACEE9288E877A00300ECA /* EventConstants.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				2B01E4B7274671550002A5F7 /* RoutingProvider.swift in Sources */,
 				DA5F450025F07DE200F573EC /* ElectronicHorizonOptions.swift in Sources */,
@@ -3131,7 +3148,6 @@
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				2BF398C3274FE99A000C9A72 /* HandlerFactory.swift in Sources */,
 				118D883626F8CA0700B2ED7B /* ActiveNavigationFeedbackType.swift in Sources */,
-				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
 				11B3D6D626A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift in Sources */,
 				2B28AD7D284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
@@ -3365,7 +3381,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3393,7 +3409,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3471,12 +3487,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3509,11 +3525,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3568,7 +3584,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3633,7 +3649,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3667,7 +3683,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Sources/MapboxCoreNavigation/Info.plist;
@@ -3694,7 +3710,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Sources/MapboxCoreNavigation/Info.plist;
@@ -3763,11 +3779,11 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Sources/CarPlayTestHelper/Info.plist;
@@ -3796,10 +3812,10 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 125;
+				DYLIB_CURRENT_VERSION = 126;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Sources/CarPlayTestHelper/Info.plist;

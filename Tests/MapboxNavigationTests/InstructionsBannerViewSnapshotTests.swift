@@ -2,30 +2,29 @@ import XCTest
 import TestHelper
 import SnapshotTesting
 import MapboxDirections
+import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class InstructionsBannerViewSnapshotTests: TestCase {
-    let spriteRepository: SpriteRepository = SpriteRepository.shared
-
+class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
     let asyncTimeout: TimeInterval = 2.0
 
     override func setUp() {
         super.setUp()
         isRecording = false
 
-        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
-        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
+        let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
+        let us101Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.us101.baseURL)
 
-        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false, completion: nil)
-        spriteRepository.legacyCache.store(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false, completion: nil)
+        cacheLegacyIcon(with: i280Representation, shieldImage: .i280)
+        cacheLegacyIcon(with: us101Representation, shieldImage: .us101)
         NavigationSettings.shared.distanceUnit = .mile
         DayStyle().apply()
     }
 
     override func tearDown() {
         super.tearDown()
-        spriteRepository.resetCache()
+        clearDiskCache()
     }
 
     func testSinglelinePrimary() {
@@ -82,8 +81,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
     }
     
     func testSinglelinePrimaryAndSecondaryWithShield() {
-        spriteRepository.spriteCache.store(ShieldImage.shieldDay.image, forKey: spriteRepository.styleID!, toDisk: false, completion: nil)
-        spriteRepository.infoCache.store(Fixture.JSONFromFileNamed(name: "sprite-info"), spriteKey: spriteRepository.styleID!)
+        cacheSprite(for: .navigationDay)
         
         let view = instructionsView()
         styleInstructionsView(view)
@@ -105,8 +103,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
     }
     
     func testSinglelinePrimaryAndSecondaryWithNightShield() {
-        spriteRepository.spriteCache.store(ShieldImage.shieldNight.image, forKey: spriteRepository.styleID!, toDisk: false, completion: nil)
-        spriteRepository.infoCache.store(Fixture.JSONFromFileNamed(name: "sprite-info"), spriteKey: spriteRepository.styleID!)
+        cacheSprite(for: .navigationNight)
         
         let view = instructionsView()
         styleInstructionsView(view)
@@ -183,7 +180,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
             .text(text: .init(text: "20 West", abbreviation: "20 W", abbreviationPriority: 1)),
         ]
 
-        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: primary.first!.cacheKey!, toDisk: false, completion: nil)
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
 
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
@@ -430,3 +426,47 @@ extension InstructionsBannerViewSnapshotTests {
         view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: .medium)
     }
 }
+
+class InstructionBannerTest: TestCase {
+    lazy var spriteRepository: SpriteRepository = {
+        return SpriteRepository.shared
+    }()
+    
+    func cacheSprite(for styleURI: StyleURI = .navigationDay) {
+        let shieldImage: ShieldImage = (styleURI == .navigationDay) ? .shieldDay : .shieldNight
+        guard let styleID = spriteRepository.styleID(for: styleURI),
+              let spriteRequestURL = spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let infoRequestURL = spriteRepository.spriteURL(isImage: false, styleID: styleID),
+              let spriteData = shieldImage.image.pngData() else {
+                  XCTFail("Failed to form request URL.")
+                  return
+              }
+        
+        let spriteResponse = URLResponse(url: spriteRequestURL, mimeType: nil, expectedContentLength: spriteData.count, textEncodingName: nil)
+        spriteRepository.requestCache.store( CachedURLResponse(response: spriteResponse, data: spriteData), for: spriteRequestURL)
+        
+        let infoData = Fixture.JSONFromFileNamed(name: "sprite-info")
+        let infoResponse = URLResponse(url: infoRequestURL, mimeType: nil, expectedContentLength: infoData.count, textEncodingName: nil)
+        spriteRepository.requestCache.store( CachedURLResponse(response: infoResponse, data: infoData), for: infoRequestURL)
+    }
+    
+    func clearDiskCache() {
+        let semaphore = DispatchSemaphore(value: 0)
+        spriteRepository.resetCache() {
+            semaphore.signal()
+        }
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+    }
+    
+    func cacheLegacyIcon(with representation: VisualInstruction.Component.ImageRepresentation, shieldImage: ShieldImage) {
+        guard let legacyURL = representation.imageURL(scale: VisualInstruction.Component.scale, format: .png),
+              let data = shieldImage.image.pngData() else {
+            XCTFail("Failed to cache legacy images.")
+            return
+        }
+        let response = URLResponse(url: legacyURL, mimeType: nil, expectedContentLength: data.count, textEncodingName: nil)
+        spriteRepository.requestCache.store(CachedURLResponse(response: response, data: data), for: legacyURL)
+    }
+}
+

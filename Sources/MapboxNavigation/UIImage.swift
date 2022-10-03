@@ -127,6 +127,14 @@ extension UIImage {
                                     withAttributes: textFontAttributes)
         }
     }
+    
+    func scale(to height: Double) -> UIImage {
+        let ratio = height / size.height
+        let newSize = CGSize(width: ratio * size.width, height: ratio * size.height)
+        return UIGraphicsImageRenderer(size: newSize).image { _ in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
 
     func scaled(to: CGSize) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

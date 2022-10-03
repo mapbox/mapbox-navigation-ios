@@ -27,6 +27,55 @@ public protocol BimodalDataCache: BimodalCache {
     func data(forKey: String?) -> Data?
 }
 
+protocol URLCaching {
+    func store(_ cachedResponse: CachedURLResponse, for url: URL)
+    func response(for url: URL) -> CachedURLResponse?
+    func clearCache()
+    func removeCache(for url: URL)
+}
+
+/**
+ A general purpose URLCache used by `SpriteRepository` implementations.
+ */
+internal class URLDataCache: URLCaching {
+    let defaultDiskCacheURL: URL = {
+        let fileManager = FileManager.default
+        let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let identifier = Bundle.mapboxNavigation.bundleIdentifier!
+        return basePath.appendingPathComponent(identifier).appendingPathComponent("URLDataCache")
+    }()
+    
+    let urlCache: URLCache
+    let defaultCapacity = 5 * 1024 * 1024
+    
+    init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
+        let memoryCapacity = memoryCapacity ?? defaultCapacity
+        let diskCapacity = diskCapacity ?? defaultCapacity
+        let diskCacheURL = diskCacheURL ?? defaultDiskCacheURL
+        if #available(iOS 13.0, *) {
+            urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: diskCacheURL)
+        } else {
+            urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: diskCacheURL.path)
+        }
+    }
+    
+    func store(_ cachedResponse: CachedURLResponse, for url: URL) {
+        urlCache.storeCachedResponse(cachedResponse, for: URLRequest(url))
+    }
+    
+    func response(for url: URL) -> CachedURLResponse? {
+        return urlCache.cachedResponse(for: URLRequest(url))
+    }
+    
+    func clearCache() {
+        urlCache.removeAllCachedResponses()
+    }
+    
+    func removeCache(for url: URL) {
+        urlCache.removeCachedResponse(for: URLRequest(url))
+    }
+}
+
 /**
  A general purpose on-disk cache used by both the ImageCache and DataCache implementations
  */

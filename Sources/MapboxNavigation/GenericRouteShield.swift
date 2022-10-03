@@ -79,7 +79,7 @@ public class GenericRouteShield: StylableView {
     }
 
     func buildConstraints() {
-        let height = heightAnchor.constraint(equalToConstant: pointSize * 1.2)
+        let height = heightAnchor.constraint(equalToConstant: pointSize * InstructionPresenter.labelShieldScaleFactor)
         
         let labelCenterY = routeLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         

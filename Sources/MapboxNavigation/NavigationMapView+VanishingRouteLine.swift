@@ -122,6 +122,23 @@ extension NavigationMapView {
         routeRemainingDistancesIndex = allPoints - allRemainingPoints
     }
     
+    func calculateGranularDistanceOffset(_ coordinates: [CLLocationCoordinate2D], splitPoint: CLLocationCoordinate2D) -> Double? {
+        if coordinates.isEmpty { return nil }
+        var distance = 0.0
+        var closestError = Double.greatestFiniteMagnitude
+        var pointDistance: Double? = nil
+        for index in stride(from: coordinates.count - 1, to: 0, by: -1) {
+            let curr = coordinates[index]
+            let prev = coordinates[index - 1]
+            distance += curr.projectedDistance(to: prev)
+            if curr.distance(to: splitPoint) < closestError {
+                pointDistance = distance
+                closestError = curr.distance(to: splitPoint)
+            }
+        }
+        return pointDistance.map { (distance - $0) / distance }
+    }
+    
     func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
         if coordinates.isEmpty { return nil }
         var distance = 0.0

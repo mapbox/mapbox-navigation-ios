@@ -303,12 +303,14 @@ open class NavigationMapView: UIView {
             }
         }
         
-        continuousAlternatives?.forEach { routeAlternative in
-            guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+        guard let continuousAlternatives = continuousAlternatives else { return }
+        for (index, routeAlternative) in continuousAlternatives.enumerated() {
+            guard let route = routeAlternative.indexedRouteResponse.currentRoute,
+                  alternativesRouteLineDeviationOffsets?.count ?? 0 > index,
+                  let offset = alternativesRouteLineDeviationOffsets?[index] else {
                 return
             }
             
-            let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
                                                   below: parentLayerIdentifier,
                                                   isMainRoute: false,
@@ -1152,14 +1154,11 @@ open class NavigationMapView: UIView {
         var features = [Turf.Feature]()
         
         for (index, alternativeRoute) in routes.enumerated() {
-            guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape else { return }
-            
-            var annotationCoordinate: LocationCoordinate2D!
-            if let mainRoute = self.routes?.first {
-                let offset = mainRoute.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset
-                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: offset)?.coordinate
-            } else {
-                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset)?.coordinate
+            guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape,
+                  let annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance
+                                                                                   - alternativeRoute.infoFromDeviationPoint.distance
+                                                                                   + continuousAlternativeDurationAnnotationOffset)?.coordinate else {
+                return
             }
             
             // Form the appropriate text string for the annotation.
@@ -1323,6 +1322,7 @@ open class NavigationMapView: UIView {
             "text": .string(labelText),
             "imageName": .string(imageName),
             "sortOrder": .number(Double(isSelected ? index : -index)),
+            "routeIndex": .number(Double(index))
         ]
         
         return feature
@@ -1691,7 +1691,19 @@ open class NavigationMapView: UIView {
     // MARK: Map Rendering and Observing
     
     var routes: [Route]?
-    var continuousAlternatives: [AlternativeRoute]?
+    var continuousAlternatives: [AlternativeRoute]? {
+        didSet {
+            alternativesRouteLineDeviationOffsets = continuousAlternatives?.map {
+                guard let coordinates = $0.indexedRouteResponse.currentRoute?.shape?.coordinates,
+                      let projectedOffset = calculateGranularDistanceOffset(coordinates,
+                                                                            splitPoint: $0.alternativeRouteIntersection.location) else {
+                    return 0.0
+                }
+                return projectedOffset
+            }
+        }
+    }
+    var alternativesRouteLineDeviationOffsets: [Double]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
@@ -2119,12 +2131,59 @@ open class NavigationMapView: UIView {
         if let selected = waypointTest?.first {
             delegate?.navigationMapView(self, didSelect: selected)
             return
-        } else if let routes = self.routes(closeTo: tapPoint),
-                  let selectedRoute = routes.first {
-            delegate?.navigationMapView(self, didSelect: selectedRoute)
-        } else if let alternativeRoutes = self.continuousAlternativeRoutes(closeTo: tapPoint),
-                  let selectedRoute = alternativeRoutes.first {
-            delegate?.navigationMapView(self, didSelect: selectedRoute)
+        }
+        
+        route(at: tapPoint)  { [weak self] (routeFoundByPoint) in
+            guard !routeFoundByPoint, let self = self else { return }
+            if let routes = self.routes(closeTo: tapPoint),
+               let selectedRoute = routes.first {
+                self.delegate?.navigationMapView(self, didSelect: selectedRoute)
+            } else if let alternativeRoutes = self.continuousAlternativeRoutes(closeTo: tapPoint),
+                      let selectedRoute = alternativeRoutes.first {
+                self.delegate?.navigationMapView(self, didSelect: selectedRoute)
+            }
+        }
+    }
+    
+    func route(at point: CGPoint, completion: @escaping (Bool) -> Void) {
+        let group = DispatchGroup()
+        var routeFoundByPoint: Bool = false
+        let layerIds: [String] = [
+            LayerIdentifier.routeDurationAnnotationsLayer,
+            LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer]
+    
+        for layerId in layerIds {
+            group.enter()
+            let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
+            routeIndexFromMapQuery(with: options, at: point) { [weak self] (routeIndex) in
+                defer { group.leave() }
+                guard let self = self, let routeIndex = routeIndex else { return }
+                if layerId == layerIds.first {
+                    if let route = self.routes?[safe: routeIndex] {
+                        routeFoundByPoint = true
+                        self.delegate?.navigationMapView(self, didSelect: route)
+                    }
+                } else if let alternativeRoute = self.continuousAlternatives?[safe: routeIndex] {
+                    routeFoundByPoint = true
+                    self.delegate?.navigationMapView(self, didSelect: alternativeRoute)
+                }
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(routeFoundByPoint)
+        }
+    }
+    
+    func routeIndexFromMapQuery(with options: RenderedQueryOptions, at point: CGPoint, completion: @escaping (Int?) -> Void) {
+        mapView.mapboxMap.queryRenderedFeatures(with: [point], options: options) { result in
+            if case .success(let queriedFeatures) = result,
+               let indexValue = queriedFeatures.first?.feature.properties?["routeIndex"] as? JSONValue,
+               case .number(let routeIndex) = indexValue {
+                completion(Int(routeIndex))
+            } else {
+                completion(nil)
+            }
         }
     }
     

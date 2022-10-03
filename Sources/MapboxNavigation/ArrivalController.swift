@@ -1,7 +1,6 @@
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
-import MapboxMobileEvents
 import MapboxMaps
 
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
@@ -103,7 +102,7 @@ class ArrivalController: NavigationComponentDelegate {
     
     fileprivate func rating(for stars: Int) -> Int {
         assert(stars >= 0 && stars <= 5)
-        guard stars > 0 else { return MMEEventsManager.unrated } //zero stars means this was unrated.
+        guard stars > 0 else { return EventRating.unrated } //zero stars means this was unrated.
         return (stars - 1) * 25
     }
     

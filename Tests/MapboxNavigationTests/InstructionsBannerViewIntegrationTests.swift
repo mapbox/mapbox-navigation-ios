@@ -34,15 +34,9 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                                    drivingSide: drivingSide)
 }
 
-class InstructionsBannerViewIntegrationTests: TestCase {
+class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
     private lazy var reverseDelegate = TextReversingDelegate()
     private lazy var silentDelegate = DefaultBehaviorDelegate()
-    
-    lazy var spriteRepository: SpriteRepository = {
-        let repo = SpriteRepository.shared
-        repo.sessionConfiguration = URLSessionConfiguration.default
-        return repo
-    }()
 
     lazy var instructions: [VisualInstruction.Component] = {
         let components: [VisualInstruction.Component] =  [
@@ -63,13 +57,13 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        spriteRepository.spriteCache.store(ShieldImage.shieldDay.image, forKey: spriteRepository.styleID!, toDisk: false, completion: nil)
+        cacheSprite()
         spriteRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
     }
 
     override func tearDown() {
         super.tearDown()
-        spriteRepository.resetCache()
+        clearDiskCache()
         spriteRepository.imageDownloader.setOperationType(nil)
         ImageDownloadOperationSpy.reset()
     }
@@ -102,11 +96,11 @@ class InstructionsBannerViewIntegrationTests: TestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0))
-        let instruction2 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
+        let representation1 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
+        let representation2 = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.us101.baseURL)
 
-        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false, completion: nil)
-        spriteRepository.legacyCache.store(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false, completion: nil)
+        cacheLegacyIcon(with: representation1, shieldImage: .i280)
+        cacheLegacyIcon(with: representation2, shieldImage: .us101)
 
         let view = instructionsView()
         view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -115,7 +109,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         XCTAssertNil(view.primaryLabel.text!.firstIndex(of: "/"))
 
         //explicitly reset the cache
-        spriteRepository.resetCache()
+        spriteRepository.requestCache.clearCache()
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -291,6 +285,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         let presenter = InstructionPresenter(exitInstruction,
                                              dataSource: label,
+                                             spriteRepository: spriteRepository,
                                              traitCollection: traitCollection,
                                              downloadCompletion: nil)
         
@@ -299,11 +294,11 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         let cacheKey = [
             exitCodeAttribute.cacheKey!,
             ExitView.criticalHash(side: .right,
-                                  styleID: spriteRepository.styleID,
+                                  styleID: spriteRepository.styleID(for: .phone),
                                   dataSource: label,
                                   traitCollection: traitCollection)
         ].joined(separator: "-")
-        XCTAssertNotNil(spriteRepository.legacyRoadShieldImage(from: cacheKey), "Expected cached image")
+        XCTAssertNotNil(spriteRepository.derivedCache.image(forKey: cacheKey), "Expected cached image")
         
         let spaceRange = NSMakeRange(1, 1)
         let space = attributed.attributedSubstring(from: spaceRange)
@@ -319,15 +314,14 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component) {
-        var imageURL: URL!
-        if case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component,
-           let imageBaseURL = imageRepresentation.imageURL(scale: VisualInstruction.Component.scale, format: .png) {
-            imageURL = imageBaseURL
-        }
+        guard case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component,
+              let imageURL = imageRepresentation.imageURL(scale: VisualInstruction.Component.scale, format: .png)  else { return }
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(imageURL)!
-        operation.fireAllCompletions(ShieldImage.i280.image, data: ShieldImage.i280.image.pngData(), error: nil)
+        let data = ShieldImage.i280.image.pngData()!
+        let response = URLResponse(url: imageURL, mimeType: nil, expectedContentLength: data.count, textEncodingName: nil)
+        operation.fireAllCompletions(CachedURLResponse(response: response, data: data), error: nil)
 
-        XCTAssertNotNil(spriteRepository.legacyCache.image(forKey: component.cacheKey!))
+        XCTAssertNotNil(spriteRepository.getLegacyShield(with: imageRepresentation))
     }
 }
 

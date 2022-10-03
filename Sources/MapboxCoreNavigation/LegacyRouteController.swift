@@ -5,8 +5,8 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 import Polyline
-import MapboxMobileEvents
 import Turf
+import UIKit
 
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {

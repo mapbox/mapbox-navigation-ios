@@ -2,11 +2,11 @@ import Foundation
 import MapboxDirections
 import UIKit
 
-typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?) -> Void
+typealias CachedResponseCompletionHandler = (CachedURLResponse?, Error?) -> Void
 typealias ImageDownloadCompletionHandler = (DownloadError?) -> Void
 
 protocol ReentrantImageDownloader {
-    func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) -> Void
+    func download(with url: URL, completion: CachedResponseCompletionHandler?) -> Void
     func activeOperation(with url: URL) -> ImageDownload?
     func setOperationType(_ operationType: ImageDownload.Type?)
 }
@@ -20,8 +20,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     private var operationType: ImageDownload.Type
     private var operations: [URL: ImageDownload] = [:]
-
-    private let headers: [String: String] = ["Accept": "image/*;q=0.8"]
 
     init(sessionConfiguration: URLSessionConfiguration = .default,
          operationType: ImageDownload.Type = ImageDownloadOperation.self) {
@@ -44,9 +42,9 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         urlSession.invalidateAndCancel()
     }
 
-    func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
+    func download(with url: URL, completion: CachedResponseCompletionHandler?) {
         accessQueue.sync {
-            let request: URLRequest = self.urlRequest(with: url)
+            let request = URLRequest(url)
             var operation: ImageDownload
             if let activeOperation = self.unsafeActiveOperation(with: url) {
                 operation = activeOperation
@@ -72,14 +70,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             return nil
         }
         return operation
-    }
-    
-    private func urlRequest(with url: URL) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = self.headers
-        request.cachePolicy = .reloadIgnoringCacheData
-        request.setValue(URLSession.userAgent, forHTTPHeaderField: "User-Agent")
-        return request
     }
 
     func setOperationType(_ operationType: ImageDownload.Type?) {
