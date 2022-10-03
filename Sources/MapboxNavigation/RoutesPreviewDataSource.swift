@@ -1,7 +1,7 @@
 import UIKit
 
 // :nodoc:
-public typealias RoutesPreviewing = Previewing & RoutesPreviewDataSource
+public typealias RoutesPreviewing = BannerPreviewing & RoutesPreviewDataSource
 
 // :nodoc:
 public protocol RoutesPreviewDataSource: AnyObject {

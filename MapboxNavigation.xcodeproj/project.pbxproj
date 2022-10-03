@@ -273,7 +273,7 @@
 		8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
 		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
-		8ACCD6B728DC3BA6008224D3 /* Previewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B628DC3BA6008224D3 /* Previewing.swift */; };
+		8ACCD6B728DC3BA6008224D3 /* BannerPreviewing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B628DC3BA6008224D3 /* BannerPreviewing.swift */; };
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
@@ -884,7 +884,7 @@
 		8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationViewController+NavigationMapViewDelegate.swift"; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
-		8ACCD6B628DC3BA6008224D3 /* Previewing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewing.swift; sourceTree = "<group>"; };
+		8ACCD6B628DC3BA6008224D3 /* BannerPreviewing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPreviewing.swift; sourceTree = "<group>"; };
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
@@ -1602,7 +1602,7 @@
 			children = (
 				8AB97C15280A30A800792939 /* Destination Preview */,
 				8AB97C16280A30C500792939 /* Routes Preview */,
-				8ACCD6B628DC3BA6008224D3 /* Previewing.swift */,
+				8ACCD6B628DC3BA6008224D3 /* BannerPreviewing.swift */,
 				8AD2210327C1A668000734A5 /* PreviewViewController.swift */,
 				8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */,
 				8AB97C1D280A364E00792939 /* PreviewViewControllerState.swift */,
@@ -2880,7 +2880,7 @@
 				8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */,
 				8AA0385D27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift in Sources */,
 				DA66063023B32F99007832E5 /* Array.swift in Sources */,
-				8ACCD6B728DC3BA6008224D3 /* Previewing.swift in Sources */,
+				8ACCD6B728DC3BA6008224D3 /* BannerPreviewing.swift in Sources */,
 				8AD635BD278F66FC00218D5A /* StepsViewControllerDelegate.swift in Sources */,
 				8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */,
 				8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */,

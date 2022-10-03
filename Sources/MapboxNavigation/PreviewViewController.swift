@@ -12,7 +12,7 @@ open class PreviewViewController: UIViewController {
     // :nodoc:
     public private(set) var state: State = .browsing {
         didSet {
-            updateInternalComponents(to: state)
+            update(to: state)
         }
     }
     
@@ -32,7 +32,7 @@ open class PreviewViewController: UIViewController {
     var styleManager: StyleManager!
     
     // TODO: Consider retrieving bottom banner view controller from actual view where it was embedded.
-    var presentedBottomBannerViewController: Previewing?
+    var presentedBottomBanner: BannerPreviewing?
     
     var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
@@ -336,7 +336,7 @@ open class PreviewViewController: UIViewController {
         addDestinationAnnotation(waypoint.coordinate)
         
         if let primaryText = destinationOptions.primaryText,
-           let destinationPreviewViewController = presentedBottomBannerViewController as? DestinationPreviewViewController {
+           let destinationPreviewViewController = presentedBottomBanner as? DestinationPreviewViewController {
             let primaryAttributedString = NSAttributedString(string: primaryText)
             destinationPreviewViewController.destinationLabel.attributedText =
             delegate?.previewViewController(self,
@@ -406,7 +406,7 @@ open class PreviewViewController: UIViewController {
                 navigationView.bottomBannerContainerView.isHidden = false
                 embed(customBottomBannerViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
                 
-                presentedBottomBannerViewController = customBottomBannerViewController
+                presentedBottomBanner = customBottomBannerViewController
             } else {
                 navigationView.bottomBannerContainerView.hide()
             }
@@ -428,7 +428,7 @@ open class PreviewViewController: UIViewController {
                 (destinationPreviewViewController as? DestinationPreviewViewController)?.delegate = self
             }
             
-            presentedBottomBannerViewController = destinationPreviewViewController
+            presentedBottomBanner = destinationPreviewViewController
             embed(destinationPreviewViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
         case .routesPreviewing(let routesPreviewOptions):
             navigationView.bottomBannerContainerView.subviews.forEach {
@@ -448,12 +448,12 @@ open class PreviewViewController: UIViewController {
                 (routesPreviewViewController as? RoutesPreviewViewController)?.delegate = self
             }
             
-            presentedBottomBannerViewController = routesPreviewViewController
+            presentedBottomBanner = routesPreviewViewController
             embed(routesPreviewViewController as! UIViewController, in: navigationView.bottomBannerContainerView)
         }
     }
     
-    func updateInternalComponents(to state: State) {
+    func update(to state: State) {
         delegate?.previewViewController(self, stateWillChangeTo: state)
         
         updateBottomBannerContainerView(to: state)

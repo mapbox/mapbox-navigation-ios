@@ -23,7 +23,7 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
                                didSelect route: Route)
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerFor state: PreviewViewController.State) -> Previewing?
+                               bottomBannerFor state: PreviewViewController.State) -> BannerPreviewing?
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                willPresent destinationText: NSAttributedString,
@@ -62,7 +62,7 @@ public extension PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerxFor state: PreviewViewController.State) -> Previewing? {
+                               bottomBannerxFor state: PreviewViewController.State) -> BannerPreviewing? {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
         return nil
     }

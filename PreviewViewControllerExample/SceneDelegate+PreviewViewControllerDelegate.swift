@@ -31,7 +31,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerFor state: PreviewViewController.State) -> Previewing? {
+                               bottomBannerFor state: PreviewViewController.State) -> BannerPreviewing? {
         switch state {
         case .browsing:
             if useCustomBannerViews {

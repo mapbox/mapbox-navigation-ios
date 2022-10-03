@@ -1,6 +1,6 @@
 import UIKit
 import MapboxNavigation
 
-class CustomBrowsingViewController: UIViewController, Previewing {
+class CustomBrowsingViewController: UIViewController, BannerPreviewing {
     
 }
