@@ -195,7 +195,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         
         instructionsCardView.backgroundColor = backgroundColor
         instructionsCardView.separatorView.backgroundColor = separatorColor
-        if instructionsCardView.primaryLabel.styleID == "/mapbox/navigation-day-v1" {
+        if instructionsCardView.primaryLabel.styleType == .day {
             instructionsCardView.primaryLabel.showHighlightedTextColor = shouldUseHighlightedColors
         }
         instructionsCardView.secondaryLabel.showHighlightedTextColor = shouldUseHighlightedColors
