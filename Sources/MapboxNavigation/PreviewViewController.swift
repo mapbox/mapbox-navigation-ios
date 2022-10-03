@@ -58,11 +58,8 @@ open class PreviewViewController: UIViewController {
         setupFloatingButtons()
         setupTopBannerContainerView()
         setupBottomBannerContainerView()
-        setupOrnaments()
         setupConstraints()
-        
         setupStyleManager()
-        setupGestureRecognizers()
         
         state = .browsing
     }
@@ -70,14 +67,19 @@ open class PreviewViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Apply style each time `PreviewViewController` appears on screen
+        // (e.g. after active navigation).
+        styleManager.applyStyle()
         setupPassiveLocationManager()
         setupNavigationViewportDataSource()
         subscribeForNotifications()
+        setupGestureRecognizers()
     }
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        setupOrnaments()
         setupBottomBannerContainerViewLayoutConstraints()
         
         // TODO: Implement public method that completely cleans-up `NavigationMapView`.
@@ -105,6 +107,7 @@ open class PreviewViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         unsubscribeFromNotifications()
+        resetGestureRecognizers()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
