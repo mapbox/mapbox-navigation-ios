@@ -613,8 +613,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         // Check if device orientation has changed and inform the location provider accordingly.
         updateHeadingForCurrentDeviceOrientation()
-        print("!!! device orientation: \(UIDevice.current.orientation)")
-        updateHeadingForCurrentDeviceOrientation()
         router.locationManager?(manager, didUpdateHeading: newHeading)
     }
     

@@ -74,15 +74,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                                  viewportDataSourceType: .active)
             navigationMapView.navigationCamera.follow()
-            
-            let viewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
-            print("!!! orientation: \(navigationService.locationManager.headingOrientation)")
-//            print("!!! device orientation: \(UIDevice.current.orientation)")
-//            if navigationService.locationManager.headingOrientation == .landscapeLeft {
-//                print("!!! landscape left")
-//            } else if navigationService.locationManager.headingOrientation == .landscapeRight {
-//                print("!!! landscape right")
-//            }
         }
         
         // In case if `NavigationMapView` instance was injected - do not set initial camera options.
