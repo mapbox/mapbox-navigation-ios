@@ -123,25 +123,39 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
         
         self.previewViewController.navigationView.bottomBannerContainerView.hide(completion: { _ in
-            let navigationRouteOptions = NavigationRouteOptions(coordinates: self.coordinates)
-            let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                            routeIndex: self.routeIndex,
-                                                            routeOptions: navigationRouteOptions,
+            let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                            routeIndex: self.routeIndex)
+            let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                             customRoutingProvider: NavigationSettings.shared.directions,
                                                             credentials: NavigationSettings.shared.directions.credentials,
                                                             simulating: .always)
             
             let navigationOptions = NavigationOptions(navigationService: navigationService)
-            
-            let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                    routeIndex: self.routeIndex,
-                                                                    routeOptions: navigationRouteOptions,
-                                                                    navigationOptions: navigationOptions)
-            navigationViewController.delegate = self
+            let navigationViewController = NavigationViewController(for: indexedRouteResponse,
+                                                                       navigationOptions: navigationOptions)
             navigationViewController.modalPresentationStyle = .fullScreen
             navigationViewController.transitioningDelegate = self
             
-            self.previewViewController.present(navigationViewController, animated: true)
+            self.previewViewController.present(navigationViewController, animated: true, completion: {
+                navigationViewController.delegate = self
+                
+                // Switch navigation camera to active navigation mode.
+                navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationViewController.navigationView.navigationMapView.mapView,
+                                                                                                                               viewportDataSourceType: .active)
+                navigationViewController.navigationMapView?.navigationCamera.follow()
+                
+                navigationViewController.navigationMapView?.userLocationStyle = .courseView()
+                
+                // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
+                navigationViewController.routeLineTracksTraversal = true
+                
+                // Hide top and bottom container views before animating their presentation.
+                navigationViewController.navigationView.topBannerContainerView.isHidden = true
+                navigationViewController.navigationView.bottomBannerContainerView.isHidden = true
+                
+                navigationViewController.navigationView.topBannerContainerView.show()
+                navigationViewController.navigationView.bottomBannerContainerView.show()
+            })
         })
     }
     
