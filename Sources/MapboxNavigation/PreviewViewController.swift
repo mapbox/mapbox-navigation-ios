@@ -222,7 +222,7 @@ open class PreviewViewController: UIViewController {
     func setupGestureRecognizers() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         longPressGestureRecognizer.name = "preview_long_press_gesture_recognizer"
-        navigationView.addGestureRecognizer(longPressGestureRecognizer)
+        navigationView.navigationMapView.addGestureRecognizer(longPressGestureRecognizer)
         
         // In case if map view is panned, rotated or pinched, camera state should be reset.
         for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
@@ -230,6 +230,19 @@ open class PreviewViewController: UIViewController {
         || gestureRecognizer is UIRotationGestureRecognizer
         || gestureRecognizer is UIPinchGestureRecognizer {
             gestureRecognizer.addTarget(self, action: #selector(resetCameraState))
+        }
+    }
+    
+    func resetGestureRecognizers() {
+        navigationView.navigationMapView.gestureRecognizers?.filter({ $0.name == "preview_long_press_gesture_recognizer" }).forEach {
+            navigationView.navigationMapView.removeGestureRecognizer($0)
+        }
+        
+        for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
+        where gestureRecognizer is UIPanGestureRecognizer
+        || gestureRecognizer is UIRotationGestureRecognizer
+        || gestureRecognizer is UIPinchGestureRecognizer {
+            gestureRecognizer.removeTarget(self, action: #selector(resetCameraState))
         }
     }
     
