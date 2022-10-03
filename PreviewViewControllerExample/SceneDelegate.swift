@@ -24,7 +24,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
-        previewViewController = PreviewViewController()
+        let previewOptions: PreviewOptions
+        if useCustomBannerViews {
+            previewOptions = PreviewOptions(styles: [PreviewDayStyle(), PreviewNightStyle()])
+        } else {
+            previewOptions = PreviewOptions()
+        }
+        
+        previewViewController = PreviewViewController(previewOptions)
         previewViewController.delegate = self
         window?.rootViewController = previewViewController
         window?.makeKeyAndVisible()

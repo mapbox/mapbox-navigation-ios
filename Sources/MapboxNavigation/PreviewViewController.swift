@@ -16,12 +16,18 @@ open class PreviewViewController: UIViewController {
         }
     }
     
-    var backButton: BackButton!
-    
     // :nodoc:
     public var navigationView: NavigationView {
         view as! NavigationView
     }
+    
+    // :nodoc:
+    public weak var delegate: PreviewViewControllerDelegate?
+    
+    // :nodoc:
+    public private(set) var backButton: BackButton!
+    
+    var previousState: State? = nil
     
     var finalDestinationAnnotation: PointAnnotation? = nil
     
@@ -31,6 +37,8 @@ open class PreviewViewController: UIViewController {
     
     var styleManager: StyleManager!
     
+    var previewOptions: PreviewOptions
+    
     // TODO: Consider retrieving bottom banner view controller from actual view where it was embedded.
     var presentedBottomBanner: BannerPreviewing?
     
@@ -38,8 +46,17 @@ open class PreviewViewController: UIViewController {
     
     var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
-    // :nodoc:
-    public weak var delegate: PreviewViewControllerDelegate?
+    // MARK: - Initialization methods
+    
+    public init(_ previewOptions: PreviewOptions = PreviewOptions()) {
+        self.previewOptions = previewOptions
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         unsubscribeFromNotifications()
@@ -214,8 +231,7 @@ open class PreviewViewController: UIViewController {
     func setupStyleManager() {
         styleManager = StyleManager()
         styleManager.delegate = self
-        // TODO: Provide the ability to set custom styles.
-        styleManager.styles = [DayStyle(), NightStyle()]
+        styleManager.styles = previewOptions.styles ?? [DayStyle(), NightStyle()]
     }
     
     // TODO: Implement the ability to remove gesture recognizers in case when `NavigationMapView` is reused.

@@ -266,6 +266,7 @@
 		8AB97C20280E021800792939 /* BannerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1F280E021800792939 /* BannerContainerView.swift */; };
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
+		8AC0241428DD237800A2BF3A /* PreviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC0241328DD237800A2BF3A /* PreviewOptions.swift */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
 		8AC4091E279918470075248E /* NavigationViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091D279918470075248E /* NavigationViewLayout.swift */; };
 		8AC40920279918930075248E /* NavigationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091F279918930075248E /* NavigationViewDelegate.swift */; };
@@ -876,6 +877,7 @@
 		8AB97C1F280E021800792939 /* BannerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerContainerView.swift; sourceTree = "<group>"; };
 		8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraTests.swift; sourceTree = "<group>"; };
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
+		8AC0241328DD237800A2BF3A /* PreviewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewOptions.swift; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
 		8AC4091D279918470075248E /* NavigationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewLayout.swift; sourceTree = "<group>"; };
 		8AC4091F279918930075248E /* NavigationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewDelegate.swift; sourceTree = "<group>"; };
@@ -1603,6 +1605,7 @@
 				8AB97C15280A30A800792939 /* Destination Preview */,
 				8AB97C16280A30C500792939 /* Routes Preview */,
 				8ACCD6B628DC3BA6008224D3 /* BannerPreviewing.swift */,
+				8AC0241328DD237800A2BF3A /* PreviewOptions.swift */,
 				8AD2210327C1A668000734A5 /* PreviewViewController.swift */,
 				8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */,
 				8AB97C1D280A364E00792939 /* PreviewViewControllerState.swift */,
@@ -2857,6 +2860,7 @@
 				8A12E864282484B20071AF00 /* BannerContainerViewDelegate.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				8AB97C1A280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift in Sources */,
+				8AC0241428DD237800A2BF3A /* PreviewOptions.swift in Sources */,
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8AD2211327C43654000734A5 /* ManeuverContainerView.swift in Sources */,
