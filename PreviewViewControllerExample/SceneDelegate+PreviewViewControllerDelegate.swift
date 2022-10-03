@@ -66,6 +66,9 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             routeResponse = nil
             routeIndex = 0
             coordinates = []
+            
+            previewViewController.navigationView.navigationMapView.removeWaypoints()
+            previewViewController.navigationView.navigationMapView.removeRoutes()
         case .destinationPreviewing:
             break
         case .routesPreviewing:

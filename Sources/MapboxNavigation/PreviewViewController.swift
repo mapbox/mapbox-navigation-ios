@@ -469,9 +469,6 @@ open class PreviewViewController: UIViewController {
             navigationView.speedLimitView.hide()
         }
         
-        navigationView.navigationMapView.removeWaypoints()
-        navigationView.navigationMapView.removeRoutes()
-        
         delegate?.previewViewController(self, stateDidChangeTo: state)
     }
     
