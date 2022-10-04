@@ -696,13 +696,21 @@ extension CarPlayManager: CPMapTemplateDelegate {
                             using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
               let carPlayMapViewController = carPlayMapViewController else {
-                  return
-              }
+            return
+        }
         
-        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
-              let routeOptions = routeResponse.options as? RouteOptions else {
-                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
-              }
+        guard let routeResponse = routeChoice.routeResponseFromUserInfo else {
+            preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+        }
+        
+        var routeOptions = routeResponse.options as? RouteOptions
+        if routeOptions == nil,
+           let matchOptions = routeResponse.options as? MatchOptions {
+            routeOptions = RouteOptions(matchOptions: matchOptions)
+        }
+        guard let routeOptions = routeOptions else {
+            preconditionFailure("Options in user info should be either a RouteOptions or a MatchOptions.")
+        }
 
         mapTemplate.hideTripPreviews()
         
