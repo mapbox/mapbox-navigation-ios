@@ -11,6 +11,7 @@ extension NavigationMapView {
         static let arrowSymbolCasingLayer = "\(identifier)_arrowSymbolCasingLayer"
         static let voiceInstructionLabelLayer = "\(identifier)_voiceInstructionLabelLayer"
         static let voiceInstructionCircleLayer = "\(identifier)_voiceInstructionCircleLayer"
+        static let intersectionSignalLayer = "\(identifier)_trafficLayer"
         static let waypointCircleLayer = "\(identifier)_waypointCircleLayer"
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
         static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
@@ -25,6 +26,7 @@ extension NavigationMapView {
         static let arrowStrokeSource = "\(identifier)_arrowStrokeSource"
         static let arrowSymbolSource = "\(identifier)_arrowSymbolSource"
         static let voiceInstructionSource = "\(identifier)_instructionSource"
+        static let intersectionSignalSource = "\(identifier)_trafficSource"
         static let waypointSource = "\(identifier)_waypointSource"
         static let routeDurationAnnotationsSource: String = "\(identifier)_routeDurationAnnotationsSource"
         static let continuousAlternativeRoutesDurationAnnotationsSource: String = "\(identifier)_continuousAlternativeRoutesDurationAnnotationsSource"
@@ -36,6 +38,10 @@ extension NavigationMapView {
         static let markerImage = "default_marker"
         static let routeAnnotationLeftHanded = "RouteInfoAnnotationLeftHanded"
         static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
+        static let trafficSignalDay = "TrafficSignalDay"
+        static let trafficSignalNight = "TrafficSignalNight"
+        static let railroadCrossingDay = "RailroadCrossingDay"
+        static let railroadCrossingNight = "RailroadCrossingNight"
     }
     
     struct ModelKeyIdentifier {

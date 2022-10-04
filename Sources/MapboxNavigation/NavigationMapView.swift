@@ -264,6 +264,7 @@ open class NavigationMapView: UIView {
         customRouteLineLayerPosition = layerPosition
         
         applyRoutesDisplay(layerPosition: layerPosition)
+        updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
     }
     
     func applyRoutesDisplay(layerPosition: MapboxMaps.LayerPosition? = nil) {
@@ -351,6 +352,7 @@ open class NavigationMapView: UIView {
         
         routes = nil
         removeLineGradientStops()
+        removeIntersectionSignals()
     }
     
     /**
@@ -1125,7 +1127,106 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     Shows the intersection signals on current route.
+     */
+    public var showsIntersectionSignalsOnRoutes: Bool = false {
+        didSet {
+            updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
+        }
+    }
+    
+    /**
+     The style type of `NavigationMapView` during active navigation.
+     */
+    var styleType: StyleType = .day {
+        didSet {
+            updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
+        }
+    }
+    
     private let continuousAlternativeDurationAnnotationOffset: LocationDistance = 75
+    
+    func updateIntersectionSignalsAlongRouteOnMap(styleType: StyleType = .day) {
+        guard showsIntersectionSignalsOnRoutes, let route = routes?.first else {
+            removeIntersectionSignals()
+            return
+        }
+              
+        do {
+            try updateIntersectionSymbolImages()
+        } catch {
+            Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
+                      category: .navigationUI)
+        }
+        
+        updateIntersectionSignals(along: route, styleType: styleType)
+    }
+    
+    private func signalFeature(from intersection: Intersection, styleType: StyleType) -> Feature? {
+        var properties: JSONObject? = nil
+        let styleTypeString = (styleType == .day) ? "Day" : "Night"
+        if intersection.railroadCrossing == true {
+            properties = ["imageName": .string("RailroadCrossing" + styleTypeString)]
+        }
+        if intersection.trafficSignal == true {
+            properties = ["imageName": .string("TrafficSignal" + styleTypeString)]
+        }
+        
+        guard let properties = properties else { return nil }
+        
+        var feature = Feature(geometry: .point(Point(intersection.location)))
+        feature.properties = properties
+        return feature
+        
+    }
+    
+    private func updateIntersectionSignals(along route: Route, styleType: StyleType) {
+        var featureCollection = FeatureCollection(features: [])
+        for leg in route.legs {
+            for step in leg.steps {
+                guard let intersections = step.intersections else { continue }
+                for intersection in intersections {
+                    guard let feature = signalFeature(from: intersection, styleType: styleType) else { continue }
+                    featureCollection.features.append(feature)
+                }
+            }
+        }
+        
+        let style = mapView.mapboxMap.style
+        
+        do {
+            let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionSignalSource
+            if style.sourceExists(withId: sourceIdentifier) {
+                try style.updateGeoJSONSource(withId: sourceIdentifier, geoJSON: .featureCollection(featureCollection))
+            } else {
+                var source = GeoJSONSource()
+                source.data = .featureCollection(featureCollection)
+                try style.addSource(source, id: sourceIdentifier)
+            }
+            
+            let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
+            var shapeLayer: SymbolLayer
+            if style.layerExists(withId: layerIdentifier),
+               let symbolLayer = try style.layer(withId: layerIdentifier) as? SymbolLayer {
+                shapeLayer = symbolLayer
+            } else {
+                shapeLayer = SymbolLayer(id: layerIdentifier)
+            }
+            
+            shapeLayer.source = sourceIdentifier
+            shapeLayer.iconAllowOverlap = .constant(false)
+            shapeLayer.iconImage = .expression(Exp(.get) {
+                "imageName"
+            })
+            
+            let layerPosition = layerPosition(for: layerIdentifier)
+            try style.addPersistentLayer(shapeLayer, layerPosition: layerPosition)
+        } catch {
+            Log.error("Failed to perform operation while adding intersection signals with error: \(error.localizedDescription).",
+                      category: .navigationUI)
+        }
+    }
     
     func showContinuousAlternativeRoutesDurations() {
         // Remove any existing route annotation.
@@ -1336,6 +1437,15 @@ open class NavigationMapView: UIView {
         // Removes the underlying style layers and data sources for the route duration annotations.
         style.removeLayers([NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer])
         style.removeSources([NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource])
+    }
+    
+    /**
+     Removes all intersection signals on current route.
+     */
+    func removeIntersectionSignals() {
+        let style = mapView.mapboxMap.style
+        style.removeLayers([NavigationMapView.LayerIdentifier.intersectionSignalLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.intersectionSignalSource])
     }
     
     /**
@@ -1640,6 +1750,33 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Updates the image assets in the map style for the route intersection signals.
+     */
+    private func updateIntersectionSymbolImages() throws {
+        let style = mapView.mapboxMap.style
+        
+        if style.image(withId: ImageIdentifier.trafficSignalDay) == nil,
+           let trafficSignlaDay =  Bundle.mapboxNavigation.image(named: "TrafficSignalDay") {
+            try style.addImage(trafficSignlaDay, id: ImageIdentifier.trafficSignalDay)
+        }
+        
+        if style.image(withId: ImageIdentifier.trafficSignalNight) == nil,
+           let trafficSignalNight =  Bundle.mapboxNavigation.image(named: "TrafficSignalNight") {
+            try style.addImage(trafficSignalNight, id: ImageIdentifier.trafficSignalNight)
+        }
+        
+        if style.image(withId: ImageIdentifier.railroadCrossingDay) == nil,
+           let railroadCrossingDay =  Bundle.mapboxNavigation.image(named: "RailroadCrossingDay") {
+            try style.addImage(railroadCrossingDay, id: ImageIdentifier.railroadCrossingDay)
+        }
+        
+        if style.image(withId: ImageIdentifier.railroadCrossingNight) == nil,
+           let railroadCrossingNight =  Bundle.mapboxNavigation.image(named: "RailroadCrossingNight") {
+            try style.addImage(railroadCrossingNight, id: ImageIdentifier.railroadCrossingNight)
+        }
+    }
+    
+    /**
      Updates the image assets in the map style for the route duration annotations. Useful when the
      desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
@@ -1838,6 +1975,7 @@ open class NavigationMapView: UIView {
             route?.identifier(.restrictedRouteAreaRoute)
         ].compactMap{ $0 }
         let arrowLayers: [String] = [
+            LayerIdentifier.intersectionSignalLayer,
             LayerIdentifier.arrowStrokeLayer,
             LayerIdentifier.arrowLayer,
             LayerIdentifier.arrowSymbolCasingLayer,
