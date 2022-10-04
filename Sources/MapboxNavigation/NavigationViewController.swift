@@ -802,9 +802,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var waypointStyle: WaypointStyle = .annotation
     
     /**
-     Allows to control whether night style is used in dark mode or not.
+     Controls whether night style will be used whenever dark mode is enabled. Defaults to `false`.
      */
-    public var usesNightStyleInDarkMode = false
+    public var usesNightStyleInDarkMode: Bool = false
     
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
