@@ -221,6 +221,7 @@ open class BannerContainerView: UIView {
             expansionConstraint.isActive = true
         }
         
+        setNeedsLayout()
         layoutIfNeeded()
         
         if animated {
