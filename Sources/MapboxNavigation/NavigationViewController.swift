@@ -804,7 +804,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Allows to control whether night style is used in dark mode or not.
      */
-    public var usesNightStyleInDarkMode = true
+    public var usesNightStyleInDarkMode = false
     
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
