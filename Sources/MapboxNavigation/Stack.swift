@@ -29,7 +29,7 @@ struct Stack<Element>: Stackable {
         elements.append(element)
     }
     
-    mutating func pop() -> Element? {
+    @discardableResult mutating func pop() -> Element? {
         elements.popLast()
     }
 }
