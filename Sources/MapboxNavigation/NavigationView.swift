@@ -159,14 +159,14 @@ open class NavigationView: UIView {
     
     // :nodoc:
     public lazy var topBannerContainerView: BannerContainerView = {
-        let topBannerContainerView = BannerContainerView(.top)
+        let topBannerContainerView = BannerContainerView(.topLeading)
         topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return topBannerContainerView
     }()
     
     // :nodoc:
     public lazy var bottomBannerContainerView: BannerContainerView = {
-        let bottomBannerContainerView = BannerContainerView(.bottom)
+        let bottomBannerContainerView = BannerContainerView(.bottomLeading)
         bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return bottomBannerContainerView
     }()

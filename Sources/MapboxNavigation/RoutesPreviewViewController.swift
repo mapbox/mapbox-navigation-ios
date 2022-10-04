@@ -27,6 +27,9 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
     // MARK: - RoutesPreviewing properties
     
     // :nodoc:
+    public let position: Banner.Position = .bottomLeading
+    
+    // :nodoc:
     public var routesPreviewOptions: RoutesPreviewOptions {
         didSet {
             updateRouteDetails()

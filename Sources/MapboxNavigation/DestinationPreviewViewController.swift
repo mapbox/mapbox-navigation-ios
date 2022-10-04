@@ -26,6 +26,9 @@ public class DestinationPreviewViewController: UIViewController, DestinationPrev
     // MARK: - DestinationPreviewing properties
     
     // :nodoc:
+    public let position: Banner.Position = .bottomLeading
+    
+    // :nodoc:
     public var destinationOptions: DestinationOptions {
         didSet {
             if let primaryText = destinationOptions.primaryText {

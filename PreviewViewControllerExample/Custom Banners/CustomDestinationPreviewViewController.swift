@@ -8,6 +8,8 @@ protocol CustomDestinationPreviewViewControllerDelegate: AnyObject {
 
 class CustomDestinationPreviewViewController: UIViewController, DestinationPreviewing {
     
+    let position: Banner.Position = .bottomLeading
+    
     var directionsButton: UIButton!
     
     var destinationLabel: UILabel!

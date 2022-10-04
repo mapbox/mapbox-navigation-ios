@@ -1,16 +1,20 @@
 import UIKit
 
 // :nodoc:
+public class Banner {
+    
+    // :nodoc:
+    public enum Position {
+        case topLeading
+        case bottomLeading
+    }
+}
+
+// :nodoc:
 @objc(MBBannerContainerView)
 open class BannerContainerView: UIView {
     
-    // :nodoc:
-    public enum `Type` {
-        case top
-        case bottom
-    }
-    
-    var type: BannerContainerView.`Type`
+    var position: Banner.Position
     
     // :nodoc:
     public enum State {
@@ -45,14 +49,14 @@ open class BannerContainerView: UIView {
             
             if oldValue == state { return }
             
-            switch type {
-            case .top:
+            switch position {
+            case .topLeading:
                 if state == .expanded {
                     expansionConstraint.constant = 0.0
                 } else {
                     expansionConstraint.constant = -expansionOffset
                 }
-            case .bottom:
+            case .bottomLeading:
                 if state == .expanded {
                     expansionConstraint.constant = 0.0
                 } else {
@@ -76,8 +80,8 @@ open class BannerContainerView: UIView {
     }
     
     // :nodoc:
-    public init(_ type: BannerContainerView.`Type`, frame: CGRect = .zero) {
-        self.type = type
+    public init(_ position: Banner.Position, frame: CGRect = .zero) {
+        self.position = position
         
         super.init(frame: frame)
         
@@ -106,10 +110,10 @@ open class BannerContainerView: UIView {
             NSLayoutConstraint.deactivate([expansionConstraint])
         }
         
-        switch type {
-        case .top:
+        switch position {
+        case .topLeading:
             expansionConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
-        case .bottom:
+        case .bottomLeading:
             expansionConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
         }
         
@@ -117,10 +121,10 @@ open class BannerContainerView: UIView {
             if state == .expanded {
                 expansionConstraint.constant = 0.0
             } else {
-                switch type {
-                case .top:
+                switch position {
+                case .topLeading:
                     expansionConstraint.constant = -expansionOffset
-                case .bottom:
+                case .bottomLeading:
                     expansionConstraint.constant = expansionOffset
                 }
             }
@@ -144,8 +148,8 @@ open class BannerContainerView: UIView {
         let translation = recognizer.translation(in: view)
         let currentOffset = initialOffset + translation.y
         
-        switch type {
-        case .top:
+        switch position {
+        case .topLeading:
             if currentOffset < -expansionOffset {
                 expansionConstraint.constant = -expansionOffset
             } else if currentOffset > expansionOffset {
@@ -153,7 +157,7 @@ open class BannerContainerView: UIView {
             } else {
                 expansionConstraint.constant = currentOffset
             }
-        case .bottom:
+        case .bottomLeading:
             if currentOffset < 0.0 {
                 expansionConstraint.constant = 0.0
             } else if currentOffset > expansionOffset {
@@ -166,14 +170,14 @@ open class BannerContainerView: UIView {
         if recognizer.state == .ended {
             let velocity = recognizer.velocity(in: view)
             
-            switch type {
-            case .top:
+            switch position {
+            case .topLeading:
                 if velocity.y >= 0.0 {
                     state = .expanded
                 } else {
                     state = .collapsed
                 }
-            case .bottom:
+            case .bottomLeading:
                 if velocity.y <= 0.0 {
                     state = .expanded
                 } else {
@@ -207,10 +211,10 @@ open class BannerContainerView: UIView {
         }
         
         if let superview = superview, expansionConstraint == nil {
-            switch type {
-            case .top:
+            switch position {
+            case .topLeading:
                 expansionConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
-            case .bottom:
+            case .bottomLeading:
                 expansionConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
             }
             
@@ -221,10 +225,10 @@ open class BannerContainerView: UIView {
         
         if animated {
             // TODO: Improve animation for devices with notch.
-            switch type {
-            case .top:
+            switch position {
+            case .topLeading:
                 expansionConstraint.constant = -frame.height //+ self.topSafeAreaInset
-            case .bottom:
+            case .bottomLeading:
                 expansionConstraint.constant = frame.height //- self.bottomSafeAreaInset
             }
             
@@ -270,10 +274,10 @@ open class BannerContainerView: UIView {
                            animations: {
                 animations?()
                 
-                switch self.type {
-                case .top:
+                switch self.position {
+                case .topLeading:
                     self.expansionConstraint.constant = -self.frame.height
-                case .bottom:
+                case .bottomLeading:
                     self.expansionConstraint.constant = self.frame.height
                 }
                 

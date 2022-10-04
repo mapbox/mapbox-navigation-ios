@@ -8,6 +8,8 @@ protocol CustomRoutesPreviewViewControllerDelegate: AnyObject {
 
 class CustomRoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
+    let position: Banner.Position = .bottomLeading
+    
     var startNavigationButton: UIButton!
     
     var routesPreviewOptions: RoutesPreviewOptions

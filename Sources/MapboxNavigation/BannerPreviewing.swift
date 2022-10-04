@@ -1,10 +1,7 @@
 import UIKit
 
 // :nodoc:
-public protocol BannerPreviewing {
+public protocol BannerPreviewing: UIViewController {
     
-}
-
-extension BannerPreviewing where Self: UIViewController {
-    
+    var position: Banner.Position { get }
 }
