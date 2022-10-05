@@ -13,7 +13,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         Directions.shared.calculate(navigationRouteOptions) { [weak self] (_, result) in
             switch result {
             case .failure(let error):
-                NSLog("Error occured: \(error.localizedDescription).")
+                print("Error occured while requesting routes: \(error.localizedDescription)")
             case .success(let routeResponse):
                 guard let self = self else { return }
                 
@@ -24,7 +24,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
     }
     
-    func previewViewControllerWillPreviewRoutes(_ previewViewController: PreviewViewController) {
+    func willPreviewRoutes(_ previewViewController: PreviewViewController) {
         requestRoutes { routeResponse in
             previewViewController.preview(routeResponse)
         }
@@ -165,10 +165,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     func previewViewController(_ previewViewController: PreviewViewController,
                                willPresent destinationText: NSAttributedString,
                                in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString? {
-        guard case .destinationPreviewing(let destinationOptions) = previewViewController.state else {
-            return nil
-        }
-        
+        let destinationOptions = destinationPreviewViewController.destinationOptions
         let destinationCoordinate = destinationOptions.waypoint.coordinate
         let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
         reverseGeocodeOptions.focalLocation = CLLocationManager().location
@@ -192,5 +189,21 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         })
         
         return NSAttributedString(string: "")
+    }
+    
+    func bannerWillAppear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+        // No-op
+    }
+    
+    func bannerDidAppear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+        // No-op
+    }
+    
+    func bannerWillDisappear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+        // No-op
+    }
+    
+    func bannerDidDisappear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+        // No-op
     }
 }
