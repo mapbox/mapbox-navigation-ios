@@ -5,13 +5,14 @@ extension SceneDelegate: NavigationViewControllerDelegate {
     
     public func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController,
                                                    byCanceling canceled: Bool) {
+        let duration = 1.0
         // Hide top and bottom banner containers and after that dismiss `NavigationViewController`.
-        navigationViewController.navigationView.topBannerContainerView.hide(duration: 3.0,
+        navigationViewController.navigationView.topBannerContainerView.hide(duration: duration,
                                                                             animations: {
             navigationViewController.navigationView.topBannerContainerView.alpha = 0.0
         })
         
-        navigationViewController.navigationView.bottomBannerContainerView.hide(duration: 3.0,
+        navigationViewController.navigationView.bottomBannerContainerView.hide(duration: duration,
                                                                                animations: {
             navigationViewController.navigationView.bottomBannerContainerView.alpha = 0.0
             navigationViewController.navigationView.speedLimitView.alpha = 0.0

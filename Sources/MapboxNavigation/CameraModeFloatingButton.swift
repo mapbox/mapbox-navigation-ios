@@ -37,7 +37,7 @@ public class CameraModeFloatingButton: FloatingButton {
     }
     
     convenience init(_ frame: CGRect,
-                     cameraMode: Preview.CameraMode = .following,
+                     cameraMode: Preview.CameraMode = .centered,
                      delegate: CameraModeFloatingButtonDelegate? = nil) {
         self.init(frame: frame)
         
@@ -46,7 +46,7 @@ public class CameraModeFloatingButton: FloatingButton {
     }
     
     func commonInit() {
-        cameraMode = .following
+        cameraMode = .centered
         addTarget(self, action: #selector(didPress), for: .touchUpInside)
     }
     

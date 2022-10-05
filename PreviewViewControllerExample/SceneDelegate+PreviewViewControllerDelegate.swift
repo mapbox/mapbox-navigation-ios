@@ -51,7 +51,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         
         let finalWaypoint = Waypoint(coordinate: destinationCoordinate,
                                      coordinateAccuracy: nil,
-                                     name: "Final destination")
+                                     name: "Dropped pin")
         
         previewViewController.preview(finalWaypoint)
     }
