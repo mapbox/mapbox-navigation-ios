@@ -30,58 +30,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
     }
     
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               bottomBannerFor state: Preview.State) -> BannerPreviewing? {
-        switch state {
-        case .browsing:
-            if useCustomBannerViews {
-                let customBrowsingViewController = CustomBrowsingViewController()
-                customBrowsingViewController.view.backgroundColor = .green
-                
-                return customBrowsingViewController
-            }
-        case .destinationPreviewing(let destinationOptions):
-            if useCustomBannerViews {
-                let customDestinationPreviewViewController = CustomDestinationPreviewViewController(destinationOptions)
-                customDestinationPreviewViewController.delegate = self
-                
-                return customDestinationPreviewViewController
-            }
-        case .routesPreviewing(let routesPreviewOptions):
-            if useCustomBannerViews {
-                let customRoutesPreviewViewController = CustomRoutesPreviewViewController(routesPreviewOptions)
-                customRoutesPreviewViewController.delegate = self
-                
-                return customRoutesPreviewViewController
-            }
-        }
-        
-        return nil
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               stateWillChangeTo state: Preview.State) {
-        switch state {
-        case .browsing:
-            routeResponse = nil
-            routeIndex = 0
-            coordinates = []
-            
-            previewViewController.navigationView.navigationMapView.removeWaypoints()
-            previewViewController.navigationView.navigationMapView.removeRoutes()
-        case .destinationPreviewing:
-            break
-        case .routesPreviewing:
-            break
-        }
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               stateDidChangeTo state: Preview.State) {
-        // No-op
-    }
-    
-    func previewViewControllerWillBeginNavigation(_ previewViewController: PreviewViewController) {
+    func willBeginActiveNavigation(_ previewViewController: PreviewViewController) {
         if let routeResponse = routeResponse {
             startActiveNavigation(for: routeResponse)
         } else {
