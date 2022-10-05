@@ -42,6 +42,8 @@ public class DestinationPreviewViewController: UIViewController, DestinationPrev
         self.destinationOptions = destinationOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -50,8 +52,6 @@ public class DestinationPreviewViewController: UIViewController, DestinationPrev
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {

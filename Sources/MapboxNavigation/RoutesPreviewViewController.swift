@@ -42,6 +42,8 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
         self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -50,8 +52,6 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {
