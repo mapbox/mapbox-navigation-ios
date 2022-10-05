@@ -3,9 +3,11 @@ import MapboxDirections
 // :nodoc:
 public struct RoutesPreviewOptions {
     
-    var routeResponse: RouteResponse
+    // :nodoc:
+    public var routeResponse: RouteResponse
     
-    var routeIndex: Int
+    // :nodoc:
+    public var routeIndex: Int
     
     // :nodoc:
     public init(routeResponse: RouteResponse, routeIndex: Int = 0) {

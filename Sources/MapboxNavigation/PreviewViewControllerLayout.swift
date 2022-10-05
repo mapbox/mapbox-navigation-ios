@@ -9,7 +9,7 @@ extension PreviewViewController {
             backButton.heightAnchor.constraint(equalToConstant: 50.0),
             backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                                 constant: 10.0),
-            backButton.topAnchor.constraint(equalTo: navigationView.topBannerContainerView.bottomAnchor,
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                             constant: 10.0)
         ]
         

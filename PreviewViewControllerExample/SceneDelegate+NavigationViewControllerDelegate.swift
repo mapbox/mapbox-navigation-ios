@@ -21,16 +21,28 @@ extension SceneDelegate: NavigationViewControllerDelegate {
             guard let self = self else { return }
             
             navigationViewController.dismiss(animated: true) {
-                let navigationMapView = self.previewViewController.navigationView.navigationMapView
+                let navigationView = self.previewViewController.navigationView
+                let navigationMapView = navigationView.navigationMapView
                 
                 // TODO: Implement public method that completely cleans-up `NavigationMapView`.
                 navigationMapView.removeRoutes()
-                navigationMapView.removeAlternativeRoutes()
+                navigationMapView.removeWaypoints()
                 navigationMapView.removeArrow()
                 navigationMapView.removeRouteDurations()
                 navigationMapView.removeContinuousAlternativesRoutes()
                 navigationMapView.removeContinuousAlternativeRoutesDurations()
                 navigationMapView.userLocationStyle = .puck2D()
+                
+                // TODO: Depending on currently presented banner perform required map modifications. For example:
+                // - Camera fitting to requested route response
+                // - Showing top/bottom banner container views
+                if let routesPreviewViewController = self.previewViewController.topmostBottomBanner as? RoutesPreviewViewController {
+                    let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
+                    self.previewViewController.showcase(routeResponse: routeResponse)
+                    navigationView.bottomBannerContainerView.show()
+                } else if let _ = self.previewViewController.topmostBottomBanner as? DestinationPreviewViewController {
+                    navigationView.bottomBannerContainerView.show()
+                }
             }
         })
     }
