@@ -6,13 +6,11 @@ protocol Previewable: UIViewController {
     
     var cameraMode: Preview.CameraMode { get }
     
-    var state: Preview.State { get }
-    
     var topBanners: Stack<BannerPreviewing> { get }
     
     var bottomBanners: Stack<BannerPreviewing> { get }
     
-    func popBanner(_ position: Banner.Position) -> BannerPreviewing?
+    func popBanner(_ position: Banner.Position, animated: Bool) -> BannerPreviewing?
     
-    func pushBanner(_ banner: BannerPreviewing)
+    func pushBanner(_ banner: BannerPreviewing, animated: Bool)
 }
