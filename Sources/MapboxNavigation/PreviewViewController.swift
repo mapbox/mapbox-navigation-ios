@@ -175,6 +175,7 @@ open class PreviewViewController: UIViewController {
         // TODO: Add localization.
         backButton.setTitle("Back", for: .normal)
         backButton.clipsToBounds = true
+        backButton.isHidden = true
         backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
         backButton.setImage(.backImage, for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFit
@@ -207,7 +208,7 @@ open class PreviewViewController: UIViewController {
     }
     
     func setupTopBannerContainerView() {
-        navigationView.topBannerContainerView.isHidden = false
+        navigationView.topBannerContainerView.isHidden = true
         navigationView.topBannerContainerView.backgroundColor = .clear
     }
     
