@@ -268,10 +268,8 @@ open class RouteController: NSObject {
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
                                  completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
-        guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
-            completion?(.failure(RouteControllerError.internalError))
-            return
-        }
+        let routeOptions = indexedRouteResponse.validatedRouteOptions
+        
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         guard let newMainRoute = indexedRouteResponse.currentRoute,

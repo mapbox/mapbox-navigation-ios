@@ -63,6 +63,15 @@ public struct IndexedRouteResponse {
         self.routeIndex = routeIndex
         self.responseOrigin = responseOrigin
     }
+    
+    internal var validatedRouteOptions: RouteOptions {
+        switch routeResponse.options {
+        case let .match(matchOptions):
+            return RouteOptions(matchOptions: matchOptions)
+        case let .route(options):
+            return options
+        }
+    }
 }
 
 /**
