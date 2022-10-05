@@ -37,6 +37,10 @@
 * MapboxMobileEvents dependency is replaced with CoreTelemetry (part of MapboxCommon). ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favour of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 
+## v2.8.1
+
+* Fixed an issue where creating a `RouteController` with the result of `RouteResponse(matching:options:credentials:)` would cause route progress and guidance instructions to remain stuck at the beginning of the route. ([#4186](https://github.com/mapbox/mapbox-navigation-ios/pull/4186))
+
 ## v2.8.0
 
 ### Packaging
