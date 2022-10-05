@@ -9,8 +9,7 @@ open class PreviewViewController: UIViewController, Previewable {
     
     // MARK: - Previewable properties and methods
     
-    // :nodoc:
-    public private(set) var cameraMode: Preview.CameraMode = .centered {
+    var cameraMode: Preview.CameraMode = .centered {
         didSet {
             navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
         }
