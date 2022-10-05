@@ -25,8 +25,9 @@ public class DestinationPreviewViewController: UIViewController, DestinationPrev
     
     // MARK: - DestinationPreviewing properties
     
-    // :nodoc:
-    public let position: Banner.Position = .bottomLeading
+    public var configuration: PreviewBannerConfiguration {
+        PreviewBannerConfiguration(position: .bottomLeading)
+    }
     
     // :nodoc:
     public var destinationOptions: DestinationOptions {
