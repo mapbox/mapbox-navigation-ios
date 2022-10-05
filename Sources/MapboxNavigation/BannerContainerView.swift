@@ -239,7 +239,9 @@ open class BannerContainerView: UIView {
             UIView.animate(withDuration: duration,
                            delay: 0.0,
                            options: [],
-                           animations: {
+                           animations: { [weak self] in
+                guard let self = self else { return }
+                
                 animations?()
                 
                 if self.isExpandable {
@@ -272,7 +274,9 @@ open class BannerContainerView: UIView {
             UIView.animate(withDuration: duration,
                            delay: 0.0,
                            options: [],
-                           animations: {
+                           animations: { [weak self] in
+                guard let self = self else { return }
+                
                 animations?()
                 
                 switch self.position {
