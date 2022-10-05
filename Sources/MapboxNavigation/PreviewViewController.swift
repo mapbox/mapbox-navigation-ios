@@ -530,14 +530,7 @@ open class PreviewViewController: UIViewController {
     // MARK: - Event handlers
     
     @objc func didPressBackButton() {
-        if case let .destinationPreviewing(destinationOptions) = previousState {
-            previousState = nil
-            preview(destinationOptions.waypoint)
-        } else if case .destinationPreviewing = state {
-            state = .browsing
-        } else if case .routesPreviewing = state {
-            state = .browsing
-        }
+        popBanner(.bottomLeading)
     }
     
     @objc func didPressDebugButton() {
@@ -564,16 +557,15 @@ extension PreviewViewController: NavigationMapViewDelegate {
 extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate {
     
     func willPreviewRoutes(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        previousState = state
-        delegate?.previewViewControllerWillPreviewRoutes(self)
+        delegate?.willPreviewRoutes(self)
     }
     
     func willStartNavigation(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        delegate?.previewViewControllerWillBeginNavigation(self)
+        delegate?.willBeginActiveNavigation(self)
     }
     
     func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController) {
-        delegate?.previewViewControllerWillBeginNavigation(self)
+        delegate?.willBeginActiveNavigation(self)
     }
 }
 
@@ -584,15 +576,6 @@ extension PreviewViewController: CameraModeFloatingButtonDelegate {
     func cameraModeFloatingButton(_ cameraModeFloatingButton: CameraModeFloatingButton,
                                   cameraModeDidChangeTo cameraMode: Preview.CameraMode) {
         navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
-        
-        switch cameraMode {
-        case .idle:
-            fallthrough
-        case .centered:
-            navigationView.navigationMapView.userLocationStyle = .puck2D()
-        case .following:
-            navigationView.navigationMapView.userLocationStyle = .courseView()
-        }
     }
 }
 
