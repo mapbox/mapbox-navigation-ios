@@ -1417,8 +1417,7 @@ open class NavigationMapView: UIView {
            let destinationCoordinate = lastLeg.destination?.coordinate {
             let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
             var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
-            let markerImage = UIImage(named: "default_marker", in: .mapboxNavigation, compatibleWith: nil)!
-            destinationAnnotation.image = .init(image: markerImage, name: ImageIdentifier.markerImage)
+            destinationAnnotation.image = .init(image: .defaultMarkerImage, name: ImageIdentifier.markerImage)
             
             // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
             // and add it only after fully loading `MapView` style.

@@ -61,14 +61,25 @@ open class DismissButton: Button {
     
 }
 
-class BackButton: Button {
+// :nodoc:
+public class BackButton: Button {
+    
+    // TODO: Implement animated showing and hiding functionality.
+    func show() {
+        isHidden = false
+    }
+    
+    func hide() {
+        isHidden = true
+    }
+}
+
+// :nodoc:
+public class PreviewButton: Button {
     
 }
 
-class PreviewButton: Button {
-    
-}
-
-class StartButton: Button {
+// :nodoc:
+public class StartButton: Button {
     
 }

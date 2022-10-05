@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 // :nodoc:
-public class RoutesPreviewViewController: RoutesPreviewing {
+public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
@@ -27,6 +27,11 @@ public class RoutesPreviewViewController: RoutesPreviewing {
     // MARK: - RoutesPreviewing properties
     
     // :nodoc:
+    public var configuration: PreviewBannerConfiguration {
+        PreviewBannerConfiguration(position: .bottomLeading)
+    }
+    
+    // :nodoc:
     public var routesPreviewOptions: RoutesPreviewOptions {
         didSet {
             updateRouteDetails()
@@ -37,6 +42,8 @@ public class RoutesPreviewViewController: RoutesPreviewing {
         self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -45,8 +52,6 @@ public class RoutesPreviewViewController: RoutesPreviewing {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {
@@ -151,7 +156,7 @@ public class RoutesPreviewViewController: RoutesPreviewing {
             dateFormatter.timeStyle = .short
             
             let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance(for: phoneTraitCollection,
-                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                        whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
             arrivalTimeLabel.attributedText = attributedString(with: .timeImage.tint(arrivalTimeImageTintColor),
                                                                imageBounds: imageBounds,
                                                                text: dateFormatter.string(from: arrivalDate))

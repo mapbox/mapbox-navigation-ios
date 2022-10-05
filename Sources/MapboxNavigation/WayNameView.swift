@@ -124,4 +124,13 @@ open class WayNameView: UIView {
         
         containerView.layer.cornerRadius = _cornerRadius ?? bounds.midY
     }
+    
+    // TODO: Implement animated showing and hiding functionality.
+    func show() {
+        isHidden = false
+    }
+    
+    func hide() {
+        isHidden = true
+    }
 }

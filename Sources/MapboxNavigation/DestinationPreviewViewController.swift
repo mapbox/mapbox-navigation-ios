@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public class DestinationPreviewViewController: DestinationPreviewing {
+public class DestinationPreviewViewController: UIViewController, DestinationPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
@@ -26,6 +26,11 @@ public class DestinationPreviewViewController: DestinationPreviewing {
     // MARK: - DestinationPreviewing properties
     
     // :nodoc:
+    public var configuration: PreviewBannerConfiguration {
+        PreviewBannerConfiguration(position: .bottomLeading)
+    }
+    
+    // :nodoc:
     public var destinationOptions: DestinationOptions {
         didSet {
             if let primaryText = destinationOptions.primaryText {
@@ -38,6 +43,8 @@ public class DestinationPreviewViewController: DestinationPreviewing {
         self.destinationOptions = destinationOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -46,8 +53,6 @@ public class DestinationPreviewViewController: DestinationPreviewing {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {
