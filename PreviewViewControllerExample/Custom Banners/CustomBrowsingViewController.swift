@@ -3,5 +3,7 @@ import MapboxNavigation
 
 class CustomBrowsingViewController: UIViewController, BannerPreviewing {
     
-    let position: Banner.Position = .bottomLeading
+    var configuration: PreviewBannerConfiguration {
+        PreviewBannerConfiguration(position: .bottomLeading)
+    }
 }

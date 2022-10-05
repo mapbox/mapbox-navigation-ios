@@ -8,7 +8,9 @@ protocol CustomDestinationPreviewViewControllerDelegate: AnyObject {
 
 class CustomDestinationPreviewViewController: UIViewController, DestinationPreviewing {
     
-    let position: Banner.Position = .bottomLeading
+    var configuration: PreviewBannerConfiguration {
+        PreviewBannerConfiguration(position: .bottomLeading)
+    }
     
     var directionsButton: UIButton!
     
