@@ -44,9 +44,6 @@ open class PreviewViewController: UIViewController {
     
     let previewOptions: PreviewOptions
     
-    // TODO: Consider retrieving bottom banner view controller from actual view where it was embedded.
-    var presentedBottomBanner: BannerPreviewing?
-    
     var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
     var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
@@ -82,8 +79,6 @@ open class PreviewViewController: UIViewController {
         setupBottomBannerContainerView()
         setupConstraints()
         setupStyleManager()
-        
-        state = .browsing
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -240,7 +235,6 @@ open class PreviewViewController: UIViewController {
         styleManager.styles = previewOptions.styles ?? [DayStyle(), NightStyle()]
     }
     
-    // TODO: Implement the ability to remove gesture recognizers in case when `NavigationMapView` is reused.
     func setupGestureRecognizers() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         longPressGestureRecognizer.name = "preview_long_press_gesture_recognizer"
@@ -322,11 +316,8 @@ open class PreviewViewController: UIViewController {
     @objc func orientationDidChange(_ notification: Notification) {
         navigationView.navigationMapView.navigationCamera.update(to: cameraModeFloatingButton.cameraMode)
         
-        // In case if routes are already shown and orientation changes - fit camera so that all
+        // TODO: In case if routes are already shown and orientation changes - fit camera so that all
         // routes fit into available space.
-        if case .routesPreviewing(let previewOptions) = state {
-            fitCamera(to: previewOptions.routeResponse)
-        }
     }
     
     func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D) {
@@ -346,19 +337,29 @@ open class PreviewViewController: UIViewController {
     }
     
     // :nodoc:
-    public func preview(_ coordinate: CLLocationCoordinate2D) {
-        preview(Waypoint(coordinate: coordinate))
+    public func preview(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
+        preview(Waypoint(coordinate: coordinate),
+                animated: animated)
     }
     
     // :nodoc:
-    public func preview(_ waypoint: Waypoint) {
+    public func preview(_ waypoint: Waypoint, animated: Bool = true) {
         let destinationOptions = DestinationOptions(waypoint: waypoint)
-        state = .destinationPreviewing(destinationOptions)
+        
+        // If `DestinationPreviewViewController` is already the topmost preview banner - update its
+        // `DestinationOptions` only. If not - push banner to the top of the stack.
+        let destinationPreviewViewController: DestinationPreviewViewController
+        if let currentDestinationPreviewViewController = topmostBottomBanner as? DestinationPreviewViewController {
+            destinationPreviewViewController = currentDestinationPreviewViewController
+            destinationPreviewViewController.destinationOptions = destinationOptions
+        } else {
+            destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
+            destinationPreviewViewController.delegate = self
+            pushBanner(destinationPreviewViewController, animated: animated)
+        }
         
         addDestinationAnnotation(waypoint.coordinate)
         
-        if let primaryText = destinationOptions.primaryText,
-           let destinationPreviewViewController = presentedBottomBanner as? DestinationPreviewViewController {
             let primaryAttributedString = NSAttributedString(string: primaryText)
             destinationPreviewViewController.destinationLabel.attributedText =
             delegate?.previewViewController(self,
@@ -374,11 +375,17 @@ open class PreviewViewController: UIViewController {
                         duration: TimeInterval = 1.0,
                         completion: NavigationMapView.AnimationCompletionHandler? = nil) {
         let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
-        state = .routesPreviewing(routesPreviewOptions)
         
-        if let lastLeg = routesPreviewOptions.routeResponse.routes?.first?.legs.last,
-           let destinationCoordinate = lastLeg.destination?.coordinate {
-            addDestinationAnnotation(destinationCoordinate)
+        // If `RoutesPreviewViewController` is already the topmost preview banner - update its
+        // `RoutesPreviewOptions` only. If not - push banner to the top of the banners stack.
+        let routesPreviewViewController: RoutesPreviewViewController
+        if let currentRoutesPreviewViewController = topmostBottomBanner as? RoutesPreviewViewController {
+            routesPreviewViewController = currentRoutesPreviewViewController
+            routesPreviewViewController.routesPreviewOptions = routesPreviewOptions
+        } else {
+            routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
+            routesPreviewViewController.delegate = self
+            pushBanner(routesPreviewViewController, animated: animated)
         }
         
         showcase(routeResponse: routeResponse,
