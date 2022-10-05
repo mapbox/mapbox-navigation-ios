@@ -15,15 +15,15 @@ open class RouteProgress: Codable {
      - parameter route: The route to follow.
      - parameter options: The route options that were attached to the route request.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
-     - parameter currentRouteShapeIndex: Index relative to route shape, representing the point the user is currently located at.
-     - parameter currentLegShapeIndex: Index relative to leg shape, representing the point the user is currently located at.
+     - parameter routeShapeIndex: Index relative to route shape, representing the point the user is currently located at.
+     - parameter legShapeIndex: Index relative to leg shape, representing the point the user is currently located at.
      */
-    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0, currentRouteShapeIndex: Int = 0, currentLegShapeIndex: Int = 0) {
+    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0, routeShapeIndex: Int = 0, legShapeIndex: Int = 0) {
         self.route = route
         self.routeOptions = options
         self.legIndex = legIndex
-        self.currentRouteShapeIndex = currentRouteShapeIndex
-        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex, shapeIndex: currentLegShapeIndex)
+        self.shapeIndex = routeShapeIndex
+        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex, shapeIndex: legShapeIndex)
 
         self.calculateLegsCongestion()
     }
@@ -167,7 +167,7 @@ open class RouteProgress: Codable {
     /**
      Index relative to route shape, representing the point the user is currently located at.
      */
-    public internal(set) var currentRouteShapeIndex: Int
+    public internal(set) var shapeIndex: Int
 
     /**
      Increments the progress according to new location specified.
@@ -371,7 +371,7 @@ open class RouteProgress: Codable {
         case routeOptions
         case legIndex
         case currentLegProgress
-        case currentRouteShapeIndex
+        case shapeIndex
     }
         
     required public init(from decoder: Decoder) throws {
@@ -382,7 +382,7 @@ open class RouteProgress: Codable {
         self.routeOptions = try container.decode(RouteOptions.self, forKey: .routeOptions)
         self.legIndex = try container.decode(Int.self, forKey: .legIndex)
         self.currentLegProgress = try container.decode(RouteLegProgress.self, forKey: .currentLegProgress)
-        self.currentRouteShapeIndex = try container.decode(Int.self, forKey: .currentRouteShapeIndex)
+        self.shapeIndex = try container.decode(Int.self, forKey: .shapeIndex)
         
         calculateLegsCongestion()
     }
@@ -394,6 +394,6 @@ open class RouteProgress: Codable {
         try container.encode(routeOptions, forKey: .routeOptions)
         try container.encode(legIndex, forKey: .legIndex)
         try container.encode(currentLegProgress, forKey: .currentLegProgress)
-        try container.encode(currentRouteShapeIndex, forKey: .currentRouteShapeIndex)
+        try container.encode(shapeIndex, forKey: .shapeIndex)
     }
 }

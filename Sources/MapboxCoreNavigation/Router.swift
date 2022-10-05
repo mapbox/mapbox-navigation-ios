@@ -282,7 +282,7 @@ extension InternalRouter where Self: Router {
     
     func refreshAndCheckForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         if refreshesRoute {
-            refreshRoute(from: location, legIndex: routeProgress.legIndex, routeShapeIndex: routeProgress.currentRouteShapeIndex, legShapeIndex: routeProgress.currentLegProgress.shapeIndex) { [weak self] in
+            refreshRoute(from: location, legIndex: routeProgress.legIndex, routeShapeIndex: routeProgress.shapeIndex, legShapeIndex: routeProgress.currentLegProgress.shapeIndex) { [weak self] in
                 self?.checkForFasterRoute(from: location, routeProgress: routeProgress)
             }
         } else {

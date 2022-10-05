@@ -291,8 +291,8 @@ class RouteProgressTests: TestCase {
     func testRouteProggressCodable() {
         let routeProgress = RouteProgress(route: route,
                                           options: routeOptions,
-                                          currentRouteShapeIndex: 37,
-                                          currentLegShapeIndex: 13)
+                                          routeShapeIndex: 37,
+                                          legShapeIndex: 13)
         
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
@@ -314,7 +314,7 @@ class RouteProgressTests: TestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.leg.source, decoded.currentLegProgress.leg.source)
         XCTAssertEqual(routeProgress.congestionTravelTimesSegmentsByStep.count, decoded.congestionTravelTimesSegmentsByStep.count)
         XCTAssertEqual(routeProgress.congestionTimesPerStep, decoded.congestionTimesPerStep)
-        XCTAssertEqual(routeProgress.currentRouteShapeIndex, decoded.currentRouteShapeIndex)
+        XCTAssertEqual(routeProgress.shapeIndex, decoded.shapeIndex)
         XCTAssertEqual(routeProgress.currentLegProgress.shapeIndex, decoded.currentLegProgress.shapeIndex)
     }
     
