@@ -66,11 +66,17 @@ extension PreviewViewController {
     func setupBottomBannerContainerViewLayoutConstraints() {
         NSLayoutConstraint.deactivate(bottomBannerContainerViewLayoutConstraints)
         
+        // In case if bottom banner height was set - use it. Otherwise use default height for
+        // specific trait collection.
         let bottomBannerContainerViewHeight: CGFloat
-        if traitCollection.verticalSizeClass == .regular {
-            bottomBannerContainerViewHeight = 80.0 + view.safeAreaInsets.bottom
+        if let height = topmostBottomBanner?.configuration.height {
+            bottomBannerContainerViewHeight = height
         } else {
-            bottomBannerContainerViewHeight = 60.0 + view.safeAreaInsets.bottom
+            if traitCollection.verticalSizeClass == .regular {
+                bottomBannerContainerViewHeight = 80.0 + view.safeAreaInsets.bottom
+            } else {
+                bottomBannerContainerViewHeight = 60.0 + view.safeAreaInsets.bottom
+            }
         }
         
         bottomBannerContainerViewLayoutConstraints = [
@@ -86,7 +92,14 @@ extension PreviewViewController {
     func setupTopBannerContainerViewLayoutConstraints() {
         NSLayoutConstraint.deactivate(topBannerContainerViewLayoutConstraints)
         
-        let topBannerContainerViewHeight = view.safeAreaInsets.top
+        // In case if top banner height was set - use it. Otherwise use default height
+        // (height of top safe area insets).
+        let topBannerContainerViewHeight: CGFloat
+        if let height = topmostTopBanner?.configuration.height {
+            topBannerContainerViewHeight = height
+        } else {
+            topBannerContainerViewHeight = view.safeAreaInsets.top
+        }
         
         topBannerContainerViewLayoutConstraints = [
             navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight)
