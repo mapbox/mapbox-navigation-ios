@@ -4,8 +4,6 @@ protocol Previewable: UIViewController {
     
     var navigationView: NavigationView { get }
     
-    var cameraMode: Preview.CameraMode { get }
-    
     var topBanners: Stack<BannerPreviewing> { get }
     
     var bottomBanners: Stack<BannerPreviewing> { get }

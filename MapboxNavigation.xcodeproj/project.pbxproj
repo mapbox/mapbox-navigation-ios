@@ -273,7 +273,6 @@
 		8AC4091E279918470075248E /* NavigationViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091D279918470075248E /* NavigationViewLayout.swift */; };
 		8AC40920279918930075248E /* NavigationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC4091F279918930075248E /* NavigationViewDelegate.swift */; };
 		8AC5070728D3D925005D45EB /* CameraModeFloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */; };
-		8AC5070928D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */; };
 		8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
 		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
@@ -887,7 +886,6 @@
 		8AC4091D279918470075248E /* NavigationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewLayout.swift; sourceTree = "<group>"; };
 		8AC4091F279918930075248E /* NavigationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewDelegate.swift; sourceTree = "<group>"; };
 		8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButton.swift; sourceTree = "<group>"; };
-		8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButtonDelegate.swift; sourceTree = "<group>"; };
 		8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationViewController+NavigationMapViewDelegate.swift"; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
@@ -2043,7 +2041,6 @@
 				2BDD653C2614BCA1005B8B55 /* WayNameView.swift */,
 				8A99F18A28821AB80034F5BD /* WayNameLabel.swift */,
 				8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */,
-				8AC5070828D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2948,7 +2945,6 @@
 				8AE8FB912717543100EA026A /* UIColor.swift in Sources */,
 				8AD220A927C08F7C000734A5 /* MarkerView.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
-				8AC5070928D3D930005D45EB /* CameraModeFloatingButtonDelegate.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				8A11FEF027A3514C00285B6F /* CPRouteChoice.swift in Sources */,
 				8A01B16028DBF048006A50AF /* NavigationCamera+Preview.swift in Sources */,

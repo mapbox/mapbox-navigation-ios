@@ -9,12 +9,6 @@ open class PreviewViewController: UIViewController, Previewable {
     
     // MARK: - Previewable properties and methods
     
-    var cameraMode: Preview.CameraMode = .centered {
-        didSet {
-            navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
-        }
-    }
-    
     // :nodoc:
     public var navigationView: NavigationView {
         view as! NavigationView
@@ -126,7 +120,7 @@ open class PreviewViewController: UIViewController, Previewable {
         if banner is DestinationPreviewViewController || banner is RoutesPreviewViewController {
             navigationView.wayNameView.hide()
             navigationView.speedLimitView.hide()
-            cameraModeFloatingButton.cameraMode = .idle
+            navigationView.navigationMapView.navigationCamera.stop()
         }
         
         let bannerContainerView: UIView
@@ -239,6 +233,7 @@ open class PreviewViewController: UIViewController, Previewable {
         setupBottomBannerContainerView()
         setupConstraints()
         setupStyleManager()
+        setupNavigationCamera()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -325,7 +320,7 @@ open class PreviewViewController: UIViewController, Previewable {
     
     func setupFloatingButtons() {
         cameraModeFloatingButton = FloatingButton.rounded(imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0)) as CameraModeFloatingButton
-        cameraModeFloatingButton.delegate = self
+        cameraModeFloatingButton.navigationMapView = navigationView.navigationMapView
         
         navigationView.floatingButtons = [
             cameraModeFloatingButton
@@ -375,30 +370,19 @@ open class PreviewViewController: UIViewController, Previewable {
         styleManager.styles = previewOptions.styles ?? [DayStyle(), NightStyle()]
     }
     
+    func setupNavigationCamera() {
+        navigationView.navigationMapView.navigationCamera.move(to: .centered)
+    }
+    
     func setupGestureRecognizers() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         longPressGestureRecognizer.name = "preview_long_press_gesture_recognizer"
         navigationView.navigationMapView.addGestureRecognizer(longPressGestureRecognizer)
-        
-        // In case if map view is panned, rotated or pinched, camera state should be reset.
-        for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
-        where gestureRecognizer is UIPanGestureRecognizer
-        || gestureRecognizer is UIRotationGestureRecognizer
-        || gestureRecognizer is UIPinchGestureRecognizer {
-            gestureRecognizer.addTarget(self, action: #selector(resetCameraState))
-        }
     }
     
     func resetGestureRecognizers() {
         navigationView.navigationMapView.gestureRecognizers?.filter({ $0.name == "preview_long_press_gesture_recognizer" }).forEach {
             navigationView.navigationMapView.removeGestureRecognizer($0)
-        }
-        
-        for gestureRecognizer in navigationView.navigationMapView.mapView.gestureRecognizers ?? []
-        where gestureRecognizer is UIPanGestureRecognizer
-        || gestureRecognizer is UIRotationGestureRecognizer
-        || gestureRecognizer is UIPinchGestureRecognizer {
-            gestureRecognizer.removeTarget(self, action: #selector(resetCameraState))
         }
     }
     
@@ -409,20 +393,11 @@ open class PreviewViewController: UIViewController, Previewable {
                                                selector: #selector(didUpdatePassiveLocation(_:)),
                                                name: .passiveLocationManagerDidUpdate,
                                                object: nil)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(orientationDidChange(_:)),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .passiveLocationManagerDidUpdate,
-                                                  object: nil)
-        
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIDevice.orientationDidChangeNotification,
                                                   object: nil)
     }
     
@@ -448,16 +423,6 @@ open class PreviewViewController: UIViewController, Previewable {
             navigationView.wayNameView.text = nil
             navigationView.wayNameView.containerView.isHidden = true
         }
-        
-        // Update camera options based on current location and camera mode.
-        navigationView.navigationMapView.navigationCamera.update(to: cameraModeFloatingButton.cameraMode)
-    }
-    
-    @objc func orientationDidChange(_ notification: Notification) {
-        navigationView.navigationMapView.navigationCamera.update(to: cameraModeFloatingButton.cameraMode)
-        
-        // TODO: In case if routes are already shown and orientation changes - fit camera so that all
-        // routes fit into available space.
     }
     
     // MARK: - Destination and routes preview methods
@@ -595,11 +560,6 @@ open class PreviewViewController: UIViewController, Previewable {
     @objc func didPressDebugButton() {
         // TODO: Implement debug view presentation.
     }
-    
-    @objc func resetCameraState() {
-        if case .idle = cameraModeFloatingButton.cameraMode { return }
-        cameraModeFloatingButton.cameraMode = .idle
-    }
 }
 
 // MARK: - NavigationMapViewDelegate methods
@@ -625,16 +585,6 @@ extension PreviewViewController: DestinationPreviewViewControllerDelegate, Route
     
     func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController) {
         delegate?.willBeginActiveNavigation(self)
-    }
-}
-
-// MARK: - CameraModeFloatingButtonDelegate methods
-
-extension PreviewViewController: CameraModeFloatingButtonDelegate {
-    
-    func cameraModeFloatingButton(_ cameraModeFloatingButton: CameraModeFloatingButton,
-                                  cameraModeDidChangeTo cameraMode: Preview.CameraMode) {
-        navigationView.navigationMapView.navigationCamera.move(to: cameraMode)
     }
 }
 

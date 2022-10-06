@@ -6,11 +6,10 @@ public class CameraModeFloatingButton: FloatingButton {
     var cameraMode: Preview.CameraMode = .centered {
         didSet {
             updateImage(for: cameraMode)
-            delegate?.cameraModeFloatingButton(self, cameraModeDidChangeTo: cameraMode)
         }
     }
     
-    weak var delegate: CameraModeFloatingButtonDelegate?
+    weak var navigationMapView: NavigationMapView? = nil
     
     func updateImage(for cameraMode: Preview.CameraMode) {
         let image: UIImage
@@ -36,18 +35,40 @@ public class CameraModeFloatingButton: FloatingButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(_ frame: CGRect,
-                     cameraMode: Preview.CameraMode = .centered,
-                     delegate: CameraModeFloatingButtonDelegate? = nil) {
-        self.init(frame: frame)
-        
-        self.delegate = delegate
-        self.cameraMode = cameraMode
-    }
-    
     func commonInit() {
         cameraMode = .centered
         addTarget(self, action: #selector(didPress), for: .touchUpInside)
+        
+        subscribeForNotifications()
+    }
+    
+    deinit {
+        unsubscribeFromNotifications()
+    }
+    
+    // MARK: Notifications observer methods
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: navigationMapView?.navigationCamera)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: navigationMapView?.navigationCamera)
+    }
+    
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
+        switch state {
+        case .idle:
+            cameraMode = .idle
+        case .transitionToFollowing, .following, .transitionToOverview, .overview:
+            break
+        }
     }
     
     @objc func didPress() {
@@ -59,5 +80,7 @@ public class CameraModeFloatingButton: FloatingButton {
         case .following:
             cameraMode = .centered
         }
+        
+        navigationMapView?.navigationCamera.move(to: cameraMode)
     }
 }
