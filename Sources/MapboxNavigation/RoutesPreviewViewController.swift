@@ -142,10 +142,19 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
         
         let phoneTraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
         let distanceRemainingTintColor = DistanceRemainingLabel.appearance(for: phoneTraitCollection,
-                                                                              whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
         let distance = Measurement(distance: route.distance).localized()
         let imageBounds = CGRect(x: 0.0, y: -2.0, width: 12.0, height: 15.0)
-        distanceRemainingLabel.attributedText = attributedString(with: .pinImage.tint(distanceRemainingTintColor),
+        
+        // FIXME: Tinting with custom method doesn't work on iOS 13 and higher.
+        let tintedPinImage: UIImage
+        if #available(iOS 13.0, *) {
+            tintedPinImage = .pinImage.withTintColor(distanceRemainingTintColor)
+        } else {
+            tintedPinImage = .pinImage.tint(distanceRemainingTintColor)
+        }
+        
+        distanceRemainingLabel.attributedText = attributedString(with: tintedPinImage,
                                                                  imageBounds: imageBounds,
                                                                  text: MeasurementFormatter().string(from: distance))
         
@@ -157,7 +166,15 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
             
             let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance(for: phoneTraitCollection,
                                                                         whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
-            arrivalTimeLabel.attributedText = attributedString(with: .timeImage.tint(arrivalTimeImageTintColor),
+            
+            let tintedTimeImage: UIImage
+            if #available(iOS 13.0, *) {
+                tintedTimeImage = .pinImage.withTintColor(distanceRemainingTintColor)
+            } else {
+                tintedTimeImage = .timeImage.tint(arrivalTimeImageTintColor)
+            }
+            
+            arrivalTimeLabel.attributedText = attributedString(with: tintedTimeImage,
                                                                imageBounds: imageBounds,
                                                                text: dateFormatter.string(from: arrivalDate))
         }
