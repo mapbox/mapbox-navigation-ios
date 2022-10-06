@@ -32,7 +32,7 @@ extension ViewController {
             case .motorway, .primary:
                 CongestionRange.setCongestionRanges(low: 0..<40, moderate: 40..<60, heavy: 60..<80, severe: 80..<101)
             default:
-                CongestionRange.setCongestionRanges(low: 0..<15, moderate: 15..<30, heavy: 30..<45, severe: 45..<101)
+                CongestionRange.setCongestionRanges(low: 0..<20, moderate: 20..<40, heavy: 40..<60, severe: 60..<101)
             }
             return CongestionLevel.init(numericValue: numericLevel)
         }

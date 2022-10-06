@@ -27,6 +27,10 @@ open class NavigationMapView: UIView {
      */
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
+    /**
+     The closure to map the `NumericCongestionLevel` and `MapboxStreetsRoadClass` to `CongestionLevel`.
+     If provided, the route lines will display the associated colors of the `CongestionLevel` mapping result on the map view.
+     */
     public var congestionMapping: CongestionMapping? = nil
     
     /**

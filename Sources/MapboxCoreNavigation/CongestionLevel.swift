@@ -10,7 +10,7 @@ import MapboxDirections
 public typealias CongestionRange = Range<NumericCongestionLevel>
 
 /**
- The method to map the `NumericCongestionLevel` to `CongestionLevel` with the consideration of `MapboxStreetsRoadClass`.
+ The closure to map the `NumericCongestionLevel` and `MapboxStreetsRoadClass` to `CongestionLevel`.
  */
 public typealias CongestionMapping = (NumericCongestionLevel, MapboxStreetsRoadClass) -> CongestionLevel
 
@@ -57,7 +57,7 @@ public extension CongestionRange {
 
 extension CongestionLevel {
     /**
-     Set a `CongestionLevel` value from `NumericCongestionLevel`.
+     Set a `CongestionLevel` value from an optional `NumericCongestionLevel`.
      */
     public init(numericValue: NumericCongestionLevel?) {
         guard let numericValue = numericValue else {
@@ -120,13 +120,18 @@ extension RouteLeg {
         guard let numericLevels = segmentNumericCongestionLevels,
               let congestionMapping = congestionMapping,
               numericLevels.count == streetsRoadClasses.count else {
-            return segmentCongestionLevels
+            return resolvedCongestionLevels
         }
         
         var congestionLevels = [CongestionLevel]()
-        for (index, numeric) in numericLevels.enumerated() {
-            guard let numeric = numeric, let roadClass = streetsRoadClasses[index] else { continue }
-            congestionLevels.append(congestionMapping(numeric, roadClass))
+        for (numeric, roadClass) in zip(numericLevels, streetsRoadClasses) {
+            var congestionLevel: CongestionLevel = .unknown
+            if let numeric = numeric, let roadClass = roadClass {
+                congestionLevel = congestionMapping(numeric, roadClass)
+            } else if let numeric = numeric {
+                congestionLevel = CongestionLevel.init(numericValue: numeric)
+            }
+            congestionLevels.append(congestionLevel)
         }
         return congestionLevels
     }
