@@ -666,7 +666,7 @@ class ViewController: UIViewController {
             self.navigationMapView = nil
             self.passiveLocationManager = nil
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
-            navigationViewController.navigationMapView?.showsIntersectionSignalsOnRoutes = true
+            navigationViewController.navigationMapView?.showsIntersectionSignals = true
             
             // Animate top and bottom banner views presentation.
             navigationViewController.navigationView.bottomBannerContainerView.show(duration: 1.0,

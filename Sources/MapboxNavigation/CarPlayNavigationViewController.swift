@@ -779,6 +779,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: legIndex != currentLegIndexMapped)
         currentLegIndexMapped = legIndex
+        
+        navigationMapView?.showIntersectionSignals(with: routeProgress)
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -872,6 +874,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             navigationMapView?.removeArrow()
         }
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
+        
+        navigationMapView?.showIntersectionSignals(with: progress)
     }
     
     func updateManeuvers(_ routeProgress: RouteProgress) {

@@ -67,6 +67,7 @@ class CustomViewController: UIViewController {
             // By setting the `NavigationMapView.routeLineTracksTraversal` to `true`, it would allow the main route shown with
             // traversed part disappearing effect in a standalone `NavigationMapView` during active navigation.
             self.navigationMapView.routeLineTracksTraversal = true
+            self.navigationMapView.showsIntersectionSignals = true
             if self.navigationMapView.mapView.mapboxMap.style.layerExists(withId: "road-intersection") {
                 // Provide the custom layer position for route line in active navigation.
                 self.navigationMapView.show([self.navigationService.route], layerPosition: .below("road-intersection") ,legIndex: 0)
@@ -151,6 +152,9 @@ class CustomViewController: UIViewController {
         // without redrawing the main route.
         navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: routeProgress.legIndex != currentLegIndex)
         currentLegIndex = routeProgress.legIndex
+        
+        // Add intersection signals
+        navigationMapView.showIntersectionSignals(with: routeProgress)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
@@ -173,6 +177,8 @@ class CustomViewController: UIViewController {
         navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
                                           coordinate: navigationService.router.location?.coordinate,
                                           shouldRedraw: true)
+        
+        navigationMapView.showIntersectionSignals(with: navigationService.routeProgress)
     }
     
     @objc func refresh(_ notification: NSNotification) {

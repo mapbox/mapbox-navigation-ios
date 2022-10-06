@@ -264,7 +264,6 @@ open class NavigationMapView: UIView {
         customRouteLineLayerPosition = layerPosition
         
         applyRoutesDisplay(layerPosition: layerPosition)
-        updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
     }
     
     func applyRoutesDisplay(layerPosition: MapboxMaps.LayerPosition? = nil) {
@@ -352,7 +351,6 @@ open class NavigationMapView: UIView {
         
         routes = nil
         removeLineGradientStops()
-        removeIntersectionSignals()
     }
     
     /**
@@ -1128,22 +1126,41 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Shows the intersection signals on current route.
+     Show the signals on the intersections.
+     
+     - parameter routeProgress: The `RouteProgress` that the intersections will be displayed with.
      */
-    public var showsIntersectionSignalsOnRoutes: Bool = false {
+    public func showIntersectionSignals(with routeProgress: RouteProgress) {
+        guard showsIntersectionSignals else {
+            removeIntersectionSignals()
+            return
+        }
+        
+        do {
+            try updateIntersectionSymbolImages()
+        } catch {
+            Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
+                      category: .navigationUI)
+        }
+        
+        updateIntersectionSignals(with: routeProgress)
+    }
+    
+    /**
+     Shows the intersection signals on current step of current route during active navigation.
+     */
+    public var showsIntersectionSignals: Bool = false {
         didSet {
-            updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
+            if !showsIntersectionSignals {
+                removeIntersectionSignals()
+            }
         }
     }
     
     /**
      The style type of `NavigationMapView` during active navigation.
      */
-    var styleType: StyleType = .day {
-        didSet {
-            updateIntersectionSignalsAlongRouteOnMap(styleType: styleType)
-        }
-    }
+    var styleType: StyleType = .day
     
     let continuousAlternativeDurationAnnotationOffset: LocationDistance = 75
     
@@ -1475,11 +1492,11 @@ open class NavigationMapView: UIView {
             route?.identifier(.restrictedRouteAreaRoute)
         ].compactMap{ $0 }
         let arrowLayers: [String] = [
-            LayerIdentifier.intersectionSignalLayer,
             LayerIdentifier.arrowStrokeLayer,
             LayerIdentifier.arrowLayer,
             LayerIdentifier.arrowSymbolCasingLayer,
-            LayerIdentifier.arrowSymbolLayer
+            LayerIdentifier.arrowSymbolLayer,
+            LayerIdentifier.intersectionSignalLayer
         ]
         let uppermostSymbolLayers: [String] = [
             LayerIdentifier.waypointCircleLayer,

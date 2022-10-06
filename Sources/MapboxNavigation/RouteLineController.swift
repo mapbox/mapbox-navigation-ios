@@ -54,6 +54,8 @@ extension NavigationMapView {
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: router.route)
             }
+            
+            navigationMapView.showIntersectionSignals(with: router.routeProgress)
         }
         
         func navigationViewDidAppear(_ animated: Bool) {
@@ -88,6 +90,8 @@ extension NavigationMapView {
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
             }
+            
+            navigationMapView.showIntersectionSignals(with: router.routeProgress)
         }
         
         func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -111,6 +115,8 @@ extension NavigationMapView {
             
             navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate, shouldRedraw: currentLegIndexMapped != legIndex)
             currentLegIndexMapped = legIndex
+            
+            navigationMapView.showIntersectionSignals(with: router.routeProgress)
         }
         
         private func updateMapOverlays(for routeProgress: RouteProgress) {

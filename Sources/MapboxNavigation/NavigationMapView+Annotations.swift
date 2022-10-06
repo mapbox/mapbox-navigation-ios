@@ -396,34 +396,9 @@ extension NavigationMapView {
     // MARK: Intersection Signals Annotations
     
     /**
-     Removes all intersection signals on current route.
-     */
-    func removeIntersectionSignals() {
-        let style = mapView.mapboxMap.style
-        style.removeLayers([NavigationMapView.LayerIdentifier.intersectionSignalLayer])
-        style.removeSources([NavigationMapView.SourceIdentifier.intersectionSignalSource])
-    }
-    
-    func updateIntersectionSignalsAlongRouteOnMap(styleType: StyleType = .day) {
-        guard showsIntersectionSignalsOnRoutes, let route = routes?.first else {
-            removeIntersectionSignals()
-            return
-        }
-              
-        do {
-            try updateIntersectionSymbolImages()
-        } catch {
-            Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
-                      category: .navigationUI)
-        }
-        
-        updateIntersectionSignals(along: route, styleType: styleType)
-    }
-    
-    /**
      Updates the image assets in the map style for the route intersection signals.
      */
-    private func updateIntersectionSymbolImages() throws {
+    func updateIntersectionSymbolImages() throws {
         let style = mapView.mapboxMap.style
         
         if style.image(withId: ImageIdentifier.trafficSignalDay) == nil,
@@ -447,15 +422,20 @@ extension NavigationMapView {
         }
     }
     
-    private func updateIntersectionSignals(along route: Route, styleType: StyleType) {
+    func updateIntersectionSignals(with routeProgress: RouteProgress) {
+        guard !routeProgress.routeIsComplete else {
+            removeIntersectionSignals()
+            return
+        }
         var featureCollection = FeatureCollection(features: [])
-        for leg in route.legs {
-            for step in leg.steps {
-                guard let intersections = step.intersections else { continue }
-                for intersection in intersections {
-                    guard let feature = signalFeature(from: intersection, styleType: styleType) else { continue }
-                    featureCollection.features.append(feature)
-                }
+        
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let intersectionIndex = stepProgress.intersectionIndex
+        let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
+        
+        for intersection in stepIntersections?.suffix(from: intersectionIndex) ?? [] {
+            if let feature = signalFeature(from: intersection, styleType: styleType) {
+                featureCollection.features.append(feature)
             }
         }
         
@@ -472,14 +452,9 @@ extension NavigationMapView {
             }
             
             let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
-            var shapeLayer: SymbolLayer
-            if style.layerExists(withId: layerIdentifier),
-               let symbolLayer = try style.layer(withId: layerIdentifier) as? SymbolLayer {
-                shapeLayer = symbolLayer
-            } else {
-                shapeLayer = SymbolLayer(id: layerIdentifier)
-            }
+            guard !style.layerExists(withId: layerIdentifier) else { return }
             
+            var shapeLayer = SymbolLayer(id: layerIdentifier)
             shapeLayer.source = sourceIdentifier
             shapeLayer.iconAllowOverlap = .constant(false)
             shapeLayer.iconImage = .expression(Exp(.get) {

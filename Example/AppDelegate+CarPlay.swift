@@ -92,7 +92,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
         navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
-        navigationViewController.navigationMapView?.showsIntersectionSignalsOnRoutes = true
+        navigationViewController.navigationMapView?.showsIntersectionSignals = true
         
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding

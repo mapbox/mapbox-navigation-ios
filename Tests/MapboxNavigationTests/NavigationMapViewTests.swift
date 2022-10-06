@@ -13,6 +13,10 @@ class NavigationMapViewTests: TestCase {
     ]))
     var navigationMapView: NavigationMapView!
     
+    let options: NavigationRouteOptions = .init(coordinates: [
+        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197)])
+    
     lazy var route: Route = {
         let route = response.routes!.first!
         return route
@@ -493,23 +497,27 @@ class NavigationMapViewTests: TestCase {
     
     func testUpdateIntersectionSignalsAlongRouteOnMap() {
         let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
+        let style = navigationMapView.mapView.mapboxMap.style
         let imageIdentifier = NavigationMapView.ImageIdentifier.trafficSignalDay
         let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
-        let style = navigationMapView.mapView.mapboxMap.style
+        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionSignalSource
         
-        XCTAssertFalse(navigationMapView.showsIntersectionSignalsOnRoutes)
-        
-        let route = loadRoute(from: "route-with-mixed-road-classes")
-        navigationMapView.show([route])
+        XCTAssertFalse(navigationMapView.showsIntersectionSignals)
         XCTAssertFalse(style.imageExists(withId: imageIdentifier))
         XCTAssertFalse(style.layerExists(withId: layerIdentifier))
+        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
         
-        navigationMapView.showsIntersectionSignalsOnRoutes = true
+        let routeProgress = RouteProgress(route: route, options: options, legIndex: 0, spokenInstructionIndex: 0)
+        navigationMapView.showsIntersectionSignals = true
+        navigationMapView.showIntersectionSignals(with: routeProgress)
+        
         XCTAssertTrue(style.imageExists(withId: imageIdentifier))
         XCTAssertTrue(style.layerExists(withId: layerIdentifier))
+        XCTAssertTrue(style.sourceExists(withId: sourceIdentifier))
         
-        navigationMapView.removeRoutes()
+        navigationMapView.removeIntersectionSignals()
         XCTAssertTrue(style.imageExists(withId: imageIdentifier))
         XCTAssertFalse(style.layerExists(withId: layerIdentifier))
+        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
     }
 }

@@ -6,13 +6,18 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class RouteLineLayerPositionTests: TestCase {
+    let options: NavigationRouteOptions = NavigationRouteOptions(coordinates: [
+        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197)])
     
     lazy var route: Route = {
-        let response = Fixture.routeResponse(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
-            CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
-        ]))
+        let response = Fixture.routeResponse(from: "route-with-instructions", options: options)
         return response.routes!.first!
+    }()
+    
+    lazy var routeProgress: RouteProgress = {
+        let routeProgress = RouteProgress(route: route, options: options, legIndex: 0, spokenInstructionIndex: 0)
+        return routeProgress
     }()
     
     func testRouteLineLayerPosition() {
@@ -239,7 +244,8 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.removeWaypoints()
         navigationMapView.showsRestrictedAreasOnRoute = false
         navigationMapView.routeLineTracksTraversal = true
-        navigationMapView.showsIntersectionSignalsOnRoutes = true
+        navigationMapView.showsIntersectionSignals = true
+        navigationMapView.showIntersectionSignals(with: routeProgress)
         
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -248,11 +254,11 @@ class RouteLineLayerPositionTests: TestCase {
             multilegRoute.identifier(.route(isMainRoute: true)),
             roadTrafficLayer["id"]!,
             roadLabelLayer["id"]!,
-            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!
@@ -278,6 +284,7 @@ class RouteLineLayerPositionTests: TestCase {
                                 layerPosition: .below(roadLabelLayer["id"]!))
         navigationMapView.removeRoutes()
         navigationMapView.removeArrow()
+        navigationMapView.removeIntersectionSignals()
 
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -300,6 +307,7 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.show([multilegRoute])
         navigationMapView.showsRestrictedAreasOnRoute = true
         navigationMapView.routeLineTracksTraversal = false
+        navigationMapView.showIntersectionSignals(with: routeProgress)
         
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -309,11 +317,11 @@ class RouteLineLayerPositionTests: TestCase {
             multilegRoute.identifier(.route(isMainRoute: true)),
             multilegRoute.identifier(.restrictedRouteAreaRoute),
             roadLabelLayer["id"]!,
-            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
             NavigationMapView.LayerIdentifier.arrowStrokeLayer,
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
