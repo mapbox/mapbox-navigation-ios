@@ -460,6 +460,8 @@ open class PreviewViewController: UIViewController, Previewable {
         // routes fit into available space.
     }
     
+    // MARK: - Destination and routes preview methods
+    
     func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D) {
         let destinationIdentifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
         var destinationAnnotation = PointAnnotation(id: destinationIdentifier,
