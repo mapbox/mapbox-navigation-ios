@@ -246,7 +246,7 @@ open class PreviewViewController: UIViewController, Previewable {
         
         // Apply style each time `PreviewViewController` appears on screen
         // (e.g. after active navigation).
-        styleManager.applyStyle()
+        styleManager.currentStyle?.apply()
         setupPassiveLocationManager()
         setupNavigationViewportDataSource()
         subscribeForNotifications()
