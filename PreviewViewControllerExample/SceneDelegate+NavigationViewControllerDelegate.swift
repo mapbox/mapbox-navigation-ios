@@ -5,22 +5,19 @@ extension SceneDelegate: NavigationViewControllerDelegate {
     
     public func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController,
                                                    byCanceling canceled: Bool) {
-        let duration = 1.0
         // Hide top and bottom banner containers and after that dismiss `NavigationViewController`.
-        navigationViewController.navigationView.topBannerContainerView.hide(duration: duration,
+        navigationViewController.navigationView.topBannerContainerView.hide(duration: animationDuration,
                                                                             animations: {
             navigationViewController.navigationView.topBannerContainerView.alpha = 0.0
         })
         
-        navigationViewController.navigationView.bottomBannerContainerView.hide(duration: duration,
+        navigationViewController.navigationView.bottomBannerContainerView.hide(duration: animationDuration,
                                                                                animations: {
             navigationViewController.navigationView.bottomBannerContainerView.alpha = 0.0
             navigationViewController.navigationView.speedLimitView.alpha = 0.0
             navigationViewController.navigationView.wayNameView.alpha = 0.0
             navigationViewController.navigationView.floatingStackView.alpha = 0.0
-        }, completion: { [weak self] _ in
-            guard let self = self else { return }
-            
+        }, completion: { _ in
             navigationViewController.dismiss(animated: true) {
                 let navigationView = self.previewViewController.navigationView
                 let navigationMapView = navigationView.navigationMapView
@@ -40,13 +37,16 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 if let routesPreviewViewController = self.previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
                     let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
                     self.previewViewController.showcase(routeResponse: routeResponse)
-                    navigationView.bottomBannerContainerView.show(duration: duration,
+                    
+                    navigationView.topBannerContainerView.show(duration: self.animationDuration)
+                    navigationView.bottomBannerContainerView.show(duration: self.animationDuration,
                                                                   animations: { [weak self] in
                         guard let self = self else { return }
                         self.previewViewController.navigationView.floatingStackView.alpha = 1.0
                     })
                 } else if self.previewViewController.topBanner(.bottomLeading) is DestinationPreviewViewController {
-                    navigationView.bottomBannerContainerView.show()
+                    navigationView.bottomBannerContainerView.show(duration: self.animationDuration)
+                    navigationView.topBannerContainerView.show(duration: self.animationDuration)
                 }
             }
         })
