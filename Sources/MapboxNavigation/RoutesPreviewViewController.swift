@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 // :nodoc:
-public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
+public class RoutesPreviewViewController: UIViewController, Banner, RoutesPreviewDataSource {
     
     var bottomBannerView: BottomBannerView!
     
@@ -24,12 +24,14 @@ public class RoutesPreviewViewController: UIViewController, RoutesPreviewing {
     
     weak var delegate: RoutesPreviewViewControllerDelegate?
     
-    // MARK: - RoutesPreviewing properties
+    // MARK: - Banner properties
     
     // :nodoc:
-    public var configuration: PreviewBannerConfiguration {
-        PreviewBannerConfiguration(position: .bottomLeading)
+    public var bannerConfiguration: BannerConfiguration {
+        BannerConfiguration(position: .bottomLeading)
     }
+    
+    // MARK: - RoutesPreviewDataSource properties
     
     // :nodoc:
     public var routesPreviewOptions: RoutesPreviewOptions {

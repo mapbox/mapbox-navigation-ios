@@ -87,6 +87,10 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
+    var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
+    var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
     var endOfRouteView: UIView? {
         didSet {
             if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {

@@ -20,17 +20,17 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
                                willPresent destinationText: NSAttributedString,
                                in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString?
     
-    func bannerWillAppear(_ previewViewController: PreviewViewController,
-                          banner: BannerPreviewing)
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent banner: Banner)
     
-    func bannerDidAppear(_ previewViewController: PreviewViewController,
-                         banner: BannerPreviewing)
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didPresent banner: Banner)
     
-    func bannerWillDisappear(_ previewViewController: PreviewViewController,
-                             banner: BannerPreviewing)
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willDismiss banner: Banner)
     
-    func bannerDidDisappear(_ previewViewController: PreviewViewController,
-                            banner: BannerPreviewing)
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didDismiss banner: Banner)
 }
 
 // :nodoc:
@@ -61,23 +61,23 @@ public extension PreviewViewControllerDelegate {
         return nil
     }
     
-    func bannerWillAppear(_ previewViewController: PreviewViewController,
-                          banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent banner: Banner) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
-    func bannerDidAppear(_ previewViewController: PreviewViewController,
-                         banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didPresent banner: Banner) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
-    func bannerWillDisappear(_ previewViewController: PreviewViewController,
-                             banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willDismiss banner: Banner) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
-    func bannerDidDisappear(_ previewViewController: PreviewViewController,
-                            banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didDismiss banner: Banner) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
 }

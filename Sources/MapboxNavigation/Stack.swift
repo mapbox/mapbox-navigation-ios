@@ -14,7 +14,7 @@ protocol Stackable {
 }
 
 struct Stack<Element>: Stackable {
-
+    
     var elements = [Element]()
     
     var count: Int {

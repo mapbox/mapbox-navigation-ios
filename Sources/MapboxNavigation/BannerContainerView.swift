@@ -1,20 +1,16 @@
 import UIKit
 
 // :nodoc:
-public class Banner {
-    
-    // :nodoc:
-    public enum Position {
-        case topLeading
-        case bottomLeading
-    }
+public enum BannerPosition {
+    case topLeading
+    case bottomLeading
 }
 
 // :nodoc:
 @objc(MBBannerContainerView)
 open class BannerContainerView: UIView {
     
-    var position: Banner.Position
+    var position: BannerPosition
     
     // :nodoc:
     public enum State {
@@ -80,7 +76,7 @@ open class BannerContainerView: UIView {
     }
     
     // :nodoc:
-    public init(_ position: Banner.Position, frame: CGRect = .zero) {
+    public init(_ position: BannerPosition, frame: CGRect = .zero) {
         self.position = position
         
         super.init(frame: frame)

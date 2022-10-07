@@ -310,5 +310,58 @@ extension NavigationView {
         if previousTraitCollection == traitCollection { return }
         
         setupConstraints()
+        
+        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
+            setupBottomBannerContainerViewHeightLayoutConstraints()
+        }
+    }
+    
+    /**
+     Sets top banner container view height constraints.
+     */
+    func setupTopBannerContainerViewHeightLayoutConstraints(_ height: CGFloat? = nil) {
+        NSLayoutConstraint.deactivate(topBannerContainerViewLayoutConstraints)
+        
+        // In case if top banner height was set - use it. Otherwise use default height
+        // (height of top safe area insets).
+        let topBannerContainerViewHeight: CGFloat
+        if let height = height {
+            topBannerContainerViewHeight = height
+        } else {
+            topBannerContainerViewHeight = safeAreaInsets.top
+        }
+        
+        topBannerContainerViewLayoutConstraints = [
+            topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight)
+        ]
+        
+        NSLayoutConstraint.activate(topBannerContainerViewLayoutConstraints)
+    }
+    
+    /**
+     Sets bottom banner container height view constraints for portrait and landscape modes. In landscape mode
+     height of bottom banner container view is lower than in portrait.
+     */
+    func setupBottomBannerContainerViewHeightLayoutConstraints(_ height: CGFloat? = nil) {
+        NSLayoutConstraint.deactivate(bottomBannerContainerViewLayoutConstraints)
+        
+        // In case if bottom banner height was set - use it. Otherwise use default height for
+        // specific trait collection.
+        let bottomBannerContainerViewHeight: CGFloat
+        if let height = height {
+            bottomBannerContainerViewHeight = height
+        } else {
+            if traitCollection.verticalSizeClass == .regular {
+                bottomBannerContainerViewHeight = 80.0 + safeAreaInsets.bottom
+            } else {
+                bottomBannerContainerViewHeight = 60.0 + safeAreaInsets.bottom
+            }
+        }
+        
+        bottomBannerContainerViewLayoutConstraints = [
+            bottomBannerContainerView.heightAnchor.constraint(equalToConstant: bottomBannerContainerViewHeight)
+        ]
+        
+        NSLayoutConstraint.activate(bottomBannerContainerViewLayoutConstraints)
     }
 }

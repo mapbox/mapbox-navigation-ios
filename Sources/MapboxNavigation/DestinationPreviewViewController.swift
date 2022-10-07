@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public class DestinationPreviewViewController: UIViewController, DestinationPreviewing {
+public class DestinationPreviewViewController: UIViewController, Banner, DestinationDataSource {
     
     var bottomBannerView: BottomBannerView!
     
@@ -23,12 +23,14 @@ public class DestinationPreviewViewController: UIViewController, DestinationPrev
     
     weak var delegate: DestinationPreviewViewControllerDelegate?
     
-    // MARK: - DestinationPreviewing properties
+    // MARK: - Banner properties
     
     // :nodoc:
-    public var configuration: PreviewBannerConfiguration {
-        PreviewBannerConfiguration(position: .bottomLeading)
+    public var bannerConfiguration: BannerConfiguration {
+        BannerConfiguration(position: .bottomLeading)
     }
+    
+    // MARK: - DestinationDataSource properties
     
     // :nodoc:
     public var destinationOptions: DestinationOptions {

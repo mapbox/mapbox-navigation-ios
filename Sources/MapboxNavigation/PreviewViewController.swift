@@ -5,187 +5,35 @@ import MapboxMaps
 import MapboxDirections
 
 // :nodoc:
-open class PreviewViewController: UIViewController, Previewable {
+open class PreviewViewController: UIViewController, BannerPresentation {
     
-    // MARK: - Previewable properties and methods
+    // MARK: - BannerPresentation properties and methods
     
     // :nodoc:
     public var navigationView: NavigationView {
         view as! NavigationView
     }
     
-    var topBanners = Stack<BannerPreviewing>()
+    weak var bannerPresentationDelegate: BannerPresentationDelegate? = nil
+    
+    var topBanners = Stack<Banner>()
+    
+    var bottomBanners = Stack<Banner>()
     
     // :nodoc:
-    public var topmostTopBanner: BannerPreviewing? {
-        topBanners.peek()
-    }
-    
-    var bottomBanners = Stack<BannerPreviewing>()
-    
-    // :nodoc:
-    public var topmostBottomBanner: BannerPreviewing? {
-        bottomBanners.peek()
-    }
-    
-    // :nodoc:
-    @discardableResult public func popBanner(_ position: Banner.Position, animated: Bool = true) -> BannerPreviewing? {
-        let banner: BannerPreviewing?
+    public func topBanner(_ position: BannerPosition) -> Banner? {
         switch position {
         case .topLeading:
-            banner = topmostTopBanner
+            return topmostTopBanner
         case .bottomLeading:
-            banner = topmostBottomBanner
+            return topmostBottomBanner
         }
-        
-        if let banner = banner {
-            delegate?.bannerWillDisappear(self, banner: banner)
-            
-            switch position {
-            case .topLeading:
-                let bannerContainerView = navigationView.topBannerContainerView
-                topBanners.pop()
-                
-                if let topBanner = topmostTopBanner {
-                    navigationView.topBannerContainerView.hide(animated: animated,
-                                                               completion: { _ in
-                        bannerContainerView.subviews.forEach {
-                            $0.removeFromSuperview()
-                        }
-                        
-                        self.embed(topBanner, in: bannerContainerView)
-                        
-                        self.navigationView.topBannerContainerView.show()
-                    })
-                } else {
-                    navigationView.topBannerContainerView.hide(animated: animated,
-                                                               completion: { _ in
-                        bannerContainerView.subviews.forEach {
-                            $0.removeFromSuperview()
-                        }
-                    })
-                }
-            case .bottomLeading:
-                let bannerContainerView = navigationView.bottomBannerContainerView
-                bottomBanners.pop()
-                
-                if let bottomBanner = topmostBottomBanner {
-                    navigationView.bottomBannerContainerView.hide(completion: { _ in
-                        bannerContainerView.subviews.forEach {
-                            $0.removeFromSuperview()
-                        }
-                        
-                        self.embed(bottomBanner, in: bannerContainerView)
-                        
-                        self.navigationView.bottomBannerContainerView.show()
-                    })
-                } else {
-                    navigationView.bottomBannerContainerView.hide(completion: { _ in
-                        bannerContainerView.subviews.forEach {
-                            $0.removeFromSuperview()
-                        }
-                    })
-                    
-                    if !prefersBackButtonHidden {
-                        backButton.hide()
-                    }
-                }
-            }
-            
-            if banner is DestinationPreviewViewController {
-                pointAnnotationManager?.annotations = []
-            } else if banner is RoutesPreviewViewController {
-                navigationView.navigationMapView.removeWaypoints()
-                navigationView.navigationMapView.removeRoutes()
-            }
-            
-            if topmostBottomBanner == nil {
-                navigationView.wayNameView.show()
-                navigationView.speedLimitView.show()
-                cameraModeFloatingButton.cameraMode = .centered
-            }
-            
-            delegate?.bannerDidDisappear(self, banner: banner)
-            
-            return banner
-        }
-        
-        return nil
     }
     
-    // :nodoc:
-    public func pushBanner(_ banner: BannerPreviewing, animated: Bool = true) {
-        delegate?.bannerWillAppear(self, banner: banner)
-        
-        if banner is DestinationPreviewViewController || banner is RoutesPreviewViewController {
-            navigationView.wayNameView.hide()
-            navigationView.speedLimitView.hide()
-            navigationView.navigationMapView.navigationCamera.stop()
-        }
-        
-        let bannerContainerView: UIView
-        switch banner.configuration.position {
-        case .topLeading:
-            bannerContainerView = navigationView.topBannerContainerView
-            
-            let previousTopmostTopBanner = topmostTopBanner
-            topBanners.push(banner)
-            
-            // Update top banner constraints to change its height if needed.
-            setupTopBannerContainerViewLayoutConstraints()
-            
-            // In case if banner is already shown - hide it and then present another one.
-            if let _ = previousTopmostTopBanner {
-                navigationView.topBannerContainerView.hide(animated: animated,
-                                                           completion: { _ in
-                    bannerContainerView.subviews.forEach {
-                        $0.removeFromSuperview()
-                    }
-                    
-                    self.embed(banner, in: bannerContainerView)
-                    self.navigationView.topBannerContainerView.show()
-                })
-            } else {
-                embed(banner, in: bannerContainerView)
-                navigationView.topBannerContainerView.show(animated: animated)
-            }
-        case .bottomLeading:
-            bannerContainerView = navigationView.bottomBannerContainerView
-            
-            let previousTopmostBottomBanner = topmostBottomBanner
-            bottomBanners.push(banner)
-            
-            setupBottomBannerContainerViewLayoutConstraints()
-            
-            // In case if banner is already shown - hide it and then present another one.
-            if let _ = previousTopmostBottomBanner {
-                navigationView.bottomBannerContainerView.hide(completion: { _ in
-                    bannerContainerView.subviews.forEach {
-                        $0.removeFromSuperview()
-                    }
-                    
-                    self.embed(banner, in: bannerContainerView)
-                    self.navigationView.bottomBannerContainerView.show()
-                })
-            } else {
-                embed(banner, in: bannerContainerView)
-                navigationView.bottomBannerContainerView.show()
-            }
-            
-            if !prefersBackButtonHidden {
-                backButton.show()
-            }
-        }
-        
-        delegate?.bannerDidAppear(self, banner: banner)
-    }
+    // MARK: - PreviewViewController properties
     
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
-    
-    var backButton: BackButton!
-    
-    var prefersBackButtonHidden: Bool = false
     
     var finalDestinationAnnotation: PointAnnotation? = nil
     
@@ -197,10 +45,6 @@ open class PreviewViewController: UIViewController, Previewable {
     
     let previewOptions: PreviewOptions
     
-    var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
-    
-    var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
-    
     // MARK: - Initialization methods
     
     // :nodoc:
@@ -208,6 +52,8 @@ open class PreviewViewController: UIViewController, Previewable {
         self.previewOptions = previewOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        bannerPresentationDelegate = self
     }
     
     public required init?(coder: NSCoder) {
@@ -227,7 +73,6 @@ open class PreviewViewController: UIViewController, Previewable {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupBackButton()
         setupFloatingButtons()
         setupTopBannerContainerView()
         setupBottomBannerContainerView()
@@ -252,7 +97,6 @@ open class PreviewViewController: UIViewController, Previewable {
         super.viewDidAppear(animated)
         
         setupOrnaments()
-        setupBottomBannerContainerViewLayoutConstraints()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -262,18 +106,11 @@ open class PreviewViewController: UIViewController, Previewable {
         resetGestureRecognizers()
     }
     
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
-            setupBottomBannerContainerViewLayoutConstraints()
-        }
-    }
-    
     open override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        setupTopBannerContainerViewLayoutConstraints()
+        navigationView.setupTopBannerContainerViewHeightLayoutConstraints()
+        navigationView.setupBottomBannerContainerViewHeightLayoutConstraints()
     }
     
     // MARK: - UIViewController setting-up methods
@@ -297,25 +134,6 @@ open class PreviewViewController: UIViewController, Previewable {
         }
         
         return navigationView
-    }
-    
-    func setupBackButton() {
-        let backButton = BackButton(type: .system)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        // TODO: Add localization.
-        backButton.setTitle("Back", for: .normal)
-        backButton.clipsToBounds = true
-        backButton.isHidden = true
-        backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
-        backButton.setImage(.backImage, for: .normal)
-        backButton.imageView?.contentMode = .scaleAspectFit
-        backButton.imageEdgeInsets = UIEdgeInsets(top: 10,
-                                                  left: 0,
-                                                  bottom: 10,
-                                                  right: 15)
-        navigationView.addSubview(backButton)
-        
-        self.backButton = backButton
     }
     
     func setupFloatingButtons() {
@@ -444,13 +262,18 @@ open class PreviewViewController: UIViewController, Previewable {
     }
     
     // :nodoc:
-    public func preview(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
+    public func preview(_ coordinate: CLLocationCoordinate2D,
+                        animated: Bool = true,
+                        completion: (() -> Void)? = nil) {
         preview(Waypoint(coordinate: coordinate),
-                animated: animated)
+                animated: animated,
+                completion: completion)
     }
     
     // :nodoc:
-    public func preview(_ waypoint: Waypoint, animated: Bool = true) {
+    public func preview(_ waypoint: Waypoint,
+                        animated: Bool = true,
+                        completion: (() -> Void)? = nil) {
         let destinationOptions = DestinationOptions(waypoint: waypoint)
         
         // If `DestinationPreviewViewController` is already the topmost preview banner - update its
@@ -462,7 +285,7 @@ open class PreviewViewController: UIViewController, Previewable {
         } else {
             destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
             destinationPreviewViewController.delegate = self
-            pushBanner(destinationPreviewViewController, animated: animated)
+            push(destinationPreviewViewController, animated: animated)
         }
         
         addDestinationAnnotation(waypoint.coordinate)
@@ -493,7 +316,7 @@ open class PreviewViewController: UIViewController, Previewable {
         } else {
             routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
             routesPreviewViewController.delegate = self
-            pushBanner(routesPreviewViewController, animated: animated)
+            push(routesPreviewViewController, animated: animated)
         }
         
         showcase(routeResponse: routeResponse,
@@ -553,10 +376,6 @@ open class PreviewViewController: UIViewController, Previewable {
     
     // MARK: - Event handlers
     
-    @objc func didPressBackButton() {
-        popBanner(.bottomLeading)
-    }
-    
     @objc func didPressDebugButton() {
         // TODO: Implement debug view presentation.
     }
@@ -571,9 +390,9 @@ extension PreviewViewController: NavigationMapViewDelegate {
     }
 }
 
-// MARK: - DestinationPreviewViewControllerDelegate and RoutesPreviewViewControllerDelegate methods
+// MARK: - DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate and PreviewDismissalViewControllerDelegate methods
 
-extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate {
+extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate, PreviewDismissalViewControllerDelegate {
     
     func willPreviewRoutes(_ destinationPreviewViewController: DestinationPreviewViewController) {
         delegate?.willPreviewRoutes(self)
@@ -585,6 +404,12 @@ extension PreviewViewController: DestinationPreviewViewControllerDelegate, Route
     
     func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController) {
         delegate?.willBeginActiveNavigation(self)
+    }
+    
+    func didDismiss(_ previewDismissalViewController: PreviewDismissalViewController) {
+        popBanner(.bottomLeading,
+                  animated: true,
+                  completion: nil)
     }
 }
 
@@ -602,5 +427,48 @@ extension PreviewViewController: StyleManagerDelegate {
         if navigationView.navigationMapView.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
             navigationView.navigationMapView.mapView.mapboxMap.style.uri = StyleURI(url: style.mapStyleURL)
         }
+    }
+}
+
+// MARK: - BannerPresentationDelegate methods
+
+extension PreviewViewController: BannerPresentationDelegate {
+    
+    func bannerWillAppear(_ presenter: BannerPresentation,
+                          banner: Banner) {
+        if banner is DestinationPreviewViewController || banner is RoutesPreviewViewController {
+            navigationView.wayNameView.hide()
+            navigationView.speedLimitView.hide()
+            navigationView.navigationMapView.navigationCamera.stop()
+        }
+        
+        delegate?.previewViewController(self, willPresent: banner)
+    }
+    
+    func bannerDidAppear(_ presenter: BannerPresentation,
+                         banner: Banner) {
+        delegate?.previewViewController(self, didPresent: banner)
+    }
+    
+    func bannerWillDisappear(_ presenter: BannerPresentation,
+                             banner: Banner) {
+        delegate?.previewViewController(self, willDismiss: banner)
+    }
+    
+    func bannerDidDisappear(_ presenter: BannerPresentation,
+                            banner: Banner) {
+        if banner is DestinationPreviewViewController {
+            pointAnnotationManager?.annotations = []
+        } else if banner is RoutesPreviewViewController {
+            navigationView.navigationMapView.removeWaypoints()
+            navigationView.navigationMapView.removeRoutes()
+        }
+        
+        if topBanner(.bottomLeading) == nil {
+            navigationView.wayNameView.show()
+            navigationView.speedLimitView.show()
+        }
+        
+        delegate?.previewViewController(self, didDismiss: banner)
     }
 }
