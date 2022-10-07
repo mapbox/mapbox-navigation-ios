@@ -6,9 +6,9 @@
 
 * This library now requires a minimum deployment target of iOS 12.0 or above. iOS 11._x_ is no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 * MapboxCoreNavigation now requires [MapboxDirections v2.8.0-alpha.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-alpha.2). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v116._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/116.0.0). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v117._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/117.0.0). ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxNavigation now requires [MapboxMaps v10.9.0-beta.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0-beta.2). ([#4183](https://github.com/mapbox/mapbox-navigation-ios/pull/4183))
+* MapboxNavigation now requires [MapboxMaps v10.9.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0-rc.1). ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 
 ### Routing
 
