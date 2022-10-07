@@ -38,9 +38,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter route: The initial route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(route: Route) {
-        super.init()
-        commonInit(for: route, currentDistance: 0, currentSpeed: 0)
+    public convenience init(route: Route) {
+        self.init(route: route, currentDistance: 0, currentSpeed: 0)
     }
 
     /**
@@ -49,22 +48,25 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(routeProgress: RouteProgress) {
-        super.init()
-        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled, speed: currentSpeed)
-        commonInit(for: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
+    public convenience init(routeProgress: RouteProgress) {
+        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled, speed: 0)
+        self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
     }
 
-    private func commonInit(for route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
+    private init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
         self.currentSpeed = currentSpeed
         self.currentDistance = currentDistance
         self.route = route
         if currentDistance != 0 {
             self.remainingRouteShape = route.shape?.trimmed(from: currentDistance, to: LocationDistance.infinity)
         }
+        self.remainingRouteShape = route.shape
+        self.locations = route.shape?.coordinates.simulatedLocationsWithTurnPenalties()
+
+        super.init()
 
         restartTimer()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
@@ -168,7 +170,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let (
             expectedSegmentTravelTimes,
             originalShape
-        ) = DispatchQueue.main.sync {
+        ) = onMainQueueSync {
             (
                 routeProgress?.currentLeg.expectedSegmentTravelTimes,
                 route?.shape
@@ -194,7 +196,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                       course: 0,
                                       speed: currentSpeed,
                                       timestamp: getNextDate())
-            DispatchQueue.main.async { [weak self] in
+            onMainQueueSync { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.locationManager?(self, didUpdateLocations: [location])
             }
@@ -235,7 +237,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
 
         self.simulatedLocation = location
 
-        DispatchQueue.main.sync {
+        onMainQueueSync {
             delegate?.locationManager?(self, didUpdateLocations: [location])
         }
         currentDistance += remainingShape.distance(to: newCoordinate) ?? 0
@@ -283,7 +285,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
                 newClosestCoordinate = router.routeProgress.route.shape?.coordinateFromStart(distance: self.currentDistance)
             }
 
-            DispatchQueue.main.sync {
+            onMainQueueSync {
                 self.routeProgress = router.routeProgress
                 self.route = router.routeProgress.route
             }
