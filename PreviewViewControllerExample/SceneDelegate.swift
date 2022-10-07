@@ -9,13 +9,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    var routeResponse: RouteResponse?
-    
     var routeIndex: Int = 0
     
     var coordinates: [CLLocationCoordinate2D] = []
     
     var previewViewController: PreviewViewController!
+    
+    let animationDuration = 0.5
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }

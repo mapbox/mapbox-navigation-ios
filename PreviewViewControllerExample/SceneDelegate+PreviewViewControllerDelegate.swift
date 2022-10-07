@@ -10,15 +10,11 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     func requestRoutes(_ completion: @escaping (_ routeResponse: RouteResponse) -> Void) {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         
-        Directions.shared.calculate(navigationRouteOptions) { [weak self] (_, result) in
+        Directions.shared.calculate(navigationRouteOptions) { (_, result) in
             switch result {
             case .failure(let error):
                 print("Error occured while requesting routes: \(error.localizedDescription)")
             case .success(let routeResponse):
-                guard let self = self else { return }
-                
-                self.routeResponse = routeResponse
-                
                 completion(routeResponse)
             }
         }
@@ -31,7 +27,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func willBeginActiveNavigation(_ previewViewController: PreviewViewController) {
-        if let routeResponse = routeResponse {
+        if let previewViewController = previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
+            let routeResponse = previewViewController.routesPreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
         } else {
             requestRoutes { [weak self] routeResponse in
@@ -63,20 +60,20 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didSelect route: Route) {
-        guard let routeResponse = routeResponse,
-              let routes = routeResponse.routes,
+        guard let routesPreviewViewController = previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController,
+              let routes = routesPreviewViewController.routesPreviewOptions.routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
             return
         }
         
         self.routeIndex = routeIndex
         
-        previewViewController.preview(routeResponse, routeIndex: routeIndex)
+        previewViewController.preview(routesPreviewViewController.routesPreviewOptions.routeResponse, routeIndex: routeIndex)
     }
     
     func startActiveNavigation(for routeResponse: RouteResponse) {
-        let duration = 1.0
-        self.previewViewController.navigationView.bottomBannerContainerView.hide(duration: duration,
+        self.previewViewController.navigationView.topBannerContainerView.hide(duration: animationDuration)
+        self.previewViewController.navigationView.bottomBannerContainerView.hide(duration: animationDuration,
                                                                                  animations: { [weak self] in
             guard let self = self else { return }
             self.previewViewController.navigationView.floatingStackView.alpha = 0.0
@@ -99,7 +96,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             
             self.previewViewController.present(navigationViewController,
                                                animated: true,
-                                               completion: {
+                                               completion: { [weak self] in
+                guard let self = self else { return }
                 // Make `SceneDelegate` delegate of `NavigationViewController` to be notified about
                 // its dismissal.
                 navigationViewController.delegate = self
@@ -118,8 +116,17 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                 navigationViewController.navigationView.topBannerContainerView.isHidden = true
                 navigationViewController.navigationView.bottomBannerContainerView.isHidden = true
                 
-                navigationViewController.navigationView.topBannerContainerView.show(duration: duration)
-                navigationViewController.navigationView.bottomBannerContainerView.show(duration: duration)
+                navigationViewController.navigationView.speedLimitView.alpha = 0.0
+                navigationViewController.navigationView.wayNameView.alpha = 0.0
+                navigationViewController.navigationView.floatingStackView.alpha = 0.0
+                
+                navigationViewController.navigationView.topBannerContainerView.show(duration: self.animationDuration,
+                                                                                    animations: {
+                    navigationViewController.navigationView.speedLimitView.alpha = 1.0
+                    navigationViewController.navigationView.wayNameView.alpha = 1.0
+                    navigationViewController.navigationView.floatingStackView.alpha = 1.0
+                })
+                navigationViewController.navigationView.bottomBannerContainerView.show(duration: self.animationDuration)
             })
         })
     }
