@@ -152,19 +152,23 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         return NSAttributedString(string: "")
     }
     
-    func bannerWillAppear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent banner: Banner) {
         // No-op
     }
     
-    func bannerDidAppear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didPresent banner: Banner) {
         // No-op
     }
     
-    func bannerWillDisappear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willDismiss banner: Banner) {
         // No-op
     }
     
-    func bannerDidDisappear(_ previewViewController: PreviewViewController, banner: BannerPreviewing) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didDismiss banner: Banner) {
         // No-op
     }
 }
