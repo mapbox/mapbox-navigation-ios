@@ -36,6 +36,7 @@
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
 * MapboxMobileEvents dependency is replaced with CoreTelemetry (part of MapboxCommon). ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favour of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
+* Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
 
 ## v2.8.1
 

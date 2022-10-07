@@ -444,6 +444,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigationService()
         setupVoiceController()
         setupNavigationCamera()
+        
+        if usesNightStyleInDarkMode && self.traitCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
+        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -454,6 +458,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         notifyUserAboutLowVolumeIfNeeded()
+    }
+    
+    override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if usesNightStyleInDarkMode {
+            transitionStyle(to: newCollection)
+        }
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
@@ -791,6 +801,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var waypointStyle: WaypointStyle = .annotation
     
+    /**
+     Controls whether night style will be used whenever dark mode is enabled. Defaults to `false`.
+     */
+    public var usesNightStyleInDarkMode: Bool = false
+    
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
     var currentLeg: RouteLeg?
@@ -818,6 +833,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
             return currentStatusBarStyle
+        }
+    }
+    
+    func transitionStyle(to newCollection: UITraitCollection) {
+        if newCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
+        } else {
+            styleManager.applyStyle(type: .day)
         }
     }
 }
