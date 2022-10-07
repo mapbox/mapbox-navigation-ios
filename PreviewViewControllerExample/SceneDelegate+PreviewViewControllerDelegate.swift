@@ -44,7 +44,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     func previewViewController(_ previewViewController: PreviewViewController,
                                didAddDestinationBetween coordinates: [CLLocationCoordinate2D]) {
         // In case if `RoutesPreviewViewController` don't do anything.
-        if previewViewController.topmostBottomBanner is RoutesPreviewViewController {
+        if previewViewController.topBanner(.bottomLeading) is RoutesPreviewViewController {
             return
         } else {
             self.coordinates = coordinates

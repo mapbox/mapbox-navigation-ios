@@ -37,7 +37,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 navigationMapView.userLocationStyle = .puck2D()
                 
                 // Depending on currently presented banner perform required map or camera modifications.
-                if let routesPreviewViewController = self.previewViewController.topmostBottomBanner as? RoutesPreviewViewController {
+                if let routesPreviewViewController = self.previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
                     let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
                     self.previewViewController.showcase(routeResponse: routeResponse)
                     navigationView.bottomBannerContainerView.show(duration: duration,
@@ -45,7 +45,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                         guard let self = self else { return }
                         self.previewViewController.navigationView.floatingStackView.alpha = 1.0
                     })
-                } else if self.previewViewController.topmostBottomBanner is DestinationPreviewViewController {
+                } else if self.previewViewController.topBanner(.bottomLeading) is DestinationPreviewViewController {
                     navigationView.bottomBannerContainerView.show()
                 }
             }
