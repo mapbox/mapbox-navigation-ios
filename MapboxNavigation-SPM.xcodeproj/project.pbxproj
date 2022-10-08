@@ -738,6 +738,7 @@
 		};
 		8A9C67F22891F2B100C28B2B /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
