@@ -109,8 +109,8 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     open override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        navigationView.setupTopBannerContainerViewHeightLayoutConstraints()
-        navigationView.setupBottomBannerContainerViewHeightLayoutConstraints()
+        navigationView.setupTopBannerContainerViewHeightLayoutConstraints(topmostTopBanner?.bannerConfiguration.height)
+        navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(topmostBottomBanner?.bannerConfiguration.height)
     }
     
     // MARK: - UIViewController setting-up methods
@@ -286,6 +286,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
             destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
             destinationPreviewViewController.delegate = self
             push(destinationPreviewViewController, animated: animated)
+            presentPreviewDismissalViewController(animated)
         }
         
         addDestinationAnnotation(waypoint.coordinate)
@@ -345,6 +346,12 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                                                   animated: animated,
                                                   duration: duration,
                                                   completion: completion)
+    }
+    
+    func presentPreviewDismissalViewController(_ animated: Bool) {
+        let previewDismissalViewController = PreviewDismissalViewController()
+        previewDismissalViewController.delegate = self
+        push(previewDismissalViewController, animated: animated)
     }
     
     func fitCamera(to routeResponse: RouteResponse) {
@@ -410,6 +417,13 @@ extension PreviewViewController: DestinationPreviewViewControllerDelegate, Route
         popBanner(.bottomLeading,
                   animated: true,
                   completion: nil)
+        
+        // In case if there are no more banners in stack - dismiss top banner as well.
+        if topBanner(.bottomLeading) == nil {
+            popBanner(.topLeading,
+                      animated: true,
+                      completion: nil)
+        }
     }
 }
 

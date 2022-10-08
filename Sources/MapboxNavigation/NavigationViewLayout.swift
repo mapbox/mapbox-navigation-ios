@@ -326,7 +326,7 @@ extension NavigationView {
         // (height of top safe area insets).
         let topBannerContainerViewHeight: CGFloat
         if let height = height {
-            topBannerContainerViewHeight = height
+            topBannerContainerViewHeight = height + safeAreaInsets.top
         } else {
             topBannerContainerViewHeight = safeAreaInsets.top
         }
@@ -349,7 +349,7 @@ extension NavigationView {
         // specific trait collection.
         let bottomBannerContainerViewHeight: CGFloat
         if let height = height {
-            bottomBannerContainerViewHeight = height
+            bottomBannerContainerViewHeight = height + safeAreaInsets.bottom
         } else {
             if traitCollection.verticalSizeClass == .regular {
                 bottomBannerContainerViewHeight = 80.0 + safeAreaInsets.bottom

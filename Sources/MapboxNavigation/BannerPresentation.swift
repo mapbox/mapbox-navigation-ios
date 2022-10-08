@@ -123,7 +123,7 @@ extension BannerPresentation {
             topBanners.push(banner)
             
             // Update top banner constraints to change its height if needed.
-            navigationView.setupTopBannerContainerViewHeightLayoutConstraints()
+            navigationView.setupTopBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
             
             // In case if banner is already shown - hide it and then present another one.
             if let _ = previousTopmostTopBanner {
@@ -146,7 +146,7 @@ extension BannerPresentation {
             let previousTopmostBottomBanner = topmostBottomBanner
             bottomBanners.push(banner)
             
-            navigationView.setupBottomBannerContainerViewHeightLayoutConstraints()
+            navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
             
             // In case if banner is already shown - hide it and then present another one.
             if let _ = previousTopmostBottomBanner {
