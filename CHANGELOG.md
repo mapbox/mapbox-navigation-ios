@@ -16,6 +16,7 @@
 * Added the `NavigationViewController(for:routeIndex:navigationOptions:)` initializer to start turn-by-turn navigation using map matching response. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * Fixed an issue where continuous alternative route lines and their corresponding callouts were misplaced on long routes. ([#4176](https://github.com/mapbox/mapbox-navigation-ios/pull/4176))
 * Added `ReplayLocationManager(history:)` and `MapboxNavigationService(history:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:)` for replaying trips recorded by a history file. ([#4194](https://github.com/mapbox/mapbox-navigation-ios/pull/4194))
+* Fixed an issue where after route refresh, the `RouteStepProgress.userDistanceToUpcomingIntersection`, `RouteStepProgress.intersectionsIncludingUpcomingManeuverIntersection`, `RouteStepProgress.intersectionDistances` and `RouteStepProgress.intersectionIndex` are all set to default values. ([#4193](https://github.com/mapbox/mapbox-navigation-ios/pull/4193))
 
 ### Map
 
