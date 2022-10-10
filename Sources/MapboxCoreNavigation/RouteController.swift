@@ -398,44 +398,13 @@ open class RouteController: NSObject {
         updateSpokenInstructionProgress(status: status, willReRoute: isRerouting)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
-        updateDistanceToIntersection(from: snappedLocation)
+        routeProgress.updateDistanceToIntersection(from: snappedLocation)
         
         rerouteAfterArrivalIfNeeded(snappedLocation, status: status)
         
         if status.routeState != .complete {
             // Check for faster route proactively (if reroutesProactively is enabled)
             refreshAndCheckForFasterRoute(from: snappedLocation, routeProgress: routeProgress)
-        }
-    }
-    
-    func updateDistanceToIntersection(from location: CLLocation) {
-        guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
-        
-        // The intersections array does not include the upcoming maneuver intersection.
-        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
-           let upcomingIntersection = upcomingStep.intersections?.first {
-            intersections += [upcomingIntersection]
-        }
-        
-        routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
-        
-        if let shape = routeProgress.currentLegProgress.currentStepProgress.step.shape,
-           let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
-            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
-        }
-        
-        updateIntersectionDistances()
-    }
-    
-    func updateIntersectionDistances() {
-        if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
-            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
-            
-            if let shape = routeProgress.currentLegProgress.currentStep.shape,
-               let intersections = routeProgress.currentLegProgress.currentStep.intersections {
-                let distances: [CLLocationDistance] = intersections.compactMap { shape.distance(from: shape.coordinates.first, to: $0.location) }
-                routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
-            }
         }
     }
     
