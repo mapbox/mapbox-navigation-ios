@@ -43,6 +43,7 @@
 		2B27557F2860B01A002D1CAD /* HistoryRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B27557E2860B01A002D1CAD /* HistoryRecorder.swift */; };
 		2B28AD7D284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD7C284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift */; };
 		2B28E22127EB48C60029E4C1 /* RerouteControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28E22027EB48C60029E4C1 /* RerouteControllerDelegate.swift */; };
+		2B2DC69728F45CA00019232C /* HistoryFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2DC69628F45CA00019232C /* HistoryFileReader.swift */; };
 		2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED38B2609FA7900861A84 /* ArrivalController.swift */; };
 		2B3ED3962609FB2300861A84 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3952609FB2300861A84 /* CameraController.swift */; };
 		2B3ED3B4260A162900861A84 /* NavigationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3B3260A162900861A84 /* NavigationViewData.swift */; };
@@ -635,6 +636,7 @@
 		2B27557E2860B01A002D1CAD /* HistoryRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecorder.swift; sourceTree = "<group>"; };
 		2B28AD7C284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternativeRouteDetectionStrategy.swift; sourceTree = "<group>"; };
 		2B28E22027EB48C60029E4C1 /* RerouteControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteControllerDelegate.swift; sourceTree = "<group>"; };
+		2B2DC69628F45CA00019232C /* HistoryFileReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryFileReader.swift; sourceTree = "<group>"; };
 		2B3ED38B2609FA7900861A84 /* ArrivalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalController.swift; sourceTree = "<group>"; };
 		2B3ED3952609FB2300861A84 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		2B3ED3B3260A162900861A84 /* NavigationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewData.swift; sourceTree = "<group>"; };
@@ -1307,6 +1309,17 @@
 				8AB316C826BCA56D00C3AC76 /* UIViewController.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		2B2DC69528F45C770019232C /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				8AA0386227F7B3F50007BD2D /* BottomBannerViewControllerDelegate.swift */,
+				8A12E863282484B20071AF00 /* BannerContainerViewDelegate.swift */,
+				8AA0386027F7B3DE0007BD2D /* BottomBannerViewControllerLayout.swift */,
+				8AB97C1F280E021800792939 /* BannerContainerView.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		2BE701A4253760B300F46E4E /* RouteAlerts */ = {
@@ -2065,6 +2078,7 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				2B2DC69528F45C770019232C /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2106,6 +2120,7 @@
 				2BEF16462775C8FD0085E3C6 /* MapMatchingResult.swift */,
 				41B901EA271048BD007F9F78 /* HistoryRecording.swift */,
 				2B27557E2860B01A002D1CAD /* HistoryRecorder.swift */,
+				2B2DC69628F45CA00019232C /* HistoryFileReader.swift */,
 				E2108B2F285866C200CB0875 /* NavigationLog.swift */,
 				2BF398C2274FE99A000C9A72 /* HandlerFactory.swift */,
 				2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */,
@@ -3040,6 +3055,7 @@
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,
 				DA5F44DC25F07D1500F573EC /* RoadObjectEdgeLocation.swift in Sources */,
 				2B42586D2657BF9100B487C3 /* TilesetDescriptorFactory.swift in Sources */,
+				2B2DC69728F45CA00019232C /* HistoryFileReader.swift in Sources */,
 				118D883B26F8CA0700B2ED7B /* NavigationEventsManager.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */,
 				417D127726E24D0800E0AB16 /* FreeDriveEventDetails.swift in Sources */,
