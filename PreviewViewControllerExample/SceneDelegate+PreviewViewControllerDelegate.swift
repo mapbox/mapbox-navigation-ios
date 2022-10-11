@@ -20,7 +20,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
     }
     
-    func willPreviewRoutes(_ previewViewController: PreviewViewController) {
+    func didPressPreviewRoutesButton(_ previewViewController: PreviewViewController) {
         requestRoutes { [weak self] routeResponse in
             guard let self = self else { return }
             previewViewController.preview(routeResponse,
@@ -29,7 +29,23 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
     }
     
-    func willBeginActiveNavigation(_ previewViewController: PreviewViewController) {
+    func didPressDismissBannerButton(_ previewViewController: PreviewViewController) {
+        previewViewController.dismissBanner(at: .bottomLeading,
+                                            animated: shouldAnimate,
+                                            duration: animationDuration)
+        
+        // In case if there are no more bottom banners - dismiss top banner as well.
+        if previewViewController.topBanner(.bottomLeading) == nil {
+            previewViewController.dismissBanner(at: .topLeading,
+                                                animated: shouldAnimate,
+                                                duration: animationDuration,
+                                                animations: {
+                previewViewController.navigationView.topBannerContainerView.alpha = 0.0
+            })
+        }
+    }
+    
+    func didPressBeginActiveNavigationButton(_ previewViewController: PreviewViewController) {
         if let previewViewController = previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
             let routeResponse = previewViewController.routesPreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
@@ -86,22 +102,6 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                       routeIndex: routeIndex,
                                       animated: shouldAnimate,
                                       duration: animationDuration)
-    }
-    
-    func didPressBannerDismissalButton(_ previewViewController: PreviewViewController) {
-        previewViewController.dismissBanner(at: .bottomLeading,
-                                            animated: shouldAnimate,
-                                            duration: animationDuration)
-        
-        // In case if there are no more bottom banners - dismiss top banner as well.
-        if previewViewController.topBanner(.bottomLeading) == nil {
-            previewViewController.dismissBanner(at: .topLeading,
-                                                animated: shouldAnimate,
-                                                duration: animationDuration,
-                                                animations: {
-                previewViewController.navigationView.topBannerContainerView.alpha = 0.0
-            })
-        }
     }
     
     func startActiveNavigation(for routeResponse: RouteResponse) {
