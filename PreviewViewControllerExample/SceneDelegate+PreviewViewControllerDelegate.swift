@@ -105,20 +105,21 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func startActiveNavigation(for routeResponse: RouteResponse) {
-        self.previewViewController.navigationView.topBannerContainerView.hide(animated: shouldAnimate,
-                                                                              duration: animationDuration,
-                                                                              animations: {
+        previewViewController.navigationView.topBannerContainerView.hide(animated: shouldAnimate,
+                                                                         duration: animationDuration,
+                                                                         animations: {
             self.previewViewController.navigationView.topBannerContainerView.alpha = 0.0
         })
         
-        self.previewViewController.navigationView.bottomBannerContainerView.hide(animated: shouldAnimate,
-                                                                                 duration: animationDuration,
-                                                                                 animations: { [weak self] in
+        previewViewController.navigationView.bottomBannerContainerView.hide(animated: shouldAnimate,
+                                                                            duration: animationDuration,
+                                                                            animations: { [weak self] in
             guard let self = self else { return }
             self.previewViewController.navigationView.floatingStackView.alpha = 0.0
             self.previewViewController.navigationView.bottomBannerContainerView.alpha = 0.0
         }, completion: { [weak self] _ in
             guard let self = self else { return }
+            
             let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                             routeIndex: self.routeIndex)
             
@@ -130,7 +131,6 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             
             let navigationViewController = NavigationViewController(for: indexedRouteResponse,
                                                                     navigationOptions: navigationOptions)
-            
             navigationViewController.modalPresentationStyle = .fullScreen
             navigationViewController.transitioningDelegate = self
             
@@ -160,22 +160,18 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                     navigationViewController.navigationView.speedLimitView.alpha = 0.0
                     navigationViewController.navigationView.wayNameView.alpha = 0.0
                     navigationViewController.navigationView.floatingStackView.alpha = 0.0
-                    
                     navigationViewController.navigationView.topBannerContainerView.alpha = 0.0
+                    navigationViewController.navigationView.bottomBannerContainerView.alpha = 0.0
                 }
                 
                 navigationViewController.navigationView.topBannerContainerView.show(animated: self.shouldAnimate,
                                                                                     duration: self.animationDuration,
                                                                                     animations: {
-                    navigationViewController.navigationView.topBannerContainerView.alpha = 1.0
                     navigationViewController.navigationView.speedLimitView.alpha = 1.0
                     navigationViewController.navigationView.wayNameView.alpha = 1.0
                     navigationViewController.navigationView.floatingStackView.alpha = 1.0
+                    navigationViewController.navigationView.topBannerContainerView.alpha = 1.0
                 })
-                
-                if self.shouldAnimate {
-                    navigationViewController.navigationView.bottomBannerContainerView.alpha = 0.0
-                }
                 
                 navigationViewController.navigationView.bottomBannerContainerView.show(animated: self.shouldAnimate,
                                                                                        duration: self.animationDuration,

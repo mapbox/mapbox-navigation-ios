@@ -21,7 +21,9 @@ extension SceneDelegate: NavigationViewControllerDelegate {
             navigationViewController.navigationView.floatingStackView.alpha = 0.0
         },
                                                                                completion: { _ in
-            navigationViewController.dismiss(animated: true) {
+            navigationViewController.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                
                 let navigationView = self.previewViewController.navigationView
                 let navigationMapView = navigationView.navigationMapView
                 
