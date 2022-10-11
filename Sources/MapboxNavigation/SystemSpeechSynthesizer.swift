@@ -64,7 +64,10 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
                                         with: nil)
             return
         }
-        
+        forceSpeak(instruction, during: legProgress, locale: locale)
+    }
+    
+    open func forceSpeak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
         guard let locale = locale ?? self.locale else {
             self.delegate?.speechSynthesizer(self,
                                              encounteredError: SpeechError.undefinedSpeechLocale(instruction: instruction))

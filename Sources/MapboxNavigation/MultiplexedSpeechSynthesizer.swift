@@ -108,6 +108,11 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
         currentLegProgress = legProgress
         speechSynthesizers.first?.speak(instruction, during: legProgress, locale: locale)
     }
+
+    public func forceSpeak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
+        currentLegProgress = legProgress
+        speechSynthesizers.first?.forceSpeak(instruction, during: legProgress, locale: locale)
+    }
     
     public func stopSpeaking() {
         speechSynthesizers.forEach { $0.stopSpeaking() }
