@@ -103,21 +103,21 @@ public final class HistoryFileReader {
     }
     
     private func process(record: HistoryRecord) -> HistoryEvent? {
+        let timestamp = TimeInterval(Double(record.timestampNanoseconds) / 1e9)
         switch record.type {
         case .setRoute:
             guard let event = record.setRoute,
                   let routeResponse = process(setRoute: event) else { break }
-            return HistorySetRoute(timestamp: TimeInterval(record.timestampNanoseconds),
+            return HistorySetRoute(timestamp: timestamp,
                                    routeResponse: routeResponse)
         case .updateLocation:
             guard let event = record.updateLocation else { break }
-            return HistoryUpdateLocation(timestamp: TimeInterval(record.timestampNanoseconds),
+            return HistoryUpdateLocation(timestamp: timestamp,
                                          location: process(updateLocation: event))
         default:
-            // Ignored
             break
         }
-        return nil
+        return HistoryEvent(timestamp: timestamp)
     }
     
     private func process(setRoute: SetRouteHistoryRecord) -> IndexedRouteResponse? {

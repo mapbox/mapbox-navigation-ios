@@ -50,6 +50,8 @@
 		2B3ED3B4260A162900861A84 /* NavigationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3B3260A162900861A84 /* NavigationViewData.swift */; };
 		2B42586D2657BF9100B487C3 /* TilesetDescriptorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B42586B2657BF9000B487C3 /* TilesetDescriptorFactory.swift */; };
 		2B42586E2657BF9100B487C3 /* TileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B42586C2657BF9100B487C3 /* TileStore.swift */; };
+		2B45758B28F56A160074039A /* ag_history.pbf.gz in Resources */ = {isa = PBXBuildFile; fileRef = 2B45758A28F56A160074039A /* ag_history.pbf.gz */; };
+		2B45758D28F56A4C0074039A /* HistoryFileReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B45758C28F56A4C0074039A /* HistoryFileReaderTests.swift */; };
 		2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5407EA24470B0A006C820B /* AVAudioSession.swift */; };
 		2B5A4AC728099FA900170A2B /* AlternativeRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5A4AC428099FA900170A2B /* AlternativeRoute.swift */; };
 		2B5A4ACB2809A03A00170A2B /* routeResponseWithAlternatives.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B5A4AC928099FD500170A2B /* routeResponseWithAlternatives.json */; };
@@ -644,6 +646,8 @@
 		2B3ED3B3260A162900861A84 /* NavigationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewData.swift; sourceTree = "<group>"; };
 		2B42586B2657BF9000B487C3 /* TilesetDescriptorFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TilesetDescriptorFactory.swift; sourceTree = "<group>"; };
 		2B42586C2657BF9100B487C3 /* TileStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileStore.swift; sourceTree = "<group>"; };
+		2B45758A28F56A160074039A /* ag_history.pbf.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = ag_history.pbf.gz; sourceTree = "<group>"; };
+		2B45758C28F56A4C0074039A /* HistoryFileReaderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryFileReaderTests.swift; sourceTree = "<group>"; };
 		2B5407EA24470B0A006C820B /* AVAudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioSession.swift; sourceTree = "<group>"; };
 		2B5A4AC428099FA900170A2B /* AlternativeRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternativeRoute.swift; sourceTree = "<group>"; };
 		2B5A4AC928099FD500170A2B /* routeResponseWithAlternatives.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeResponseWithAlternatives.json; sourceTree = "<group>"; };
@@ -1920,6 +1924,7 @@
 				8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */,
 				8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */,
 				E2D14969265CFB4D008135A3 /* Images.xcassets */,
+				2B45758A28F56A160074039A /* ag_history.pbf.gz */,
 				E2D1496A265CFB4D008135A3 /* md5_crazy_strings.txt */,
 				E2D14967265CFB4D008135A3 /* waypoint-after-turn.json */,
 				2B5A4AC928099FD500170A2B /* routeResponseWithAlternatives.json */,
@@ -2174,6 +2179,7 @@
 				2E82B9DD26E6237600B7837F /* CongestionLevelTests.swift */,
 				DAD903AE23E3DCC80057CF1F /* DateTests.swift */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
+				2B45758C28F56A4C0074039A /* HistoryFileReaderTests.swift */,
 				11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
@@ -2632,6 +2638,7 @@
 				B4A78D26261FD47700FDF212 /* route-with-not-present-road-classes.json in Resources */,
 				E2D1497D265CFB5B008135A3 /* 878.gph.gz in Resources */,
 				B4A78D27261FD47700FDF212 /* DCA-Arboretum.json in Resources */,
+				2B45758B28F56A160074039A /* ag_history.pbf.gz in Resources */,
 				B4A78D28261FD47700FDF212 /* routeWithInstructions.json in Resources */,
 				B4A78D29261FD47700FDF212 /* 9-legged-route.json in Resources */,
 				8A4038F92759526800F8C75C /* route-with-10-legs.json in Resources */,
@@ -3181,6 +3188,7 @@
 				E2814D982693412E000AD987 /* BillingHandlerTests.swift in Sources */,
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
 				B426FEF425FFD5DC001884C8 /* RouteControllerTests.swift in Sources */,
+				2B45758D28F56A4C0074039A /* HistoryFileReaderTests.swift in Sources */,
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				DA7A97CF26A7613D001B6A9A /* RouteOptionsTests.swift in Sources */,
 				8A9270EA2704F6CC00B606D9 /* BundleAdditionsTests.swift in Sources */,
