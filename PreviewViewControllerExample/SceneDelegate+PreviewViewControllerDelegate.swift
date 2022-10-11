@@ -35,7 +35,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                             duration: animationDuration)
         
         // In case if there are no more bottom banners - dismiss top banner as well.
-        if previewViewController.topBanner(.bottomLeading) == nil {
+        if previewViewController.topBanner(at: .bottomLeading) == nil {
             previewViewController.dismissBanner(at: .topLeading,
                                                 animated: shouldAnimate,
                                                 duration: animationDuration,
@@ -46,7 +46,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     }
     
     func didPressBeginActiveNavigationButton(_ previewViewController: PreviewViewController) {
-        if let previewViewController = previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
+        if let previewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
             let routeResponse = previewViewController.routesPreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
         } else {
@@ -60,7 +60,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     func previewViewController(_ previewViewController: PreviewViewController,
                                didAddDestinationBetween coordinates: [CLLocationCoordinate2D]) {
         // In case if `RoutesPreviewViewController` is shown - don't do anything.
-        if previewViewController.topBanner(.bottomLeading) is RoutesPreviewViewController {
+        if previewViewController.topBanner(at: .bottomLeading) is RoutesPreviewViewController {
             return
         } else {
             self.coordinates = coordinates
@@ -73,7 +73,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                          coordinateAccuracy: nil,
                                          name: "Dropped pin")
             
-            if shouldAnimate && !(previewViewController.topBanner(.bottomLeading) is DestinationPreviewViewController) {
+            if shouldAnimate && !(previewViewController.topBanner(at: .bottomLeading) is DestinationPreviewViewController) {
                 previewViewController.navigationView.topBannerContainerView.alpha = 0.0
                 previewViewController.navigationView.bottomBannerContainerView.alpha = 0.0
             }
@@ -90,7 +90,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didSelect route: Route) {
-        guard let routesPreviewViewController = previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController,
+        guard let routesPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController,
               let routes = routesPreviewViewController.routesPreviewOptions.routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
             return
