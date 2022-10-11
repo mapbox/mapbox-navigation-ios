@@ -77,7 +77,9 @@ extension BannerPresentation {
                     navigationView.topBannerContainerView.hide(animated: animated,
                                                                duration: duration,
                                                                animations: animations,
-                                                               completion: { _ in
+                                                               completion: { [weak self] _ in
+                        guard let self = self else { return }
+                        
                         bannerContainerView.subviews.forEach {
                             $0.removeFromSuperview()
                         }
@@ -111,7 +113,9 @@ extension BannerPresentation {
                     navigationView.bottomBannerContainerView.hide(animated: animated,
                                                                   duration: duration,
                                                                   animations: animations,
-                                                                  completion: { _ in
+                                                                  completion: { [weak self] _ in
+                        guard let self = self else { return }
+                        
                         bannerContainerView.subviews.forEach {
                             $0.removeFromSuperview()
                         }
@@ -175,7 +179,9 @@ extension BannerPresentation {
                 navigationView.topBannerContainerView.hide(animated: animated,
                                                            duration: duration,
                                                            animations: animations,
-                                                           completion: { _ in
+                                                           completion: { [weak self] _ in
+                    guard let self = self else { return }
+                    
                     bannerContainerView.subviews.forEach {
                         $0.removeFromSuperview()
                     }
@@ -210,7 +216,9 @@ extension BannerPresentation {
                 navigationView.bottomBannerContainerView.hide(animated: animated,
                                                               duration: duration,
                                                               animations: animations,
-                                                              completion: { _ in
+                                                              completion: { [weak self] _ in
+                    guard let self = self else { return }
+                    
                     bannerContainerView.subviews.forEach {
                         $0.removeFromSuperview()
                     }

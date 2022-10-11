@@ -7,7 +7,7 @@ open class TopBannerView: UIView {
 }
 
 // :nodoc:
-open class TopPaddingView: BottomBannerView {
+open class TopPaddingView: TopBannerView {
     
 }
 
