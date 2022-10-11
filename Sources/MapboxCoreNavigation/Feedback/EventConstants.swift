@@ -19,6 +19,8 @@ enum EventType: String {
     case carplayDisconnect = "navigation.carplay.disconnect"
     case routeRetrieval = "mobile.performance_trace"
     case freeDrive = "navigation.freeDrive"
+    case dropInConnect = "navigation.dropin.connect"
+    case dropInDisconnect = "navigation.dropin.disconnect"
 }
 
 // :nodoc:

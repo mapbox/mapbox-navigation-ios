@@ -365,6 +365,17 @@ open class NavigationEventsManager {
         
         return event
     }
+    
+    public func sendDropInConnectEvent() {
+        // send using navigationservice.eventsmanager
+        let attributes = eventAttributes(type: .dropInConnect)
+        eventsAPI.sendImmediateEvent(with: attributes)
+    }
+    
+    public func sendDropInDisconnectEvent() {
+        let attributes = eventAttributes(type: .dropInDisconnect)
+        eventsAPI.sendImmediateEvent(with: attributes)
+    }
 
     public func sendCarPlayConnectEvent() {
         let attributes = eventAttributes(type: .carplayConnect)

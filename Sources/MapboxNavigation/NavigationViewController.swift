@@ -584,6 +584,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         } else {
             dismiss(animated: true, completion: nil)
         }
+        navigationService.eventsManager.sendDropInDisconnectEvent()
     }
     
     // MARK: Customizing Views and Child View Controllers
@@ -695,6 +696,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         arrivalController?.destination = route?.legs.last?.destination
         reportButton.isHidden = !showsReportFeedback
+        
+        navigationService.eventsManager.sendDropInConnectEvent()
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
