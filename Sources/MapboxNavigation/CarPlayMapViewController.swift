@@ -402,12 +402,12 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let mapboxMapStyle = navigationMapView.mapView.mapboxMap.style
+        let styleURI = StyleURI(url: style.mapStyleURL)
         if mapboxMapStyle.uri?.rawValue != style.mapStyleURL.absoluteString {
-            let styleURI = StyleURI(url: style.mapStyleURL)
             mapboxMapStyle.uri = styleURI
-            // Update the sprite repository of wayNameView when map style changes.
-            wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
         }
+        
+        wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {

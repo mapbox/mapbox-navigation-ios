@@ -1202,13 +1202,12 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     private func updateMapStyle(_ style: Style) {
+        let styleURI = StyleURI(url: style.mapStyleURL)
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            let styleURI = StyleURI(url: style.mapStyleURL)
             navigationMapView?.mapView.mapboxMap.style.uri = styleURI
-            // Update the sprite repository of wayNameView when map style changes.
-            ornamentsController?.updateStyle(styleURI: styleURI)
         }
         
+        ornamentsController?.updateStyle(styleURI: styleURI)
         currentStatusBarStyle = style.statusBarStyle ?? .default
         setNeedsStatusBarAppearanceUpdate()
     }
