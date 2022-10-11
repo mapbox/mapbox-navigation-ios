@@ -15,6 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var previewViewController: PreviewViewController!
     
+    let shouldAnimate = true
+    
     let animationDuration = 0.5
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
