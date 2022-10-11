@@ -42,15 +42,18 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 if let routesPreviewViewController = self.previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
                     let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
                     self.previewViewController.showcase(routeResponse: routeResponse,
+                                                        animated: self.shouldAnimate,
                                                         duration: self.animationDuration)
                 }
                 
-                navigationView.topBannerContainerView.show(duration: self.animationDuration,
+                navigationView.topBannerContainerView.show(animated: self.shouldAnimate,
+                                                           duration: self.animationDuration,
                                                            animations: {
                     navigationView.topBannerContainerView.alpha = 1.0
                 })
                 
-                navigationView.bottomBannerContainerView.show(duration: self.animationDuration,
+                navigationView.bottomBannerContainerView.show(animated: self.shouldAnimate,
+                                                              duration: self.animationDuration,
                                                               animations: {
                     navigationView.floatingStackView.alpha = 1.0
                     navigationView.bottomBannerContainerView.alpha = 1.0
