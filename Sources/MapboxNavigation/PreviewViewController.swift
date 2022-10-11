@@ -20,16 +20,6 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     
     var bottomBanners = Stack<Banner>()
     
-    // :nodoc:
-    public func topBanner(_ position: BannerPosition) -> Banner? {
-        switch position {
-        case .topLeading:
-            return topmostTopBanner
-        case .bottomLeading:
-            return topmostBottomBanner
-        }
-    }
-    
     // MARK: - PreviewViewController properties
     
     // :nodoc:
@@ -356,7 +346,6 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                          routeIndex: Int = 0,
                          animated: Bool = true,
                          duration: TimeInterval = 1.0,
-                         animations: (() -> Void)? = nil,
                          completion: NavigationMapView.AnimationCompletionHandler? = nil) {
         guard var routes = routeResponse.routes else { return }
         
@@ -398,6 +387,16 @@ open class PreviewViewController: UIViewController, BannerPresentation {
              duration: duration,
              animations: animations,
              completion: completion)
+    }
+    
+    // :nodoc:
+    public func topBanner(at position: BannerPosition) -> Banner? {
+        switch position {
+        case .topLeading:
+            return topmostTopBanner
+        case .bottomLeading:
+            return topmostBottomBanner
+        }
     }
     
     // MARK: - Gesture recognizers
@@ -504,7 +503,7 @@ extension PreviewViewController: BannerPresentationDelegate {
             navigationView.navigationMapView.removeRoutes()
         }
         
-        if topBanner(.bottomLeading) == nil {
+        if topBanner(at: .bottomLeading) == nil {
             navigationView.wayNameView.show()
             navigationView.speedLimitView.show()
         }

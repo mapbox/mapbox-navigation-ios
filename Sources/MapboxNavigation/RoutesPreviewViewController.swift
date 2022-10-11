@@ -171,7 +171,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
             
             let tintedTimeImage: UIImage
             if #available(iOS 13.0, *) {
-                tintedTimeImage = .pinImage.withTintColor(distanceRemainingTintColor)
+                tintedTimeImage = .timeImage.withTintColor(distanceRemainingTintColor)
             } else {
                 tintedTimeImage = .timeImage.tint(arrivalTimeImageTintColor)
             }
