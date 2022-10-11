@@ -195,41 +195,37 @@ open class RouteProgress: Codable {
      - parameter location: Updated user location.
      */
     func updateDistanceToIntersection(from location: CLLocation) {
-        let stepProgress = currentLegProgress.currentStepProgress
-        guard var intersections = stepProgress.step.intersections else { return }
+        guard var intersections = currentLegProgress.currentStepProgress.step.intersections else { return }
         
         // The intersections array does not include the upcoming maneuver intersection.
         if let upcomingIntersection = currentLegProgress.upcomingStep?.intersections?.first {
             intersections += [upcomingIntersection]
         }
-        stepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
+        currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
         
-        if let shape = stepProgress.step.shape,
-           let upcomingIntersection = stepProgress.upcomingIntersection {
-            stepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
+        if let shape = currentLegProgress.currentStep.shape,
+           let upcomingIntersection = currentLegProgress.currentStepProgress.upcomingIntersection {
+            currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
         }
         
         updateIntersectionDistances()
     }
     
     func updateIntersectionDistances() {
-        let stepProgress = currentLegProgress.currentStepProgress
-        guard stepProgress.intersectionDistances == nil else { return }
+        guard currentLegProgress.currentStepProgress.intersectionDistances == nil else { return }
         
-        stepProgress.intersectionDistances = [CLLocationDistance]()
-        if let shape = stepProgress.step.shape,
-           let intersections = stepProgress.step.intersections {
+        currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
+        if let shape = currentLegProgress.currentStep.shape,
+           let intersections = currentLegProgress.currentStep.intersections {
             let distances: [CLLocationDistance] = intersections.compactMap { shape.distance(from: shape.coordinates.first, to: $0.location) }
-            stepProgress.intersectionDistances = distances
+            currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
     
     func updateIntersectionIndex() {
-        let stepProgress = currentLegProgress.currentStepProgress
-        if let distances = stepProgress.intersectionDistances {
-            let upcomingIntersectionIndex = distances.firstIndex { $0 > stepProgress.distanceTraveled } ?? distances.endIndex
-            stepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? distances.index(before: upcomingIntersectionIndex) : 0
-        }
+        guard let distances = currentLegProgress.currentStepProgress.intersectionDistances else { return }
+        let upcomingIntersectionIndex = distances.firstIndex { $0 > currentLegProgress.currentStepProgress.distanceTraveled } ?? distances.endIndex
+        currentLegProgress.currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? distances.index(before: upcomingIntersectionIndex) : 0
     }
     
     // MARK: Leg Statistics
