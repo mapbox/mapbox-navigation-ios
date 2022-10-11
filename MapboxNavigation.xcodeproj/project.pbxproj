@@ -319,9 +319,9 @@
 		8AEB28AC265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */; };
 		8AF1D56428EF8A4B00041ED4 /* BannerPresentationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56328EF8A4B00041ED4 /* BannerPresentationDelegate.swift */; };
 		8AF1D56628EFA1CA00041ED4 /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56528EFA1CA00041ED4 /* Banner.swift */; };
-		8AF1D57028F0C8FE00041ED4 /* PreviewDismissalViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56F28F0C8FE00041ED4 /* PreviewDismissalViewControllerDelegate.swift */; };
-		8AF1D57128F0C90B00041ED4 /* PreviewDismissalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56B28F0B10000041ED4 /* PreviewDismissalViewController.swift */; };
-		8AF1D57228F0C90E00041ED4 /* PreviewDismissalViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56D28F0B13500041ED4 /* PreviewDismissalViewControllerLayout.swift */; };
+		8AF1D57028F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56F28F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift */; };
+		8AF1D57128F0C90B00041ED4 /* BannerDismissalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56B28F0B10000041ED4 /* BannerDismissalViewController.swift */; };
+		8AF1D57228F0C90E00041ED4 /* BannerDismissalViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56D28F0B13500041ED4 /* BannerDismissalViewControllerLayout.swift */; };
 		8AF23ED527AA0B9C0038B40D /* CarPlayManagerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF23ED427AA0B9C0038B40D /* CarPlayManagerSpec.swift */; };
 		8AFF2D2326F137CB008267BF /* RoadObjectKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF2D2226F137CB008267BF /* RoadObjectKind.swift */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
@@ -936,9 +936,9 @@
 		8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayNavigationViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AF1D56328EF8A4B00041ED4 /* BannerPresentationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPresentationDelegate.swift; sourceTree = "<group>"; };
 		8AF1D56528EFA1CA00041ED4 /* Banner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Banner.swift; sourceTree = "<group>"; };
-		8AF1D56B28F0B10000041ED4 /* PreviewDismissalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDismissalViewController.swift; sourceTree = "<group>"; };
-		8AF1D56D28F0B13500041ED4 /* PreviewDismissalViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDismissalViewControllerLayout.swift; sourceTree = "<group>"; };
-		8AF1D56F28F0C8FE00041ED4 /* PreviewDismissalViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDismissalViewControllerDelegate.swift; sourceTree = "<group>"; };
+		8AF1D56B28F0B10000041ED4 /* BannerDismissalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewController.swift; sourceTree = "<group>"; };
+		8AF1D56D28F0B13500041ED4 /* BannerDismissalViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerLayout.swift; sourceTree = "<group>"; };
+		8AF1D56F28F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AF23ED427AA0B9C0038B40D /* CarPlayManagerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerSpec.swift; sourceTree = "<group>"; };
 		8AFF2D2226F137CB008267BF /* RoadObjectKind.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectKind.swift; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1614,7 +1614,7 @@
 		8AA0386427FD053F0007BD2D /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				8AF1D56A28F0B0D800041ED4 /* Preview Dismissal */,
+				8AF1D56A28F0B0D800041ED4 /* Banner Dismissal */,
 				8AB97C15280A30A800792939 /* Destination Preview */,
 				8AB97C16280A30C500792939 /* Routes Preview */,
 				8AC0241728DD3E8000A2BF3A /* Preview.swift */,
@@ -1835,14 +1835,14 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		8AF1D56A28F0B0D800041ED4 /* Preview Dismissal */ = {
+		8AF1D56A28F0B0D800041ED4 /* Banner Dismissal */ = {
 			isa = PBXGroup;
 			children = (
-				8AF1D56B28F0B10000041ED4 /* PreviewDismissalViewController.swift */,
-				8AF1D56D28F0B13500041ED4 /* PreviewDismissalViewControllerLayout.swift */,
-				8AF1D56F28F0C8FE00041ED4 /* PreviewDismissalViewControllerDelegate.swift */,
+				8AF1D56B28F0B10000041ED4 /* BannerDismissalViewController.swift */,
+				8AF1D56D28F0B13500041ED4 /* BannerDismissalViewControllerLayout.swift */,
+				8AF1D56F28F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift */,
 			);
-			name = "Preview Dismissal";
+			name = "Banner Dismissal";
 			sourceTree = "<group>";
 		};
 		8DF8E4DD2202694100B29FEF /* Documents */ = {
@@ -2836,7 +2836,7 @@
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
 				B4319F2F27A35EA8005A706E /* SpriteRepository.swift in Sources */,
-				8AF1D57028F0C8FE00041ED4 /* PreviewDismissalViewControllerDelegate.swift in Sources */,
+				8AF1D57028F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPlayCompassView.swift in Sources */,
 				8A50A3C826EC09FB00894A8E /* ActiveNavigationFeedbackType+FeedbackItem.swift in Sources */,
@@ -2945,7 +2945,7 @@
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				8AD866F925CA1BF10019A638 /* ViewportDataSource.swift in Sources */,
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
-				8AF1D57128F0C90B00041ED4 /* PreviewDismissalViewController.swift in Sources */,
+				8AF1D57128F0C90B00041ED4 /* BannerDismissalViewController.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
 				8A2354F028877890003E42B4 /* BottomBannerViewControllerLayout.swift in Sources */,
@@ -2955,7 +2955,7 @@
 				B432985F28D53AB8005AFB98 /* URLSessionDelegateProxy.swift in Sources */,
 				2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */,
 				8AD2212327C43DEB000734A5 /* StylableView.swift in Sources */,
-				8AF1D57228F0C90E00041ED4 /* PreviewDismissalViewControllerLayout.swift in Sources */,
+				8AF1D57228F0C90E00041ED4 /* BannerDismissalViewControllerLayout.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				8AB97C1C280A323E00792939 /* RoutesPreviewDataSource.swift in Sources */,
 				2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */,

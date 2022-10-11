@@ -1,4 +1,4 @@
 protocol RoutesPreviewViewControllerDelegate: AnyObject {
     
-    func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController)
+    func didPressBeginActiveNavigationButton(_ routesPreviewViewController: RoutesPreviewViewController)
 }

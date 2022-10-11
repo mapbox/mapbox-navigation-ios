@@ -6,9 +6,11 @@ import MapboxCoreNavigation
 // :nodoc:
 public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
     
-    func willPreviewRoutes(_ previewViewController: PreviewViewController)
+    func didPressPreviewRoutesButton(_ previewViewController: PreviewViewController)
     
-    func willBeginActiveNavigation(_ previewViewController: PreviewViewController)
+    func didPressBeginActiveNavigationButton(_ previewViewController: PreviewViewController)
+    
+    func didPressDismissBannerButton(_ previewViewController: PreviewViewController)
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didAddDestinationBetween coordinates: [CLLocationCoordinate2D])
@@ -36,11 +38,15 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
 // :nodoc:
 public extension PreviewViewControllerDelegate {
     
-    func willPreviewRoutes(_ previewViewController: PreviewViewController) {
+    func didPressPreviewRoutesButton(_ previewViewController: PreviewViewController) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     
-    func willBeginActiveNavigation(_ previewViewController: PreviewViewController) {
+    func didPressBeginActiveNavigationButton(_ previewViewController: PreviewViewController) {
+        logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
+    }
+    
+    func didPressDismissBannerButton(_ previewViewController: PreviewViewController) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
     }
     

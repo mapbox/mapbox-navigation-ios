@@ -36,28 +36,33 @@ extension NavigationView {
         
         layoutConstraints.append(contentsOf: topBannerConstraints)
         
-        let floatingStackViewTopConstraint = floatingStackView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor,
-                                                                                    constant: 10)
-        
-        layoutConstraints.append(floatingStackViewTopConstraint)
-        
-        switch floatingButtonsPosition {
-        case .topLeading:
-            let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: safeLeadingAnchor,
-                                                                                                constant: 10)
+        if let floatingStackViewLayoutGuide = floatingStackViewLayoutGuide {
+            let floatingStackViewLayoutConstraints = floatingStackViewLayoutGuide.layoutConstraints(for: floatingStackView)
+            layoutConstraints.append(contentsOf: floatingStackViewLayoutConstraints)
+        } else {
+            let floatingStackViewTopConstraint = floatingStackView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor,
+                                                                                        constant: 10)
             
-            layoutConstraints.append(floatingStackViewLeadingConstraint)
-        case .topTrailing:
-            let floatingStackViewLeadingContraint: NSLayoutConstraint
-            if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                                constant: -10)
-            } else {
-                floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                                constant: -10)
+            layoutConstraints.append(floatingStackViewTopConstraint)
+            
+            switch floatingButtonsPosition {
+            case .topLeading:
+                let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: safeLeadingAnchor,
+                                                                                                    constant: 10)
+                
+                layoutConstraints.append(floatingStackViewLeadingConstraint)
+            case .topTrailing:
+                let floatingStackViewLeadingContraint: NSLayoutConstraint
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                    floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                    constant: -10)
+                } else {
+                    floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                    constant: -10)
+                }
+                
+                layoutConstraints.append(floatingStackViewLeadingContraint)
             }
-            
-            layoutConstraints.append(floatingStackViewLeadingContraint)
         }
 
         let bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor)
@@ -170,38 +175,43 @@ extension NavigationView {
         
         layoutConstraints.append(floatingStackViewTopConstraint)
         
-        switch floatingButtonsPosition {
-        case .topLeading:
-            let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor,
-                                                                                                constant: 10)
-            
-            layoutConstraints.append(floatingStackViewLeadingConstraint)
-        case .topTrailing:
-            let floatingStackViewTrailingConstraint: NSLayoutConstraint
-            // Device is in landscape mode and notch (if present) is located on the left side.
-            if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                    // Language with right-to-left interface layout is used.
-                    floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                                      constant: -10)
+        if let floatingStackViewLayoutGuide = floatingStackViewLayoutGuide {
+            let floatingStackViewLayoutConstraints = floatingStackViewLayoutGuide.layoutConstraints(for: floatingStackView)
+            layoutConstraints.append(contentsOf: floatingStackViewLayoutConstraints)
+        } else {
+            switch floatingButtonsPosition {
+            case .topLeading:
+                let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor,
+                                                                                                    constant: 10)
+                
+                layoutConstraints.append(floatingStackViewLeadingConstraint)
+            case .topTrailing:
+                let floatingStackViewTrailingConstraint: NSLayoutConstraint
+                // Device is in landscape mode and notch (if present) is located on the left side.
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                    if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                        // Language with right-to-left interface layout is used.
+                        floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                          constant: -10)
+                    } else {
+                        // Language with left-to-right interface layout is used.
+                        floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                          constant: -10)
+                    }
                 } else {
-                    // Language with left-to-right interface layout is used.
-                    floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                                      constant: -10)
+                    if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                        floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                          constant: -10)
+                    } else {
+                        floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                          constant: -10)
+                    }
                 }
-            } else {
-                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                    floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                                      constant: -10)
-                } else {
-                    floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                                      constant: -10)
-                }
+                
+                layoutConstraints.append(floatingStackViewTrailingConstraint)
             }
-            
-            layoutConstraints.append(floatingStackViewTrailingConstraint)
         }
-
+        
         let bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor)
         let bottomBannerContainerViewLeadingConstraint = bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor)
         

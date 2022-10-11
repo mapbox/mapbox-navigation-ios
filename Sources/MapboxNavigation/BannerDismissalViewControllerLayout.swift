@@ -1,6 +1,6 @@
 import UIKit
 
-extension PreviewDismissalViewController {
+extension BannerDismissalViewController {
     
     func setupConstraints() {
         let parentViewsLayoutConstraints = [
@@ -21,7 +21,7 @@ extension PreviewDismissalViewController {
         let backButtonLayoutConstraints = [
             backButton.widthAnchor.constraint(equalToConstant: 110.0),
             backButton.heightAnchor.constraint(equalToConstant: 50.0),
-            backButton.leadingAnchor.constraint(equalTo: topBannerView.leadingAnchor,
+            backButton.leadingAnchor.constraint(equalTo: topBannerView.safeLeadingAnchor,
                                                 constant: 10.0),
             backButton.topAnchor.constraint(equalTo: topBannerView.topAnchor,
                                                constant: 10.0)

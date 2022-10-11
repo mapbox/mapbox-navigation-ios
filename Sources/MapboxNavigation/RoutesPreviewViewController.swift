@@ -130,7 +130,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     }
     
     @objc func didPressStartButton() {
-        delegate?.willStartNavigation(self)
+        delegate?.didPressBeginActiveNavigationButton(self)
     }
     
     // TODO: Extract implementation out of `RoutesPreviewViewController`.

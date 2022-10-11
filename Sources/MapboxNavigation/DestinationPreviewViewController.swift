@@ -124,10 +124,10 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     }
     
     @objc func didPressPreviewButton() {
-        delegate?.willPreviewRoutes(self)
+        delegate?.didPressPreviewRoutesButton(self)
     }
     
     @objc func didPressStartButton() {
-        delegate?.willStartNavigation(self)
+        delegate?.didPressBeginActiveNavigationButton(self)
     }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
 // :nodoc:
-public class PreviewDismissalViewController: UIViewController, Banner {
+public class BannerDismissalViewController: UIViewController, Banner {
     
     var topBannerView: TopBannerView!
     
@@ -9,7 +9,7 @@ public class PreviewDismissalViewController: UIViewController, Banner {
     
     var backButton: BackButton!
     
-    weak var delegate: PreviewDismissalViewControllerDelegate?
+    weak var delegate: BannerDismissalViewControllerDelegate?
     
     // MARK: - Banner properties
     
@@ -85,6 +85,6 @@ public class PreviewDismissalViewController: UIViewController, Banner {
     // MARK: - Event handlers
     
     @objc func didPressBackButton() {
-        delegate?.didDismiss(self)
+        delegate?.didPressDismissBannerButton(self)
     }
 }

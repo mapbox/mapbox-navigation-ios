@@ -8,9 +8,9 @@ extension PreviewViewController {
         navigationView.addLayoutGuide(speedLimitViewLayoutGuide)
         
         let speedLimitViewLayoutGuideLayoutConstraints = [
-            speedLimitViewLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            speedLimitViewLayoutGuide.topAnchor.constraint(equalTo: view.safeTopAnchor,
                                                            constant: 10.0),
-            speedLimitViewLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            speedLimitViewLayoutGuide.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
                                                                constant: 10.0),
             speedLimitViewLayoutGuide.widthAnchor.constraint(equalToConstant: 50.0),
             speedLimitViewLayoutGuide.heightAnchor.constraint(equalToConstant: 50.0)
@@ -35,12 +35,18 @@ extension PreviewViewController {
         NSLayoutConstraint.activate(wayNameViewLayoutGuideLayoutContraints)
         navigationView.wayNameViewLayoutGuide = wayNameViewLayoutGuide
         
-        // Setup floating stack view layout constraints.
-        let floatingStackViewLayoutConstraints = [
-            navigationView.floatingStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
-                                                                       constant: -10.0)
+        // Layout guide is used to modify default position of the `UIStackView` with floating buttons.
+        let floatingStackViewLayoutGuide = UILayoutGuide()
+        navigationView.addLayoutGuide(floatingStackViewLayoutGuide)
+        
+        let floatingStackViewLayoutGuideLayoutConstraints = [
+            floatingStackViewLayoutGuide.topAnchor.constraint(equalTo: view.safeTopAnchor,
+                                                              constant: 10.0),
+            floatingStackViewLayoutGuide.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
+                                                                   constant: -10.0)
         ]
         
-        NSLayoutConstraint.activate(floatingStackViewLayoutConstraints)
+        NSLayoutConstraint.activate(floatingStackViewLayoutGuideLayoutConstraints)
+        navigationView.floatingStackViewLayoutGuide = floatingStackViewLayoutGuide
     }
 }

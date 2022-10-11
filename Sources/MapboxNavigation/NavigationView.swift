@@ -122,6 +122,12 @@ open class NavigationView: UIView {
         return stackView
     }()
     
+    var floatingStackViewLayoutGuide: UILayoutGuide? {
+        didSet {
+            setupConstraints()
+        }
+    }
+    
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
             setupConstraints()

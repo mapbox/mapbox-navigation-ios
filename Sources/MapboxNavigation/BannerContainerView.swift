@@ -27,17 +27,6 @@ open class BannerContainerView: UIView {
     
     var expansionOffset: CGFloat = 50.0
     
-    var topSafeAreaInset: CGFloat = 0.0
-    
-    var bottomSafeAreaInset: CGFloat = 0.0
-    
-    open override func safeAreaInsetsDidChange() {
-        super.safeAreaInsetsDidChange()
-        
-        topSafeAreaInset = safeAreaInsets.top
-        bottomSafeAreaInset = safeAreaInsets.bottom
-    }
-    
     // :nodoc:
     public private(set) var state: State = .collapsed {
         didSet {
@@ -224,9 +213,9 @@ open class BannerContainerView: UIView {
             // TODO: Improve animation for devices with notch.
             switch position {
             case .topLeading:
-                expansionConstraint.constant = -frame.height //+ self.topSafeAreaInset
+                expansionConstraint.constant = -frame.height //+ safeAreaInsets.top
             case .bottomLeading:
-                expansionConstraint.constant = frame.height //- self.bottomSafeAreaInset
+                expansionConstraint.constant = frame.height //- safeAreaInsets.bottom
             }
             
             isHidden = false

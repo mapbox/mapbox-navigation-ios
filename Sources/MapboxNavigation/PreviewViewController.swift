@@ -264,15 +264,21 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     // :nodoc:
     public func preview(_ coordinate: CLLocationCoordinate2D,
                         animated: Bool = true,
+                        duration: TimeInterval = 1.0,
+                        animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
         preview(Waypoint(coordinate: coordinate),
                 animated: animated,
+                duration: duration,
+                animations: animations,
                 completion: completion)
     }
     
     // :nodoc:
     public func preview(_ waypoint: Waypoint,
                         animated: Bool = true,
+                        duration: TimeInterval = 1.0,
+                        animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
         let destinationOptions = DestinationOptions(waypoint: waypoint)
         
@@ -285,8 +291,20 @@ open class PreviewViewController: UIViewController, BannerPresentation {
         } else {
             destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
             destinationPreviewViewController.delegate = self
-            push(destinationPreviewViewController, animated: animated)
-            presentPreviewDismissalViewController(animated)
+            push(destinationPreviewViewController,
+                 animated: animated,
+                 duration: duration,
+                 animations: animations,
+                 completion: {
+                completion?()
+            })
+            
+            let bannerDismissalViewController = BannerDismissalViewController()
+            bannerDismissalViewController.delegate = self
+            push(bannerDismissalViewController,
+                 animated: animated,
+                 duration: duration,
+                 animations: animations)
         }
         
         addDestinationAnnotation(waypoint.coordinate)
@@ -303,9 +321,10 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     // :nodoc:
     public func preview(_ routeResponse: RouteResponse,
                         routeIndex: Int = 0,
-                        animated: Bool = false,
+                        animated: Bool = true,
                         duration: TimeInterval = 1.0,
-                        completion: NavigationMapView.AnimationCompletionHandler? = nil) {
+                        animations: (() -> Void)? = nil,
+                        completion: (() -> Void)? = nil) {
         let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
         
         // If `RoutesPreviewViewController` is already the topmost preview banner - update its
@@ -317,21 +336,27 @@ open class PreviewViewController: UIViewController, BannerPresentation {
         } else {
             routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
             routesPreviewViewController.delegate = self
-            push(routesPreviewViewController, animated: animated)
+            push(routesPreviewViewController,
+                 animated: animated,
+                 duration: duration,
+                 animations: animations)
         }
         
         showcase(routeResponse: routeResponse,
                  routeIndex: routeIndex,
                  animated: animated,
                  duration: duration,
-                 completion: completion)
+                 completion: { _ in
+            completion?()
+        })
     }
     
     // :nodoc:
     public func showcase(routeResponse: RouteResponse,
                          routeIndex: Int = 0,
-                         animated: Bool = false,
+                         animated: Bool = true,
                          duration: TimeInterval = 1.0,
+                         animations: (() -> Void)? = nil,
                          completion: NavigationMapView.AnimationCompletionHandler? = nil) {
         guard var routes = routeResponse.routes else { return }
         
@@ -348,21 +373,31 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                                                   completion: completion)
     }
     
-    func presentPreviewDismissalViewController(_ animated: Bool) {
-        let previewDismissalViewController = PreviewDismissalViewController()
-        previewDismissalViewController.delegate = self
-        push(previewDismissalViewController, animated: animated)
+    // :nodoc:
+    @discardableResult
+    public func dismissBanner(at position: BannerPosition,
+                              animated: Bool = true,
+                              duration: TimeInterval = 1.0,
+                              animations: (() -> Void)? = nil,
+                              completion: (() -> Void)? = nil) -> Banner? {
+        return popBanner(at: position,
+                         animated: animated,
+                         duration: duration,
+                         animations: animations,
+                         completion: completion)
     }
     
-    func fitCamera(to routeResponse: RouteResponse) {
-        guard let routes = routeResponse.routes else { return }
-        
-        navigationView.navigationMapView.navigationCamera.stop()
-        let cameraOptions = navigationView.defaultRoutesPreviewCameraOptions()
-        navigationView.navigationMapView.fitCamera(to: routes,
-                                                   routesPresentationStyle: .all(shouldFit: true,
-                                                                                 cameraOptions: cameraOptions),
-                                                   animated: true)
+    // :nodoc:
+    public func present(_ banner: Banner,
+                        animated: Bool = true,
+                        duration: TimeInterval = 1.0,
+                        animations: (() -> Void)? = nil,
+                        completion: (() -> Void)? = nil) {
+        push(banner,
+             animated: animated,
+             duration: duration,
+             animations: animations,
+             completion: completion)
     }
     
     // MARK: - Gesture recognizers
@@ -397,33 +432,24 @@ extension PreviewViewController: NavigationMapViewDelegate {
     }
 }
 
-// MARK: - DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate and PreviewDismissalViewControllerDelegate methods
+// MARK: - DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate and BannerDismissalViewControllerDelegate methods
 
-extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate, PreviewDismissalViewControllerDelegate {
+extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate, BannerDismissalViewControllerDelegate {
     
-    func willPreviewRoutes(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        delegate?.willPreviewRoutes(self)
+    func didPressPreviewRoutesButton(_ destinationPreviewViewController: DestinationPreviewViewController) {
+        delegate?.didPressPreviewRoutesButton(self)
     }
     
-    func willStartNavigation(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        delegate?.willBeginActiveNavigation(self)
+    func didPressBeginActiveNavigationButton(_ destinationPreviewViewController: DestinationPreviewViewController) {
+        delegate?.didPressBeginActiveNavigationButton(self)
     }
     
-    func willStartNavigation(_ routesPreviewViewController: RoutesPreviewViewController) {
-        delegate?.willBeginActiveNavigation(self)
+    func didPressBeginActiveNavigationButton(_ routesPreviewViewController: RoutesPreviewViewController) {
+        delegate?.didPressBeginActiveNavigationButton(self)
     }
     
-    func didDismiss(_ previewDismissalViewController: PreviewDismissalViewController) {
-        popBanner(.bottomLeading,
-                  animated: true,
-                  completion: nil)
-        
-        // In case if there are no more banners in stack - dismiss top banner as well.
-        if topBanner(.bottomLeading) == nil {
-            popBanner(.topLeading,
-                      animated: true,
-                      completion: nil)
-        }
+    func didPressDismissBannerButton(_ bannerDismissalViewController: BannerDismissalViewController) {
+        delegate?.didPressDismissBannerButton(self)
     }
 }
 
