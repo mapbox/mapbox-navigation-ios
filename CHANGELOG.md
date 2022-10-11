@@ -21,6 +21,11 @@
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
 * Fixed an issue where tapping on a route duration annotation that overlaps a different route would cause the wrong route to be passed into `NavigationMapViewDelegate.navigationMapView(_:didSelect:)` or `NavigationMapViewDelegate.navigationMapView(_:didSelect:)`. ([#4133](https://github.com/mapbox/mapbox-navigation-ios/pull/4133))
 
+### Routing
+
+* Route refreshing now respects current user progress on a leg to reduce update size and improve updating longer routes. ([#4111](https://github.com/mapbox/mapbox-navigation-ios/pull/4111))
+* Added `RoutingProvider.refreshRoute(indexedRouteResponse:fromLegAtIndex:routeShapeIndex:legShapeIndex:completionHandler:)` to request a refresh starting from specified shape index. Updated `RouteLegProgress` and `RouteProgress` initializers to include shape indices, and added `RouteProgress.refreshRoute(with:at:legIndex:legShapeIndex:)` to apply partial route refresh. ([#4111](https://github.com/mapbox/mapbox-navigation-ios/pull/4111))
+
 ### Banners and guidance instructions
 
 * Added replacement for `VisualInstruction.maneuverImageSet(side:)` method to generate a maneuver image on iOS 13 and above. ([#4161](https://github.com/mapbox/mapbox-navigation-ios/pull/4161))

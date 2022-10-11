@@ -323,6 +323,30 @@ public class MapboxRoutingProvider: RoutingProvider {
     @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
                                                 fromLegAtIndex startLegIndex: UInt32 = 0,
                                                 completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        _refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                     fromLegAtIndex: startLegIndex,
+                     currentRouteShapeIndex: nil,
+                     currentLegShapeIndex: nil,
+                     completionHandler: completionHandler)
+    }
+
+    @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
+                                                fromLegAtIndex startLegIndex: UInt32,
+                                                currentRouteShapeIndex: Int,
+                                                currentLegShapeIndex: Int,
+                                                completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        _refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                     fromLegAtIndex: startLegIndex,
+                     currentRouteShapeIndex: currentRouteShapeIndex,
+                     currentLegShapeIndex: currentLegShapeIndex,
+                     completionHandler: completionHandler)
+    }
+
+    private func _refreshRoute(indexedRouteResponse: IndexedRouteResponse,
+                              fromLegAtIndex startLegIndex: UInt32,
+                              currentRouteShapeIndex: Int? = nil,
+                              currentLegShapeIndex: Int? = nil,
+                              completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
@@ -344,8 +368,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile,
-                                                 currentRouteGeometryIndex: nil)
-        
+                                                 currentRouteGeometryIndex: currentRouteShapeIndex.map { NSNumber(value: $0) })
+
         requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
             
@@ -364,8 +388,19 @@ public class MapboxRoutingProvider: RoutingProvider {
                     DispatchQueue.global().async {
                         do {
                             let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
-                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegAttributes(from: routeRefreshResponse.route)
-                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegIncidents(from: routeRefreshResponse.route)
+                            let route = routeResponse.routes?[indexedRouteResponse.routeIndex]
+                            if let currentLegShapeIndex = currentLegShapeIndex {
+                                route?.refreshLegAttributes(from: routeRefreshResponse.route,
+                                                            legIndex: Int(startLegIndex),
+                                                            legShapeIndex: currentLegShapeIndex)
+                                route?.refreshLegIncidents(from: routeRefreshResponse.route,
+                                                           legIndex: Int(startLegIndex),
+                                                           legShapeIndex: currentLegShapeIndex)
+                            } else {
+                                route?.refreshLegAttributes(from: routeRefreshResponse.route)
+                                route?.refreshLegIncidents(from: routeRefreshResponse.route)
+                            }
+
                             DispatchQueue.main.async {
                                 completionHandler(session, .success(routeResponse))
                             }

@@ -175,18 +175,25 @@ open class RouteLegProgress: Codable {
             return speedLimit
         }
     }
+
+    /**
+     Index relative to leg shape, representing the point the user is currently located at.
+     */
+    public internal(set) var shapeIndex: Int
     
     /**
      Intializes a new `RouteLegProgress`.
 
      - parameter leg: Leg on a `Route`.
      - parameter stepIndex: Current step the user is on.
+     - parameter shapeIndex: Index relative to leg shape, representing the point the user is currently located at.
      */
-    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0, shapeIndex: Int = 0) {
         precondition(leg.steps.indices.contains(stepIndex), "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(leg.steps.count) or not included.")
         
         self.leg = leg
         self.stepIndex = stepIndex
+        self.shapeIndex = shapeIndex
         
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
@@ -247,5 +254,6 @@ open class RouteLegProgress: Codable {
         case stepIndex
         case userHasArrivedAtWaypoint
         case currentStepProgress
+        case shapeIndex
     }
 }
