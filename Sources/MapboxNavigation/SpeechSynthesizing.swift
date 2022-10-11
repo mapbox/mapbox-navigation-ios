@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 /**
  Protocol for implementing speech synthesizer to be used in `RouteVoiceController`.
  */
-public protocol SpeechSynthesizing: AnyObject {
+public protocol SpeechSynthesizing: AnyObject, UnimplementedLogging {
     
     /// A delegate that will be notified about significant events related to spoken instructions.
     var delegate: SpeechSynthesizingDelegate? { get set }
@@ -38,11 +38,30 @@ public protocol SpeechSynthesizing: AnyObject {
     ///
     /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished, `voiceController(_ voiceController: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?)` should be called.
     func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?)
+
+    /// A request to vocalize the instruction, breaking through the mute of the speech synthesizer if muted
+    /// - parameter instruction: an instruction to be vocalized
+    /// - parameter legProgress: current leg progress, corresponding to the instruction
+    /// - parameter locale: A locale to be used for vocalizing the instruction. If `nil` is passed - `SpeechSynthesizing.locale` will be used as 'default'.
+    ///
+    /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished, `voiceController(_ voiceController: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?)` should be called.
+    func forceSpeak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?)
     
     /// Tells synthesizer to stop current vocalization in a graceful manner
     func stopSpeaking()
     /// Tells synthesizer to stop current vocalization immediately
     func interruptSpeaking()
+}
+
+extension SpeechSynthesizing {
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    public func forceSpeak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
+        logUnimplemented(protocolType: SpeechSynthesizing.self, level: .debug)
+        speak(instruction, during: legProgress, locale: locale)
+    }
 }
 
 /**
