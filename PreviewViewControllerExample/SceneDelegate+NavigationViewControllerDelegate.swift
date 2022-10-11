@@ -39,7 +39,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 navigationMapView.userLocationStyle = .puck2D()
                 
                 // Depending on currently presented banner perform required map or camera modifications.
-                if let routesPreviewViewController = self.previewViewController.topBanner(.bottomLeading) as? RoutesPreviewViewController {
+                if let routesPreviewViewController = self.previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
                     let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
                     self.previewViewController.showcase(routeResponse: routeResponse,
                                                         duration: self.animationDuration)
