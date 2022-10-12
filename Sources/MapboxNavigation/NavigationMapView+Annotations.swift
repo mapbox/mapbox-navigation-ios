@@ -398,27 +398,33 @@ extension NavigationMapView {
     /**
      Updates the image assets in the map style for the route intersection signals.
      */
-    func updateIntersectionSymbolImages() throws {
+    func updateIntersectionSymbolImages(styleType: StyleType?) {
         let style = mapView.mapboxMap.style
+        let styleType = styleType ?? .day
         
-        if style.image(withId: ImageIdentifier.trafficSignalDay) == nil,
-           let trafficSignlaDay =  Bundle.mapboxNavigation.image(named: "TrafficSignalDay") {
-            try style.addImage(trafficSignlaDay, id: ImageIdentifier.trafficSignalDay)
-        }
-        
-        if style.image(withId: ImageIdentifier.trafficSignalNight) == nil,
-           let trafficSignalNight =  Bundle.mapboxNavigation.image(named: "TrafficSignalNight") {
-            try style.addImage(trafficSignalNight, id: ImageIdentifier.trafficSignalNight)
-        }
-        
-        if style.image(withId: ImageIdentifier.railroadCrossingDay) == nil,
-           let railroadCrossingDay =  Bundle.mapboxNavigation.image(named: "RailroadCrossingDay") {
-            try style.addImage(railroadCrossingDay, id: ImageIdentifier.railroadCrossingDay)
-        }
-        
-        if style.image(withId: ImageIdentifier.railroadCrossingNight) == nil,
-           let railroadCrossingNight =  Bundle.mapboxNavigation.image(named: "RailroadCrossingNight") {
-            try style.addImage(railroadCrossingNight, id: ImageIdentifier.railroadCrossingNight)
+        do {
+            if styleType == .day {
+                if let trafficSignlaDay = Bundle.mapboxNavigation.image(named: "TrafficSignalDay") {
+                    try style.addImage(trafficSignlaDay, id: ImageIdentifier.trafficSignal)
+                }
+                
+                if let railroadCrossingDay = Bundle.mapboxNavigation.image(named: "RailroadCrossingDay") {
+                    try style.addImage(railroadCrossingDay, id: ImageIdentifier.railroadCrossing)
+                }
+                
+            } else {
+                if let trafficSignalNight = Bundle.mapboxNavigation.image(named: "TrafficSignalNight") {
+                    try style.addImage(trafficSignalNight, id: ImageIdentifier.trafficSignal)
+                }
+                
+                if let railroadCrossingNight = Bundle.mapboxNavigation.image(named: "RailroadCrossingNight") {
+                    try style.addImage(railroadCrossingNight, id: ImageIdentifier.railroadCrossing)
+                }
+            }
+            
+        } catch {
+            Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     
@@ -434,7 +440,7 @@ extension NavigationMapView {
         let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
         
         for intersection in stepIntersections?.suffix(from: intersectionIndex) ?? [] {
-            if let feature = signalFeature(from: intersection, styleType: styleType) {
+            if let feature = signalFeature(from: intersection) {
                 featureCollection.features.append(feature)
             }
         }
@@ -469,14 +475,13 @@ extension NavigationMapView {
         }
     }
     
-    private func signalFeature(from intersection: Intersection, styleType: StyleType) -> Feature? {
+    private func signalFeature(from intersection: Intersection) -> Feature? {
         var properties: JSONObject? = nil
-        let styleTypeString = (styleType == .day) ? "Day" : "Night"
         if intersection.railroadCrossing == true {
-            properties = ["imageName": .string("RailroadCrossing" + styleTypeString)]
+            properties = ["imageName": .string(ImageIdentifier.railroadCrossing)]
         }
         if intersection.trafficSignal == true {
-            properties = ["imageName": .string("TrafficSignal" + styleTypeString)]
+            properties = ["imageName": .string(ImageIdentifier.trafficSignal)]
         }
         
         guard let properties = properties else { return nil }

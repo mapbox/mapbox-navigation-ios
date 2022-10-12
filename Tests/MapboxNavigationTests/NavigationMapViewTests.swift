@@ -494,30 +494,4 @@ class NavigationMapViewTests: TestCase {
                        NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
                        "Point annotation identifiers should be equal.")
     }
-    
-    func testUpdateIntersectionSignalsAlongRouteOnMap() {
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        let style = navigationMapView.mapView.mapboxMap.style
-        let imageIdentifier = NavigationMapView.ImageIdentifier.trafficSignalDay
-        let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
-        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionSignalSource
-        
-        XCTAssertFalse(navigationMapView.showsIntersectionSignals)
-        XCTAssertFalse(style.imageExists(withId: imageIdentifier))
-        XCTAssertFalse(style.layerExists(withId: layerIdentifier))
-        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
-        
-        let routeProgress = RouteProgress(route: route, options: options, legIndex: 0, spokenInstructionIndex: 0)
-        navigationMapView.showsIntersectionSignals = true
-        navigationMapView.showIntersectionSignals(with: routeProgress)
-        
-        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
-        XCTAssertTrue(style.layerExists(withId: layerIdentifier))
-        XCTAssertTrue(style.sourceExists(withId: sourceIdentifier))
-        
-        navigationMapView.removeIntersectionSignals()
-        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
-        XCTAssertFalse(style.layerExists(withId: layerIdentifier))
-        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
-    }
 }

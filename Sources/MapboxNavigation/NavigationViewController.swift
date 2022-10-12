@@ -116,6 +116,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
+     A Boolean value that determines whether the map annotates the intersections on current step during active navigation.
+     
+     Defaults to `true`.
+     */
+    public var annotatesIntersectionsAlongRoute: Bool {
+        get {
+            routeOverlayController?.annotatesIntersections ?? true
+        }
+        set {
+            routeOverlayController?.annotatesIntersections = newValue
+            updateIntersectionsAlongRoute()
+        }
+    }
+    
+    /**
      Toggles displaying alternative routes.
      
      If enabled, view will draw actual alternative route lines on the map.
@@ -867,6 +882,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             styleManager.applyStyle(type: .day)
         }
     }
+    
+    func updateIntersectionsAlongRoute() {
+        if annotatesIntersectionsAlongRoute {
+            navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
+            navigationMapView?.updateIntersectionSignals(with: navigationService.routeProgress)
+        } else {
+            navigationMapView?.removeIntersectionSignals()
+        }
+    }
 }
 
 // MARK: - NavigationViewDelegate methods
@@ -1209,6 +1233,7 @@ extension NavigationViewController: StyleManagerDelegate {
         
         ornamentsController?.updateStyle(styleURI: styleURI)
         currentStatusBarStyle = style.statusBarStyle ?? .default
+        updateIntersectionsAlongRoute()
         setNeedsStatusBarAppearanceUpdate()
     }
     

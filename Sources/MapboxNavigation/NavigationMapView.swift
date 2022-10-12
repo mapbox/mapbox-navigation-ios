@@ -1125,43 +1125,6 @@ open class NavigationMapView: UIView {
         }
     }
     
-    /**
-     Show the signals on the intersections.
-     
-     - parameter routeProgress: The `RouteProgress` that the intersections will be displayed with.
-     */
-    public func showIntersectionSignals(with routeProgress: RouteProgress) {
-        guard showsIntersectionSignals else {
-            removeIntersectionSignals()
-            return
-        }
-        
-        do {
-            try updateIntersectionSymbolImages()
-        } catch {
-            Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
-                      category: .navigationUI)
-        }
-        
-        updateIntersectionSignals(with: routeProgress)
-    }
-    
-    /**
-     Shows the intersection signals on current step of current route during active navigation.
-     */
-    public var showsIntersectionSignals: Bool = false {
-        didSet {
-            if !showsIntersectionSignals {
-                removeIntersectionSignals()
-            }
-        }
-    }
-    
-    /**
-     The style type of `NavigationMapView` during active navigation.
-     */
-    var styleType: StyleType = .day
-    
     let continuousAlternativeDurationAnnotationOffset: LocationDistance = 75
     
     /**

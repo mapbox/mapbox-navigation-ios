@@ -38,10 +38,8 @@ extension NavigationMapView {
         static let markerImage = "default_marker"
         static let routeAnnotationLeftHanded = "RouteInfoAnnotationLeftHanded"
         static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
-        static let trafficSignalDay = "TrafficSignalDay"
-        static let trafficSignalNight = "TrafficSignalNight"
-        static let railroadCrossingDay = "RailroadCrossingDay"
-        static let railroadCrossingNight = "RailroadCrossingNight"
+        static let trafficSignal = "traffic_signal"
+        static let railroadCrossing = "railroad_crossing"
     }
     
     struct ModelKeyIdentifier {
