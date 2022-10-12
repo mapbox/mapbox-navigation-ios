@@ -53,7 +53,7 @@ public struct HistoryReader: Sequence {
                 return nil
             }
             let event = process(record: record)
-            if readOptions == .omitUnknownEvents && event is UnknownHistoryEvent {
+            if readOptions?.contains(.omitUnknownEvents) ?? false && event is UnknownHistoryEvent {
                 return next()
             }
             return event
@@ -116,7 +116,7 @@ public struct HistoryReader: Sequence {
     
     public func makeIterator() -> Iterator {
         return Iterator(historyReader: MapboxNavigationNative.HistoryReader(path: fileUrl.path),
-        readOptions: readOptions)
+                        readOptions: readOptions)
     }
     
     private let fileUrl: URL
