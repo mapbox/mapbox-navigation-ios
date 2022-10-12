@@ -184,3 +184,10 @@ custom_categories:
       - RoadObjectMatcherDelegate
       - RoadObjectStoreDelegate
       - RoadObjectMatcherError
+  - name: Reading History
+    children:
+      - HistoryReader
+      - HistoryEvent
+      - UnknownHistoryEvent
+      - RouteAssignmentHistoryEvent
+      - LocationUpdateHistoryEvent
