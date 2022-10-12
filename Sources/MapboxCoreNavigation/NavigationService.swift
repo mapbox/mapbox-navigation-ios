@@ -459,28 +459,28 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     /**
-     Intializes a new `NavigationService` for replaying a session from provided `HistoryFileDump`.
+     Intializes a new `NavigationService` for replaying a session from provided `History`.
      
-     - parameter historyFileDump: `HistoryFileDump` object, containing initial route and location trace to be replayed.
+     - parameter history: `History` object, containing initial route and location trace to be replayed.
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter credentials: Credentials to authorize additional data requests throughout the route.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter routerType: An optional router type to use for traversing the route.
      - returns `nil` if provided `historyFileDump` does not contain valid initial route.
      */
-    public convenience init?(historyFileDump: HistoryFileDump,
+    public convenience init?(history: History,
                              customRoutingProvider: RoutingProvider? = nil,
                              credentials: Credentials,
                              eventsManagerType: NavigationEventsManager.Type? = nil,
                              routerType: Router.Type? = nil,
                              customActivityType: CLActivityType? = nil) {
-        guard let routeResponse = historyFileDump.initialRoute else {
+        guard let routeResponse = history.initialRoute else {
             return nil
         }
         self.init(indexedRouteResponse: routeResponse,
                   customRoutingProvider: customRoutingProvider,
                   credentials: credentials,
-                  locationSource: ReplayLocationManager(historyFileDump: historyFileDump),
+                  locationSource: ReplayLocationManager(history: history),
                   eventsManagerType: eventsManagerType,
                   routerType: routerType,
                   customActivityType: customActivityType)

@@ -68,8 +68,8 @@ open class ReplayLocationManager: NavigationLocationManager {
         verifyParameters()
     }
     
-    public convenience init(historyFileDump: HistoryFileDump) {
-        self.init(locations: historyFileDump.rawLocations)
+    public convenience init(history: History) {
+        self.init(locations: history.rawLocations)
     }
     
     deinit {
