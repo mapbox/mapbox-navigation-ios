@@ -275,6 +275,7 @@
 		8AC5070728D3D925005D45EB /* CameraModeFloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */; };
 		8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
+		8AC9FD5F28F5F2AB0032FD59 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9FD5E28F5F2AB0032FD59 /* DebugView.swift */; };
 		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
@@ -892,6 +893,7 @@
 		8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButton.swift; sourceTree = "<group>"; };
 		8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationViewController+NavigationMapViewDelegate.swift"; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
+		8AC9FD5E28F5F2AB0032FD59 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
@@ -1626,6 +1628,7 @@
 				8AF1D56528EFA1CA00041ED4 /* Banner.swift */,
 				8A74630928EBBF0C002D251C /* BannerPresentation.swift */,
 				8AF1D56328EF8A4B00041ED4 /* BannerPresentationDelegate.swift */,
+				8AC9FD5E28F5F2AB0032FD59 /* DebugView.swift */,
 			);
 			name = Preview;
 			sourceTree = "<group>";
@@ -2855,6 +2858,7 @@
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				8AD866FF25CA1BF10019A638 /* NavigationViewportDataSource.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
+				8AC9FD5F28F5F2AB0032FD59 /* DebugView.swift in Sources */,
 				8A2354F128877890003E42B4 /* BottomBannerViewControllerDelegate.swift in Sources */,
 				8AD2211727C43B06000734A5 /* LineView.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
