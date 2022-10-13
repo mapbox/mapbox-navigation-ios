@@ -157,13 +157,14 @@ open class RouteProgress: Codable {
     }
 
     private func commonRefreshRoute(at location: CLLocation) {
+        let intersectionIndex = currentLegProgress.currentStepProgress.intersectionIndex
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
                                               spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
+        currentLegProgress.currentStepProgress.intersectionIndex = intersectionIndex
         updateDistanceToIntersection(from: location)
-        updateIntersectionIndex()
     }
 
     /**
@@ -220,12 +221,6 @@ open class RouteProgress: Codable {
             let distances: [CLLocationDistance] = intersections.compactMap { shape.distance(from: shape.coordinates.first, to: $0.location) }
             currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
-    }
-    
-    func updateIntersectionIndex() {
-        guard let distances = currentLegProgress.currentStepProgress.intersectionDistances else { return }
-        let upcomingIntersectionIndex = distances.firstIndex { $0 > currentLegProgress.currentStepProgress.distanceTraveled } ?? distances.endIndex
-        currentLegProgress.currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? distances.index(before: upcomingIntersectionIndex) : 0
     }
     
     // MARK: Leg Statistics
