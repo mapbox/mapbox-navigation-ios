@@ -359,6 +359,7 @@ class CustomRoutingProviderStub: RoutingProvider {
     var routeStub: (() -> Void)?
     var matchStub: (() -> Void)?
     var refreshStub: (() -> Void)?
+    var refreshByIndexStub: (() -> Void)?
     
     func calculateRoutes(options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
         routeStub?()
@@ -377,6 +378,11 @@ class CustomRoutingProviderStub: RoutingProvider {
     
     func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
         refreshStub?()
+        return nil
+    }
+    
+    func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, currentRouteShapeIndex: Int, currentLegShapeIndex: Int, completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        refreshByIndexStub?()
         return nil
     }
 }

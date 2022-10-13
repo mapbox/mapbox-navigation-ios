@@ -15,6 +15,7 @@ public protocol HistoryRecording {
      Path to the directory where history file could be stored when `stopRecordingHistory(writingFileWith:)` is called.
 
      Setting `nil` disables history recording. Defaults to `nil`. Updating value from `nil` to `non-nil` value results in recreating the shared instance since `nil` guaranteed an invalid handler. Further updates have no effect.
+     Saved history files can be then read using `HistoryReader`.
      */
     static var historyDirectoryURL: URL? { get set }
 
@@ -58,6 +59,8 @@ public protocol HistoryRecording {
      Stops recording history, asynchronously writing any recorded history to a file.
 
      Upon completion, the completion handler is called with the URL to a file in the directory specified by `historyDirectoryURL`. The file contains details about the passive location manager’s activity that may be useful to include when reporting an issue to Mapbox.
+     
+     Saved history files can be then read using `HistoryReader`.
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.

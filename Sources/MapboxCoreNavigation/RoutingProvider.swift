@@ -42,15 +42,31 @@ public protocol RoutingProvider {
                                             completionHandler: @escaping Directions.MatchCompletionHandler) -> NavigationProviderRequest?
     
     /**
-     Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg along the route.
+     Begins asynchronously refreshing the route with the given identifier, starting from an arbitrary leg along the route.
      
      - parameter indexedRouteResponse: The `RouteResponse` and selected `routeIndex` in it to be refreshed.
-     - parameter fromLegAtIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted, the entire route is refreshed.
+     - parameter fromLegAtIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route. If this argument is `0`, the entire route is refreshed.
      - parameter completionHandler: The closure (block) to call with updated `RouteResponse` data. Order of `routes` remain unchanged comparing to original `indexedRouteResponse`. This closure is executed on the application’s main thread.
      - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
      */
     @discardableResult func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
                                          fromLegAtIndex: UInt32,
+                                         completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
+
+    /**
+     Begins asynchronously refreshing the route with the given identifier, starting from an arbitrary leg and shape index along the route.
+
+     - parameter indexedRouteResponse: The `RouteResponse` and selected `routeIndex` in it to be refreshed.
+     - parameter fromLegAtIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route.
+     - parameter currentRouteShapeIndex: Index relative to route shape, representing the point the user is currently located at.
+     - parameter currentRouteShapeIndex: Index relative to `fromLegAtIndex` leg shape, representing the point the user is currently located at.
+     - parameter completionHandler: The closure (block) to call with updated `RouteResponse` data. Order of `routes` remain unchanged comparing to original `indexedRouteResponse`. This closure is executed on the application’s main thread.
+     - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
+     */
+    @discardableResult func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
+                                         fromLegAtIndex: UInt32,
+                                         currentRouteShapeIndex: Int,
+                                         currentLegShapeIndex: Int,
                                          completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest?
 }
 
