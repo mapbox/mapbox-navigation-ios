@@ -409,7 +409,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - Event handlers
     
-    @objc func didPressDebugButton() {
+    @objc func didPressDebugButton(_ sender: Any) {
         // TODO: Implement debug view presentation.
     }
 }
