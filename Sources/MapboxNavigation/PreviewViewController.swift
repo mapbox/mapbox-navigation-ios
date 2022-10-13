@@ -4,6 +4,10 @@ import MapboxCoreNavigation
 import MapboxMaps
 import MapboxDirections
 
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
+
 // :nodoc:
 open class PreviewViewController: UIViewController, BannerPresentation {
     
@@ -417,8 +421,30 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - Event handlers
     
-    @objc func didPressDebugButton() {
-        // TODO: Implement debug view presentation.
+    @objc func didPressDebugButton(_ sender: UIButton) {
+        if #available(iOS 16.0, *) {
+            let popoverViewController = UIViewController()
+            popoverViewController.modalPresentationStyle = .popover
+            popoverViewController.preferredContentSize = .init(width: 300, height: 300)
+            popoverViewController.popoverPresentationController?.sourceView = sender
+            
+            let debugView = DebugView()
+            let hostingController = UIHostingController(rootView: debugView)
+            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+            popoverViewController.addChild(hostingController)
+            popoverViewController.view.addSubview(hostingController.view)
+            
+            NSLayoutConstraint.activate([
+                hostingController.view.leadingAnchor.constraint(equalTo: popoverViewController.view.leadingAnchor),
+                hostingController.view.trailingAnchor.constraint(equalTo: popoverViewController.view.trailingAnchor),
+                hostingController.view.topAnchor.constraint(equalTo: popoverViewController.view.topAnchor),
+                hostingController.view.bottomAnchor.constraint(equalTo: popoverViewController.view.bottomAnchor)
+            ])
+            
+            present(popoverViewController, animated: true)
+        } else {
+            // No-op
+        }
     }
 }
 

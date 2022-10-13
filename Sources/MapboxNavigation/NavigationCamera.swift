@@ -25,16 +25,43 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         viewportDataSource.delegate = self
         
         setupGestureRecognizers()
-        
-        // Uncomment to be able to see `NavigationCameraDebugView`.
-        // setupDebugView(mapView,
-        //                navigationCameraType: navigationCameraType,
-        //                navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
+        subscribeForNotifications()
+    }
+    
+    deinit {
+        unsubscribeFromNotifications()
     }
     
     func setupGestureRecognizers() {
         makeGestureRecognizersDisableCameraFollowing()
         makeTapGestureRecognizerStopAnimatedTransitions()
+    }
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateDebugViewVisibility),
+                                               name: .navigationCameraViewportDidTriggerVisibilityChange,
+                                               object: nil)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraViewportDidTriggerVisibilityChange,
+                                                  object: nil)
+    }
+    
+    @objc func updateDebugViewVisibility(_ notification: Notification) {
+        guard let isVisible = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.viewportVisibility] as? Bool else {
+            return
+        }
+        
+        if isVisible, let mapView = mapView {
+            showViewportDebugView(mapView,
+                                  navigationCameraType: type,
+                                  navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
+        } else {
+            removeViewportDebugView()
+        }
     }
     
     // MARK: Reacting to ViewportDataSourceDelegate Updates
@@ -231,13 +258,17 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         }
     }
     
-    func setupDebugView(_ mapView: MapView,
-                        navigationCameraType: NavigationCameraType,
-                        navigationViewportDataSource: NavigationViewportDataSource?) {
+    func showViewportDebugView(_ mapView: MapView,
+                               navigationCameraType: NavigationCameraType,
+                               navigationViewportDataSource: NavigationViewportDataSource?) {
         debugView = NavigationCameraDebugView(mapView,
                                               frame: mapView.frame,
                                               navigationCameraType: navigationCameraType,
                                               navigationViewportDataSource: navigationViewportDataSource)
         mapView.addSubview(debugView!)
+    }
+    
+    func removeViewportDebugView() {
+        debugView?.removeFromSuperview()
     }
 }
