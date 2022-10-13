@@ -174,14 +174,14 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                                     navigationOptions: navigationOptions)
             navigationViewController.modalPresentationStyle = .fullScreen
             navigationViewController.transitioningDelegate = self
+            // Make `SceneDelegate` delegate of `NavigationViewController` to be notified about
+            // its dismissal.
+            navigationViewController.delegate = self
             
             self.previewViewController.present(navigationViewController,
                                                animated: true,
                                                completion: { [weak self] in
                 guard let self = self else { return }
-                // Make `SceneDelegate` delegate of `NavigationViewController` to be notified about
-                // its dismissal.
-                navigationViewController.delegate = self
                 
                 // Change user location style to the one that is used during active navigation.
                 navigationViewController.navigationMapView?.userLocationStyle = .courseView()
