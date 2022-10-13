@@ -9,10 +9,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    var routeIndex: Int = 0
-    
-    var coordinates: [CLLocationCoordinate2D] = []
-    
     var previewViewController: PreviewViewController!
     
     let shouldAnimate = true
