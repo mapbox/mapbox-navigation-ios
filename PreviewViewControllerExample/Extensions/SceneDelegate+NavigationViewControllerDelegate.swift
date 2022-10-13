@@ -27,7 +27,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 let navigationView = self.previewViewController.navigationView
                 let navigationMapView = navigationView.navigationMapView
                 
-                navigationMapView.delegate = self.previewViewController
+                navigationMapView.delegate = self
                 
                 // TODO: Implement public method that completely cleans-up `NavigationMapView`.
                 navigationMapView.removeRoutes()
@@ -38,9 +38,9 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 navigationMapView.removeContinuousAlternativeRoutesDurations()
                 navigationMapView.userLocationStyle = .puck2D()
                 
-                self.previewViewController.showcase(routeResponse: navigationViewController.routeResponse,
-                                                    animated: self.shouldAnimate,
-                                                    duration: self.animationDuration)
+                self.showcase(routeResponse: navigationViewController.routeResponse,
+                              animated: self.shouldAnimate,
+                              duration: self.animationDuration)
                 
                 navigationView.topBannerContainerView.show(animated: self.shouldAnimate,
                                                            duration: self.animationDuration,
