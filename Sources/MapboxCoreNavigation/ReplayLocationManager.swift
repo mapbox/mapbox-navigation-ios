@@ -68,6 +68,10 @@ open class ReplayLocationManager: NavigationLocationManager {
         verifyParameters()
     }
     
+    public convenience init(history: History) {
+        self.init(locations: history.rawLocations)
+    }
+    
     deinit {
         stopUpdatingLocation()
     }
