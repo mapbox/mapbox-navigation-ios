@@ -29,6 +29,17 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     let previewOptions: PreviewOptions
     
+    // :nodoc:
+    public var navigationMapView: NavigationMapView {
+        get {
+            navigationView.navigationMapView
+        }
+        
+        set {
+            navigationView.navigationMapView = newValue
+        }
+    }
+    
     // MARK: - Initialization methods
     
     // :nodoc:
@@ -451,6 +462,7 @@ extension PreviewViewController: BannerPresentationDelegate {
     func bannerWillDisappear(_ presenter: BannerPresentation,
                              banner: Banner) {
         if banner is DestinationPreviewViewController {
+            navigationView.navigationMapView.removeDestinationAnnotation()
             navigationView.navigationMapView.removeDestinationAnnotation(NavigationMapView.AnnotationIdentifier.previewFinalDestinationAnnotation)
             navigationView.navigationMapView.removeRoutes()
         } else if banner is RoutesPreviewViewController {
