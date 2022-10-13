@@ -117,6 +117,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             return
         }
         
+        // While presenting `DestinationPreviewViewController` - override its initial primary text
+        // to reverse-geocoded name.
         reverseGeocode(destinationCoordinate) { placemarkName in
             destinationPreviewViewController.destinationOptions.primaryText = NSAttributedString(string: placemarkName)
         }
