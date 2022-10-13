@@ -789,7 +789,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         }
         
         if annotatesIntersectionsAlongRoute {
-            navigationMapView?.updateIntersectionSignals(with: routeProgress)
+            navigationMapView?.updateIntersectionAnnotations(with: routeProgress)
         }
         
         navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: legIndex != currentLegIndexMapped)
@@ -890,7 +890,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
         
         if annotatesIntersectionsAlongRoute {
-            navigationMapView?.updateIntersectionSignals(with: progress)
+            navigationMapView?.updateIntersectionAnnotations(with: progress)
         }
     }
     
@@ -1037,9 +1037,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     func updateIntersectionsAlongRoute() {
         if annotatesIntersectionsAlongRoute {
             navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
-            navigationMapView?.updateIntersectionSignals(with: navigationService.routeProgress)
+            navigationMapView?.updateIntersectionAnnotations(with: navigationService.routeProgress)
         } else {
-            navigationMapView?.removeIntersectionSignals()
+            navigationMapView?.removeIntersectionAnnotations()
         }
     }
 }

@@ -886,9 +886,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     func updateIntersectionsAlongRoute() {
         if annotatesIntersectionsAlongRoute {
             navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
-            navigationMapView?.updateIntersectionSignals(with: navigationService.routeProgress)
+            navigationMapView?.updateIntersectionAnnotations(with: navigationService.routeProgress)
         } else {
-            navigationMapView?.removeIntersectionSignals()
+            navigationMapView?.removeIntersectionAnnotations()
         }
     }
 }

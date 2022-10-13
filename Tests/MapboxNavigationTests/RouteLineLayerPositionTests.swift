@@ -245,7 +245,7 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.showsRestrictedAreasOnRoute = false
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.updateIntersectionSymbolImages(styleType: .day)
-        navigationMapView.updateIntersectionSignals(with: routeProgress)
+        navigationMapView.updateIntersectionAnnotations(with: routeProgress)
         
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -258,7 +258,7 @@ class RouteLineLayerPositionTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
+            NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer,
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!
@@ -284,7 +284,7 @@ class RouteLineLayerPositionTests: TestCase {
                                 layerPosition: .below(roadLabelLayer["id"]!))
         navigationMapView.removeRoutes()
         navigationMapView.removeArrow()
-        navigationMapView.removeIntersectionSignals()
+        navigationMapView.removeIntersectionAnnotations()
 
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -307,7 +307,7 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.show([multilegRoute])
         navigationMapView.showsRestrictedAreasOnRoute = true
         navigationMapView.routeLineTracksTraversal = false
-        navigationMapView.updateIntersectionSignals(with: routeProgress)
+        navigationMapView.updateIntersectionAnnotations(with: routeProgress)
         
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -321,7 +321,7 @@ class RouteLineLayerPositionTests: TestCase {
             NavigationMapView.LayerIdentifier.arrowLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
             NavigationMapView.LayerIdentifier.arrowSymbolLayer,
-            NavigationMapView.LayerIdentifier.intersectionSignalLayer,
+            NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer,
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,

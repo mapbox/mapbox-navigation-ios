@@ -526,11 +526,11 @@ class NavigationViewControllerTests: TestCase {
                        "Failed to update the style of SpriteRepository singleton with the injected NavigationMapView.")
     }
     
-    func testUpdateIntersectionSignalsAlongRouteOnMap() {
+    func testAnnotatesIntersectionsAlongRoute() {
         let navigationViewController = navigationViewControllerMock()
         let imageIdentifier = NavigationMapView.ImageIdentifier.trafficSignal
-        let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
-        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionSignalSource
+        let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer
+        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionAnnotationsSource
         
         guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
             XCTFail("Failed to get the MapView style object.")

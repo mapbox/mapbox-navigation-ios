@@ -56,7 +56,7 @@ extension NavigationMapView {
             }
             
             if annotatesIntersections {
-                navigationMapView.updateIntersectionSignals(with: router.routeProgress)
+                navigationMapView.updateIntersectionAnnotations(with: router.routeProgress)
             }
         }
         
@@ -94,7 +94,7 @@ extension NavigationMapView {
             }
             
             if annotatesIntersections {
-                navigationMapView.updateIntersectionSignals(with: router.routeProgress)
+                navigationMapView.updateIntersectionAnnotations(with: router.routeProgress)
             }
         }
         
@@ -118,7 +118,7 @@ extension NavigationMapView {
             }
             
             if annotatesIntersections {
-                navigationMapView.updateIntersectionSignals(with: progress)
+                navigationMapView.updateIntersectionAnnotations(with: progress)
             }
             
             navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate, shouldRedraw: currentLegIndexMapped != legIndex)

@@ -395,8 +395,20 @@ extension NavigationMapView {
     
     // MARK: Intersection Signals Annotations
     
+    
+    /**
+     Removes all the intersection annotations on current route.
+     */
+    func removeIntersectionAnnotations() {
+        let style = mapView.mapboxMap.style
+        style.removeLayers([NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.intersectionAnnotationsSource])
+    }
+    
     /**
      Updates the image assets in the map style for the route intersection signals.
+     
+     - parameter styleType: The `StyleType` to choose `Day` or `Night` style of icon images for route intersection signals.
      */
     func updateIntersectionSymbolImages(styleType: StyleType?) {
         let style = mapView.mapboxMap.style
@@ -428,9 +440,9 @@ extension NavigationMapView {
         }
     }
     
-    func updateIntersectionSignals(with routeProgress: RouteProgress) {
+    func updateIntersectionAnnotations(with routeProgress: RouteProgress) {
         guard !routeProgress.routeIsComplete else {
-            removeIntersectionSignals()
+            removeIntersectionAnnotations()
             return
         }
         var featureCollection = FeatureCollection(features: [])
@@ -440,7 +452,7 @@ extension NavigationMapView {
         let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
         
         for intersection in stepIntersections?.suffix(from: intersectionIndex) ?? [] {
-            if let feature = signalFeature(from: intersection) {
+            if let feature = intersectionFeature(from: intersection) {
                 featureCollection.features.append(feature)
             }
         }
@@ -448,7 +460,7 @@ extension NavigationMapView {
         let style = mapView.mapboxMap.style
         
         do {
-            let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionSignalSource
+            let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionAnnotationsSource
             if style.sourceExists(withId: sourceIdentifier) {
                 try style.updateGeoJSONSource(withId: sourceIdentifier, geoJSON: .featureCollection(featureCollection))
             } else {
@@ -457,7 +469,7 @@ extension NavigationMapView {
                 try style.addSource(source, id: sourceIdentifier)
             }
             
-            let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionSignalLayer
+            let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer
             guard !style.layerExists(withId: layerIdentifier) else { return }
             
             var shapeLayer = SymbolLayer(id: layerIdentifier)
@@ -475,7 +487,7 @@ extension NavigationMapView {
         }
     }
     
-    private func signalFeature(from intersection: Intersection) -> Feature? {
+    private func intersectionFeature(from intersection: Intersection) -> Feature? {
         var properties: JSONObject? = nil
         if intersection.railroadCrossing == true {
             properties = ["imageName": .string(ImageIdentifier.railroadCrossing)]

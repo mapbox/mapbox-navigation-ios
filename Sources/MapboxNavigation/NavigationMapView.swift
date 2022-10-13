@@ -1459,7 +1459,7 @@ open class NavigationMapView: UIView {
             LayerIdentifier.arrowLayer,
             LayerIdentifier.arrowSymbolCasingLayer,
             LayerIdentifier.arrowSymbolLayer,
-            LayerIdentifier.intersectionSignalLayer
+            LayerIdentifier.intersectionAnnotationsLayer
         ]
         let uppermostSymbolLayers: [String] = [
             LayerIdentifier.waypointCircleLayer,
