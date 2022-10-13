@@ -35,9 +35,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     // :nodoc:
     public var destinationOptions: DestinationOptions {
         didSet {
-            if let primaryText = destinationOptions.primaryText {
-                destinationLabel.attributedText = primaryText
-            }
+            updateDestinationDetails()
         }
     }
     
@@ -64,6 +62,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         setupDestinationLabel()
         setupSeparatorViews()
         setupConstraints()
+        updateDestinationDetails()
     }
     
     func setupParentView() {
@@ -129,5 +128,11 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     
     @objc func didPressStartButton() {
         delegate?.didPressBeginActiveNavigationButton(self)
+    }
+    
+    func updateDestinationDetails() {
+        if let primaryText = destinationOptions.primaryText {
+            destinationLabel.attributedText = primaryText
+        }
     }
 }
