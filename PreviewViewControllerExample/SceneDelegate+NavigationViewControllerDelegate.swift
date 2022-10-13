@@ -38,13 +38,9 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 navigationMapView.removeContinuousAlternativeRoutesDurations()
                 navigationMapView.userLocationStyle = .puck2D()
                 
-                // Depending on currently presented banner perform required map or camera modifications.
-                if let routesPreviewViewController = self.previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
-                    let routeResponse = routesPreviewViewController.routesPreviewOptions.routeResponse
-                    self.previewViewController.showcase(routeResponse: routeResponse,
-                                                        animated: self.shouldAnimate,
-                                                        duration: self.animationDuration)
-                }
+                self.previewViewController.showcase(routeResponse: navigationViewController.routeResponse,
+                                                    animated: self.shouldAnimate,
+                                                    duration: self.animationDuration)
                 
                 navigationView.topBannerContainerView.show(animated: self.shouldAnimate,
                                                            duration: self.animationDuration,
