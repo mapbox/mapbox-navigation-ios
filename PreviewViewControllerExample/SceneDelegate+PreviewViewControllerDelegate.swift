@@ -7,26 +7,20 @@ import MapboxGeocoder
 
 extension SceneDelegate: PreviewViewControllerDelegate {
     
-    func requestRoutes(_ completion: @escaping (_ routeResponse: RouteResponse) -> Void) {
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
-        
-        Directions.shared.calculate(navigationRouteOptions) { (_, result) in
-            switch result {
-            case .failure(let error):
-                print("Error occured while requesting routes: \(error.localizedDescription)")
-            case .success(let routeResponse):
-                completion(routeResponse)
-            }
-        }
-    }
+    // MARK: - PreviewViewControllerDelegate methods
     
     func didPressPreviewRoutesButton(_ previewViewController: PreviewViewController) {
-        requestRoutes { [weak self] routeResponse in
+        guard let destinationPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? DestinationPreviewViewController else {
+            return
+        }
+        
+        requestRoute(between: destinationPreviewViewController.destinationOptions.coordinates,
+                     completion: { [weak self] routeResponse in
             guard let self = self else { return }
             previewViewController.preview(routeResponse,
                                           animated: self.shouldAnimate,
                                           duration: self.animationDuration)
-        }
+        })
     }
     
     func didPressDismissBannerButton(_ previewViewController: PreviewViewController) {
@@ -41,6 +35,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                 duration: animationDuration,
                                                 animations: {
                 previewViewController.navigationView.topBannerContainerView.alpha = 0.0
+            }, completion: {
+                previewViewController.navigationView.topBannerContainerView.alpha = 1.0
             })
         }
     }
@@ -50,35 +46,43 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             let routeResponse = previewViewController.routesPreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
         } else {
-            requestRoutes { [weak self] routeResponse in
-                guard let self = self else { return }
-                self.startActiveNavigation(for: routeResponse)
+            if let destinationPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? DestinationPreviewViewController {
+                let coordinates = destinationPreviewViewController.destinationOptions.coordinates
+                requestRoute(between: coordinates) { [weak self] routeResponse in
+                    guard let self = self,
+                          let routes = routeResponse.routes else {
+                        return
+                    }
+                    
+                    self.previewViewController.navigationView.navigationMapView.show(routes)
+                    self.startActiveNavigation(for: routeResponse)
+                }
             }
         }
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didAddDestinationBetween coordinates: [CLLocationCoordinate2D]) {
+        let topmostBottomBanner = previewViewController.topBanner(at: .bottomLeading)
+        
         // In case if `RoutesPreviewViewController` is shown - don't do anything.
-        if previewViewController.topBanner(at: .bottomLeading) is RoutesPreviewViewController {
+        if topmostBottomBanner is RoutesPreviewViewController {
             return
+        }
+        
+        // In case if `DestinationPreviewViewController` is shown - dismiss it and after that show new one.
+        if topmostBottomBanner is DestinationPreviewViewController {
+            previewViewController.dismissBanner(at: .bottomLeading,
+                                                animated: false)
+            previewViewController.preview(coordinates,
+                                          animated: false)
         } else {
-            self.coordinates = coordinates
-            
-            guard let destinationCoordinate = coordinates.last else {
-                return
-            }
-            
-            let finalWaypoint = Waypoint(coordinate: destinationCoordinate,
-                                         coordinateAccuracy: nil,
-                                         name: "Dropped pin")
-            
-            if shouldAnimate && !(previewViewController.topBanner(at: .bottomLeading) is DestinationPreviewViewController) {
+            if shouldAnimate {
                 previewViewController.navigationView.topBannerContainerView.alpha = 0.0
                 previewViewController.navigationView.bottomBannerContainerView.alpha = 0.0
             }
             
-            previewViewController.preview(finalWaypoint,
+            previewViewController.preview(coordinates,
                                           animated: shouldAnimate,
                                           duration: animationDuration,
                                           animations: {
@@ -90,21 +94,53 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                didSelect route: Route) {
-        guard let routesPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController,
+        let topmostBottomBanner = previewViewController.topBanner(at: .bottomLeading)
+        
+        guard let routesPreviewViewController = topmostBottomBanner as? RoutesPreviewViewController,
               let routes = routesPreviewViewController.routesPreviewOptions.routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
             return
         }
         
-        self.routeIndex = routeIndex
+        previewViewController.dismissBanner(at: .bottomLeading,
+                                            animated: false)
         
         previewViewController.preview(routesPreviewViewController.routesPreviewOptions.routeResponse,
                                       routeIndex: routeIndex,
-                                      animated: shouldAnimate,
-                                      duration: animationDuration)
+                                      animated: false)
     }
     
-    func startActiveNavigation(for routeResponse: RouteResponse) {
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent banner: Banner) {
+        guard let destinationPreviewViewController = banner as? DestinationPreviewViewController,
+              let destinationCoordinate = destinationPreviewViewController.destinationOptions.coordinates.last else {
+            return
+        }
+        
+        reverseGeocode(destinationCoordinate) { placemarkName in
+            destinationPreviewViewController.destinationOptions.primaryText = NSAttributedString(string: placemarkName)
+        }
+    }
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didPresent banner: Banner) {
+        // No-op
+    }
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willDismiss banner: Banner) {
+        // No-op
+    }
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               didDismiss banner: Banner) {
+        // No-op
+    }
+    
+    // MARK: - Helper methods
+    
+    func startActiveNavigation(for routeResponse: RouteResponse,
+                               routeIndex: Int = 0) {
         previewViewController.navigationView.topBannerContainerView.hide(animated: shouldAnimate,
                                                                          duration: animationDuration,
                                                                          animations: {
@@ -121,7 +157,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             guard let self = self else { return }
             
             let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
-                                                            routeIndex: self.routeIndex)
+                                                            routeIndex: routeIndex)
             
             let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                             credentials: NavigationSettings.shared.directions.credentials,
@@ -182,15 +218,26 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         })
     }
     
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               willPresent destinationText: NSAttributedString,
-                               in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString? {
-        let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoint.coordinate
-        let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
+    func requestRoute(between coordinates: [CLLocationCoordinate2D],
+                      completion: @escaping (_ routeResponse: RouteResponse) -> Void) {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
+        
+        Directions.shared.calculate(navigationRouteOptions) { (_, result) in
+            switch result {
+            case .failure(let error):
+                print("Error occured while requesting routes: \(error.localizedDescription)")
+            case .success(let routeResponse):
+                completion(routeResponse)
+            }
+        }
+    }
+    
+    func reverseGeocode(_ coordinate: CLLocationCoordinate2D,
+                        completion: @escaping (_ placemarkName: String) -> Void) {
+        let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: coordinate)
         reverseGeocodeOptions.focalLocation = CLLocationManager().location
         reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
-        let allowedScopes: PlacemarkScope = .all
-        reverseGeocodeOptions.allowedScopes = allowedScopes
+        reverseGeocodeOptions.allowedScopes = .all
         reverseGeocodeOptions.maximumResultCount = 1
         reverseGeocodeOptions.includesRoutableLocations = true
         
@@ -201,32 +248,11 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             }
             
             guard let placemark = placemarks?.first else {
+                print("Placemark was not found")
                 return
             }
             
-            destinationPreviewViewController.destinationOptions.primaryText = placemark.formattedName
+            completion(placemark.formattedName)
         })
-        
-        return NSAttributedString(string: "")
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               willPresent banner: Banner) {
-        // No-op
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               didPresent banner: Banner) {
-        // No-op
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               willDismiss banner: Banner) {
-        // No-op
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               didDismiss banner: Banner) {
-        // No-op
     }
 }
