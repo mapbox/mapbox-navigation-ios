@@ -275,7 +275,6 @@
 		8AC5070728D3D925005D45EB /* CameraModeFloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */; };
 		8AC5070C28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */; };
 		8AC85EA428628E4F003F8FC8 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC85EA328628E4F003F8FC8 /* UIDevice.swift */; };
-		8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */; };
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
@@ -892,7 +891,6 @@
 		8AC5070628D3D925005D45EB /* CameraModeFloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeFloatingButton.swift; sourceTree = "<group>"; };
 		8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationViewController+NavigationMapViewDelegate.swift"; sourceTree = "<group>"; };
 		8AC85EA328628E4F003F8FC8 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
-		8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
@@ -2048,7 +2046,6 @@
 				8AD220AA27C091EE000734A5 /* Solar.swift */,
 				8AD220AE27C09544000734A5 /* Date.swift */,
 				8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */,
-				8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */,
 				8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */,
 			);
 			name = Extensions;
@@ -2796,7 +2793,6 @@
 				8A50A3CD26EC0A3100894A8E /* DialogViewController.swift in Sources */,
 				8A7FD08A28D9369C000C448F /* UIViewController.swift in Sources */,
 				8AD635BB278F667300218D5A /* StepTableViewCell.swift in Sources */,
-				8ACCD6B328DC0EED008224D3 /* NavigationView+CameraOptions.swift in Sources */,
 				AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */,
 				8AD2211B27C43BB1000734A5 /* StylableLabel.swift in Sources */,
 				2BDD65512615C0E0005B8B55 /* RouteLineController.swift in Sources */,

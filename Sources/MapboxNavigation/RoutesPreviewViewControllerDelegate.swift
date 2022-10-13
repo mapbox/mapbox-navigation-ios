@@ -1,4 +1,5 @@
-protocol RoutesPreviewViewControllerDelegate: AnyObject {
+// :nodoc:
+public protocol RoutesPreviewViewControllerDelegate: AnyObject {
     
     func didPressBeginActiveNavigationButton(_ routesPreviewViewController: RoutesPreviewViewController)
 }

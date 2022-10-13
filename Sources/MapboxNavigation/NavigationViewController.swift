@@ -48,9 +48,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                 preconditionFailure("Invalid NavigationMapView instance.")
             }
             
-            navigationView.navigationMapView = validNavigationMapView
-            navigationView.navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationView.navigationMapView.mapView,
-                                                                                                                viewportDataSourceType: .active)
+            validNavigationMapView.delegate = self
+            validNavigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(validNavigationMapView.mapView,
+                                                                                                      viewportDataSourceType: .active)
             
             // Reset any changes that were previously made to `FollowingCameraOptions` to prevent
             // undesired camera behavior in active navigation.
@@ -63,6 +63,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             navigationViewportDataSource?.options.followingCameraOptions.followsLocationCourse = false
             
             validNavigationMapView.navigationCamera.follow()
+            
+            navigationView.navigationMapView = validNavigationMapView
         }
     }
     

@@ -1,7 +1,6 @@
 import UIKit
 
-// :nodoc:
-public class CameraModeFloatingButton: FloatingButton {
+class CameraModeFloatingButton: FloatingButton {
     
     var cameraMode: Preview.CameraMode = .centered {
         didSet {

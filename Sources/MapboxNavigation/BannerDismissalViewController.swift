@@ -1,6 +1,7 @@
 import UIKit
 
-class BannerDismissalViewController: UIViewController, Banner {
+// :nodoc:
+public class BannerDismissalViewController: UIViewController, Banner {
     
     var topBannerView: TopBannerView!
     
@@ -8,16 +9,19 @@ class BannerDismissalViewController: UIViewController, Banner {
     
     var backButton: BackButton!
     
-    weak var delegate: BannerDismissalViewControllerDelegate?
+    // :nodoc:
+    public weak var delegate: BannerDismissalViewControllerDelegate?
     
     // MARK: - Banner properties
     
-    var bannerConfiguration: BannerConfiguration {
+    // :nodoc:
+    public var bannerConfiguration: BannerConfiguration {
         BannerConfiguration(position: .topLeading,
                             height: 70.0)
     }
     
-    init() {
+    // :nodoc:
+    public init() {
         super.init(nibName: nil, bundle: nil)
         
         commonInit()
@@ -37,7 +41,7 @@ class BannerDismissalViewController: UIViewController, Banner {
     
     // MARK: - UIViewController lifecycle methods
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
@@ -69,7 +73,7 @@ class BannerDismissalViewController: UIViewController, Banner {
         
         backButton.setTitle(backButtonTitle, for: .normal)
         backButton.clipsToBounds = true
-        backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(didTapDismissBannerButton), for: .touchUpInside)
         backButton.setImage(.backImage, for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageEdgeInsets = UIEdgeInsets(top: 10,
@@ -83,7 +87,7 @@ class BannerDismissalViewController: UIViewController, Banner {
     
     // MARK: - Event handlers
     
-    @objc func didPressBackButton() {
-        delegate?.didPressDismissBannerButton(self)
+    @objc func didTapDismissBannerButton() {
+        delegate?.didTapDismissBannerButton(self)
     }
 }

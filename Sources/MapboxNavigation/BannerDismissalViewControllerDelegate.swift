@@ -1,4 +1,5 @@
-protocol BannerDismissalViewControllerDelegate: AnyObject {
+// :nodoc:
+public protocol BannerDismissalViewControllerDelegate: AnyObject {
     
-    func didPressDismissBannerButton(_ bannerDismissalViewController: BannerDismissalViewController)
+    func didTapDismissBannerButton(_ bannerDismissalViewController: BannerDismissalViewController)
 }

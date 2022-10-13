@@ -85,7 +85,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         setupPassiveLocationManager()
         setupNavigationViewportDataSource()
         subscribeForNotifications()
-        setupGestureRecognizers()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -98,7 +97,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         super.viewWillDisappear(animated)
         
         unsubscribeFromNotifications()
-        resetGestureRecognizers()
     }
     
     public override func viewSafeAreaInsetsDidChange() {
@@ -114,7 +112,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
         let navigationView = NavigationView(frame: frame)
         navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        navigationView.navigationMapView.delegate = self
         
         return navigationView
     }
@@ -175,18 +172,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         navigationView.moveCamera(to: .centered)
     }
     
-    func setupGestureRecognizers() {
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-        longPressGestureRecognizer.name = "preview_long_press_gesture_recognizer"
-        navigationView.navigationMapView.addGestureRecognizer(longPressGestureRecognizer)
-    }
-    
-    func resetGestureRecognizers() {
-        navigationView.navigationMapView.gestureRecognizers?.filter({ $0.name == "preview_long_press_gesture_recognizer" }).forEach {
-            navigationView.navigationMapView.removeGestureRecognizer($0)
-        }
-    }
-    
     // MARK: - Notifications observer methods
     
     func subscribeForNotifications() {
@@ -226,111 +211,7 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         }
     }
     
-    // MARK: - Destination and routes preview methods
-    
-    // :nodoc:
-    public func preview(_ coordinates: [CLLocationCoordinate2D],
-                        animated: Bool = true,
-                        duration: TimeInterval = 1.0,
-                        animations: (() -> Void)? = nil,
-                        completion: (() -> Void)? = nil) {
-        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
-        preview(waypoints,
-                animated: animated,
-                duration: duration,
-                animations: animations,
-                completion: completion)
-    }
-    
-    // :nodoc:
-    public func preview(_ waypoints: [Waypoint],
-                        animated: Bool = true,
-                        duration: TimeInterval = 1.0,
-                        animations: (() -> Void)? = nil,
-                        completion: (() -> Void)? = nil) {
-        if waypoints.isEmpty {
-            preconditionFailure("Waypoints array should not be empty.")
-        }
-        
-        let destinationOptions = DestinationOptions(waypoints: waypoints)
-        let destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
-        destinationPreviewViewController.delegate = self
-        push(destinationPreviewViewController,
-             animated: animated,
-             duration: duration,
-             animations: animations,
-             completion: {
-            completion?()
-        })
-        
-        presentBannerDismissalViewControllerIfNeeded(animated,
-                                                     duration: duration)
-        
-        // Force-unwrapping is acceptable here because of check at the beginng of the method.
-        navigationView.navigationMapView.addDestinationAnnotation(waypoints.last!.coordinate,
-                                                                  identifier: NavigationMapView.AnnotationIdentifier.previewFinalDestinationAnnotation)
-    }
-    
-    // :nodoc:
-    public func preview(_ routeResponse: RouteResponse,
-                        routeIndex: Int = 0,
-                        animated: Bool = true,
-                        duration: TimeInterval = 1.0,
-                        animations: (() -> Void)? = nil,
-                        completion: (() -> Void)? = nil) {
-        let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
-        let routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
-        routesPreviewViewController.delegate = self
-        push(routesPreviewViewController,
-             animated: animated,
-             duration: duration,
-             animations: animations)
-        
-        presentBannerDismissalViewControllerIfNeeded(animated,
-                                                     duration: duration)
-        
-        showcase(routeResponse: routeResponse,
-                 routeIndex: routeIndex,
-                 animated: animated,
-                 duration: duration,
-                 completion: { _ in
-            completion?()
-        })
-    }
-    
-    func presentBannerDismissalViewControllerIfNeeded(_ animated: Bool,
-                                                      duration: TimeInterval) {
-        if topBanner(at: .topLeading) is BannerDismissalViewController {
-            return
-        }
-        
-        let bannerDismissalViewController = BannerDismissalViewController()
-        bannerDismissalViewController.delegate = self
-        push(bannerDismissalViewController,
-             animated: animated,
-             duration: duration)
-    }
-    
-    // :nodoc:
-    public func showcase(routeResponse: RouteResponse,
-                         routeIndex: Int = 0,
-                         animated: Bool = true,
-                         duration: TimeInterval = 1.0,
-                         completion: NavigationMapView.AnimationCompletionHandler? = nil) {
-        guard var routes = routeResponse.routes else { return }
-        
-        routes.insert(routes.remove(at: routeIndex), at: 0)
-        
-        let cameraOptions = navigationView.defaultRoutesPreviewCameraOptions()
-        let routesPresentationStyle: RoutesPresentationStyle = .all(shouldFit: true,
-                                                                    cameraOptions: cameraOptions)
-        
-        navigationView.navigationMapView.showcase(routes,
-                                                  routesPresentationStyle: routesPresentationStyle,
-                                                  animated: animated,
-                                                  duration: duration,
-                                                  completion: completion)
-    }
+    // MARK: - Banner presentation and dismissal methods
     
     // :nodoc:
     @discardableResult
@@ -369,56 +250,10 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         }
     }
     
-    // MARK: - Gesture recognizers
-    
-    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
-        guard gesture.state == .began,
-              let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider,
-              let originCoordinate = passiveLocationProvider.locationManager.location?.coordinate else { return }
-        
-        let destinationCoordinate = navigationView.navigationMapView.mapView.mapboxMap.coordinate(for: gesture.location(in: navigationView.navigationMapView.mapView))
-        let coordinates = [
-            originCoordinate,
-            destinationCoordinate,
-        ]
-        
-        delegate?.previewViewController(self, didAddDestinationBetween: coordinates)
-    }
-    
     // MARK: - Event handlers
     
     @objc func didPressDebugButton(_ sender: Any) {
         // TODO: Implement debug view presentation.
-    }
-}
-
-// MARK: - NavigationMapViewDelegate methods
-
-extension PreviewViewController: NavigationMapViewDelegate {
-    
-    public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        delegate?.previewViewController(self, didSelect: route)
-    }
-}
-
-// MARK: - DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate and BannerDismissalViewControllerDelegate methods
-
-extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate, BannerDismissalViewControllerDelegate {
-    
-    func didPressPreviewRoutesButton(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        delegate?.didPressPreviewRoutesButton(self)
-    }
-    
-    func didPressBeginActiveNavigationButton(_ destinationPreviewViewController: DestinationPreviewViewController) {
-        delegate?.didPressBeginActiveNavigationButton(self)
-    }
-    
-    func didPressBeginActiveNavigationButton(_ routesPreviewViewController: RoutesPreviewViewController) {
-        delegate?.didPressBeginActiveNavigationButton(self)
-    }
-    
-    func didPressDismissBannerButton(_ bannerDismissalViewController: BannerDismissalViewController) {
-        delegate?.didPressDismissBannerButton(self)
     }
 }
 
@@ -445,12 +280,6 @@ extension PreviewViewController: BannerPresentationDelegate {
     
     func bannerWillAppear(_ presenter: BannerPresentation,
                           banner: Banner) {
-        if banner is DestinationPreviewViewController || banner is RoutesPreviewViewController {
-            navigationView.wayNameView.hide()
-            navigationView.speedLimitView.hide()
-            navigationView.navigationMapView.navigationCamera.stop()
-        }
-        
         delegate?.previewViewController(self, willPresent: banner)
     }
     
@@ -461,25 +290,11 @@ extension PreviewViewController: BannerPresentationDelegate {
     
     func bannerWillDisappear(_ presenter: BannerPresentation,
                              banner: Banner) {
-        if banner is DestinationPreviewViewController {
-            navigationView.navigationMapView.removeDestinationAnnotation()
-            navigationView.navigationMapView.removeDestinationAnnotation(NavigationMapView.AnnotationIdentifier.previewFinalDestinationAnnotation)
-            navigationView.navigationMapView.removeRoutes()
-        } else if banner is RoutesPreviewViewController {
-            navigationView.navigationMapView.removeWaypoints()
-            navigationView.navigationMapView.removeRoutes()
-        }
-        
         delegate?.previewViewController(self, willDismiss: banner)
     }
     
     func bannerDidDisappear(_ presenter: BannerPresentation,
                             banner: Banner) {
-        if topBanner(at: .bottomLeading) == nil {
-            navigationView.wayNameView.show()
-            navigationView.speedLimitView.show()
-        }
-        
         delegate?.previewViewController(self, didDismiss: banner)
     }
 }

@@ -22,7 +22,8 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     
     var trailingSeparatorView: SeparatorView!
     
-    weak var delegate: RoutesPreviewViewControllerDelegate?
+    // :nodoc:
+    public weak var delegate: RoutesPreviewViewControllerDelegate?
     
     // MARK: - Banner properties
     
@@ -40,7 +41,8 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
         }
     }
     
-    required init(_ routesPreviewOptions: RoutesPreviewOptions) {
+    // :nodoc:
+    public required init(_ routesPreviewOptions: RoutesPreviewOptions) {
         self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)

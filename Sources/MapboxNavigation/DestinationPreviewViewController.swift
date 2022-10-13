@@ -21,7 +21,8 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     
     var trailingSeparatorView: SeparatorView!
     
-    weak var delegate: DestinationPreviewViewControllerDelegate?
+    // :nodoc:
+    public weak var delegate: DestinationPreviewViewControllerDelegate?
     
     // MARK: - Banner properties
     
@@ -39,7 +40,8 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         }
     }
     
-    required init(_ destinationOptions: DestinationOptions) {
+    // :nodoc:
+    public required init(_ destinationOptions: DestinationOptions) {
         self.destinationOptions = destinationOptions
         
         super.init(nibName: nil, bundle: nil)
@@ -90,7 +92,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         previewButton.clipsToBounds = true
         previewButton.setImage(.previewOverviewImage, for: .normal)
         previewButton.imageView?.contentMode = .scaleAspectFit
-        previewButton.addTarget(self, action: #selector(didPressPreviewButton), for: .touchUpInside)
+        previewButton.addTarget(self, action: #selector(didTapPreviewRoutesButton), for: .touchUpInside)
         view.addSubview(previewButton)
         
         self.previewButton = previewButton
@@ -102,7 +104,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         startButton.clipsToBounds = true
         startButton.setImage(.previewStartImage, for: .normal)
         startButton.imageView?.contentMode = .scaleAspectFit
-        startButton.addTarget(self, action: #selector(didPressStartButton), for: .touchUpInside)
+        startButton.addTarget(self, action: #selector(didTapBeginActiveNavigationButton), for: .touchUpInside)
         view.addSubview(startButton)
         
         self.startButton = startButton
@@ -122,12 +124,12 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         self.trailingSeparatorView = trailingSeparatorView
     }
     
-    @objc func didPressPreviewButton() {
-        delegate?.didPressPreviewRoutesButton(self)
+    @objc func didTapPreviewRoutesButton() {
+        delegate?.didTapPreviewRoutesButton(self)
     }
     
-    @objc func didPressStartButton() {
-        delegate?.didPressBeginActiveNavigationButton(self)
+    @objc func didTapBeginActiveNavigationButton() {
+        delegate?.didTapBeginActiveNavigationButton(self)
     }
     
     func updateDestinationDetails() {
