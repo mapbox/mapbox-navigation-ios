@@ -1,7 +1,6 @@
 import UIKit
 
-// :nodoc:
-public class BannerDismissalViewController: UIViewController, Banner {
+class BannerDismissalViewController: UIViewController, Banner {
     
     var topBannerView: TopBannerView!
     
@@ -13,9 +12,9 @@ public class BannerDismissalViewController: UIViewController, Banner {
     
     // MARK: - Banner properties
     
-    public var bannerConfiguration: BannerConfiguration {
-         BannerConfiguration(position: .topLeading,
-                             height: 70.0)
+    var bannerConfiguration: BannerConfiguration {
+        BannerConfiguration(position: .topLeading,
+                            height: 70.0)
     }
     
     init() {
@@ -38,7 +37,7 @@ public class BannerDismissalViewController: UIViewController, Banner {
     
     // MARK: - UIViewController lifecycle methods
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
     }
     

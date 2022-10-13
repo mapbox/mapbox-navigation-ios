@@ -5,7 +5,7 @@ import MapboxMaps
 import MapboxDirections
 
 // :nodoc:
-open class PreviewViewController: UIViewController, BannerPresentation {
+public class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - BannerPresentation properties and methods
     
@@ -56,11 +56,11 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - UIViewController lifecycle methods
     
-    open override func loadView() {
+    public override func loadView() {
         view = setupNavigationView()
     }
     
-    open override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupFloatingButtons()
@@ -71,7 +71,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
         setupNavigationCamera()
     }
     
-    open override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Apply style each time `PreviewViewController` appears on screen
@@ -83,20 +83,20 @@ open class PreviewViewController: UIViewController, BannerPresentation {
         setupGestureRecognizers()
     }
     
-    open override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         setupOrnaments()
     }
     
-    open override func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         unsubscribeFromNotifications()
         resetGestureRecognizers()
     }
     
-    open override func viewSafeAreaInsetsDidChange() {
+    public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
         navigationView.setupTopBannerContainerViewHeightLayoutConstraints(topmostTopBanner?.bannerConfiguration.height)
@@ -271,7 +271,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                         duration: TimeInterval = 1.0,
                         animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
-        if waypoints.count < 2 {
+        if waypoints.isEmpty {
             preconditionFailure("Waypoints array should not be empty.")
         }
         
