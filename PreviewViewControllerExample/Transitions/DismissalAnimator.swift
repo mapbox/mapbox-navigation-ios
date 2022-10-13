@@ -9,6 +9,7 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromViewController = transitionContext.viewController(forKey: .from) as? NavigationViewController,
+              let navigationMapView = fromViewController.navigationMapView,
               let toViewController = transitionContext.viewController(forKey: .to) as? PreviewViewController else {
             transitionContext.completeTransition(false)
             return
@@ -16,7 +17,7 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         // Transfer `NavigationMapView` that was used in `NavigationViewController` back to
         // `PreviewViewController`.
-        toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
+        toViewController.navigationMapView = navigationMapView
         
         transitionContext.containerView.addSubview(toViewController.view)
         transitionContext.completeTransition(true)

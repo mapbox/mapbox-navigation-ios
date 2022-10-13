@@ -16,7 +16,7 @@ class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         // Replace default `NavigationMapView` in `NavigationViewController` with `NavigationMapView`
         // that was used in `PreviewViewController`.
-        toViewController.navigationView.navigationMapView = fromViewController.navigationView.navigationMapView
+        toViewController.navigationMapView = fromViewController.navigationMapView
         
         transitionContext.containerView.addSubview(toViewController.view)
         transitionContext.completeTransition(true)

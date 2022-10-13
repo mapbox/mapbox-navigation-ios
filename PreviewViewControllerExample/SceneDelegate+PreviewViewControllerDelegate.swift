@@ -145,7 +145,9 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                routeIndex: Int = 0) {
         previewViewController.navigationView.topBannerContainerView.hide(animated: shouldAnimate,
                                                                          duration: animationDuration,
-                                                                         animations: {
+                                                                         animations: { [weak self] in
+            guard let self = self else { return }
+            
             self.previewViewController.navigationView.topBannerContainerView.alpha = 0.0
         })
         
@@ -153,6 +155,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                                             duration: animationDuration,
                                                                             animations: { [weak self] in
             guard let self = self else { return }
+            
             self.previewViewController.navigationView.floatingStackView.alpha = 0.0
             self.previewViewController.navigationView.bottomBannerContainerView.alpha = 0.0
         }, completion: { [weak self] _ in
@@ -180,11 +183,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                 // its dismissal.
                 navigationViewController.delegate = self
                 
-                // Switch navigation camera to active navigation mode.
-                navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationViewController.navigationView.navigationMapView.mapView,
-                                                                                                                               viewportDataSourceType: .active)
-                navigationViewController.navigationMapView?.navigationCamera.follow()
-                
+                // Change user location style to the one that is used during active navigation.
                 navigationViewController.navigationMapView?.userLocationStyle = .courseView()
                 
                 // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
