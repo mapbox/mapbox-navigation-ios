@@ -54,8 +54,10 @@ extension DestinationPreviewViewController {
         
         NSLayoutConstraint.activate(destinationLabelLayoutConstraints)
         
+        let separatorViewThickness = 1 / UIScreen.main.scale
+        
         let separatorViewsConstraints = [
-            verticalSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            verticalSeparatorView.widthAnchor.constraint(equalToConstant: separatorViewThickness),
             verticalSeparatorView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor,
                                                        constant: 10.0),
             verticalSeparatorView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor,
@@ -64,12 +66,12 @@ extension DestinationPreviewViewController {
             verticalSeparatorView.leadingAnchor.constraint(equalTo: previewButton.trailingAnchor,
                                                            constant: 5.0),
             
-            horizontalSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            horizontalSeparatorView.heightAnchor.constraint(equalToConstant: separatorViewThickness),
             horizontalSeparatorView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor),
             horizontalSeparatorView.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor),
             horizontalSeparatorView.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor),
             
-            trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale),
+            trailingSeparatorView.widthAnchor.constraint(equalToConstant: separatorViewThickness),
             trailingSeparatorView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor),
             trailingSeparatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             trailingSeparatorView.leadingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor)

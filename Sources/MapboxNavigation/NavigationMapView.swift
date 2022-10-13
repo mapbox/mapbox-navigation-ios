@@ -1348,14 +1348,14 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     `PointAnnotation`, which should be added to the `MapView` when `PointAnnotationManager` becomes
+     Array of `PointAnnotation`s, which should be added to the `MapView` when `PointAnnotationManager` becomes
      available. Since `PointAnnotationManager` is created only after loading `MapView` style, there
      is a chance that due to a race condition during `NavigationViewController` creation
      `NavigationMapView.showWaypoints(on:legIndex:)` will be called before loading style. In such case
      final destination `PointAnnotation` will be stored in this property and added to the `MapView`
      later on.
      */
-    var finalDestinationAnnotation: PointAnnotation? = nil
+    var finalDestinationAnnotations: [PointAnnotation] = []
     
     /**
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
@@ -1415,29 +1415,40 @@ open class NavigationMapView: UIView {
         
         if let lastLeg = route.legs.last,
            let destinationCoordinate = lastLeg.destination?.coordinate {
-            let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
-            let markerImage = UIImage(named: "default_marker", in: .mapboxNavigation, compatibleWith: nil)!
-            destinationAnnotation.image = .init(image: markerImage, name: ImageIdentifier.markerImage)
-            
-            // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
-            // and add it only after fully loading `MapView` style.
-            if let pointAnnotationManager = pointAnnotationManager {
-                pointAnnotationManager.annotations = [destinationAnnotation]
-                delegate?.navigationMapView(self,
-                                            didAdd: destinationAnnotation,
-                                            pointAnnotationManager: pointAnnotationManager)
-            } else {
-                finalDestinationAnnotation = destinationAnnotation
-            }
+            addDestinationAnnotation(destinationCoordinate)
         }
+    }
+    
+    func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D,
+                                  identifier: String = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation) {
+        var destinationAnnotation = PointAnnotation(id: identifier, coordinate: coordinate)
+        destinationAnnotation.image = .init(image: .defaultMarkerImage, name: ImageIdentifier.markerImage)
+        
+        // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
+        // and add it only after fully loading `MapView` style.
+        if let pointAnnotationManager = pointAnnotationManager {
+            pointAnnotationManager.annotations.append(destinationAnnotation)
+            delegate?.navigationMapView(self,
+                                        didAdd: destinationAnnotation,
+                                        pointAnnotationManager: pointAnnotationManager)
+        } else {
+            finalDestinationAnnotations.append(destinationAnnotation)
+        }
+    }
+    
+    func removeDestinationAnnotation(_ identifier: String = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation) {
+        let remainingAnnotations = pointAnnotationManager?.annotations.filter {
+            $0.id != identifier
+        }
+        
+        pointAnnotationManager?.annotations = remainingAnnotations ?? []
     }
     
     /**
      Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-        pointAnnotationManager?.annotations = []
+        removeDestinationAnnotation()
         
         let layers: Set = [
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
@@ -2083,14 +2094,17 @@ open class NavigationMapView: UIView {
             guard let self = self else { return }
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
             
-            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
+            if self.finalDestinationAnnotations.count != 0,
                let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = [finalDestinationAnnotation]
-                self.delegate?.navigationMapView(self,
-                                                 didAdd: finalDestinationAnnotation,
-                                                 pointAnnotationManager: pointAnnotationManager)
+                pointAnnotationManager.annotations = self.finalDestinationAnnotations
                 
-                self.finalDestinationAnnotation = nil
+                self.finalDestinationAnnotations.forEach {
+                    self.delegate?.navigationMapView(self,
+                                                     didAdd: $0,
+                                                     pointAnnotationManager: pointAnnotationManager)
+                }
+                
+                self.finalDestinationAnnotations = []
             }
         }
         

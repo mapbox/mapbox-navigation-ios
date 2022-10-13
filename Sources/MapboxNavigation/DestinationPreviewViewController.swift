@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public class DestinationPreviewViewController: DestinationPreviewing {
+public class DestinationPreviewViewController: UIViewController, Banner, DestinationDataSource {
     
     var bottomBannerView: BottomBannerView!
     
@@ -21,23 +21,32 @@ public class DestinationPreviewViewController: DestinationPreviewing {
     
     var trailingSeparatorView: SeparatorView!
     
-    weak var delegate: DestinationPreviewViewControllerDelegate?
+    // :nodoc:
+    public weak var delegate: DestinationPreviewViewControllerDelegate?
     
-    // MARK: - DestinationPreviewing properties
+    // MARK: - Banner properties
+    
+    // :nodoc:
+    public var bannerConfiguration: BannerConfiguration {
+        BannerConfiguration(position: .bottomLeading)
+    }
+    
+    // MARK: - DestinationDataSource properties
     
     // :nodoc:
     public var destinationOptions: DestinationOptions {
         didSet {
-            if let primaryText = destinationOptions.primaryText {
-                destinationLabel.attributedText = NSAttributedString(string: primaryText)
-            }
+            updateDestinationDetails()
         }
     }
     
-    required init(_ destinationOptions: DestinationOptions) {
+    // :nodoc:
+    public required init(_ destinationOptions: DestinationOptions) {
         self.destinationOptions = destinationOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -46,8 +55,6 @@ public class DestinationPreviewViewController: DestinationPreviewing {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {
@@ -57,6 +64,7 @@ public class DestinationPreviewViewController: DestinationPreviewing {
         setupDestinationLabel()
         setupSeparatorViews()
         setupConstraints()
+        updateDestinationDetails()
     }
     
     func setupParentView() {
@@ -84,7 +92,7 @@ public class DestinationPreviewViewController: DestinationPreviewing {
         previewButton.clipsToBounds = true
         previewButton.setImage(.previewOverviewImage, for: .normal)
         previewButton.imageView?.contentMode = .scaleAspectFit
-        previewButton.addTarget(self, action: #selector(didPressPreviewButton), for: .touchUpInside)
+        previewButton.addTarget(self, action: #selector(didTapPreviewRoutesButton), for: .touchUpInside)
         view.addSubview(previewButton)
         
         self.previewButton = previewButton
@@ -96,7 +104,7 @@ public class DestinationPreviewViewController: DestinationPreviewing {
         startButton.clipsToBounds = true
         startButton.setImage(.previewStartImage, for: .normal)
         startButton.imageView?.contentMode = .scaleAspectFit
-        startButton.addTarget(self, action: #selector(didPressStartButton), for: .touchUpInside)
+        startButton.addTarget(self, action: #selector(didTapBeginActiveNavigationButton), for: .touchUpInside)
         view.addSubview(startButton)
         
         self.startButton = startButton
@@ -116,11 +124,17 @@ public class DestinationPreviewViewController: DestinationPreviewing {
         self.trailingSeparatorView = trailingSeparatorView
     }
     
-    @objc func didPressPreviewButton() {
-        delegate?.willPreviewRoutes(self)
+    @objc func didTapPreviewRoutesButton() {
+        delegate?.didTapPreviewRoutesButton(self)
     }
     
-    @objc func didPressStartButton() {
-        delegate?.willStartNavigation(self)
+    @objc func didTapBeginActiveNavigationButton() {
+        delegate?.didTapBeginActiveNavigationButton(self)
+    }
+    
+    func updateDestinationDetails() {
+        if let primaryText = destinationOptions.primaryText {
+            destinationLabel.attributedText = primaryText
+        }
     }
 }

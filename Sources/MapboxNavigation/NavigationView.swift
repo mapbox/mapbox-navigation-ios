@@ -87,6 +87,10 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
+    var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
+    var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
     var endOfRouteView: UIView? {
         didSet {
             if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
@@ -117,6 +121,12 @@ open class NavigationView: UIView {
         stackView.spacing = Constants.buttonSpacing
         return stackView
     }()
+    
+    var floatingStackViewLayoutGuide: UILayoutGuide? {
+        didSet {
+            setupConstraints()
+        }
+    }
     
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
@@ -159,14 +169,14 @@ open class NavigationView: UIView {
     
     // :nodoc:
     public lazy var topBannerContainerView: BannerContainerView = {
-        let topBannerContainerView = BannerContainerView(.top)
+        let topBannerContainerView = BannerContainerView(.topLeading)
         topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return topBannerContainerView
     }()
     
     // :nodoc:
     public lazy var bottomBannerContainerView: BannerContainerView = {
-        let bottomBannerContainerView = BannerContainerView(.bottom)
+        let bottomBannerContainerView = BannerContainerView(.bottomLeading)
         bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return bottomBannerContainerView
     }()

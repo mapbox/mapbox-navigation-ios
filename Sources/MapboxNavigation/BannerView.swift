@@ -7,6 +7,11 @@ open class TopBannerView: UIView {
 }
 
 // :nodoc:
+open class TopPaddingView: TopBannerView {
+    
+}
+
+// :nodoc:
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView {
     

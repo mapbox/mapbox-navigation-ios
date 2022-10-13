@@ -42,6 +42,30 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         get {
             return navigationView.navigationMapView
         }
+        
+        set {
+            guard let validNavigationMapView = newValue else {
+                preconditionFailure("Invalid NavigationMapView instance.")
+            }
+            
+            validNavigationMapView.delegate = self
+            validNavigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(validNavigationMapView.mapView,
+                                                                                                      viewportDataSourceType: .active)
+            
+            // Reset any changes that were previously made to `FollowingCameraOptions` to prevent
+            // undesired camera behavior in active navigation.
+            let navigationViewportDataSource = validNavigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+            navigationViewportDataSource?.options.followingCameraOptions.centerUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.bearingUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.pitchUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.paddingUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.zoomUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.followsLocationCourse = false
+            
+            validNavigationMapView.navigationCamera.follow()
+            
+            navigationView.navigationMapView = validNavigationMapView
+        }
     }
     
     func setupNavigationCamera() {
