@@ -36,7 +36,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     public var destinationOptions: DestinationOptions {
         didSet {
             if let primaryText = destinationOptions.primaryText {
-                destinationLabel.attributedText = NSAttributedString(string: primaryText)
+                destinationLabel.attributedText = primaryText
             }
         }
     }

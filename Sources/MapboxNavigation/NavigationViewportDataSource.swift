@@ -179,8 +179,13 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             if followingCameraOptions.bearingUpdatesAllowed || followingMobileCamera.bearing == nil {
-                followingMobileCamera.bearing = 0.0
-                followingCarPlayCamera.bearing = 0.0
+                if followingCameraOptions.followsLocationCourse {
+                    followingMobileCamera.bearing = location.course
+                    followingCarPlayCamera.bearing = location.course
+                } else {
+                    followingMobileCamera.bearing = 0.0
+                    followingCarPlayCamera.bearing = 0.0
+                }
             }
             
             followingMobileCamera.anchor = mapView.center

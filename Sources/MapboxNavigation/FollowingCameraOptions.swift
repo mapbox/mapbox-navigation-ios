@@ -138,6 +138,14 @@ public struct FollowingCameraOptions: Equatable {
     public var pitchNearManeuver: PitchNearManeuver = PitchNearManeuver()
     
     /**
+     If `true`, `NavigationViewportDataSource` will follow course of the location.
+     
+     If `false`, `NavigationViewportDataSource` will not follow course of the location and use
+     `0.0` value instead.
+     */
+    var followsLocationCourse = false
+    
+    /**
      Initializes `FollowingCameraOptions` instance.
      */
     public init() {

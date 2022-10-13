@@ -9,7 +9,7 @@ public class CameraModeFloatingButton: FloatingButton {
         }
     }
     
-    weak var navigationMapView: NavigationMapView? = nil
+    weak var navigationView: NavigationView? = nil
     
     func updateImage(for cameraMode: Preview.CameraMode) {
         let image: UIImage
@@ -52,13 +52,13 @@ public class CameraModeFloatingButton: FloatingButton {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraStateDidChange(_:)),
                                                name: .navigationCameraStateDidChange,
-                                               object: navigationMapView?.navigationCamera)
+                                               object: navigationView?.navigationMapView.navigationCamera)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraStateDidChange,
-                                                  object: navigationMapView?.navigationCamera)
+                                                  object: navigationView?.navigationMapView.navigationCamera)
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
@@ -81,6 +81,6 @@ public class CameraModeFloatingButton: FloatingButton {
             cameraMode = .centered
         }
         
-        navigationMapView?.navigationCamera.move(to: cameraMode)
+        navigationView?.moveCamera(to: cameraMode)
     }
 }

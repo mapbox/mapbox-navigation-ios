@@ -5,30 +5,27 @@ import MapboxDirections
 public struct DestinationOptions {
     
     // :nodoc:
-    public var primaryText: String?
+    public var primaryText: NSAttributedString?
     
     // :nodoc:
-    public var secondaryText: String?
+    public let waypoints: [Waypoint]
     
     // :nodoc:
-    public private(set) var waypoint: Waypoint
+    public let coordinates: [CLLocationCoordinate2D]
     
     // :nodoc:
-    public init(coordinate: CLLocationCoordinate2D) {
-        let waypoint = Waypoint(coordinate: coordinate)
-        self.init(waypoint: waypoint)
+    public init(coordinates: [CLLocationCoordinate2D]) {
+        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
+        self.init(waypoints: waypoints)
     }
     
     // :nodoc:
-    public init(waypoint: Waypoint) {
-        self.waypoint = waypoint
+    public init(waypoints: [Waypoint]) {
+        self.waypoints = waypoints
+        self.coordinates = waypoints.map({ CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude) })
         
-        if let destinationName = waypoint.name {
-            primaryText = destinationName
+        if let destinationName = waypoints.last?.name {
+            primaryText = NSAttributedString(string: destinationName)
         }
-        
-        secondaryText = String(format: "(%.5f, %.5f)",
-                               waypoint.coordinate.latitude,
-                               waypoint.coordinate.longitude)
     }
 }

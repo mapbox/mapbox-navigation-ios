@@ -180,7 +180,7 @@
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
 		8A01B15C28DBC22A006A50AF /* PreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */; };
-		8A01B16028DBF048006A50AF /* NavigationCamera+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */; };
+		8A01B16028DBF048006A50AF /* NavigationView+PreviewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */; };
 		8A04BDF227DC043F00B8F76C /* PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */; };
 		8A04DFBC275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */; };
 		8A0DA5F726A23FF800E7D360 /* route-for-navigation-camera.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */; };
@@ -797,7 +797,7 @@
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
 		8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerLayout.swift; sourceTree = "<group>"; };
-		8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationCamera+Preview.swift"; sourceTree = "<group>"; };
+		8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+PreviewCamera.swift"; sourceTree = "<group>"; };
 		8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera.json"; sourceTree = "<group>"; };
@@ -2047,7 +2047,7 @@
 				8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */,
 				8AD220AA27C091EE000734A5 /* Solar.swift */,
 				8AD220AE27C09544000734A5 /* Date.swift */,
-				8A01B15F28DBF048006A50AF /* NavigationCamera+Preview.swift */,
+				8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */,
 				8ACCD6B228DC0EED008224D3 /* NavigationView+CameraOptions.swift */,
 				8AC5070B28D3F6E3005D45EB /* NavigationViewController+NavigationMapViewDelegate.swift */,
 			);
@@ -2983,7 +2983,7 @@
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				8A11FEF027A3514C00285B6F /* CPRouteChoice.swift in Sources */,
-				8A01B16028DBF048006A50AF /* NavigationCamera+Preview.swift in Sources */,
+				8A01B16028DBF048006A50AF /* NavigationView+PreviewCamera.swift in Sources */,
 				8AD220AB27C091EE000734A5 /* Solar.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
 				8A8C3D98260175D20071D274 /* CLLocationDirection+Camera.swift in Sources */,

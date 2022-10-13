@@ -19,10 +19,6 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
                                didSelect route: Route)
     
     func previewViewController(_ previewViewController: PreviewViewController,
-                               willPresent destinationText: NSAttributedString,
-                               in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString?
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
                                willPresent banner: Banner)
     
     func previewViewController(_ previewViewController: PreviewViewController,
@@ -58,13 +54,6 @@ public extension PreviewViewControllerDelegate {
     func previewViewController(_ previewViewController: PreviewViewController,
                                didSelect route: Route) {
         logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
-    }
-    
-    func previewViewController(_ previewViewController: PreviewViewController,
-                               willPresent destinationText: NSAttributedString,
-                               in destinationPreviewViewController: DestinationPreviewViewController) -> NSAttributedString? {
-        logUnimplemented(protocolType: PreviewViewControllerDelegate.self, level: .debug)
-        return nil
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,

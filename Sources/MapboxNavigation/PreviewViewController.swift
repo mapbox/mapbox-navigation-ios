@@ -128,7 +128,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     
     func setupFloatingButtons() {
         cameraModeFloatingButton = FloatingButton.rounded(imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0)) as CameraModeFloatingButton
-        cameraModeFloatingButton.navigationMapView = navigationView.navigationMapView
+        cameraModeFloatingButton.navigationView = navigationView
         
         navigationView.floatingButtons = [
             cameraModeFloatingButton
@@ -138,7 +138,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
         let debugFloatingButton = FloatingButton.rounded(image: .debugImage,
                                                          imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0))
         debugFloatingButton.addTarget(self,
-                                      action: #selector(didPressDebugButton),
+                                      action: #selector(didPressDebugButton(_:)),
                                       for: .touchUpInside)
         
         navigationView.floatingButtons?.append(debugFloatingButton)
@@ -179,7 +179,7 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     }
     
     func setupNavigationCamera() {
-        navigationView.navigationMapView.navigationCamera.move(to: .centered)
+        navigationView.moveCamera(to: .centered)
     }
     
     func setupGestureRecognizers() {
@@ -252,12 +252,13 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     }
     
     // :nodoc:
-    public func preview(_ coordinate: CLLocationCoordinate2D,
+    public func preview(_ coordinates: [CLLocationCoordinate2D],
                         animated: Bool = true,
                         duration: TimeInterval = 1.0,
                         animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
-        preview(Waypoint(coordinate: coordinate),
+        let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
+        preview(waypoints,
                 animated: animated,
                 duration: duration,
                 animations: animations,
@@ -265,47 +266,31 @@ open class PreviewViewController: UIViewController, BannerPresentation {
     }
     
     // :nodoc:
-    public func preview(_ waypoint: Waypoint,
+    public func preview(_ waypoints: [Waypoint],
                         animated: Bool = true,
                         duration: TimeInterval = 1.0,
                         animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
-        let destinationOptions = DestinationOptions(waypoint: waypoint)
-        
-        // If `DestinationPreviewViewController` is already the topmost preview banner - update its
-        // `DestinationOptions` only. If not - push banner to the top of the stack.
-        let destinationPreviewViewController: DestinationPreviewViewController
-        if let currentDestinationPreviewViewController = topmostBottomBanner as? DestinationPreviewViewController {
-            destinationPreviewViewController = currentDestinationPreviewViewController
-            destinationPreviewViewController.destinationOptions = destinationOptions
-        } else {
-            destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
-            destinationPreviewViewController.delegate = self
-            push(destinationPreviewViewController,
-                 animated: animated,
-                 duration: duration,
-                 animations: animations,
-                 completion: {
-                completion?()
-            })
-            
-            let bannerDismissalViewController = BannerDismissalViewController()
-            bannerDismissalViewController.delegate = self
-            push(bannerDismissalViewController,
-                 animated: animated,
-                 duration: duration,
-                 animations: animations)
+        if waypoints.count < 2 {
+            preconditionFailure("Waypoints array should not be empty.")
         }
         
-        addDestinationAnnotation(waypoint.coordinate)
+        let destinationOptions = DestinationOptions(waypoints: waypoints)
+        let destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
+        destinationPreviewViewController.delegate = self
+        push(destinationPreviewViewController,
+             animated: animated,
+             duration: duration,
+             animations: animations,
+             completion: {
+            completion?()
+        })
         
-        if let primaryText = destinationPreviewViewController.destinationOptions.primaryText {
-            let primaryAttributedString = NSAttributedString(string: primaryText)
-            destinationPreviewViewController.destinationLabel.attributedText =
-            delegate?.previewViewController(self,
-                                            willPresent: primaryAttributedString,
-                                            in: destinationPreviewViewController) ?? primaryAttributedString
-        }
+        presentBannerDismissalViewControllerIfNeeded(animated,
+                                                     duration: duration)
+        
+        // Force-unwrapping is acceptable here because of check at the beginng of the method.
+        addDestinationAnnotation(waypoints.last!.coordinate)
     }
     
     // :nodoc:
@@ -316,21 +301,15 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                         animations: (() -> Void)? = nil,
                         completion: (() -> Void)? = nil) {
         let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
+        let routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
+        routesPreviewViewController.delegate = self
+        push(routesPreviewViewController,
+             animated: animated,
+             duration: duration,
+             animations: animations)
         
-        // If `RoutesPreviewViewController` is already the topmost preview banner - update its
-        // `RoutesPreviewOptions` only. If not - push banner to the top of the banners stack.
-        let routesPreviewViewController: RoutesPreviewViewController
-        if let currentRoutesPreviewViewController = topmostBottomBanner as? RoutesPreviewViewController {
-            routesPreviewViewController = currentRoutesPreviewViewController
-            routesPreviewViewController.routesPreviewOptions = routesPreviewOptions
-        } else {
-            routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
-            routesPreviewViewController.delegate = self
-            push(routesPreviewViewController,
-                 animated: animated,
-                 duration: duration,
-                 animations: animations)
-        }
+        presentBannerDismissalViewControllerIfNeeded(animated,
+                                                     duration: duration)
         
         showcase(routeResponse: routeResponse,
                  routeIndex: routeIndex,
@@ -339,6 +318,19 @@ open class PreviewViewController: UIViewController, BannerPresentation {
                  completion: { _ in
             completion?()
         })
+    }
+    
+    func presentBannerDismissalViewControllerIfNeeded(_ animated: Bool,
+                                                      duration: TimeInterval) {
+        if topBanner(at: .topLeading) is BannerDismissalViewController {
+            return
+        }
+        
+        let bannerDismissalViewController = BannerDismissalViewController()
+        bannerDismissalViewController.delegate = self
+        push(bannerDismissalViewController,
+             animated: animated,
+             duration: duration)
     }
     
     // :nodoc:
@@ -491,11 +483,6 @@ extension PreviewViewController: BannerPresentationDelegate {
     
     func bannerWillDisappear(_ presenter: BannerPresentation,
                              banner: Banner) {
-        delegate?.previewViewController(self, willDismiss: banner)
-    }
-    
-    func bannerDidDisappear(_ presenter: BannerPresentation,
-                            banner: Banner) {
         if banner is DestinationPreviewViewController {
             pointAnnotationManager?.annotations = []
         } else if banner is RoutesPreviewViewController {
@@ -503,6 +490,11 @@ extension PreviewViewController: BannerPresentationDelegate {
             navigationView.navigationMapView.removeRoutes()
         }
         
+        delegate?.previewViewController(self, willDismiss: banner)
+    }
+    
+    func bannerDidDisappear(_ presenter: BannerPresentation,
+                            banner: Banner) {
         if topBanner(at: .bottomLeading) == nil {
             navigationView.wayNameView.show()
             navigationView.speedLimitView.show()

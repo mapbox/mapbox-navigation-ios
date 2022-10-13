@@ -10,7 +10,7 @@ extension NavigationView {
         let spacing: CGFloat = 50.0
         
         if traitCollection.verticalSizeClass == .regular {
-            topInset = 150.0
+            topInset = topBannerContainerView.frame.height + spacing
             bottomInset = bottomBannerContainerView.frame.height + spacing
             leftInset = navigationMapView.mapView.safeAreaInsets.left + spacing
             rightInset = navigationMapView.mapView.safeAreaInsets.right + spacing
@@ -27,7 +27,8 @@ extension NavigationView {
                                    right: rightInset)
         
         let pitch: CGFloat = 0.0
+        let bearing: CGFloat = 0.0
         
-        return CameraOptions(padding: padding, pitch: pitch)
+        return CameraOptions(padding: padding, bearing: bearing, pitch: pitch)
     }
 }
