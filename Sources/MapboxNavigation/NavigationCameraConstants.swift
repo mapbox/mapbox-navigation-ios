@@ -52,6 +52,8 @@ extension Notification.Name {
      The user info dictionary contains `NavigationCamera.NotificationUserInfoKey.cameraOptions` key.
      */
     public static let navigationCameraViewportDidChange: Notification.Name = .init(rawValue: "NavigationViewportDidChange")
+    
+    static let navigationCameraViewportDidTriggerVisibilityChange: Notification.Name = .init(rawValue: "NavigationViewportVisibilityDidChange")
 }
 
 extension NavigationCamera {
@@ -74,5 +76,7 @@ extension NavigationCamera {
          A key in the user info dictionary of a `Notification.Name.navigationCameraViewportDidChange` notification. The corresponding value is a `[String: CameraOptions]` dictionary object.
          */
         public static let cameraOptions: NotificationUserInfoKey = .init(rawValue: "cameraOptions")
+        
+        static let viewportVisibility: NotificationUserInfoKey = .init(rawValue: "viewportVisibility")
     }
 }
