@@ -157,13 +157,4 @@ public class SpeedLimitView: UIView {
             self?.layer.opacity = 1
         }
     }
-    
-    // TODO: Implement animated showing and hiding functionality.
-    func show() {
-        isAlwaysHidden = false
-    }
-    
-    func hide() {
-        isAlwaysHidden = true
-    }
 }

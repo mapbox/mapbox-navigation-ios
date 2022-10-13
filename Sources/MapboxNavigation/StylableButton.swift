@@ -64,14 +64,6 @@ open class DismissButton: Button {
 // :nodoc:
 public class BackButton: Button {
     
-    // TODO: Implement animated showing and hiding functionality.
-    func show() {
-        isHidden = false
-    }
-    
-    func hide() {
-        isHidden = true
-    }
 }
 
 // :nodoc:
