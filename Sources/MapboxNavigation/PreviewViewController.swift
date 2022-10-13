@@ -25,12 +25,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
     
-    var finalDestinationAnnotation: PointAnnotation? = nil
-    
-    var pointAnnotationManager: PointAnnotationManager?
-    
-    var cameraModeFloatingButton: CameraModeFloatingButton!
-    
     var styleManager: StyleManager!
     
     let previewOptions: PreviewOptions
@@ -110,24 +104,12 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         let navigationView = NavigationView(frame: frame)
         navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationView.navigationMapView.delegate = self
-        // TODO: Move final destination annotation placement logic to `MapView` or `NavigationMapView`.
-        navigationView.navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
-            
-            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
-               let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = [finalDestinationAnnotation]
-                
-                self.finalDestinationAnnotation = nil
-            }
-        }
         
         return navigationView
     }
     
     func setupFloatingButtons() {
-        cameraModeFloatingButton = FloatingButton.rounded(imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0)) as CameraModeFloatingButton
+        let cameraModeFloatingButton = FloatingButton.rounded(imageEdgeInsets: UIEdgeInsets(floatLiteral: 12.0)) as CameraModeFloatingButton
         cameraModeFloatingButton.navigationView = navigationView
         
         navigationView.floatingButtons = [
@@ -235,22 +217,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - Destination and routes preview methods
     
-    func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D) {
-        let destinationIdentifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-        var destinationAnnotation = PointAnnotation(id: destinationIdentifier,
-                                                    coordinate: coordinate)
-        destinationAnnotation.image = .init(image: .defaultMarkerImage,
-                                            name: "default_marker")
-        
-        // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
-        // and add it only after fully loading `MapView` style.
-        if let pointAnnotationManager = self.pointAnnotationManager {
-            pointAnnotationManager.annotations = [destinationAnnotation]
-        } else {
-            finalDestinationAnnotation = destinationAnnotation
-        }
-    }
-    
     // :nodoc:
     public func preview(_ coordinates: [CLLocationCoordinate2D],
                         animated: Bool = true,
@@ -290,7 +256,8 @@ public class PreviewViewController: UIViewController, BannerPresentation {
                                                      duration: duration)
         
         // Force-unwrapping is acceptable here because of check at the beginng of the method.
-        addDestinationAnnotation(waypoints.last!.coordinate)
+        navigationView.navigationMapView.addDestinationAnnotation(waypoints.last!.coordinate,
+                                                                  identifier: NavigationMapView.AnnotationIdentifier.previewFinalDestinationAnnotation)
     }
     
     // :nodoc:
@@ -484,7 +451,8 @@ extension PreviewViewController: BannerPresentationDelegate {
     func bannerWillDisappear(_ presenter: BannerPresentation,
                              banner: Banner) {
         if banner is DestinationPreviewViewController {
-            pointAnnotationManager?.annotations = []
+            navigationView.navigationMapView.removeDestinationAnnotation(NavigationMapView.AnnotationIdentifier.previewFinalDestinationAnnotation)
+            navigationView.navigationMapView.removeRoutes()
         } else if banner is RoutesPreviewViewController {
             navigationView.navigationMapView.removeWaypoints()
             navigationView.navigationMapView.removeRoutes()
