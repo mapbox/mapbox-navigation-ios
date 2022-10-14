@@ -80,13 +80,4 @@ public class ResumeButton: UIControl {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=12-[label]->=12-|", options: [], metrics: nil, views: views))
         setNeedsUpdateConstraints()
     }
-    
-    // TODO: Implement animated showing and hiding functionality.
-    func show() {
-        isHidden = false
-    }
-    
-    func hide() {
-        isHidden = true
-    }
 }
