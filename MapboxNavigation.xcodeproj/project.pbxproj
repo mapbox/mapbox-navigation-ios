@@ -183,6 +183,9 @@
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
+		8A0155E828F8EC72009E299C /* BannerPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */; };
+		8A0155EA28F8EC85009E299C /* StackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E928F8EC85009E299C /* StackTests.swift */; };
+		8A0155EC28F8ED38009E299C /* PreviewViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */; };
 		8A01B15C28DBC22A006A50AF /* PreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */; };
 		8A01B16028DBF048006A50AF /* NavigationView+PreviewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */; };
 		8A04BDF227DC043F00B8F76C /* PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */; };
@@ -804,6 +807,9 @@
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
+		8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPresentationTests.swift; sourceTree = "<group>"; };
+		8A0155E928F8EC85009E299C /* StackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackTests.swift; sourceTree = "<group>"; };
+		8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerTests.swift; sourceTree = "<group>"; };
 		8A01B15B28DBC22A006A50AF /* PreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerLayout.swift; sourceTree = "<group>"; };
 		8A01B15F28DBF048006A50AF /* NavigationView+PreviewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationView+PreviewCamera.swift"; sourceTree = "<group>"; };
 		8A04BDF127DC043F00B8F76C /* PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -1442,6 +1448,7 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
+				8A0155E628F8EC58009E299C /* Preview */,
 				8AB316BD26BC9F1800C3AC76 /* Camera */,
 				8AB316C526BCA0DA00C3AC76 /* Navigation */,
 				8AB316C026BC9FAB00C3AC76 /* Instructions */,
@@ -1471,6 +1478,16 @@
 				DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8A0155E628F8EC58009E299C /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */,
+				8A0155E928F8EC85009E299C /* StackTests.swift */,
+				8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */,
+			);
+			name = Preview;
 			sourceTree = "<group>";
 		};
 		8A0E09F9257ACACC00C2E924 /* Feedback */ = {
@@ -3022,6 +3039,7 @@
 				8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				8A379B1127B5EADB00CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
+				8A0155E828F8EC72009E299C /* BannerPresentationTests.swift in Sources */,
 				B4C4FFA028ADB19600C7C253 /* RouteLineLayerPositionTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				8AF23ED527AA0B9C0038B40D /* CarPlayManagerSpec.swift in Sources */,
@@ -3040,6 +3058,7 @@
 				2B81EC28241A237E00145086 /* SpeechSynthesizersControllerTests.swift in Sources */,
 				35BC7178226F6667003BB5F1 /* CarPlayCompassViewTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
+				8A0155EC28F8ED38009E299C /* PreviewViewControllerTests.swift in Sources */,
 				E2D14980265CFD33008135A3 /* CarPlayUtils.swift in Sources */,
 				35E5B963227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift in Sources */,
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
@@ -3057,6 +3076,7 @@
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				B4F4FEAD27AB1E11003915A9 /* SpriteRepositoryTests.swift in Sources */,
+				8A0155EA28F8EC85009E299C /* StackTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */,
