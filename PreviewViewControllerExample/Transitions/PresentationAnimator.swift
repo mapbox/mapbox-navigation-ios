@@ -8,15 +8,15 @@ class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromViewController = transitionContext.viewController(forKey: .from) as? ViewController,
+        guard let fromViewController = transitionContext.viewController(forKey: .from) as? PreviewViewController,
               let toViewController = transitionContext.viewController(forKey: .to) as? NavigationViewController else {
             transitionContext.completeTransition(false)
             return
         }
         
-        // Replace already exisiting `NavigationMapView` from `NavigationViewController` with `NavigationMapView`
-        // that was used in `ViewController`.
-        toViewController.navigationMapView = fromViewController.navigationView.navigationMapView
+        // Replace default `NavigationMapView` in `NavigationViewController` with `NavigationMapView`
+        // that was used in `PreviewViewController`.
+        toViewController.navigationMapView = fromViewController.navigationMapView
         
         transitionContext.containerView.addSubview(toViewController.view)
         transitionContext.completeTransition(true)

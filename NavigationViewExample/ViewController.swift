@@ -3,6 +3,7 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
+import MapboxMaps
 
 class ViewController: UIViewController {
     
@@ -21,21 +22,24 @@ class ViewController: UIViewController {
             
             navigationView.navigationMapView.showcase(routes,
                                                       routesPresentationStyle: .all(),
-                                                      animated: true) { _ in
-                guard let routeResponse = self.routeResponse else { return }
+                                                      animated: true) { [weak self] _ in
+                guard let self = self,
+                      let routeResponse = self.routeResponse else {
+                    return
+                }
                 
-                let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                                routeIndex: self.currentRouteIndex,
-                                                                routeOptions: self.navigationRouteOptions,
-                                                                customRoutingProvider: NavigationSettings.shared.directions,
+                let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                                routeIndex: self.currentRouteIndex)
+                
+                let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                                 credentials: NavigationSettings.shared.directions.credentials,
                                                                 simulating: .always)
                 
                 let navigationOptions = NavigationOptions(navigationService: navigationService)
-                let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                        routeIndex: self.currentRouteIndex,
-                                                                        routeOptions: self.navigationRouteOptions,
+                
+                let navigationViewController = NavigationViewController(for: indexedRouteResponse,
                                                                         navigationOptions: navigationOptions)
+                
                 navigationViewController.modalPresentationStyle = .fullScreen
                 navigationViewController.delegate = self
                 
@@ -45,7 +49,33 @@ class ViewController: UIViewController {
                 
                 // `NavigationViewController` should be presented with animation for
                 // `PresentationAnimator` to work correctly.
-                self.present(navigationViewController, animated: true)
+                self.present(navigationViewController,
+                             animated: true,
+                             completion: {
+                    // Change user location style to show view that represents user’s location and course on the map.
+                    navigationViewController.navigationMapView?.userLocationStyle = .courseView()
+                    
+                    // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
+                    navigationViewController.routeLineTracksTraversal = true
+                    
+                    // Hide top and bottom container views before animating their presentation.
+                    navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
+                    navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
+                    
+                    // Hide `WayNameView`, `FloatingStackView` and `SpeedLimitView` to smoothly present them.
+                    navigationViewController.navigationView.wayNameView.alpha = 0.0
+                    navigationViewController.navigationView.floatingStackView.alpha = 0.0
+                    navigationViewController.navigationView.speedLimitView.alpha = 0.0
+                    
+                    // Animate top and bottom banner views presentation.
+                    navigationViewController.navigationView.bottomBannerContainerView.show(duration: 1.0,
+                                                                                           animations: {
+                        navigationViewController.navigationView.wayNameView.alpha = 1.0
+                        navigationViewController.navigationView.floatingStackView.alpha = 1.0
+                        navigationViewController.navigationView.speedLimitView.alpha = 1.0
+                    })
+                    navigationViewController.navigationView.topBannerContainerView.show(duration: 1.0)
+                })
             }
         }
     }
@@ -132,11 +162,11 @@ extension ViewController: NavigationMapViewDelegate {
 }
 
 extension ViewController: UIViewControllerTransitioningDelegate {
-
+    
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissalAnimator()
     }
-
+    
     public func animationController(forPresented presented: UIViewController,
                                     presenting: UIViewController,
                                     source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -145,11 +175,50 @@ extension ViewController: UIViewControllerTransitioningDelegate {
 }
 
 extension ViewController: NavigationViewControllerDelegate {
-
+    
     public func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController,
                                                    byCanceling canceled: Bool) {
-        // `NavigationViewController` should be dismissed with animation for
-        // `DismissalAnimator` to work correctly.
-        navigationViewController.dismiss(animated: true)
+        // Hide top and bottom banner containers.
+        navigationViewController.navigationView.topBannerContainerView.hide(animated: true,
+                                                                            duration: 1.0,
+                                                                            animations: {
+            navigationViewController.navigationView.topBannerContainerView.alpha = 0.0
+        })
+        
+        navigationViewController.navigationView.bottomBannerContainerView.hide(animated: true,
+                                                                               duration: 1.0,
+                                                                               animations: {
+            navigationViewController.navigationView.bottomBannerContainerView.alpha = 0.0
+            navigationViewController.navigationView.wayNameView.alpha = 0.0
+            navigationViewController.navigationView.floatingStackView.alpha = 0.0
+            navigationViewController.navigationView.speedLimitView.alpha = 0.0
+        },
+                                                                               completion: { [weak self] _ in
+            guard let self = self else { return }
+            
+            navigationViewController.dismiss(animated: true,
+                                             completion: {
+                // To receive gesture events delegate should be re-assigned back to `ViewController`.
+                self.navigationView.navigationMapView.delegate = self
+                
+                let navigationViewportDataSource = NavigationViewportDataSource(self.navigationView.navigationMapView.mapView,
+                                                                                viewportDataSourceType: .raw)
+                self.navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+                self.navigationView.navigationMapView.navigationCamera.follow()
+                
+                // Use default puck style.
+                self.navigationView.navigationMapView.userLocationStyle = .puck2D()
+                
+                // Show routes that were originally requested and remove the ones that were added during
+                // active navigation (along with waypoints, continuous alternatives, route durations etc).
+                if let routes = self.routes {
+                    let cameraOptions = CameraOptions(bearing: 0.0, pitch: 0.0)
+                    self.navigationView.navigationMapView.showcase(routes,
+                                                                   routesPresentationStyle: .all(shouldFit: true, cameraOptions: cameraOptions),
+                                                                   animated: true,
+                                                                   duration: 1.0)
+                }
+            })
+        })
     }
 }

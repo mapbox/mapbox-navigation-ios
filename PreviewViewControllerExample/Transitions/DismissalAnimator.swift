@@ -1,5 +1,4 @@
 import UIKit
-import MapboxMaps
 import MapboxNavigation
 
 class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
@@ -11,13 +10,14 @@ class DismissalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromViewController = transitionContext.viewController(forKey: .from) as? NavigationViewController,
               let navigationMapView = fromViewController.navigationMapView,
-              let toViewController = transitionContext.viewController(forKey: .to) as? ViewController else {
+              let toViewController = transitionContext.viewController(forKey: .to) as? PreviewViewController else {
             transitionContext.completeTransition(false)
             return
         }
         
-        // `NavigationMapView` should be transfered back from `NavigationViewController` to `ViewController`.
-        toViewController.navigationView.navigationMapView = navigationMapView
+        // Transfer `NavigationMapView` that was used in `NavigationViewController` back to
+        // `PreviewViewController`.
+        toViewController.navigationMapView = navigationMapView
         
         transitionContext.containerView.addSubview(toViewController.view)
         transitionContext.completeTransition(true)
