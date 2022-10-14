@@ -157,13 +157,12 @@ open class RouteProgress: Codable {
     }
 
     private func commonRefreshRoute(at location: CLLocation) {
-        let intersectionIndex = currentLegProgress.currentStepProgress.intersectionIndex
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
-                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
+                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex,
+                                              intersectionIndex: currentLegProgress.currentStepProgress.intersectionIndex)
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
-        currentLegProgress.currentStepProgress.intersectionIndex = intersectionIndex
         updateDistanceToIntersection(from: location)
     }
 

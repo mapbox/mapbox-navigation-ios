@@ -12,11 +12,11 @@ open class RouteStepProgress: Codable {
 
      - parameter step: Step on a `RouteLeg`.
      */
-    public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
+    public init(step: RouteStep, spokenInstructionIndex: Int = 0, intersectionIndex: Int = 0) {
         self.step = step
         self.userDistanceToManeuverLocation = step.distance
-        self.intersectionIndex = 0
         self.spokenInstructionIndex = spokenInstructionIndex
+        self.intersectionIndex = intersectionIndex
     }
     
     // MARK: Step Stats
