@@ -159,9 +159,11 @@ open class RouteProgress: Codable {
     private func commonRefreshRoute(at location: CLLocation) {
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
-                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
+                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex,
+                                              intersectionIndex: currentLegProgress.currentStepProgress.intersectionIndex)
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
+        updateDistanceToIntersection(from: location)
     }
 
     /**
@@ -185,6 +187,38 @@ open class RouteProgress: Codable {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
             let distanceTraveled = step.distance - remainingDistance
             stepProgress.distanceTraveled = distanceTraveled
+        }
+    }
+    
+    /**
+     Update the distance to intersection according to new location specified.
+     - parameter location: Updated user location.
+     */
+    func updateDistanceToIntersection(from location: CLLocation) {
+        guard var intersections = currentLegProgress.currentStepProgress.step.intersections else { return }
+        
+        // The intersections array does not include the upcoming maneuver intersection.
+        if let upcomingIntersection = currentLegProgress.upcomingStep?.intersections?.first {
+            intersections += [upcomingIntersection]
+        }
+        currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
+        
+        if let shape = currentLegProgress.currentStep.shape,
+           let upcomingIntersection = currentLegProgress.currentStepProgress.upcomingIntersection {
+            currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
+        }
+        
+        updateIntersectionDistances()
+    }
+    
+    func updateIntersectionDistances() {
+        guard currentLegProgress.currentStepProgress.intersectionDistances == nil else { return }
+        
+        currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
+        if let shape = currentLegProgress.currentStep.shape,
+           let intersections = currentLegProgress.currentStep.intersections {
+            let distances: [CLLocationDistance] = intersections.compactMap { shape.distance(from: shape.coordinates.first, to: $0.location) }
+            currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
     
