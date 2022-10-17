@@ -108,8 +108,8 @@ open class NavigationView: UIView {
     func constrainEndOfRoute() {
         endOfRouteHideConstraint?.isActive = true
         
-        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        endOfRouteView?.leadingAnchor.constraint(equalTo: bottomBannerContainerView.leadingAnchor).isActive = true
+        endOfRouteView?.trailingAnchor.constraint(equalTo: bottomBannerContainerView.trailingAnchor).isActive = true
         
         endOfRouteHeightConstraint?.isActive = true
     }
