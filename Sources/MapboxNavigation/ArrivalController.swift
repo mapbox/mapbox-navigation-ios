@@ -56,10 +56,30 @@ class ArrivalController: NavigationComponentDelegate {
         navigationViewData.navigationView.endOfRouteHideConstraint?.isActive = false
         navigationViewData.navigationView.endOfRouteShowConstraint?.isActive = true
 
+        let leftInset = navigationMapView.navigationCamera.viewportDataSource.followingMobileCamera.padding?.left
+        let rightInset = navigationMapView.navigationCamera.viewportDataSource.followingMobileCamera.padding?.right
+        
         navigationMapView.navigationCamera.stop()
         
-        if (navigationViewData.navigationView.endOfRouteHeightConstraint?.constant) != nil {
+        if let height = navigationViewData.navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationViewData.navigationView.floatingStackView.alpha = 0.0
+            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
+            // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
+            if let zoom = cameraOptions.zoom {
+                cameraOptions.zoom = zoom + 1.0
+            }
+            
+            cameraOptions.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
+                                                 left: leftInset ?? 20,
+                                                 bottom: height + 20,
+                                                 right: rightInset ?? 20)
+            cameraOptions.center = destination?.coordinate
+            cameraOptions.pitch = 0
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: duration) { (animatingPosition) in
+                if animatingPosition == .end {
+                    completion?(true)
+                }
+            }
         }
     }
     
