@@ -20,6 +20,7 @@
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
 * Fixed an issue where tapping on a route duration annotation that overlaps a different route would cause the wrong route to be passed into `NavigationMapViewDelegate.navigationMapView(_:didSelect:)` or `NavigationMapViewDelegate.navigationMapView(_:didSelect:)`. ([#4133](https://github.com/mapbox/mapbox-navigation-ios/pull/4133))
 * Fixed an issue where the shields in the instruction are using the style from last navigation session with the `NavigationMapView` injection used in the new session. ([#4197](https://github.com/mapbox/mapbox-navigation-ios/pull/4197))
+* Fixed an issue where the `NavigationMapView.localizeLabels()` method only localized map labels according to the user’s Preferred Language Order setting if the application also had a localization in the preferred language. ([#4205](https://github.com/mapbox/mapbox-navigation-ios/pull/4205))
 
 ### Banners and guidance instructions
 
