@@ -1757,7 +1757,7 @@ open class NavigationMapView: UIView {
      need to call this method on the value of `NavigationViewController.navigationMapView`.
      */
     public func localizeLabels() {
-        guard let preferredLocale = VectorSource.preferredMapboxStreetsLocale(for: .nationalizedCurrent) else { return }
+        guard let preferredLocale = VectorSource.preferredMapboxStreetsLocale(for: nil) else { return }
         mapView.localizeLabels(into: preferredLocale)
     }
     
