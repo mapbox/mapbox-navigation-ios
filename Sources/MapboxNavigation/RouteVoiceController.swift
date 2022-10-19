@@ -62,8 +62,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil, accessToken: String? = nil, host: String? = nil) {
         self.speechSynthesizer = speechSynthesizer ?? MultiplexedSpeechSynthesizer(accessToken: accessToken, host: host)
+        rerouteSoundPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data,
+                                                fileTypeHint: AVFileType.mp3.rawValue)
         
         super.init()
+        
+        rerouteSoundPlayer.delegate = self
 
         verifyBackgroundAudio()
 
@@ -105,23 +109,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         if !Bundle.main.backgroundModes.contains("audio") {
             assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
         }
-    }
-    
-    func safeMixAudio(instruction: SpokenInstruction?, failure: AudioControlFailureHandler) {
-        do {
-            try tryMixAudio()
-        } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, underlying: error)
-            failure(wrapped)
-            return
-        }
-    }
-    
-    func tryMixAudio() throws {
-        guard speechSynthesizer.managesAudioSession else { return }
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.ambient, mode: audioSession.mode)
-        try audioSession.setActive(true)
     }
     
     // MARK: Speech Synthesizing
@@ -168,14 +155,19 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
-        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
+        // Ducking and unducking is not performed when re-routing sound playback is switched off
+        // or when voice is muted in global settings.
+        guard playRerouteSound || !NavigationSettings.shared.voiceMuted else {
             return
         }
         
         speechSynthesizer.stopSpeaking()
         
-        safeMixAudio(instruction: nil) {
-            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: $0)
+        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
+            let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
+                                                                action: .duck,
+                                                                underlying: error)
+            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
         }
         
         rerouteSoundPlayer.play()
@@ -191,7 +183,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
+    public var rerouteSoundPlayer: AVAudioPlayer
     
     @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
@@ -220,5 +212,23 @@ public extension RouteVoiceControllerDelegate {
      */
     func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError) {
         logUnimplemented(protocolType: RouteVoiceControllerDelegate.self, level: .debug)
+    }
+}
+
+extension RouteVoiceController: AVAudioPlayerDelegate {
+    
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // Ducking and unducking is not performed when re-routing sound playback is switched off
+        // or when voice is muted in global settings.
+        guard playRerouteSound || !NavigationSettings.shared.voiceMuted else {
+            return
+        }
+        
+        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
+            let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
+                                                                action: .unduck,
+                                                                underlying: error)
+            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
+        }
     }
 }
