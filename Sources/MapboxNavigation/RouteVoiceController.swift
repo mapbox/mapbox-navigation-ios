@@ -155,6 +155,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+        // Ducking and unducking is not performed when re-routing sound playback is switched off
+        // or when voice is muted in global settings.
         guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
@@ -163,7 +165,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
             let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
-                                                                action: .mix,
+                                                                action: .duck,
                                                                 underlying: error)
             routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
         }
@@ -216,9 +218,15 @@ public extension RouteVoiceControllerDelegate {
 extension RouteVoiceController: AVAudioPlayerDelegate {
     
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // Ducking and unducking is not performed when re-routing sound playback is switched off
+        // or when voice is muted in global settings.
+        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
+            return
+        }
+        
         if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
             let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
-                                                                action: .duck,
+                                                                action: .unduck,
                                                                 underlying: error)
             routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
         }
