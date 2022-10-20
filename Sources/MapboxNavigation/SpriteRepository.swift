@@ -6,17 +6,18 @@ import MapboxDirections
 class SpriteRepository {
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     let defaultStyleURI: StyleURI = .navigationDay
-    fileprivate(set) var imageDownloader: ReentrantImageDownloader
+//    fileprivate(set) var imageDownloader: ReentrantImageDownloader
     
-    let requestCache: URLCaching
-    let derivedCache: BimodalImageCache
+//    let requestCache: URLCaching
+//    let derivedCache: BimodalImageCache
+    let cache: any BimodalURLCaching
     static let shared = SpriteRepository.init()
     
     private let requestTimeOut: TimeInterval = 10
     
     var sessionConfiguration: URLSessionConfiguration {
         didSet {
-            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
+//            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
     
@@ -25,9 +26,11 @@ class SpriteRepository {
     init() {
         sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
-        imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
-        requestCache = URLDataCache()
-        derivedCache = ImageCache()
+//        imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
+//        requestCache = URLDataCache()
+//        derivedCache = ImageCache()
+        cache = BimodalTileStoreCaching(tileStore: TileStoreCaching(tileStore: TileStore.default),
+                                        memoryCache: ImageCache())
     }
     
     func updateStyle(styleURI: StyleURI?,
@@ -133,29 +136,37 @@ class SpriteRepository {
     }
     
     func downloadInfo(_ infoURL: URL, completion: @escaping (Data?) -> Void) {
-        imageDownloader.download(with: infoURL, completion: { [weak self] (cachedResponse, error)  in
-            guard let strongSelf = self, let cachedResponse = cachedResponse else {
-                completion(nil)
-                return
-            }
-            
-            strongSelf.requestCache.store(cachedResponse, for: infoURL)
-            completion(cachedResponse.data)
-        })
+        cache.storeResource(fromURL: infoURL,
+                            policy: .memoryAndDisk,
+                            completion: completion)
+//        imageDownloader.download(with: infoURL, completion: { [weak self] (cachedResponse, error)  in
+//            guard let strongSelf = self, let cachedResponse = cachedResponse else {
+//                completion(nil)
+//                return
+//            }
+//
+//            strongSelf.requestCache.store(cachedResponse, for: infoURL)
+//            completion(cachedResponse.data)
+//        })
     }
     
     func downloadImage(imageURL: URL, completion: @escaping (UIImage?) -> Void) {
-        imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
-            guard let strongSelf = self,
-                  let cachedResponse = cachedResponse,
-                  let image = UIImage(data: cachedResponse.data, scale: VisualInstruction.Component.scale) else {
-                completion(nil)
-                return
-            }
-
-            strongSelf.requestCache.store(cachedResponse, for: imageURL)
-            completion(image)
+        cache.storeResource(fromURL: imageURL,
+                            policy: .memoryAndDisk,
+                            completion: { data in
+            completion(data.flatMap { UIImage(data: $0) })
         })
+//        imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
+//            guard let strongSelf = self,
+//                  let cachedResponse = cachedResponse,
+//                  let image = UIImage(data: cachedResponse.data, scale: VisualInstruction.Component.scale) else {
+//                completion(nil)
+//                return
+//            }
+//
+//            strongSelf.requestCache.store(cachedResponse, for: imageURL)
+//            completion(image)
+//        })
     }
     
     func roadShieldImage(from shieldRepresentation: VisualInstruction.Component.ShieldRepresentation?,
@@ -169,7 +180,9 @@ class SpriteRepository {
         let compositeKey = shieldKey + "-\(styleID)"
         
         // Retrieve the single shield icon if it has been cached.
-        if let shieldIcon = derivedCache.image(forKey: compositeKey) {
+//        if let shieldIcon = derivedCache.image(forKey: compositeKey) {
+        if let shieldIconData = cache.dataFromCache(forKey: compositeKey),
+           let shieldIcon = UIImage(data: shieldIconData) {
             return shieldIcon
         }
         
@@ -181,7 +194,11 @@ class SpriteRepository {
             
             // Cache the single shield icon if it hasn't been stored.
             let shieldIcon = UIImage(cgImage: croppedCGIImage)
-            derivedCache.store(shieldIcon, forKey: compositeKey, toDisk: true, completion: nil)
+//            derivedCache.store(shieldIcon, forKey: compositeKey, toDisk: true, completion: nil)
+            cache.store(shieldIcon.pngData()!, // ACHTUNG
+                        forKey: compositeKey,
+                        policy: .diskOnly,
+                        completion: nil)
             
             return shieldIcon
         }
@@ -211,8 +228,22 @@ class SpriteRepository {
         return styleID(for: styleURI)
     }
     
+    func store(_ image: UIImage, forKey key: String, policy: CachingPolicy, completion: CompletionHandler?) {
+        guard let data = image.pngData() else { return }
+        
+        cache.store(data,
+                    forKey: key,
+                    policy: policy,
+                    completion: completion)
+    }
+    
+    func imageFromCache(forKey key: String) -> UIImage? {
+        return cache.dataFromCache(forKey: key).flatMap({ UIImage(data: $0) })
+    }
+    
     func getImage(with url: URL) -> UIImage? {
-        guard let data = requestCache.response(for: url)?.data else {
+//        guard let data = requestCache.response(for: url)?.data else {
+        guard let data = cache.resourceDataFromCache(forURL: url) else {
             return nil
         }
         return UIImage(data: data, scale: VisualInstruction.Component.scale)
@@ -228,7 +259,8 @@ class SpriteRepository {
     func getSpriteInfo(styleURI: StyleURI) -> Data? {
         guard let styleID = styleID(for: styleURI),
               let infoURL = spriteURL(isImage: false, styleID: styleID) else { return  nil }
-        return requestCache.response(for: infoURL)?.data
+//        return requestCache.response(for: infoURL)?.data
+        return cache.resourceDataFromCache(forURL: infoURL)
     }
     
     func getSpriteInfo(styleURI: StyleURI, with key: String) -> SpriteInfo? {
@@ -250,19 +282,22 @@ class SpriteRepository {
         return nil
     }
     
+    // remove method?
     func removeStyleCacheFor(_ styleURI: StyleURI) {
-        guard let styleID = styleID(for: styleURI),
-              let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
-              let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else { return }
-        requestCache.removeCache(for: infoRequestURL)
-        requestCache.removeCache(for: spriteRequestURL)
+//        guard let styleID = styleID(for: styleURI),
+//              let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
+//              let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else { return }
+//        requestCache.removeCache(for: infoRequestURL)
+//        requestCache.removeCache(for: spriteRequestURL)
+        // ???
     }
     
     func resetCache(completion: CompletionHandler? = nil) {
         userInterfaceIdiomStyles.removeAll()
-        requestCache.clearCache()
-        derivedCache.clearMemory()
-        derivedCache.clearDisk(completion: completion)
+//        requestCache.clearCache()
+//        derivedCache.clearMemory()
+//        derivedCache.clearDisk(completion: completion)
+        cache.clearCache(completion: completion)
     }
 
 }

@@ -2,11 +2,12 @@ import UIKit
 
 public class DataCache: BimodalDataCache {
     let memoryCache: NSCache<NSString, NSData>
-    let fileCache = FileCache()
+    let fileCache: DiskCache
 
     public init() {
         memoryCache = NSCache<NSString, NSData>()
         memoryCache.name = "In-Memory Data Cache"
+        fileCache = FileCache()
         
         NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
@@ -19,7 +20,8 @@ public class DataCache: BimodalDataCache {
     public func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeDataInMemoryCache(data, forKey: key)
 
-        toDisk == true ? fileCache.store(data, forKey: key, completion: completion) : completion?()
+//        toDisk == true ? fileCache.store(data, forKey: key, completion: completion) : completion?()
+        toDisk == true ? fileCache.storeOnDisk(data, forKey: key, completion: completion) : completion?()
     }
 
     /**
@@ -34,7 +36,8 @@ public class DataCache: BimodalDataCache {
             return data
         }
 
-        if let data = fileCache.dataFromFileCache(forKey: key) {
+//        if let data = fileCache.dataFromFileCache(forKey: key) {
+        if let data = fileCache.dataFromDiskCache(forKey: key) {
             storeDataInMemoryCache(data, forKey: key)
             return data
         }

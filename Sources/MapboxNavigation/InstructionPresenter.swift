@@ -111,7 +111,8 @@ class InstructionPresenter {
             case .image(let representation, _):
                 return spriteRepository.shieldCached(for: representation, idiom: idiom)
             default:
-                return spriteRepository.derivedCache.image(forKey: key) != nil
+//                return spriteRepository.derivedCache.image(forKey: key) != nil
+                return spriteRepository.imageFromCache(forKey: key) != nil
             }
         }
         
@@ -258,7 +259,8 @@ class InstructionPresenter {
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = spriteRepository.derivedCache.image(forKey: key) {
+//        if let image = spriteRepository.derivedCache.image(forKey: key) {
+        if let image = spriteRepository.imageFromCache(forKey: key) {
             attachment.image = image
         } else {
             let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
@@ -280,7 +282,11 @@ class InstructionPresenter {
             genericRouteShield.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
-            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
+//            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
+            spriteRepository.store(image,
+                                   forKey: key,
+                                   policy: .diskOnly,
+                                   completion: nil)
             attachment.image = image
         }
         
@@ -301,7 +307,8 @@ class InstructionPresenter {
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = spriteRepository.derivedCache.image(forKey: key) {
+//        if let image = spriteRepository.derivedCache.image(forKey: key) {
+        if let image = spriteRepository.imageFromCache(forKey: key) {
             attachment.image = image
         } else {
             let exitView = ExitView(pointSize: dataSource.font.pointSize,
@@ -324,7 +331,11 @@ class InstructionPresenter {
             exitView.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: exitView) else { return nil }
-            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
+//            spriteRepository.derivedCache.store(image, forKey: key, toDisk: true, completion: nil)
+            spriteRepository.store(image,
+                                   forKey: key,
+                                   policy: .diskOnly,
+                                   completion: nil)
             attachment.image = image
         }
         
