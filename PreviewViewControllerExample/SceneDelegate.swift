@@ -15,12 +15,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     let animationDuration = 0.5
     
+    let styles = [
+        CustomDayStyle(),
+        CustomNightStyle()
+    ]
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
         
-        previewViewController = PreviewViewController()
+        let previewOptions = PreviewOptions(styles: styles)
+        previewViewController = PreviewViewController(previewOptions)
         previewViewController.delegate = self
         previewViewController.navigationMapView.delegate = self
         

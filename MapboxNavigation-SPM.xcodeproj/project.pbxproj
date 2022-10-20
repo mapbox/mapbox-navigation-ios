@@ -23,6 +23,8 @@
 		8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */; };
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
+		8A4BE0962901E68000F8042A /* CustomDayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4BE0942901E67E00F8042A /* CustomDayStyle.swift */; };
+		8A4BE0972901E68000F8042A /* CustomNightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4BE0952901E67E00F8042A /* CustomNightStyle.swift */; };
 		8A506B7C285A53A0008A6082 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 8A506B7B285A53A0008A6082 /* SnapshotTesting */; };
 		8A506B97285A7AE8008A6082 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506B96285A7AE8008A6082 /* AppDelegate.swift */; };
 		8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506B98285A7AE8008A6082 /* SceneDelegate.swift */; };
@@ -116,6 +118,8 @@
 		8A0155DD28F8CF98009E299C /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+RoutesPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+FreeDrive.swift"; path = "Example/ViewController+FreeDrive.swift"; sourceTree = "<group>"; };
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
+		8A4BE0942901E67E00F8042A /* CustomDayStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDayStyle.swift; sourceTree = "<group>"; };
+		8A4BE0952901E67E00F8042A /* CustomNightStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNightStyle.swift; sourceTree = "<group>"; };
 		8A506B94285A7AE8008A6082 /* PreviewViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A506B96285A7AE8008A6082 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A506B98285A7AE8008A6082 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -294,9 +298,19 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		8A4BE0932901E67E00F8042A /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				8A4BE0942901E67E00F8042A /* CustomDayStyle.swift */,
+				8A4BE0952901E67E00F8042A /* CustomNightStyle.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		8A506B95285A7AE8008A6082 /* PreviewViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
+				8A4BE0932901E67E00F8042A /* Styles */,
 				8A0155D228F8C909009E299C /* Extensions */,
 				8A506BAD285A7E50008A6082 /* Transitions */,
 				8A506B96285A7AE8008A6082 /* AppDelegate.swift */,
@@ -856,12 +870,14 @@
 				8A0155DE28F8CF98009E299C /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift in Sources */,
 				8A506B97285A7AE8008A6082 /* AppDelegate.swift in Sources */,
 				8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */,
+				8A4BE0962901E68000F8042A /* CustomDayStyle.swift in Sources */,
 				8A506BB7285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
 				8A0155D828F8C909009E299C /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
 				8A0155DA28F8CEEF009E299C /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift in Sources */,
 				8A506BB9285A7E50008A6082 /* PresentationAnimator.swift in Sources */,
 				8A506BB8285A7E50008A6082 /* DismissalAnimator.swift in Sources */,
 				8A0155DC28F8CF66009E299C /* SceneDelegate+BannerDismissalViewControllerDelegate.swift in Sources */,
+				8A4BE0972901E68000F8042A /* CustomNightStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

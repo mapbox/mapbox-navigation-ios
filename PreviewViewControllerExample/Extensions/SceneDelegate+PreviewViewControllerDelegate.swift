@@ -100,7 +100,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                             credentials: NavigationSettings.shared.directions.credentials,
                                                             simulating: .always)
             
-            let navigationOptions = NavigationOptions(navigationService: navigationService)
+            let navigationOptions = NavigationOptions(styles: self.styles,
+                                                      navigationService: navigationService)
             
             let navigationViewController = NavigationViewController(for: indexedRouteResponse,
                                                                     navigationOptions: navigationOptions)
