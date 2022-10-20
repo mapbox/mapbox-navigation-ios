@@ -374,4 +374,48 @@ extension NavigationView {
         
         NSLayoutConstraint.activate(bottomBannerContainerViewLayoutConstraints)
     }
+    
+    /**
+     Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
+     reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
+     */
+    private func updateMapViewOrnaments() {
+//        let bottomBannerHeight = bottomBannerContainerView.he
+//        let bottomBannerVerticalOffset = bounds.height - bottomBannerHeight - bottomBannerContainerView.frame.origin.y
+//        let defaultOffset: CGFloat = 10.0
+//        let x: CGFloat = 10.0
+//        let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
+//
+//        navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x - safeAreaInsets.left,
+//                                                                           y: y - safeAreaInsets.bottom)
+        
+        navigationMapView.mapView.ornaments.logoView.leadingAnchor.constraint(equalTo: leadingAnchor,
+                                                                              constant: 10.0).isActive = true
+        
+        navigationMapView.mapView.ornaments.logoView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
+                                                                             constant: -10.0).isActive = true
+        
+//        switch traitCollection.verticalSizeClass {
+//        case .unspecified:
+//            fallthrough
+//        case .regular:
+//            navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: -safeAreaInsets.right,
+//                                                                                            y: y - safeAreaInsets.bottom)
+//        case .compact:
+//            if UIApplication.shared.statusBarOrientation == .landscapeRight {
+//                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x - safeAreaInsets.right,
+//                                                                                                y: defaultOffset - safeAreaInsets.bottom)
+//            } else {
+//                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x,
+//                                                                                                y: defaultOffset - safeAreaInsets.bottom)
+//            }
+//        @unknown default:
+//            break
+//        }
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        updateMapViewOrnaments()
+    }
 }

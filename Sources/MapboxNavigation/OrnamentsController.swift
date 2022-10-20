@@ -53,7 +53,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         if navigationViewData.navigationView.superview == nil { return }
         
         navigationViewData.navigationView.setupConstraints()
-        updateMapViewOrnaments()
     }
     
     func embedBanners(topBannerViewController: ContainerViewController,
@@ -123,39 +122,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
-    }
-    
-    /**
-     Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
-     reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
-     */
-    private func updateMapViewOrnaments() {
-        let bottomBannerHeight = navigationView.bottomBannerContainerView.bounds.height
-        let bottomBannerVerticalOffset = navigationView.bounds.height - bottomBannerHeight - navigationView.bottomBannerContainerView.frame.origin.y
-        let defaultOffset: CGFloat = 10.0
-        let x: CGFloat = 10.0
-        let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
-        
-        navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x - navigationView.safeAreaInsets.left,
-                                                                           y: y - navigationView.safeAreaInsets.bottom)
-        
-        switch navigationView.traitCollection.verticalSizeClass {
-        case .unspecified:
-            fallthrough
-        case .regular:
-            navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: -navigationView.safeAreaInsets.right,
-                                                                                            y: y - navigationView.safeAreaInsets.bottom)
-        case .compact:
-            if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x - navigationView.safeAreaInsets.right,
-                                                                                                y: defaultOffset - navigationView.safeAreaInsets.bottom)
-            } else {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x,
-                                                                                                y: defaultOffset - navigationView.safeAreaInsets.bottom)
-            }
-        @unknown default:
-            break
-        }
     }
     
     // MARK: Road Labelling
@@ -229,10 +195,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     
     func navigationViewDidDisappear(_: Bool) {
         suspendNotifications()
-    }
-    
-    func navigationViewDidLayoutSubviews() {
-        updateMapViewOrnaments()
     }
     
     // MARK: NavigationComponent implementation

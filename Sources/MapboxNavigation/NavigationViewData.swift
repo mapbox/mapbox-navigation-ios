@@ -17,7 +17,6 @@ protocol NavigationComponentDelegate {
     func navigationViewDidAppear(_: Bool)
     func navigationViewWillDisappear(_: Bool)
     func navigationViewDidDisappear(_: Bool)
-    func navigationViewDidLayoutSubviews()
 }
 
 extension NavigationComponentDelegate {
@@ -26,5 +25,4 @@ extension NavigationComponentDelegate {
     func navigationViewDidAppear(_: Bool) {}
     func navigationViewWillDisappear(_: Bool) {}
     func navigationViewDidDisappear(_: Bool) {}
-    func navigationViewDidLayoutSubviews() {}
 }

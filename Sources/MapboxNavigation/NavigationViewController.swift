@@ -546,14 +546,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    open override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        viewObservers.forEach {
-            $0?.navigationViewDidLayoutSubviews()
-        }
-    }
-    
     open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         arrivalController?.updatePreferredContentSize(container.preferredContentSize)
     }
