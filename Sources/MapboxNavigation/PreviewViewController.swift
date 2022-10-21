@@ -49,6 +49,11 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         super.init(nibName: nil, bundle: nil)
         
         bannerPresentationDelegate = self
+        
+        setupFloatingButtons()
+        setupConstraints()
+        setupStyleManager()
+        setupNavigationCamera()
     }
     
     public required init?(coder: NSCoder) {
@@ -63,15 +68,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     public override func loadView() {
         view = setupNavigationView()
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupFloatingButtons()
-        setupConstraints()
-        setupStyleManager()
-        setupNavigationCamera()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
