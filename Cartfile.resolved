@@ -2,7 +2,7 @@ binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "118.0.0"
 github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v3.1.2"
-github "mapbox/mapbox-directions-swift" "v2.8.0-beta.1"
+github "mapbox/mapbox-directions-swift" "v2.8.0-beta.2"
 github "mapbox/mapbox-events-ios" "v1.0.8"
 github "mapbox/turf-swift" "v2.5.0"
 github "pointfreeco/swift-snapshot-testing" "1.9.0"
