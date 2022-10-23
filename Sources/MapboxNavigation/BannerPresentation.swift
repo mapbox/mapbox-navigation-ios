@@ -84,7 +84,12 @@ extension BannerPresentation {
                             $0.removeFromSuperview()
                         }
                         
+                        self.navigationView.topBannerContainerView.isExpandable = topBanner.bannerConfiguration.isExpandable
+                        self.navigationView.topBannerContainerView.expansionOffset = topBanner.bannerConfiguration.expansionOffset
+                        
                         self.embed(topBanner, in: bannerContainerView)
+                        
+                        self.navigationView.setupTopBannerContainerViewHeightLayoutConstraints(topBanner.bannerConfiguration.height)
                         
                         self.navigationView.topBannerContainerView.show(animated: animated,
                                                                         duration: duration,
@@ -120,7 +125,12 @@ extension BannerPresentation {
                             $0.removeFromSuperview()
                         }
                         
+                        self.navigationView.bottomBannerContainerView.isExpandable = bottomBanner.bannerConfiguration.isExpandable
+                        self.navigationView.bottomBannerContainerView.expansionOffset = bottomBanner.bannerConfiguration.expansionOffset
+                        
                         self.embed(bottomBanner, in: bannerContainerView)
+                        
+                        self.navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(bottomBanner.bannerConfiguration.height)
                         
                         self.navigationView.bottomBannerContainerView.show(animated: animated,
                                                                            duration: duration,
@@ -186,7 +196,13 @@ extension BannerPresentation {
                         $0.removeFromSuperview()
                     }
                     
+                    self.navigationView.topBannerContainerView.isExpandable = banner.bannerConfiguration.isExpandable
+                    self.navigationView.topBannerContainerView.expansionOffset = banner.bannerConfiguration.expansionOffset
+                    
                     self.embed(banner, in: bannerContainerView)
+                    
+                    self.navigationView.setupTopBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
+                    
                     self.navigationView.topBannerContainerView.show(animated: animated,
                                                                     duration: duration,
                                                                     animations: animations,
@@ -196,6 +212,11 @@ extension BannerPresentation {
                 })
             } else {
                 embed(banner, in: bannerContainerView)
+                navigationView.setupTopBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
+                
+                navigationView.topBannerContainerView.isExpandable = banner.bannerConfiguration.isExpandable
+                navigationView.topBannerContainerView.expansionOffset = banner.bannerConfiguration.expansionOffset
+                
                 navigationView.topBannerContainerView.show(animated: animated,
                                                            duration: duration,
                                                            animations: animations,
@@ -209,8 +230,6 @@ extension BannerPresentation {
             let previousTopmostBottomBanner = topmostBottomBanner
             bottomBanners.push(banner)
             
-            navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
-            
             // In case if banner is already shown - hide it and then present another one.
             if let _ = previousTopmostBottomBanner {
                 navigationView.bottomBannerContainerView.hide(animated: animated,
@@ -223,7 +242,13 @@ extension BannerPresentation {
                         $0.removeFromSuperview()
                     }
                     
+                    self.navigationView.bottomBannerContainerView.isExpandable = banner.bannerConfiguration.isExpandable
+                    self.navigationView.bottomBannerContainerView.expansionOffset = banner.bannerConfiguration.expansionOffset
+                    
                     self.embed(banner, in: bannerContainerView)
+                    
+                    self.navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
+                    
                     self.navigationView.bottomBannerContainerView.show(animated: animated,
                                                                        duration: duration,
                                                                        animations: animations,
@@ -233,6 +258,11 @@ extension BannerPresentation {
                 })
             } else {
                 embed(banner, in: bannerContainerView)
+                navigationView.setupBottomBannerContainerViewHeightLayoutConstraints(banner.bannerConfiguration.height)
+                
+                navigationView.bottomBannerContainerView.isExpandable = banner.bannerConfiguration.isExpandable
+                navigationView.bottomBannerContainerView.expansionOffset = banner.bannerConfiguration.expansionOffset
+                
                 navigationView.bottomBannerContainerView.show(animated: animated,
                                                               duration: duration,
                                                               animations: animations,

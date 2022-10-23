@@ -27,9 +27,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     // MARK: - Banner properties
     
     // :nodoc:
-    public var bannerConfiguration: BannerConfiguration {
-        BannerConfiguration(position: .bottomLeading)
-    }
+    public let bannerConfiguration: BannerConfiguration
     
     // MARK: - DestinationDataSource properties
     
@@ -41,8 +39,10 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     }
     
     // :nodoc:
-    public required init(_ destinationOptions: DestinationOptions) {
+    public required init(_ destinationOptions: DestinationOptions,
+                         bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
         self.destinationOptions = destinationOptions
+        self.bannerConfiguration = bannerConfiguration
         
         super.init(nibName: nil, bundle: nil)
         

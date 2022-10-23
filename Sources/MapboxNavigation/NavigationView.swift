@@ -240,11 +240,11 @@ open class NavigationView: UIView {
     func setupViews() {
         let children: [UIView] = [
             navigationMapView,
-            topBannerContainerView,
             floatingStackView,
             wayNameView,
             resumeButton,
             speedLimitView,
+            topBannerContainerView,
             bottomBannerContainerView
         ]
         

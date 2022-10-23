@@ -18,14 +18,16 @@ open class BannerContainerView: UIView {
         case collapsed
     }
     
-    var isExpandable: Bool = false {
+    // :nodoc:
+    public var isExpandable: Bool = false {
         didSet {
             guard let superview = superview else { return }
             setupConstraints(superview)
         }
     }
     
-    var expansionOffset: CGFloat = 50.0
+    // :nodoc:
+    public var expansionOffset: CGFloat = 0.0
     
     // :nodoc:
     public private(set) var state: State = .collapsed {

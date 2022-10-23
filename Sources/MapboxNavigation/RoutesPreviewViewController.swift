@@ -28,9 +28,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     // MARK: - Banner properties
     
     // :nodoc:
-    public var bannerConfiguration: BannerConfiguration {
-        BannerConfiguration(position: .bottomLeading)
-    }
+    public let bannerConfiguration: BannerConfiguration
     
     // MARK: - RoutesPreviewDataSource properties
     
@@ -42,8 +40,10 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     }
     
     // :nodoc:
-    public required init(_ routesPreviewOptions: RoutesPreviewOptions) {
+    public required init(_ routesPreviewOptions: RoutesPreviewOptions,
+                         bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
         self.routesPreviewOptions = routesPreviewOptions
+        self.bannerConfiguration = bannerConfiguration
         
         super.init(nibName: nil, bundle: nil)
         
