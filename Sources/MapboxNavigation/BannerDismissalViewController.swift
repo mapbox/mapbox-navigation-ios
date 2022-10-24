@@ -10,6 +10,16 @@ public class BannerDismissalViewController: UIViewController, Banner {
     var backButton: BackButton!
     
     // :nodoc:
+    public var backTitle: String? {
+        get {
+            backButton.title(for: .normal)
+        }
+        set {
+            backButton.setTitle(newValue, for: .normal)
+        }
+    }
+    
+    // :nodoc:
     public weak var delegate: BannerDismissalViewControllerDelegate?
     
     // MARK: - Banner properties
