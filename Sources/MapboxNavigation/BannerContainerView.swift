@@ -253,6 +253,7 @@ open class BannerContainerView: UIView {
                      animations: (() -> Void)? = nil,
                      completion: CompletionHandler? = nil) {
         guard !isHidden else {
+            state = .collapsed
             completion?(true)
             return
         }
@@ -274,12 +275,16 @@ open class BannerContainerView: UIView {
                 }
                 
                 self.superview?.layoutIfNeeded()
-            }) { completed in
+            }) { [weak self] completed in
+                guard let self = self else { return }
+                
                 self.isHidden = true
+                self.state = .collapsed
                 completion?(completed)
             }
         } else {
             isHidden = true
+            state = .collapsed
             completion?(true)
         }
     }
