@@ -32,6 +32,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case latitude = "lat"
         case longitude = "lng"
         case userIdentifier = "userId"
+        case created
         case appMetadata
         case event
         case feedbackType
@@ -62,6 +63,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
+        try container.encode(created.ISO8601, forKey: .created)
         try container.encode(audioType, forKey: .audioType)
         try container.encode(applicationState, forKey: .applicationState)
         try container.encode(batteryLevel, forKey: .batteryLevel)
