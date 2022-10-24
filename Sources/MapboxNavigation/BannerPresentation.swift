@@ -12,11 +12,18 @@ protocol BannerPresentation: UIViewController {
     
     func topBanner(at position: BannerPosition) -> Banner?
     
+    func popAllExceptFirstBanner(at position: BannerPosition,
+                                 animated: Bool,
+                                 duration: TimeInterval,
+                                 animations: (() -> Void)?,
+                                 completion: (() -> Void)?)
+    
     func popBanner(at position: BannerPosition,
                    animated: Bool,
                    duration: TimeInterval,
                    animations: (() -> Void)?,
-                   completion: (() -> Void)?) -> Banner?
+                   completion: (() -> Void)?,
+                   popAllExceptFirstBanner: Bool) -> Banner?
     
     func push(_ banner: Banner,
               animated: Bool,
@@ -49,7 +56,8 @@ extension BannerPresentation {
                    animated: Bool = true,
                    duration: TimeInterval = 1.0,
                    animations: (() -> Void)? = nil,
-                   completion: (() -> Void)? = nil) -> Banner? {
+                   completion: (() -> Void)? = nil,
+                   popAllExceptFirstBanner: Bool = false) -> Banner? {
         let banner: Banner?
         switch position {
         case .topLeading:
@@ -71,7 +79,12 @@ extension BannerPresentation {
             switch position {
             case .topLeading:
                 let bannerContainerView = navigationView.topBannerContainerView
-                topBanners.pop()
+                
+                if popAllExceptFirstBanner {
+                    topBanners.popAllExceptFirst()
+                } else {
+                    topBanners.pop()
+                }
                 
                 if let topBanner = topmostTopBanner {
                     navigationView.topBannerContainerView.hide(animated: animated,
@@ -112,7 +125,12 @@ extension BannerPresentation {
                 }
             case .bottomLeading:
                 let bannerContainerView = navigationView.bottomBannerContainerView
-                bottomBanners.pop()
+                
+                if popAllExceptFirstBanner {
+                    bottomBanners.popAllExceptFirst()
+                } else {
+                    bottomBanners.pop()
+                }
                 
                 if let bottomBanner = topmostBottomBanner {
                     navigationView.bottomBannerContainerView.hide(animated: animated,
@@ -157,6 +175,19 @@ extension BannerPresentation {
         }
         
         return nil
+    }
+    
+    func popAllExceptFirstBanner(at position: BannerPosition,
+                                 animated: Bool,
+                                 duration: TimeInterval,
+                                 animations: (() -> Void)?,
+                                 completion: (() -> Void)?) {
+        _ = popBanner(at: position,
+                      animated: animated,
+                      duration: duration,
+                      animations: animations,
+                      completion: completion,
+                      popAllExceptFirstBanner: true)
     }
     
     func push(_ banner: Banner,

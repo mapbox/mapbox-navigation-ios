@@ -211,6 +211,19 @@ public class PreviewViewController: UIViewController, BannerPresentation {
                          completion: completion)
     }
     
+    func dismissAllExceptFirst(at position: BannerPosition,
+                               animated: Bool,
+                               duration: TimeInterval,
+                               animations: (() -> Void)?,
+                               completion: (() -> Void)?) {
+        popBanner(at: position,
+                  animated: animated,
+                  duration: duration,
+                  animations: animations,
+                  completion: completion,
+                  popAllExceptFirstBanner: true)
+    }
+    
     // :nodoc:
     public func present(_ banner: Banner,
                         animated: Bool = true,
