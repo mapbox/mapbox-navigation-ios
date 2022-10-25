@@ -81,12 +81,17 @@ public class BannerDismissalViewController: UIViewController, Banner {
                                                 comment: "Title of the back button.")
         
         backButton.setTitle(backButtonTitle, for: .normal)
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 0,
+                                                    left: 25,
+                                                    bottom: 0,
+                                                    right: 15)
+        backButton.sizeToFit()
         backButton.clipsToBounds = true
         backButton.addTarget(self, action: #selector(didTapDismissBannerButton), for: .touchUpInside)
         backButton.setImage(.backImage, for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageEdgeInsets = UIEdgeInsets(top: 10,
-                                                  left: 0,
+                                                  left: -10,
                                                   bottom: 10,
                                                   right: 15)
         topBannerView.addSubview(backButton)
