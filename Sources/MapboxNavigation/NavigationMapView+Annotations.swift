@@ -395,7 +395,6 @@ extension NavigationMapView {
     
     // MARK: Intersection Signals Annotations
     
-    
     /**
      Removes all the intersection annotations on current route.
      */
@@ -419,18 +418,27 @@ extension NavigationMapView {
                 if let trafficSignlaDay = Bundle.mapboxNavigation.image(named: "TrafficSignalDay") {
                     try style.addImage(trafficSignlaDay, id: ImageIdentifier.trafficSignal)
                 }
-                
                 if let railroadCrossingDay = Bundle.mapboxNavigation.image(named: "RailroadCrossingDay") {
                     try style.addImage(railroadCrossingDay, id: ImageIdentifier.railroadCrossing)
                 }
-                
+                if let yieldSignDay = Bundle.mapboxNavigation.image(named: "YieldSignDay") {
+                    try style.addImage(yieldSignDay, id: ImageIdentifier.yieldSign)
+                }
+                if let stopSignDay = Bundle.mapboxNavigation.image(named: "StopSignDay") {
+                    try style.addImage(stopSignDay, id: ImageIdentifier.stopSign)
+                }
             } else {
                 if let trafficSignalNight = Bundle.mapboxNavigation.image(named: "TrafficSignalNight") {
                     try style.addImage(trafficSignalNight, id: ImageIdentifier.trafficSignal)
                 }
-                
                 if let railroadCrossingNight = Bundle.mapboxNavigation.image(named: "RailroadCrossingNight") {
                     try style.addImage(railroadCrossingNight, id: ImageIdentifier.railroadCrossing)
+                }
+                if let yieldSignNight = Bundle.mapboxNavigation.image(named: "YieldSignNight") {
+                    try style.addImage(yieldSignNight, id: ImageIdentifier.yieldSign)
+                }
+                if let stopSignNight = Bundle.mapboxNavigation.image(named: "StopSignNight") {
+                    try style.addImage(stopSignNight, id: ImageIdentifier.stopSign)
                 }
             }
             
@@ -491,6 +499,12 @@ extension NavigationMapView {
         var properties: JSONObject? = nil
         if intersection.railroadCrossing == true {
             properties = ["imageName": .string(ImageIdentifier.railroadCrossing)]
+        }
+        if intersection.yieldSign == true {
+            properties = ["imageName": .string(ImageIdentifier.yieldSign)]
+        }
+        if intersection.stopSign == true {
+            properties = ["imageName": .string(ImageIdentifier.stopSign)]
         }
         if intersection.trafficSignal == true {
             properties = ["imageName": .string(ImageIdentifier.trafficSignal)]

@@ -40,6 +40,8 @@ extension NavigationMapView {
         static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
         static let trafficSignal = "traffic_signal"
         static let railroadCrossing = "railroad_crossing"
+        static let yieldSign = "yield_sign"
+        static let stopSign = "stop_sign"
     }
     
     struct ModelKeyIdentifier {
