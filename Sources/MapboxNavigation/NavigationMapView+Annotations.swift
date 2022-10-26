@@ -480,14 +480,14 @@ extension NavigationMapView {
     
     private func intersectionFeature(from intersection: Intersection) -> Feature? {
         var properties: JSONObject? = nil
-        if intersection.railroadCrossing == true {
-            properties = ["imageName": .string(ImageIdentifier.railroadCrossing)]
-        }
         if intersection.yieldSign == true {
             properties = ["imageName": .string(ImageIdentifier.yieldSign)]
         }
         if intersection.stopSign == true {
             properties = ["imageName": .string(ImageIdentifier.stopSign)]
+        }
+        if intersection.railroadCrossing == true {
+            properties = ["imageName": .string(ImageIdentifier.railroadCrossing)]
         }
         if intersection.trafficSignal == true {
             properties = ["imageName": .string(ImageIdentifier.trafficSignal)]
