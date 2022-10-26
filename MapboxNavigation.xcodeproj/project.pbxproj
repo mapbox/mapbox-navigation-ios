@@ -381,6 +381,7 @@
 		B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */; };
 		B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B456A8EB2620D26A00FD86D8 /* LeakTest.swift */; };
 		B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B46C42C52908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */; };
 		B473E901278651DD00D9E821 /* NavigationLocationProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */; };
 		B47BD90227B1E53D00338EE9 /* WayNameViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47BD90127B1E53D00338EE9 /* WayNameViewTests.swift */; };
 		B47C1B05261FD0C00078546C /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B47C1AFF261FD0A30078546C /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1013,6 +1014,7 @@
 		B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MMEEventsManager+Spy.h"; path = "include/MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
 		B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLHeadingPrivate.h; path = include/CLHeadingPrivate.h; sourceTree = "<group>"; };
+		B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationProviderTests.swift; sourceTree = "<group>"; };
 		B47BD90127B1E53D00338EE9 /* WayNameViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayNameViewTests.swift; sourceTree = "<group>"; };
 		B47C1AAA261FCDF30078546C /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
@@ -1913,6 +1915,14 @@
 				8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */,
 			);
 			name = "Instructions Card";
+			sourceTree = "<group>";
+		};
+		B46C42C32908AF1B006304B0 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */,
+			);
+			name = Preview;
 			sourceTree = "<group>";
 		};
 		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
@@ -3025,6 +3035,7 @@
 				8AB8F30226DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */,
+				B46C42C52908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				8A379B1127B5EADB00CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
 				8A0155E828F8EC72009E299C /* BannerPresentationTests.swift in Sources */,
