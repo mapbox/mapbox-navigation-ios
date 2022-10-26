@@ -10,7 +10,6 @@ class BannerDismissalViewControllerSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         isRecording = false
-        DayStyle().apply()
         bannerDismissalViewController = BannerDismissalViewController()
     }
     
@@ -19,13 +18,19 @@ class BannerDismissalViewControllerSnapshotTests: TestCase {
         bannerDismissalViewController = nil
     }
     
-    func testBannerDismissalViewController() {
+    func testBannerDismissalViewControllerDayStyle() {
+        DayStyle().apply()
         assertImageSnapshot(matching: bannerDismissalViewController, as: .image(precision: 0.95))
     }
     
+    func testBannerDismissalViewControllerNightStyle() {
+        NightStyle().apply()
+        assertImageSnapshot(matching: bannerDismissalViewController, as: .image(precision: 0.95))
+    }
     
     func testBackTitleUpdate() {
-        bannerDismissalViewController.backTitle = "Testing Title"
-        assertImageSnapshot(matching: bannerDismissalViewController, as: .image(precision: 0.95))
+        let newTitle = "Testing Title"
+        bannerDismissalViewController.backTitle = newTitle
+        XCTAssertEqual(newTitle, bannerDismissalViewController.backButton.currentTitle, "Failed to update the button title.")
     }
 }
