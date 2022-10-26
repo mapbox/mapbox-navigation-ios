@@ -83,6 +83,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     /**
      A Boolean value that determines whether the map annotates the intersections on current step during active navigation.
      
+     If `true`, the map would display an icon of a traffic control device on the intersection,
+     such as traffic signal, stop sign, yield sign, or railroad crossing.
      Defaults to `true`.
      */
     public var annotatesIntersectionsAlongRoute: Bool = true {

@@ -412,36 +412,19 @@ extension NavigationMapView {
     func updateIntersectionSymbolImages(styleType: StyleType?) {
         let style = mapView.mapboxMap.style
         let styleType = styleType ?? .day
+        let iconNameToIdentifier: [String: String] = ["trafficSignal": ImageIdentifier.trafficSignal,
+                                                      "railroadCrossing": ImageIdentifier.railroadCrossing,
+                                                      "yieldSign": ImageIdentifier.yieldSign,
+                                                      "stopSign": ImageIdentifier.stopSign]
         
         do {
-            if styleType == .day {
-                if let trafficSignlaDay = Bundle.mapboxNavigation.image(named: "TrafficSignalDay") {
-                    try style.addImage(trafficSignlaDay, id: ImageIdentifier.trafficSignal)
-                }
-                if let railroadCrossingDay = Bundle.mapboxNavigation.image(named: "RailroadCrossingDay") {
-                    try style.addImage(railroadCrossingDay, id: ImageIdentifier.railroadCrossing)
-                }
-                if let yieldSignDay = Bundle.mapboxNavigation.image(named: "YieldSignDay") {
-                    try style.addImage(yieldSignDay, id: ImageIdentifier.yieldSign)
-                }
-                if let stopSignDay = Bundle.mapboxNavigation.image(named: "StopSignDay") {
-                    try style.addImage(stopSignDay, id: ImageIdentifier.stopSign)
-                }
-            } else {
-                if let trafficSignalNight = Bundle.mapboxNavigation.image(named: "TrafficSignalNight") {
-                    try style.addImage(trafficSignalNight, id: ImageIdentifier.trafficSignal)
-                }
-                if let railroadCrossingNight = Bundle.mapboxNavigation.image(named: "RailroadCrossingNight") {
-                    try style.addImage(railroadCrossingNight, id: ImageIdentifier.railroadCrossing)
-                }
-                if let yieldSignNight = Bundle.mapboxNavigation.image(named: "YieldSignNight") {
-                    try style.addImage(yieldSignNight, id: ImageIdentifier.yieldSign)
-                }
-                if let stopSignNight = Bundle.mapboxNavigation.image(named: "StopSignNight") {
-                    try style.addImage(stopSignNight, id: ImageIdentifier.stopSign)
+            for iconType in iconNameToIdentifier.keys {
+                let iconName = iconType.firstCapitalized + styleType.description.firstCapitalized
+                if let imageIdentifier = iconNameToIdentifier[iconType],
+                   let iconImage = Bundle.mapboxNavigation.image(named: iconName) {
+                    try style.addImage(iconImage, id: imageIdentifier)
                 }
             }
-            
         } catch {
             Log.error("Error occured while updating intersection signal images: \(error.localizedDescription).",
                       category: .navigationUI)
