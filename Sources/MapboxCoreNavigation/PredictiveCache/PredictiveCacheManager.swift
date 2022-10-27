@@ -10,51 +10,89 @@ import MapboxNavigationNative
  - note: This object uses global tile store configuration from `NavigationSettings.tileStoreConfiguration`.
  */
 public class PredictiveCacheManager {
+    public typealias CacheMapOptions = (tileStore: TileStore, tilesetDescriptor: TilesetDescriptor)
+    
+    @available(*, deprecated, message: "Specify `CacheMapOptions` instead.")
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
-    
-    private var controllers: [PredictiveCacheController] = []
-    private var predictiveCacheOptions: PredictiveCacheOptions
-    private var mapOptions: MapOptions?
-    
+
+    private let navigatorProvider: NativeNavigatorProvider.Type
+    private let predictiveCacheOptions: PredictiveCacheOptions
+    private var cacheMapOptions: CacheMapOptions?
+
+    private var navigationController: PredictiveCacheController? = nil
+    private var mapController: PredictiveCacheController? = nil
+
+    private var navigator: MapboxNavigationNative.Navigator {
+        return navigatorProvider.navigator
+    }
+
     /**
-     Initializes a predictive cache.
-     
-     Recommended constructor. This action will initialize tile storage for navigation tiles.
+      Initializes a predictive cache.
+      Only non-volatile styles will be cached.
+
+      Recommended constructor. This action will initialize tile storage for navigation tiles.
+
+      - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
+      - parameter cacheMapOptions: Information about `MapView` tiles such as the location and tilesets to cache. If this argument is set to `nil`, predictive caching is disabled for map tiles.
+      */
+    public convenience init(predictiveCacheOptions: PredictiveCacheOptions,
+                            cacheMapOptions: CacheMapOptions? = nil) {
+        self.init(predictiveCacheOptions: predictiveCacheOptions,
+                  cacheMapOptions: cacheMapOptions,
+                  navigatorProvider: Navigator.self)
+    }
+
+    /**
+     Initializes a predictive cache. Enables only navigation cache. The only way to map enable caching is to pass a non-nil `cacheMapOptions`.
+
+     It is recommended to use `init(predictiveCacheOptions:cacheMapOptions:)` instead to correctly specify tileset for caching of non-volatile styles .
     
      - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
-     - parameter styleSourcePaths: Tilesets names for caching.
+     - parameter styleSourcePaths: Tilesets names for caching. The SDK ignores this parameter in the latest versions.
      */
+    @available(*, deprecated, message: "Use `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)` instead.")
     public convenience init(predictiveCacheOptions: PredictiveCacheOptions,
                             styleSourcePaths: [String]) {
-        var mapOptions: MapOptions?
-        if let tileStore = NavigationSettings.shared.tileStoreConfiguration.mapLocation?.tileStore {
-            mapOptions = MapOptions(tileStore, styleSourcePaths)
-        }
-        
-        self.init(predictiveCacheOptions: predictiveCacheOptions, mapOptions: mapOptions)
+        self.init(predictiveCacheOptions: predictiveCacheOptions, cacheMapOptions: nil)
     }
     
     /**
-     Initializes a predictive cache.
-     
-     This action will initialize tile storage for navigation tiles.
-     It is recommended to use `init(predictiveCacheOptions:styleSourcePaths:)` instead to control navigator storage location.
+     Initializes a predictive cache. Enables only navigation cache. The only way to enable map caching is to pass a non-nil `cacheMapOptions`.
+
+     It is recommended to use `init(predictiveCacheOptions:cacheMapOptions:)` instead to correctly specify tileset for caching of non-volatile styles .
     
      - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
      - parameter mapOptions: Information about `MapView` tiles such as the location and tilesets to cache. If this argument is set to `nil`, predictive caching is disabled for map tiles.
-     - seealso: `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)`
      */
-    public init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
+    @available(*, deprecated, message: "Use `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)` instead.")
+    public convenience init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
+        self.init(predictiveCacheOptions:predictiveCacheOptions, cacheMapOptions: nil)
+    }
+
+    init(predictiveCacheOptions: PredictiveCacheOptions,
+         cacheMapOptions: CacheMapOptions?,
+         navigatorProvider: NativeNavigatorProvider.Type) {
         self.predictiveCacheOptions = predictiveCacheOptions
-        self.mapOptions = mapOptions
-        
-        self.controllers = createControllers()
-        
+        self.cacheMapOptions = cacheMapOptions
+        self.navigatorProvider = navigatorProvider
+
+        updateControllers()
         subscribeNotifications()
     }
     
     deinit {
         unsubscribeNotifications()
+    }
+
+    /**
+     Updates a predictive cache configuration for additional tilesets. Call when new tilesets need to be cached.
+     - Parameter cacheMapOptions: Information about `MapView` tiles such as the location and tilesets to cache.
+     */
+    public func updateMapControllers(cacheMapOptions: CacheMapOptions?) {
+        guard let cacheMapOptions = cacheMapOptions else { return }
+
+        self.cacheMapOptions = cacheMapOptions
+        self.mapController = createMapController()
     }
     
     private func subscribeNotifications() {
@@ -69,40 +107,27 @@ public class PredictiveCacheManager {
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        self.controllers = createControllers()
+       updateControllers()
     }
-    
-    private func createControllers() -> [PredictiveCacheController] {
-        var controllers = [createPredictiveCacheController(options: predictiveCacheOptions)!]
-        
-        if let mapOptions = mapOptions {
-            controllers.append(contentsOf: mapOptions.styleSourcePaths.compactMap {
-                createPredictiveCacheController(options: predictiveCacheOptions,
-                                                tileStore: mapOptions.tileStore,
-                                                dataset: $0)
-            })
-        }
-        return controllers
+
+    private func updateControllers() {
+        self.navigationController = createNavigationCacheController()
+        self.mapController = createMapController()
     }
-    
-    private func createPredictiveCacheController(options: PredictiveCacheOptions,
-                                                 tileStore: TileStore? = nil,
-                                                 version: String = "",
-                                                 dataset: String = "mapbox",
-                                                 maxConcurrentRequests: UInt32 = 2) -> PredictiveCacheController? {
-        let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(options)
-        let navigator = Navigator.shared
-        if let tileStore = tileStore {
-            let cacheOptions = PredictiveCacheControllerOptions(version: version,
-                                                                dataset: dataset,
-                                                                dataDomain: .maps,
-                                                                concurrency: maxConcurrentRequests,
-                                                                maxAverageDownloadBytesPerSecond: 0)
-            return navigator.navigator.createPredictiveCacheController(for: tileStore,
-                                                                cacheOptions: cacheOptions,
-                                                                locationTrackerOptions: predictiveLocationTrackerOptions)
-        } else {
-            return navigator.navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
-        }
+
+    private func createMapController() -> PredictiveCacheController? {
+        guard let cacheMapOptions = cacheMapOptions else { return nil }
+
+        let cacheMapsOptions = predictiveCacheOptions.predictiveCacheMapsOptions
+        let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(cacheMapsOptions.locationOptions)
+        return navigator.createPredictiveCacheController(for: cacheMapOptions.tileStore,
+                                                         descriptors: [cacheMapOptions.tilesetDescriptor],
+                                                         locationTrackerOptions: predictiveLocationTrackerOptions)
+    }
+
+    private func createNavigationCacheController() -> PredictiveCacheController {
+        let locationOptions = predictiveCacheOptions.predictiveCacheNavigationOptions.locationOptions
+        let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(locationOptions)
+        return navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
     }
 }
