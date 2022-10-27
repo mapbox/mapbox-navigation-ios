@@ -1915,6 +1915,8 @@ open class NavigationMapView: UIView {
      */
     private(set) var predictiveCacheManager: PredictiveCacheManager?
     
+    private var predictiveCacheMapObserver: MapboxMaps.Cancelable? = nil
+
     /**
      Setups the Predictive Caching mechanism using provided Options.
      
@@ -1923,10 +1925,26 @@ open class NavigationMapView: UIView {
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
      */
     public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
-        let styleSourcePaths = mapView.styleSourceDatasets(["raster", "vector"])
-        
-        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
-                                                        styleSourcePaths: styleSourcePaths)
+        predictiveCacheMapObserver?.cancel()
+
+        let cacheMapOptions = createCacheMapOptions(predictiveCacheOptions: predictiveCacheOptions)
+        self.predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                             cacheMapOptions: cacheMapOptions)
+        self.predictiveCacheMapObserver = mapView.mapboxMap?.onEvery(event: .styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+
+            let cacheMapOptions = self.createCacheMapOptions(predictiveCacheOptions: predictiveCacheOptions)
+            self.predictiveCacheManager?.updateMapControllers(cacheMapOptions: cacheMapOptions)
+        }
+    }
+
+    private func createCacheMapOptions(predictiveCacheOptions: PredictiveCacheOptions) -> PredictiveCacheManager.CacheMapOptions? {
+        let tileStore = mapTileStore ?? NavigationSettings.shared.tileStoreConfiguration.mapLocation?.tileStore
+        let mapsOptions = predictiveCacheOptions.predictiveCacheMapsOptions
+        let tilesetDescriptor = self.mapView.tilesetDescriptor(zoomRange: mapsOptions.zoomRange)
+        guard let tileStore = tileStore, let tilesetDescriptor = tilesetDescriptor else { return nil }
+
+        return (tileStore: tileStore, tilesetDescriptor: tilesetDescriptor)
     }
     
     // MARK: Interacting with Camera
