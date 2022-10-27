@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 // :nodoc:
-public class RoutesPreviewViewController: RoutesPreviewing {
+public class RoutesPreviewViewController: UIViewController, Banner, RoutesPreviewDataSource {
     
     var bottomBannerView: BottomBannerView!
     
@@ -22,9 +22,17 @@ public class RoutesPreviewViewController: RoutesPreviewing {
     
     var trailingSeparatorView: SeparatorView!
     
-    weak var delegate: RoutesPreviewViewControllerDelegate?
+    // :nodoc:
+    public weak var delegate: RoutesPreviewViewControllerDelegate?
     
-    // MARK: - RoutesPreviewing properties
+    // MARK: - Banner properties
+    
+    // :nodoc:
+    public var bannerConfiguration: BannerConfiguration {
+        BannerConfiguration(position: .bottomLeading)
+    }
+    
+    // MARK: - RoutesPreviewDataSource properties
     
     // :nodoc:
     public var routesPreviewOptions: RoutesPreviewOptions {
@@ -33,10 +41,13 @@ public class RoutesPreviewViewController: RoutesPreviewing {
         }
     }
     
-    required init(_ routesPreviewOptions: RoutesPreviewOptions) {
+    // :nodoc:
+    public required init(_ routesPreviewOptions: RoutesPreviewOptions) {
         self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)
+        
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -45,8 +56,6 @@ public class RoutesPreviewViewController: RoutesPreviewing {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        commonInit()
     }
     
     func commonInit() {
@@ -123,7 +132,7 @@ public class RoutesPreviewViewController: RoutesPreviewing {
     }
     
     @objc func didPressStartButton() {
-        delegate?.willStartNavigation(self)
+        delegate?.didPressBeginActiveNavigationButton(self)
     }
     
     // TODO: Extract implementation out of `RoutesPreviewViewController`.
@@ -137,10 +146,19 @@ public class RoutesPreviewViewController: RoutesPreviewing {
         
         let phoneTraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
         let distanceRemainingTintColor = DistanceRemainingLabel.appearance(for: phoneTraitCollection,
-                                                                              whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
         let distance = Measurement(distance: route.distance).localized()
         let imageBounds = CGRect(x: 0.0, y: -2.0, width: 12.0, height: 15.0)
-        distanceRemainingLabel.attributedText = attributedString(with: .pinImage.tint(distanceRemainingTintColor),
+        
+        // FIXME: Tinting with custom method doesn't work on iOS 13 and higher.
+        let tintedPinImage: UIImage
+        if #available(iOS 13.0, *) {
+            tintedPinImage = .pinImage.withTintColor(distanceRemainingTintColor)
+        } else {
+            tintedPinImage = .pinImage.tint(distanceRemainingTintColor)
+        }
+        
+        distanceRemainingLabel.attributedText = attributedString(with: tintedPinImage,
                                                                  imageBounds: imageBounds,
                                                                  text: MeasurementFormatter().string(from: distance))
         
@@ -151,8 +169,16 @@ public class RoutesPreviewViewController: RoutesPreviewing {
             dateFormatter.timeStyle = .short
             
             let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance(for: phoneTraitCollection,
-                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
-            arrivalTimeLabel.attributedText = attributedString(with: .timeImage.tint(arrivalTimeImageTintColor),
+                                                                        whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+            
+            let tintedTimeImage: UIImage
+            if #available(iOS 13.0, *) {
+                tintedTimeImage = .timeImage.withTintColor(distanceRemainingTintColor)
+            } else {
+                tintedTimeImage = .timeImage.tint(arrivalTimeImageTintColor)
+            }
+            
+            arrivalTimeLabel.attributedText = attributedString(with: tintedTimeImage,
                                                                imageBounds: imageBounds,
                                                                text: dateFormatter.string(from: arrivalDate))
         }

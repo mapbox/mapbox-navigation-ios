@@ -54,7 +54,7 @@ To install the MapboxNavigation framework in another package rather than an appl
 // Latest stable release
 .package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.6.0")
 // Latest prerelease
-.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.9.0-alpha.3"))
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.9.0-beta.3"))
 ```
 
 ### Using CocoaPods
@@ -75,8 +75,8 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
    pod 'MapboxCoreNavigation', '~> 2.6'
    pod 'MapboxNavigation', '~> 2.6'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.9.0-alpha.3'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.9.0-alpha.3'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.9.0-beta.3'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.9.0-beta.3'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -103,7 +103,7 @@ To install the MapboxNavigation framework using [Carthage](https://github.com/Ca
    # Latest stable release
    github "mapbox/mapbox-navigation-ios" ~> 2.6
    # Latest prerelease
-   github "mapbox/mapbox-navigation-ios" "v2.9.0-alpha.3"
+   github "mapbox/mapbox-navigation-ios" "v2.9.0-beta.3"
    ```
 
 1. Run `carthage bootstrap --platform iOS --use-xcframeworks --cache-builds --use-netrc`.

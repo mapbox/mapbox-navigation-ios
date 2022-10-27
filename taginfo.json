@@ -93,6 +93,30 @@
       "description": "📱🗣🔨 Shown in top banner and step table and mentioned in voice guidance. In code, the RouteStep.maneuverType property is set to ManeuverType.takeOnRamp or ManeuverType.takeOffRamp. Set the RouteOptions.roadClassesToAvoid property to RoadClasses.motorway to avoid the way."
     },
     {
+      "key": "highway",
+      "value": "traffic_signals",
+      "object_types": ["node"],
+      "description": "📱🔨 The map shows a traffic light icon at the intersection along the route. In code, use the Intersection.trafficSignal property."
+    },
+    {
+      "key": "highway",
+      "value": "stop",
+      "object_types": ["node"],
+      "description": "📱🔨 The map shows a stop sign icon at the intersection along the route. In code, use the Intersection.stopSign property."
+    },
+    {
+      "key": "highway",
+      "value": "give_way",
+      "object_types": ["node"],
+      "description": "📱🔨 The map shows a yield sign icon at the intersection along the route. In code, use the Intersection.yieldSign property."
+    },
+    {
+      "key": "railway",
+      "value": "level_crossing",
+      "object_types": ["node"],
+      "description": "📱🔨 The map shows a railroad crossing icon at the intersection along the route. In code, use the Intersection.railroadCrossing property."
+    },
+    {
       "key": "hov",
       "object_types": ["way"],
       "description": "🔨 In code, the Intersection.outletRoadClasses property is set to RoadClasses.restricted."

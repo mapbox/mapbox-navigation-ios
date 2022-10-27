@@ -61,14 +61,17 @@ open class DismissButton: Button {
     
 }
 
-class BackButton: Button {
+// :nodoc:
+public class BackButton: Button {
     
 }
 
-class PreviewButton: Button {
+// :nodoc:
+public class PreviewButton: Button {
     
 }
 
-class StartButton: Button {
+// :nodoc:
+public class StartButton: Button {
     
 }

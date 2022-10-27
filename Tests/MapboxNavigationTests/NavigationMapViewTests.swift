@@ -13,6 +13,10 @@ class NavigationMapViewTests: TestCase {
     ]))
     var navigationMapView: NavigationMapView!
     
+    let options: NavigationRouteOptions = .init(coordinates: [
+        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197)])
+    
     lazy var route: Route = {
         let route = response.routes!.first!
         return route
@@ -123,10 +127,13 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(pointAnnotationManager?.annotations.count, 2)
         
         navigationMapView.showWaypoints(on: route)
-        XCTAssertEqual(pointAnnotationManager?.annotations.count, 1)
+        XCTAssertEqual(pointAnnotationManager?.annotations.count, 3)
         
+        // This method only removes waypoints and final destination annotation.
+        // If `NavigationMapView.pointAnnotationManager` contains any other annotations
+        // they will not be removed.
         navigationMapView.removeWaypoints()
-        XCTAssertEqual(pointAnnotationManager?.annotations.count, 0)
+        XCTAssertEqual(pointAnnotationManager?.annotations.count, 2)
         
         // Clean up
         pointAnnotationManager?.annotations = []
@@ -452,7 +459,7 @@ class NavigationMapViewTests: TestCase {
         // Right after calling `NavigationMapView.showWaypoints(on:legIndex:)` and before loading actual
         // `MapView` style it is expected that `NavigationMapView.finalDestinationAnnotation` is assigned
         // to non-nil value.
-        XCTAssertNotNil(navigationMapView.finalDestinationAnnotation, "Final destination annotation should not be nil.")
+        XCTAssertEqual(navigationMapView.finalDestinationAnnotations.count, 1, "Final destination annotations array should not be empty.")
         XCTAssertNil(navigationMapView.pointAnnotationManager, "Point annotation manager should be nil.")
         
         let styleJSONObject: [String: Any] = [
@@ -478,7 +485,7 @@ class NavigationMapViewTests: TestCase {
         
         // After fully loading style `NavigationMapView.finalDestinationAnnotation` should be assigned to nil and
         // `NavigationMapView.pointAnnotationManager` must become valid.
-        XCTAssertNil(navigationMapView.finalDestinationAnnotation, "Final destination annotation should be nil.")
+        XCTAssertEqual(navigationMapView.finalDestinationAnnotations.count, 0, "Final destination annotations array should be empty.")
         XCTAssertNotNil(navigationMapView.pointAnnotationManager, "Point annotation manager should not be nil.")
         XCTAssertEqual(navigationMapView.pointAnnotationManager?.annotations.count,
                        1,

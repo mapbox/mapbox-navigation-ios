@@ -485,6 +485,68 @@ class NavigationViewControllerTests: TestCase {
                        floatingButton,
                        "Unexpected floating button.")
     }
+    
+    func testShieldStyleWithNavigationMapViewInjection() {
+        let nightStyleURI: StyleURI = .navigationNight
+        let dayStyleURI: StyleURI = .navigationDay
+        
+        let spriteRepository = SpriteRepository.shared
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 1.0
+        spriteRepository.sessionConfiguration = config
+        
+        let styleLoadedExpectation = XCTestExpectation(description: "Style updated expectation.")
+        spriteRepository.updateStyle(styleURI: nightStyleURI) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        wait(for: [styleLoadedExpectation], timeout: 2.0)
+        XCTAssertEqual(spriteRepository.userInterfaceIdiomStyles[.phone],
+                       nightStyleURI,
+                       "Failed to update the style of SpriteRepository singleton to Night style.")
+        
+        class CustomNavigationMapView: NavigationMapView { }
+        let injected = CustomNavigationMapView()
+        injected.mapView.mapboxMap.style.uri = dayStyleURI
+        
+        let navService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
+                                                 customRoutingProvider: nil,
+                                                 credentials: Fixture.credentials)
+        let navOptions = NavigationOptions(styles: [DayStyle()],
+                                           navigationService: navService,
+                                           navigationMapView: injected)
+        let subject = NavigationViewController(for: initialRouteResponse, navigationOptions: navOptions)
+        _ = subject.view // trigger view load
+        
+        XCTAssert(subject.navigationMapView == injected, "NavigtionMapView not injected properly.")
+        XCTAssertEqual(injected.mapView.mapboxMap.style.uri?.rawValue,
+                       subject.styleManager.currentStyle?.mapStyleURL.absoluteString,
+                       "Failed to apply the style to NavigationViewController.")
+        XCTAssertEqual(spriteRepository.userInterfaceIdiomStyles[.phone],
+                       dayStyleURI,
+                       "Failed to update the style of SpriteRepository singleton with the injected NavigationMapView.")
+    }
+    
+    func testAnnotatesIntersectionsAlongRoute() {
+        let navigationViewController = navigationViewControllerMock()
+        let imageIdentifier = NavigationMapView.ImageIdentifier.trafficSignal
+        let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer
+        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionAnnotationsSource
+        
+        guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
+            XCTFail("Failed to get the MapView style object.")
+            return
+        }
+        
+        XCTAssertTrue(navigationViewController.annotatesIntersectionsAlongRoute)
+        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
+        XCTAssertTrue(style.layerExists(withId: layerIdentifier))
+        XCTAssertTrue(style.sourceExists(withId: sourceIdentifier))
+        
+        navigationViewController.annotatesIntersectionsAlongRoute = false
+        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
+        XCTAssertFalse(style.layerExists(withId: layerIdentifier))
+        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {

@@ -11,6 +11,7 @@ extension NavigationMapView {
         static let arrowSymbolCasingLayer = "\(identifier)_arrowSymbolCasingLayer"
         static let voiceInstructionLabelLayer = "\(identifier)_voiceInstructionLabelLayer"
         static let voiceInstructionCircleLayer = "\(identifier)_voiceInstructionCircleLayer"
+        static let intersectionAnnotationsLayer = "\(identifier)_intersectionAnnotationsLayer"
         static let waypointCircleLayer = "\(identifier)_waypointCircleLayer"
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
         static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
@@ -25,6 +26,7 @@ extension NavigationMapView {
         static let arrowStrokeSource = "\(identifier)_arrowStrokeSource"
         static let arrowSymbolSource = "\(identifier)_arrowSymbolSource"
         static let voiceInstructionSource = "\(identifier)_instructionSource"
+        static let intersectionAnnotationsSource = "\(identifier)_intersectionAnnotationsSource"
         static let waypointSource = "\(identifier)_waypointSource"
         static let routeDurationAnnotationsSource: String = "\(identifier)_routeDurationAnnotationsSource"
         static let continuousAlternativeRoutesDurationAnnotationsSource: String = "\(identifier)_continuousAlternativeRoutesDurationAnnotationsSource"
@@ -36,6 +38,10 @@ extension NavigationMapView {
         static let markerImage = "default_marker"
         static let routeAnnotationLeftHanded = "RouteInfoAnnotationLeftHanded"
         static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
+        static let trafficSignal = "traffic_signal"
+        static let railroadCrossing = "railroad_crossing"
+        static let yieldSign = "yield_sign"
+        static let stopSign = "stop_sign"
     }
     
     struct ModelKeyIdentifier {
@@ -44,6 +50,7 @@ extension NavigationMapView {
     
     struct AnnotationIdentifier {
         static let finalDestinationAnnotation = "\(identifier)_finalDestinationAnnotation"
+        static let previewFinalDestinationAnnotation = "\(identifier)_previewFinalDestinationAnnotation"
     }
     
     static let userCourseViewTag = 999

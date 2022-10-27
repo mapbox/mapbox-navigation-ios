@@ -42,6 +42,30 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         get {
             return navigationView.navigationMapView
         }
+        
+        set {
+            guard let validNavigationMapView = newValue else {
+                preconditionFailure("Invalid NavigationMapView instance.")
+            }
+            
+            validNavigationMapView.delegate = self
+            validNavigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(validNavigationMapView.mapView,
+                                                                                                      viewportDataSourceType: .active)
+            
+            // Reset any changes that were previously made to `FollowingCameraOptions` to prevent
+            // undesired camera behavior in active navigation.
+            let navigationViewportDataSource = validNavigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+            navigationViewportDataSource?.options.followingCameraOptions.centerUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.bearingUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.pitchUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.paddingUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.zoomUpdatesAllowed = true
+            navigationViewportDataSource?.options.followingCameraOptions.followsLocationCourse = false
+            
+            validNavigationMapView.navigationCamera.follow()
+            
+            navigationView.navigationMapView = validNavigationMapView
+        }
     }
     
     func setupNavigationCamera() {
@@ -88,6 +112,23 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         set {
             navigationMapView?.routeLineTracksTraversal = newValue
             routeOverlayController?.routeLineTracksTraversal = newValue
+        }
+    }
+    
+    /**
+     A Boolean value that determines whether the map annotates the intersections on current step during active navigation.
+     
+     If `true`, the map would display an icon of a traffic control device on the intersection,
+     such as traffic signal, stop sign, yield sign, or railroad crossing.
+     Defaults to `true`.
+     */
+    public var annotatesIntersectionsAlongRoute: Bool {
+        get {
+            routeOverlayController?.annotatesIntersections ?? true
+        }
+        set {
+            routeOverlayController?.annotatesIntersections = newValue
+            updateIntersectionsAlongRoute()
         }
     }
     
@@ -444,6 +485,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigationService()
         setupVoiceController()
         setupNavigationCamera()
+        
+        if usesNightStyleInDarkMode && self.traitCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
+        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -454,6 +499,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         notifyUserAboutLowVolumeIfNeeded()
+    }
+    
+    override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if usesNightStyleInDarkMode {
+            transitionStyle(to: newCollection)
+        }
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
@@ -791,6 +842,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var waypointStyle: WaypointStyle = .annotation
     
+    /**
+     Controls whether night style will be used whenever dark mode is enabled. Defaults to `false`.
+     */
+    public var usesNightStyleInDarkMode: Bool = false
+    
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
     var currentLeg: RouteLeg?
@@ -818,6 +874,23 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
             return currentStatusBarStyle
+        }
+    }
+    
+    func transitionStyle(to newCollection: UITraitCollection) {
+        if newCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
+        } else {
+            styleManager.applyStyle(type: .day)
+        }
+    }
+    
+    func updateIntersectionsAlongRoute() {
+        if annotatesIntersectionsAlongRoute {
+            navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
+            navigationMapView?.updateIntersectionAnnotations(with: navigationService.routeProgress)
+        } else {
+            navigationMapView?.removeIntersectionAnnotations()
         }
     }
 }
@@ -1155,14 +1228,14 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     private func updateMapStyle(_ style: Style) {
+        let styleURI = StyleURI(url: style.mapStyleURL)
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            let styleURI = StyleURI(url: style.mapStyleURL)
             navigationMapView?.mapView.mapboxMap.style.uri = styleURI
-            // Update the sprite repository of wayNameView when map style changes.
-            ornamentsController?.updateStyle(styleURI: styleURI)
         }
         
+        ornamentsController?.updateStyle(styleURI: styleURI)
         currentStatusBarStyle = style.statusBarStyle ?? .default
+        updateIntersectionsAlongRoute()
         setNeedsStatusBarAppearanceUpdate()
     }
     

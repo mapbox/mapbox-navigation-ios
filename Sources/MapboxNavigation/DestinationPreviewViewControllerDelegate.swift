@@ -1,6 +1,7 @@
-protocol DestinationPreviewViewControllerDelegate: AnyObject {
+// :nodoc:
+public protocol DestinationPreviewViewControllerDelegate: AnyObject {
     
-    func willPreviewRoutes(_ destinationPreviewViewController: DestinationPreviewViewController)
+    func didTapPreviewRoutesButton(_ destinationPreviewViewController: DestinationPreviewViewController)
     
-    func willStartNavigation(_ destinationPreviewViewController: DestinationPreviewViewController)
+    func didTapBeginActiveNavigationButton(_ destinationPreviewViewController: DestinationPreviewViewController)
 }
