@@ -81,6 +81,19 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     /**
+     A Boolean value that determines whether the map annotates the intersections on current step during active navigation.
+     
+     If `true`, the map would display an icon of a traffic control device on the intersection,
+     such as traffic signal, stop sign, yield sign, or railroad crossing.
+     Defaults to `true`.
+     */
+    public var annotatesIntersectionsAlongRoute: Bool = true {
+        didSet {
+            updateIntersectionsAlongRoute()
+        }
+    }
+    
+    /**
      `AlternativeRoute`s user might take during this trip to reach the destination using another road.
      
      Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
@@ -777,8 +790,13 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
         }
         
+        if annotatesIntersectionsAlongRoute {
+            navigationMapView?.updateIntersectionAnnotations(with: routeProgress)
+        }
+        
         navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, shouldRedraw: legIndex != currentLegIndexMapped)
         currentLegIndexMapped = legIndex
+        
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -872,6 +890,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             navigationMapView?.removeArrow()
         }
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
+        
+        if annotatesIntersectionsAlongRoute {
+            navigationMapView?.updateIntersectionAnnotations(with: progress)
+        }
     }
     
     func updateManeuvers(_ routeProgress: RouteProgress) {
@@ -1013,6 +1035,15 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         carInterfaceController.dismissTemplate(animated: true)
         carInterfaceController.presentTemplate(waypointArrival, animated: true)
     }
+    
+    func updateIntersectionsAlongRoute() {
+        if annotatesIntersectionsAlongRoute {
+            navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
+            navigationMapView?.updateIntersectionAnnotations(with: navigationService.routeProgress)
+        } else {
+            navigationMapView?.removeIntersectionAnnotations()
+        }
+    }
 }
 
 // MARK: StyleManagerDelegate Methods
@@ -1040,6 +1071,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
         wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
         updateMapTemplateStyle()
         updateManeuvers(navigationService.routeProgress)
+        updateIntersectionsAlongRoute()
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {

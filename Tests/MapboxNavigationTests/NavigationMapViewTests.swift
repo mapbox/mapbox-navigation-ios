@@ -13,6 +13,10 @@ class NavigationMapViewTests: TestCase {
     ]))
     var navigationMapView: NavigationMapView!
     
+    let options: NavigationRouteOptions = .init(coordinates: [
+        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197)])
+    
     lazy var route: Route = {
         let route = response.routes!.first!
         return route

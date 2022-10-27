@@ -525,6 +525,28 @@ class NavigationViewControllerTests: TestCase {
                        dayStyleURI,
                        "Failed to update the style of SpriteRepository singleton with the injected NavigationMapView.")
     }
+    
+    func testAnnotatesIntersectionsAlongRoute() {
+        let navigationViewController = navigationViewControllerMock()
+        let imageIdentifier = NavigationMapView.ImageIdentifier.trafficSignal
+        let layerIdentifier = NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer
+        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionAnnotationsSource
+        
+        guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
+            XCTFail("Failed to get the MapView style object.")
+            return
+        }
+        
+        XCTAssertTrue(navigationViewController.annotatesIntersectionsAlongRoute)
+        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
+        XCTAssertTrue(style.layerExists(withId: layerIdentifier))
+        XCTAssertTrue(style.sourceExists(withId: sourceIdentifier))
+        
+        navigationViewController.annotatesIntersectionsAlongRoute = false
+        XCTAssertTrue(style.imageExists(withId: imageIdentifier))
+        XCTAssertFalse(style.layerExists(withId: layerIdentifier))
+        XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {

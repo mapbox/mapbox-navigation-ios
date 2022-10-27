@@ -54,6 +54,10 @@ extension NavigationMapView {
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: router.route)
             }
+            
+            if annotatesIntersections {
+                navigationMapView.updateIntersectionAnnotations(with: router.routeProgress)
+            }
         }
         
         func navigationViewDidAppear(_ animated: Bool) {
@@ -88,6 +92,10 @@ extension NavigationMapView {
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
             }
+            
+            if annotatesIntersections {
+                navigationMapView.updateIntersectionAnnotations(with: router.routeProgress)
+            }
         }
         
         func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -109,6 +117,10 @@ extension NavigationMapView {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
             }
             
+            if annotatesIntersections {
+                navigationMapView.updateIntersectionAnnotations(with: progress)
+            }
+            
             navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate, shouldRedraw: currentLegIndexMapped != legIndex)
             currentLegIndexMapped = legIndex
         }
@@ -127,6 +139,7 @@ extension NavigationMapView {
         // MARK: Annotations Overlay
         
         var annotatesSpokenInstructions = false
+        var annotatesIntersections: Bool = true
         
         private var currentLegIndexMapped = 0
         private var currentStepIndexMapped = 0

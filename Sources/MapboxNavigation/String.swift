@@ -27,6 +27,10 @@ extension String {
         return replacements.reduce(self) { $0.replacingOccurrences(of: $1.of, with: $1.with) }
     }
     
+    var firstCapitalized: String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+    
     /**
      Returns the MD5 hash of the string.
      */
