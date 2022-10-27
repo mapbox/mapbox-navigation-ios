@@ -39,7 +39,7 @@ open class NavigationMapView: UIView {
     public var showsCongestionForAlternativeRoutes: Bool = false
     
     /**
-     Controls wheter to show restricted portions of a route line.
+     Controls whether to show restricted portions of a route line.
      
      Restricted areas are drawn using `routeRestrictedAreaColor` which is customizable.
      */
@@ -95,6 +95,11 @@ open class NavigationMapView: UIView {
             updateRouteLineWithRouteLineTracksTraversal()
         }
     }
+    
+    /**
+     Controls whether to use a dotted line for the route line when the transport type is walking.
+     */
+    public var usesDottedLineForWalking: Bool = true
     
     /**
      Location manager that is used to track accuracy and status authorization changes.
@@ -162,6 +167,12 @@ open class NavigationMapView: UIView {
             }
             
             return true
+        }
+    }
+    
+    var isWalking: Bool {
+        get {
+            return routes?.first?.legs.first?.profileIdentifier == .walking ? true : false
         }
     }
     
@@ -348,6 +359,15 @@ open class NavigationMapView: UIView {
         
         mapView.mapboxMap.style.removeLayers(layerIdentifiers)
         mapView.mapboxMap.style.removeSources(sourceIdentifiers)
+        
+        do {
+            if mapView.mapboxMap.style.image(withId: NavigationMapView.ImageIdentifier.minusImage) != nil {
+                try mapView.mapboxMap.style.removeImage(withId: NavigationMapView.ImageIdentifier.minusImage)
+            }
+        } catch {
+            Log.error("Failed to remove image \(NavigationMapView.ImageIdentifier.minusImage) from style with error: \(error.localizedDescription).",
+                      category: .navigationUI)
+        }
         
         routes = nil
         removeLineGradientStops()
@@ -623,13 +643,22 @@ open class NavigationMapView: UIView {
                                           below parentLayerIndentifier: String? = nil,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
-        guard let defaultShape = route.shape else { return nil }
+        guard let defaultShape = route.shape,
+              let circleImage = Bundle.mapboxNavigation.image(named: "minus")?.withRenderingMode(.alwaysTemplate) else { return nil }
         let shape = delegate?.navigationMapView(self, shapeFor: route) ?? defaultShape
         
         let geoJSONSource = self.geoJSONSource(shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: false))
 
         do {
+            if isWalking && usesDottedLineForWalking && mapView.mapboxMap.style.image(withId: NavigationMapView.ImageIdentifier.minusImage) == nil {
+                try mapView.mapboxMap.style.addImage(circleImage,
+                                                     id: NavigationMapView.ImageIdentifier.minusImage,
+                                                     sdf: true,
+                                                     stretchX: [ImageStretches(first: 0, second: 0)],
+                                                     stretchY: [ImageStretches(first: 0, second: 0)])
+            }
+            
             if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
                 try mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceIdentifier,
                                                                 geoJSON: .geometry(.lineString(shape)))
@@ -659,6 +688,9 @@ open class NavigationMapView: UIView {
             lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression())
             lineLayer?.lineJoin = .constant(.round)
             lineLayer?.lineCap = .constant(.round)
+            if isWalking && usesDottedLineForWalking {
+                lineLayer?.linePattern = .constant(.name(NavigationMapView.ImageIdentifier.minusImage))
+            }
             
             if isMainRoute {
                 let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
@@ -717,6 +749,7 @@ open class NavigationMapView: UIView {
     @discardableResult func addRouteCasingLayer(_ route: Route,
                                                 below parentLayerIndentifier: String? = nil,
                                                 isMainRoute: Bool = true) -> String? {
+        if isWalking && usesDottedLineForWalking { return nil }
         guard let defaultShape = route.shape else { return nil }
         let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
         
