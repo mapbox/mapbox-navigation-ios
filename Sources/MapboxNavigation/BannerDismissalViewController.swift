@@ -15,13 +15,12 @@ public class BannerDismissalViewController: UIViewController, Banner {
     // MARK: - Banner properties
     
     // :nodoc:
-    public var bannerConfiguration: BannerConfiguration {
-        BannerConfiguration(position: .topLeading,
-                            height: 70.0)
-    }
+    public let bannerConfiguration: BannerConfiguration
     
     // :nodoc:
-    public init() {
+    public init(_ bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .topLeading, height: 70.0)) {
+        self.bannerConfiguration = bannerConfiguration
+        
         super.init(nibName: nil, bundle: nil)
         
         commonInit()

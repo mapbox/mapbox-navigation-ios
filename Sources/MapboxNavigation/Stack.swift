@@ -32,4 +32,12 @@ struct Stack<Element>: Stackable {
     @discardableResult mutating func pop() -> Element? {
         elements.popLast()
     }
+    
+    mutating func popAllExceptFirst() {
+        guard let firstElement = elements.first else {
+            return
+        }
+        
+        elements = [firstElement]
+    }
 }

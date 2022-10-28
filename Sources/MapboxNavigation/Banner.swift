@@ -16,8 +16,19 @@ public struct BannerConfiguration {
     public private(set) var height: CGFloat? = nil
     
     // :nodoc:
-    public init(position: BannerPosition, height: CGFloat? = nil) {
+    public private(set) var isExpandable: Bool = false
+    
+    // :nodoc:
+    public private(set) var expansionOffset: CGFloat = 0.0
+    
+    // :nodoc:
+    public init(position: BannerPosition,
+                height: CGFloat? = nil,
+                isExpandable: Bool = false,
+                expansionOffset: CGFloat = 0.0) {
         self.position = position
         self.height = height
+        self.isExpandable = isExpandable
+        self.expansionOffset = expansionOffset
     }
 }
