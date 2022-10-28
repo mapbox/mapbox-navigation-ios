@@ -58,7 +58,6 @@ final class PredictiveCacheManagerTests: TestCase {
         XCTAssertEqual(navigator.passedDescriptorsTrackerOptions?.currentLocationRadius, UInt32(expectedMapOptions.currentLocationRadius))
         XCTAssertEqual(navigator.passedDescriptorsTrackerOptions?.destinationLocationRadius, UInt32(expectedMapOptions.destinationLocationRadius))
         XCTAssertEqual(navigator.passedDescriptorsTrackerOptions?.routeBufferRadius, UInt32(expectedMapOptions.routeBufferRadius))
-        XCTAssertEqual(navigator.passedTileStore, tileStore)
         XCTAssertEqual(navigator.passedDescriptors, [tilesetDescriptor])
 
         navigator.passedDescriptorsTrackerOptions = nil
@@ -83,5 +82,28 @@ final class PredictiveCacheManagerTests: TestCase {
 
         XCTAssertNotNil(navigator.passedDescriptorsTrackerOptions, "Recreate map controller")
         XCTAssertNotNil(navigator.passedNavigationTrackerOptions, "Recreate navigation controller")
+    }
+
+    func testCreateDatasetController() {
+        let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                             cacheMapOptions: (tileStore: tileStore, tilesetDescriptor: nil),
+                                             styleSourcePaths: ["first"],
+                                             navigatorProvider: NativeNavigatorProviderSpy.self)
+
+        let expectedMapOptions = predictiveCacheOptions.predictiveCacheMapsOptions.locationOptions
+        XCTAssertEqual(navigator.passedDatasetTrackerOptions?.currentLocationRadius, UInt32(expectedMapOptions.currentLocationRadius))
+        XCTAssertEqual(navigator.passedDatasetTrackerOptions?.destinationLocationRadius, UInt32(expectedMapOptions.destinationLocationRadius))
+        XCTAssertEqual(navigator.passedDatasetTrackerOptions?.routeBufferRadius, UInt32(expectedMapOptions.routeBufferRadius))
+
+        XCTAssertEqual(navigator.passedCacheOptions?.dataset, "first")
+        XCTAssertEqual(navigator.passedCacheOptions?.dataDomain, .maps)
+        XCTAssertEqual(navigator.passedCacheOptions?.version, "")
+        XCTAssertEqual(navigator.passedCacheOptions?.concurrency, predictiveCacheOptions.predictiveCacheMapsOptions.maximumConcurrentRequests)
+        XCTAssertEqual(navigator.passedCacheOptions?.maxAverageDownloadBytesPerSecond, 0)
+
+        navigator.passedDatasetTrackerOptions = nil
+        manager.updateMapControllers(cacheMapOptions: cacheMapOptions)
+
+        XCTAssertNil(navigator.passedDatasetTrackerOptions)
     }
 }

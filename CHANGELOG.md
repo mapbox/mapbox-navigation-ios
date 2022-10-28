@@ -62,9 +62,9 @@
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 
 #### Predictive caching
-* Implemented predictive cache with `TilesetDescriptor` so that volatile sources are not loaded unexpectedly.
- Deprecated `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)` and `PredictiveCacheManager.init(predictiveCacheOptions:mapOptions:)` in favour of `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
-* Deprecated `PredictiveCacheOptions.currentLocationRadius`, `PredictiveCacheOptions.routeBufferRadius`, `PredictiveCacheOptions.destinationLocationRadius`, `PredictiveCacheOptions.maximumConcurrentRequests`. Use `PredictiveCacheOptions.predictiveCacheNavigationOptions` and `PredictiveCacheOptions.predictiveCacheMapsOptions` insread for separate predictive cache configuration for maps and navigation. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Implemented predictive cache with `TilesetDescriptor` so that volatile sources are not loaded unexpectedly. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)` and `PredictiveCacheManager.init(predictiveCacheOptions:mapOptions:)` in favor of `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheOptions.currentLocationRadius`, `PredictiveCacheOptions.routeBufferRadius`, `PredictiveCacheOptions.destinationLocationRadius`, `PredictiveCacheOptions.maximumConcurrentRequests`. Use `PredictiveCacheOptions.predictiveCacheNavigationOptions` and `PredictiveCacheOptions.predictiveCacheMapsOptions` instead for separate predictive cache configuration for maps and navigation. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
 * Added `PredictiveCacheManager.updateMapControllers(cacheMapOptions:)` for cashing map styles after they are loaded. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
 
 ### Other changes

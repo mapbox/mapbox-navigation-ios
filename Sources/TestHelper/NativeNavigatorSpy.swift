@@ -6,9 +6,11 @@ import MapboxNavigationNative
 class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     var passedTileStore: TileStore?
     var passedDescriptors: [TilesetDescriptor]?
+    var passedCacheOptions: PredictiveCacheControllerOptions?
 
     var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?
     var passedDescriptorsTrackerOptions: PredictiveLocationTrackerOptions?
+    var passedDatasetTrackerOptions: PredictiveLocationTrackerOptions?
 
     init() {
         let factory = NativeHandlersFactory(tileStorePath: "", credentials: DirectionsSpy.shared.credentials)
@@ -29,6 +31,15 @@ class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
         passedTileStore = tileStore
         passedDescriptors = descriptors
         passedDescriptorsTrackerOptions = locationTrackerOptions
+        return super.createPredictiveCacheController(for: locationTrackerOptions)
+    }
+
+    override func createPredictiveCacheController(for tileStore: TileStore,
+                                                  cacheOptions: PredictiveCacheControllerOptions,
+                                                  locationTrackerOptions: PredictiveLocationTrackerOptions) -> PredictiveCacheController {
+        passedTileStore = tileStore
+        passedCacheOptions = cacheOptions
+        passedDatasetTrackerOptions = locationTrackerOptions
         return super.createPredictiveCacheController(for: locationTrackerOptions)
     }
 }
