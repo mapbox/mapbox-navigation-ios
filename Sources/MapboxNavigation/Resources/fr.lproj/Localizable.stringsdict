@@ -14,6 +14,8 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>Évaluer à %ld étoile</string>
+			<key>many</key>
+			<string>Évaluer à %ld étoiles</string>
 			<key>other</key>
 			<string>Évaluer à %ld étoiles</string>
 		</dict>
@@ -30,9 +32,16 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>Évalué à %ld étoile.</string>
+			<key>many</key>
+			<string>Évalué à %ld étoiles.</string>
 			<key>other</key>
 			<string>Évalué à %ld étoiles.</string>
 		</dict>
+	</dict>
+	<key>NAVIGATION_REPORT_ISSUES</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@items@</string>
 	</dict>
 </dict>
 </plist>
