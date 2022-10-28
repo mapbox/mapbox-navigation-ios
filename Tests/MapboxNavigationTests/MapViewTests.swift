@@ -251,7 +251,7 @@ class MapViewTests: TestCase {
         
         // Simplified Chinese is broken: https://github.com/mapbox/mapbox-maps-ios/issues/652
         mapView.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
-        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh")
+        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh-Hans")
         
         XCTAssertNoThrow(mapView.localizeLabels(into: Locale(identifier: "tlh")))
     }
