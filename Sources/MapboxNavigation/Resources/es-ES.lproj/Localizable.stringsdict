@@ -14,6 +14,8 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>Dar la calificación de %ld estrella</string>
+			<key>many</key>
+			<string>Dar la calificación de %ld estrellas</string>
 			<key>other</key>
 			<string>Dar la calificación de %ld estrellas</string>
 		</dict>
@@ -30,6 +32,8 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>Has calificado con %ld estrella.</string>
+			<key>many</key>
+			<string>Has calificado con %ld estrellas.</string>
 			<key>other</key>
 			<string>Has calificado con %ld estrellas.</string>
 		</dict>
@@ -46,6 +50,8 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>Enviar 1 artículo</string>
+			<key>many</key>
+			<string>Enviar %ld artículos</string>
 			<key>other</key>
 			<string>Enviar %ld artículos</string>
 		</dict>
