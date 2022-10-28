@@ -21,6 +21,7 @@
 * `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
+* Fixed the Route Leg gradient endpoints offset when route lacks traffic congestion data. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
 
 ### Banners and guidance instructions
 
