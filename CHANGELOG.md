@@ -63,6 +63,7 @@
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favour of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
 * Added `HistoryReader` for parsing history files. ([#4194](https://github.com/mapbox/mapbox-navigation-ios/pull/4194))
+* `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains `legIndex` parameter that allows to highlight leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 
 ## v2.8.1
 
