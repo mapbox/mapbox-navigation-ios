@@ -49,6 +49,11 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         super.init(nibName: nil, bundle: nil)
         
         bannerPresentationDelegate = self
+        
+        setupFloatingButtons()
+        setupConstraints()
+        setupStyleManager()
+        setupNavigationCamera()
     }
     
     public required init?(coder: NSCoder) {
@@ -63,17 +68,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     public override func loadView() {
         view = setupNavigationView()
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupFloatingButtons()
-        setupTopBannerContainerView()
-        setupBottomBannerContainerView()
-        setupConstraints()
-        setupStyleManager()
-        setupNavigationCamera()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -133,16 +127,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         
         navigationView.floatingButtons?.append(debugFloatingButton)
 #endif
-    }
-    
-    func setupTopBannerContainerView() {
-        navigationView.topBannerContainerView.isHidden = true
-        navigationView.topBannerContainerView.backgroundColor = .clear
-    }
-    
-    func setupBottomBannerContainerView() {
-        navigationView.bottomBannerContainerView.isHidden = true
-        navigationView.bottomBannerContainerView.backgroundColor = .defaultBackgroundColor
     }
     
     // TODO: Implement the ability to set default positions for logo and attribution button.
