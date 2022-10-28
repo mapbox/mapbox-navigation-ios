@@ -73,7 +73,7 @@ final class PreviewViewControllerTests: XCTestCase {
                                                       height: nil)
         let banner = BannerMock(bannerConfiguration)
         
-        let presentationExpectation = expectation(description: "Top banner presentation expectation.")
+        let presentationExpectation = expectation(description: "Banner presentation expectation.")
         let animationDuration = 3.0
         previewViewController.present(banner,
                                       duration: animationDuration,
@@ -99,14 +99,14 @@ final class PreviewViewControllerTests: XCTestCase {
         previewViewControllerDelegateMock.didCallWillPresentBanner = false
         previewViewControllerDelegateMock.didCallDidPresentBanner = false
         
-        let dismissalExpectation = expectation(description: "Top banner dismissal expectation.")
+        let dismissalExpectation = expectation(description: "Banner dismissal expectation.")
         previewViewController.dismissBanner(at: position,
                                             duration: animationDuration,
                                             completion: {
             dismissalExpectation.fulfill()
         })
         
-        // Right after dismissing top banner verify that correct methods of the delegate were called.
+        // Right after dismissing banner verify that correct methods of the delegate were called.
         XCTAssertEqual(previewViewControllerDelegateMock.didCallWillPresentBanner, false)
         XCTAssertEqual(previewViewControllerDelegateMock.didCallDidPresentBanner, false)
         XCTAssertEqual(previewViewControllerDelegateMock.didCallBannerWillDisappear, true)

@@ -129,7 +129,7 @@ final class BannerPresentationTests: XCTestCase {
                                                       height: nil)
         let banner = BannerMock(bannerConfiguration)
         
-        let presentationExpectation = expectation(description: "Top banner presentation expectation.")
+        let presentationExpectation = expectation(description: "Banner presentation expectation.")
         let animationDuration = 3.0
         bannerPresenter.push(banner,
                              duration: animationDuration,
@@ -155,14 +155,14 @@ final class BannerPresentationTests: XCTestCase {
         bannerPresentationDelegateMock.didCallBannerWillAppear = false
         bannerPresentationDelegateMock.didCallBannerDidAppear = false
         
-        let dismissalExpectation = expectation(description: "Top banner dismissal expectation.")
+        let dismissalExpectation = expectation(description: "Banner dismissal expectation.")
         bannerPresenter.popBanner(at: position,
                                   duration: animationDuration,
                                   completion: {
             dismissalExpectation.fulfill()
         })
         
-        // Right after dismissing top banner verify that correct methods of the delegate were called.
+        // Right after dismissing banner verify that correct methods of the delegate were called.
         XCTAssertEqual(bannerPresentationDelegateMock.didCallBannerWillAppear, false)
         XCTAssertEqual(bannerPresentationDelegateMock.didCallBannerDidAppear, false)
         XCTAssertEqual(bannerPresentationDelegateMock.didCallBannerWillDisappear, true)
