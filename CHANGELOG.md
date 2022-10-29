@@ -10,18 +10,17 @@
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
 * MapboxNavigation now requires [MapboxMaps v10.9._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0). ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 
-### Location tracking
-
-* Fixed an issue where the user’s location history was sometimes matched to unnavigable paths, leading to unreliable location snapping. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
-* Fixed an issue where the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method would incorrectly match some TPEG OpenLR identifiers. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
-
 ### Map
 
+* Traffic lights, stop signs, yield signs, and railroad crossings now appear along the route during turn-by-turn navigation. To disable these icons, set the `NavigationViewController.annotatesIntersectionsAlongRoute` and `CarPlayNavigationViewController.annotatesIntersectionsAlongRoute` properties to `false`. ([#4185](https://github.com/mapbox/mapbox-navigation-ios/pull/4185))
 * `NavigationMapView.removeAlternativeRoutes()` and `NavigationMapView.removeContinuousAlternativeRoutesDurations()` were made public to provide a way to remove previously shown alternative routes and alternative routes duration annotations, respectively. ([#4134](https://github.com/mapbox/mapbox-navigation-ios/pull/4134))
 * Fixed an issue where tapping on a route duration annotation that overlaps a different route would cause the wrong route to be passed into `NavigationMapViewDelegate.navigationMapView(_:didSelect:)` or `NavigationMapViewDelegate.navigationMapView(_:didSelect:)`. ([#4133](https://github.com/mapbox/mapbox-navigation-ios/pull/4133))
 * Fixed an issue where the shields in the instruction are using the style from last navigation session with the `NavigationMapView` injection used in the new session. ([#4197](https://github.com/mapbox/mapbox-navigation-ios/pull/4197))
 * Fixed an issue where the `NavigationMapView.localizeLabels()` method only localized map labels according to the user’s Preferred Language Order setting if the application also had a localization in the preferred language. ([#4205](https://github.com/mapbox/mapbox-navigation-ios/pull/4205))
-* Added `NavigationViewController.annotatesIntersectionsAlongRoute` and `CarPlayNavigationViewController.annotatesIntersectionsAlongRoute` to annotate intersections on the current route step during active navigation. ([#4185](https://github.com/mapbox/mapbox-navigation-ios/pull/4185))
+* Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:imageEdgeInsets:cornerRadius)` to be able to provide button type, button image edge insets and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060), [#4157](https://github.com/mapbox/mapbox-navigation-ios/pull/4157))
+* `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
+* `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 
 ### Banners and guidance instructions
 
@@ -34,12 +33,15 @@
 * Improved the timing of some spoken instructions. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where the current road name label appeared even while the user is not traveling on a known road. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 
-### Visual and spoken instructions
+### Location tracking
 
-* Fixed an issue where rerouting sound stops background audio. ([#3642](https://github.com/mapbox/mapbox-navigation-ios/pull/3642))
+* Fixed an issue where the user’s location history was sometimes matched to unnavigable paths, leading to unreliable location snapping. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* Fixed an issue where the `RoadObjectMatcher.matchOpenLR(location:identifier:)` method would incorrectly match some TPEG OpenLR identifiers. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* Added `HistoryReader` for parsing history files. ([#4194](https://github.com/mapbox/mapbox-navigation-ios/pull/4194))
 
 ### Routing
 
+* `IndexedRouteResponse` is now the preferred way for setting up routing information for navigation. `NavigationViewController`, `MapboxNavigationService`, `Router` and `RoutingProvider` are updated to accomodate this change. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * Added the `RouteController.prefersOnlineRoute` property, which lets you automatically switch from a route generated on the device to one generated by the Mapbox Directions API if the geometries match. Use `NavigationViewControllerDelegate.navigationViewController(_:didSwitchToCoincidentOnlineRoute:)`, `NavigationServiceDelegate.navigationService(_:didSwitchToCoincidentOnlineRoute:)`, `RouterDelegate.router(_:didSwitchToCoincidentOnlineRoute:)` or `.routeControllerDidSwitchToCoincidentOnlineRoute` notification to track such events. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * Added the `NavigationViewController(for:routeIndex:navigationOptions:)` initializer to start turn-by-turn navigation using map matching response. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
 * Fixed an issue where continuous alternative route lines and their corresponding callouts were misplaced on long routes. ([#4176](https://github.com/mapbox/mapbox-navigation-ios/pull/4176))
@@ -53,17 +55,16 @@
 * Fixed an issue where some [rat runs](https://en.wikipedia.org/wiki/Rat_running) were suggested as alternative routes that matched the main route. These alternative routes are no longer suggested at all. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where routes avoided roads with the deprecated tags [`hov=lane`](https://taginfo.openstreetmap.org/tags/hov=lane) and `hov:conditional=lane @ …` as restricted roads. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 
+### User feedback
+
+* The MapboxMobileEvents dependency is no longer used. Feedback events are now handled by MapboxCommon. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
+* Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
+
 ### Other changes
 
-* Additional parameters were added to `FloatingButton.rounded(image:selectedImage:size:type:imageEdgeInsets:cornerRadius)` to be able to provide button type, button image edge insets and corner radius. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060), [#4157](https://github.com/mapbox/mapbox-navigation-ios/pull/4157))
-* `IndexedRouteResponse` is now the preferred way for setting up routing information for navigation. `NavigationViewController`, `MapboxNavigationService`, `Router` and `RoutingProvider` are updated to accomodate this change. ([#4127](https://github.com/mapbox/mapbox-navigation-ios/pull/4127))
-* `FloatingButton` no longer contains corner radius shadow, border is applied instead. ([#4060](https://github.com/mapbox/mapbox-navigation-ios/pull/4060))
-* Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
-* MapboxMobileEvents dependency is replaced with CoreTelemetry (part of MapboxCommon). ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
-* Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favour of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
-* Added `HistoryReader` for parsing history files. ([#4194](https://github.com/mapbox/mapbox-navigation-ios/pull/4194))
-* `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains `legIndex` parameter that allows to highlight leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
+* Fixed an issue where the rerouting audio cue stopped background audio. ([#3642](https://github.com/mapbox/mapbox-navigation-ios/pull/3642))
+* Fixed an issue where the rerouting audio cue played even if `RouteVoiceController.playRerouteSound` was set to `false`. ([#4214](https://github.com/mapbox/mapbox-navigation-ios/pull/4214))
 
 ## v2.8.1
 
