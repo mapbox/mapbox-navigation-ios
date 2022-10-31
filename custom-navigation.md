@@ -66,6 +66,8 @@ To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
 
 ### Using Carthage
 
+MapboxNavigation no longer supports Carthage as of v2.0.0-alpha.1. However, if you are building a user interface from scratch, you can install just the MapboxCoreNavigation framework using Carthage.
+
 To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.38 or above:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
