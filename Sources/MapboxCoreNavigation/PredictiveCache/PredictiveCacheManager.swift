@@ -47,7 +47,7 @@ public class PredictiveCacheManager {
     }
 
     /**
-     IInitializes a predictive cache.
+     Initializes a predictive cache.
 
      It is recommended to use `init(predictiveCacheOptions:cacheMapOptions:)` instead to correctly specify tileset for caching of non-volatile styles .
     
@@ -66,7 +66,7 @@ public class PredictiveCacheManager {
     }
     
     /**
-     IInitializes a predictive cache.
+     Initializes a predictive cache.
 
      It is recommended to use `init(predictiveCacheOptions:cacheMapOptions:)` instead to correctly specify tileset for caching of non-volatile styles .
     
