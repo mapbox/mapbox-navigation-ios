@@ -90,17 +90,16 @@ extension Route {
         for (index, leg) in legs.enumerated() {
             let legFeatures: [Feature]
             let currentLegAttribute = (legIndex != nil) ? index == legIndex : true
+            
+            // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
+            let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                let index = current.offset
+                let step = current.element
+                let stepCoordinates = step.shape!.coordinates
+                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+            }
 
             if let congestionLevels = leg.resolvedCongestionLevels, congestionLevels.count < coordinates.count + 2 {
-                // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
-                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
-                    let index = current.offset
-                    let step = current.element
-                    let stepCoordinates = step.shape!.coordinates
-                    
-                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
-                }
-                
                 let mergedCongestionSegments = legCoordinates.combined(congestionLevels,
                                                                        streetsRoadClasses: leg.streetsRoadClasses,
                                                                        roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
@@ -115,7 +114,7 @@ extension Route {
                     return feature
                 }
             } else {
-                var feature = Feature(geometry: .lineString(LineString(shape.coordinates)))
+                var feature = Feature(geometry: .lineString(LineString(.init(coordinates: legCoordinates))))
                 feature.properties = [
                     CurrentLegAttribute: .boolean(currentLegAttribute),
                 ]
