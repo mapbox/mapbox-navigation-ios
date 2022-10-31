@@ -1,14 +1,18 @@
 import CoreLocation
 import MapboxCoreNavigation
 import XCTest
+@testable import MapboxDirections
 @testable import TestHelper
 
 @available(*, deprecated)
 final class PredictiveCacheOptionsTests: TestCase {
 
-    private var cacheOptions = PredictiveCacheOptions()
+    private var cacheOptions: PredictiveCacheOptions!
 
-    override func setUpWithError() throws {
+    override func setUp() {
+        super.setUp()
+
+        cacheOptions = .init()
         cacheOptions.predictiveCacheMapsOptions.maximumConcurrentRequests = 3
         cacheOptions.predictiveCacheMapsOptions.locationOptions.currentLocationRadius = 100
         cacheOptions.predictiveCacheMapsOptions.locationOptions.destinationLocationRadius = 10

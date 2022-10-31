@@ -11,9 +11,12 @@ final class PredictiveCacheManagerTests: TestCase {
     var tileStore: TileStore!
     var tilesetDescriptor: TilesetDescriptor!
     var cacheMapOptions: PredictiveCacheManager.CacheMapOptions!
-    var predictiveCacheOptions = PredictiveCacheOptions()
+    var predictiveCacheOptions: PredictiveCacheOptions!
 
-    override func setUpWithError() throws {
+    override func setUp() {
+        super.setUp()
+
+        predictiveCacheOptions = PredictiveCacheOptions()
         navigator = NativeNavigatorSpy()
         NativeNavigatorProviderSpy.navigator = navigator
         tileStore = Navigator.shared.tileStore
