@@ -43,6 +43,8 @@ extension NavigationMapView {
             // These numbers are the pixel offsets into the PDF image asset
             var stretchX: [ImageStretches]!
             var stretchY: [ImageStretches]!
+            // define the "content" area of the image which is the portion that the maps sdk will use
+            // to place the text label within
             var imageContent: ImageContent!
             
             if bottomInset > 0 {
