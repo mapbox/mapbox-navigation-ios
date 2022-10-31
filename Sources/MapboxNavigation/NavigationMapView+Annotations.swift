@@ -35,6 +35,8 @@ extension NavigationMapView {
         guard style.image(withId: "RouteInfoAnnotationLeftHanded") == nil,
               style.image(withId: "RouteInfoAnnotationRightHanded") == nil else { return }
         
+        let bottomInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+        
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
@@ -43,14 +45,14 @@ extension NavigationMapView {
             var stretchY: [ImageStretches]!
             var imageContent: ImageContent!
             
-            if !UIDevice.current.hasNotch {
-                stretchX = [ImageStretches(first: Float(33), second: Float(52))]
-                stretchY = [ImageStretches(first: Float(32), second: Float(35))]
-                imageContent = ImageContent(left: 28, top: 24, right: 56, bottom: 40)
-            } else {
+            if bottomInset > 0 {
                 stretchX = [ImageStretches(first: Float(33), second: Float(52))]
                 stretchY = [ImageStretches(first: Float(32), second: Float(35))]
                 imageContent = ImageContent(left: 34, top: 32, right: 56, bottom: 50)
+            } else {
+                stretchX = [ImageStretches(first: Float(33), second: Float(52))]
+                stretchY = [ImageStretches(first: Float(32), second: Float(35))]
+                imageContent = ImageContent(left: 28, top: 24, right: 56, bottom: 40)
             }
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
@@ -78,14 +80,14 @@ extension NavigationMapView {
             // to place the text label within
             var imageContent: ImageContent!
             
-            if !UIDevice.current.hasNotch {
-                stretchX = [ImageStretches(first: Float(47), second: Float(48))]
-                stretchY = [ImageStretches(first: Float(28), second: Float(32))]
-                imageContent = ImageContent(left: 28, top: 24, right: 58, bottom: 40)
-            } else {
+            if bottomInset > 0 {
                 stretchX = [ImageStretches(first: Float(47), second: Float(48))]
                 stretchY = [ImageStretches(first: Float(28), second: Float(32))]
                 imageContent = ImageContent(left: 47, top: 28, right: 52, bottom: 40)
+            } else {
+                stretchX = [ImageStretches(first: Float(47), second: Float(48))]
+                stretchY = [ImageStretches(first: Float(28), second: Float(32))]
+                imageContent = ImageContent(left: 28, top: 24, right: 58, bottom: 40)
             }
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
@@ -516,12 +518,5 @@ extension NavigationMapView {
         var feature = Feature(geometry: .point(Point(intersection.location)))
         feature.properties = properties
         return feature
-    }
-}
-
-extension UIDevice {
-    var hasNotch: Bool {
-        let bottom = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
-        return bottom > 0
     }
 }
