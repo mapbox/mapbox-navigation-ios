@@ -84,7 +84,7 @@ extension Route {
     
     func congestionFeatures(legIndex: Int? = nil,
                             roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [Feature] {
-        guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
+        guard let coordinates = shape?.coordinates else { return [] }
         var features: [Feature] = []
         
         for (index, leg) in legs.enumerated() {
@@ -96,7 +96,7 @@ extension Route {
                 let index = current.offset
                 let step = current.element
                 let stepCoordinates = step.shape!.coordinates
-                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.dropFirst()
             }
 
             if let congestionLevels = leg.resolvedCongestionLevels, congestionLevels.count < coordinates.count + 2 {
