@@ -1,8 +1,7 @@
 import CoreLocation
 import MapboxCoreNavigation
 import XCTest
-@testable import MapboxDirections
-@testable import TestHelper
+import TestHelper
 
 @available(*, deprecated)
 final class PredictiveCacheOptionsTests: TestCase {
