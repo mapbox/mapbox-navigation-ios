@@ -1,27 +1,69 @@
 import UIKit
 
-// :nodoc:
+/**
+ A banner protocol provides the ability to show content inside `NavigationView`. Components that
+ conform to `Banner` protocol must be instances of the `UIViewController`. Banners are injected
+ into `BannerContainerView` and can have various properties:
+ - Can be shown at the top or at the bottom of the screen
+ - Can be expanded and collapsed
+ - Can have custom height
+ 
+ By default Mapbox Navigation SDK provides several default banners:
+ - `DestinationPreviewViewController` - banner that is shown at the bottom of the screen and allows
+ to show information about the final destination, preview available routes and start active navigation
+ session
+ - `RoutesPreviewViewController` - banner that is shown at the bottom of the screen and allows to
+ preview information about the current `Route` (expected travel time, distance and expected time of arrival)
+ - `BannerDismissalViewController` - banner that is shown at the top of the screen and allows to
+ show dismiss already presented banner
+ */
 public protocol Banner: UIViewController {
     
     var bannerConfiguration: BannerConfiguration { get }
 }
 
-// :nodoc:
+/**
+ Configuration of the banner that allows to change its default behavior.
+ */
 public struct BannerConfiguration {
     
-    // :nodoc:
+    /**
+     Position of the `Banner`. `Banner` is presented at the bottom of the screen by default.
+     */
     public private(set) var position: BannerPosition = .bottomLeading
     
-    // :nodoc:
+    /**
+     Initial height of the `Banner`. By default heights of the `Banner` are the following:
+     Top banner:
+     - Top safe area inset for both compact/regular-height size class
+     
+     Bottom banner:
+     - 80.0 + bottom safe area inset for regular-height size class
+     - 60.0 + bottom safe area inset for compact-height size class
+     */
     public private(set) var height: CGFloat? = nil
     
-    // :nodoc:
+    /**
+     A Boolean value that determines whether `Banner` can be expanded or not. Defaults to `false`.
+     Presented `Banner` is collapsed by default.
+     */
     public private(set) var isExpandable: Bool = false
     
-    // :nodoc:
+    /**
+     A floating-point value that denotes extent by which `Banner` can be expanded. Defaults to `0.0`.
+     Presented `Banner` is collapsed by default.
+     */
     public private(set) var expansionOffset: CGFloat = 0.0
     
-    // :nodoc:
+    /**
+     Initializes a new `BannerConfiguration` object.
+     
+     - parameter position: Position of the `Banner`.
+     - parameter height: Initial height of the `Banner`.
+     - parameter isExpandable: A Boolean value that determines whether `Banner` can be expanded or not.
+     - parameter expansionOffset: A floating-point value that denotes extent by which `Banner`
+     can be expanded.
+     */
     public init(position: BannerPosition,
                 height: CGFloat? = nil,
                 isExpandable: Bool = false,
