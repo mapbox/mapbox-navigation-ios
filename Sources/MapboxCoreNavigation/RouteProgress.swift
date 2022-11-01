@@ -2,6 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 import Turf
+import MapboxNavigationNative
+
+public typealias Waypoint = MapboxDirections.Waypoint
 
 /**
  `RouteProgress` stores the user’s progress along a route.
@@ -175,18 +178,23 @@ open class RouteProgress: Codable {
      Increments the progress according to new location specified.
      - parameter location: Updated user location.
      */
-    public func updateDistanceTraveled(with location: CLLocation) {
+    public func updateDistanceTraveled(with location: CLLocation, navigationStatus: NavigationStatus? = nil) {
         let stepProgress = currentLegProgress.currentStepProgress
-        let step = stepProgress.step
-        
-        //Increment the progress model
-        guard let polyline = step.shape else {
-            preconditionFailure("Route steps used for navigation must have shape data")
+
+        if let activeGuidanceInfo = navigationStatus?.activeGuidanceInfo {
+            stepProgress.distanceTraveled = activeGuidanceInfo.stepProgress.distanceTraveled
         }
-        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
-            let distanceTraveled = step.distance - remainingDistance
-            stepProgress.distanceTraveled = distanceTraveled
+        else {
+            let step = stepProgress.step
+            //Increment the progress model
+            guard let polyline = step.shape else {
+                preconditionFailure("Route steps used for navigation must have shape data")
+            }
+            if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
+                let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
+                let distanceTraveled = step.distance - remainingDistance
+                stepProgress.distanceTraveled = distanceTraveled
+            }
         }
     }
     

@@ -650,6 +650,7 @@ class ViewController: UIViewController {
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
+        activeNavigationViewController?.navigationMapView?.traversedRouteColor = .gray
         
         // Hide top and bottom container views before animating their presentation.
         navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
@@ -789,10 +790,22 @@ extension ViewController: NavigationMapViewDelegate {
 extension ViewController: NavigationViewControllerDelegate {
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
+              activeNavigationViewController?.navigationMapView?.traversedRouteColor = .gray
+              activeNavigationViewController?.navigationMapView?.trafficUnknownColor = .gray
+              activeNavigationViewController?.navigationMapView?.trafficLowColor = .gray
+              activeNavigationViewController?.navigationMapView?.trafficModerateColor = .gray
+              activeNavigationViewController?.navigationMapView?.trafficHeavyColor = .gray
+              activeNavigationViewController?.navigationMapView?.trafficSevereColor = .gray
+              activeNavigationViewController?.navigationMapView?.routeCasingColor = .gray
+              activeNavigationViewController?.routeLineTracksTraversal = false
+
+
+
         if let delegate = UIApplication.shared.delegate as? AppDelegate,
            let carPlayNavigationViewController = delegate.carPlayManager.carPlayNavigationViewController {
             return carPlayNavigationViewController.navigationService(navigationViewController.navigationService, didArriveAt: waypoint)
         }
+
         return true
     }
     
