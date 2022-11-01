@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 import Turf
+import class MapboxNavigationNative.NavigationStatus
 
 /**
  `RouteProgress` stores the user’s progress along a route.
@@ -187,6 +188,17 @@ open class RouteProgress: Codable {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
             let distanceTraveled = step.distance - remainingDistance
             stepProgress.distanceTraveled = distanceTraveled
+        }
+    }
+
+    func updateDistanceTraveled(with location: CLLocation, navigationStatus: NavigationStatus) {
+        let stepProgress = currentLegProgress.currentStepProgress
+
+        if let activeGuidanceInfo = navigationStatus.activeGuidanceInfo {
+            stepProgress.distanceTraveled = activeGuidanceInfo.stepProgress.distanceTraveled
+        }
+        else {
+            updateDistanceTraveled(with: location)
         }
     }
     

@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import Polyline
 
 /**
  `RouteStepProgress` stores the user’s progress along a route step.
@@ -56,6 +57,16 @@ open class RouteStepProgress: Codable {
      */
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
+    }
+
+    /// Returns remaining step shape coordinates.
+    public func remainingStepCoordinates() -> [LocationCoordinate2D] {
+        guard let shape = step.shape else {
+            return []
+        }
+
+        let startCoordinate = shape.coordinateFromStart(distance: distanceTraveled)
+        return shape.sliced(from: startCoordinate)?.coordinates ?? []
     }
 
     // MARK: Intersections
