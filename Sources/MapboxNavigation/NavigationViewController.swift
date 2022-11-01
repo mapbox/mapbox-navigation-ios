@@ -90,7 +90,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         NavigationSettings.shared.tileStoreConfiguration.mapLocation
     }
     
-    // :nodoc:
+    /**
+     `NavigationView`, that is displayed inside the view controller.
+     */
     public var navigationView: NavigationView {
         return (view as! NavigationView)
     }

@@ -4,7 +4,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 /**
- `PreviewViewControllerDelegate` allows to observe `Banner` presentation and dimissal events.
+ `PreviewViewControllerDelegate` allows to observe `Banner` presentation and dismissal events.
  */
 public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
     
