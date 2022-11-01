@@ -66,6 +66,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         }
         
         topBannerContainerView.backgroundColor = .clear
+        topBannerContainerView.isHidden = false
         
         let bottomBannerContainerView = navigationViewData.navigationView.bottomBannerContainerView
         
@@ -75,6 +76,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         }
         
         bottomBannerContainerView.backgroundColor = .clear
+        bottomBannerContainerView.isHidden = false
         
         navigationViewData.containerViewController.view.bringSubviewToFront(navigationViewData.navigationView.topBannerContainerView)
     }
