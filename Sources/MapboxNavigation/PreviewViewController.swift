@@ -49,6 +49,11 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         super.init(nibName: nil, bundle: nil)
         
         bannerPresentationDelegate = self
+        
+        setupFloatingButtons()
+        setupConstraints()
+        setupStyleManager()
+        setupNavigationCamera()
     }
     
     public required init?(coder: NSCoder) {
@@ -63,17 +68,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     public override func loadView() {
         view = setupNavigationView()
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupFloatingButtons()
-        setupTopBannerContainerView()
-        setupBottomBannerContainerView()
-        setupConstraints()
-        setupStyleManager()
-        setupNavigationCamera()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -133,16 +127,6 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         
         navigationView.floatingButtons?.append(debugFloatingButton)
 #endif
-    }
-    
-    func setupTopBannerContainerView() {
-        navigationView.topBannerContainerView.isHidden = true
-        navigationView.topBannerContainerView.backgroundColor = .clear
-    }
-    
-    func setupBottomBannerContainerView() {
-        navigationView.bottomBannerContainerView.isHidden = true
-        navigationView.bottomBannerContainerView.backgroundColor = .defaultBackgroundColor
     }
     
     // TODO: Implement the ability to set default positions for logo and attribution button.
@@ -225,6 +209,20 @@ public class PreviewViewController: UIViewController, BannerPresentation {
                          duration: duration,
                          animations: animations,
                          completion: completion)
+    }
+    
+    // :nodoc:
+    public func dismissAllExceptFirst(at position: BannerPosition,
+                                      animated: Bool = true,
+                                      duration: TimeInterval = 1.0,
+                                      animations: (() -> Void)? = nil,
+                                      completion: (() -> Void)? = nil) {
+        popBanner(at: position,
+                  animated: animated,
+                  duration: duration,
+                  animations: animations,
+                  completion: completion,
+                  popAllExceptFirstBanner: true)
     }
     
     // :nodoc:

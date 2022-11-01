@@ -295,6 +295,56 @@ class MapboxNavigationTests: XCTestCase {
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
     }
     
+    func testMultiLegRouteWithoutCongestion() {
+        navigationMapView._locationChangesAllowed = false
+        navigationMapView.authorizationStatus = .denied
+        navigationMapView.userLocationStyle = nil
+        
+        let timeout: TimeInterval = 2.0
+        let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        wait(for: [styleLoadedExpectation], timeout: timeout)
+        
+        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 37.768506, longitude: -122.416286),
+                                                                        zoom: 15.0,
+                                                                        bearing: 0.0,
+                                                                        pitch: 0.0))
+        
+        let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+            mapLoadedExpectation.fulfill()
+        }
+        wait(for: [mapLoadedExpectation], timeout: timeout)
+        
+        let coordinates = [
+            CLLocationCoordinate2DMake(37.766786656393464, -122.41803651931673),
+            CLLocationCoordinate2DMake(37.76850632569678, -122.41628613127037),
+            CLLocationCoordinate2DMake(37.768650567520595, -122.41376775457874)
+        ]
+        let routeName = "two_routes_with_two_legs"
+        let routes = routes(for: coordinates, routeName: routeName)
+        guard let firstRoute = routes.first else {
+            XCTFail("Route should be valid.")
+            return
+        }
+
+        XCTAssertEqual(firstRoute.legs.count, 2)
+        firstRoute.legs.first?.attributes.segmentNumericCongestionLevels = nil
+        firstRoute.legs.first?.attributes.segmentCongestionLevels = nil
+        firstRoute.legs.last?.attributes.segmentNumericCongestionLevels = nil
+        firstRoute.legs.last?.attributes.segmentCongestionLevels = nil
+        
+        XCTAssertNil(firstRoute.legs.first?.resolvedCongestionLevels)
+        XCTAssertNil(firstRoute.legs.last?.resolvedCongestionLevels)
+        
+        navigationMapView.show([firstRoute], legIndex: 0)
+        navigationMapView.showWaypoints(on: firstRoute)
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+    }
+    
     func routes(for coordinates: [CLLocationCoordinate2D], routeName: String) -> [Route] {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         

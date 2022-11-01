@@ -19,12 +19,13 @@ extension BannerDismissalViewController {
         
         // TODO: Verify that back button is shown correctly for right-to-left languages.
         let backButtonLayoutConstraints = [
-            backButton.widthAnchor.constraint(equalToConstant: 110.0),
             backButton.heightAnchor.constraint(equalToConstant: 50.0),
             backButton.leadingAnchor.constraint(equalTo: topBannerView.safeLeadingAnchor,
                                                 constant: 10.0),
+            backButton.trailingAnchor.constraint(lessThanOrEqualTo: topBannerView.safeTrailingAnchor,
+                                                 constant: 10.0),
             backButton.topAnchor.constraint(equalTo: topBannerView.topAnchor,
-                                               constant: 10.0)
+                                            constant: 10.0)
         ]
         
         NSLayoutConstraint.activate(backButtonLayoutConstraints)

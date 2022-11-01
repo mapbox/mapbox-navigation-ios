@@ -27,10 +27,7 @@ To contribute code changes to this project, use Swift Package Manager to set up 
 1. `MapboxNavigation-SPM.xcodeproj` with Example or Example-CarPlay applications. 
 1. `MapboxNavigation.xcodeproj`, which builds the navigation SDK and its dependencies using Carthage but does not include a sample application.
 
-### Using Carthage
-
-To build this SDK, you need Xcode 13.0 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
-
+### Configuring credentials
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
    machine api.mapbox.com
@@ -38,19 +35,6 @@ To build this SDK, you need Xcode 13.0 and [Carthage](https://github.com/Carthag
      password PRIVATE_MAPBOX_API_TOKEN
    ```
    where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
-
-1. _(Optional)_ Clear your Carthage caches:
-   ```bash
-   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
-   ```
-
-1. Run `carthage bootstrap --platform iOS --cache-builds --use-xcframeworks --use-netrc`.
-
-1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme.
-
-1. Open the Info.plist in the `Example` target and paste your [Mapbox Access Token](https://account.mapbox.com/access-tokens/) into `MGLMapboxAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
-
-1. Switch to the Example or Example-CarPlay scheme, then Run the scheme to see the SDK in action.
 
 ### Using Swift Package Manager
 
@@ -65,6 +49,24 @@ open Package.swift
 ```
 
 The resulting package only includes the framework and test targets. It does not include the example applications, and the file list is not synchronized with the Xcode project used by Carthage, so make sure to [build and test the SDK in the Xcode workspace](#using-carthage) before opening a pull request.
+
+To run example:
+1. Open `MapboxNavigation-SPM.xcodeproj`
+1. Open the Info.plist in the `Example` target and paste your [Mapbox Access Token](https://account.mapbox.com/access-tokens/) into `MBXAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
+1. Switch to the `Example` or `Example-CarPlay` scheme, then Run the scheme to see the SDK in action.
+
+### Using Carthage
+
+MapboxNavigation no longer supports Carthage as of v2.0.0-alpha.1. However, you can still build MapboxCoreNavigation.
+
+To build this SDK, you need Xcode 13.0 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
+
+1. _(Optional)_ Clear your Carthage caches:
+   ```bash
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
+   ```
+1. Run `carthage bootstrap --platform iOS --cache-builds --use-xcframeworks --use-netrc`.
+1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the `MapboxCoreNavigation` scheme.
 
 ### Adding new files
 

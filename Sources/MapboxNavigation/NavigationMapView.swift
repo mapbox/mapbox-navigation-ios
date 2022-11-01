@@ -195,6 +195,8 @@ open class NavigationMapView: UIView {
      route.
      - parameter routesPresentationStyle: Route lines presentation style. By default the map will be
      updated to fit all routes.
+     - parameter legIndex: The zero-based index of the currently active leg along the active route.
+     The active leg is highlighted more prominently than inactive legs.
      - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
      zoom and pan the map.
      - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
@@ -203,6 +205,7 @@ open class NavigationMapView: UIView {
      */
     public func showcase(_ routes: [Route],
                          routesPresentationStyle: RoutesPresentationStyle = .all(),
+                         legIndex: Int? = nil,
                          animated: Bool = false,
                          duration: TimeInterval = 1.0,
                          completion: AnimationCompletionHandler? = nil) {
@@ -217,9 +220,9 @@ open class NavigationMapView: UIView {
         
         switch routesPresentationStyle {
         case .single:
-            show([activeRoute], layerPosition: customRouteLineLayerPosition)
+            show([activeRoute], layerPosition: customRouteLineLayerPosition, legIndex: legIndex)
         case .all:
-            show(routes, layerPosition: customRouteLineLayerPosition)
+            show(routes, layerPosition: customRouteLineLayerPosition, legIndex: legIndex)
         }
         
         showWaypoints(on: activeRoute)

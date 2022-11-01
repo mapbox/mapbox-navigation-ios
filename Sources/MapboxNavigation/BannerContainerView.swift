@@ -18,14 +18,16 @@ open class BannerContainerView: UIView {
         case collapsed
     }
     
-    var isExpandable: Bool = false {
+    // :nodoc:
+    public var isExpandable: Bool = false {
         didSet {
             guard let superview = superview else { return }
             setupConstraints(superview)
         }
     }
     
-    var expansionOffset: CGFloat = 50.0
+    // :nodoc:
+    public var expansionOffset: CGFloat = 0.0
     
     // :nodoc:
     public private(set) var state: State = .collapsed {
@@ -251,6 +253,7 @@ open class BannerContainerView: UIView {
                      animations: (() -> Void)? = nil,
                      completion: CompletionHandler? = nil) {
         guard !isHidden else {
+            state = .collapsed
             completion?(true)
             return
         }
@@ -272,12 +275,16 @@ open class BannerContainerView: UIView {
                 }
                 
                 self.superview?.layoutIfNeeded()
-            }) { completed in
+            }) { [weak self] completed in
+                guard let self = self else { return }
+                
                 self.isHidden = true
+                self.state = .collapsed
                 completion?(completed)
             }
         } else {
             isHidden = true
+            state = .collapsed
             completion?(true)
         }
     }

@@ -170,6 +170,7 @@ open class NavigationView: UIView {
     // :nodoc:
     public lazy var topBannerContainerView: BannerContainerView = {
         let topBannerContainerView = BannerContainerView(.topLeading)
+        topBannerContainerView.isHidden = true
         topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return topBannerContainerView
     }()
@@ -177,6 +178,7 @@ open class NavigationView: UIView {
     // :nodoc:
     public lazy var bottomBannerContainerView: BannerContainerView = {
         let bottomBannerContainerView = BannerContainerView(.bottomLeading)
+        bottomBannerContainerView.isHidden = true
         bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
         return bottomBannerContainerView
     }()
@@ -238,11 +240,11 @@ open class NavigationView: UIView {
     func setupViews() {
         let children: [UIView] = [
             navigationMapView,
-            topBannerContainerView,
             floatingStackView,
             wayNameView,
             resumeButton,
             speedLimitView,
+            topBannerContainerView,
             bottomBannerContainerView
         ]
         
