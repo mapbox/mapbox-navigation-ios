@@ -147,32 +147,20 @@ extension MapView {
             setShowsTileSet(newValue, with: incidentsTileSetIdentifiers, layerIdentifier: "closures")
         }
     }
-    
+
     /**
-     Returns a list of style source datasets (e.g. `mapbox.mapbox-streets-v8`), based on provided
-     selected style source types.
-     
-     - parameter sourceTypes: List of `MapView` source types (e.g. `vector`).
+     Returns a tileset descriptor for current map style.
+
+     - parameter zoomRange: Closed range zoom level for the tile package.
+     - returns: A tileset descriptor.
      */
-    func styleSourceDatasets(_ sourceTypes: [String]) -> [String] {
-        let sources = mapboxMap.style.allSourceIdentifiers.filter {
-            return sourceTypes.contains($0.type.rawValue)
-        }
-        
-        var datasets = [String]()
-        for source in sources {
-            // Ignore composite (https://docs.mapbox.com/studio-manual/reference/styles/#source-compositing)
-            // and non-mapbox sources.
-            if let properties = try? mapboxMap.style.sourceProperties(for: source.id),
-               let urlContent = properties["url"] as? String,
-               let url = URL(string: urlContent),
-               url.scheme == "mapbox",
-               let dataset = url.host {
-                datasets.append(dataset)
-            }
-        }
-        
-        return datasets
+    func tilesetDescriptor(zoomRange: ClosedRange<UInt8>) -> TilesetDescriptor? {
+        guard let styleURI = mapboxMap.style.uri,
+              URL(string:styleURI.rawValue)?.scheme == "mapbox" else { return nil }
+
+        let offlineManager = OfflineManager(resourceOptions: mapboxMap.resourceOptions)
+        let tilesetDescriptorOptions = TilesetDescriptorOptions(styleURI: styleURI, zoomRange: zoomRange)
+        return offlineManager.createTilesetDescriptor(for: tilesetDescriptorOptions)
     }
     
     /**

@@ -284,4 +284,16 @@ class MapViewTests: TestCase {
         XCTAssertNil(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "tlh")),
                      "Klingon not yet implemented. 🖖")
     }
+
+    func testCreateTilesetDescriptor() {
+        let resourceOptions = ResourceOptions(accessToken: "")
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+
+        let tilesetDescriptor = mapView.tilesetDescriptor(zoomRange: 3...10)
+        XCTAssertNotNil(tilesetDescriptor)
+
+        mapView.mapboxMap.style.uri = StyleURI(rawValue: "https://url")
+        XCTAssertNil(mapView.tilesetDescriptor(zoomRange: 3...10), "Should ignore non mapbox sources")
+    }
 }

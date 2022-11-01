@@ -62,6 +62,14 @@
 * The MapboxMobileEvents dependency is no longer used. Feedback events are now handled by MapboxCommon. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 
+### Predictive caching
+
+* Implemented predictive cache with `TilesetDescriptor` so that volatile sources are not loaded unexpectedly. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)` and `PredictiveCacheManager.init(predictiveCacheOptions:mapOptions:)` in favor of `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Added `PredictiveCacheMapsOptions` (map specific, that also allow to specify zoom levels for which the map tiles should be cached) and `PredictiveCacheNavigationOptions` (navigation specific) available through the `PredictiveCacheOptions`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheOptions.currentLocationRadius`, `PredictiveCacheOptions.routeBufferRadius`, `PredictiveCacheOptions.destinationLocationRadius`, `PredictiveCacheOptions.maximumConcurrentRequests`. Use `PredictiveCacheOptions.predictiveCacheNavigationOptions` and `PredictiveCacheOptions.predictiveCacheMapsOptions` instead for separate predictive cache configuration for maps and navigation. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Added `PredictiveCacheManager.updateMapControllers(cacheMapOptions:)` for cashing map styles after they are loaded. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+
 ### Other changes
 
 * Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
