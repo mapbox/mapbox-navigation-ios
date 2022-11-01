@@ -9,7 +9,9 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - BannerPresentation properties and methods
     
-    // :nodoc:
+    /**
+     `NavigationView`, that is displayed inside the view controller.
+     */
     public var navigationView: NavigationView {
         view as! NavigationView
     }
@@ -22,14 +24,18 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - PreviewViewController properties
     
-    // :nodoc:
+    /**
+     `PreviewViewControllerDelegate` that allows to observe `Banner` presentation and dismissal events.
+     */
     public weak var delegate: PreviewViewControllerDelegate?
     
     var styleManager: StyleManager!
     
     let previewOptions: PreviewOptions
     
-    // :nodoc:
+    /**
+     The `NavigationMapView`, that is displayed inside the view controller.
+     */
     public var navigationMapView: NavigationMapView {
         get {
             navigationView.navigationMapView
@@ -42,7 +48,12 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     
     // MARK: - Initialization methods
     
-    // :nodoc:
+    /**
+     Initializes a `PreviewViewController` that presents the user interface for the destination and
+     routes preview.
+     
+     - parameter previewOptions: Customization options for the navigation preview user experience.
+     */
     public init(_ previewOptions: PreviewOptions = PreviewOptions()) {
         self.previewOptions = previewOptions
         
@@ -53,7 +64,10 @@ public class PreviewViewController: UIViewController, BannerPresentation {
         setupFloatingButtons()
         setupConstraints()
         setupStyleManager()
+        setupPassiveLocationManager()
+        setupNavigationViewportDataSource()
         setupNavigationCamera()
+        subscribeForNotifications()
     }
     
     public required init?(coder: NSCoder) {
@@ -73,24 +87,16 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Apply style each time `PreviewViewController` appears on screen
-        // (e.g. after active navigation).
+        // Apply style that was set specifically for the `PreviewViewController` when it appears on
+        // the screen to prevent incorrect style usage (e.g. after finishing active navigation when
+        // using `NavigationViewController`).
         styleManager.currentStyle?.apply()
-        setupPassiveLocationManager()
-        setupNavigationViewportDataSource()
-        subscribeForNotifications()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         setupOrnaments()
-    }
-    
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        unsubscribeFromNotifications()
     }
     
     public override func viewSafeAreaInsetsDidChange() {
