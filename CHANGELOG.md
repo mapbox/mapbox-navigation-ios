@@ -75,6 +75,7 @@
 * Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
 * Fixed an issue where the rerouting audio cue stopped background audio. ([#3642](https://github.com/mapbox/mapbox-navigation-ios/pull/3642))
 * Fixed an issue where the rerouting audio cue played even if `RouteVoiceController.playRerouteSound` was set to `false`. ([#4214](https://github.com/mapbox/mapbox-navigation-ios/pull/4214))
+* Added `BorderCrossing.init(from:to:)` to allow creation of `BorderCrossing` publicly. ([#4226](https://github.com/mapbox/mapbox-navigation-ios/issues/4226))
 
 ## v2.8.1
 
