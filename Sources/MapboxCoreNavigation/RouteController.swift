@@ -374,15 +374,16 @@ open class RouteController: NSObject {
         else { return }
         
         let snappedLocation = CLLocation(status.location)
-        
+        updateIndexes(status: status, progress: routeProgress)
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress,
+               status: status,
                with: snappedLocation,
                rawLocation: rawLocation,
                upcomingRouteAlerts: status.upcomingRouteAlerts,
                mapMatchingResult: MapMatchingResult(status: status))
         
-        updateIndexes(status: status, progress: routeProgress)
+
         updateRouteLegProgress(status: status)
         
         updateSpokenInstructionProgress(status: status, willReRoute: isRerouting)
@@ -534,8 +535,8 @@ open class RouteController: NSObject {
         }
     }
     
-    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult) {
-        progress.updateDistanceTraveled(with: location)
+    private func update(progress: RouteProgress, status: NavigationStatus, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult) {
+        progress.updateDistanceTraveled(with: location, navigationStatus: status)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         
         //Fire the delegate method

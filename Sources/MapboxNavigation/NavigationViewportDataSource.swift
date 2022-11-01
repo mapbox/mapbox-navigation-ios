@@ -243,7 +243,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
-            let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
+            let coordinatesToManeuver = routeProgress.currentLegProgress.currentStepProgress.remainingStepCoordinates()
             
             if options.followingCameraOptions.centerUpdatesAllowed || followingMobileCamera.center == nil {
                 var center = location.coordinate
@@ -357,14 +357,13 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     func updateOverviewCamera(_ activeLocation: CLLocation?, routeProgress: RouteProgress?) {
         guard let mapView = mapView,
-              let coordinate = activeLocation?.coordinate,
               let routeProgress = routeProgress else { return }
         
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
         let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...]
             .map({ $0.shape?.coordinates })
-        let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: coordinate) ?? []
+        let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStepProgress.remainingStepCoordinates()
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
         let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let overviewCameraOptions = options.overviewCameraOptions
@@ -499,10 +498,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
                     shouldIgnoreManeuver = true
                 }
             }
-            
-            let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: currentCoordinate) ?? []
-            if let distanceToManeuver = LineString(coordinatesToManeuver).distance(),
-               distanceToManeuver <= pitchNearManeuver.triggerDistanceToManeuver,
+
+            let distanceToManeuver = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
+            if distanceToManeuver <= pitchNearManeuver.triggerDistanceToManeuver,
                !shouldIgnoreManeuver {
                 return min(distanceToManeuver, pitchNearManeuver.triggerDistanceToManeuver) / pitchNearManeuver.triggerDistanceToManeuver
             }
