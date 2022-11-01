@@ -33,6 +33,7 @@
 * Route shields now respect language-specific route numbers in Japan. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Improved the timing of some spoken instructions. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where the current road name label appeared even while the user is not traveling on a known road. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* Fixed an issue where top and bottom banners were not presented when starting active navigation session. ([#4222](https://github.com/mapbox/mapbox-navigation-ios/pull/4222))
 
 ### Location tracking
 
