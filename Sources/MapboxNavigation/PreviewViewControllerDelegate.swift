@@ -49,7 +49,6 @@ public protocol PreviewViewControllerDelegate: AnyObject, UnimplementedLogging {
                                didDismiss banner: Banner)
 }
 
-// :nodoc:
 public extension PreviewViewControllerDelegate {
     
     /**
