@@ -15,7 +15,7 @@ import UIKit
  - `RoutesPreviewViewController` - banner that is shown at the bottom of the screen and allows to
  preview information about the current `Route` (expected travel time, distance and expected time of arrival)
  - `BannerDismissalViewController` - banner that is shown at the top of the screen and allows to
- show dismiss already presented banner
+ dismiss already presented banner
  */
 public protocol Banner: UIViewController {
     
