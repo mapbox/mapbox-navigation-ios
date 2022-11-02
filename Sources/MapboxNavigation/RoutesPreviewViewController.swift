@@ -1,7 +1,10 @@
 import UIKit
 import MapboxDirections
 
-// :nodoc:
+/**
+ Banner that is shown at the bottom of the screen and allows to show route-related information
+ in `PreviewViewController`.
+ */
 public class RoutesPreviewViewController: UIViewController, Banner, RoutesPreviewDataSource {
     
     var bottomBannerView: BottomBannerView!
@@ -22,24 +25,36 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     
     var trailingSeparatorView: SeparatorView!
     
-    // :nodoc:
+    /**
+     The object that serves as the routes preview delegate.
+     */
     public weak var delegate: RoutesPreviewViewControllerDelegate?
     
     // MARK: - Banner properties
     
-    // :nodoc:
+    /**
+     Configuration of the banner.
+     */
     public let bannerConfiguration: BannerConfiguration
     
     // MARK: - RoutesPreviewDataSource properties
     
-    // :nodoc:
+    /**
+     Customization options that are used for the route(s) preview.
+     */
     public var routesPreviewOptions: RoutesPreviewOptions {
         didSet {
             updateRouteDetails()
         }
     }
     
-    // :nodoc:
+    /**
+     Initializes a `RoutesPreviewViewController` instance.
+     
+     - parameter routesPreviewOptions: Customization options that are used for the route(s) preview.
+     - parameter bannerConfiguration: Configuration of the banner. `RoutesPreviewViewController` is
+     shown at the bottom of the screen by default.
+     */
     public required init(_ routesPreviewOptions: RoutesPreviewOptions,
                          bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
         self.routesPreviewOptions = routesPreviewOptions
@@ -54,9 +69,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    // MARK: - UIViewController setting-up methods
     
     func commonInit() {
         setupParentView()
@@ -130,6 +143,8 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
         bottomBannerView.addSubview(trailingSeparatorView)
         self.trailingSeparatorView = trailingSeparatorView
     }
+    
+    // MARK: - Event handlers
     
     @objc func didPressStartButton() {
         delegate?.didPressBeginActiveNavigationButton(self)
