@@ -19,6 +19,9 @@ import UIKit
  */
 public protocol Banner: UIViewController {
     
+    /**
+     Configuration of the banner.
+     */
     var bannerConfiguration: BannerConfiguration { get }
 }
 
