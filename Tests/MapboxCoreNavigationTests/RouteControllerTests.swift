@@ -386,7 +386,7 @@ class RouteControllerTests: TestCase {
         let routerDelegateSpy = RouterDelegateSpy()
         let routeExpectation = XCTestExpectation(description: "Proactive ReRoute should be called")
         
-        routerDelegateSpy.onShouldProactivelyRerouteFrom = { _ in
+        routerDelegateSpy.onShouldProactivelyRerouteFrom = { _, _ in
             routeExpectation.fulfill()
             return true
         }

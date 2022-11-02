@@ -32,15 +32,15 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Asks permission to proceed with found proactive reroute and apply it is main route.
      
-     If implemented, this method is called as soon as the navigation service detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Returning `true` in this method results in new route to be set, without triggering usual rerouting delegate methods.
-     
-     This method is always called on a background thread, allowing to implement user input if required.
+     If implemented, this method is called as soon as the navigation service detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Calling provided `completion` results in new route to be set, without triggering usual rerouting delegate methods.
      
      - parameter service: The navigation service that has detected faster new route
      - parameter location: The user’s current location.
-     - returns: True to allow the navigation service to apply a new route; false to keep tracking the current route.
+     - parameter route: The route found.
+     - parameter completion: Completion to be called to allow the navigation service to apply a new route; Ignoring calling the completion will ignore the faster route aswell.
      */
-    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation) -> Bool
+    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void)
+    
     /**
      Called immediately before the navigation service calculates a new route.
      
@@ -304,9 +304,11 @@ public extension NavigationServiceDelegate {
         return MapboxNavigationService.Default.shouldRerouteFromLocation
     }
     
-    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
+    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void) {
         logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
-        return MapboxNavigationService.Default.shouldProactivelyRerouteFromLocation
+        if MapboxNavigationService.Default.shouldProactivelyRerouteFromLocation {
+            completion()
+        }
     }
     
     /**

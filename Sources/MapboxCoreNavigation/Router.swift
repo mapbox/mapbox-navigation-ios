@@ -392,12 +392,12 @@ extension InternalRouter where Self: Router {
             let routeIsFaster = firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval &&
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
-            DispatchQueue.global().async { [weak self] in
+            guard routeIsFaster else {
+                self.isRerouting = false; return
+            }
+            
+            let completion = { [weak self] in
                 guard let self = self else { return }
-                guard routeIsFaster && self.delegate?.router(self, shouldProactivelyRerouteFrom:location) ?? RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation else {
-                    self.isRerouting = false; return
-                }
-                
                 var routeOptions: RouteOptions?
                 if case let .route(options) = response.options {
                     routeOptions = options
@@ -411,6 +411,15 @@ extension InternalRouter where Self: Router {
                         self?.isRerouting = false
                     }
                 }
+            }
+            
+            if let delegate = self.delegate {
+                delegate.router(self,
+                                shouldProactivelyRerouteFrom: location,
+                                to: route,
+                                completion: completion)
+            } else if RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation {
+                completion()
             }
         }
     }

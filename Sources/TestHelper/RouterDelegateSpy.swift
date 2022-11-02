@@ -6,7 +6,7 @@ import MapboxDirections
 public final class RouterDelegateSpy: RouterDelegate {
     public var onDidRefresh: ((RouteProgress) -> Void)?
     public var onShouldRerouteFrom: ((CLLocation) -> Bool)?
-    public var onShouldProactivelyRerouteFrom: ((CLLocation) -> Bool)?
+    public var onShouldProactivelyRerouteFrom: ((CLLocation, Route) -> Bool)?
     public var onWillRerouteFrom: ((CLLocation) -> Void)?
     public var onModifiedOptionsForReroute: ((RouteOptions) -> RouteOptions)?
     public var onShouldDiscard: ((CLLocation) -> Bool)?
@@ -39,8 +39,10 @@ public final class RouterDelegateSpy: RouterDelegate {
         return onShouldRerouteFrom?(location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
 
-    public func router(_ router: Router, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
-        return onShouldProactivelyRerouteFrom?(location) ?? RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation
+    public func router(_ router: Router, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void) {
+        if onShouldProactivelyRerouteFrom?(location, route) ?? RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation {
+            completion()
+        }
     }
     
     public func router(_ router: Router,
