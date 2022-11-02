@@ -89,6 +89,19 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
 
     /**
+     Asks permission to proceed with found proactive reroute and apply it is main route.
+     
+     If implemented, this method is called as soon as the navigation view controller detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Returning `true` in this method results in new route to be set, without triggering usual rerouting delegate methods.
+     
+     This method is always called on a background thread, allowing to implement user input if required.
+     
+     - parameter navigationViewController: The navigation view controller that has detected faster new route
+     - parameter location: The user’s current location.
+     - returns: True to allow the navigation view controller to apply a new route; false to keep tracking the current route.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldProactivelyRerouteFrom location: CLLocation) -> Bool
+    
+    /**
      Called when the user arrives at a waypoint.
 
      Return false to continue checking if reroute is needed. By default, the user will not be rerouted when arriving at a waypoint.
@@ -381,6 +394,11 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation
     }
 
     /**

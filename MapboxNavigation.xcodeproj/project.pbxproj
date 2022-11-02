@@ -55,6 +55,7 @@
 		2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5407EA24470B0A006C820B /* AVAudioSession.swift */; };
 		2B5A4AC728099FA900170A2B /* AlternativeRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5A4AC428099FA900170A2B /* AlternativeRoute.swift */; };
 		2B5A4ACB2809A03A00170A2B /* routeResponseWithAlternatives.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B5A4AC928099FD500170A2B /* routeResponseWithAlternatives.json */; };
+		2B5F6C342912B9430062E3B5 /* DCA-Arboretum-duration-edited.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B5F6C332912B9420062E3B5 /* DCA-Arboretum-duration-edited.json */; };
 		2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5D241276D10003B370 /* RouteVoiceController.swift */; };
 		2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */; };
 		2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8098402411375700FED452 /* SpeechSynthesizing.swift */; };
@@ -672,6 +673,7 @@
 		2B5407EA24470B0A006C820B /* AVAudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioSession.swift; sourceTree = "<group>"; };
 		2B5A4AC428099FA900170A2B /* AlternativeRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlternativeRoute.swift; sourceTree = "<group>"; };
 		2B5A4AC928099FD500170A2B /* routeResponseWithAlternatives.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeResponseWithAlternatives.json; sourceTree = "<group>"; };
+		2B5F6C332912B9420062E3B5 /* DCA-Arboretum-duration-edited.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-duration-edited.json"; sourceTree = "<group>"; };
 		2B72EC5D241276D10003B370 /* RouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.swift; sourceTree = "<group>"; };
 		2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2B8098402411375700FED452 /* SpeechSynthesizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizing.swift; sourceTree = "<group>"; };
@@ -1359,6 +1361,14 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		2B5F6C322912B9230062E3B5 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		2BE701A4253760B300F46E4E /* RouteAlerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1955,14 +1965,6 @@
 			name = "Instructions Card";
 			sourceTree = "<group>";
 		};
-		B46C42C32908AF1B006304B0 /* Preview */ = {
-			isa = PBXGroup;
-			children = (
-				B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */,
-			);
-			name = Preview;
-			sourceTree = "<group>";
-		};
 		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2036,6 +2038,7 @@
 				B47C1AF1261FD0A30078546C /* route-with-same-congestion-different-road-classes.json */,
 				B47C1AF2261FD0A30078546C /* route-with-not-present-road-classes.json */,
 				B47C1AF3261FD0A30078546C /* DCA-Arboretum.json */,
+				2B5F6C332912B9420062E3B5 /* DCA-Arboretum-duration-edited.json */,
 				B47C1AF4261FD0A30078546C /* routeWithInstructions.json */,
 				B47C1AF5261FD0A30078546C /* 9-legged-route.json */,
 				B47C1AF7261FD0A30078546C /* route.json */,
@@ -2179,6 +2182,7 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				2B5F6C322912B9230062E3B5 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2731,6 +2735,7 @@
 				B4A78D26261FD47700FDF212 /* route-with-not-present-road-classes.json in Resources */,
 				E2D1497D265CFB5B008135A3 /* 878.gph.gz in Resources */,
 				B4A78D27261FD47700FDF212 /* DCA-Arboretum.json in Resources */,
+				2B5F6C342912B9430062E3B5 /* DCA-Arboretum-duration-edited.json in Resources */,
 				2B45758B28F56A160074039A /* ag_history.pbf.gz in Resources */,
 				B4A78D28261FD47700FDF212 /* routeWithInstructions.json in Resources */,
 				B4A78D29261FD47700FDF212 /* 9-legged-route.json in Resources */,

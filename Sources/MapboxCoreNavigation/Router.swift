@@ -392,19 +392,25 @@ extension InternalRouter where Self: Router {
             let routeIsFaster = firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval &&
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
-            guard routeIsFaster else {
-                self.isRerouting = false; return
-            }
-            var routeOptions: RouteOptions?
-            if case let .route(options) = response.options {
-                routeOptions = options
-            }
+            DispatchQueue.global().async { [weak self] in
+                guard let self = self else { return }
+                guard routeIsFaster && self.delegate?.router(self, shouldProactivelyRerouteFrom:location) ?? RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation else {
+                    self.isRerouting = false; return
+                }
+                
+                var routeOptions: RouteOptions?
+                if case let .route(options) = response.options {
+                    routeOptions = options
+                }
 
-            // Prefer the most optimal route (the first one) over the route that matched the original choice.
-            self.updateRoute(with: indexedResponse,
-                             routeOptions: routeOptions ?? self.routeProgress.routeOptions,
-                             isProactive: true) { [weak self] success in
-                self?.isRerouting = false
+                DispatchQueue.main.async {
+                    // Prefer the most optimal route (the first one) over the route that matched the original choice.
+                    self.updateRoute(with: indexedResponse,
+                                     routeOptions: routeOptions ?? self.routeProgress.routeOptions,
+                                     isProactive: true) { [weak self] success in
+                        self?.isRerouting = false
+                    }
+                }
             }
         }
     }

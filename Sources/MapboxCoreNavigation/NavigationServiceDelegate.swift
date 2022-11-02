@@ -30,6 +30,18 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
+     Asks permission to proceed with found proactive reroute and apply it is main route.
+     
+     If implemented, this method is called as soon as the navigation service detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Returning `true` in this method results in new route to be set, without triggering usual rerouting delegate methods.
+     
+     This method is always called on a background thread, allowing to implement user input if required.
+     
+     - parameter service: The navigation service that has detected faster new route
+     - parameter location: The user’s current location.
+     - returns: True to allow the navigation service to apply a new route; false to keep tracking the current route.
+     */
+    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation) -> Bool
+    /**
      Called immediately before the navigation service calculates a new route.
      
      This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:modifiedOptionsForReroute:)` is called.
@@ -290,6 +302,11 @@ public extension NavigationServiceDelegate {
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldRerouteFromLocation
+    }
+    
+    func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
+        logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
+        return MapboxNavigationService.Default.shouldProactivelyRerouteFromLocation
     }
     
     /**

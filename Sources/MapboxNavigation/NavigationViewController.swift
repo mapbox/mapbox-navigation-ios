@@ -923,6 +923,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         return componentsWantReroute && (delegate?.navigationViewController(self, shouldRerouteFrom: location) ?? defaultBehavior)
     }
     
+    public func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
+        let defaultBehavior = RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation
+        let componentsWantReroute = navigationComponents.allSatisfy { $0.navigationService(service, shouldProactivelyRerouteFrom: location) }
+        return componentsWantReroute && (delegate?.navigationViewController(self, shouldProactivelyRerouteFrom: location) ?? defaultBehavior)
+    }
+    
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         for component in navigationComponents {
             component.navigationService(service, willRerouteFrom: location)

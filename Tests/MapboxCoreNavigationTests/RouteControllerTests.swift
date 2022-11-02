@@ -224,7 +224,7 @@ class RouteControllerTests: TestCase {
         let routingProviderStub = CustomRoutingProviderStub()
         let routeExpectation = XCTestExpectation(description: "Route calculation should be called")
         
-        routingProviderStub.routeStub = {
+        routingProviderStub.indexedRouteStub = { _ in
             routeExpectation.fulfill()
         }
         
@@ -343,6 +343,66 @@ class RouteControllerTests: TestCase {
         
         waitForExpectations(timeout: 2)
     }
+    
+    func testProactiveRerouting() {
+        let defaultInterval = RouteControllerProactiveReroutingInterval
+        RouteControllerProactiveReroutingInterval = 1
+        
+        let coordinates = [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ]
+        
+        let options = NavigationRouteOptions(coordinates: coordinates)
+        let route = Fixture.route(from: "DCA-Arboretum", options: options)
+        let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let routeResponse = RouteResponse(httpResponse: nil,
+                                          routes: [route],
+                                          options: .route(.init(locations: replayLocations,
+                                                                profileIdentifier: nil)),
+                                          credentials: .mocked)
+        
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                        routeIndex: 0)
+        
+        let routingProviderStub = CustomRoutingProviderStub()
+        
+        routingProviderStub.indexedRouteStub = { completion in
+            let route = Fixture.route(from: "DCA-Arboretum-duration-edited", options: options)
+            let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+            let routeResponse = RouteResponse(httpResponse: nil,
+                                              routes: [route],
+                                              options: .route(.init(locations: replayLocations,
+                                                                    profileIdentifier: nil)),
+                                              credentials: .mocked)
+            
+            completion(.success(IndexedRouteResponse(routeResponse: routeResponse,
+                                                     routeIndex: 0)))
+        }
+        
+        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                              customRoutingProvider: routingProviderStub,
+                                              dataSource: self)
+        let routerDelegateSpy = RouterDelegateSpy()
+        let routeExpectation = XCTestExpectation(description: "Proactive ReRoute should be called")
+        
+        routerDelegateSpy.onShouldProactivelyRerouteFrom = { _ in
+            routeExpectation.fulfill()
+            return true
+        }
+        
+        routeController.delegate = routerDelegateSpy
+        
+        let locationManager = ReplayLocationManager(locations: [CLLocation(coordinate: coordinates[0])].shiftedToPresent())
+        locationManager.startDate = Date()
+        locationManager.delegate = routeController
+        
+        locationManager.speedMultiplier = 1
+        locationManager.startUpdatingLocation()
+        wait(for: [routeExpectation], timeout: 15)
+        
+        RouteControllerProactiveReroutingInterval = defaultInterval
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {
@@ -357,6 +417,7 @@ extension RouteControllerTests: RouterDataSource {
 
 class CustomRoutingProviderStub: RoutingProvider {
     var routeStub: (() -> Void)?
+    var indexedRouteStub: ((IndexedRouteResponseCompletionHandler) -> Void)?
     var matchStub: (() -> Void)?
     var refreshStub: (() -> Void)?
     var refreshByIndexStub: (() -> Void)?
@@ -367,7 +428,7 @@ class CustomRoutingProviderStub: RoutingProvider {
     }
     
     func calculateRoutes(options: RouteOptions, completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {
-        routeStub?()
+        indexedRouteStub?(completionHandler)
         return nil
     }
     

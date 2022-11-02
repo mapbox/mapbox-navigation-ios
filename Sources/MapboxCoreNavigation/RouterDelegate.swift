@@ -26,6 +26,18 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool
 
     /**
+     Asks permission to proceed with found proactive reroute and apply it is main route.
+     
+     If implemented, this method is called as soon as the router detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Returning `true` in this method results in new route to be set, without triggering usual rerouting delegate methods.
+     
+     This method is always called on a background thread, allowing to implement user input if required.
+     
+     - parameter router: The router that has detected faster new route
+     - parameter location: The user’s current location.
+     - returns: True to allow the router to apply a new route; false to keep tracking the current route.
+     */
+    func router(_ router: Router, shouldProactivelyRerouteFrom location: CLLocation) -> Bool
+    /**
      Called immediately before the router calculates a new route.
 
      This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:modifiedOptionsForReroute:)` is called.
@@ -237,6 +249,11 @@ public extension RouterDelegate {
     func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
+    }
+    
+    func router(_ router: Router, shouldProactivelyRerouteFrom location: CLLocation) -> Bool {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+        return RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation
     }
     
     func router(_ router: Router, willRerouteFrom location: CLLocation) {
