@@ -26,7 +26,7 @@ import MapboxDirections
  `PreviewViewController` works as an initial step before switching to the active navigation.
  Use `NavigationViewController` for turn-by-turn navigation experience.
  */
-public class PreviewViewController: UIViewController, BannerPresentation {
+public class PreviewViewController: UIViewController {
     
     // MARK: - BannerPresentation properties and methods
     
@@ -325,6 +325,12 @@ public class PreviewViewController: UIViewController, BannerPresentation {
     @objc func didPressDebugButton(_ sender: Any) {
         // TODO: Implement debug view presentation.
     }
+}
+
+// MARK: - BannerPresentation conformance
+
+extension PreviewViewController: BannerPresentation {
+    
 }
 
 // MARK: - StyleManagerDelegate methods
