@@ -62,12 +62,6 @@ public class BannerDismissalViewController: UIViewController, Banner {
         setupConstraints()
     }
     
-    // MARK: - UIViewController lifecycle methods
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     // MARK: - UIViewController setting-up methods
     
     func setupParentView() {

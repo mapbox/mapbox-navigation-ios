@@ -3,7 +3,8 @@ import CoreLocation
 import MapboxDirections
 
 /**
- Banner that is shown at the bottom of the screen and allows to show final destination information.
+ Banner that is shown at the bottom of the screen and allows to show final destination information
+ in `PreviewViewController`.
  */
 public class DestinationPreviewViewController: UIViewController, Banner, DestinationDataSource {
     
@@ -51,7 +52,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
      
      - parameter destinationOptions: Customization options that are used for the destination(s) preview.
      - parameter bannerConfiguration: Configuration of the banner. `DestinationPreviewViewController` is
-     shown at the top of the screen by default.
+     shown at the bottom of the screen by default.
      */
     public required init(_ destinationOptions: DestinationOptions,
                          bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
@@ -65,12 +66,6 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - UIViewController lifecycle methods
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
     }
     
     // MARK: - UIViewController setting-up methods
