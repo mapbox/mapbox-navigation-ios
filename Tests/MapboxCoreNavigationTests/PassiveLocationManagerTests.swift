@@ -60,10 +60,13 @@ class PassiveLocationManagerTests: TestCase {
         func passiveLocationManager(_ manager: PassiveLocationManager, didFailWithError error: Error) {
         }
     }
+
+    private var navigatorSpy: NavigatorSpy!
+    private var passiveLocationManager: PassiveLocationManager!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        
+
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .custom(filePathURL), mapLocation: nil), routingProviderSource: .offline, alternativeRouteDetectionStrategy: .init())
@@ -74,6 +77,10 @@ class PassiveLocationManagerTests: TestCase {
         PassiveLocationManager.historyDirectoryURL = nil
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
         HistoryRecorder._recreateHistoryRecorder()
+    }
+
+    func testReturnLocation() {
+        let location =
     }
     
     func testManualLocations() {

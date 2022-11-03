@@ -236,9 +236,11 @@ open class RouteController: NSObject {
     private lazy var sharedNavigator: Navigator = {
         return Navigator.shared
     }()
-    
+
+    private var navigatorProvider: NativeNavigatorProvider.Type
+
     var navigator: MapboxNavigationNative.Navigator {
-        return sharedNavigator.navigator
+        return navigatorProvider.navigator
     }
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
@@ -620,7 +622,6 @@ open class RouteController: NSObject {
     required public init(indexedRouteResponse: IndexedRouteResponse,
                          customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
-        
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
         Self.instanceLock.unlock()
@@ -629,6 +630,7 @@ open class RouteController: NSObject {
                       category: .navigation)
         }
 
+        navigatorProvider = Navigator.self
         var isRouteOptions = false
         if case .route = indexedRouteResponse.routeResponse.options {
             isRouteOptions = true
@@ -659,6 +661,16 @@ open class RouteController: NSObject {
         Self.instanceLock.lock()
         Self.instance = self
         Self.instanceLock.unlock()
+    }
+
+    convenience init(indexedRouteResponse: IndexedRouteResponse,
+         customRoutingProvider: RoutingProvider?,
+         dataSource source: RouterDataSource,
+         navigatorProvider: NativeNavigatorProvider.Type) {
+        self.init(indexedRouteResponse: indexedRouteResponse,
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
+        self.navigatorProvider = navigatorProvider
     }
     
     deinit {
