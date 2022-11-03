@@ -23,6 +23,10 @@
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 * Fixed an issue where the route line with no traffic congestion data and multiple legs wasn't shown correctly. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
 
+### Preview
+
+* Added the `PreviewViewController` that along with the ability to display a route preview map allows to present banners with additional information. Such banners should conform to `Banner` protocol. The Mapbox Navigation SDK also provides default banners that allow to present address of the final destination (`DestinationPreviewViewController`) and route information like estimated time of arrival, total duration and distance (`RoutePreviewViewController`). The `PreviewViewControllerDelegate` protocol allows to observe `Banner` presentation and dismissal events. Seamless transition between `PreviewViewController` and `NavigationViewController` can be reached by using `UIViewControllerTransitioningDelegate` and replacing existing `NavigationViewController.navigationMapView` instance with the one that is used in `PreviewViewController`. ([#4227](https://github.com/mapbox/mapbox-navigation-ios/pull/4227), [#4188](https://github.com/mapbox/mapbox-navigation-ios/pull/4188))
+
 ### Banners and guidance instructions
 
 * Added replacement for `VisualInstruction.maneuverImageSet(side:)` method to generate a maneuver image on iOS 13 and above. ([#4161](https://github.com/mapbox/mapbox-navigation-ios/pull/4161))
