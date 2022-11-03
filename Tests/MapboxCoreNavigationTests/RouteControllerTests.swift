@@ -10,47 +10,17 @@ import MapboxNavigationNative
 
 class RouteControllerTests: TestCase {
     var replayManager: ReplayLocationManager?
-    var navigator: NativeNavigatorSpy!
-    var routingProvider: RoutingProviderSpy!
-
-    let options = NavigationMatchOptions(coordinates: [
-        CLLocationCoordinate2D(latitude: 37.750384, longitude: -122.387487),
-        CLLocationCoordinate2D(latitude: 37.764343, longitude: -122.388664),
-    ])
 
     override func setUp() {
         super.setUp()
-
-        navigator = NativeNavigatorSpy()
-        NativeNavigatorProviderSpy.navigator = navigator
-        routingProvider = RoutingProviderSpy()
     }
 
     override func tearDown() {
         replayManager = nil
         MapboxRoutingProvider.__testRoutesStub = nil
-        Navigator._recreateNavigator()
         super.tearDown()
     }
-
-    var defaultRouteController: RouteController {
-        let routeResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options), routeIndex: 0)
-        return .init(indexedRouteResponse: routeResponse,
-                     customRoutingProvider: routingProvider,
-                     dataSource: self)
-    }
-
-    func testSetNotFirstLocationAfterSettingRawLocation() {
-        let routeController = defaultRouteController
-        XCTAssertTrue(routeController.isFirstLocation)
-        routeController.rawLocation = CLLocation(latitude: 59.337928, longitude: 18.076841)
-        XCTAssertFalse(routeController.isFirstLocation)
-    }
-
-    func testReturnSnappedLocation() {
-        let snappedLocation = defaultRouteController.snappedLocation
-    }
-
+    
     func testRouteSnappingOvershooting() {
         let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),
