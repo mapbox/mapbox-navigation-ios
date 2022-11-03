@@ -22,8 +22,8 @@ extension SceneDelegate: DestinationPreviewViewControllerDelegate {
     }
     
     func didTapBeginActiveNavigationButton(_ destinationPreviewViewController: MapboxNavigation.DestinationPreviewViewController) {
-        if let previewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
-            let routeResponse = previewViewController.routesPreviewOptions.routeResponse
+        if let routePreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutePreviewViewController {
+            let routeResponse = routePreviewViewController.routePreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
         } else {
             if let destinationPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? DestinationPreviewViewController {

@@ -12,7 +12,7 @@ import MapboxDirections
  - `DestinationPreviewViewController` - banner that is shown at the bottom of the screen and allows
  to show information about the final destination, preview available routes and start active navigation
  session
- - `RoutesPreviewViewController` - banner that is shown at the bottom of the screen and allows to
+ - `RoutePreviewViewController` - banner that is shown at the bottom of the screen and allows to
  preview information about the current `Route` (expected travel time, distance and expected time of arrival)
  - `BannerDismissalViewController` - banner that is shown at the top of the screen and allows to
  dismiss already presented banner

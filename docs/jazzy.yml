@@ -183,10 +183,10 @@ custom_categories:
       - DestinationPreviewViewControllerDelegate
       - DestinationOptions
       - DestinationDataSource
-      - RoutesPreviewViewController
-      - RoutesPreviewViewControllerDelegate
-      - RoutesPreviewOptions
-      - RoutesPreviewDataSource
+      - RoutePreviewViewController
+      - RoutePreviewViewControllerDelegate
+      - RoutePreviewOptions
+      - RoutePreviewDataSource
   - name: Electronic Horizon
     children:
       - ElectronicHorizonOptions

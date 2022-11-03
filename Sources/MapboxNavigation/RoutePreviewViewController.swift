@@ -5,7 +5,7 @@ import MapboxDirections
  Banner that is shown at the bottom of the screen and allows to show route-related information
  in `PreviewViewController`.
  */
-public class RoutesPreviewViewController: UIViewController, Banner, RoutesPreviewDataSource {
+public class RoutePreviewViewController: UIViewController, Banner, RoutePreviewDataSource {
     
     var bottomBannerView: BottomBannerView!
     
@@ -28,7 +28,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
     /**
      The object that serves as the routes preview delegate.
      */
-    public weak var delegate: RoutesPreviewViewControllerDelegate?
+    public weak var delegate: RoutePreviewViewControllerDelegate?
     
     // MARK: - Banner properties
     
@@ -37,27 +37,27 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
      */
     public let bannerConfiguration: BannerConfiguration
     
-    // MARK: - RoutesPreviewDataSource properties
+    // MARK: - RoutePreviewDataSource properties
     
     /**
      Customization options that are used for the route(s) preview.
      */
-    public var routesPreviewOptions: RoutesPreviewOptions {
+    public var routePreviewOptions: RoutePreviewOptions {
         didSet {
             updateRouteDetails()
         }
     }
     
     /**
-     Initializes a `RoutesPreviewViewController` instance.
+     Initializes a `RoutePreviewViewController` instance.
      
-     - parameter routesPreviewOptions: Customization options that are used for the route(s) preview.
-     - parameter bannerConfiguration: Configuration of the banner. `RoutesPreviewViewController` is
+     - parameter routePreviewOptions: Customization options that are used for the route(s) preview.
+     - parameter bannerConfiguration: Configuration of the banner. `RoutePreviewViewController` is
      shown at the bottom of the screen by default.
      */
-    public required init(_ routesPreviewOptions: RoutesPreviewOptions,
+    public required init(_ routePreviewOptions: RoutePreviewOptions,
                          bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
-        self.routesPreviewOptions = routesPreviewOptions
+        self.routePreviewOptions = routePreviewOptions
         self.bannerConfiguration = bannerConfiguration
         
         super.init(nibName: nil, bundle: nil)
@@ -150,9 +150,9 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
         delegate?.didPressBeginActiveNavigationButton(self)
     }
     
-    // TODO: Extract implementation out of `RoutesPreviewViewController`.
+    // TODO: Extract implementation out of `RoutePreviewViewController`.
     func updateRouteDetails() {
-        guard let route = routesPreviewOptions.routeResponse.routes?[routesPreviewOptions.routeIndex] else {
+        guard let route = routePreviewOptions.routeResponse.routes?[routePreviewOptions.routeIndex] else {
             return
         }
         
@@ -161,7 +161,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
         
         let phoneTraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
         let distanceRemainingTintColor = DistanceRemainingLabel.appearance(for: phoneTraitCollection,
-                                                                           whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                           whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor
         let distance = Measurement(distance: route.distance).localized()
         let imageBounds = CGRect(x: 0.0, y: -2.0, width: 12.0, height: 15.0)
         
@@ -184,7 +184,7 @@ public class RoutesPreviewViewController: UIViewController, Banner, RoutesPrevie
             dateFormatter.timeStyle = .short
             
             let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance(for: phoneTraitCollection,
-                                                                        whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor
+                                                                        whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor
             
             let tintedTimeImage: UIImage
             if #available(iOS 13.0, *) {

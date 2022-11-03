@@ -3,16 +3,14 @@ import UIKit
 /**
  A banner protocol provides the ability to show content inside `NavigationView`. Components that
  conform to `Banner` protocol must be instances of the `UIViewController`. Banners are injected
- into `BannerContainerView` and can have various properties:
- - Can be shown at the top or at the bottom of the screen
- - Can be expanded and collapsed
- - Can have custom height
+ into `BannerContainerView` and can have various properties: can be shown at the top or at the
+ bottom of the screen, can be expanded and collapsed and can have custom height.
  
  By default Mapbox Navigation SDK provides several default banners:
  - `DestinationPreviewViewController` - banner that is shown at the bottom of the screen and allows
  to show information about the final destination, preview available routes and start active navigation
  session
- - `RoutesPreviewViewController` - banner that is shown at the bottom of the screen and allows to
+ - `RoutePreviewViewController` - banner that is shown at the bottom of the screen and allows to
  preview information about the current `Route` (expected travel time, distance and expected time of arrival)
  - `BannerDismissalViewController` - banner that is shown at the top of the screen and allows to
  dismiss already presented banner
@@ -36,13 +34,7 @@ public struct BannerConfiguration {
     public private(set) var position: BannerPosition = .bottomLeading
     
     /**
-     Initial height of the `Banner`. By default heights of the `Banner` are the following:
-     Top banner:
-     - Top safe area inset for both compact/regular-height size class
-     
-     Bottom banner:
-     - 80.0 + bottom safe area inset for regular-height size class
-     - 60.0 + bottom safe area inset for compact-height size class
+     Initial height of the `Banner` in points.
      */
     public private(set) var height: CGFloat? = nil
     
@@ -62,7 +54,7 @@ public struct BannerConfiguration {
      Initializes a new `BannerConfiguration` object.
      
      - parameter position: Position of the `Banner`.
-     - parameter height: Initial height of the `Banner`.
+     - parameter height: Initial height of the `Banner` in points.
      - parameter isExpandable: A Boolean value that determines whether `Banner` can be expanded or not.
      - parameter expansionOffset: A floating-point value that denotes extent by which `Banner`
      can be expanded.
