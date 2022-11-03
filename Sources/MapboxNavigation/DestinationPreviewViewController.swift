@@ -2,7 +2,10 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-// :nodoc:
+/**
+ Banner that is shown at the bottom of the screen and allows to show final destination information
+ in `PreviewViewController`.
+ */
 public class DestinationPreviewViewController: UIViewController, Banner, DestinationDataSource {
     
     var bottomBannerView: BottomBannerView!
@@ -21,24 +24,36 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
     
     var trailingSeparatorView: SeparatorView!
     
-    // :nodoc:
+    /**
+     The object that serves as the destination preview delegate.
+     */
     public weak var delegate: DestinationPreviewViewControllerDelegate?
     
     // MARK: - Banner properties
     
-    // :nodoc:
+    /**
+     Configuration of the banner.
+     */
     public let bannerConfiguration: BannerConfiguration
     
     // MARK: - DestinationDataSource properties
     
-    // :nodoc:
+    /**
+     Customization options that are used for the destination(s) preview.
+     */
     public var destinationOptions: DestinationOptions {
         didSet {
             updateDestinationDetails()
         }
     }
     
-    // :nodoc:
+    /**
+     Initializes a `DestinationPreviewViewController` instance.
+     
+     - parameter destinationOptions: Customization options that are used for the destination(s) preview.
+     - parameter bannerConfiguration: Configuration of the banner. `DestinationPreviewViewController` is
+     shown at the bottom of the screen by default.
+     */
     public required init(_ destinationOptions: DestinationOptions,
                          bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .bottomLeading)) {
         self.destinationOptions = destinationOptions
@@ -53,9 +68,7 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    // MARK: - UIViewController setting-up methods
     
     func commonInit() {
         setupParentView()
@@ -123,6 +136,8 @@ public class DestinationPreviewViewController: UIViewController, Banner, Destina
         bottomBannerView.addSubview(trailingSeparatorView)
         self.trailingSeparatorView = trailingSeparatorView
     }
+    
+    // MARK: - Event handlers
     
     @objc func didTapPreviewRoutesButton() {
         delegate?.didTapPreviewRoutesButton(self)

@@ -43,12 +43,12 @@ open class NightStyle: DayStyle {
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         DistanceRemainingLabel.appearance(for: traitCollection,
-                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+                                          whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         ArrivalTimeLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         ArrivalTimeLabel.appearance(for: traitCollection,
-                                       whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+                                       whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         DestinationLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         

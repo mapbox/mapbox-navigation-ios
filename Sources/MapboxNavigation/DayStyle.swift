@@ -239,13 +239,13 @@ open class DayStyle: Style {
         TimeRemainingLabel.appearance(for: traitCollection).trafficUnknownColor = .defaultPrimaryTextColor
         
         TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection,
-                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+                                      whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection,
-                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+                                      whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection,
-                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
+                                      whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 28.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection,
-                                      whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
+                                      whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 20.0, weight: .medium).adjustedFont
         
         StepsTableHeaderView.appearance(for: traitCollection).tintColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StepsTableHeaderView.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
@@ -266,9 +266,9 @@ open class DayStyle: Style {
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         
         DistanceRemainingLabel.appearance(for: traitCollection,
-                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
+                                          whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
         DistanceRemainingLabel.appearance(for: traitCollection,
-                                          whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
+                                          whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
         
         NavigationView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         
@@ -305,9 +305,9 @@ open class DayStyle: Style {
         ArrivalTimeLabel.appearance(for: traitCollection).normalTextColor = .defaultPrimaryTextColor
         
         ArrivalTimeLabel.appearance(for: traitCollection,
-                                    whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
+                                    whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium).adjustedFont
         ArrivalTimeLabel.appearance(for: traitCollection,
-                                    whenContainedInInstancesOf: [RoutesPreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
+                                    whenContainedInInstancesOf: [RoutePreviewViewController.self]).normalTextColor = .defaultPrimaryTextColor
         
         DestinationLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 25.0, weight: .medium).adjustedFont
         DestinationLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 25.0, weight: .medium).adjustedFont

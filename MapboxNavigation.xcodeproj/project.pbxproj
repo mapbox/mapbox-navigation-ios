@@ -214,7 +214,7 @@
 		8A2354F128877890003E42B4 /* BottomBannerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2354ED28877890003E42B4 /* BottomBannerViewControllerDelegate.swift */; };
 		8A2354F4288778D6003E42B4 /* NavigationMapView+ContinuousAlternatives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2354F2288778D6003E42B4 /* NavigationMapView+ContinuousAlternatives.swift */; };
 		8A285E242637859800B11ECD /* OrnamentsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A285E232637859800B11ECD /* OrnamentsController.swift */; };
-		8A2B541328DA857C0070CE6E /* RoutesPreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B541228DA857C0070CE6E /* RoutesPreviewViewControllerLayout.swift */; };
+		8A2B541328DA857C0070CE6E /* RoutePreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B541228DA857C0070CE6E /* RoutePreviewViewControllerLayout.swift */; };
 		8A2B541528DA85C60070CE6E /* DestinationPreviewViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B541428DA85C60070CE6E /* DestinationPreviewViewControllerLayout.swift */; };
 		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
 		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
@@ -260,7 +260,7 @@
 		8A99F18928821AA80034F5BD /* UILayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A99F18828821AA70034F5BD /* UILayoutGuide.swift */; };
 		8A99F18B28821AB80034F5BD /* WayNameLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A99F18A28821AB80034F5BD /* WayNameLabel.swift */; };
 		8AA0385D27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0385C27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift */; };
-		8AA0386E27FF9F9C0007BD2D /* RoutesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0386C27FF9F9C0007BD2D /* RoutesPreviewViewController.swift */; };
+		8AA0386E27FF9F9C0007BD2D /* RoutePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0386C27FF9F9C0007BD2D /* RoutePreviewViewController.swift */; };
 		8AA0387027FFBC1D0007BD2D /* DestinationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0386F27FFBC1D0007BD2D /* DestinationPreviewViewController.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */; };
@@ -273,9 +273,9 @@
 		8AB97C10280A304000792939 /* DestinationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C0F280A304000792939 /* DestinationDataSource.swift */; };
 		8AB97C12280A305500792939 /* DestinationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C11280A305500792939 /* DestinationOptions.swift */; };
 		8AB97C14280A309200792939 /* DestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C13280A309200792939 /* DestinationPreviewViewControllerDelegate.swift */; };
-		8AB97C18280A316C00792939 /* RoutesPreviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C17280A316C00792939 /* RoutesPreviewOptions.swift */; };
-		8AB97C1A280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C19280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift */; };
-		8AB97C1C280A323E00792939 /* RoutesPreviewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1B280A323E00792939 /* RoutesPreviewDataSource.swift */; };
+		8AB97C18280A316C00792939 /* RoutePreviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C17280A316C00792939 /* RoutePreviewOptions.swift */; };
+		8AB97C1A280A31C600792939 /* RoutePreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C19280A31C600792939 /* RoutePreviewViewControllerDelegate.swift */; };
+		8AB97C1C280A323E00792939 /* RoutePreviewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1B280A323E00792939 /* RoutePreviewDataSource.swift */; };
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
 		8AC0241428DD237800A2BF3A /* PreviewOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC0241328DD237800A2BF3A /* PreviewOptions.swift */; };
@@ -842,7 +842,7 @@
 		8A2354ED28877890003E42B4 /* BottomBannerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomBannerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A2354F2288778D6003E42B4 /* NavigationMapView+ContinuousAlternatives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+ContinuousAlternatives.swift"; sourceTree = "<group>"; };
 		8A285E232637859800B11ECD /* OrnamentsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrnamentsController.swift; sourceTree = "<group>"; };
-		8A2B541228DA857C0070CE6E /* RoutesPreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewViewControllerLayout.swift; sourceTree = "<group>"; };
+		8A2B541228DA857C0070CE6E /* RoutePreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePreviewViewControllerLayout.swift; sourceTree = "<group>"; };
 		8A2B541428DA85C60070CE6E /* DestinationPreviewViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationPreviewViewControllerLayout.swift; sourceTree = "<group>"; };
 		8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraDebugView.swift; sourceTree = "<group>"; };
 		8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraConstants.swift; sourceTree = "<group>"; };
@@ -887,7 +887,7 @@
 		8A99F18828821AA70034F5BD /* UILayoutGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILayoutGuide.swift; sourceTree = "<group>"; };
 		8A99F18A28821AB80034F5BD /* WayNameLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WayNameLabel.swift; sourceTree = "<group>"; };
 		8AA0385C27F3B5740007BD2D /* NavigationMapView+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
-		8AA0386C27FF9F9C0007BD2D /* RoutesPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesPreviewViewController.swift; sourceTree = "<group>"; };
+		8AA0386C27FF9F9C0007BD2D /* RoutePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutePreviewViewController.swift; sourceTree = "<group>"; };
 		8AA0386F27FFBC1D0007BD2D /* DestinationPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestinationPreviewViewController.swift; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -901,9 +901,9 @@
 		8AB97C0F280A304000792939 /* DestinationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDataSource.swift; sourceTree = "<group>"; };
 		8AB97C11280A305500792939 /* DestinationOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationOptions.swift; sourceTree = "<group>"; };
 		8AB97C13280A309200792939 /* DestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationPreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
-		8AB97C17280A316C00792939 /* RoutesPreviewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewOptions.swift; sourceTree = "<group>"; };
-		8AB97C19280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
-		8AB97C1B280A323E00792939 /* RoutesPreviewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewDataSource.swift; sourceTree = "<group>"; };
+		8AB97C17280A316C00792939 /* RoutePreviewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePreviewOptions.swift; sourceTree = "<group>"; };
+		8AB97C19280A31C600792939 /* RoutePreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
+		8AB97C1B280A323E00792939 /* RoutePreviewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePreviewDataSource.swift; sourceTree = "<group>"; };
 		8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraTests.swift; sourceTree = "<group>"; };
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
 		8AC0241328DD237800A2BF3A /* PreviewOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewOptions.swift; sourceTree = "<group>"; };
@@ -1821,11 +1821,11 @@
 		8AB97C16280A30C500792939 /* Routes Preview */ = {
 			isa = PBXGroup;
 			children = (
-				8AA0386C27FF9F9C0007BD2D /* RoutesPreviewViewController.swift */,
-				8A2B541228DA857C0070CE6E /* RoutesPreviewViewControllerLayout.swift */,
-				8AB97C19280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift */,
-				8AB97C17280A316C00792939 /* RoutesPreviewOptions.swift */,
-				8AB97C1B280A323E00792939 /* RoutesPreviewDataSource.swift */,
+				8AA0386C27FF9F9C0007BD2D /* RoutePreviewViewController.swift */,
+				8A2B541228DA857C0070CE6E /* RoutePreviewViewControllerLayout.swift */,
+				8AB97C19280A31C600792939 /* RoutePreviewViewControllerDelegate.swift */,
+				8AB97C17280A316C00792939 /* RoutePreviewOptions.swift */,
+				8AB97C1B280A323E00792939 /* RoutePreviewDataSource.swift */,
 			);
 			name = "Routes Preview";
 			sourceTree = "<group>";
@@ -2845,7 +2845,7 @@
 				8AD2210D27C433D8000734A5 /* StepListIndicatorView.swift in Sources */,
 				8A04BDF227DC043F00B8F76C /* PreviewViewControllerDelegate.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
-				8AA0386E27FF9F9C0007BD2D /* RoutesPreviewViewController.swift in Sources */,
+				8AA0386E27FF9F9C0007BD2D /* RoutePreviewViewController.swift in Sources */,
 				8A460FB8279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
 				8AD2210427C1A668000734A5 /* PreviewViewController.swift in Sources */,
@@ -2887,7 +2887,7 @@
 				8A2354EF28877890003E42B4 /* BannerContainerView.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */,
-				8A2B541328DA857C0070CE6E /* RoutesPreviewViewControllerLayout.swift in Sources */,
+				8A2B541328DA857C0070CE6E /* RoutePreviewViewControllerLayout.swift in Sources */,
 				8AC0241828DD3E8000A2BF3A /* Preview.swift in Sources */,
 				8AE9081225FAA53300F37077 /* Collection.swift in Sources */,
 				8AA0387027FFBC1D0007BD2D /* DestinationPreviewViewController.swift in Sources */,
@@ -2958,7 +2958,7 @@
 				8A50A3C526EC09FB00894A8E /* FeedbackViewControllerType.swift in Sources */,
 				8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
-				8AB97C1A280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift in Sources */,
+				8AB97C1A280A31C600792939 /* RoutePreviewViewControllerDelegate.swift in Sources */,
 				8AC0241428DD237800A2BF3A /* PreviewOptions.swift in Sources */,
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
@@ -2971,7 +2971,7 @@
 				CFD47D9020FD85EC00BC1E49 /* ResourceOptionsManager.swift in Sources */,
 				8A7AFE672733483C004617DC /* RoutesPresentationStyle.swift in Sources */,
 				8AB316AB26BA029100C3AC76 /* MapTemplateProviderDelegate.swift in Sources */,
-				8AB97C18280A316C00792939 /* RoutesPreviewOptions.swift in Sources */,
+				8AB97C18280A316C00792939 /* RoutePreviewOptions.swift in Sources */,
 				B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */,
 				8AB316A926BA026B00C3AC76 /* MapTemplateProvider.swift in Sources */,
 				8AD2212127C43DAB000734A5 /* StylableTextView.swift in Sources */,
@@ -3012,7 +3012,7 @@
 				8AD2212327C43DEB000734A5 /* StylableView.swift in Sources */,
 				8AF1D57228F0C90E00041ED4 /* BannerDismissalViewControllerLayout.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
-				8AB97C1C280A323E00792939 /* RoutesPreviewDataSource.swift in Sources */,
+				8AB97C1C280A323E00792939 /* RoutePreviewDataSource.swift in Sources */,
 				2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */,
 				2BDD653D2614BCA1005B8B55 /* WayNameView.swift in Sources */,
 				353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */,

@@ -1,12 +1,12 @@
 import MapboxNavigation
 
-// MARK: - RoutesPreviewViewControllerDelegate methods
+// MARK: - RoutePreviewViewControllerDelegate methods
 
-extension SceneDelegate: RoutesPreviewViewControllerDelegate {
+extension SceneDelegate: RoutePreviewViewControllerDelegate {
     
-    func didPressBeginActiveNavigationButton(_ routesPreviewViewController: RoutesPreviewViewController) {
-        if let previewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController {
-            let routeResponse = previewViewController.routesPreviewOptions.routeResponse
+    func didPressBeginActiveNavigationButton(_ routePreviewViewController: RoutePreviewViewController) {
+        if let routePreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutePreviewViewController {
+            let routeResponse = routePreviewViewController.routePreviewOptions.routeResponse
             startActiveNavigation(for: routeResponse)
         } else {
             if let destinationPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? DestinationPreviewViewController {

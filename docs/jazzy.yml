@@ -170,6 +170,23 @@ custom_categories:
       - NavigationViewportDataSource
       - ViewportDataSourceType
       - ViewportDataSourceDelegate
+  - name: Preview
+    children:
+      - PreviewOptions
+      - PreviewViewController
+      - PreviewViewControllerDelegate
+      - Banner
+      - BannerConfiguration
+      - BannerDismissalViewController
+      - BannerDismissalViewControllerDelegate
+      - DestinationPreviewViewController
+      - DestinationPreviewViewControllerDelegate
+      - DestinationOptions
+      - DestinationDataSource
+      - RoutePreviewViewController
+      - RoutePreviewViewControllerDelegate
+      - RoutePreviewOptions
+      - RoutePreviewDataSource
   - name: Electronic Horizon
     children:
       - ElectronicHorizonOptions

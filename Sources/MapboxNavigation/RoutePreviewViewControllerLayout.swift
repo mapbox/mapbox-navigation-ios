@@ -1,6 +1,6 @@
 import UIKit
 
-extension RoutesPreviewViewController {
+extension RoutePreviewViewController {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
