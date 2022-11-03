@@ -1361,14 +1361,6 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
-		2B5F6C322912B9230062E3B5 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		2BE701A4253760B300F46E4E /* RouteAlerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1965,6 +1957,14 @@
 			name = "Instructions Card";
 			sourceTree = "<group>";
 		};
+		B46C42C32908AF1B006304B0 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				B46C42C42908AF50006304B0 /* BannerDismissalViewControllerSnapshotTests.swift */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
 		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2182,7 +2182,6 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
-				2B5F6C322912B9230062E3B5 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};

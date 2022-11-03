@@ -300,12 +300,12 @@ public extension NavigationServiceDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
-        logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldRerouteFromLocation
     }
     
     func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void) {
-        logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         if MapboxNavigationService.Default.shouldProactivelyRerouteFromLocation {
             completion()
         }
