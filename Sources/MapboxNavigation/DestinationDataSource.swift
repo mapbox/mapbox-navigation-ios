@@ -1,7 +1,9 @@
 import UIKit
 
 /**
- Protocol, to which `Banner` instances should conform to, to provide the options that are required
+ A protocol, that allows to provide destination information.
+ 
+ `Banner` instances should conform to this protocol, to provide the options that are required
  for the destination presentation in the `PreviewViewController`.
  
  By default Mapbox Navigation SDK provides `DestinationPreviewViewController` that conforms to this
