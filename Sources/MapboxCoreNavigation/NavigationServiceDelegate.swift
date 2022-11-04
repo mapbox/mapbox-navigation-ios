@@ -30,7 +30,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
-     Asks permission to proceed with found proactive reroute and apply it is main route.
+     Asks permission to proceed with found proactive reroute and apply it as main route.
      
      If implemented, this method is called as soon as the navigation service detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Calling provided `completion` results in new route to be set, without triggering usual rerouting delegate methods.
      
