@@ -189,7 +189,7 @@ open class BannerContainerView: UIView {
     
     // :nodoc:
     public func expand(animated: Bool = true,
-                       duration: TimeInterval = 2.0,
+                       duration: TimeInterval = 0.2,
                        animations: (() -> Void)? = nil,
                        completion: CompletionHandler? = nil) {
         guard isExpandable, state == .collapsed else { return }
@@ -209,12 +209,11 @@ open class BannerContainerView: UIView {
         layoutIfNeeded()
         
         if animated {
-            // TODO: Improve animation for devices with notch.
             switch position {
             case .topLeading:
-                expansionConstraint.constant = -frame.height //+ safeAreaInsets.top
+                expansionConstraint.constant = -expansionOffset
             case .bottomLeading:
-                expansionConstraint.constant = frame.height - expansionOffset - safeAreaInsets.bottom
+                expansionConstraint.constant = expansionOffset
             }
             
             isHidden = false
