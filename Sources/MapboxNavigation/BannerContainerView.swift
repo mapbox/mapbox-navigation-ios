@@ -188,6 +188,64 @@ open class BannerContainerView: UIView {
     }
     
     // :nodoc:
+    public func expand(animated: Bool = true,
+                       duration: TimeInterval = 2.0,
+                       animations: (() -> Void)? = nil,
+                       completion: CompletionHandler? = nil) {
+        guard isExpandable, state == .collapsed else { return }
+        
+        if let superview = superview, expansionConstraint == nil {
+            switch position {
+            case .topLeading:
+                expansionConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
+            case .bottomLeading:
+                expansionConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+            }
+            
+            expansionConstraint.isActive = true
+        }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
+        
+        if animated {
+            // TODO: Improve animation for devices with notch.
+            switch position {
+            case .topLeading:
+                expansionConstraint.constant = -frame.height //+ safeAreaInsets.top
+            case .bottomLeading:
+                expansionConstraint.constant = frame.height - expansionOffset - safeAreaInsets.bottom
+            }
+            
+            isHidden = false
+            superview?.layoutIfNeeded()
+            
+            UIView.animate(withDuration: duration,
+                           delay: 0.0,
+                           options: [],
+                           animations: { [weak self] in
+                guard let self = self else { return }
+                
+                animations?()
+                
+                self.expansionConstraint.constant = 0.0
+                
+                self.superview?.layoutIfNeeded()
+            }) { [weak self] completed in
+                guard let self = self else { return }
+                
+                self.state = .expanded
+                completion?(completed)
+            }
+        } else {
+            isHidden = false
+            
+            self.state = .expanded
+            completion?(true)
+        }
+    }
+    
+    // :nodoc:
     public func show(animated: Bool = true,
                      duration: TimeInterval = 0.2,
                      animations: (() -> Void)? = nil,
@@ -238,11 +296,15 @@ open class BannerContainerView: UIView {
                 }
                 
                 self.superview?.layoutIfNeeded()
-            }) { completed in
+            }) { [weak self] completed in
+                guard let self = self else { return }
+                
+                self.state = .collapsed
                 completion?(completed)
             }
         } else {
             isHidden = false
+            state = .collapsed
             completion?(true)
         }
     }
