@@ -58,6 +58,7 @@ custom_categories:
       - NavigationMatchOptions
       - SimulationMode
       - PassiveLocationManager
+      - PassiveLocationManagerDelegate
       - HistoryRecording
   - name: Maps
     children:
@@ -86,6 +87,7 @@ custom_categories:
       - SpeedLimitView
       - UserPuckCourseView
       - UserHaloCourseView
+      - UserCourseView
       - CourseUpdatable
       - NavigationComponent
   - name: Guidance Instruction UI
@@ -115,6 +117,7 @@ custom_categories:
       - CarPlayConnectionObserver
       - RecentItem
       - NavigationGeocodedPlacemark
+      - CarPlayUserInfo
   - name: Configuration
     children:
       - RouteControllerDeadReckoningTimeInterval
