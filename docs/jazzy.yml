@@ -170,6 +170,13 @@ custom_categories:
       - NavigationViewportDataSource
       - ViewportDataSourceType
       - ViewportDataSourceDelegate
+      - FollowingCameraOptions
+      - IntersectionDensity
+      - BearingSmoothing
+      - GeometryFramingAfterManeuver
+      - PitchNearManeuver
+      - OverviewCameraOptions
+      - NavigationViewportDataSourceOptions
   - name: Preview
     children:
       - PreviewOptions
