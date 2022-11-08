@@ -472,7 +472,27 @@ extension AppDelegate: CPListTemplateDelegate {
 // MARK: - CarPlaySceneDelegate methods
 
 @available(iOS 13.0, *)
-class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
+class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate, CPTemplateApplicationDashboardSceneDelegate {
+    
+    @available(iOS 13.4, *)
+    func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene,
+                                           didConnect dashboardController: CPDashboardController,
+                                           to window: UIWindow) {
+        guard let carImage = UIImage(systemName: "car"),
+              let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let button = CPDashboardButton(titleVariants: ["Example-CarPlay"], subtitleVariants: ["Mapbox"], image: carImage)
+        dashboardController.shortcutButtons.append(button)
+        
+        let carPlayMapViewController = CarPlayMapViewController(styles: appDelegate.carPlayManager.styles)
+        carPlayMapViewController.delegate = appDelegate.carPlayManager
+        window.rootViewController = carPlayMapViewController
+    }
+
+    @available(iOS 13.4, *)
+    func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene, didDisconnect dashboardController: CPDashboardController, from window: UIWindow) {
+        window.rootViewController = nil
+    }
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
                                   didConnect interfaceController: CPInterfaceController,

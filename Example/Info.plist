@@ -35,9 +35,20 @@
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>CPSupportsDashboardNavigationScene</key>
-		<false/>
+		<true/>
 		<key>UISceneConfigurations</key>
 		<dict>
+			<key>CPTemplateApplicationDashboardSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>CPTemplateDashboardScene</string>
+					<key>UISceneDelegateClassName</key>
+					<string>Example.CarPlaySceneDelegate</string>
+					<key>UISceneConfigurationName</key>
+					<string>ExampleCarPlayApplicationConfiguration</string>
+				</dict>
+			</array>
 			<key>CPTemplateApplicationSceneSessionRoleApplication</key>
 			<array>
 				<dict>
