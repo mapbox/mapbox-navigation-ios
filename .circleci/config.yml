@@ -343,7 +343,7 @@ jobs:
         default: true
       codecoverage:
         type: boolean
-        default: false
+        default: true
       verify_localization:
         type: boolean
         default: true
