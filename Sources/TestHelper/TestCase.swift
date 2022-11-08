@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import MapboxDirections
+import MapboxDirections
 @testable import MapboxCoreNavigation
 #if canImport(MapboxMaps)
 import MapboxMaps
