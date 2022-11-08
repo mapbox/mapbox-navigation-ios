@@ -395,16 +395,31 @@ extension InternalRouter where Self: Router {
             guard routeIsFaster else {
                 self.isRerouting = false; return
             }
-            var routeOptions: RouteOptions?
-            if case let .route(options) = response.options {
-                routeOptions = options
-            }
+            
+            let completion = { [weak self] in
+                guard let self = self else { return }
+                var routeOptions: RouteOptions?
+                if case let .route(options) = response.options {
+                    routeOptions = options
+                }
 
-            // Prefer the most optimal route (the first one) over the route that matched the original choice.
-            self.updateRoute(with: indexedResponse,
-                             routeOptions: routeOptions ?? self.routeProgress.routeOptions,
-                             isProactive: true) { [weak self] success in
-                self?.isRerouting = false
+                DispatchQueue.main.async {
+                    // Prefer the most optimal route (the first one) over the route that matched the original choice.
+                    self.updateRoute(with: indexedResponse,
+                                     routeOptions: routeOptions ?? self.routeProgress.routeOptions,
+                                     isProactive: true) { [weak self] success in
+                        self?.isRerouting = false
+                    }
+                }
+            }
+            
+            if let delegate = self.delegate {
+                delegate.router(self,
+                                shouldProactivelyRerouteFrom: location,
+                                to: route,
+                                completion: completion)
+            } else if RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation {
+                completion()
             }
         }
     }

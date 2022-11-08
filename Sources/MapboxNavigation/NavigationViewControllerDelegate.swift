@@ -89,6 +89,18 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
 
     /**
+     Asks permission to proceed with found proactive reroute and apply it as main route.
+     
+     If implemented, this method is called as soon as the navigation view controller detects route faster than the current one. This only happens if `Router.reroutesProactively` is set to `true` (default). Calling provided `completion` results in new route to be set, without triggering usual rerouting delegate methods.
+     
+     - parameter navigationViewController: The navigation view controller that has detected faster new route
+     - parameter location: The user’s current location.
+     - parameter route: The route found.
+     - parameter completion: Completion to be called to allow the navigation view controller to apply a new route; Ignoring calling the completion will ignore the faster route aswell.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void)
+    
+    /**
      Called when the user arrives at a waypoint.
 
      Return false to continue checking if reroute is needed. By default, the user will not be rerouted when arriving at a waypoint.
@@ -381,6 +393,13 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        if RouteController.DefaultBehavior.shouldProactivelyRerouteFromLocation {
+            completion()
+        }
     }
 
     /**
