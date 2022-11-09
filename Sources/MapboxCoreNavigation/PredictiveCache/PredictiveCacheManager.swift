@@ -25,7 +25,7 @@ public class PredictiveCacheManager {
     private var navigationController: PredictiveCacheController? = nil
     private var mapController: PredictiveCacheController? = nil
 
-    private let navigatorType: NavigatorProtocol.Type
+    private let navigatorType: CoreNavigator.Type
     private var navigator: MapboxNavigationNative.Navigator {
         return navigatorType.shared.navigator
     }
@@ -89,7 +89,7 @@ public class PredictiveCacheManager {
     init(predictiveCacheOptions: PredictiveCacheOptions,
          cacheMapOptions: CacheMapOptions?,
          styleSourcePaths: [String] = [],
-         navigatorType: NavigatorProtocol.Type) {
+         navigatorType: CoreNavigator.Type) {
         self.predictiveCacheOptions = predictiveCacheOptions
         self.cacheMapOptions = cacheMapOptions
         self.styleSourcePaths = styleSourcePaths

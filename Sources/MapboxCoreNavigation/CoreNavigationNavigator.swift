@@ -2,9 +2,10 @@ import MapboxNavigationNative
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
 
-protocol NavigatorProtocol {
+protocol CoreNavigator {
     static var shared: Self { get }
 
+    static var isSharedInstanceCreated: Bool { get }
     static var datasetProfileIdentifier: ProfileIdentifier { get set }
 
     var navigator: MapboxNavigationNative.Navigator { get }
@@ -14,8 +15,6 @@ protocol NavigatorProtocol {
     var roadObjectStore: RoadObjectStore { get }
     var roadObjectMatcher: RoadObjectMatcher { get }
     var rerouteController: RerouteController { get }
-
-    func restartNavigator(forcing version: String?)
 
     func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?)
     func stopUpdatingElectronicHorizon()
@@ -31,10 +30,12 @@ protocol NavigatorProtocol {
                      completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
 
     func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void)
+
+    func resume()
     func pause()
 }
 
-final class Navigator: NavigatorProtocol {
+final class Navigator: CoreNavigator {
     /**
      Tiles version string. If not specified explicitly - will be automatically resolved
      to the latest version.

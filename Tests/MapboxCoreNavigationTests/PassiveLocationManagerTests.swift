@@ -9,7 +9,7 @@ class PassiveLocationManagerTests: TestCase {
 
     private var directionsSpy: DirectionsSpy!
     private var eventsManagerType: NavigationEventsManagerSpy!
-    private var navigatorSpy: NavigatorSpy!
+    private var navigatorSpy: CoreNavigatorSpy!
     private var locationManagerSpy: NavigationLocationManagerSpy!
 
     private var passiveLocationManager: PassiveLocationManager!
@@ -24,13 +24,13 @@ class PassiveLocationManagerTests: TestCase {
 
         locationManagerSpy = .init()
         directionsSpy = .init()
-        navigatorSpy = NavigatorSpy.shared
+        navigatorSpy = CoreNavigatorSpy.shared
         passiveLocationManager = PassiveLocationManager(directions: directionsSpy,
                                                         systemLocationManager: locationManagerSpy,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         userInfo: [:],
                                                         datasetProfileIdentifier: .cycling,
-                                                        navigatorType: NavigatorSpy.self)
+                                                        navigatorType: CoreNavigatorSpy.self)
         delegate = PassiveLocationManagerDelegateSpy()
         passiveLocationManager.delegate = delegate
     }
@@ -372,8 +372,8 @@ class PassiveLocationManagerTests: TestCase {
                                    eventsManagerType: NavigationEventsManagerSpy.self,
                                    userInfo: [:],
                                    datasetProfileIdentifier: .walking,
-                                   navigatorType: NavigatorSpy.self)
-        XCTAssertEqual(NavigatorSpy.datasetProfileIdentifier, .walking)
+                                   navigatorType: CoreNavigatorSpy.self)
+        XCTAssertEqual(CoreNavigatorSpy.datasetProfileIdentifier, .walking)
     }
 
     func testCreateDefaultManager() {

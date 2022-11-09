@@ -93,7 +93,7 @@
 		2C7FAF96291ABE62000217A7 /* TestRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */; };
 		2C7FAF98291BB1CA000217A7 /* RerouteControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */; };
 		2C9006CA291927850012CCEA /* RoutingProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */; };
-		2C9006CB291927850012CCEA /* NavigatorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C8291927850012CCEA /* NavigatorSpy.swift */; };
+		2C9006CB291927850012CCEA /* CoreNavigatorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C8291927850012CCEA /* CoreNavigatorSpy.swift */; };
 		2C9006CC291927850012CCEA /* DummyRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C9291927850012CCEA /* DummyRoute.swift */; };
 		2C9006D5291927D80012CCEA /* MeasurementSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006CD291927B80012CCEA /* MeasurementSystemTests.swift */; };
 		2C9006D6291927D80012CCEA /* RerouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006CF291927B80012CCEA /* RerouteTests.swift */; };
@@ -722,7 +722,7 @@
 		2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouteProvider.swift; sourceTree = "<group>"; };
 		2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerSpy.swift; sourceTree = "<group>"; };
 		2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingProviderSpy.swift; sourceTree = "<group>"; };
-		2C9006C8291927850012CCEA /* NavigatorSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorSpy.swift; sourceTree = "<group>"; };
+		2C9006C8291927850012CCEA /* CoreNavigatorSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreNavigatorSpy.swift; sourceTree = "<group>"; };
 		2C9006C9291927850012CCEA /* DummyRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyRoute.swift; sourceTree = "<group>"; };
 		2C9006CD291927B80012CCEA /* MeasurementSystemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementSystemTests.swift; sourceTree = "<group>"; };
 		2C9006CF291927B80012CCEA /* RerouteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteTests.swift; sourceTree = "<group>"; };
@@ -2007,7 +2007,7 @@
 			children = (
 				2C2880A2291AB7240063E5B7 /* NavNative */,
 				2C9006C9291927850012CCEA /* DummyRoute.swift */,
-				2C9006C8291927850012CCEA /* NavigatorSpy.swift */,
+				2C9006C8291927850012CCEA /* CoreNavigatorSpy.swift */,
 				2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */,
 				E2D1496F265CFB5B008135A3 /* tiles */,
 				B47C1AE4261FD0A30078546C /* Fixtures */,
@@ -3182,7 +3182,7 @@
 				B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */,
 				E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */,
 				B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */,
-				2C9006CB291927850012CCEA /* NavigatorSpy.swift in Sources */,
+				2C9006CB291927850012CCEA /* CoreNavigatorSpy.swift in Sources */,
 				B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */,
 				2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */,
 				B47C1B47261FD3A90078546C /* Date.swift in Sources */,

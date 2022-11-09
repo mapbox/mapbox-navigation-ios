@@ -57,11 +57,11 @@ open class PassiveLocationManager: NSObject {
 
     private var _eventsManager: NavigationEventsManager?
 
-    private lazy var sharedNavigator: NavigatorProtocol = {
+    private lazy var sharedNavigator: CoreNavigator = {
         return navigatorType.shared
     }()
 
-    private let navigatorType: NavigatorProtocol.Type
+    private let navigatorType: CoreNavigator.Type
     
     /**
      The underlying navigator that performs map matching.
@@ -258,7 +258,7 @@ open class PassiveLocationManager: NSObject {
          eventsManagerType: NavigationEventsManager.Type?,
          userInfo: [String: String?]?,
          datasetProfileIdentifier: ProfileIdentifier?,
-         navigatorType: NavigatorProtocol.Type) {
+         navigatorType: CoreNavigator.Type) {
         self.navigatorType = navigatorType
         self.directions = directions
         self.systemLocationManager = systemLocationManager
@@ -308,7 +308,7 @@ open class PassiveLocationManager: NSObject {
                             eventsManagerType: NavigationEventsManager.Type?,
                             userInfo: [String: String?]?,
                             datasetProfileIdentifier: ProfileIdentifier?,
-                            navigatorType: NavigatorProtocol.Type) {
+                            navigatorType: CoreNavigator.Type) {
         if let datasetProfileIdentifier = datasetProfileIdentifier {
             navigatorType.datasetProfileIdentifier = datasetProfileIdentifier
         }

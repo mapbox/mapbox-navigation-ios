@@ -3,9 +3,10 @@ import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 @_implementationOnly import MapboxCommon_Private
 
-public final class NavigatorSpy: NavigatorProtocol {
-    public static var shared: NavigatorSpy = NavigatorSpy()
+public final class CoreNavigatorSpy: CoreNavigator {
+    public static var shared: CoreNavigatorSpy = .init()
 
+    public static var isSharedInstanceCreated = true
     public static var datasetProfileIdentifier: ProfileIdentifier = .automobile
 
     public var updateLocationCalled = false
@@ -13,6 +14,7 @@ public final class NavigatorSpy: NavigatorProtocol {
     public var startUpdatingElectronicHorizonCalled = false
     public var stopUpdatingElectronicHorizonCalled = false
     public var pauseCalled = false
+    public var resumeCalled = false
 
     public var onUpdateLocation: ((CLLocation) -> Bool)?
 
@@ -70,8 +72,12 @@ public final class NavigatorSpy: NavigatorProtocol {
         pauseCalled = true
     }
 
+    public func resume() {
+        resumeCalled = true
+    }
+
     public static func reset() {
-        shared = NavigatorSpy()
+        shared = CoreNavigatorSpy()
     }
 
     public init() {}

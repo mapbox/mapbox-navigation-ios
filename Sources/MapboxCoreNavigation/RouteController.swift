@@ -234,11 +234,11 @@ open class RouteController: NSObject {
     
     // MARK: Navigating
     
-    private lazy var sharedNavigator: NavigatorProtocol = {
+    private lazy var sharedNavigator: CoreNavigator = {
         return navigatorType.shared
     }()
 
-    private var navigatorType: NavigatorProtocol.Type
+    private var navigatorType: CoreNavigator.Type
 
     var navigator: MapboxNavigationNative.Navigator {
         return sharedNavigator.navigator
@@ -667,7 +667,7 @@ open class RouteController: NSObject {
     convenience init(indexedRouteResponse: IndexedRouteResponse,
                      customRoutingProvider: RoutingProvider?,
                      dataSource source: RouterDataSource,
-                     navigatorType: NavigatorProtocol.Type) {
+                     navigatorType: CoreNavigator.Type) {
         self.init(indexedRouteResponse: indexedRouteResponse,
                   customRoutingProvider: customRoutingProvider,
                   dataSource: source)

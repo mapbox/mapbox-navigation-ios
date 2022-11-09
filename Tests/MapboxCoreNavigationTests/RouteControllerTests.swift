@@ -24,7 +24,7 @@ class RouteControllerTests: TestCase {
 
         locationManagerSpy = .init()
         routingProvider = .init()
-        navigator = NavigatorSpy.shared.navigatorSpy
+        navigator = CoreNavigatorSpy.shared.navigatorSpy
     }
 
     override func tearDown() {
