@@ -61,7 +61,6 @@ custom_categories:
       - SimulationState
       - PassiveLocationManager
       - PassiveLocationManagerDelegate
-      - HistoryRecording
   - name: Maps
     children:
       - NavigationMapView
@@ -242,3 +241,5 @@ custom_categories:
       - UnknownHistoryEvent
       - RouteAssignmentHistoryEvent
       - LocationUpdateHistoryEvent
+      - History
+      - HistoryRecording
