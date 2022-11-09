@@ -238,7 +238,7 @@ open class RouteController: NSObject {
         return navigatorType.shared
     }()
 
-    private var navigatorType: CoreNavigator.Type
+    private let navigatorType: CoreNavigator.Type
 
     var navigator: MapboxNavigationNative.Navigator {
         return sharedNavigator.navigator
@@ -631,47 +631,58 @@ open class RouteController: NSObject {
                       category: .navigation)
         }
 
-        navigatorType = Navigator.self
+        self.navigatorType = Navigator.self
+        self.indexedRouteResponse = indexedRouteResponse
+        self.dataSource = source
+
         var isRouteOptions = false
         if case .route = indexedRouteResponse.routeResponse.options {
             isRouteOptions = true
         }
         let options = indexedRouteResponse.validatedRouteOptions
-        Navigator.datasetProfileIdentifier = options.profileIdentifier
-        
-        self.indexedRouteResponse = indexedRouteResponse
-        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!,
-                                           options: options)
-        self.dataSource = source
+
+        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.refreshesRoute = isRouteOptions && options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
-        UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
-        
+
+        commonInit(customRoutingProvider: customRoutingProvider, options: options)
+
+        Self.instanceLock.lock()
+        Self.instance = self
+        Self.instanceLock.unlock()
+    }
+
+    init(indexedRouteResponse: IndexedRouteResponse,
+         customRoutingProvider: RoutingProvider?,
+         dataSource source: RouterDataSource,
+         navigatorType: CoreNavigator.Type) {
+        self.navigatorType = navigatorType
+        self.indexedRouteResponse = indexedRouteResponse
+        self.dataSource = source
+        let options = indexedRouteResponse.validatedRouteOptions
+        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
+
+        super.init()
+
+        commonInit(customRoutingProvider: customRoutingProvider, options: options)
+    }
+
+    private func commonInit(customRoutingProvider: RoutingProvider?, options: RouteOptions) {
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        navigatorType.datasetProfileIdentifier = options.profileIdentifier
+
         if let customRoutingProvider = customRoutingProvider {
             self.customRoutingProvider = customRoutingProvider
             self.rerouteController.customRoutingProvider = customRoutingProvider
         }
-        
+
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
         updateNavigator(with: self.indexedRouteResponse, fromLegIndex: 0) { [weak self] _ in
             self?.isInitialized = true
         }
-        Self.instanceLock.lock()
-        Self.instance = self
-        Self.instanceLock.unlock()
-    }
-
-    convenience init(indexedRouteResponse: IndexedRouteResponse,
-                     customRoutingProvider: RoutingProvider?,
-                     dataSource source: RouterDataSource,
-                     navigatorType: CoreNavigator.Type) {
-        self.init(indexedRouteResponse: indexedRouteResponse,
-                  customRoutingProvider: customRoutingProvider,
-                  dataSource: source)
-        self.navigatorType = navigatorType
     }
     
     deinit {

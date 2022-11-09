@@ -3,7 +3,7 @@ import XCTest
 import MapboxNavigationNative
 
 public final class TestRouteProvider {
-    public static func generateRoutes() -> RouteInterface? {
+    public static func createRoutes() -> RouteInterface? {
         let route = Fixture.route(between: .init(latitude: 0, longitude: 0),
                                   and: .init(latitude: 1, longitude: 1))
         guard case let .route(routeOptions) = route.response.options else {

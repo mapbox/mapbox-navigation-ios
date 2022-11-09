@@ -53,6 +53,7 @@ final class RerouteControllerTests: TestCase {
     private var navigatorSpy: NativeNavigatorSpy!
     private var configHandle: ConfigHandle!
     private var rerouteDetector: RerouteDetectorSpy!
+    private var customRoutingProvider: CustomRoutingProviderStub!
 
     private var delegate: DelegateSpy!
     private var rerouteController: RerouteController!
@@ -60,14 +61,16 @@ final class RerouteControllerTests: TestCase {
     override func setUp() {
         super.setUp()
 
-        route = TestRouteProvider.generateRoutes()
+        route = TestRouteProvider.createRoutes()
         routeOptions = RouteOptions(url: URL(string: route.getRequestUri())!)
 
         rerouteDetector = .init()
         configHandle = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
         navigatorSpy = .init()
         navigatorSpy.rerouteDetector = rerouteDetector
+        customRoutingProvider = .init()
         delegate = .init()
+
         rerouteController = .init(navigatorSpy, config: configHandle)
         rerouteController.delegate = delegate
     }
@@ -99,9 +102,11 @@ final class RerouteControllerTests: TestCase {
 
     func testReset() {
         rerouteController.reroutesProactively = false
+        rerouteController.customRoutingProvider = customRoutingProvider
 
         rerouteController.resetToDefaultSettings()
         XCTAssertTrue(rerouteController.reroutesProactively)
+        XCTAssertNil(rerouteController.customRoutingProvider)
     }
 
     func testHandleOnSwitchToAlternative() {

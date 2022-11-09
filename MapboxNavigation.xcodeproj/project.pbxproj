@@ -102,6 +102,7 @@
 		2C9006DB2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006DA2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift */; };
 		2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */; };
 		2CE25130291A56D900C0FA15 /* IdleTimerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2512E291A56CE00C0FA15 /* IdleTimerManagerTests.swift */; };
+		2CFAE203291C4E8300562E5F /* TestNavigationStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFAE202291C4E8300562E5F /* TestNavigationStatusProvider.swift */; };
 		2E50E0C0264E35CA009D3848 /* RoadObjectMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0BF264E35CA009D3848 /* RoadObjectMatcher.swift */; };
 		2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0D1264E468B009D3848 /* RoadObjectMatcherError.swift */; };
 		2E50E0DC264E49C8009D3848 /* RoadObjectMatcherDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0DB264E49C8009D3848 /* RoadObjectMatcherDelegate.swift */; };
@@ -730,6 +731,7 @@
 		2C9006DA2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerSpy.swift; sourceTree = "<group>"; };
 		2CE2512E291A56CE00C0FA15 /* IdleTimerManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdleTimerManagerTests.swift; sourceTree = "<group>"; };
+		2CFAE202291C4E8300562E5F /* TestNavigationStatusProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestNavigationStatusProvider.swift; sourceTree = "<group>"; };
 		2E50E0BF264E35CA009D3848 /* RoadObjectMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectMatcher.swift; sourceTree = "<group>"; };
 		2E50E0D1264E468B009D3848 /* RoadObjectMatcherError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectMatcherError.swift; sourceTree = "<group>"; };
 		2E50E0DB264E49C8009D3848 /* RoadObjectMatcherDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectMatcherDelegate.swift; sourceTree = "<group>"; };
@@ -1420,6 +1422,7 @@
 		2C2880A2291AB7240063E5B7 /* NavNative */ = {
 			isa = PBXGroup;
 			children = (
+				2CFAE202291C4E8300562E5F /* TestNavigationStatusProvider.swift */,
 				2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */,
 				2C04E45E290A8C0F0067FDCF /* NativeNavigatorSpy.swift */,
 				2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */,
@@ -3189,6 +3192,7 @@
 				2C9006CC291927850012CCEA /* DummyRoute.swift in Sources */,
 				B47C1B50261FD3B10078546C /* DirectionsSpy.swift in Sources */,
 				B47C1B6B261FD3C30078546C /* Fixture.swift in Sources */,
+				2CFAE203291C4E8300562E5F /* TestNavigationStatusProvider.swift in Sources */,
 				E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */,
 				B47C1B59261FD3B70078546C /* DummyLocationManager.swift in Sources */,
 				B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */,

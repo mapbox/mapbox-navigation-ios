@@ -15,11 +15,22 @@ public final class CoreNavigatorSpy: CoreNavigator {
     public var stopUpdatingElectronicHorizonCalled = false
     public var pauseCalled = false
     public var resumeCalled = false
+    public var setRoutesCalled = false
+    public var setAlternativeRoutesCalled = false
+    public var unsetRoutesCalled = false
 
     public var onUpdateLocation: ((CLLocation) -> Bool)?
 
-    public var location: CLLocation? = nil
-    public var electronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions? = nil
+    public var passedUuid: UUID? = nil
+    public var passedRoute: RouteInterface? = nil
+    public var passedLegIndex: UInt32? = nil
+    public var passedAlternativeRoutes: [RouteInterface]? = nil
+    public var passedLocation: CLLocation? = nil
+    public var passedElectronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions? = nil
+    public var passedRoutes: [RouteInterface]? = nil
+
+    public var returnedSetRoutesResult: Result<RoutesCoordinator.RoutesResult, Error>? = nil
+    public var returnedSetAlternativeRoutesResult: Result<[RouteAlternative], Error>? = nil
 
     public var navigatorSpy = NativeNavigatorSpy()
     public var navigator: MapboxNavigationNative.Navigator {
@@ -42,28 +53,40 @@ public final class CoreNavigatorSpy: CoreNavigator {
 
     public func startUpdatingElectronicHorizon(with options: MapboxCoreNavigation.ElectronicHorizonOptions?) {
         startUpdatingElectronicHorizonCalled = true
-        electronicHorizonOptions = options
+        passedElectronicHorizonOptions = options
     }
 
     public func stopUpdatingElectronicHorizon() {
         stopUpdatingElectronicHorizonCalled = true
     }
 
-    public func setRoutes(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, alternativeRoutes: [RouteInterface], completion: @escaping (Result<MapboxCoreNavigation.RoutesCoordinator.RoutesResult, Error>) -> Void) {
-
+    public func setRoutes(_ route: RouteInterface,
+                          uuid: UUID,
+                          legIndex: UInt32,
+                          alternativeRoutes: [RouteInterface],
+                          completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
+        setRoutesCalled = true
+        passedRoute = route
+        passedUuid = uuid
+        passedLegIndex = legIndex
+        passedAlternativeRoutes = alternativeRoutes
+        completion(returnedSetRoutesResult ?? .success((mainRouteInfo: nil, alternativeRoutes: [])))
     }
 
     public func setAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
-
+        setAlternativeRoutesCalled = true
+        passedRoutes = routes
+        completion(returnedSetAlternativeRoutesResult ?? .success([]))
     }
 
     public func unsetRoutes(uuid: UUID, completion: @escaping (Result<MapboxCoreNavigation.RoutesCoordinator.RoutesResult, Error>) -> Void) {
-
+        unsetRoutesCalled = true
+        passedUuid = uuid
     }
 
     public func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void) {
         updateLocationCalled = true
-        self.location = location
+        passedLocation = location
         let result = onUpdateLocation?(location) ?? true
         completion(result)
     }
