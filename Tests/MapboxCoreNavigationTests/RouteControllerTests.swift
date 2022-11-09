@@ -9,6 +9,7 @@ import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
+    private var locationManagerSpy: NavigationLocationManagerSpy!
     var replayManager: ReplayLocationManager?
     var navigator: NativeNavigatorSpy!
     var routingProvider: RoutingProviderSpy!
@@ -21,9 +22,9 @@ class RouteControllerTests: TestCase {
     override func setUp() {
         super.setUp()
 
-        navigator = NativeNavigatorSpy()
-        NativeNavigatorProviderSpy.navigator = navigator
-        routingProvider = RoutingProviderSpy()
+        locationManagerSpy = .init()
+        routingProvider = .init()
+        navigator = NavigatorSpy.shared.navigatorSpy
     }
 
     override func tearDown() {
@@ -40,11 +41,20 @@ class RouteControllerTests: TestCase {
                      dataSource: self)
     }
 
-    func testSetNotFirstLocationAfterSettingRawLocation() {
+    func testReturnIsFirstLocation() {
         let routeController = defaultRouteController
         XCTAssertTrue(routeController.isFirstLocation)
         routeController.rawLocation = CLLocation(latitude: 59.337928, longitude: 18.076841)
         XCTAssertFalse(routeController.isFirstLocation)
+    }
+
+    func testReturnLocation() {
+        let routeController = defaultRouteController
+        XCTAssertNil(routeController.location)
+
+        let rawLocation = CLLocation(latitude: 47.208674, longitude: 9.524650)
+        routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
+        XCTAssertEqual(routeController.location, rawLocation)
     }
 
     func testRouteSnappingOvershooting() {

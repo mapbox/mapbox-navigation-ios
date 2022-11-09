@@ -17,9 +17,8 @@ final class PredictiveCacheManagerTests: TestCase {
         super.setUp()
 
         predictiveCacheOptions = PredictiveCacheOptions()
-        navigator = NativeNavigatorSpy()
-        NativeNavigatorProviderSpy.navigator = navigator
-        tileStore = Navigator.shared.tileStore
+        navigator = NavigatorSpy.shared.navigatorSpy
+        tileStore = NavigatorSpy.shared.tileStore
         tilesetDescriptor = TilesetDescriptorFactory.build(forDataset: "", version: "")
         cacheMapOptions = (tileStore: tileStore, tilesetDescriptor: tilesetDescriptor)
 
@@ -36,7 +35,7 @@ final class PredictiveCacheManagerTests: TestCase {
     func testCreateNavigationController() {
         let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                              cacheMapOptions: nil,
-                                             navigatorProvider: NativeNavigatorProviderSpy.self)
+                                             navigatorType: NavigatorSpy.self)
         let expectedOptions = predictiveCacheOptions.predictiveCacheNavigationOptions.locationOptions
         XCTAssertNil(navigator.passedTileStore)
         XCTAssertNil(navigator.passedDescriptorsTrackerOptions)
@@ -54,7 +53,7 @@ final class PredictiveCacheManagerTests: TestCase {
     func testCreateNavigationAndMapController() {
         let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                              cacheMapOptions: cacheMapOptions,
-                                             navigatorProvider: NativeNavigatorProviderSpy.self)
+                                             navigatorType: NavigatorSpy.self)
 
         let expectedMapOptions = predictiveCacheOptions.predictiveCacheMapsOptions.locationOptions
         XCTAssertEqual(navigator.passedTileStore, tileStore)
@@ -77,7 +76,7 @@ final class PredictiveCacheManagerTests: TestCase {
     func testCreateNavigationAndMapsControllerWhenDidSwitchToTargetVersion() {
         manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                          cacheMapOptions: cacheMapOptions,
-                                         navigatorProvider: NativeNavigatorProviderSpy.self)
+                                         navigatorType: NavigatorSpy.self)
         navigator.passedDescriptorsTrackerOptions = nil
         navigator.passedNavigationTrackerOptions = nil
 
@@ -91,7 +90,7 @@ final class PredictiveCacheManagerTests: TestCase {
         let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                              cacheMapOptions: (tileStore: tileStore, tilesetDescriptor: nil),
                                              styleSourcePaths: ["first"],
-                                             navigatorProvider: NativeNavigatorProviderSpy.self)
+                                             navigatorType: NavigatorSpy.self)
 
         let expectedMapOptions = predictiveCacheOptions.predictiveCacheMapsOptions.locationOptions
         XCTAssertEqual(navigator.passedDatasetTrackerOptions?.currentLocationRadius, UInt32(expectedMapOptions.currentLocationRadius))

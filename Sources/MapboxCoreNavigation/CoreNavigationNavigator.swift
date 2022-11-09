@@ -2,7 +2,39 @@ import MapboxNavigationNative
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
 
-class Navigator {
+protocol NavigatorProtocol {
+    static var shared: Self { get }
+
+    static var datasetProfileIdentifier: ProfileIdentifier { get set }
+
+    var navigator: MapboxNavigationNative.Navigator { get }
+    var mostRecentNavigationStatus: NavigationStatus? { get }
+    var tileStore: TileStore { get }
+    var roadGraph: RoadGraph { get }
+    var roadObjectStore: RoadObjectStore { get }
+    var roadObjectMatcher: RoadObjectMatcher { get }
+    var rerouteController: RerouteController { get }
+
+    func restartNavigator(forcing version: String?)
+
+    func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?)
+    func stopUpdatingElectronicHorizon()
+
+    func setRoutes(_ route: RouteInterface,
+                   uuid: UUID,
+                   legIndex: UInt32,
+                   alternativeRoutes: [RouteInterface],
+                   completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
+    func setAlternativeRoutes(with routes: [RouteInterface],
+                              completion: @escaping (Result<[RouteAlternative], Error>) -> Void)
+    func unsetRoutes(uuid: UUID,
+                     completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
+
+    func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void)
+    func pause()
+}
+
+final class Navigator: NavigatorProtocol {
     /**
      Tiles version string. If not specified explicitly - will be automatically resolved
      to the latest version.

@@ -15,7 +15,6 @@ public class PredictiveCacheManager {
     @available(*, deprecated, message: "Specify `CacheMapOptions` instead.")
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
 
-    private let navigatorProvider: NativeNavigatorProvider.Type
     private let predictiveCacheOptions: PredictiveCacheOptions
     private var cacheMapOptions: CacheMapOptions?
 
@@ -26,8 +25,9 @@ public class PredictiveCacheManager {
     private var navigationController: PredictiveCacheController? = nil
     private var mapController: PredictiveCacheController? = nil
 
+    private let navigatorType: NavigatorProtocol.Type
     private var navigator: MapboxNavigationNative.Navigator {
-        return navigatorProvider.navigator
+        return navigatorType.shared.navigator
     }
 
     /**
@@ -43,7 +43,7 @@ public class PredictiveCacheManager {
                             cacheMapOptions: CacheMapOptions? = nil) {
         self.init(predictiveCacheOptions: predictiveCacheOptions,
                   cacheMapOptions: cacheMapOptions,
-                  navigatorProvider: Navigator.self)
+                  navigatorType: Navigator.self)
     }
 
     /**
@@ -83,17 +83,17 @@ public class PredictiveCacheManager {
         self.init(predictiveCacheOptions:predictiveCacheOptions,
                   cacheMapOptions: cacheMapOptions,
                   styleSourcePaths: mapOptions?.styleSourcePaths ?? [],
-                  navigatorProvider: Navigator.self)
+                  navigatorType: Navigator.self)
     }
 
     init(predictiveCacheOptions: PredictiveCacheOptions,
          cacheMapOptions: CacheMapOptions?,
          styleSourcePaths: [String] = [],
-         navigatorProvider: NativeNavigatorProvider.Type) {
+         navigatorType: NavigatorProtocol.Type) {
         self.predictiveCacheOptions = predictiveCacheOptions
         self.cacheMapOptions = cacheMapOptions
         self.styleSourcePaths = styleSourcePaths
-        self.navigatorProvider = navigatorProvider
+        self.navigatorType = navigatorType
 
         updateControllers()
         subscribeNotifications()

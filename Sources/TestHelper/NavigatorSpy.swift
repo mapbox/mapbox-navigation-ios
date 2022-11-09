@@ -1,38 +1,13 @@
+import MapboxDirections
 import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 @_implementationOnly import MapboxCommon_Private
 
-class GraphAccessorSpy: GraphAccessor {
-    init() {
-        let configHandle = NativeHandlersFactory.configHandle()
-        let tileConfig = TilesConfig(tilesPath: "tileStorePath",
-                                     tileStore: nil,
-                                     inMemoryTileCache: nil,
-                                     onDiskTileCache: nil,
-                                     mapMatchingSpatialCache: nil,
-                                     threadsCount: nil,
-                                     endpointConfig: nil)
-        let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
-        super.init(cache: cache)
-    }
-}
+public final class NavigatorSpy: NavigatorProtocol {
+    public static var shared: NavigatorSpy = NavigatorSpy()
 
-class RoadObjectMatcherSpy: MapboxNavigationNative.RoadObjectMatcher {
-    init() {
-        let configHandle = NativeHandlersFactory.configHandle()
-        let tileConfig = TilesConfig(tilesPath: "tileStorePath",
-                                     tileStore: nil,
-                                     inMemoryTileCache: nil,
-                                     onDiskTileCache: nil,
-                                     mapMatchingSpatialCache: nil,
-                                     threadsCount: nil,
-                                     endpointConfig: nil)
-        let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
-        super.init(cache: cache)
-    }
-}
+    public static var datasetProfileIdentifier: ProfileIdentifier = .automobile
 
-public class NavigatorSpy: NavigatorProtocol {
     public var updateLocationCalled = false
     public var restartNavigatorCalled = false
     public var startUpdatingElectronicHorizonCalled = false
@@ -44,18 +19,20 @@ public class NavigatorSpy: NavigatorProtocol {
     public var location: CLLocation? = nil
     public var electronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions? = nil
 
-    public var returnedNavigator: MapboxNavigationNative.Navigator = NativeNavigatorSpy()
-    public var mostRecentNavigationStatus: NavigationStatus? = nil
-
+    public var navigatorSpy = NativeNavigatorSpy()
     public var navigator: MapboxNavigationNative.Navigator {
-        return returnedNavigator
+        return navigatorSpy
     }
+
+    public var mostRecentNavigationStatus: NavigationStatus? = nil
 
     public var tileStore: TileStore = TileStore.__create()
 
-    public var roadGraph: RoadGraph = .init(GraphAccessorSpy())
+    public var roadGraph = RoadGraph(GraphAccessorSpy())
     public var roadObjectStore = RoadObjectStore(NativeNavigatorSpy().roadObjectStore())
     public var roadObjectMatcher = RoadObjectMatcher(RoadObjectMatcherSpy())
+
+    public var rerouteController: MapboxCoreNavigation.RerouteController = RerouteControllerSpy()
 
     public func restartNavigator(forcing version: String?) {
         restartNavigatorCalled = true
@@ -93,6 +70,40 @@ public class NavigatorSpy: NavigatorProtocol {
         pauseCalled = true
     }
 
+    public static func reset() {
+        shared = NavigatorSpy()
+    }
+
     public init() {}
-    
+
+}
+
+class GraphAccessorSpy: GraphAccessor {
+    init() {
+        let configHandle = NativeHandlersFactory.configHandle()
+        let tileConfig = TilesConfig(tilesPath: "tileStorePath",
+                                     tileStore: nil,
+                                     inMemoryTileCache: nil,
+                                     onDiskTileCache: nil,
+                                     mapMatchingSpatialCache: nil,
+                                     threadsCount: nil,
+                                     endpointConfig: nil)
+        let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
+        super.init(cache: cache)
+    }
+}
+
+class RoadObjectMatcherSpy: MapboxNavigationNative.RoadObjectMatcher {
+    init() {
+        let configHandle = NativeHandlersFactory.configHandle()
+        let tileConfig = TilesConfig(tilesPath: "tileStorePath",
+                                     tileStore: nil,
+                                     inMemoryTileCache: nil,
+                                     onDiskTileCache: nil,
+                                     mapMatchingSpatialCache: nil,
+                                     threadsCount: nil,
+                                     endpointConfig: nil)
+        let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
+        super.init(cache: cache)
+    }
 }
