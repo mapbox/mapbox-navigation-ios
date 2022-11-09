@@ -3,6 +3,7 @@
 ## v2.8.1
 
 * Fixed an issue where creating a `RouteController` with the result of `RouteResponse(matching:options:credentials:)` would cause route progress and guidance instructions to remain stuck at the beginning of the route. ([#4186](https://github.com/mapbox/mapbox-navigation-ios/pull/4186))
+* Fix falding back steps.
 
 ## v2.8.0
 
