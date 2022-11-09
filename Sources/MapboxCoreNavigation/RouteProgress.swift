@@ -171,14 +171,14 @@ open class RouteProgress: Codable {
         }
     }
 
-    func updateDistanceTraveled(with location: CLLocation, navigationStatus: NavigationStatus) {
+    func updateDistanceTraveled(navigationStatus: NavigationStatus) {
         let stepProgress = currentLegProgress.currentStepProgress
 
         if let activeGuidanceInfo = navigationStatus.activeGuidanceInfo {
             stepProgress.distanceTraveled = activeGuidanceInfo.stepProgress.distanceTraveled
         }
         else {
-            updateDistanceTraveled(with: location)
+            updateDistanceTraveled(with: .init(navigationStatus.location))
         }
     }
     
