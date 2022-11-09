@@ -518,7 +518,7 @@ open class RouteController: NSObject {
     }
     
     private func update(progress: RouteProgress, status: NavigationStatus, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult, routeShapeIndex: Int) {
-        progress.updateDistanceTraveled(with: location, navigationStatus: status)
+        progress.updateDistanceTraveled(navigationStatus: status)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         progress.shapeIndex = routeShapeIndex
         
