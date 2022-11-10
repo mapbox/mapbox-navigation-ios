@@ -72,8 +72,10 @@ class PassiveLocationManagerTests: TestCase {
         passiveLocationManager.locationManager(locationManagerSpy, didFailWithError: error)
         wait(for: [callbackExpectation], timeout: 0.5)
     }
-    
+
     func testHandleDidChangeAuthorization() {
+        guard #available(iOS 14.0, *) else { return }
+
         let callbackExpectation = expectation(description: "Authorization Callback")
         callbackExpectation.assertForOverFulfill = false
         delegate.onAuthorizationChange = {
