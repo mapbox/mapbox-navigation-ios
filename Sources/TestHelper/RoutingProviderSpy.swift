@@ -4,7 +4,7 @@ import MapboxDirections
 public class RoutingProviderSpy: RoutingProvider {
     public var calculateRoutesCalled = false
     public var refreshRoutesCalled = false
-    public var returnedNavigationProviderRequest: NavigationProviderRequest? = nil
+    public var returnedNavigationProviderRequest: NavigationProviderRequest?
 
     public func calculateRoutes(options: RouteOptions,
                                 completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {

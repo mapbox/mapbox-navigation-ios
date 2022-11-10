@@ -5,7 +5,7 @@ import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 
 public final class TestNavigationStatusProvider {
-    public static func createNavigationStatus(with speedLimit: SpeedLimit? = nil) -> NavigationStatus {
+    public static func createNavigationStatus(speedLimit: SpeedLimit? = nil) -> NavigationStatus {
         let location = FixLocation(CLLocation(latitude: 37.788443, longitude: -122.4020258))
         let road = MapboxNavigationNative.Road(text: "name", imageBaseUrl: "base image url", shield: nil)
         let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42)

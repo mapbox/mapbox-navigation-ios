@@ -385,6 +385,6 @@ class PassiveLocationManagerTests: TestCase {
     }
 
     private func navigationStatus(with speedLimit: SpeedLimit? = nil) -> NavigationStatus {
-        return TestNavigationStatusProvider.createNavigationStatus(with: speedLimit)
+        return TestNavigationStatusProvider.createNavigationStatus(speedLimit: speedLimit)
     }
 }

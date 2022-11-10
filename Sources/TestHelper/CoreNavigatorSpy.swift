@@ -21,23 +21,23 @@ public final class CoreNavigatorSpy: CoreNavigator {
 
     public var onUpdateLocation: ((CLLocation) -> Bool)?
 
-    public var passedUuid: UUID? = nil
-    public var passedRoute: RouteInterface? = nil
-    public var passedLegIndex: UInt32? = nil
-    public var passedAlternativeRoutes: [RouteInterface]? = nil
-    public var passedLocation: CLLocation? = nil
-    public var passedElectronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions? = nil
-    public var passedRoutes: [RouteInterface]? = nil
+    public var passedUuid: UUID?
+    public var passedRoute: RouteInterface?
+    public var passedLegIndex: UInt32?
+    public var passedAlternativeRoutes: [RouteInterface]?
+    public var passedLocation: CLLocation?
+    public var passedElectronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions?
+    public var passedRoutes: [RouteInterface]?
 
-    public var returnedSetRoutesResult: Result<RoutesCoordinator.RoutesResult, Error>? = nil
-    public var returnedSetAlternativeRoutesResult: Result<[RouteAlternative], Error>? = nil
+    public var returnedSetRoutesResult: Result<RoutesCoordinator.RoutesResult, Error>?
+    public var returnedSetAlternativeRoutesResult: Result<[RouteAlternative], Error>?
 
     public var navigatorSpy = NativeNavigatorSpy()
     public var navigator: MapboxNavigationNative.Navigator {
         return navigatorSpy
     }
 
-    public var mostRecentNavigationStatus: NavigationStatus? = nil
+    public var mostRecentNavigationStatus: NavigationStatus?
 
     public var tileStore: TileStore = TileStore.__create()
 
