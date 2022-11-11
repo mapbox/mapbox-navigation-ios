@@ -81,6 +81,9 @@ class URLDataCacheTest: TestCase {
         limitCache.store(response, for: url)
         XCTAssertNil(cache.response(for: url))
         XCTAssertEqual(limitCache.urlCache.currentMemoryUsage, 0)
+        
+        limitCache.urlCache.diskCapacity = 0
+        limitCache.clearCache()
     }
 }
 
