@@ -23,7 +23,7 @@
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 * Fixed an issue where the route line with no traffic congestion data and multiple legs wasn't shown correctly. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
-* Fixed the crash when using `.puck3D` for `NavigationMapView.userLocationStyle`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* Fixed a crash when setting the `NavigationMapView.userLocationStyle` property to `UserLocationStyle.puck3D`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### Preview
 
@@ -63,8 +63,8 @@
 * Fixed an issue where some [rat runs](https://en.wikipedia.org/wiki/Rat_running) were suggested as alternative routes that matched the main route. These alternative routes are no longer suggested at all. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where routes avoided roads with the deprecated tags [`hov=lane`](https://taginfo.openstreetmap.org/tags/hov=lane) and `hov:conditional=lane @ …` as restricted roads. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
-* Fix reset of DR driving out of the tunnel for a brief moment. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
-* Fixed segfault after switch to online route. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* Fixed an issue where the user’s location would get out of sync after traveling through short tunnels. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* Fixed a crash after changing `RouteController.prefersOnlineRoute` from `false` to `true`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### User feedback
 
