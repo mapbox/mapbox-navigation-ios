@@ -27,7 +27,7 @@ exit(1)
 END 
 )
 
-NATIVE_SIM_FRAMEWORK_PATH="$(xcodebuild -project MapboxNavigation-SPM.xcodeproj/ -showBuildSettings | grep -m 1 "BUILD_DIR" | grep -oEi "\/.*")/../../SourcePackages/artifacts/MapboxNavigationNative/MapboxNavigationNative.xcframework/ios-arm64_x86_64-simulator"
+NATIVE_SIM_FRAMEWORK_PATH="$(xcodebuild -project MapboxNavigation-SPM.xcodeproj/ -showBuildSettings | grep -m 1 "BUILD_DIR" | grep -oEi "\/.*")/../../SourcePackages/artifacts/mapbox-navigation-native-ios/MapboxNavigationNative.xcframework/ios-arm64_x86_64-simulator"
 
 echo "NATIVE_PATH=$NATIVE_PATH"
 echo "DESTINATION=$DESTINATION"
