@@ -327,6 +327,9 @@ extension InternalRouter where Self: Router {
             guard case let .success(response) = result, let self = self else {
                 return
             }
+            guard response.identifier == self.indexedRouteResponse.routeResponse.identifier else {
+                return
+            }
             self.indexedRouteResponse = .init(routeResponse: response,
                                               routeIndex: routeIndex,
                                               responseOrigin: routeOrigin)
