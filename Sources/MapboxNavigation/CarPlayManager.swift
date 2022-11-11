@@ -829,6 +829,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        // Stop the navigation camera from following to prevent "snap back"
+        navigationMapView?.navigationCamera.stop()
+        
         // We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
@@ -907,6 +910,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             didUpdatePanGestureWithTranslation translation: CGPoint,
                             velocity: CGPoint) {
+        // Stop the navigation camera from following to prevent "snap back"
+        navigationMapView?.navigationCamera.stop()
+        
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
     }
     
