@@ -358,7 +358,6 @@ open class CarPlayMapViewController: UIViewController {
         view.setNeedsUpdateConstraints()
         
         guard let activeRoute = navigationMapView.routes?.first else {
-            navigationMapView.navigationCamera.follow()
             return
         }
         
