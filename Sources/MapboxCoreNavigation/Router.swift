@@ -312,6 +312,8 @@ extension InternalRouter where Self: Router {
             return
         }
         isRefreshing = true
+        let routeIndex = indexedRouteResponse.routeIndex
+        let routeOrigin = indexedRouteResponse.responseOrigin
         resolvedRoutingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
                                              fromLegAtIndex: UInt32(legIndex),
                                              currentRouteShapeIndex: routeShapeIndex,
@@ -325,14 +327,17 @@ extension InternalRouter where Self: Router {
             guard case let .success(response) = result, let self = self else {
                 return
             }
-            self.indexedRouteResponse = .init(routeResponse: response, routeIndex: self.indexedRouteResponse.routeIndex)
+            self.indexedRouteResponse = .init(routeResponse: response,
+                                              routeIndex: routeIndex,
+                                              responseOrigin: routeOrigin)
             
             guard let currentRoute = self.indexedRouteResponse.currentRoute else {
                 assertionFailure("Refreshed `RouteResponse` did not contain required `routeIndex`!")
                 return
             }
             
-            self.routeProgress.refreshRoute(with: currentRoute, at: self.location ?? location,
+            self.routeProgress.refreshRoute(with: currentRoute,
+                                            at: self.location ?? location,
                                             legIndex: legIndex,
                                             legShapeIndex: legShapeIndex)
             
