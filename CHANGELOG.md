@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.10.0
+
+### Routing
+
+* Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
+
 ## v2.9.0
 
 ### Packaging
@@ -62,7 +68,6 @@
 * Fixed an issue where the values of `RouteLeg.segmentDistances` and `RouteLeg.expectedTravelTime` did not add up to `RouteLeg.distance` and `RouteLeg.expectedTravelTime`, respectively. Each value of `RouteLeg.expectedTravelTime` that immediately follows an intersection now includes the time required to traverse the intersection. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where some [rat runs](https://en.wikipedia.org/wiki/Rat_running) were suggested as alternative routes that matched the main route. These alternative routes are no longer suggested at all. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where routes avoided roads with the deprecated tags [`hov=lane`](https://taginfo.openstreetmap.org/tags/hov=lane) and `hov:conditional=lane @ …` as restricted roads. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
-* Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
 * Fixed an issue where the user’s location would get out of sync after traveling through short tunnels. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 * Fixed a crash after changing `RouteController.prefersOnlineRoute` from `false` to `true`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
