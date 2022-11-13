@@ -620,9 +620,7 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    required public init(indexedRouteResponse: IndexedRouteResponse,
-                         customRoutingProvider: RoutingProvider?,
-                         dataSource source: RouterDataSource) {
+    private static func checkUniqueInstance() {
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
         Self.instanceLock.unlock()
@@ -630,6 +628,18 @@ open class RouteController: NSObject {
             Log.fault("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.",
                       category: .navigation)
         }
+    }
+
+    private func configureUniqueInstance() {
+        Self.instanceLock.lock()
+        Self.instance = self
+        Self.instanceLock.unlock()
+    }
+
+    required public init(indexedRouteResponse: IndexedRouteResponse,
+                         customRoutingProvider: RoutingProvider?,
+                         dataSource source: RouterDataSource) {
+        Self.checkUniqueInstance()
 
         self.navigatorType = Navigator.self
         self.indexedRouteResponse = indexedRouteResponse
@@ -648,15 +658,15 @@ open class RouteController: NSObject {
 
         commonInit(customRoutingProvider: customRoutingProvider, options: options)
 
-        Self.instanceLock.lock()
-        Self.instance = self
-        Self.instanceLock.unlock()
+        configureUniqueInstance()
     }
 
     init(indexedRouteResponse: IndexedRouteResponse,
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource,
          navigatorType: CoreNavigator.Type) {
+        Self.checkUniqueInstance()
+
         self.navigatorType = navigatorType
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
@@ -666,6 +676,8 @@ open class RouteController: NSObject {
         super.init()
 
         commonInit(customRoutingProvider: customRoutingProvider, options: options)
+        
+        configureUniqueInstance()
     }
 
     private func commonInit(customRoutingProvider: RoutingProvider?, options: RouteOptions) {
