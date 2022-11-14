@@ -354,7 +354,16 @@ class NavigationMapViewTests: TestCase {
         let route = loadRoute(from: "route-with-missing-road-classes")
         let restrictedFeatures = route.restrictedRoadsFeatures()
 
-        XCTAssertTrue(restrictedFeatures.isEmpty, "Restricted Road Features should be empty")
+        XCTAssertEqual(restrictedFeatures.count, 1, "Restricted road features should have one valid feature")
+        let restrictedFeature = restrictedFeatures.first!
+        let expectedGeometry = Geometry.lineString(route.shape!)
+        let isRestrictedRoad = isRestricted(restrictedFeature)!
+        XCTAssertEqual(restrictedFeature.geometry, expectedGeometry)
+        XCTAssertFalse(isRestrictedRoad)
+
+        let routeLineStops = navigationMapView.routeLineRestrictionsGradient(restrictedFeatures)
+        let expectedStops: [Double: UIColor] = [0.0: .defaultTraversedRouteColor]
+        XCTAssertEqual(routeLineStops, expectedStops, "Failed to hide restricted gradient stops with default traversed route color")
     }
 
     func isRestricted(_ feature: Turf.Feature) -> Bool? {

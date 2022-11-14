@@ -45,7 +45,7 @@ extension Route {
     }
     
     func restrictedRoadsFeatures() -> [Feature] {
-        guard shape != nil else { return [] }
+        guard let shape = shape else { return [] }
         
         var hasRestriction = false
         var features: [Feature] = []
@@ -79,7 +79,15 @@ extension Route {
             })
         }
         
-        return hasRestriction ? features : []
+        if hasRestriction {
+            return features
+        } else {
+            var feature = Feature(geometry: .lineString(shape))
+            feature.properties = [
+                RestrictedRoadClassAttribute: .boolean(false),
+            ]
+            return [feature]
+        }
     }
     
     func congestionFeatures(legIndex: Int? = nil,
