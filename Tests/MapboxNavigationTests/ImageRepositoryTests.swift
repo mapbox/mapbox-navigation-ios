@@ -27,6 +27,8 @@ class ImageRepositoryTests: TestCase {
     }
 
     override func tearDown() {
+        ImageLoadingURLProtocolSpy.reset()
+        
         super.tearDown()
     }
 
