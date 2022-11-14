@@ -6,6 +6,10 @@
 
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
 
+### Other changes
+
+* Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
+
 ## v2.9.0
 
 ### Packaging
