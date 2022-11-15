@@ -910,8 +910,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             didUpdatePanGestureWithTranslation translation: CGPoint,
                             velocity: CGPoint) {
+        
         // Stop the navigation camera from following to prevent "snap back"
         navigationMapView?.navigationCamera.stop()
+        navigationMapView?.mapView.camera.cancelAnimations()
         
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
     }
