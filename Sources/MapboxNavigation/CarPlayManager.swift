@@ -930,7 +930,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
         let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
+        
+        if animated {
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
+        } else {
+            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+        }
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
