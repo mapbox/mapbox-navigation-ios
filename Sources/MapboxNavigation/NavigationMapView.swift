@@ -1575,7 +1575,7 @@ open class NavigationMapView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupMapView(frame)
+        setupMapView(frame: frame, mapInitOptions: makeMapViewInitOptions())
         commonInit()
     }
     
@@ -1590,8 +1590,28 @@ open class NavigationMapView: UIView {
                 navigationCameraType: NavigationCameraType = .mobile,
                 tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         super.init(frame: frame)
-        
-        setupMapView(frame, navigationCameraType: navigationCameraType, tileStoreLocation: tileStoreLocation)
+        setupMapView(
+            frame: frame,
+            mapInitOptions: makeMapViewInitOptions(
+                navigationCameraType: navigationCameraType,
+                tileStoreLocation: tileStoreLocation
+            ),
+            navigationCameraType: navigationCameraType
+        )
+        commonInit()
+    }
+
+    /// :nodoc:
+    public init(frame: CGRect,
+                navigationCameraType: NavigationCameraType = .mobile,
+                mapInitOptions: MapboxMaps.MapInitOptions) {
+        super.init(frame: frame)
+
+        setupMapView(
+            frame: frame,
+            mapInitOptions: mapInitOptions,
+            navigationCameraType: navigationCameraType
+        )
         commonInit()
     }
     
@@ -1603,7 +1623,10 @@ open class NavigationMapView: UIView {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
-        setupMapView(self.bounds)
+        setupMapView(
+            frame: bounds,
+            mapInitOptions: makeMapViewInitOptions()
+        )
         commonInit()
     }
     
@@ -1637,36 +1660,42 @@ open class NavigationMapView: UIView {
                                                   name: .navigationCameraStateDidChange,
                                                   object: nil)
     }
-    
-    func setupMapView(_ frame: CGRect,
-                      navigationCameraType: NavigationCameraType = .mobile,
-                      tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+
+    private func makeMapViewInitOptions(
+        navigationCameraType: NavigationCameraType = .mobile,
+        tileStoreLocation: TileStoreConfiguration.Location? = .default
+    ) -> MapInitOptions {
         let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
-        
+
         // TODO: allow customising tile store location.
         let tileStore = tileStoreLocation?.tileStore
-        
+
         // In case of CarPlay, use `pixelRatio` value, which is used on second `UIScreen`.
         var pixelRatio = UIScreen.main.scale
         if navigationCameraType == .carPlay, UIScreen.screens.indices.contains(1) {
             pixelRatio = UIScreen.screens[1].scale
         }
-        
+
         let mapOptions = MapOptions(constrainMode: .widthAndHeight,
-                                    viewportMode: .default,
-                                    orientation: .upwards,
-                                    crossSourceCollisions: false,
-                                    optimizeForTerrain: false,
-                                    size: nil,
-                                    pixelRatio: pixelRatio,
-                                    glyphsRasterizationOptions: .init())
-        
+                viewportMode: .default,
+                orientation: .upwards,
+                crossSourceCollisions: false,
+                optimizeForTerrain: false,
+                size: nil,
+                pixelRatio: pixelRatio,
+                glyphsRasterizationOptions: .init())
+
         let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              tileStore: tileStore)
-        
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            mapOptions: mapOptions)
-        
+                tileStore: tileStore)
+
+        return MapInitOptions(resourceOptions: resourceOptions, mapOptions: mapOptions)
+    }
+    
+    private func setupMapView(
+        frame: CGRect,
+        mapInitOptions: MapInitOptions,
+        navigationCameraType: NavigationCameraType = .mobile
+    ) {
         mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
