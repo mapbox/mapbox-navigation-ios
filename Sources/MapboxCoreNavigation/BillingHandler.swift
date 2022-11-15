@@ -191,8 +191,9 @@ final class BillingHandler {
     /// The billing service which is used to send billing events.
     private let billingService: BillingService
 
-    private var navigator: Navigator {
-        .shared
+    private let navigatorType: CoreNavigator.Type
+    private var navigator: CoreNavigator {
+        return navigatorType.shared
     }
 
     /**
@@ -252,8 +253,10 @@ final class BillingHandler {
         billingService.accessToken
     }
 
-    private init(service: BillingService) {
+    private init(service: BillingService,
+                 navibatorType: CoreNavigator.Type = Navigator.self) {
         self.billingService = service
+        self.navigatorType = navibatorType
     }
 
     /**
@@ -455,7 +458,7 @@ final class BillingHandler {
         let hasRunningSession = _sessions.values.contains { !$0.isPaused }
         lock.unlock()
 
-        if Navigator.isSharedInstanceCreated {
+        if navigatorType.isSharedInstanceCreated {
             if hasRunningSession {
                 navigator.resume()
             }

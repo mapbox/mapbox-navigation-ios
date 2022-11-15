@@ -4,14 +4,24 @@ import Foundation
 import CTestHelper
 #endif
 
+public class PassiveNavigationDataSourceSpy: PassiveNavigationEventsManagerDataSource {
+    public var rawLocation: CLLocation? = nil
+    public var locationManagerType: MapboxCoreNavigation.NavigationLocationManager.Type = NavigationLocationManagerSpy.self
+}
+
 public class NavigationEventsManagerSpy: NavigationEventsManager {
     private let eventsAPIMock: EventsAPIMock
+    private let passiveNavigationDataSource: PassiveNavigationDataSourceSpy
     
     var debuggableEvents = [NavigationEventDetails]()
 
     required public init() {
         eventsAPIMock = EventsAPIMock()
-        super.init(activeNavigationDataSource: nil, accessToken: "fake token", eventsAPI: eventsAPIMock)
+        passiveNavigationDataSource = PassiveNavigationDataSourceSpy()
+        super.init(activeNavigationDataSource: nil,
+                   passiveNavigationDataSource: passiveNavigationDataSource,
+                   accessToken: "fake token",
+                   eventsAPI: eventsAPIMock)
     }
 
     required convenience init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil, passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil, accessToken possibleToken: String? = nil) {

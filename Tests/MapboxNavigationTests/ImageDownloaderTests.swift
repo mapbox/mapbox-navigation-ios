@@ -27,6 +27,7 @@ class ImageDownloaderTests: TestCase {
 
     override func tearDown() {
         downloader = nil
+        ImageLoadingURLProtocolSpy.reset()
 
         super.tearDown()
     }

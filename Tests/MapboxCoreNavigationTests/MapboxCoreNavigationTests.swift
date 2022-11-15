@@ -14,7 +14,6 @@ var routeOptions: NavigationRouteOptions {
 }
 let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
-let directions = DirectionsSpy()
 let route: Route = {
     return Fixture.route(from: jsonFileName, options: routeOptions)
 }()

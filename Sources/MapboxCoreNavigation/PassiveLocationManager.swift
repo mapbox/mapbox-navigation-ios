@@ -54,10 +54,14 @@ open class PassiveLocationManager: NSObject {
      The events manager, responsible for all telemetry.
      */
     public var eventsManager: NavigationEventsManager { _eventsManager! }
-    
+
     private var _eventsManager: NavigationEventsManager?
-    
-    private let sharedNavigator: Navigator
+
+    private lazy var sharedNavigator: CoreNavigator = {
+        return navigatorType.shared
+    }()
+
+    private let navigatorType: CoreNavigator.Type
     
     /**
      The underlying navigator that performs map matching.
@@ -248,7 +252,27 @@ open class PassiveLocationManager: NSObject {
         
         NotificationCenter.default.post(name: .passiveLocationManagerDidUpdate, object: self, userInfo: userInfo)
     }
-    
+
+    init(directions: Directions = NavigationSettings.shared.directions,
+         systemLocationManager: NavigationLocationManager,
+         eventsManagerType: NavigationEventsManager.Type?,
+         userInfo: [String: String?]?,
+         datasetProfileIdentifier: ProfileIdentifier?,
+         navigatorType: CoreNavigator.Type) {
+        self.navigatorType = navigatorType
+        self.directions = directions
+        self.systemLocationManager = systemLocationManager
+
+        super.init()
+
+        commonInit(directions: directions,
+                   systemLocationManager: systemLocationManager,
+                   eventsManagerType: eventsManagerType,
+                   userInfo: userInfo,
+                   datasetProfileIdentifier: datasetProfileIdentifier,
+                   navigatorType: navigatorType)
+    }
+
     /**
      Initializes the location manager with the given directions service.
      
@@ -265,18 +289,30 @@ open class PassiveLocationManager: NSObject {
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          userInfo: [String: String?]? = nil,
                          datasetProfileIdentifier: ProfileIdentifier? = nil) {
+        self.navigatorType = Navigator.self
+        self.directions = directions
+        self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
+
+        super.init()
+
+        commonInit(directions: directions,
+                   systemLocationManager: systemLocationManager,
+                   eventsManagerType: eventsManagerType,
+                   userInfo: userInfo,
+                   datasetProfileIdentifier: datasetProfileIdentifier,
+                   navigatorType: navigatorType)
+    }
+
+    private func commonInit(directions: Directions,
+                            systemLocationManager: NavigationLocationManager?,
+                            eventsManagerType: NavigationEventsManager.Type?,
+                            userInfo: [String: String?]?,
+                            datasetProfileIdentifier: ProfileIdentifier?,
+                            navigatorType: CoreNavigator.Type) {
         if let datasetProfileIdentifier = datasetProfileIdentifier {
-            Navigator.datasetProfileIdentifier = datasetProfileIdentifier
+            navigatorType.datasetProfileIdentifier = datasetProfileIdentifier
         }
 
-        self.sharedNavigator = Navigator.shared
-        
-        self.directions = directions
-        
-        self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
-        
-        super.init()
-        
         self.systemLocationManager.delegate = self
 
         let resolvedEventsManagerType = eventsManagerType ?? NavigationEventsManager.self

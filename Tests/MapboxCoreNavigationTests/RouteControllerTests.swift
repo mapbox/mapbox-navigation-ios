@@ -9,18 +9,115 @@ import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
-    var replayManager: ReplayLocationManager?
+    private var locationManagerSpy: NavigationLocationManagerSpy!
+    private var replayManager: ReplayLocationManager?
+    private var navigatorSpy: CoreNavigatorSpy!
+    private var routingProvider: RoutingProviderSpy!
+    private var delegate: RouterDelegateSpy!
+
+    private let rawLocation = CLLocation(latitude: 47.208674, longitude: 9.524650)
+
+    private let options = NavigationMatchOptions(coordinates: [
+        CLLocationCoordinate2D(latitude: 37.750384, longitude: -122.387487),
+        CLLocationCoordinate2D(latitude: 37.764343, longitude: -122.388664),
+    ])
 
     override func setUp() {
         super.setUp()
+
+        delegate = .init()
+        locationManagerSpy = .init()
+        routingProvider = .init()
+        navigatorSpy = CoreNavigatorSpy.shared
     }
 
     override func tearDown() {
         replayManager = nil
         MapboxRoutingProvider.__testRoutesStub = nil
+        Navigator._recreateNavigator()
+
         super.tearDown()
     }
+
+    private func createRouteController() -> RouteController {
+        let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
+        let controller = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                         customRoutingProvider: routingProvider,
+                                         dataSource: self,
+                                         navigatorType: CoreNavigatorSpy.self)
+        controller.delegate = delegate
+        return controller
+    }
+
+    func testReturnIsFirstLocation() {
+        let routeController = createRouteController()
+        XCTAssertTrue(routeController.isFirstLocation)
+        routeController.rawLocation = CLLocation(latitude: 59.337928, longitude: 18.076841)
+        XCTAssertFalse(routeController.isFirstLocation)
+    }
+
+    func testReturnLocation() {
+        let routeController = createRouteController()
+        XCTAssertNil(routeController.location)
+
+        let rawLocation = CLLocation(latitude: 47.208674, longitude: 9.524650)
+        routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
+        XCTAssertEqual(routeController.location, rawLocation)
+    }
+
+    func testSetDatasetProfileIdentifier() {
+        CoreNavigatorSpy.datasetProfileIdentifier = .walking
+        _ = createRouteController()
+        XCTAssertEqual(CoreNavigatorSpy.datasetProfileIdentifier, .automobileAvoidingTraffic)
+    }
+
+    func testFallbackToOffline() {
+        let routeController = createRouteController()
+        NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion, object: nil, userInfo: nil)
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+    }
+
+    func testRestoreToOnline() {
+        let routeController = createRouteController()
+        NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion, object: nil, userInfo: nil)
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+    }
     
+    func testHandleNavigationStatusDidChange() {
+        let callbackExpectation = expectation(description: "Progress Callback")
+        let routeController = createRouteController()
+        routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
+
+        let status = TestNavigationStatusProvider.createNavigationStatus()
+        let userInfo = [Navigator.NotificationUserInfoKey.statusKey : status]
+
+        delegate.onDidUpdate = { arguments in
+            let (_, location, rawLocation) = arguments
+            XCTAssertEqual(location.coordinate, CLLocation(status.location).coordinate)
+            XCTAssertEqual(rawLocation, self.rawLocation)
+            callbackExpectation.fulfill()
+        }
+
+        expectation(forNotification: .routeControllerProgressDidChange, object: nil) { (notification) -> Bool in
+            let userInfo = notification.userInfo
+            let newLocation = userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
+            let rawLocation = userInfo?[RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation
+
+            XCTAssertEqual(newLocation?.coordinate, CLLocation(status.location).coordinate)
+            XCTAssertEqual(rawLocation, self.rawLocation)
+
+            return true
+        }
+
+        NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+        waitForExpectations(timeout: 0.5)
+    }
+
     func testRouteSnappingOvershooting() {
         let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),

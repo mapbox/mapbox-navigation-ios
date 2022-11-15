@@ -4,6 +4,11 @@
 
 ### Routing
 
+* Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
+
+### Other changes
+
+* Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
 
 ## v2.9.0
@@ -11,10 +16,11 @@
 ### Packaging
 
 * This library now requires a minimum deployment target of iOS 12.0 or above. iOS 11._x_ is no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-rc.1). ([#4215](https://github.com/mapbox/mapbox-navigation-ios/pull/4215))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v119._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/119.0.1). ([#4215](https://github.com/mapbox/mapbox-navigation-ios/pull/4215))
+* This library now requires a minimum Xcode version of 13.1.0 or above. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-rc.2). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v119._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/119.0.2). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxNavigation now requires [MapboxMaps v10.9._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0). ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
+* MapboxNavigation now requires [MapboxMaps v10.9._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.1). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### Map
 
@@ -28,6 +34,7 @@
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 * Fixed an issue where the route line with no traffic congestion data and multiple legs wasn't shown correctly. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
+* Fixed a crash when setting the `NavigationMapView.userLocationStyle` property to `UserLocationStyle.puck3D`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### Preview
 
@@ -66,7 +73,8 @@
 * Fixed an issue where the values of `RouteLeg.segmentDistances` and `RouteLeg.expectedTravelTime` did not add up to `RouteLeg.distance` and `RouteLeg.expectedTravelTime`, respectively. Each value of `RouteLeg.expectedTravelTime` that immediately follows an intersection now includes the time required to traverse the intersection. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where some [rat runs](https://en.wikipedia.org/wiki/Rat_running) were suggested as alternative routes that matched the main route. These alternative routes are no longer suggested at all. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where routes avoided roads with the deprecated tags [`hov=lane`](https://taginfo.openstreetmap.org/tags/hov=lane) and `hov:conditional=lane @ …` as restricted roads. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
-* Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
+* Fixed an issue where the user’s location would get out of sync after traveling through short tunnels. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* Fixed a crash after changing `RouteController.prefersOnlineRoute` from `false` to `true`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### User feedback
 
