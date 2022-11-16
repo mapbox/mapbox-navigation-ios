@@ -38,7 +38,7 @@ final class RoutesCoordinatorTests: TestCase {
 
 private extension RoutesCoordinatorTests {
     func createRoutes() -> RouteInterface? {
-        return TestRouteProvider.createRoutes()
+        return TestRouteProvider.createRoute()
     }
 
     struct RoutesCoordinatorTestCase {

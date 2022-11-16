@@ -602,7 +602,7 @@ open class RouteController: NSObject {
                                      options: RouteOptions,
                                      routingProvider: RoutingProvider,
                                      dataSource source: RouterDataSource) {
-        self.init(alongRouteAtIndex:routeIndex,
+        self.init(alongRouteAtIndex: routeIndex,
                   in: routeResponse,
                   options: options,
                   customRoutingProvider: routingProvider,

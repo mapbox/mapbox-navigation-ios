@@ -162,18 +162,24 @@ public class Fixture: NSObject {
         return traceCollector.locations
     }
     
-    public class func routeLegProgress() -> RouteLegProgress {
-        let routeStep = RouteStep(transportType: .automobile,
-                                  maneuverLocation: .init(),
-                                  maneuverType: .arrive,
-                                  instructions: "empty",
-                                  drivingSide: .right,
-                                  distance: 0.0,
-                                  expectedTravelTime: 0.0)
-        return RouteLegProgress(leg: RouteLeg(steps: [routeStep],
+    public class func routeLegProgress(expectedTravelTime: TimeInterval = 0.0,
+                                       stepDistance: Turf.LocationDistance = 0.0,
+                                       stepCount: Int = 1) -> RouteLegProgress {
+        var steps = [RouteStep]()
+        for i in 0..<stepCount {
+            let maneuverType: ManeuverType = i == stepCount - 1 ? .arrive : i == 0 ? .depart : .turn
+            steps.append(RouteStep(transportType: .automobile,
+                                   maneuverLocation: .init(),
+                                   maneuverType: maneuverType,
+                                   instructions: "empty",
+                                   drivingSide: .right,
+                                   distance: stepDistance,
+                                   expectedTravelTime: expectedTravelTime))
+        }
+        return RouteLegProgress(leg: RouteLeg(steps: steps,
                                               name: "empty",
                                               distance: 0.0,
-                                              expectedTravelTime: 0.0,
+                                              expectedTravelTime: expectedTravelTime,
                                               profileIdentifier: .automobile))
     }
 
