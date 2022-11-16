@@ -14,18 +14,19 @@ extension Match {
      - returns: A polyline whose length is twice `distance` and whose centroid is located at the maneuver.
      */
     func polylineAroundManeuver(legIndex: Int, stepIndex: Int, distance: CLLocationDistance) -> LineString {
-        var precedingCoordinates = [LocationCoordinate2D]()
-        if stepIndex > 0 {
-            precedingCoordinates = legs[legIndex].steps[safe: stepIndex - 1]?.shape?.coordinates ?? []
-        }
-        if precedingCoordinates.isEmpty, legIndex > 0 {
-            precedingCoordinates = legs[legIndex - 1].steps.suffix(2).flatMap { $0.shape?.coordinates ?? [] }
-        }
-        let precedingPolyline = LineString((precedingCoordinates).reversed())
-
+        let precedingLegs = legs.prefix(upTo: legIndex)
+        let precedingLegCoordinates = precedingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
         
-        let followingCoordinates = legs[legIndex].steps[safe: stepIndex]?.shape?.coordinates ?? []
-        let followingPolyline = LineString(followingCoordinates)
+        let precedingSteps = legs[legIndex].steps.prefix(upTo: stepIndex)
+        let precedingStepCoordinates = precedingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
+        let precedingPolyline = LineString((precedingLegCoordinates + precedingStepCoordinates).reversed())
+
+        let followingLegs = legs.suffix(from: legIndex).dropFirst()
+        let followingLegCoordinates = followingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
+        
+        let followingSteps = legs[legIndex].steps.suffix(from: stepIndex)
+        let followingStepCoordinates = followingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
+        let followingPolyline = LineString(followingStepCoordinates + followingLegCoordinates)
         
         // After trimming, reverse the array so that the resulting polyline proceeds in a forward direction throughout.
         let trimmedPrecedingCoordinates: [CLLocationCoordinate2D]

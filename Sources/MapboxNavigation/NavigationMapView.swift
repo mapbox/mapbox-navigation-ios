@@ -401,6 +401,8 @@ open class NavigationMapView: UIView {
             
             let metersPerPoint = Projection.metersPerPoint(for: maneuverCoordinate.latitude,
                                                            zoom: mapView.cameraState.zoom)
+            
+            // TODO: Implement ability to change `shaftLength` depending on zoom level.
             let shaftLength = max(min(50 * metersPerPoint, 50), 30)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             

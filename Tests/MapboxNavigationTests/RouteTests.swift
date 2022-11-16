@@ -59,13 +59,12 @@ class RouteTests: TestCase {
         
         // There are four traversals of the intersection at Linnégatan and Brahegatan, two left turns from one direction and one right turn from another direction.
         let traversals = [1, 8, 13, 20]
-        let maneuverDistance = 80.0
         for stepIndex in traversals {
             let precedingStep = leg.steps[stepIndex - 1]
             let precedingStepPolyline = precedingStep.shape!
             let followingStep = leg.steps[stepIndex]
             let stepPolyline = followingStep.shape!
-            let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: maneuverDistance)
+            let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: 50)
             
             let firstIndexedCoordinate = precedingStepPolyline.closestCoordinate(to: maneuverPolyline.coordinates[0])
             XCTAssertNotNil(firstIndexedCoordinate)
@@ -77,11 +76,6 @@ class RouteTests: TestCase {
             let lastIndexedCoordinate = stepPolyline.closestCoordinate(to: maneuverPolyline.coordinates.last!)
             XCTAssertNotNil(lastIndexedCoordinate)
             XCTAssertLessThan(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!), 1, "End of maneuver polyline for step \(stepIndex) is \(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!)) away from outlet from intersection.")
-            
-            guard stepIndex == 13 else { continue }
-            let precedingStepDistance = precedingStepPolyline.distance()!
-            XCTAssertTrue(precedingStepDistance < maneuverDistance)
-            XCTAssertEqual(maneuverPolyline.coordinates.first, precedingStepPolyline.coordinates.first, "Maneuver polyline for step \(stepIndex) extends outside the preceding step.")
         }
     }
     
