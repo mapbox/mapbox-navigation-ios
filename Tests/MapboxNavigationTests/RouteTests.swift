@@ -64,7 +64,7 @@ class RouteTests: TestCase {
             let precedingStepPolyline = precedingStep.shape!
             let followingStep = leg.steps[stepIndex]
             let stepPolyline = followingStep.shape!
-            let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: 30)
+            let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: 50)
             
             let firstIndexedCoordinate = precedingStepPolyline.closestCoordinate(to: maneuverPolyline.coordinates[0])
             XCTAssertNotNil(firstIndexedCoordinate)
