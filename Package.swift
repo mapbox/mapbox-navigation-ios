@@ -106,13 +106,5 @@ let package = Package(
                 "__Snapshots__", // Ignore snapshots folder
             ]
         ),
-        .testTarget(
-            name: "MapboxCoreNavigationIntegrationTests",
-            dependencies: ["TestHelper"],
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Fixtures"),
-            ]
-        ),
     ]
 )

@@ -61,8 +61,8 @@ class PassiveLocationManagerIntegrationTests: TestCase {
         }
     }
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() {
+        super.setUp()
 
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
