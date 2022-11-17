@@ -1335,14 +1335,30 @@ open class NavigationMapView: UIView {
         
         if let lastLeg = route.legs.last,
            let destinationCoordinate = lastLeg.destination?.coordinate {
-            addDestinationAnnotation(destinationCoordinate)
+            addDestinationAnnotation(destinationCoordinate) { [weak self] in
+                guard self != nil else { return }
+            }
         }
     }
     
-    func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D,
-                                  identifier: String = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation) {
+    /**
+     Adds a final destination annotation to the map.
+     
+     - parameter coordinate: Coordinate which represents the annotation location.
+     - parameter identifier: String to uniquely identify the destination annotation. Defaults to `nil` and a default identifier will be provided.
+     - parameter styleLoaded: An escaping closure to be executed when the `MapView` style has finished loading.
+     */
+    public func addDestinationAnnotation(_ coordinate: CLLocationCoordinate2D,
+                                         identifier: String? = nil,
+                                         styleLoaded: @escaping () -> Void) {
+        let identifier = identifier ?? String("finalDestinationAnnotation_\(finalDestinationAnnotations.count)")
         var destinationAnnotation = PointAnnotation(id: identifier, coordinate: coordinate)
         destinationAnnotation.image = .init(image: .defaultMarkerImage, name: ImageIdentifier.markerImage)
+                
+        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+            guard self != nil else { return }
+            styleLoaded()
+        }
         
         // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
         // and add it only after fully loading `MapView` style.
@@ -1356,12 +1372,19 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func removeDestinationAnnotation(_ identifier: String = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation) {
-        let remainingAnnotations = pointAnnotationManager?.annotations.filter {
-            $0.id != identifier
+    /**
+     Removes a final destination annotation to the map.
+     
+     - parameter identifier: String to uniquely identify the destination annotation to be removed. Defaults to `nil` and removes all destination annotations.
+     */
+    public func removeDestinationAnnotation(_ identifier: String? = nil) {
+        if let identifier {
+            finalDestinationAnnotations.removeAll(where: { $0.id == identifier })
+            pointAnnotationManager?.annotations.removeAll(where: { $0.id == identifier })
+        } else {
+            finalDestinationAnnotations.removeAll(where: { $0.id.contains("finalDestinationAnnotation") })
+            pointAnnotationManager?.annotations.removeAll(where: { $0.id.contains("finalDestinationAnnotation") })
         }
-        
-        pointAnnotationManager?.annotations = remainingAnnotations ?? []
     }
     
     /**
