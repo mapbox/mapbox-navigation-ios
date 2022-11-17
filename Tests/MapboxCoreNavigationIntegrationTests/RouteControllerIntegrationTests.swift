@@ -11,13 +11,22 @@ import MapboxNavigationNative
 class RouteControllerIntegrationTests: TestCase {
     var replayManager: ReplayLocationManager?
 
+    override func setUp() {
+        super.setUp()
+        reset()
+    }
+
     override func tearDown() {
         replayManager = nil
+        reset()
+
+        super.tearDown()
+    }
+
+    private func reset() {
         MapboxRoutingProvider.__testRoutesStub = nil
         Navigator._recreateNavigator()
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
-
-        super.tearDown()
     }
 
     func testRouteSnappingOvershooting() {
