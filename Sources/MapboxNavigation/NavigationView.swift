@@ -167,7 +167,11 @@ open class NavigationView: UIView {
     // :nodoc:
     public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
-    // :nodoc:
+    /**
+     View that is used as a container for top banners. By default, for turn-by-turn navigation
+     `NavigationViewController` presents `TopBannerViewController` in this banner
+     container.
+     */
     public lazy var topBannerContainerView: BannerContainerView = {
         let topBannerContainerView = BannerContainerView(.topLeading)
         topBannerContainerView.isHidden = true
@@ -175,7 +179,11 @@ open class NavigationView: UIView {
         return topBannerContainerView
     }()
     
-    // :nodoc:
+    /**
+     View that is used as a container for bottom banners. By default, for turn-by-turn navigation
+     `NavigationViewController` presents `BottomBannerViewController` in this banner
+     container.
+     */
     public lazy var bottomBannerContainerView: BannerContainerView = {
         let bottomBannerContainerView = BannerContainerView(.bottomLeading)
         bottomBannerContainerView.isHidden = true
