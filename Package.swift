@@ -30,7 +30,7 @@ let package = Package(
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "3.1.2"),
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "9.0.1"),
-        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.8.1"),
+        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .exact("1.9.0")),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
     ],
     targets: [
