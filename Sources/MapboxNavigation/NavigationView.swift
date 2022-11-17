@@ -59,7 +59,9 @@ open class NavigationView: UIView {
         navigationMapView.delegate = delegate
     }
     
-    // :nodoc:
+    /**
+     `NavigationMapView` that is displayed inside the `NavigationView`.
+     */
     public var navigationMapView: NavigationMapView {
         didSet {
             oldValue.removeFromSuperview()
@@ -114,7 +116,9 @@ open class NavigationView: UIView {
     
     // MARK: Overlay Views
     
-    // :nodoc:
+    /**
+     Stack view that contains floating buttons.
+     */
     public lazy var floatingStackView: UIStackView = {
         let stackView = UIStackView(orientation: .vertical, autoLayout: true)
         stackView.distribution = .equalSpacing
@@ -134,7 +138,9 @@ open class NavigationView: UIView {
         }
     }
     
-    // :nodoc:
+    /**
+     List that contains floating buttons.
+     */
     public var floatingButtons: [UIButton]? {
         didSet {
             clearStackViews()
@@ -150,7 +156,9 @@ open class NavigationView: UIView {
         }
     }
     
-    // :nodoc:
+    /**
+     A host view for `WayNameLabel` that shows a road name and a shield icon.
+     */
     public lazy var wayNameView: WayNameView = {
         let wayNameView: WayNameView = .forAutoLayout()
         wayNameView.containerView.isHidden = true
@@ -164,7 +172,9 @@ open class NavigationView: UIView {
         }
     }
     
-    // :nodoc:
+    /**
+     A view that displays a speed limit.
+     */
     public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
     /**
@@ -207,7 +217,14 @@ open class NavigationView: UIView {
     
     // MARK: Initialization methods
     
-    // :nodoc:
+    /**
+     Initializes a `NavigationView` instance with the specified parameters.
+     
+     - parameter frame: The frame rectangle for the `NavigationView`.
+     - parameter tileStoreLocation: Configuration of the `TileStore` location, where map tiles are stored.
+     Value is ignored if custom `NavigationMapView` instance was provided. Use `nil` to disable onboard tile storage.
+     - parameter navigationMapView: Custom `NavigationMapView` instance to supersede the default one.
+     */
     public init(frame: CGRect,
                 tileStoreLocation: TileStoreConfiguration.Location? = .default,
                 navigationMapView: NavigationMapView? = nil) {
