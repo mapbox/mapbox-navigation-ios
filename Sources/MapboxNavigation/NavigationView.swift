@@ -139,7 +139,7 @@ open class NavigationView: UIView {
     }
     
     /**
-     List that contains floating buttons.
+     The buttons to show floating on the map inside `floatingStackView`.
      */
     public var floatingButtons: [UIButton]? {
         didSet {
