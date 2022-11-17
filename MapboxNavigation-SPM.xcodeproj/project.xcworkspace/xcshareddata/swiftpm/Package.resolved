@@ -41,9 +41,9 @@
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "2bbd4e385ff7b3edd5022212c0f77d2474fc08c8",
-          "version": "2.7.0"
+          "branch": "maxim/fix-v2.7.0-build",
+          "revision": "6b2df4bd5bf1cf4ea9d88c551ba8fd1b723d83c5",
+          "version": null
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
+          "revision": "dbc07b0a298d642414d3abec59c9eaba1fb3367f",
+          "version": "2.5.0"
         }
       }
     ]
