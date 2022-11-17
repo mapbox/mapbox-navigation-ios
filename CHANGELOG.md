@@ -6,6 +6,10 @@
 
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
 
+### Map
+
+* The maneuver arrow now extends 50 points along the route before and after an intersection, compared to 30 points previously. ([#4230](https://github.com/mapbox/mapbox-navigation-ios/pull/4230))
+
 ### Other changes
 
 * Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
@@ -36,7 +40,6 @@
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 * Fixed an issue where the route line with no traffic congestion data and multiple legs wasn't shown correctly. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
 * Fixed a crash when setting the `NavigationMapView.userLocationStyle` property to `UserLocationStyle.puck3D`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
-* The maneuver arrow now extends 50 points along the route before and after an intersection, compared to 30 points previously. ([#4230](https://github.com/mapbox/mapbox-navigation-ios/pull/4230))
 
 ### Preview
 
