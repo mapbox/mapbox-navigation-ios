@@ -10,6 +10,7 @@
 
 * Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
+* `NavigationView.init(frame:tileStoreLocation:navigationMapView:)`, `NavigationView.navigationMapView`, `NavigationView.floatingStackView`, `NavigationView.floatingButtons`, `NavigationView.wayNameView`, `NavigationView.speedLimitView`, `NavigationView.topBannerContainerView` and `NavigationView.bottomBannerContainerView` are now publicly accessible. ([#4249](https://github.com/mapbox/mapbox-navigation-ios/pull/4249))
 
 ## v2.9.0
 
