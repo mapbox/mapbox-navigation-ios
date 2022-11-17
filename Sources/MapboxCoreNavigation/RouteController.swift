@@ -239,6 +239,7 @@ open class RouteController: NSObject {
     }()
 
     private let navigatorType: CoreNavigator.Type
+    private let routeParserType: RouteParser.Type
 
     var navigator: MapboxNavigationNative.Navigator {
         return sharedNavigator.navigator
@@ -294,9 +295,9 @@ open class RouteController: NSObject {
         let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
                                 .url(forCalculating: routeOptions).absoluteString
         
-        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
-                                                               request: routeRequest,
-                                                               routeOrigin: indexedRouteResponse.responseOrigin)
+        let parsedRoutes = routeParserType.parseDirectionsResponse(forResponse: routeJSONString,
+                                                                   request: routeRequest,
+                                                                   routeOrigin: indexedRouteResponse.responseOrigin)
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
            routes.count > indexedRouteResponse.routeIndex {
@@ -643,6 +644,7 @@ open class RouteController: NSObject {
         Self.checkUniqueInstance()
 
         self.navigatorType = Navigator.self
+        self.routeParserType = RouteParser.self
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
 
@@ -665,10 +667,12 @@ open class RouteController: NSObject {
     init(indexedRouteResponse: IndexedRouteResponse,
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource,
-         navigatorType: CoreNavigator.Type) {
+         navigatorType: CoreNavigator.Type,
+         routeParserType: RouteParser.Type) {
         Self.checkUniqueInstance()
 
         self.navigatorType = navigatorType
+        self.routeParserType = routeParserType
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
         let options = indexedRouteResponse.validatedRouteOptions

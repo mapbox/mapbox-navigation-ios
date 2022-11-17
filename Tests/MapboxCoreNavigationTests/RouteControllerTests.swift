@@ -24,6 +24,7 @@ class RouteControllerTests: TestCase {
     private var rerouteController: RerouteControllerSpy!
     private var dataSource: RouterDataSourceSpy!
     private var routeProgress: RouteProgress!
+    private var nativeRoute: RouteInterface!
     
     private var routeController: RouteController!
 
@@ -48,6 +49,20 @@ class RouteControllerTests: TestCase {
         options.shapeFormat = .geoJSON
         return options
     }
+
+    private var bannerInstruction: BannerInstruction {
+        let bannerSection = BannerSection(text: "", type: nil, modifier: nil, degrees: nil, drivingSide: nil, components: nil)
+        return BannerInstruction(primary: bannerSection,
+                                 view: nil,
+                                 secondary: nil,
+                                 sub: nil,
+                                 remainingStepDistance: 10,
+                                 index: 6)
+    }
+
+    private var route: Route {
+        return routeResponse.routes![0]
+    }
     
     override func setUp() {
         super.setUp()
@@ -64,6 +79,7 @@ class RouteControllerTests: TestCase {
         routeResponse = makeRouteResponse()
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routeProgress = .init(route: routeResponse.routes![0], options: options)
+        nativeRoute = TestRouteProvider.createRoute(routeResponse: response)
 
         singleRouteResponse = makeSingleRouteResponse()
         multilegRouteResponse = makeMultilegRouteResponse()
@@ -75,6 +91,8 @@ class RouteControllerTests: TestCase {
     override func tearDown() {
         delegate = nil
         routeController = nil
+        RouteParserSpy.returnedRoutes = nil
+        RouteParserSpy.returnedError = nil
         MapboxRoutingProvider.__testRoutesStub = nil
         Navigator._recreateNavigator()
         resetNavigationSettings()
@@ -173,7 +191,7 @@ class RouteControllerTests: TestCase {
     }
     
     func testReturnRoute() {
-        XCTAssertEqual(routeController.route, routeResponse.routes?[0])
+        XCTAssertEqual(routeController.route, route)
     }
     
     func testReturnRoadGraph() {
@@ -199,15 +217,19 @@ class RouteControllerTests: TestCase {
     }
     
     func testFallbackToOffline() {
+        RouteParserSpy.returnedRoutes = [nativeRoute]
         NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion, object: nil, userInfo: nil)
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
     }
     
     func testRestoreToOnline() {
+        RouteParserSpy.returnedRoutes = [nativeRoute]
         NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion, object: nil, userInfo: nil)
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
     }
@@ -348,7 +370,7 @@ class RouteControllerTests: TestCase {
         let callbackExpectation = expectation(description: "Progress callback should be called")
         routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
 
-        let step = routeResponse.routes![0].legs[0].steps[0]
+        let step = route.legs[0].steps[0]
         let statusLocation = CLLocation(coordinate: step.shape!.coordinates.last!)
         let status = TestNavigationStatusProvider.createNavigationStatus(location: statusLocation)
         let userInfo = [Navigator.NotificationUserInfoKey.statusKey : status]
@@ -377,13 +399,6 @@ class RouteControllerTests: TestCase {
 
         let activeGuidanceInfo = makeActiveGuidanceInfo()
         let voiceInstruction = VoiceInstruction(ssmlAnnouncement: "a", announcement: "b", remainingStepDistance: 10, index: 5)
-        let bannerSection = BannerSection(text: "", type: nil, modifier: nil, degrees: nil, drivingSide: nil, components: nil)
-        let bannerInstruction = BannerInstruction(primary: bannerSection,
-                                                  view: nil,
-                                                  secondary: nil,
-                                                  sub: nil,
-                                                  remainingStepDistance: 10,
-                                                  index: 6)
         let status = TestNavigationStatusProvider.createNavigationStatus(legIndex: 1,
                                                                          stepIndex: 2,
                                                                          shapeIndex: 3,
@@ -428,10 +443,7 @@ class RouteControllerTests: TestCase {
 
     func testDoNotUpdateRouteLegProgressIfTooManyStepsLeft() {
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .complete)
-
-        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil) { (notification) -> Bool in
-            return true
-        }
+        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil)
         notificationExpectation.isInverted = true
 
         routeController.updateRouteLegProgress(status: status)
@@ -440,7 +452,7 @@ class RouteControllerTests: TestCase {
 
     func testNotifyDidArriveAtWaypointIfCompleteStatus() {
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .complete)
-        let destination = self.routeResponse.routes![0].legs[0].destination
+        let destination = route.legs[0].destination
 
         expectation(forNotification: .didArriveAtWaypoint, object: nil) { (notification) -> Bool in
             let waypoint = notification.userInfo?[RouteController.NotificationUserInfoKey.waypointKey] as? MapboxDirections.Waypoint
@@ -459,7 +471,7 @@ class RouteControllerTests: TestCase {
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .tracking)
         routeController.routeProgress.currentLegProgress.stepIndex = 4
         let legProgress = routeController.routeProgress.currentLegProgress
-        let destination = routeResponse.routes![0].legs[0].destination
+        let destination = route.legs[0].destination
 
         let callbackExpectation = expectation(description: "Will arrive should called")
         delegate.onWillArriveAt = { arguments in
@@ -470,9 +482,7 @@ class RouteControllerTests: TestCase {
             callbackExpectation.fulfill()
         }
 
-        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil) { (notification) -> Bool in
-            return true
-        }
+        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil)
         notificationExpectation.isInverted = true
 
         routeController.updateRouteLegProgress(status: status)
@@ -614,7 +624,7 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
     
-    func testUpdateRouteWhenReroutingAndNavigatorSucceed() {
+    func testRerouteWhenReroutingAndNavigatorSucceed() {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
         
@@ -635,7 +645,7 @@ class RouteControllerTests: TestCase {
         XCTAssertEqual(routeController.routeProgress.routeOptions, expectedRouteOptions)
     }
     
-    func testUpdateRouteWhenReroutingAndNavigatorFailed() {
+    func testRerouteWhenReroutingAndNavigatorFailed() {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
         navigatorSpy.returnedSetRoutesResult = .failure(DirectionsError.unableToRoute)
@@ -977,7 +987,7 @@ class RouteControllerTests: TestCase {
 
     func testAlternativeRoutesReportedIfNonEmptyCurrentContinuousAlternatives() {
         navigatorSpy.returnedSetRoutesResult = .success((mainRouteInfo: nil, alternativeRoutes: [createRouteAlternative(id: 2)]))
-        routeController = makeRouteController()
+        routeController.updateRoute(with: indexedRouteResponse, routeOptions: options, completion: nil)
 
         let alternativesExpectation = expectation(description: "Alternative route should be reported")
         delegate.onDidUpdateAlternativeRoutes = { newAlternatives, removedAlternatives in
@@ -1003,7 +1013,7 @@ class RouteControllerTests: TestCase {
 
     func testSendAlternativeRoutesNotificationIfNonEmptyCurrentContinuousAlternatives() {
         navigatorSpy.returnedSetRoutesResult = .success((mainRouteInfo: nil, alternativeRoutes: [createRouteAlternative(id: 2)]))
-        routeController = makeRouteController()
+        routeController.updateRoute(with: indexedRouteResponse, routeOptions: options, completion: nil)
 
         expectation(forNotification: .routeControllerDidUpdateAlternatives, object: routeController) { (notification) -> Bool in
             let userInfo = notification.userInfo
@@ -1099,20 +1109,51 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
 
-    func testSwitchToCoincideOnlineRouteIfErrorInNavNative() {
-        let route = TestRouteProvider.createRoute(routeResponse: routeResponse)!
+    func testSwitchToCoincideOnlineRouteIfNavNativeFailed() {
+        let route = TestRouteProvider.createRoute(routeResponse: singleRouteResponse)!
         let callbackExpectation = expectation(description: "Switch to coincident online route should be reported")
         delegate.onDidSwitchToCoincideRoute = { actualRoute in
-            XCTAssertEqual(actualRoute, self.routeResponse.routes?[0])
-            XCTAssertEqual(self.routeController.indexedRouteResponse.routeIndex, 0)
-            XCTAssertEqual(self.routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
+            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
             callbackExpectation.fulfill()
+        }
+
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController) { (notification) -> Bool in
+            let actualRoute = notification.userInfo?[RouteController.NotificationUserInfoKey.coincidentRouteKey] as? Route
+            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            return true
         }
         navigatorSpy.returnedSetRoutesResult = .failure(DirectionsError.unableToRoute)
         
         let userInfo = [Navigator.NotificationUserInfoKey.coincideOnlineRouteKey: route]
         NotificationCenter.default.post(name: .navigatorWantsSwitchToCoincideOnlineRoute, object: nil, userInfo: userInfo)
 
+        XCTAssertEqual(routeController.indexedRouteResponse.routeIndex, 0)
+        XCTAssertEqual(routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
+        XCTAssertEqual(routeController.continuousAlternatives.count, 0)
+        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleRouteResponse.routes?[0].legs)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testSwitchToCoincideOnlineRouteIfNavNativeSucceed() {
+        let route = TestRouteProvider.createRoute(routeResponse: singleRouteResponse)!
+        let callbackExpectation = expectation(description: "Switch to coincident online route should be reported")
+        delegate.onDidSwitchToCoincideRoute = { actualRoute in
+            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            callbackExpectation.fulfill()
+        }
+
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController) { (notification) -> Bool in
+            let actualRoute = notification.userInfo?[RouteController.NotificationUserInfoKey.coincidentRouteKey] as? Route
+            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            return true
+        }
+
+        let userInfo = [Navigator.NotificationUserInfoKey.coincideOnlineRouteKey: route]
+        NotificationCenter.default.post(name: .navigatorWantsSwitchToCoincideOnlineRoute, object: nil, userInfo: userInfo)
+
+        XCTAssertEqual(routeController.indexedRouteResponse.routeIndex, 0)
+        XCTAssertEqual(routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
+        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleRouteResponse.routes?[0].legs)
         waitForExpectations(timeout: expectationsTimeout)
     }
 
@@ -1236,7 +1277,7 @@ class RouteControllerTests: TestCase {
             XCTAssertFalse(result)
             completionExpectation.fulfill()
         }
-        XCTAssertEqual(routeController.route, routeResponse.routes?[0])
+        XCTAssertEqual(routeController.route, route)
         waitForExpectations(timeout: expectationsTimeout)
     }
 
@@ -1248,7 +1289,51 @@ class RouteControllerTests: TestCase {
             XCTAssertTrue(result)
             completionExpectation.fulfill()
         }
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(routeController.route, routeResponse.routes?[1])
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testUpdateRouteIfRouteParserFailed() {
+        RouteParserSpy.returnedError = "error"
+        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+
+        let completionExpectation = expectation(description: "Should call callback")
+        routeController.updateRoute(with: newResponse, routeOptions: options) { result in
+            XCTAssertFalse(result)
+            completionExpectation.fulfill()
+        }
+        XCTAssertFalse(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(routeController.route, routeResponse.routes?[0], "Should not change rout")
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testUpdateRouteIfRouteParserSucceedButNotEnoughRoutes() {
+        RouteParserSpy.returnedRoutes = [nativeRoute]
+        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+        let completionExpectation = expectation(description: "Should call callback")
+
+        routeController.updateRoute(with: newResponse, routeOptions: options) { result in
+            XCTAssertFalse(result)
+            completionExpectation.fulfill()
+        }
+        XCTAssertFalse(navigatorSpy.setRoutesCalled)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testUpdateRouteIfRouteParserSucceed() {
+        RouteParserSpy.returnedRoutes = [nativeRoute, nativeRoute]
+        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+        let completionExpectation = expectation(description: "Should call callback")
+        
+        routeController.updateRoute(with: newResponse, routeOptions: options) { result in
+            XCTAssertTrue(result)
+            completionExpectation.fulfill()
+        }
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
         waitForExpectations(timeout: expectationsTimeout)
     }
 
@@ -1323,6 +1408,119 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
 
+    func testDoNotUpdateSpokenInstructionProgressIfNilVoiceInstruction() {
+        let status = TestNavigationStatusProvider.createNavigationStatus()
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        notificationExpectation.isInverted = true
+
+        routeController.updateSpokenInstructionProgress(status: status, willReRoute: false)
+
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+    
+    func testDoNotUpdateSpokenInstructionProgressIfWillReroute() {
+        let voiceInstruction = VoiceInstruction(ssmlAnnouncement: "a", announcement: "b", remainingStepDistance: 10, index: 0)
+        let status = TestNavigationStatusProvider.createNavigationStatus(voiceInstruction: voiceInstruction)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        notificationExpectation.isInverted = true
+
+        routeController.updateSpokenInstructionProgress(status: status, willReRoute: true)
+
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testUpdateSpokenInstructionProgress() {
+        let voiceInstruction = VoiceInstruction(ssmlAnnouncement: "a", announcement: "b", remainingStepDistance: 10, index: 0)
+        let status = TestNavigationStatusProvider.createNavigationStatus(voiceInstruction: voiceInstruction)
+        let expectedSpokenInstruction = route.legs.first?.steps.first?.instructionsSpokenAlongStep?.first
+
+        let callbackExpectation = expectation(description: "Did pass spoken instruction should be reported")
+        delegate.onDidPassSpokenInstructionPoint = { spokenInstruction, routeProgress in
+            XCTAssertEqual(spokenInstruction, expectedSpokenInstruction)
+            XCTAssertTrue(routeProgress === self.routeController.routeProgress)
+            callbackExpectation.fulfill()
+        }
+
+        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController) { (notification) -> Bool in
+            let userInfo = notification.userInfo
+            let routeProgress = userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+            let spokenInstruction = userInfo?[RouteController.NotificationUserInfoKey.spokenInstructionKey] as? SpokenInstruction
+
+            XCTAssertEqual(spokenInstruction, expectedSpokenInstruction)
+            XCTAssertTrue(routeProgress === self.routeController.routeProgress)
+
+            return true
+        }
+
+        routeController.updateSpokenInstructionProgress(status: status, willReRoute: false)
+
+        XCTAssertFalse(routeController.didProactiveReroute)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testDoNotUpdateVisualInstructionProgressIfNilBannerInstruction() {
+        let status = TestNavigationStatusProvider.createNavigationStatus()
+        routeController.rawLocation = rawLocation
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        notificationExpectation.isInverted = true
+
+        routeController.updateVisualInstructionProgress(status: status)
+
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testDoNotUpdateVisualInstructionProgressIfNilFirstLocation() {
+        let status = TestNavigationStatusProvider.createNavigationStatus(bannerInstruction: bannerInstruction)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        notificationExpectation.isInverted = true
+
+        routeController.updateVisualInstructionProgress(status: status)
+
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testDoNotUpdateVisualInstructionProgressIfNilFirstLocationVisualInstruction() {
+        let status = TestNavigationStatusProvider.createNavigationStatus(bannerInstruction: bannerInstruction)
+        routeController.rawLocation = rawLocation
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        notificationExpectation.isInverted = true
+
+        routeController.updateVisualInstructionProgress(status: status)
+
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testUpdateVisualInstructionProgress() {
+        let routeResponse = makeRouteResponseWithBannerInstuctions()
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
+        let controller = makeRouteController(routeResponse: indexedRouteResponse)
+        
+        let status = TestNavigationStatusProvider.createNavigationStatus(bannerInstruction: bannerInstruction)
+        let route = routeResponse.routes?[0]
+        let expectedVisualInstruction = route?.legs.first?.steps.first?.instructionsDisplayedAlongStep?.first
+        
+        let callbackExpectation = expectation(description: "Did pass spoken instruction should be reported")
+        delegate.onDidPassVisualInstructionPoint = { visualInstruction, routeProgress in
+            XCTAssertEqual(visualInstruction, expectedVisualInstruction)
+            XCTAssertTrue(routeProgress === controller.routeProgress)
+            callbackExpectation.fulfill()
+        }
+
+        expectation(forNotification: .routeControllerDidPassVisualInstructionPoint, object: controller) { (notification) -> Bool in
+            let userInfo = notification.userInfo
+            let routeProgress = userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+            let visualInstruction = userInfo?[RouteController.NotificationUserInfoKey.visualInstructionKey] as? VisualInstructionBanner
+
+            XCTAssertEqual(visualInstruction, expectedVisualInstruction)
+            XCTAssertTrue(routeProgress === controller.routeProgress)
+
+            return true
+        }
+
+        controller.updateVisualInstructionProgress(status: status)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
     // MARK: Helpers
 
     private func resetNavigationSettings() {
@@ -1333,7 +1531,7 @@ class RouteControllerTests: TestCase {
     }
 
     private func createRouteAlternative(id: UInt32) -> RouteAlternative {
-        let intersectionStep = routeResponse.routes![0].legs[0].steps[3]
+        let intersectionStep = route.legs[0].steps[3]
         let intersection = RouteIntersection(location: intersectionStep.maneuverLocation,
                                              geometryIndex: 6,
                                              segmentIndex: 6,
@@ -1358,7 +1556,8 @@ class RouteControllerTests: TestCase {
         let controller = RouteController(indexedRouteResponse: routeResponse ?? indexedRouteResponse,
                                          customRoutingProvider: routingProvider,
                                          dataSource: dataSource,
-                                         navigatorType: CoreNavigatorSpy.self)
+                                         navigatorType: CoreNavigatorSpy.self,
+                                         routeParserType: RouteParserSpy.self)
         controller.delegate = delegate
         navigatorSpy.reset()
         return controller
@@ -1381,6 +1580,12 @@ class RouteControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
         return Fixture.routeResponse(from: "multileg-route", options: routeOptions)
+    }
+
+    private func makeRouteResponseWithBannerInstuctions() -> RouteResponse {
+        let routeOptions = options
+        routeOptions.shapeFormat = .polyline
+        return Fixture.routeResponse(from: "routeWithInstructions", options: routeOptions)
     }
 
     private func makeActiveGuidanceInfo() -> ActiveGuidanceInfo {
