@@ -10,6 +10,7 @@
 ### Routing
 
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
+* Added `RouteController.updateRouteLeg(to:completionHandler:)` method to allow switching route legs arbitrarily. ([#4261](https://github.com/mapbox/mapbox-navigation-ios/pull/4261))
 
 ### Map
 
