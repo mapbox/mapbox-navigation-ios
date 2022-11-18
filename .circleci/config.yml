@@ -690,6 +690,32 @@ jobs:
       - *save-cache-podmaster
       - *save-cache-gems
 
+  distribute-version-job:
+    parameters:
+      xcode:
+        type: string
+        default: "13.4.1"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-gems
+      - *restore-cache-podmaster
+      - *install-gems
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - install-mbx-ci
+      - run:
+          name: Update version
+          command: |
+            pod trunk register applemachine@mapbox.com "Mapbox" --description="Circle CI, Release train"
+#            pod repo update && pod trunk push MapboxCoreNavigation.podspec
+#            pod repo update && pod trunk push MapboxNavigation.podspec
+      - *save-cache-podmaster
+      - *save-cache-gems
+
 workflows:
   extended-workflow:
     jobs:
@@ -812,3 +838,9 @@ workflows:
           filters:
             branches:
               only: /^trigger-update-version-.*/
+  distribute-version-workflow:
+    jobs:
+      - distribute-version-job:
+          filters:
+            branches:
+              only: /^trigger-distribute-version-.*/
