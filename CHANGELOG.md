@@ -2,6 +2,11 @@
 
 ## main
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v121._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/121.0.0). ([#4256](https://github.com/mapbox/mapbox-navigation-ios/pull/4256))
+* MapboxNavigation now requires [MapboxMaps v10.10.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.0-beta.1). ([#4256](https://github.com/mapbox/mapbox-navigation-ios/pull/4256))
+
 ### Routing
 
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
