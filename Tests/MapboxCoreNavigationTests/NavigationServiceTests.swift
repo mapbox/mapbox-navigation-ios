@@ -59,6 +59,7 @@ class NavigationServiceTests: TestCase {
     override func tearDown() {
         super.tearDown()
 
+        dependencies?.navigationService.locationManager.stopUpdatingLocation()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
     }
