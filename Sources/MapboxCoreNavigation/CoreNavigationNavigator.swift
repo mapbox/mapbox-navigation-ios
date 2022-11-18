@@ -71,7 +71,7 @@ final class Navigator: CoreNavigator {
                                                alternativeRoutes: alternativeRoutes)
             }
             
-            self?.navigator.setRoutesFor(routesParams) { [weak self] result in
+            self?.navigator.setRoutesFor(routesParams, reason: .newRoute) { [weak self] result in
                 if result.isValue(),
                    let routesResult = result.value {
                     Log.info("Navigator has been updated, including \(routesResult.alternatives.count) alternatives.", category: .navigation)
