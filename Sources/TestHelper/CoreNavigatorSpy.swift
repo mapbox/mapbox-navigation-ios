@@ -47,6 +47,30 @@ public final class CoreNavigatorSpy: CoreNavigator {
 
     public var rerouteController: MapboxCoreNavigation.RerouteController = RerouteControllerSpy()
 
+    public func reset() {
+        setRoutesCalled = false
+        passedRoute = nil
+        passedUuid = nil
+        passedLegIndex = nil
+        passedAlternativeRoutes = nil
+
+        restartNavigatorCalled = false
+
+        setAlternativeRoutesCalled = false
+        passedRoutes = nil
+
+        unsetRoutesCalled = false
+        passedUuid = nil
+
+        updateLocationCalled = false
+        passedLocation = nil
+
+        startUpdatingElectronicHorizonCalled = false
+        passedElectronicHorizonOptions = nil
+
+        stopUpdatingElectronicHorizonCalled = false
+    }
+
     public func restartNavigator(forcing version: String?) {
         restartNavigatorCalled = true
     }

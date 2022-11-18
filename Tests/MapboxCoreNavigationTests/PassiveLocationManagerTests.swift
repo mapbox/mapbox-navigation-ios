@@ -188,10 +188,10 @@ class PassiveLocationManagerTests: TestCase {
     }
 
     func testStartUpdatingElectronicHorizon() {
-        let options: MapboxCoreNavigation.ElectronicHorizonOptions = .init(length: 100,
-                                                                           expansionLevel: 10,
-                                                                           branchLength: 100,
-                                                                           minTimeDeltaBetweenUpdates: nil)
+        let options = MapboxCoreNavigation.ElectronicHorizonOptions(length: 100,
+                                                                    expansionLevel: 10,
+                                                                    branchLength: 100,
+                                                                    minTimeDeltaBetweenUpdates: nil)
         passiveLocationManager.startUpdatingElectronicHorizon(with: options)
         XCTAssertTrue(navigatorSpy.startUpdatingElectronicHorizonCalled)
         XCTAssertNotNil(navigatorSpy.passedElectronicHorizonOptions)
@@ -252,15 +252,11 @@ class PassiveLocationManagerTests: TestCase {
                                          expectedTravelTime: -1,
                                          confidence: 42,
                                          weight: .routability(value: 1))]
-            let imageBaseURL = URL(string: "base image url")
-            let expectedRouteShieldRepresentation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: imageBaseURL,
-                                                                                                    shield: nil)
-
             XCTAssertEqual(newLocation?.coordinate, CLLocation(status.location).coordinate)
             XCTAssertEqual(rawLocation, self.location)
             XCTAssertEqual(roadName, "name")
             XCTAssertEqual(matches, expectedMatches)
-            XCTAssertEqual(routeShieldRepresentation, expectedRouteShieldRepresentation)
+            XCTAssertEqual(routeShieldRepresentation, status.routeShieldRepresentation)
             XCTAssertNotNil(mapMatchingResult)
             XCTAssertEqual(speedLimit, expectedSpeedLimit)
             XCTAssertEqual(signStandard, .mutcd)

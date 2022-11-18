@@ -411,7 +411,7 @@ extension InternalRouter where Self: Router {
                     routeOptions = options
                 }
 
-                DispatchQueue.main.async {
+                onMainAsync {
                     // Prefer the most optimal route (the first one) over the route that matched the original choice.
                     self.updateRoute(with: indexedResponse,
                                      routeOptions: routeOptions ?? self.routeProgress.routeOptions,

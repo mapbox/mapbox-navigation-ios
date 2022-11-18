@@ -8,6 +8,8 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     public var passedDescriptors: [TilesetDescriptor]?
     public var passedCacheOptions: PredictiveCacheControllerOptions?
     public var passedRerouteController: RerouteControllerInterface?
+    public var passedLeg: UInt32? = nil
+    public var returnedChangeLegResult = true
 
     public var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?
     public var passedDescriptorsTrackerOptions: PredictiveLocationTrackerOptions?
@@ -45,6 +47,11 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
         passedCacheOptions = cacheOptions
         passedDatasetTrackerOptions = locationTrackerOptions
         return super.createPredictiveCacheController(for: locationTrackerOptions)
+    }
+
+    public override func changeLeg(forLeg leg: UInt32, callback: @escaping ChangeLegCallback) {
+        passedLeg = leg
+        callback(returnedChangeLegResult)
     }
 
     @_implementationOnly public override func setRerouteControllerForController(_ controller: RerouteControllerInterface) {
