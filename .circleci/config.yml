@@ -710,7 +710,7 @@ jobs:
       - run:
           name: Update version
           command: |
-            pod repo update && pod trunk push MapboxCoreNavigation.podspec
+#            pod repo update && pod trunk push MapboxCoreNavigation.podspec
             pod repo update && pod trunk push MapboxNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-gems
