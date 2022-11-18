@@ -10,6 +10,10 @@ class URLDataCacheTest: TestCase {
         super.setUp()
         self.continueAfterFailure = false
         cache.urlCache.diskCapacity = 0
+    }
+    
+    override func tearDown() {
+        super.tearDown()
         cache.clearCache()
     }
     
