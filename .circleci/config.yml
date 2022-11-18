@@ -741,9 +741,8 @@ jobs:
       - run:
           name: Update version
           command: |
-            pod trunk register applemachine@mapbox.com "Mapbox" --description="Circle CI, Release train"
-#            pod repo update && pod trunk push MapboxCoreNavigation.podspec
-#            pod repo update && pod trunk push MapboxNavigation.podspec
+            pod repo update && pod trunk push MapboxCoreNavigation.podspec
+            pod repo update && pod trunk push MapboxNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-gems
 
