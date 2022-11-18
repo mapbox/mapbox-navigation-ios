@@ -57,8 +57,10 @@ custom_categories:
       - DirectionsOptions
       - NavigationMatchOptions
       - SimulationMode
+      - SimulationIntent
+      - SimulationState
       - PassiveLocationManager
-      - HistoryRecording
+      - PassiveLocationManagerDelegate
   - name: Maps
     children:
       - NavigationMapView
@@ -81,16 +83,19 @@ custom_categories:
       - DistanceFormatter
   - name: UI Components
     children:
-      - BottomBannerViewController
-      - BottomBannerViewControllerDelegate
       - SpeedLimitView
       - UserPuckCourseView
       - UserHaloCourseView
+      - UserCourseView
       - CourseUpdatable
       - NavigationComponent
+      - FloatingButton
+      - WayNameLabel
+      - WayNameView
   - name: Guidance Instruction UI
     children:
       - TopBannerViewController
+      - TopBannerViewControllerDelegate
       - InstructionsCardViewController
       - InstructionsCardContainerView
       - InstructionsCardContainerViewDelegate
@@ -100,6 +105,9 @@ custom_categories:
       - ManeuverView
       - JunctionView
       - GenericRouteShield
+      - StepsViewControllerDelegate
+      - BottomBannerViewController
+      - BottomBannerViewControllerDelegate
   - name: CarPlay
     children:
       - CarPlayManager
@@ -115,6 +123,7 @@ custom_categories:
       - CarPlayConnectionObserver
       - RecentItem
       - NavigationGeocodedPlacemark
+      - CarPlayUserInfo
   - name: Configuration
     children:
       - RouteControllerDeadReckoningTimeInterval
@@ -159,6 +168,12 @@ custom_categories:
       - RoadClosureSubtype
       - FeedbackSource
       - EndOfRouteFeedback
+      - FeedbackEvent
+      - FeedbackScreenshotOption
+      - FeedbackType
+      - PassiveNavigationRoadIssueSubtype
+      - PassiveNavigationWrongTrafficSubtype
+      - LooksIncorrectSubtype
   - name: Camera
     children:
       - NavigationCamera
@@ -170,6 +185,31 @@ custom_categories:
       - NavigationViewportDataSource
       - ViewportDataSourceType
       - ViewportDataSourceDelegate
+      - FollowingCameraOptions
+      - IntersectionDensity
+      - BearingSmoothing
+      - GeometryFramingAfterManeuver
+      - PitchNearManeuver
+      - OverviewCameraOptions
+      - NavigationViewportDataSourceOptions
+      - CameraOptions
+  - name: Preview
+    children:
+      - PreviewOptions
+      - PreviewViewController
+      - PreviewViewControllerDelegate
+      - Banner
+      - BannerConfiguration
+      - BannerDismissalViewController
+      - BannerDismissalViewControllerDelegate
+      - DestinationPreviewViewController
+      - DestinationPreviewViewControllerDelegate
+      - DestinationOptions
+      - DestinationDataSource
+      - RoutePreviewViewController
+      - RoutePreviewViewControllerDelegate
+      - RoutePreviewOptions
+      - RoutePreviewDataSource
   - name: Electronic Horizon
     children:
       - ElectronicHorizonOptions
@@ -184,6 +224,7 @@ custom_categories:
       - RoadObjectMatcherDelegate
       - RoadObjectStoreDelegate
       - RoadObjectMatcherError
+      - OpenLRSideOfRoad
   - name: Reading History
     children:
       - HistoryReader
@@ -191,3 +232,5 @@ custom_categories:
       - UnknownHistoryEvent
       - RouteAssignmentHistoryEvent
       - LocationUpdateHistoryEvent
+      - History
+      - HistoryRecording

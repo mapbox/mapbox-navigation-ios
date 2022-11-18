@@ -10,8 +10,8 @@ import MapboxGeocoder
 extension SceneDelegate: NavigationMapViewDelegate {
     
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
-        guard let routesPreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutesPreviewViewController,
-              let routes = routesPreviewViewController.routesPreviewOptions.routeResponse.routes,
+        guard let routePreviewViewController = previewViewController.topBanner(at: .bottomLeading) as? RoutePreviewViewController,
+              let routes = routePreviewViewController.routePreviewOptions.routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
             return
         }
@@ -19,7 +19,7 @@ extension SceneDelegate: NavigationMapViewDelegate {
         previewViewController.dismissBanner(at: .bottomLeading,
                                             animated: false)
         
-        preview(routesPreviewViewController.routesPreviewOptions.routeResponse,
+        preview(routePreviewViewController.routePreviewOptions.routeResponse,
                 routeIndex: routeIndex,
                 animated: false)
     }
@@ -57,7 +57,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         if banner is DestinationPreviewViewController {
             // TODO: Implement the ability to remove final destination annotations.
             previewViewController.navigationMapView.removeRoutes()
-        } else if banner is RoutesPreviewViewController {
+        } else if banner is RoutePreviewViewController {
             previewViewController.navigationMapView.removeWaypoints()
             previewViewController.navigationMapView.removeRoutes()
         }

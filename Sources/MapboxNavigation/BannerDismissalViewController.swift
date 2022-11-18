@@ -1,6 +1,9 @@
 import UIKit
 
-// :nodoc:
+/**
+ Banner that is shown at the top of the screen and allows to dismiss already presented banners
+ that were added to the `PreviewViewController`.
+ */
 public class BannerDismissalViewController: UIViewController, Banner {
     
     var topBannerView: TopBannerView!
@@ -9,7 +12,9 @@ public class BannerDismissalViewController: UIViewController, Banner {
     
     var backButton: BackButton!
     
-    // :nodoc:
+    /**
+     The title for the back button.
+     */
     public var backTitle: String? {
         get {
             backButton.title(for: .normal)
@@ -19,15 +24,24 @@ public class BannerDismissalViewController: UIViewController, Banner {
         }
     }
     
-    // :nodoc:
+    /**
+     The object that serves as the banner dismissal delegate.
+     */
     public weak var delegate: BannerDismissalViewControllerDelegate?
     
     // MARK: - Banner properties
     
-    // :nodoc:
+    /**
+     Configuration of the banner.
+     */
     public let bannerConfiguration: BannerConfiguration
     
-    // :nodoc:
+    /**
+     Initializes a `BannerDismissalViewController` instance.
+     
+     - parameter bannerConfiguration: Configuration of the banner. `BannerDismissalViewController` is
+     shown at the top of the screen by default.
+     */
     public init(_ bannerConfiguration: BannerConfiguration = BannerConfiguration(position: .topLeading, height: 70.0)) {
         self.bannerConfiguration = bannerConfiguration
         
@@ -46,12 +60,6 @@ public class BannerDismissalViewController: UIViewController, Banner {
         setupParentView()
         setupBackButton()
         setupConstraints()
-    }
-    
-    // MARK: - UIViewController lifecycle methods
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
     }
     
     // MARK: - UIViewController setting-up methods

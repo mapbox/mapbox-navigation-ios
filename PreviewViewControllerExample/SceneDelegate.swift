@@ -50,8 +50,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let topmostBottomBanner = previewViewController.topBanner(at: .bottomLeading)
         
-        // In case if `RoutesPreviewViewController` is shown - don't do anything.
-        if topmostBottomBanner is RoutesPreviewViewController {
+        // In case if `RoutePreviewViewController` is shown - don't do anything.
+        if topmostBottomBanner is RoutePreviewViewController {
             return
         }
         
@@ -122,10 +122,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                  duration: TimeInterval = 1.0,
                  animations: (() -> Void)? = nil,
                  completion: (() -> Void)? = nil) {
-        let routesPreviewOptions = RoutesPreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
-        let routesPreviewViewController = RoutesPreviewViewController(routesPreviewOptions)
-        routesPreviewViewController.delegate = self
-        previewViewController.present(routesPreviewViewController,
+        let routePreviewOptions = RoutePreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
+        let routePreviewViewController = RoutePreviewViewController(routePreviewOptions)
+        routePreviewViewController.delegate = self
+        previewViewController.present(routePreviewViewController,
                                       animated: animated,
                                       duration: duration,
                                       animations: animations)

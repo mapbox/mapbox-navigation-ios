@@ -90,7 +90,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         NavigationSettings.shared.tileStoreConfiguration.mapLocation
     }
     
-    // :nodoc:
+    /**
+     `NavigationView`, that is displayed inside the view controller.
+     */
     public var navigationView: NavigationView {
         return (view as! NavigationView)
     }
@@ -921,6 +923,27 @@ extension NavigationViewController: NavigationServiceDelegate {
         let defaultBehavior = RouteController.DefaultBehavior.shouldRerouteFromLocation
         let componentsWantReroute = navigationComponents.allSatisfy { $0.navigationService(service, shouldRerouteFrom: location) }
         return componentsWantReroute && (delegate?.navigationViewController(self, shouldRerouteFrom: location) ?? defaultBehavior)
+    }
+    
+    public func navigationService(_ service: NavigationService, shouldProactivelyRerouteFrom location: CLLocation, to route: Route, completion: @escaping () -> Void) {
+        var componentsToRespond = navigationComponents.count + 1
+        let componentCompletion = {
+            componentsToRespond -= 1
+            
+            if componentsToRespond == 0 {
+                completion()
+            }
+        }
+        navigationComponents.forEach {
+            $0.navigationService(service,
+                                 shouldProactivelyRerouteFrom: location,
+                                 to: route,
+                                 completion: componentCompletion)
+        }
+        delegate?.navigationViewController(self,
+                                           shouldProactivelyRerouteFrom: location,
+                                           to: route,
+                                           completion: componentCompletion)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {

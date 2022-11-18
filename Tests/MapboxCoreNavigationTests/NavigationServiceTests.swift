@@ -11,11 +11,10 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 fileprivate let distanceThreshold: CLLocationDistance = 2
 
 // minimum threshold for both latitude and longitude between two coordinates
-fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
+fileprivate let coordinateThreshold: CLLocationDistance = 0.005
 
 class NavigationServiceTests: TestCase {
-    let directionsClientSpy = DirectionsSpy()
-    let delegate = NavigationServiceDelegateSpy()
+    var delegate: NavigationServiceDelegateSpy!
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
@@ -54,12 +53,12 @@ class NavigationServiceTests: TestCase {
     override func setUp() {
         super.setUp()
 
-        directionsClientSpy.reset()
-        delegate.reset()
+        delegate = .init()
     }
     
     override func tearDown() {
         super.tearDown()
+
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
     }

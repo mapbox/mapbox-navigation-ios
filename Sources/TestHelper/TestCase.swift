@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import MapboxDirections
+import MapboxDirections
 @testable import MapboxCoreNavigation
 #if canImport(MapboxMaps)
 import MapboxMaps
@@ -27,6 +27,7 @@ open class TestCase: XCTestCase {
     open override func tearDown() {
         super.tearDown()
         // Reset navigator
+        CoreNavigatorSpy.reset()
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
     }
 

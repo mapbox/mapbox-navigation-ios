@@ -1,14 +1,31 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+### Routing
+
+* Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
+
+### Map
+
+* The maneuver arrow now extends 50 points along the route before and after an intersection, compared to 30 points previously. ([#4230](https://github.com/mapbox/mapbox-navigation-ios/pull/4230))
+
+### Other changes
+
+* Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
+* Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
+* `NavigationView.init(frame:tileStoreLocation:navigationMapView:)`, `NavigationView.navigationMapView`, `NavigationView.floatingStackView`, `NavigationView.floatingButtons`, `NavigationView.wayNameView`, `NavigationView.speedLimitView`, `NavigationView.topBannerContainerView` and `NavigationView.bottomBannerContainerView` are now publicly accessible. ([#4249](https://github.com/mapbox/mapbox-navigation-ios/pull/4249))
+
 ## v2.9.0
 
 ### Packaging
 
 * This library now requires a minimum deployment target of iOS 12.0 or above. iOS 11._x_ is no longer supported. ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-beta.3](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-beta.3). ([#4218](https://github.com/mapbox/mapbox-navigation-ios/pull/4218))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v118._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/118.0.0). ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* This library now requires a minimum Xcode version of 13.1.0 or above. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* MapboxCoreNavigation now requires [MapboxDirections v2.8.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.8.0-rc.2). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v119._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/119.0.2). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 * MapboxNavigation now requires [MapboxSpeech v2._x_](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v2.1.0). ([#4142](https://github.com/mapbox/mapbox-navigation-ios/pull/4142))
-* MapboxNavigation now requires [MapboxMaps v10.9._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.0). ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
+* MapboxNavigation now requires [MapboxMaps v10.9._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.9.1). ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### Map
 
@@ -22,6 +39,11 @@
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` and `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)` methods that allow selection of the waypoint and continuous alternative. ([#4175](https://github.com/mapbox/mapbox-navigation-ios/pull/4175))
 * `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` now contains a `legIndex` parameter that allows highlighting one leg more prominently than other legs of the route. ([#4211](https://github.com/mapbox/mapbox-navigation-ios/pull/4211))
 * Fixed an issue where the route line with no traffic congestion data and multiple legs wasn't shown correctly. ([#4217](https://github.com/mapbox/mapbox-navigation-ios/pull/4217))
+* Fixed a crash when setting the `NavigationMapView.userLocationStyle` property to `UserLocationStyle.puck3D`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+
+### Preview
+
+* Added the `PreviewViewController` that along with the ability to display a route preview map allows to present banners with additional information. Such banners should conform to `Banner` protocol. The Mapbox Navigation SDK also provides default banners that allow to present address of the final destination (`DestinationPreviewViewController`) and route information like estimated time of arrival, total duration and distance (`RoutePreviewViewController`). The `PreviewViewControllerDelegate` protocol allows to observe `Banner` presentation and dismissal events. Seamless transition between `PreviewViewController` and `NavigationViewController` can be reached by using `UIViewControllerTransitioningDelegate` and replacing existing `NavigationViewController.navigationMapView` instance with the one that is used in `PreviewViewController`. ([#4227](https://github.com/mapbox/mapbox-navigation-ios/pull/4227), [#4188](https://github.com/mapbox/mapbox-navigation-ios/pull/4188))
 
 ### Banners and guidance instructions
 
@@ -33,6 +55,7 @@
 * Route shields now respect language-specific route numbers in Japan. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Improved the timing of some spoken instructions. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where the current road name label appeared even while the user is not traveling on a known road. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* Fixed an issue where top and bottom banners were not presented when starting active navigation session. ([#4222](https://github.com/mapbox/mapbox-navigation-ios/pull/4222))
 
 ### Location tracking
 
@@ -55,17 +78,28 @@
 * Fixed an issue where the values of `RouteLeg.segmentDistances` and `RouteLeg.expectedTravelTime` did not add up to `RouteLeg.distance` and `RouteLeg.expectedTravelTime`, respectively. Each value of `RouteLeg.expectedTravelTime` that immediately follows an intersection now includes the time required to traverse the intersection. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where some [rat runs](https://en.wikipedia.org/wiki/Rat_running) were suggested as alternative routes that matched the main route. These alternative routes are no longer suggested at all. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
 * Fixed an issue where routes avoided roads with the deprecated tags [`hov=lane`](https://taginfo.openstreetmap.org/tags/hov=lane) and `hov:conditional=lane @ …` as restricted roads. ([#4191](https://github.com/mapbox/mapbox-navigation-ios/pull/4191))
+* Fixed an issue where the user’s location would get out of sync after traveling through short tunnels. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
+* Fixed a crash after changing `RouteController.prefersOnlineRoute` from `false` to `true`. ([#4239](https://github.com/mapbox/mapbox-navigation-ios/pull/4239))
 
 ### User feedback
 
 * The MapboxMobileEvents dependency is no longer used. Feedback events are now handled by MapboxCommon. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 * Deprecated `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4011](https://github.com/mapbox/mapbox-navigation-ios/pull/4011))
 
+### Predictive caching
+
+* Implemented predictive cache with `TilesetDescriptor` so that volatile sources are not loaded unexpectedly. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)` and `PredictiveCacheManager.init(predictiveCacheOptions:mapOptions:)` in favor of `PredictiveCacheManager.init(predictiveCacheOptions:cacheMapOptions:)`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Added `PredictiveCacheMapsOptions` (map specific, that also allow to specify zoom levels for which the map tiles should be cached) and `PredictiveCacheNavigationOptions` (navigation specific) available through the `PredictiveCacheOptions`. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Deprecated `PredictiveCacheOptions.currentLocationRadius`, `PredictiveCacheOptions.routeBufferRadius`, `PredictiveCacheOptions.destinationLocationRadius`, `PredictiveCacheOptions.maximumConcurrentRequests`. Use `PredictiveCacheOptions.predictiveCacheNavigationOptions` and `PredictiveCacheOptions.predictiveCacheMapsOptions` instead for separate predictive cache configuration for maps and navigation. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+* Added `PredictiveCacheManager.updateMapControllers(cacheMapOptions:)` for cashing map styles after they are loaded. ([#4213](https://github.com/mapbox/mapbox-navigation-ios/pull/4213))
+
 ### Other changes
 
 * Added `NavigationViewController.usesNightStyleInDarkMode` property to control whether night style is used in dark mode. ([#4143](https://github.com/mapbox/mapbox-navigation-ios/pull/4143))
 * Fixed an issue where the rerouting audio cue stopped background audio. ([#3642](https://github.com/mapbox/mapbox-navigation-ios/pull/3642))
 * Fixed an issue where the rerouting audio cue played even if `RouteVoiceController.playRerouteSound` was set to `false`. ([#4214](https://github.com/mapbox/mapbox-navigation-ios/pull/4214))
+* Added `BorderCrossing.init(from:to:)` to allow creation of `BorderCrossing` publicly. ([#4226](https://github.com/mapbox/mapbox-navigation-ios/issues/4226))
 
 ## v2.8.1
 
