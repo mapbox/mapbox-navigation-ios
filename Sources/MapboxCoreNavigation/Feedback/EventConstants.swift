@@ -6,6 +6,12 @@ enum EventKey: String {
     case feedbackId = "feedbackId"
     case locationsBefore = "locationsBefore"
     case locationsAfter = "locationsAfter"
+    case payload = "payload"
+    case customEventVersion = "customEventVersion"
+}
+
+enum CustomEventType: String {
+    case analytics = "analytics"
 }
 
 enum EventType: String {
@@ -19,8 +25,7 @@ enum EventType: String {
     case carplayDisconnect = "navigation.carplay.disconnect"
     case routeRetrieval = "mobile.performance_trace"
     case freeDrive = "navigation.freeDrive"
-    case dropInConnect = "navigation.dropin.connect"
-    case dropInDisconnect = "navigation.dropin.disconnect"
+    case customEvent = "navigation.customEvent"
 }
 
 // :nodoc:

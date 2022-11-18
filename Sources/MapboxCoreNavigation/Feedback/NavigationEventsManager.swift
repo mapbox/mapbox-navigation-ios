@@ -184,6 +184,12 @@ open class NavigationEventsManager {
     private func eventAttributes(type: EventType, date: Date = Date()) -> [String : Any] {
         return [EventKey.event.rawValue: type.rawValue, EventKey.created.rawValue: date.ISO8601]
     }
+    
+    private func customEventAttributes(type: CustomEventType, payload: String = "", customEventVersion: String = "", date: Date = Date()) -> [String: Any] {
+        return [EventKey.event.rawValue: type.rawValue, EventKey.payload.rawValue: payload,
+            EventKey.customEventVersion.rawValue: customEventVersion,
+            EventKey.created.rawValue: date.ISO8601]
+    }
 
     func start() {
         guard let shortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
@@ -272,6 +278,17 @@ open class NavigationEventsManager {
 
         if let routeIdentifier = sessionState.routeIdentifier {
             event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
+        }
+        return event
+    }
+    
+    func customEvent(payload: String? = nil) -> CustomEventDetails? {
+        var event: CustomEventDetails?
+        
+        if let passiveDataSource = passiveNavigationDataSource {
+            event = CustomEventDetails(type: EventType.customEvent, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, payload: payload , passiveDataSource: passiveDataSource)
+        } else if let activeDataSource = activeNavigationDataSource {
+            event = CustomEventDetails(type: EventType.customEvent, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, payload: payload, activeDataSource: activeDataSource)
         }
         return event
     }
@@ -366,15 +383,17 @@ open class NavigationEventsManager {
         return event
     }
     
-    public func sendDropInConnectEvent() {
-        // send using navigationservice.eventsmanager
-        let attributes = eventAttributes(type: .dropInConnect)
+    func customEvent(customEventType: CustomEventType, payload: String, customEventVersion: String) {
+        let attributes = customEventAttributes(type: customEventType, payload: payload, customEventVersion: customEventVersion)
         eventsAPI.sendImmediateEvent(with: attributes)
     }
     
+    public func sendDropInConnectEvent() {
+        sendCustomEvent(payload: "Drop-In UI : started")
+    }
+    
     public func sendDropInDisconnectEvent() {
-        let attributes = eventAttributes(type: .dropInDisconnect)
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendCustomEvent(payload: "Drop-In UI : stopped")
     }
 
     public func sendCarPlayConnectEvent() {
@@ -389,6 +408,11 @@ open class NavigationEventsManager {
     
     func sendRouteRetrievalEvent() {
         guard let attributes = try? navigationRouteRetrievalEvent()?.asDictionary() else { return }
+        eventsAPI.sendImmediateEvent(with: attributes)
+    }
+    
+    func sendCustomEvent(payload: String? = nil) {
+        guard let attributes = try? customEvent(payload: payload)?.asDictionary() else { return }
         eventsAPI.sendImmediateEvent(with: attributes)
     }
 
