@@ -5,9 +5,9 @@ import Turf
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
-fileprivate var distanceFilter: CLLocationDistance = 10
-fileprivate var verticalAccuracy: CLLocationAccuracy = 10
-fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
+fileprivate let distanceFilter: CLLocationDistance = 10
+fileprivate let verticalAccuracy: CLLocationAccuracy = 10
+fileprivate let horizontalAccuracy: CLLocationAccuracy = 40
 // minimumSpeed will be used when a location have maximumTurnPenalty
 fileprivate let maximumTurnPenalty: CLLocationDirection = 90
 // maximumSpeed will be used when a location have minimumTurnPenalty
@@ -33,46 +33,47 @@ fileprivate class SimulatedLocation: CLLocation {
 open class SimulatedLocationManager: NavigationLocationManager {
     
     /**
-     Initalizes a new `SimulatedLocationManager` with the given route.
+     Initializes a new `SimulatedLocationManager` with the given route.
      
      - parameter route: The initial route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(route: Route) {
-        super.init()
-        commonInit(for: route, currentDistance: 0, currentSpeed: 0)
+    public convenience init(route: Route) {
+        self.init(route: route, currentDistance: 0, currentSpeed: 0)
     }
 
     /**
-     Initalizes a new `SimulatedLocationManager` with the given routeProgress.
+     Initializes a new `SimulatedLocationManager` with the given routeProgress.
      
      - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(routeProgress: RouteProgress) {
-        super.init()
-        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled)
-        commonInit(for: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
+    public convenience init(routeProgress: RouteProgress) {
+        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled, speed: 0)
+        self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
     }
 
-    private func commonInit(for route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
+    private init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
         self.currentSpeed = currentSpeed
         self.currentDistance = currentDistance
         self.route = route
         if currentDistance != 0 {
             self.remainingRouteShape = route.shape?.trimmed(from: currentDistance, to: LocationDistance.infinity)
         }
+        self.remainingRouteShape = route.shape
+        self.locations = route.shape?.coordinates.simulatedLocationsWithTurnPenalties()
+
+        super.init()
 
         restartTimer()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Specifying Simulation
@@ -135,7 +136,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var remainingRouteShape: LineString!
 
     private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
-    
+
     var route: Route? {
         didSet {
             reset()
@@ -144,8 +145,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     private func reset() {
         if let shape = route?.shape {
-            remainingRouteShape = shape
-            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+            queue.async { [shape, weak self] in
+                self?.remainingRouteShape = shape
+                self?.locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+            }
         }
     }
     
@@ -164,9 +167,19 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var slicedIndex: Int? = nil
     
     internal func tick() {
+        let (
+            expectedSegmentTravelTimes,
+            originalShape
+        ) = onMainQueueSync {
+            (
+                routeProgress?.currentLeg.expectedSegmentTravelTimes,
+                route?.shape
+            )
+        }
+
         let tickDistance = currentSpeed * defaultTickInterval
         guard let remainingShape = remainingRouteShape,
-              let originalShape = route?.shape,
+              let originalShape = originalShape,
               let indexedNewCoordinate = remainingShape.indexedCoordinateFromStart(distance: tickDistance) else {
             return
         }
@@ -183,8 +196,11 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                       course: 0,
                                       speed: currentSpeed,
                                       timestamp: getNextDate())
-            delegate?.locationManager?(self, didUpdateLocations: [location])
-            
+            onMainQueueSync { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.locationManager?(self, didUpdateLocations: [location])
+            }
+
             return
         }
         
@@ -195,9 +211,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
                   originalShape.closestCoordinate(to: newCoordinate,
                                                   startingIndex: idx)?.index
               }) ?? originalShape.closestCoordinate(to: newCoordinate)?.index else { return }
-        
+
         // Simulate speed based on expected segment travel time
-        if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
+        if let expectedSegmentTravelTimes = expectedSegmentTravelTimes,
            let nextCoordinateOnRoute = originalShape.coordinates.after(index: closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
             let distance = originalShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
@@ -221,32 +237,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
 
         self.simulatedLocation = location
 
-        delegate?.locationManager?(self, didUpdateLocations: [location])
+        onMainQueueSync {
+            delegate?.locationManager?(self, didUpdateLocations: [location])
+        }
         currentDistance += remainingShape.distance(to: newCoordinate) ?? 0
         
         remainingRouteShape = remainingShape.sliced(from: newCoordinate)
     }
-    
-    private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
-        // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
-        if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
-            return minimumSpeed
-        }
-        // Maximum speed if we are a safe distance from the closest coordinate
-        else if distance >= safeDistance {
-            return maximumSpeed
-        }
-        // Base speed on previous or upcoming turn penalty
-        else {
-            let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
-            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
-        }
-    }
-    
-    private func calculateCurrentDistance(_ distance: CLLocationDistance) -> CLLocationDistance {
-        return distance + currentSpeed
-    }
-    
+
     open override func copy() -> Any {
         let copy = SimulatedLocationManager(route: route!)
         copy.currentDistance = currentDistance
@@ -265,31 +263,44 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     @objc private func didReroute(_ notification: Notification) {
-        queue.async { [self] in
-            guard let router = notification.object as? Router else {
-                return
-            }
-            
+        guard let router = notification.object as? Router else {
+            return
+        }
+
+        let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
+        let shape = router.routeProgress.route.shape
+        let currentSpeed = self.currentSpeed
+
+        queue.async { [weak self] in
+            guard let self = self else { return }
             var newClosestCoordinate: LocationCoordinate2D!
-            if let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation,
-               let shape = router.routeProgress.route.shape,
+            if let location = location,
+               let shape = shape,
                let closestCoordinate = shape.closestCoordinate(to: location.coordinate) {
-                simulatedLocation = location
-                currentDistance = closestCoordinate.distance
+                self.simulatedLocation = location
+                self.currentDistance = closestCoordinate.distance
                 newClosestCoordinate = closestCoordinate.coordinate
             } else {
-                currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
-                newClosestCoordinate = router.routeProgress.route.shape?.coordinateFromStart(distance: currentDistance)
+                self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled, speed: currentSpeed)
+                newClosestCoordinate = router.routeProgress.route.shape?.coordinateFromStart(distance: self.currentDistance)
             }
-            
-            routeProgress = router.routeProgress
-            route = router.routeProgress.route
-            
-            remainingRouteShape = remainingRouteShape.sliced(from: newClosestCoordinate)
-            slicedIndex = nil
+
+            onMainQueueSync {
+                self.routeProgress = router.routeProgress
+                self.route = router.routeProgress.route
+            }
+            self.remainingRouteShape = self.remainingRouteShape.sliced(from: newClosestCoordinate)
+            self.slicedIndex = nil
         }
     }
 }
+
+// MARK: - Tests Support
+
+extension SimulatedLocationManager {
+}
+
+// MARK: - Helpers
 
 extension Double {
     fileprivate func scale(minimumIn: Double, maximumIn: Double, minimumOut: Double, maximumOut: Double) -> Double {
@@ -400,5 +411,29 @@ fileprivate extension LineString {
         }
         
         return closestCoordinate
+    }
+}
+
+private func calculateCurrentDistance(_ distance: CLLocationDistance, speed: CLLocationSpeed) -> CLLocationDistance {
+    return distance + speed
+}
+
+private func calculateCurrentSpeed(
+    distance: CLLocationDistance,
+    coordinatesNearby: [CLLocationCoordinate2D]? = nil,
+    closestLocation: SimulatedLocation
+) -> CLLocationSpeed {
+    // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
+    if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
+        return minimumSpeed
+    }
+    // Maximum speed if we are a safe distance from the closest coordinate
+    else if distance >= safeDistance {
+        return maximumSpeed
+    }
+    // Base speed on previous or upcoming turn penalty
+    else {
+        let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
+        return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
     }
 }
