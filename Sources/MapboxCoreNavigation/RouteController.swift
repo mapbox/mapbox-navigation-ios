@@ -336,9 +336,15 @@ open class RouteController: NSObject {
         }
     }
     
-    /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
-    private func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
-        let legIndex = UInt32(value)
+    /**
+    Updates current `RouteProgress.legIndex` to specified leg index.
+    
+    - parameter index: Leg index value to set.
+    - parameter completionHandler: Completion handler, which is called to report a status whether
+    `RouteLeg` was changed or not.
+    */
+    public func updateRouteLeg(to index: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
+        let legIndex = UInt32(index)
         
         navigator.changeLeg(forLeg: legIndex) { [weak self] success in
             guard let self = self else {
