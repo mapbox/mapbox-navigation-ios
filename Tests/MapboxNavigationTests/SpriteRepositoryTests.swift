@@ -7,36 +7,24 @@ import MapboxMaps
 
 class SpriteRepositoryTests: TestCase {
     var repository: SpriteRepository!
-    
+
+    var requestCache: URLCacheSpy!
+    var derivedCache: BimodalImageCacheSpy!
+    var imageDownloader: ReentrantImageDownloaderSpy!
+
+    let spriteInfo = Fixture.JSONFromFileNamed(name: "sprite-info")
+
     override func setUp() {
         super.setUp()
-        self.continueAfterFailure = false
-        generateRepository()
+
+        requestCache = URLCacheSpy()
+        derivedCache = BimodalImageCacheSpy()
+        imageDownloader = ReentrantImageDownloaderSpy()
+        repository = SpriteRepository(imageDownloader: imageDownloader,
+                                      requestCache: requestCache,
+                                      derivedCache: derivedCache)
     }
 
-    override func tearDown() {
-        super.tearDown()
-        clearDiskCache()
-        ImageLoadingURLProtocolSpy.reset()
-        repository = nil
-    }
-    
-    func clearDiskCache() {
-        let semaphore = DispatchSemaphore(value: 0)
-        repository.resetCache() {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-    }
-    
-    func generateRepository() {
-        repository = SpriteRepository()
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        repository.sessionConfiguration = config
-    }
-    
     func storeData(styleType: StyleType = .day) {
         let scale = Int(VisualInstruction.Component.scale)
         let styleURI: StyleURI = (styleType == .day) ? .navigationDay : .navigationNight
@@ -44,18 +32,18 @@ class SpriteRepositoryTests: TestCase {
               let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
               let infoRequestURL = repository.spriteURL(isImage: false, styleID: styleID),
               let legacyRequestURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
-                  XCTFail("Failed to form request URL.")
-                  return
-              }
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.shieldDay.image.pngData()!, forURL: spriteRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: infoRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: legacyRequestURL)
+            XCTFail("Failed to form request URL.")
+            return
+        }
+        imageDownloader.returnedDownloadResults[spriteRequestURL] = ShieldImage.shieldDay.image.pngData()
+        imageDownloader.returnedDownloadResults[legacyRequestURL] = ShieldImage.i280.image.pngData()
+        imageDownloader.returnedDownloadResults[infoRequestURL] = spriteInfo
     }
     
     func testDownLoadingSpriteInfo() {
         let fakeURL = URL(string: "http://an.image.url/spriteInfo.json")!
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: fakeURL)
-        
+        imageDownloader.returnedDownloadResults[fakeURL] = spriteInfo
+
         let dataKey = "us-interstate-3"
         XCTAssertNil(repository.getSpriteInfo(styleURI: .navigationDay, with: dataKey))
         
@@ -86,7 +74,8 @@ class SpriteRepositoryTests: TestCase {
     
     func testDownLoadingImage() {
         let fakeURL = URL(string: "http://an.image.url/sprite.png")!
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: fakeURL)
+        imageDownloader.returnedDownloadResults[fakeURL] = ShieldImage.i280.image.pngData()!
+
         XCTAssertNil(repository.getSpriteImage(styleURI: .navigationDay))
         
         let semaphore = DispatchSemaphore(value: 0)
@@ -252,8 +241,9 @@ class SpriteRepositoryTests: TestCase {
                   XCTFail("Failed to form request to update SpriteRepository.")
                   return
         }
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: infoRequestURL)
-        
+
+        imageDownloader.returnedDownloadResults[infoRequestURL] = self.spriteInfo
+
         // Downloaded Sprite metadata without Sprite image to test the shield icon retrieval under poor network condition.
         downloadExpectation = expectation(description: "Sprite info updated.")
         repository.downloadInfo(infoRequestURL) { (_) in
@@ -265,6 +255,21 @@ class SpriteRepositoryTests: TestCase {
         spriteInfo = repository.getSpriteInfo(styleURI: newStyleURI, with: dataKey)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")
         XCTAssertNil(repository.getSpriteImage(styleURI: newStyleURI), "Failed to match the Sprite image with the spriteKey.")
+    }
+
+    func testResetCache() {
+        repository.updateStyle(styleURI: StyleURI.navigationNight) { _ in }
+        let complitionExpectation = expectation(description: "Should call completion")
+        repository.resetCache() {
+            complitionExpectation.fulfill()
+        }
+
+        XCTAssertTrue(derivedCache.clearMemoryCalled)
+        XCTAssertTrue(derivedCache.clearDiskCalled)
+        XCTAssertTrue(requestCache.clearCacheCalled)
+        XCTAssertTrue(repository.userInterfaceIdiomStyles.isEmpty)
+
+        waitForExpectations(timeout: 0.5)
     }
 
 }
