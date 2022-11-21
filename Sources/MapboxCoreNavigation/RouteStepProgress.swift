@@ -84,7 +84,8 @@ open class RouteStepProgress: Codable {
      The step must contain `intersectionsIncludingUpcomingManeuverIntersection` otherwise this property will be `nil`.
      */
     public var upcomingIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.startIndex..<intersections.endIndex-1 ~= intersectionIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.count > 0,
+              intersections.startIndex..<intersections.endIndex-1 ~= intersectionIndex else {
             return nil
         }
 
