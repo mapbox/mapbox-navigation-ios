@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 2.7.3
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v111._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/111.0.2). ([#4255](https://github.com/mapbox/mapbox-navigation-ios/pull/4255))
+* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4255](https://github.com/mapbox/mapbox-directions-swift/pull/4255))
+
 ## v2.7.2
 
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
