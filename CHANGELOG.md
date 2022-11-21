@@ -10,7 +10,7 @@
 
 * Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
-
+* Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#]()) 
 ## v2.9.0
 
 ### Packaging
