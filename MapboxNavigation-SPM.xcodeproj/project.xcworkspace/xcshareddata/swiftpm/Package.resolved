@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/mapbox/MapboxGeocoder.swift.git",
         "state": {
           "branch": null,
-          "revision": "10c497840c9e1142194563f402ddc903310a935d",
-          "version": "0.15.0"
+          "revision": "91fb908bb57c0fcddc0062b5d64ea2002e0ea789",
+          "version": "0.14.0"
         }
       },
       {
