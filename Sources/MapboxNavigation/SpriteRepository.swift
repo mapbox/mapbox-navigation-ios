@@ -5,31 +5,33 @@ import MapboxDirections
 
 class SpriteRepository {
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
-    let defaultStyleURI: StyleURI = .navigationDay
-    fileprivate(set) var imageDownloader: ReentrantImageDownloader
-    
+    private let defaultStyleURI: StyleURI = .navigationDay
+    private let requestTimeOut: TimeInterval = 10
+    private(set) var userInterfaceIdiomStyles = [UIUserInterfaceIdiom: StyleURI]()
+
+    private(set) var imageDownloader: ReentrantImageDownloader
     let requestCache: URLCaching
     let derivedCache: BimodalImageCache
-    static let shared = SpriteRepository.init()
-    
-    private let requestTimeOut: TimeInterval = 10
-    
+
     var sessionConfiguration: URLSessionConfiguration {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
-    
-    var userInterfaceIdiomStyles = [UIUserInterfaceIdiom: StyleURI]()
 
-    init() {
-        sessionConfiguration = URLSessionConfiguration.default
-        sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
-        imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
-        requestCache = URLDataCache()
-        derivedCache = ImageCache()
+    static let shared = SpriteRepository.init()
+
+    init(imageDownloader: ReentrantImageDownloader? = nil,
+         requestCache: URLCaching = URLDataCache(),
+         derivedCache: BimodalImageCache = ImageCache()) {
+        self.sessionConfiguration = URLSessionConfiguration.default
+        self.sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
+        self.requestCache = requestCache
+        self.derivedCache = derivedCache
+
+        self.imageDownloader = imageDownloader ?? ImageDownloader(sessionConfiguration: sessionConfiguration)
     }
-    
+
     func updateStyle(styleURI: StyleURI?,
                      idiom: UIUserInterfaceIdiom = .phone,
                      completion: @escaping ImageDownloadCompletionHandler) {

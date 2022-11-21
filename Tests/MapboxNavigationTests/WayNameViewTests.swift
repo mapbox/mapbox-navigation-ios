@@ -6,33 +6,26 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class WayNameViewTests: TestCase {
-    lazy var wayNameView: WayNameView = {
-        let view: WayNameView = .forAutoLayout()
-        view.containerView.isHidden = true
-        view.containerView.clipsToBounds = true
-        
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        view.label.spriteRepository = SpriteRepository()
-        view.label.spriteRepository.sessionConfiguration = config
-        return view
-    }()
-    
+    var wayNameView: WayNameView!
+    var imageDownloader: ReentrantImageDownloaderSpy!
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
+
+        wayNameView = .forAutoLayout()
+        wayNameView.containerView.isHidden = true
+        wayNameView.containerView.clipsToBounds = true
+        
+        imageDownloader = ReentrantImageDownloaderSpy()
+        wayNameView.label.spriteRepository = SpriteRepository(imageDownloader: imageDownloader,
+                                                              requestCache: URLCacheSpy(),
+                                                              derivedCache: BimodalImageCacheSpy())
     }
 
     override func tearDown() {
         super.tearDown()
-        let semaphore = DispatchSemaphore(value: 0)
-        wayNameView.label.spriteRepository.resetCache() {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-        
-        ImageLoadingURLProtocolSpy.reset()
+
         wayNameView.label.representation = nil
     }
     
@@ -46,9 +39,9 @@ class WayNameViewTests: TestCase {
                   XCTFail("Failed to form request URL.")
                   return
               }
-        ImageLoadingURLProtocolSpy.registerData(spriteImage.pngData()!, forURL: spriteRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: infoRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: legacyRequestURL)
+        imageDownloader.returnedDownloadResults[spriteRequestURL] = spriteImage.pngData()
+        imageDownloader.returnedDownloadResults[legacyRequestURL] = ShieldImage.i280.image.pngData()
+        imageDownloader.returnedDownloadResults[infoRequestURL] = Fixture.JSONFromFileNamed(name: "sprite-info")
     }
     
     func testUpdateStyle() {
