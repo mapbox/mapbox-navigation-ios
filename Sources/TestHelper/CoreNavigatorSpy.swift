@@ -20,6 +20,9 @@ public final class CoreNavigatorSpy: CoreNavigator {
     public var unsetRoutesCalled = false
 
     public var onUpdateLocation: ((CLLocation) -> Bool)?
+    
+    public var changedRouteLegIndex: UInt32?
+    public var onChangeLeg: ((UInt32) -> Bool)?
 
     public var passedUuid: UUID?
     public var passedRoute: RouteInterface?
@@ -127,6 +130,13 @@ public final class CoreNavigatorSpy: CoreNavigator {
         shared = CoreNavigatorSpy()
     }
 
+    public func changeLeg(to index: UInt32,
+                          completion: @escaping (Bool) -> Void) {
+        changedRouteLegIndex = index
+        let result = onChangeLeg?(index) ?? true
+        completion(result)
+    }
+    
     public init() {}
 
 }

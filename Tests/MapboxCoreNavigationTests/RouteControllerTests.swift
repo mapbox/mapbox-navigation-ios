@@ -1521,6 +1521,20 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
 
+    func testUpdateRouteLegIndex() {
+        let expectation = XCTestExpectation(description: "Change leg should be called.")
+        let legIndexToSet = 13
+        navigatorSpy.onChangeLeg = { [weak self] _ in
+            XCTAssertEqual(self?.navigatorSpy.changedRouteLegIndex, UInt32(legIndexToSet))
+            expectation.fulfill()
+            return true
+        }
+        
+        routeController.updateRouteLeg(to: legIndexToSet)
+        
+        wait(for: [expectation], timeout: expectationsTimeout)
+    }
+    
     // MARK: Helpers
 
     private func resetNavigationSettings() {

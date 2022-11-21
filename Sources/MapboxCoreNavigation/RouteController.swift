@@ -339,13 +339,14 @@ open class RouteController: NSObject {
     /**
     Updates current `RouteProgress.legIndex` to specified leg index.
     
+    - parameter index: Leg index value to set.
     - parameter completionHandler: Completion handler, which is called to report a status whether
     `RouteLeg` was changed or not.
     */
-    public func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
-        let legIndex = UInt32(value)
+    public func updateRouteLeg(to index: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
+        let legIndex = UInt32(index)
         
-        navigator.changeLeg(forLeg: legIndex) { [weak self] success in
+        sharedNavigator.changeLeg(to: legIndex) { [weak self] success in
             guard let self = self else {
                 completionHandler?(.failure(RouteControllerError.internalError))
                 return
