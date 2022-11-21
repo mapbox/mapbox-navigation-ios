@@ -346,7 +346,7 @@ open class RouteController: NSObject {
     public func updateRouteLeg(to index: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
         let legIndex = UInt32(index)
         
-        sharedNavigator.changeLeg(to: legIndex) { [weak self] success in
+        navigator.changeLeg(forLeg: legIndex) { [weak self] success in
             guard let self = self else {
                 completionHandler?(.failure(RouteControllerError.internalError))
                 return

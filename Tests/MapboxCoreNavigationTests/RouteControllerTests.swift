@@ -283,6 +283,22 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
     
+    func testUpdateRouteLegIndex() {
+        let expectation = XCTestExpectation(description: "Change leg should be called.")
+        let legIndexToSet = 13
+        
+        routeController.updateRouteLeg(to: legIndexToSet) { result in
+            guard case .success(let routeProgress) = result else {
+                return XCTFail("Expected a success but got a failure with \(result)")
+            }
+            XCTAssertEqual(routeProgress.legIndex, 0, "Leg index not changed until notification")
+            expectation.fulfill()
+        }
+        
+        XCTAssertEqual(nativeNavigatorSpy.passedLeg, UInt32(legIndexToSet))
+        wait(for: [expectation], timeout: expectationsTimeout)
+    }
+    
     func testReturnInitialManeuverAvoidanceRadius() {
         rerouteController.initialManeuverAvoidanceRadius = 3.0
         XCTAssertEqual(routeController.initialManeuverAvoidanceRadius, 3.0)
@@ -1519,20 +1535,6 @@ class RouteControllerTests: TestCase {
 
         controller.updateVisualInstructionProgress(status: status)
         waitForExpectations(timeout: expectationsTimeout)
-    }
-
-    func testUpdateRouteLegIndex() {
-        let expectation = XCTestExpectation(description: "Change leg should be called.")
-        let legIndexToSet = 13
-        navigatorSpy.onChangeLeg = { [weak self] _ in
-            XCTAssertEqual(self?.navigatorSpy.changedRouteLegIndex, UInt32(legIndexToSet))
-            expectation.fulfill()
-            return true
-        }
-        
-        routeController.updateRouteLeg(to: legIndexToSet)
-        
-        wait(for: [expectation], timeout: expectationsTimeout)
     }
     
     // MARK: Helpers

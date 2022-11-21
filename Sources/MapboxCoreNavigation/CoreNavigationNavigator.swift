@@ -29,9 +29,6 @@ protocol CoreNavigator {
     func unsetRoutes(uuid: UUID,
                      completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
 
-    func changeLeg(to index: UInt32,
-                   completion: @escaping (Bool) -> Void)
-    
     func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void)
 
     func resume()
@@ -315,10 +312,6 @@ final class Navigator: CoreNavigator {
         onMainQueueSync {
             navigator.resume()
         }
-    }
-    
-    func changeLeg(to index: UInt32, completion: @escaping (Bool) -> Void) {
-        navigator.changeLeg(forLeg: index, callback: completion)
     }
     
     deinit {
