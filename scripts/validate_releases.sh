@@ -74,7 +74,7 @@ do
     xcodegen generate
     ${XCODEBUILD} -resolvePackageDependencies && ACTUAL_XCODEBUILD_RESULTS[${NAVIGATION_SDK_VERSION}]=$? || ACTUAL_XCODEBUILD_RESULTS[${NAVIGATION_SDK_VERSION}]=$?
 
-    # Validate whether Mapbox Navigation version on generated Xcode project is correct.
+    # Validate whether Mapbox Navigation version in generated Xcode project is correct.
     swift sh ./../../../scripts/validate_xcodeproj.swift UISPMTest.xcodeproj ${NAVIGATION_SDK_VERSION}
 
     # Reset XcodeGen project configuration to original state.
