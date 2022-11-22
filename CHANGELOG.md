@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.5.4
+
+### Packaging
+
+* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4274](https://github.com/mapbox/mapbox-directions-swift/pull/4274))
+
 ## v2.5.3
 
 ### Packaging
