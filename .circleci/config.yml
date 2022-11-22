@@ -413,11 +413,19 @@ jobs:
           condition: << parameters.codecoverage >>
           steps:
             - run:
+                name: Generate code coverage report
+                command: |
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+                    $(find build -name "MapboxNavigation.o") > coverage.lcov
+            - run:
                 name: Send code coverage
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
                   ./codecov
+            - store_artifacts:
+                path: coverage.lcov
       - notify-build-finished
 
   build-example:
