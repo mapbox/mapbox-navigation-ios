@@ -4,15 +4,6 @@ import MapboxMaps
 import TestHelper
 
 class MapViewTests: TestCase {
-    
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
-    
     func testMapViewTileSetAndSourceIdentifiers() {
         let resourceOptions = ResourceOptions(accessToken: "")
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)

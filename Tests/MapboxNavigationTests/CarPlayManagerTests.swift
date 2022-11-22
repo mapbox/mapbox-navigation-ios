@@ -24,10 +24,6 @@ class CarPlayManagerTests: TestCase {
         carPlaySearchController = CarPlaySearchController()
     }
     
-    override func tearDown() {
-        super.tearDown()
-    }
-    
     func testEventsSentWhenCarPlayConnectedAndDisconnected() {
         simulateCarPlayConnection(carPlayManager)
         XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.carplayConnect.rawValue))

@@ -3,14 +3,6 @@ import XCTest
 
 final class StackTests: XCTestCase {
     
-    override func setUpWithError() throws {
-        
-    }
-    
-    override func tearDownWithError() throws {
-        
-    }
-    
     func testStackOperations() {
         var stack = Stack<Int>()
         XCTAssertEqual(stack.count, 0)

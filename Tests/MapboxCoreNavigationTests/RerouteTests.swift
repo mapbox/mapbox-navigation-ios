@@ -3,7 +3,7 @@ import MapboxDirections
 import XCTest
 import TestHelper
 
-class RerouteTests: XCTestCase {
+class RerouteTests: TestCase {
 
     func testSelectsMostSimilarRouteForRerouting() {
         let originalRoute = DummyRoute(description: "AAAAA")
