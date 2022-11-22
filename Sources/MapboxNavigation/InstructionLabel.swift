@@ -23,13 +23,15 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
     var customTraitCollection: UITraitCollection?
+
+    var spriteRepository: SpriteRepository = .shared
     
     var instruction: VisualInstruction? {
         didSet {
             updateLabelAttributedText()
         }
     }
-    
+
     private func updateLabelAttributedText() {
         guard let instruction = instruction else {
             text = nil
@@ -44,6 +46,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
         
         let presenter = InstructionPresenter(instruction,
                                              dataSource: self,
+                                             spriteRepository: spriteRepository,
                                              traitCollection: customTraitCollection ?? traitCollection,
                                              downloadCompletion: update)
         
