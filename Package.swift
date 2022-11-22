@@ -22,16 +22,15 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", from: "2.6.0"),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .upToNextMinor(from: "2.7.0")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "1.0.0"),
         .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "101.0.1"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.5.0"),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.3.0")),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .upToNextMinor(from: "10.5.0")),
         .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "3.0.0"),
-        .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
+        .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", .upToNextMinor(from: "2.0.0")),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "3.1.2"),
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "9.0.1"),
-        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.8.1"),
+        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .exact("1.9.0")),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
     ],
     targets: [
@@ -40,8 +39,7 @@ let package = Package(
             dependencies: [
                 "MapboxDirections",
                 "MapboxMobileEvents",
-                "MapboxNavigationNative",
-                "MapboxCommon"
+                "MapboxNavigationNative"
             ],
             exclude: ["Info.plist"],
             resources: [.copy("MBXInfo.plist")]),
@@ -52,8 +50,7 @@ let package = Package(
                 "MapboxDirections",
                 "MapboxMaps",
                 "MapboxSpeech",
-                "Solar",
-                "MapboxCommon"
+                "Solar"
             ],
             exclude: ["Info.plist"],
             resources: [.copy("MBXInfo.plist")]),
