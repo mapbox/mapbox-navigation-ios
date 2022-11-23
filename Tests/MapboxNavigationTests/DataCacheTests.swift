@@ -3,7 +3,7 @@ import TestHelper
 @testable import MapboxNavigation
 
 class DataCacheTests: TestCase {
-    let cache: DataCache = DataCache()
+    var cache: DataCache!
 
     private func clearDisk() {
         let semaphore = DispatchSemaphore(value: 0)
@@ -18,7 +18,7 @@ class DataCacheTests: TestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        cache.clearMemory()
+        cache = DataCache()
         clearDisk()
     }
 

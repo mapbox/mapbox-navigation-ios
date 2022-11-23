@@ -428,9 +428,48 @@ extension InstructionsBannerViewSnapshotTests {
 }
 
 class InstructionBannerTest: TestCase {
-    lazy var spriteRepository: SpriteRepository = {
-        return SpriteRepository.shared
-    }()
+    var spriteRepository: SpriteRepository!
+
+    override func setUp() {
+        super.setUp()
+
+        spriteRepository = SpriteRepository(requestCache: URLCacheSpy(),
+                                            derivedCache: BimodalImageCacheSpy())
+    }
+
+    func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
+        let bannerHeight: CGFloat = 96
+        let frame = CGRect(origin: .zero, size: CGSize(width: size.width, height: bannerHeight))
+        let bannerView = InstructionsBannerView(frame: frame)
+        bannerView.primaryLabel.spriteRepository = spriteRepository
+        bannerView.secondaryLabel.spriteRepository = spriteRepository
+        return bannerView
+    }
+
+    func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
+                               _ maneuverDirection: ManeuverDirection = .left,
+                               primaryInstruction: [VisualInstruction.Component],
+                               secondaryInstruction: [VisualInstruction.Component]?,
+                               drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
+        let primary = VisualInstruction(text: "Instruction",
+                                        maneuverType: maneuverType,
+                                        maneuverDirection: maneuverDirection,
+                                        components: primaryInstruction)
+        var secondary: VisualInstruction? = nil
+        if let secondaryInstruction = secondaryInstruction {
+            secondary = VisualInstruction(text: "Instruction",
+                                          maneuverType: maneuverType,
+                                          maneuverDirection: maneuverDirection,
+                                          components: secondaryInstruction)
+        }
+
+        return VisualInstructionBanner(distanceAlongStep: 482.803,
+                                       primary: primary,
+                                       secondary: secondary,
+                                       tertiary: nil,
+                                       quaternary: nil,
+                                       drivingSide: drivingSide)
+    }
     
     func cacheSprite(for styleURI: StyleURI = .navigationDay) {
         let shieldImage: ShieldImage = (styleURI == .navigationDay) ? .shieldDay : .shieldNight

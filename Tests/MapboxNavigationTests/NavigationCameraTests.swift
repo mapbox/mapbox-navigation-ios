@@ -156,15 +156,6 @@ extension LocationProviderMock: LocationProviderDelegate {
 }
 
 class NavigationCameraTests: TestCase {
-    
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
-    
     func testNavigationMapViewCameraType() {
         var navigationMapView = NavigationMapView(frame: .zero)
         XCTAssertEqual(navigationMapView.navigationCamera.type, .mobile)

@@ -6,14 +6,6 @@ import CoreLocation
 import TestHelper
 
 class SimulatedLocationManagerTests: TestCase {
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testSimulateRouteDoublesBack() {
         let coordinates:[CLLocationCoordinate2D] = [
             .init(latitude: 59.337928, longitude: 18.076841),

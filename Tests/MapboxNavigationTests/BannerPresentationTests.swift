@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
 class BannerPresentationDelegateMock: BannerPresentationDelegate {
@@ -55,20 +56,12 @@ class BannerMock: UIViewController, Banner {
     }
 }
 
-final class BannerPresentationTests: XCTestCase {
+final class BannerPresentationTests: TestCase {
     
-    let bannerPresentationDelegateMock = BannerPresentationDelegateMock()
+    var bannerPresentationDelegateMock: BannerPresentationDelegateMock!
     
     override func setUpWithError() throws {
-        // Reset `BannerPresentationDelegateMock` to original state.
-        bannerPresentationDelegateMock.didCallBannerWillAppear = false
-        bannerPresentationDelegateMock.didCallBannerDidAppear = false
-        bannerPresentationDelegateMock.didCallBannerWillDisappear = false
-        bannerPresentationDelegateMock.didCallBannerDidDisappear = false
-    }
-    
-    override func tearDownWithError() throws {
-        
+        bannerPresentationDelegateMock = BannerPresentationDelegateMock()
     }
     
     func testTopAndBottomBannerPresentation() {

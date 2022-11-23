@@ -4,39 +4,9 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
-    let bannerHeight: CGFloat = 96
-    return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: size.width, height: bannerHeight)))
-}
-
-func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
-                           _ maneuverDirection: ManeuverDirection = .left,
-                           primaryInstruction: [VisualInstruction.Component],
-                           secondaryInstruction: [VisualInstruction.Component]?,
-                           drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
-    let primary = VisualInstruction(text: "Instruction",
-                                    maneuverType: maneuverType,
-                                    maneuverDirection: maneuverDirection,
-                                    components: primaryInstruction)
-    var secondary: VisualInstruction? = nil
-    if let secondaryInstruction = secondaryInstruction {
-        secondary = VisualInstruction(text: "Instruction",
-                                      maneuverType: maneuverType,
-                                      maneuverDirection: maneuverDirection,
-                                      components: secondaryInstruction)
-    }
-    
-    return VisualInstructionBanner(distanceAlongStep: 482.803,
-                                   primary: primary,
-                                   secondary: secondary,
-                                   tertiary: nil,
-                                   quaternary: nil,
-                                   drivingSide: drivingSide)
-}
-
 class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
-    private lazy var reverseDelegate = TextReversingDelegate()
-    private lazy var silentDelegate = DefaultBehaviorDelegate()
+    private var reverseDelegate: TextReversingDelegate!
+    private var silentDelegate: DefaultBehaviorDelegate!
 
     lazy var instructions: [VisualInstruction.Component] = {
         let components: [VisualInstruction.Component] =  [
@@ -57,12 +27,16 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
+
         cacheSprite()
+        reverseDelegate = TextReversingDelegate()
+        silentDelegate = DefaultBehaviorDelegate()
         spriteRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
     }
 
     override func tearDown() {
         super.tearDown()
+
         clearDiskCache()
         spriteRepository.imageDownloader.setOperationType(nil)
         ImageDownloadOperationSpy.reset()

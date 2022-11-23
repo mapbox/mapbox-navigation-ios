@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
 class PreviewViewControllerDelegateMock: PreviewViewControllerDelegate {
@@ -29,22 +30,14 @@ class PreviewViewControllerDelegateMock: PreviewViewControllerDelegate {
     }
 }
 
-final class PreviewViewControllerTests: XCTestCase {
+final class PreviewViewControllerTests: TestCase {
     
-    let previewViewControllerDelegateMock = PreviewViewControllerDelegateMock()
+    var previewViewControllerDelegateMock: PreviewViewControllerDelegateMock!
     
     override func setUpWithError() throws {
-        // Reset `PreviewViewControllerDelegateMock` to original state.
-        previewViewControllerDelegateMock.didCallWillPresentBanner = false
-        previewViewControllerDelegateMock.didCallDidPresentBanner = false
-        previewViewControllerDelegateMock.didCallBannerWillDisappear = false
-        previewViewControllerDelegateMock.didCallBannerDidDisappear = false
+        previewViewControllerDelegateMock = PreviewViewControllerDelegateMock()
     }
-    
-    override func tearDownWithError() throws {
-        
-    }
-    
+
     func testPreviewViewControllerCamera() {
         let previewViewController = PreviewViewController()
         

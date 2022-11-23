@@ -4,19 +4,16 @@ import TestHelper
 
 class URLDataCacheTest: TestCase {
     let url = ShieldImage.i280.baseURL
-    let cache = URLDataCache()
+    var cache: URLDataCache!
 
     override func setUp() {
         super.setUp()
+
         self.continueAfterFailure = false
+        cache = URLDataCache()
         cache.urlCache.diskCapacity = 0
     }
-    
-    override func tearDown() {
-        super.tearDown()
-        cache.clearCache()
-    }
-    
+
     private func exampleResponse(with storagePolicy: URLCache.StoragePolicy) -> CachedURLResponse {
         let data = Fixture.JSONFromFileNamed(name: "sprite-info")
         let response = URLResponse(url: url, mimeType: nil, expectedContentLength: data.count, textEncodingName: nil)

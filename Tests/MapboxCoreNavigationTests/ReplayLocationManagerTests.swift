@@ -2,8 +2,9 @@ import Foundation
 @testable import MapboxCoreNavigation
 import XCTest
 import CoreLocation
+import TestHelper
 
-final class ReplayLocationManagerTests: XCTestCase {
+final class ReplayLocationManagerTests: TestCase {
     func testOneLocationReplay() {
         let manager = ReplayLocationManager(locations: [.init(latitude: 0, longitude: 0)])
         manager.speedMultiplier = 100

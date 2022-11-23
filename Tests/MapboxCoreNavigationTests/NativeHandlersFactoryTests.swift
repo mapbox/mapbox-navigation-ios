@@ -26,6 +26,11 @@ class NativeHandlersFactoryTests: TestCase {
         super.setUp()
         UserDefaults.standard.set(nil, forKey: customConfigKey)
     }
+
+    override func tearDown() {
+        UserDefaults.resetStandardUserDefaults()
+        super.tearDown()
+    }
     
     func testDefaultCustomConfig() {
         let expectedCustomConfig = [
