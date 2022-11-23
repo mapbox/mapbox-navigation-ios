@@ -42,9 +42,6 @@ class NativeHandlersFactory {
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
-            let loggingLevel = NSNumber(value: LoggingLevel.info.rawValue)
-            LogConfiguration.setLoggingLevelForUpTo(loggingLevel)
-            
             let historyRecorder = HistoryRecorder.shared.handle
             let configHandle = Self.configHandle(by: configFactoryType)
             
