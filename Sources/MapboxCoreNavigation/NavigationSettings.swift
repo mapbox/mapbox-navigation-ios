@@ -18,7 +18,7 @@ public struct StatusUpdatingSettings {
      If `nil` - default value will be used.
      */
     public var updatingInterval: TimeInterval?
-    
+
     /**
      Creates new `StatusUpdatingSettings`.
      
@@ -44,7 +44,7 @@ public struct StatusUpdatingSettings {
  To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
  */
 public class NavigationSettings {
-    
+
     public enum StoredProperty: CaseIterable {
         case voiceVolume, voiceMuted, distanceUnit
 
@@ -124,7 +124,7 @@ public class NavigationSettings {
     public var routingProviderSource: RoutingProviderSource {
         state.routingProviderSource
     }
-    
+
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
@@ -135,7 +135,7 @@ public class NavigationSettings {
     public var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? {
         state.alternativeRouteDetectionStrategy
     }
-    
+
     /**
      Enables analyzing data from sensors for better location prediction in case of a weak GPS signal, for example in tunnel.
      
@@ -146,7 +146,7 @@ public class NavigationSettings {
     public var utilizeSensorData: Bool {
         state.utilizeSensorData
     }
-    
+
     /**
      Defines approximate navigator prediction between location ticks.
      
@@ -159,7 +159,7 @@ public class NavigationSettings {
     public var navigatorPredictionInterval: TimeInterval? {
         state.navigatorPredictionInterval
     }
-    
+
     /**
      Configuration on how live incidents on a most probable path are detected.
      
@@ -170,7 +170,7 @@ public class NavigationSettings {
     public var liveIncidentsOptions: IncidentsOptions? {
         state.liveIncidentsOptions
     }
-    
+
     /**
      Configuration on how navigator status is polled.
      
@@ -181,7 +181,7 @@ public class NavigationSettings {
     public var statusUpdatingSettings: StatusUpdatingSettings? {
         state.statusUpdatingSettings
     }
-    
+
     /**
      Initializes the settings with custom instances of globally used types.
 
@@ -224,7 +224,7 @@ public class NavigationSettings {
                        liveIncidentsOptions: liveIncidentsOptions,
                        statusUpdatingSettings: statusUpdatingSettings)
     }
-    
+
     /**
      The volume that the voice controller will use.
      
@@ -235,7 +235,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceVolume, value: voiceVolume)
         }
     }
-    
+
     /**
      Specifies whether to mute the voice controller or not.
      */
@@ -244,7 +244,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceMuted, value: voiceMuted)
         }
     }
-    
+
     /**
      Specifies the preferred distance measurement unit.
      Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
@@ -254,22 +254,22 @@ public class NavigationSettings {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
         }
     }
-    
+
     /**
      The shared navigation settings object that affects the entire application.
      */
     public static let shared: NavigationSettings = .init()
-    
+
     private func notifyChanged(property: StoredProperty, value: Any) {
         UserDefaults.standard.set(value, forKey: property.key.prefixed)
         NotificationCenter.default.post(name: .navigationSettingsDidChange,
                                         object: nil,
                                         userInfo: [property.key: value])
     }
-    
+
     private func setupFromDefaults() {
         for property in StoredProperty.allCases {
-            
+
             guard let val = UserDefaults.standard.object(forKey: property.key.prefixed) else { continue }
             switch property {
             case .voiceVolume:
@@ -287,7 +287,7 @@ public class NavigationSettings {
             }
         }
     }
-    
+
     init() {
         setupFromDefaults()
     }
