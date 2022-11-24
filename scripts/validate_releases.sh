@@ -34,12 +34,15 @@ EXPECTED_XCODEBUILD_RESULTS=( \
     [2.5.0]=${ERROR_CODE} \
     [2.5.1]=${ERROR_CODE} \
     [2.5.2]=${ERROR_CODE} \
-    [2.5.3]=${SUCCESS_CODE} \
-    [2.6.0]=${SUCCESS_CODE} \
-    [2.6.1]=${SUCCESS_CODE} \
-    [2.7.0]=${SUCCESS_CODE} \
-    [2.7.1]=${SUCCESS_CODE} \
-    [2.7.2]=${SUCCESS_CODE}
+    [2.5.3]=${ERROR_CODE} \
+    [2.6.0]=${ERROR_CODE} \
+    [2.6.1]=${ERROR_CODE} \
+    [2.7.0]=${ERROR_CODE} \
+    [2.7.1]=${ERROR_CODE} \
+    [2.7.2]=${ERROR_CODE} \
+    [2.8.0]=${SUCCESS_CODE} \
+    [2.8.1]=${SUCCESS_CODE} \
+    [2.9.0]=${SUCCESS_CODE}
 )
 
 echo "Expected xcodebuild result for:"
@@ -71,6 +74,9 @@ do
     xcodegen generate
     ${XCODEBUILD} -resolvePackageDependencies && ACTUAL_XCODEBUILD_RESULTS[${NAVIGATION_SDK_VERSION}]=$? || ACTUAL_XCODEBUILD_RESULTS[${NAVIGATION_SDK_VERSION}]=$?
 
+    # Validate whether Mapbox Navigation version in generated Xcode project is correct.
+    swift sh ./../../../scripts/validate_xcodeproj.swift UISPMTest.xcodeproj ${NAVIGATION_SDK_VERSION}
+
     # Reset XcodeGen project configuration to original state.
     git checkout project.yml
 done
@@ -80,7 +86,7 @@ for NAVIGATION_SDK_VERSION in "${!ACTUAL_XCODEBUILD_RESULTS[@]}"
 do 
     if [ ${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} -ne ${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]} ]
     then
-        echo "Actual (${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) and expected (${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) xcodebuild exit codes are not equal. Exiting..."
+        echo "Actual (${ACTUAL_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) and expected (${EXPECTED_XCODEBUILD_RESULTS[$NAVIGATION_SDK_VERSION]}) xcodebuild exit codes are not equal for ${NAVIGATION_SDK_VERSION}. Exiting..."
 
         # Return back to initial directory.
         cd ${CURRENT_DIRECTORY}
