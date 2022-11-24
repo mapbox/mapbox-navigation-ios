@@ -99,6 +99,7 @@
 		2C585165292530B70077A558 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		2C585167292531340077A558 /* PassiveLocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */; };
 		2C67751C290AC4A6009C5EE4 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
+		2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */; };
 		2C7FAF96291ABE62000217A7 /* TestRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */; };
 		2C7FAF98291BB1CA000217A7 /* RerouteControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */; };
 		2C9006CA291927850012CCEA /* RoutingProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */; };
@@ -753,6 +754,7 @@
 		2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteControllerIntegrationTests.swift; sourceTree = "<group>"; };
 		2C58516229252FE20077A558 /* MapboxCoreNavigationIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCoreNavigationIntegrationTests.swift; sourceTree = "<group>"; };
 		2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingHandlerIntegrationTests.swift; sourceTree = "<group>"; };
 		2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouteProvider.swift; sourceTree = "<group>"; };
 		2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerSpy.swift; sourceTree = "<group>"; };
 		2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingProviderSpy.swift; sourceTree = "<group>"; };
@@ -1480,6 +1482,7 @@
 		2C585154292521C20077A558 /* MapboxCoreNavigationIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
+				2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */,
 				2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */,
 				2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */,
 				2C58516229252FE20077A558 /* MapboxCoreNavigationIntegrationTests.swift */,
@@ -2975,6 +2978,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C585167292531340077A558 /* PassiveLocationManagerIntegrationTests.swift in Sources */,
+				2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */,
 				2C58516329252FE20077A558 /* MapboxCoreNavigationIntegrationTests.swift in Sources */,
 				2C58515F292523670077A558 /* RouteControllerIntegrationTests.swift in Sources */,
 			);

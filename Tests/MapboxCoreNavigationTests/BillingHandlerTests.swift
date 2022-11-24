@@ -12,7 +12,9 @@ final class BillingHandlerTests: TestCase {
     private var sessionUuid: UUID!
     private var freeRideToken: String!
     private var activeGuidanceToken: String!
-    private var navigator: MapboxCoreNavigation.Navigator? = nil
+    private var navigator: CoreNavigatorSpy!
+
+    private let expectationsTimeout = 0.5
 
     override func setUp() {
         super.setUp()
@@ -21,126 +23,192 @@ final class BillingHandlerTests: TestCase {
         freeRideToken = UUID().uuidString
         activeGuidanceToken = UUID().uuidString
         billingService = .init()
-        handler = BillingHandler.__createMockedHandler(with: billingService)
+        handler = BillingHandler.__createMockedHandler(with: billingService,
+                                                       navigatorType: CoreNavigatorSpy.self)
+        navigator = CoreNavigatorSpy.shared
         billingService.onGetSKUTokenIfValid = { [unowned self] sessionType in
             switch sessionType {
             case .activeGuidance: return activeGuidanceToken
             case .freeDrive: return freeRideToken
             }
         }
-        navigator = Navigator.shared
     }
 
     override func tearDown() {
         super.tearDown()
         billingService = nil
         handler = nil
-        navigator = nil
+    }
+
+    func testSessionStart() {
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
+
+        let expectedSessionType = BillingHandler.SessionType.activeGuidance
+        billingService.onStopBillingSession = { _ in
+            XCTFail("Stop shouldn't be called")
+        }
+
+        let beginSessionExpectation = expectation(description: "Beging session triggered")
+        billingService.onBeginBillingSession = { sessionType, _ in
+            XCTAssertEqual(sessionType, expectedSessionType)
+            beginSessionExpectation.fulfill()
+        }
+
+        let billingEventExpectation = expectation(description: "Billing event triggered")
+        billingService.onTriggerBillingEvent = { _ in
+            billingEventExpectation.fulfill()
+        }
+
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
+
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
+        billingService.assertEvents([
+            .beginBillingSession(expectedSessionType),
+        ])
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testResumeNavigatorWhenStarting() {
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+
+        XCTAssertTrue(navigator.resumeCalled)
+        XCTAssertFalse(navigator.pauseCalled)
+    }
+
+    func testDoNotResumeNavigatorWhenStartingIfNoSharedNavigatorInstanceCreated() {
+        CoreNavigatorSpy.isSharedInstanceCreated = false
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+
+        XCTAssertFalse(navigator.resumeCalled)
+        XCTAssertFalse(navigator.pauseCalled)
+    }
+
+    func testPauseNavigatorWhenNoRunningSessions() {
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        navigator.reset()
+        handler.pauseBillingSession(with: sessionUuid)
+
+        XCTAssertFalse(navigator.resumeCalled)
+        XCTAssertTrue(navigator.pauseCalled)
+    }
+
+    func testResumeNavigatorWhenResuming() {
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        handler.pauseBillingSession(with: sessionUuid)
+        navigator.reset()
+        handler.resumeBillingSession(with: sessionUuid)
+
+        XCTAssertTrue(navigator.resumeCalled)
+        XCTAssertFalse(navigator.pauseCalled)
+    }
+
+    func testPauseNavigatorWhenStopping() {
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        navigator.reset()
+        handler.stopBillingSession(with: sessionUuid)
+
+        XCTAssertFalse(navigator.resumeCalled)
+        XCTAssertTrue(navigator.pauseCalled)
     }
 
     func testSessionStop() {
-        let cancelSessionCalled = expectation(description: "Cancel session called")
-        let billingEventTriggered = expectation(description: "Billing event triggered")
-        billingService.onTriggerBillingEvent = { _ in
-            billingEventTriggered.fulfill()
-        }
-        billingService.onStopBillingSession = { _ in
-            cancelSessionCalled.fulfill()
-        }
-
-        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
-
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
 
-        DispatchQueue.main.async() { [unowned self] in
-            handler.stopBillingSession(with: self.sessionUuid)
+        let billingEventExpectation = expectation(description: "Billing event should not be triggered when stopping")
+        billingEventExpectation.isInverted = true
+        billingService.onTriggerBillingEvent = { _ in
+            billingEventExpectation.fulfill()
+        }
+        let stopSessionExpectation = expectation(description: "Session stopped")
+        billingService.onStopBillingSession = { sessionType in
+            XCTAssertEqual(sessionType, .activeGuidance)
+            stopSessionExpectation.fulfill()
         }
 
-        waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
+        handler.stopBillingSession(with: self.sessionUuid)
 
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
         billingService.assertEvents([
             .beginBillingSession(.activeGuidance),
             .stopBillingSession(.activeGuidance),
         ])
+        waitForExpectations(timeout: expectationsTimeout)
     }
 
-    func testSessionStart() {
-        let expectedSessionType = BillingHandler.SessionType.activeGuidance
-        let billingEventTriggered = expectation(description: "Billing event triggered")
-        let beginSessionTriggered = expectation(description: "Beging session triggered")
-        billingService.onStopBillingSession = { _ in
-            XCTFail("Cancel shouldn't be called")
-        }
-        billingService.onBeginBillingSession = { sessionType, _ in
-            beginSessionTriggered.fulfill()
-            XCTAssertEqual(sessionType, expectedSessionType)
-        }
+    func testSessionPause() {
+        handler.beginBillingSession(for: .freeDrive, uuid: sessionUuid)
 
+        let billingEventTriggered = expectation(description: "Billing event should not be triggered when stopping")
+        billingEventTriggered.isInverted = true
         billingService.onTriggerBillingEvent = { _ in
             billingEventTriggered.fulfill()
         }
 
-        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
-        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
-        waitForExpectations(timeout: 1, handler: nil)
+        let stopSessionExpectation = expectation(description: "Session should not be stopped")
+        stopSessionExpectation.isInverted = true
+        billingService.onStopBillingSession = { _ in
+            stopSessionExpectation.fulfill()
+        }
 
+        let sessionPausedExpectation = expectation(description: "Session paused")
+        billingService.onPauseBillingSession = { sessionType in
+            XCTAssertEqual(sessionType, .freeDrive)
+            sessionPausedExpectation.fulfill()
+        }
+
+        handler.pauseBillingSession(with: sessionUuid)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .paused)
         billingService.assertEvents([
-            .beginBillingSession(expectedSessionType),
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
         ])
+        waitForExpectations(timeout: expectationsTimeout)
     }
 
-    func testSessionPause() {
-        let sessionStarted = expectation(description: "Session started")
-        let sessionPaused = expectation(description: "Session paused")
-        billingService.onBeginBillingSession = { _, _ in
-            sessionStarted.fulfill()
-        }
-        billingService.onPauseBillingSession = { _ in
-            sessionPaused.fulfill()
-        }
-
+    func testSessionResumeAfterPause() {
         handler.beginBillingSession(for: .freeDrive, uuid: sessionUuid)
         handler.pauseBillingSession(with: sessionUuid)
-        waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .paused)
-        let billingSessionResumed = expectation(description: "Billing session resumed")
-        billingService.onResumeBillingSession = { _, _ in
-            billingSessionResumed.fulfill()
+
+        let billingSessionResumedExpectation = expectation(description: "Billing session resumed")
+        billingService.onResumeBillingSession = { sessionType, _ in
+            XCTAssertEqual(sessionType, .freeDrive)
+            billingSessionResumedExpectation.fulfill()
         }
 
         handler.resumeBillingSession(with: sessionUuid)
-        waitForExpectations(timeout: 1, handler: nil)
+
         XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
-
-
         billingService.assertEvents([
             .beginBillingSession(.freeDrive),
             .pauseBillingSession(.freeDrive),
             .resumeBillingSession(.freeDrive),
         ])
+        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testSessionResumeFailed() {
         let expectedSessionType = BillingHandler.SessionType.activeGuidance
-        let sessionStarted = expectation(description: "Session started")
-        sessionStarted.expectedFulfillmentCount = 2
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
+        handler.pauseBillingSession(with: sessionUuid)
+
+        let sessionStartedExpectation = expectation(description: "Session started second time")
         billingService.onBeginBillingSession = { sessionType, _ in
-            sessionStarted.fulfill()
             XCTAssertEqual(sessionType, expectedSessionType)
+            sessionStartedExpectation.fulfill()
         }
-        billingService.onResumeBillingSession = { _, onError in
+        let billingSessionResumedExpectation = expectation(description: "Billing session resumed")
+        billingService.onResumeBillingSession = { sessionType, onError in
             DispatchQueue.global().async {
                 onError(.resumeFailed)
             }
+            XCTAssertEqual(sessionType, expectedSessionType)
+            billingSessionResumedExpectation.fulfill()
         }
 
-        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
-        handler.pauseBillingSession(with: sessionUuid)
         handler.resumeBillingSession(with: sessionUuid)
-        waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
 
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
+        waitForExpectations(timeout: expectationsTimeout)
 
         billingService.assertEvents([
             .beginBillingSession(expectedSessionType),
@@ -153,19 +221,111 @@ final class BillingHandlerTests: TestCase {
     func testSessionBeginFailed() {
         let sessionFailed = expectation(description: "Session Failed")
         billingService.onBeginBillingSession = { _, onError in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.global().async {
                 onError(.unknown)
                 sessionFailed.fulfill()
             }
         }
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
         XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
-        waitForExpectations(timeout: 3, handler: nil)
+        waitForExpectations(timeout: expectationsTimeout)
         XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
 
         billingService.assertEvents([
             .beginBillingSession(.activeGuidance),
         ])
+    }
+
+    func testSessionStartIfExistsWhenNotStarted() {
+        let beginSessionExpectation = expectation(description: "Beging session should not be triggered")
+        beginSessionExpectation.isInverted = true
+        billingService.onBeginBillingSession = { _, _ in
+            beginSessionExpectation.fulfill()
+        }
+        let billingEventExpectation = expectation(description: "Billing should not be triggered")
+        billingEventExpectation.isInverted = true
+        billingService.onTriggerBillingEvent = { _ in
+            billingEventExpectation.fulfill()
+        }
+
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .stopped)
+        billingService.assertEvents([])
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testSessionStartIfExistsAndRunning() {
+        let expectedSessionType = BillingHandler.SessionType.activeGuidance
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
+
+        let beginSessionExpectation = expectation(description: "Beging session should be triggered")
+        billingService.onBeginBillingSession = { sessionType, _ in
+            XCTAssertEqual(sessionType, expectedSessionType)
+            beginSessionExpectation.fulfill()
+        }
+        let billingEventExpectation = expectation(description: "Billing should not be triggered")
+        billingEventExpectation.isInverted = true
+        billingService.onTriggerBillingEvent = { _ in
+            billingEventExpectation.fulfill()
+        }
+
+        let sessionPausedExpectation = expectation(description: "Pause should not be triggered")
+        sessionPausedExpectation.isInverted = true
+        billingService.onPauseBillingSession = { _ in
+            sessionPausedExpectation.fulfill()
+        }
+
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testSessionStartIfExistsAndPaused() {
+        let expectedSessionType = BillingHandler.SessionType.activeGuidance
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
+        handler.pauseBillingSession(with: sessionUuid)
+
+        let beginSessionExpectation = expectation(description: "Beging session should be triggered")
+        billingService.onBeginBillingSession = { sessionType, _ in
+            XCTAssertEqual(sessionType, expectedSessionType)
+            beginSessionExpectation.fulfill()
+        }
+        let billingEventExpectation = expectation(description: "Billing should not be triggered")
+        billingEventExpectation.isInverted = true
+        billingService.onTriggerBillingEvent = { _ in
+            billingEventExpectation.fulfill()
+        }
+
+        let sessionPausedExpectation = expectation(description: "Session paused")
+        billingService.onPauseBillingSession = { sessionType in
+            XCTAssertEqual(sessionType, expectedSessionType)
+            sessionPausedExpectation.fulfill()
+        }
+
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .paused)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
+    func testSessionFailedToStartIfExistsAndRunning() {
+        let expectedSessionType = BillingHandler.SessionType.activeGuidance
+        let expectedError = BillingServiceError.unknown
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUuid)
+
+        let beginSessionExpectation = expectation(description: "Beging session should be triggered")
+        billingService.onBeginBillingSession = { sessionType, onError in
+            XCTAssertEqual(sessionType, expectedSessionType)
+            beginSessionExpectation.fulfill()
+            onError(expectedError)
+        }
+
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+
+        XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
+        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testFailedMauBillingDoNotStopSession() {
@@ -181,7 +341,7 @@ final class BillingHandlerTests: TestCase {
             beginSessionTriggered.fulfill()
         }
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
-        waitForExpectations(timeout: 2, handler: nil)
+        waitForExpectations(timeout: 2)
         XCTAssertEqual(handler.sessionState(uuid: sessionUuid), .running)
 
         billingService.assertEvents([
@@ -203,7 +363,7 @@ final class BillingHandlerTests: TestCase {
                 finished.fulfill()
             }
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: expectationsTimeout)
 
         billingService.assertEvents([
             .beginBillingSession(.freeDrive),
@@ -248,7 +408,7 @@ final class BillingHandlerTests: TestCase {
         queue.async {
             self.handler.stopBillingSession(with: freeDriveSessionUUID)
         }
-        waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: 5)
         billingService.assertEvents([
             .beginBillingSession(.freeDrive),
             .beginBillingSession(.activeGuidance),
@@ -258,42 +418,6 @@ final class BillingHandlerTests: TestCase {
             .stopBillingSession(.activeGuidance),
             .stopBillingSession(.freeDrive),
         ])
-    }
-
-    func testPausedPassiveLocationManagerDoNotUpdateStatus() {
-        let updatesSpy = PassiveLocationManagerDelegateSpy()
-
-        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
-        let locationManager = ReplayLocationManager(locations: locations)
-        locationManager.replayCompletionHandler = { _ in true }
-
-        let passiveLocationManager = PassiveLocationManager(directions: DirectionsSpy(),
-                                                            systemLocationManager: locationManager)
-
-        locationManager.delegate = passiveLocationManager
-        passiveLocationManager.delegate = updatesSpy
-        passiveLocationManager.pauseTripSession()
-
-        locationManager.replayCompletionHandler = { _ in true }
-        locationManager.speedMultiplier = 30
-        updatesSpy.onProgressUpdate = { _,_ in
-            XCTFail("Updated on paused session isn't allowed")
-        }
-        locationManager.startUpdatingLocation()
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-
-        billingServiceMock.assertEvents([
-            .beginBillingSession(.freeDrive),
-            .pauseBillingSession(.freeDrive)
-        ])
-
-        XCTAssertNil(passiveLocationManager.rawLocation, "Location updates should be blocked")
-
-        updatesSpy.onProgressUpdate = nil
-        passiveLocationManager.resumeTripSession()
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-        XCTAssertNotNil(passiveLocationManager.rawLocation)
-        locationManager.stopUpdatingLocation()
     }
 
     func testTokens() {
@@ -408,60 +532,6 @@ final class BillingHandlerTests: TestCase {
         ])
     }
 
-    func testRouteChangeCloseToOriginal() {
-        runRouteChangeTest(
-            initialRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 59.347928, longitude: 18.086841),
-            ],
-            newRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 59.347929, longitude: 18.086842),
-            ],
-            expectedEvents: [
-                .beginBillingSession(.activeGuidance),
-            ]
-        )
-    }
-
-    func testRouteChangeDifferentToOriginal() {
-        runRouteChangeTest(
-            initialRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 59.347928, longitude: 18.086841),
-            ],
-            newRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 60.347929, longitude: 18.086841),
-            ],
-            expectedEvents: [
-                .beginBillingSession(.activeGuidance),
-                .stopBillingSession(.activeGuidance),
-                .beginBillingSession(.activeGuidance),
-            ]
-        )
-    }
-
-    func testRouteChangeCloseToOriginalMultileg() {
-        runRouteChangeTest(
-            initialRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 59.347928, longitude: 18.086841),
-                CLLocationCoordinate2D(latitude: 59.357928, longitude: 18.086841),
-                CLLocationCoordinate2D(latitude: 59.367928, longitude: 18.086841),
-            ],
-            newRouteWaypoints: [
-                CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
-                CLLocationCoordinate2D(latitude: 59.347929, longitude: 18.086841),
-                CLLocationCoordinate2D(latitude: 59.357929, longitude: 18.086841),
-                CLLocationCoordinate2D(latitude: 59.367929, longitude: 18.086841),
-            ],
-            expectedEvents: [
-                .beginBillingSession(.activeGuidance),
-            ]
-        )
-    }
-
     func testPauseSessionWithStoppingSimilarOne() {
         let freeRideSession1UUID = UUID()
         let freeRideSession2UUID = UUID()
@@ -510,7 +580,7 @@ final class BillingHandlerTests: TestCase {
         handler.pauseBillingSession(with: freeRideSession1UUID)
         handler.beginBillingSession(for: .freeDrive, uuid: freeRideSession2UUID)
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: expectationsTimeout)
 
         billingService.assertEvents([
             .beginBillingSession(.freeDrive),
@@ -518,37 +588,6 @@ final class BillingHandlerTests: TestCase {
             .resumeBillingSession(.freeDrive),
             .beginBillingSession(.freeDrive),
         ])
-    }
-
-
-    private func runRouteChangeTest(initialRouteWaypoints: [CLLocationCoordinate2D],
-                                    newRouteWaypoints: [CLLocationCoordinate2D],
-                                    expectedEvents: [BillingServiceMock.Event]) {
-        precondition(initialRouteWaypoints.count % 2 == 0)
-
-        final class DataSource: RouterDataSource {
-            var locationManagerType: NavigationLocationManager.Type {
-                NavigationLocationManager.self
-            }
-        }
-
-        let (initialRouteResponse, _) = Fixture.route(waypoints: initialRouteWaypoints)
-        let (newRouteResponse, _) = Fixture.route(waypoints: newRouteWaypoints)
-
-        let dataSource = DataSource()
-        let routeController = RouteController(indexedRouteResponse: IndexedRouteResponse(routeResponse: initialRouteResponse, routeIndex: 0),
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: dataSource)
-
-        let routeUpdated = expectation(description: "Route updated")
-        routeController.updateRoute(with: IndexedRouteResponse(routeResponse: newRouteResponse,
-                                                               routeIndex: 0),
-                                    routeOptions: NavigationRouteOptions(coordinates: newRouteWaypoints)) { success in
-            XCTAssertTrue(success)
-            routeUpdated.fulfill()
-        }
-        wait(for: [routeUpdated], timeout: 10)
-        billingServiceMock.assertEvents(expectedEvents)
     }
 
     func testServiceAccessToken() {
@@ -585,8 +624,7 @@ final class BillingHandlerTests: TestCase {
     func testForceStartNewBillingSessionOnNonExistentSession() {
         handler.beginNewBillingSessionIfExists(with: sessionUuid)
 
-        billingService.assertEvents([
-        ])
+        billingService.assertEvents([])
     }
 
     func testForceStartNewBillingSessionOnPausedSessionFreeDrive() {
@@ -619,134 +657,6 @@ final class BillingHandlerTests: TestCase {
         ])
     }
 
-    func testTripPerWaypoint() {
-        let waypointCoordinates = [
-            CLLocationCoordinate2D(latitude: 37.751748, longitude: -122.387589),
-            CLLocationCoordinate2D(latitude: 37.752397, longitude: -122.387631),
-            CLLocationCoordinate2D(latitude: 37.753186, longitude: -122.387721),
-            CLLocationCoordinate2D(latitude: 37.75405, longitude: -122.38781),
-            CLLocationCoordinate2D(latitude: 37.754817, longitude: -122.387859),
-            CLLocationCoordinate2D(latitude: 37.755594, longitude: -122.38793),
-            CLLocationCoordinate2D(latitude: 37.756574, longitude: -122.388057),
-            CLLocationCoordinate2D(latitude: 37.757531, longitude: -122.388198),
-            CLLocationCoordinate2D(latitude: 37.758628, longitude: -122.388322),
-            CLLocationCoordinate2D(latitude: 37.759682, longitude: -122.388401),
-            CLLocationCoordinate2D(latitude: 37.760872, longitude: -122.388511),
-        ]
-
-        let waypoints = waypointCoordinates.map({ Waypoint(coordinate: $0) })
-
-        var routeOptions: NavigationRouteOptions {
-
-
-            return NavigationRouteOptions(waypoints: waypoints)
-        }
-        
-        let route = Fixture.route(from: "route-with-10-legs", options: routeOptions)
-        
-        autoreleasepool {
-            let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent()
-            let routeResponse = IndexedRouteResponse(routeResponse: RouteResponse(httpResponse: nil,
-                                                                                  routes: [route],
-                                                                                  options: .route(.init(coordinates: waypointCoordinates)),
-                                                                                  credentials: .mocked),
-                                                     routeIndex: 0)
-
-            let routeController = RouteController(indexedRouteResponse: routeResponse,
-                                                  customRoutingProvider: MapboxRoutingProvider(.offline),
-                                                  dataSource: self)
-
-            let routerDelegateSpy = RouterDelegateSpy()
-            routeController.delegate = routerDelegateSpy
-
-            let locationManager = ReplayLocationManager(locations: replayLocations)
-            locationManager.delegate = routeController
-
-            let arrivedAtWaypoint = expectation(description: "Arrive at waypoint")
-            arrivedAtWaypoint.expectedFulfillmentCount = route.legs.count
-            routerDelegateSpy.onDidArriveAt = { waypoint in
-                arrivedAtWaypoint.fulfill()
-                return true
-            }
-
-            locationManager.speedMultiplier = 10
-            locationManager.startUpdatingLocation()
-            waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
-            locationManager.stopUpdatingLocation()
-        }
-
-        var expectedEvents: [BillingServiceMock.Event] = []
-        for _ in 0..<route.legs.count {
-            expectedEvents.append(.beginBillingSession(.activeGuidance))
-        }
-        expectedEvents.append(.stopBillingSession(.activeGuidance))
-        billingServiceMock.assertEvents(expectedEvents)
-    }
-
-    func testPausedFreeDrivePausesNavNativeNavigator() {
-        let locationManager = ReplayLocationManager(locations: [.init(coordinate: .init(latitude: 0, longitude: 0))])
-        locationManager.speedMultiplier = 100
-        locationManager.replayCompletionHandler = { _ in true }
-
-        let passiveLocationManager = PassiveLocationManager(directions: .mocked,
-                                                            systemLocationManager: locationManager)
-        let updatesSpy = PassiveLocationManagerDelegateSpy()
-        passiveLocationManager.delegate = updatesSpy
-        let progressWorks = expectation(description: "Progress Works")
-        progressWorks.assertForOverFulfill = false
-        updatesSpy.onProgressUpdate = { _,_ in
-            progressWorks.fulfill()
-        }
-
-        passiveLocationManager.startUpdatingLocation()
-        wait(for: [progressWorks], timeout: 2)
-
-        passiveLocationManager.pauseTripSession()
-
-        billingServiceMock.assertEvents([
-            .beginBillingSession(.freeDrive),
-            .pauseBillingSession(.freeDrive)
-        ])
-
-        var updatesAfterPauseCount: Int = 0
-
-        updatesSpy.onProgressUpdate = { _,_ in
-            updatesAfterPauseCount += 1
-        }
-
-        // Give NavNative a reasonable amount of time (a second) to allow sending progress updates after pause.
-        RunLoop.main.run(until: Date().addingTimeInterval(1))
-
-        let statusChangeSubscription = NotificationCenter.default.addObserver(forName: .navigationStatusDidChange,
-                                                                              object: nil,
-                                                                              queue: .main) { _ in
-            updatesAfterPauseCount += 1
-        }
-
-        withExtendedLifetime(statusChangeSubscription) { statusChangeSubscription in
-            // Force updates directly to MapboxNavigationNative.Navigator to check that this navigator is paused as well.
-            func forceSendNextLocation(idx: Int) {
-                guard let lastLocation = locationManager.location else {
-                    XCTFail("Unexpected nil location in ReplayLocationManager"); return
-                }
-                let nextLocation = lastLocation.shifted(to: lastLocation.timestamp.addingTimeInterval(TimeInterval(idx)))
-                Navigator.shared.navigator.updateLocation(for: FixLocation(nextLocation)) { success in
-                    XCTAssertFalse(success) // For paused Navigator updateLocation MUST return false
-                }
-            }
-            forceSendNextLocation(idx: 1)
-            DispatchQueue.main.async {
-                forceSendNextLocation(idx: 2)
-            }
-            RunLoop.main.run(until: Date().addingTimeInterval(3))
-
-            // We expect at most one status update after
-            XCTAssertLessThanOrEqual(updatesAfterPauseCount, 1)
-
-            NotificationCenter.default.removeObserver(statusChangeSubscription)
-        }
-    }
-
     func testStressTest() {
         let finished = expectation(description: "Finished")
         DispatchQueue.global().async {
@@ -762,12 +672,6 @@ final class BillingHandlerTests: TestCase {
             finished.fulfill()
         }
         waitForExpectations(timeout: 10)
-    }
-}
-
-extension BillingHandlerTests: RouterDataSource {
-    var locationManagerType: NavigationLocationManager.Type {
-        return NavigationLocationManager.self
     }
 }
 

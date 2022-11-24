@@ -254,9 +254,9 @@ final class BillingHandler {
     }
 
     private init(service: BillingService,
-                 navibatorType: CoreNavigator.Type = Navigator.self) {
+                 navigatorType: CoreNavigator.Type = Navigator.self) {
         self.billingService = service
-        self.navigatorType = navibatorType
+        self.navigatorType = navigatorType
     }
 
     /**
@@ -472,8 +472,9 @@ final class BillingHandler {
 // MARK: - Tests Support
 
 extension BillingHandler {
-    static func __createMockedHandler(with service: BillingService) -> BillingHandler {
-        BillingHandler(service: service)
+    static func __createMockedHandler(with service: BillingService,
+                                      navigatorType: CoreNavigator.Type = Navigator.self) -> BillingHandler {
+        BillingHandler(service: service, navigatorType: navigatorType)
     }
 
     static func __replaceSharedInstance(with handler: BillingHandler) {
