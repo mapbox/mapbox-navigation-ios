@@ -29,7 +29,7 @@ guard let package = rootObject.packages.first else {
 }
 
 guard case let .exact(actualMapboxNavigationVersion) = package.versionRequirement else {
-    print("Resolved Mapbox Navigation ersion should be valid")
+    print("Resolved Mapbox Navigation version should be valid")
 
     exit(1)
 }
