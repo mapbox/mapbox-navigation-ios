@@ -879,8 +879,6 @@ workflows:
             filters:
               branches:
                 only: main
-        - spm-ui-integration-test-job:
-            name: "Xcode 14.1; SPM UI test"
   update-version-workflow:
     jobs:
       - update-version-job:
