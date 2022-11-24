@@ -347,6 +347,9 @@ jobs:
       test:
         type: boolean
         default: true
+      clean_build:
+        type: boolean
+        default: true
       codecoverage:
         type: boolean
         default: true
@@ -356,6 +359,9 @@ jobs:
       configuration:
         type: string
         default: "Debug"
+      scheme:
+        type: string
+        default: "MapboxCoreNavigation"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -390,7 +396,7 @@ jobs:
                 xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation -configuration << parameters.configuration >> clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
       - when:
           condition: << parameters.spm >>
           steps:
@@ -869,6 +875,15 @@ workflows:
             context: Slack Orb
         - spm-core-integration-test-job:
             name: "Xcode 13; iOS 15.0; SPM Core test"
+        - build-job:
+            name: "Core integration test; Xcode 14; iOS 16.0"
+            xcode: "14.0.0"
+            iOS: "16.0"
+            device: "iPhone 14 Pro Max"
+            scheme: "MapboxCoreNavigationIntegrationTests"
+            codecoverage: false
+            clean_build: false
+            context: Slack Orb
         - generate-docs-job:
             name: Generate / Publish Documentation
             context: Slack Orb
