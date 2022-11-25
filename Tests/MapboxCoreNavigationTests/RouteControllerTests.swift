@@ -9,10 +9,6 @@ import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
-    final class RouterDataSourceSpy: RouterDataSource {
-        var locationManagerType: NavigationLocationManager.Type = NavigationLocationManagerSpy.self
-    }
-
     private let expectationsTimeout = 0.5
     
     private var locationManagerSpy: NavigationLocationManagerSpy!
@@ -109,7 +105,7 @@ class RouteControllerTests: TestCase {
         XCTAssertEqual(controller.routeProgress.legIndex, 0)
     }
 
-    func testConfigurerefreshesRoute() {
+    func testConfigureRefreshesRoute() {
         indexedRouteResponse.validatedRouteOptions.refreshingEnabled = true
         indexedRouteResponse.validatedRouteOptions.profileIdentifier = .automobileAvoidingTraffic
         let controller1 = RouteController(indexedRouteResponse: indexedRouteResponse,

@@ -14,6 +14,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     private let passiveNavigationDataSource: PassiveNavigationDataSourceSpy
     
     var debuggableEvents = [NavigationEventDetails]()
+    var locations = [CLLocation]()
 
     required public init() {
         eventsAPIMock = EventsAPIMock()
@@ -30,6 +31,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
 
     func reset() {
         eventsAPIMock.reset()
+        locations.removeAll()
     }
 
     func hasImmediateEvent(with eventName: String) -> Bool {
@@ -72,5 +74,9 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
         event.event = MMEEventTypeNavigationFeedback
         return FeedbackEvent(eventDetails: event)
+    }
+
+    override public func record(_ locations: [CLLocation]) {
+        self.locations.append(contentsOf: locations)
     }
 }

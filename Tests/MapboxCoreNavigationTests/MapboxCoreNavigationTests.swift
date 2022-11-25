@@ -28,15 +28,16 @@ class MapboxCoreNavigationTests: TestCase {
     
     override func setUp() {
         super.setUp()
+
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
     }
     
     override func tearDown() {
         Navigator.shared.rerouteController.reroutesProactively = true
-        super.tearDown()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
+        super.tearDown()
     }
     
     func testNavigationNotificationsInfoDict() {

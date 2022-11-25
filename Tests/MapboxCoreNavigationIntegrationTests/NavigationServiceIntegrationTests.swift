@@ -13,7 +13,7 @@ fileprivate let distanceThreshold: CLLocationDistance = 2
 // minimum threshold for both latitude and longitude between two coordinates
 fileprivate let coordinateThreshold: CLLocationDistance = 0.005
 
-class NavigationServiceTests: TestCase {
+class NavigationServiceIntegrationTests: TestCase {
     var delegate: NavigationServiceDelegateSpy!
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
@@ -67,21 +67,6 @@ class NavigationServiceTests: TestCase {
                                              tileStoreConfiguration: .default)
     }
 
-    func testDefaultUserInterfaceUsage() {
-        dependencies = createDependencies()
-        let usesDefaultUserInterface = Bundle.usesDefaultUserInterface
-        
-        // When building via Xcode when using SPM `MapboxNavigation` bundle will be present.
-        if let _ = Bundle.mapboxNavigationIfInstalled {
-            // Even though `MapboxCoreNavigationTests` does not directly link `MapboxNavigation`, it uses
-            // `TestHelper`, which in turn uses `MapboxNavigation`. This means that its bundle will be present
-            // in `MapboxCoreNavigationTests.xctest`.
-            XCTAssertTrue(usesDefaultUserInterface, "Due to indirect linkage, `MapboxNavigation` will be linked to `MapboxCoreNavigationTests`.")
-        } else {
-            XCTAssertFalse(usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
-        }
-    }
-    
     func testUserIsOnRoute() {
         dependencies = createDependencies()
 
@@ -890,5 +875,3 @@ class NavigationServiceTests: TestCase {
         waitForNavNativeCallbacks()
     }
 }
-
-class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
