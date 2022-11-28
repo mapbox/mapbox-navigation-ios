@@ -41,21 +41,11 @@ extension NavigationMapView {
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
             // These numbers are the pixel offsets into the PDF image asset
-            var stretchX: [ImageStretches]!
-            var stretchY: [ImageStretches]!
+            var stretchX = [ImageStretches(first: Float(33), second: Float(52))]
+            var stretchY = [ImageStretches(first: Float(32), second: Float(35))]
             // define the "content" area of the image which is the portion that the maps sdk will use
             // to place the text label within
-            var imageContent: ImageContent!
-            
-            if bottomInset > 0 {
-                stretchX = [ImageStretches(first: Float(33), second: Float(52))]
-                stretchY = [ImageStretches(first: Float(32), second: Float(35))]
-                imageContent = ImageContent(left: 34, top: 32, right: 56, bottom: 50)
-            } else {
-                stretchX = [ImageStretches(first: Float(33), second: Float(52))]
-                stretchY = [ImageStretches(first: Float(32), second: Float(35))]
-                imageContent = ImageContent(left: 28, top: 24, right: 56, bottom: 40)
-            }
+            var imageContent = bottomInset > 0 ? ImageContent(left: 34, top: 32, right: 56, bottom: 50) : ImageContent(left: 28, top: 24, right: 56, bottom: 40)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
@@ -76,21 +66,11 @@ extension NavigationMapView {
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
             // These numbers are the pixel offsets into the PDF image asset
-            var stretchX: [ImageStretches]!
-            var stretchY: [ImageStretches]!
+            var stretchX = [ImageStretches(first: Float(47), second: Float(48))]
+            var stretchY = [ImageStretches(first: Float(28), second: Float(32))]
             // define the "content" area of the image which is the portion that the maps sdk will use
             // to place the text label within
-            var imageContent: ImageContent!
-            
-            if bottomInset > 0 {
-                stretchX = [ImageStretches(first: Float(47), second: Float(48))]
-                stretchY = [ImageStretches(first: Float(28), second: Float(32))]
-                imageContent = ImageContent(left: 47, top: 28, right: 52, bottom: 40)
-            } else {
-                stretchX = [ImageStretches(first: Float(47), second: Float(48))]
-                stretchY = [ImageStretches(first: Float(28), second: Float(32))]
-                imageContent = ImageContent(left: 28, top: 24, right: 58, bottom: 40)
-            }
+            var imageContent = bottomInset > 0 ? ImageContent(left: 47, top: 28, right: 52, bottom: 40) : ImageContent(left: 28, top: 24, right: 58, bottom: 40)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
