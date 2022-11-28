@@ -20,7 +20,6 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     var arriveAtWaypointCalled = false
     var arriveAtDestinationCalled = false
     var enqueueRerouteEventCalled = false
-    var sendRouteRetrievalEventCalled = false
 
     required public init() {
         eventsAPIMock = EventsAPIMock()
@@ -104,9 +103,5 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
 
     public override func enqueueRerouteEvent() {
         enqueueRerouteEventCalled = true
-    }
-
-    public override func sendRouteRetrievalEvent() {
-        sendRouteRetrievalEventCalled = true
     }
 }

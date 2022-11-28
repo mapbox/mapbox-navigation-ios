@@ -9,6 +9,16 @@ import Turf
 
 class RouteProgressTests: TestCase {
 
+    var route: Route!
+    var routeWithNoDistance: Route!
+
+    override func setUp() {
+        super.setUp()
+
+        route = makeRoute()
+        routeWithNoDistance = makeRouteWithNoDistance()
+    }
+
     func testRouteProgress() {
         let routeProgress = RouteProgress(route: route, options: routeOptions)
         XCTAssertEqual(routeProgress.fractionTraveled, 0)

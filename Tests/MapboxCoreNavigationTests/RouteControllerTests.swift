@@ -75,7 +75,7 @@ class RouteControllerTests: TestCase {
         routeResponse = makeRouteResponse()
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routeProgress = .init(route: routeResponse.routes![0], options: options)
-        nativeRoute = TestRouteProvider.createRoute(routeResponse: response)
+        nativeRoute = TestRouteProvider.createRoute(routeResponse: makeRouteResponse())
 
         singleRouteResponse = makeSingleRouteResponse()
         multilegRouteResponse = makeMultilegRouteResponse()

@@ -15,6 +15,12 @@ fileprivate let coordinateThreshold: CLLocationDistance = 0.005
 
 class MapboxNavigationServiceIntegrationTests: TestCase {
     var delegate: NavigationServiceDelegateSpy!
+    var initialRouteResponse: IndexedRouteResponse!
+    var route: Route!
+    var routeResponse: RouteResponse!
+
+    var alternateRouteResponse: RouteResponse!
+    var alternateRoute: Route!
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
@@ -45,21 +51,22 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         return (navigationService: navigationService, routeLocations: routeLocations)
     }
 
-    let initialRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
-
-    let alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-    let alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
-
     override func setUp() {
         super.setUp()
 
-        delegate = .init()
+        delegate = NavigationServiceDelegateSpy()
+        routeResponse = makeRouteResponse()
+        route = routeResponse.routes!.first!
+        initialRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
+
+        alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+        alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
     }
     
     override func tearDown() {
         super.tearDown()
 
-        dependencies?.navigationService.locationManager.stopUpdatingLocation()
+        Navigator.shared.restartNavigator()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
         
@@ -501,12 +508,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         // MARK: It tells the delegate & posts a routeProgressDidChange notification
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didUpdate:with:rawLocation:)"))
         wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 0.1)
-
-        // MARK: It enqueues and flushes a NavigationRerouteEvent
-        let expectedEventName = EventType.reroute.rawValue
-        let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy.immediateEventCount(with: expectedEventName), 1)
     }
 
     func testGeneratingAnArrivalEvent() {
@@ -529,9 +530,9 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.depart.rawValue))
         // When at a valid location just before the last location
-        XCTAssertTrue(self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
         // It tells the delegate that the user did arrive
-        XCTAssertTrue(self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
@@ -632,51 +633,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         subject.poorGPSPatience = 5.0
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(5000), "Timer should now have a countdown interval of 5000 millseconds.")
-    }
-
-    func testMultiLegRoute() {
-        let route = Fixture.route(from: "multileg-route", options: routeOptions)
-        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.speedMultiplier = 100
-
-        dependencies = createDependencies(locationSource: locationManager)
-
-        let routeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
-            CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
-            CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
-        ])
-        let routeResponse = Fixture.routeResponse(from: "multileg-route", options: routeOptions)
-
-        let navigationService = dependencies.navigationService
-        let routeController = navigationService.router as! RouteController
-        routeController.refreshesRoute = false
-
-        let routeUpdated = expectation(description: "Route Updated")
-        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0),
-                                    routeOptions: routeOptions) {
-            success in
-            XCTAssertTrue(success)
-            routeUpdated.fulfill()
-        }
-        wait(for: [routeUpdated], timeout: 5)
-        locationManager.onTick = { index, _ in
-            if index < 32 {
-                XCTAssertEqual(routeController.routeProgress.legIndex,0)
-            } else {
-                XCTAssertEqual(routeController.routeProgress.legIndex, 1)
-            }
-        }
-        let replayFinished = expectation(description: "Replay finished")
-        locationManager.replayCompletionHandler = { _ in
-            replayFinished.fulfill()
-            return false
-        }
-        navigationService.start()
-        wait(for: [replayFinished], timeout: 10)
-
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
 
     func testProactiveRerouting() {
@@ -830,7 +786,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
     }
     
     func testNavigationServiceStopShouldStopLocationUpdates() {
-        let navigationService = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: response,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: routeResponse,
                                                                                                    routeIndex: 0),
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,

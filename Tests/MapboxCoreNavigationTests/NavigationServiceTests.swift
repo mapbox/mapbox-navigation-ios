@@ -105,7 +105,7 @@ class NavigationServiceTests: TestCase {
 
         XCTAssertTrue(locationManager.startUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.startUpdatingLocationCalled)
-        XCTAssertTrue(eventsManager.sendRouteRetrievalEventCalled)
+        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
 
         XCTAssertTrue(routerSpy.delegate === service)
         waitForExpectations(timeout: expectationsTimeout)
@@ -120,7 +120,7 @@ class NavigationServiceTests: TestCase {
 
         XCTAssertTrue(locationManager.startUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.startUpdatingLocationCalled)
-        XCTAssertTrue(eventsManager.sendRouteRetrievalEventCalled)
+        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
 
         XCTAssertTrue(routerSpy.delegate === service)
         waitForExpectations(timeout: expectationsTimeout)

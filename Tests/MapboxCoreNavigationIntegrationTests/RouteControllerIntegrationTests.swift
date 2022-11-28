@@ -10,9 +10,12 @@ import MapboxNavigationNative
 
 class RouteControllerIntegrationTests: TestCase {
     var replayManager: ReplayLocationManager?
+    var routeResponse: RouteResponse!
 
     override func setUp() {
         super.setUp()
+
+        routeResponse = makeRouteResponse()
         reset()
     }
 
@@ -25,7 +28,7 @@ class RouteControllerIntegrationTests: TestCase {
 
     private func reset() {
         MapboxRoutingProvider.__testRoutesStub = nil
-        Navigator._recreateNavigator()
+        Navigator.shared.restartNavigator()
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
     }
 
@@ -320,7 +323,7 @@ class RouteControllerIntegrationTests: TestCase {
     }
 
     func testSwitchToOnlineRoute() {
-        let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0,
                                                         responseOrigin: .onboard)
         let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,

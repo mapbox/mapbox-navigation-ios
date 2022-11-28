@@ -71,6 +71,8 @@ class PassiveLocationManagerIntegrationTests: TestCase {
 
     override func tearDown() {
         super.tearDown()
+        
+        Navigator.shared.restartNavigator()
         PassiveLocationManager.historyDirectoryURL = nil
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
         HistoryRecorder._recreateHistoryRecorder()
