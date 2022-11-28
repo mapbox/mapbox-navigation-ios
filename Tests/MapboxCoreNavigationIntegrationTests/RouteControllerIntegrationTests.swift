@@ -329,7 +329,7 @@ class RouteControllerIntegrationTests: TestCase {
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
 
-        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController)
 
         let routeOptions = indexedRouteResponse.validatedRouteOptions
         let encoder = JSONEncoder()

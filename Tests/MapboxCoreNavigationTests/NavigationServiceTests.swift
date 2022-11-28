@@ -99,7 +99,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testStartIfNeverSimulation() {
-        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: nil)
+        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: service)
         notificationExpectation.isInverted = true
         service.start()
 
@@ -113,9 +113,9 @@ class NavigationServiceTests: TestCase {
 
     func testStartIfAlwaysSimulation() {
         service = makeService(simulating: .always)
-        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: nil)
+        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: service)
         notificationExpectation.expectedFulfillmentCount = 2
-        
+
         service.start()
 
         XCTAssertTrue(locationManager.startUpdatingHeadingCalled)
@@ -232,7 +232,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testStopIfNoSimulation() {
-        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: nil)
+        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: service)
         notificationExpectation.isInverted = true
 
         service.stop()
@@ -456,7 +456,7 @@ class NavigationServiceTests: TestCase {
         service.simulationMode = .never
         delegate.reset()
 
-        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: nil)
+        let notificationExpectation = expectation(forNotification: .navigationServiceSimulationDidChange, object: service)
         notificationExpectation.isInverted = true
 
         let feedback = EndOfRouteFeedback(rating: 5, comment: "comment")

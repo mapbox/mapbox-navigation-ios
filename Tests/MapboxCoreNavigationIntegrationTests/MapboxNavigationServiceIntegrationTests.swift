@@ -13,7 +13,7 @@ fileprivate let distanceThreshold: CLLocationDistance = 2
 // minimum threshold for both latitude and longitude between two coordinates
 fileprivate let coordinateThreshold: CLLocationDistance = 0.005
 
-class NavigationServiceIntegrationTests: TestCase {
+class MapboxNavigationServiceIntegrationTests: TestCase {
     var delegate: NavigationServiceDelegateSpy!
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)

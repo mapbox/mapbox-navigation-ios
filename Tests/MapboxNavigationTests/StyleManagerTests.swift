@@ -132,7 +132,7 @@ class StyleManagerTests: TestCase {
         
         styleManager.applyStyle(type: .day)
         
-        let dayExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
+        let dayExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: styleManager) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let style = userInfo?[StyleManagerNotificationUserInfoKey.styleKey] as? Style
             let styleManager = userInfo?[StyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
@@ -141,7 +141,7 @@ class StyleManagerTests: TestCase {
             return style?.styleType == StyleType.day
         }
         
-        let nightExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
+        let nightExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: styleManager) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let style = userInfo?[StyleManagerNotificationUserInfoKey.styleKey] as? Style
             let styleManager = userInfo?[StyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
