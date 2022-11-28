@@ -147,7 +147,8 @@ public class ExitView: StylableView {
     static func criticalHash(side: ExitSide,
                              styleID: String?,
                              dataSource: DataSource,
-                             traitCollection: UITraitCollection) -> String {
+                             traitCollection: UITraitCollection,
+                             isHighlighted: Bool = false) -> String {
         var appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
             let traitCollection = UITraitCollection(traitsFrom: [
@@ -160,6 +161,7 @@ public class ExitView: StylableView {
         
         var criticalProperties: [AnyHashable?] = [
             side,
+            isHighlighted,
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,

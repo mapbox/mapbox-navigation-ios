@@ -33,12 +33,14 @@ class InstructionPresenter {
                   dataSource: DataSource,
                   spriteRepository: SpriteRepository = .shared,
                   traitCollection: UITraitCollection,
-                  downloadCompletion: ShieldDownloadCompletion?) {
+                  downloadCompletion: ShieldDownloadCompletion?,
+                  isHighlighted: Bool? = false) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.spriteRepository = spriteRepository
         self.traitCollection = traitCollection
         self.onShieldDownload = downloadCompletion
+        self.isHighlighted = isHighlighted
     }
 
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
@@ -50,6 +52,8 @@ class InstructionPresenter {
     private let traitCollection: UITraitCollection
     
     static let labelShieldScaleFactor: CGFloat = 1.2
+    
+    var isHighlighted: Bool = false
     
     func attributedText() -> NSAttributedString {
         guard let source = self.dataSource,
@@ -254,7 +258,8 @@ class InstructionPresenter {
                                cacheKey: String) -> NSAttributedString? {
         let additionalKey = GenericRouteShield.criticalHash(styleID: spriteRepository.styleID(for: idiom),
                                                             dataSource: dataSource,
-                                                            traitCollection: traitCollection)
+                                                            traitCollection: traitCollection,
+                                                            isHighlighted: isHighlighted)
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
@@ -297,7 +302,8 @@ class InstructionPresenter {
         let additionalKey = ExitView.criticalHash(side: side,
                                                   styleID: spriteRepository.styleID(for: idiom),
                                                   dataSource: dataSource,
-                                                  traitCollection: traitCollection)
+                                                  traitCollection: traitCollection,
+                                                  isHighlighted: isHighlighted)
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")

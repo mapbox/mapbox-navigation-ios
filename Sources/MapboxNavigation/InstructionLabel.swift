@@ -31,8 +31,15 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             updateLabelAttributedText()
         }
     }
-
-    private func updateLabelAttributedText() {
+    
+    @objc public override var showHighlightedTextColor: Bool {
+        didSet {
+            update()
+            updateLabelAttributedText(showHighlightedTextColor)
+        }
+    }
+    
+    private func updateLabelAttributedText(_ showHighlightedTextColor: Bool? = false) {
         guard let instruction = instruction else {
             text = nil
             return
@@ -48,8 +55,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                                              dataSource: self,
                                              spriteRepository: spriteRepository,
                                              traitCollection: customTraitCollection ?? traitCollection,
-                                             downloadCompletion: update)
-        styleID = presenter.spriteRepository.styleID
+                                             downloadCompletion: update,
+                                             isHighlighted: showHighlightedTextColor)
         let attributed = presenter.attributedText()
         attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }
