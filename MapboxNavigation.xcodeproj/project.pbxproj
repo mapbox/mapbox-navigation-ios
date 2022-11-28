@@ -110,6 +110,8 @@
 		2C9006D7291927D80012CCEA /* RoutesCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006D0291927B80012CCEA /* RoutesCoordinatorTests.swift */; };
 		2C9006D9291927EE0012CCEA /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
 		2C9006DB2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006DA2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift */; };
+		2C9DDBDC29312398007F8CFD /* SimulatedLocationManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9DDBDB29312398007F8CFD /* SimulatedLocationManagerSpy.swift */; };
+		2C9DDBDE29312790007F8CFD /* DispatchTimerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9DDBDD29312790007F8CFD /* DispatchTimerSpy.swift */; };
 		2CAEABD12930D25300DE851A /* NavigationServiceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEABD02930D25300DE851A /* NavigationServiceIntegrationTests.swift */; };
 		2CAEABD32930D87B00DE851A /* RouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEABD22930D87B00DE851A /* RouterSpy.swift */; };
 		2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */; };
@@ -766,6 +768,8 @@
 		2C9006CF291927B80012CCEA /* RerouteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteTests.swift; sourceTree = "<group>"; };
 		2C9006D0291927B80012CCEA /* RoutesCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesCoordinatorTests.swift; sourceTree = "<group>"; };
 		2C9006DA2919281F0012CCEA /* BannerDismissalViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
+		2C9DDBDB29312398007F8CFD /* SimulatedLocationManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationManagerSpy.swift; sourceTree = "<group>"; };
+		2C9DDBDD29312790007F8CFD /* DispatchTimerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTimerSpy.swift; sourceTree = "<group>"; };
 		2CAEABD02930D25300DE851A /* NavigationServiceIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationServiceIntegrationTests.swift; sourceTree = "<group>"; };
 		2CAEABD22930D87B00DE851A /* RouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterSpy.swift; sourceTree = "<group>"; };
 		2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerSpy.swift; sourceTree = "<group>"; };
@@ -2115,6 +2119,8 @@
 				2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */,
 				2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */,
 				2CAEABD22930D87B00DE851A /* RouterSpy.swift */,
+				2C9DDBDB29312398007F8CFD /* SimulatedLocationManagerSpy.swift */,
+				2C9DDBDD29312790007F8CFD /* DispatchTimerSpy.swift */,
 			);
 			name = TestHelper;
 			path = Sources/TestHelper;
@@ -3314,12 +3320,14 @@
 				E26AB4FD269F7BCA00FD756B /* TestCase.swift in Sources */,
 				2C4093B5292661FD0099FA0E /* RouteParserSpy.swift in Sources */,
 				B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */,
+				2C9DDBDE29312790007F8CFD /* DispatchTimerSpy.swift in Sources */,
 				E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */,
 				B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */,
 				2C9006CB291927850012CCEA /* CoreNavigatorSpy.swift in Sources */,
 				B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */,
 				2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */,
 				B47C1B47261FD3A90078546C /* Date.swift in Sources */,
+				2C9DDBDC29312398007F8CFD /* SimulatedLocationManagerSpy.swift in Sources */,
 				2C9006CC291927850012CCEA /* DummyRoute.swift in Sources */,
 				B47C1B50261FD3B10078546C /* DirectionsSpy.swift in Sources */,
 				B47C1B6B261FD3C30078546C /* Fixture.swift in Sources */,

@@ -183,6 +183,35 @@ public class Fixture: NSObject {
                                               profileIdentifier: .automobile))
     }
 
+    public class func makeVisualInstruction(maneuverType: ManeuverType = .arrive,
+                                            maneuverDirection: ManeuverDirection = .left,
+                                            primaryInstruction: [VisualInstruction.Component] = [],
+                                            secondaryInstruction: [VisualInstruction.Component]? = nil,
+                                            drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
+        let primary = VisualInstruction(text: "Instruction",
+                                        maneuverType: maneuverType,
+                                        maneuverDirection: maneuverDirection,
+                                        components: primaryInstruction)
+        var secondary: VisualInstruction? = nil
+        if let secondaryInstruction = secondaryInstruction {
+            secondary = VisualInstruction(text: "Instruction",
+                                          maneuverType: maneuverType,
+                                          maneuverDirection: maneuverDirection,
+                                          components: secondaryInstruction)
+        }
+
+        return VisualInstructionBanner(distanceAlongStep: 482.803,
+                                       primary: primary,
+                                       secondary: secondary,
+                                       tertiary: nil,
+                                       quaternary: nil,
+                                       drivingSide: drivingSide)
+    }
+
+    public class func makeSpokenInstruction() -> SpokenInstruction {
+        return SpokenInstruction(distanceAlongStep: 100, text: "Instruction", ssmlText: "instruction")
+    }
+
     public static func route(waypoints: [CLLocationCoordinate2D],
                              profileIdentifier: ProfileIdentifier = .automobile,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {

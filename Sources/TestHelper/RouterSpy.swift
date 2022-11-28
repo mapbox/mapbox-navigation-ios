@@ -48,12 +48,14 @@ final class RouterSpy: NSObject, Router {
     var passedRouteOptions: RouteOptions?
     var passedLocations: [CLLocation]?
     var passedLocationManager: CLLocationManager?
+    var passedHeading: CLHeading?
 
     var updateRouteCalled = false
     var advanceLegIndexCalled = false
     var finishRoutingCalled = false
     var rerouteCalled = false
     var didUpdateLocationsCalled = false
+    var didUpdateHeadingCalled = false
 
     // MARK: Methods
 
@@ -123,6 +125,12 @@ final class RouterSpy: NSObject, Router {
         didUpdateLocationsCalled = true
         passedLocationManager = manager
         passedLocations = locations
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        didUpdateHeadingCalled = true
+        passedLocationManager = manager
+        passedHeading = newHeading
     }
 
 }

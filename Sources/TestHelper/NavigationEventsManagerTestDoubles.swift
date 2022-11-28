@@ -15,6 +15,12 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     
     var debuggableEvents = [NavigationEventDetails]()
     var locations = [CLLocation]()
+    var totalDistanceCompleted: CLLocationDistance = 0
+
+    var arriveAtWaypointCalled = false
+    var arriveAtDestinationCalled = false
+    var enqueueRerouteEventCalled = false
+    var sendRouteRetrievalEventCalled = false
 
     required public init() {
         eventsAPIMock = EventsAPIMock()
@@ -42,7 +48,11 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return eventsAPIMock.immediateEventCount(with: eventName)
     }
 
-    override public func navigationDepartEvent() -> ActiveNavigationEventDetails? {
+    func hasQueuedEvent(with eventName: String) -> Bool {
+        return eventsAPIMock.hasQueuedEvent(with: eventName)
+    }
+
+    public override func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         if let event = super.navigationDepartEvent() {
             debuggableEvents.append(event)
             return event
@@ -50,7 +60,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return nil
     }
     
-    override public func navigationArriveEvent() -> ActiveNavigationEventDetails? {
+    public override func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         if let event = super.navigationArriveEvent() {
             debuggableEvents.append(event)
             return event
@@ -58,7 +68,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return nil
     }
     
-    override public func navigationRerouteEvent(
+    public override func navigationRerouteEvent(
         eventType: String = MMEEventTypeNavigationReroute
     ) -> ActiveNavigationEventDetails? {
         if let event = super.navigationRerouteEvent() {
@@ -68,7 +78,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return nil
     }
     
-    override public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
+    public override func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
         let sessionState = SessionState(currentRoute: nil, originalRoute: nil, routeIdentifier: nil)
         var event = PassiveNavigationEventDetails(dataSource: PassiveLocationManager(), sessionState: sessionState)
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
@@ -76,7 +86,27 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return FeedbackEvent(eventDetails: event)
     }
 
-    override public func record(_ locations: [CLLocation]) {
+    public override func record(_ locations: [CLLocation]) {
         self.locations.append(contentsOf: locations)
+    }
+
+    public override func incrementDistanceTraveled(by distance: CLLocationDistance) {
+        totalDistanceCompleted += distance
+    }
+
+    public override func arriveAtWaypoint() {
+        arriveAtWaypointCalled = true
+    }
+
+    public override func arriveAtDestination() {
+        arriveAtDestinationCalled = true
+    }
+
+    public override func enqueueRerouteEvent() {
+        enqueueRerouteEventCalled = true
+    }
+
+    public override func sendRouteRetrievalEvent() {
+        sendRouteRetrievalEventCalled = true
     }
 }
