@@ -519,7 +519,7 @@ class InstructionBannerTest: TestCase {
                                              maneuverDirection: maneuverDirection,
                                              primaryInstruction: primaryInstruction,
                                              secondaryInstruction: secondaryInstruction,
-                                             drivingSide)
+                                             drivingSide: drivingSide)
     }
     
     func cacheSprite(for styleURI: StyleURI = .navigationDay) {

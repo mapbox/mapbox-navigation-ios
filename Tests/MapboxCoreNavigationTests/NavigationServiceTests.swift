@@ -151,17 +151,10 @@ class NavigationServiceTests: TestCase {
 
     func testDidChangeAuthorization() {
         guard #available(iOS 14.0, *) else { return }
-        expectation(forNotification: .locationAuthorizationDidChange, object: locationManager) { (notification) -> Bool in
-            let userInfo = notification.userInfo
-            let authorization = userInfo?[MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey] as? Int
-
-            XCTAssertEqual(authorization, 0)
-
-            return true
-        }
+        expectation(forNotification: .locationAuthorizationDidChange, object: locationManager)
         service.locationManagerDidChangeAuthorization(locationManager)
 
-        let expectedCalls = [ "navigationServiceDidChangeAuthorization(_:didChangeAuthorizationFor:)"]
+        let expectedCalls = ["navigationServiceDidChangeAuthorization(_:didChangeAuthorizationFor:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
 
         waitForExpectations(timeout: expectationsTimeout)
@@ -476,7 +469,7 @@ class NavigationServiceTests: TestCase {
         service.router(routerSpy, willRerouteFrom: location)
         XCTAssertTrue(eventsManager.enqueueRerouteEventCalled)
         XCTAssertEqual(eventsManager.totalDistanceCompleted, routeProgress.distanceTraveled)
-        let expectedCalls = [ "navigationService(_:willRerouteFrom:)"]
+        let expectedCalls = ["navigationService(_:willRerouteFrom:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
@@ -487,47 +480,47 @@ class NavigationServiceTests: TestCase {
         ])
         let routeOptions = service.router(routerSpy, modifiedOptionsForReroute: expectedRouteOptions)
         XCTAssertEqual(routeOptions, expectedRouteOptions)
-        let expectedCalls = [ "navigationService(_:modifiedOptionsForReroute:)"]
+        let expectedCalls = ["navigationService(_:modifiedOptionsForReroute:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidRerouteAlong() {
         service.router(routerSpy, didRerouteAlong: route, at: location, proactive: true)
-        let expectedCalls = [ "navigationService(_:didRerouteAlong:at:proactive:)"]
+        let expectedCalls = ["navigationService(_:didRerouteAlong:at:proactive:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidFailToReroute() {
         let error = DirectionsError.noData
         service.router(routerSpy, didFailToRerouteWith: error)
-        let expectedCalls = [ "navigationService(_:didFailToRerouteWith:)"]
+        let expectedCalls = ["navigationService(_:didFailToRerouteWith:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidRefresh() {
         service.router(routerSpy, didRefresh: routeProgress)
-        let expectedCalls = [ "navigationService(_:didRefresh:)"]
+        let expectedCalls = ["navigationService(_:didRefresh:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidUpdate() {
         service.router(routerSpy, didUpdate: routeProgress, with: location, rawLocation: lastLocation)
         XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.depart.rawValue))
-        let expectedCalls = [ "navigationService(_:didUpdate:with:rawLocation:)"]
+        let expectedCalls = ["navigationService(_:didUpdate:with:rawLocation:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidPassVisualInstructionPoint() {
         let visualInstruction = Fixture.makeVisualInstruction()
         service.router(routerSpy, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
-        let expectedCalls = [ "navigationService(_:didPassVisualInstructionPoint:routeProgress:)"]
+        let expectedCalls = ["navigationService(_:didPassVisualInstructionPoint:routeProgress:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidPassSpokenInstructionPoint() {
         let spokenInstruction = Fixture.makeSpokenInstruction()
         service.router(routerSpy, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
-        let expectedCalls = [ "navigationService(_:didPassSpokenInstructionPoint:routeProgress:)"]
+        let expectedCalls = ["navigationService(_:didPassSpokenInstructionPoint:routeProgress:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
@@ -588,7 +581,7 @@ class NavigationServiceTests: TestCase {
 
     func testWillArriveAt() {
         service.router(routerSpy, willArriveAt: waypoint, after: 100, distance: 1000)
-        let expectedCalls = [ "navigationService(_:willArriveAt:after:distance:)"]
+        let expectedCalls = ["navigationService(_:willArriveAt:after:distance:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
         XCTAssertEqual(delegate.passedWaypoint, waypoint)
     }
@@ -620,7 +613,7 @@ class NavigationServiceTests: TestCase {
     func testDidArriveAtIfDelegateReturnedTrue() {
         delegate.returnedDidArrive = true
         XCTAssertTrue(service.router(routerSpy, didArriveAt: waypoint))
-        let expectedCalls = [ "navigationService(_:didArriveAt:)"]
+        let expectedCalls = ["navigationService(_:didArriveAt:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
         XCTAssertEqual(delegate.passedWaypoint, waypoint)
 
@@ -632,7 +625,7 @@ class NavigationServiceTests: TestCase {
     func testDidArriveAtIfDelegateReturnedFalse() {
         delegate.returnedDidArrive = false
         XCTAssertFalse(service.router(routerSpy, didArriveAt: waypoint))
-        let expectedCalls = [ "navigationService(_:didArriveAt:)"]
+        let expectedCalls = ["navigationService(_:didArriveAt:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
         XCTAssertEqual(delegate.passedWaypoint, waypoint)
 
@@ -644,37 +637,37 @@ class NavigationServiceTests: TestCase {
     func testDidFailToUpdateAlternatives() {
         let error = AlternativeRouteError.failedToUpdateAlternativeRoutes(reason: "reason")
         service.router(routerSpy, didFailToUpdateAlternatives: error)
-        let expectedCalls = [ "navigationService(_:didFailToUpdateAlternatives:)"]
+        let expectedCalls = ["navigationService(_:didFailToUpdateAlternatives:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidFailToTakeAlternativeRoad() {
         service.router(routerSpy, didFailToTakeAlternativeRouteAt: location)
-        let expectedCalls = [ "navigationService(_:didFailToTakeAlternativeRouteAt:)"]
+        let expectedCalls = ["navigationService(_:didFailToTakeAlternativeRouteAt:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testWillTakeAlternativeRoad() {
         service.router(routerSpy, willTakeAlternativeRoute: route, at: location)
-        let expectedCalls = [ "navigationService(_:willTakeAlternativeRoute:at:)"]
+        let expectedCalls = ["navigationService(_:willTakeAlternativeRoute:at:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidTakeAlternativeRoad() {
         service.router(routerSpy, didTakeAlternativeRouteAt: location)
-        let expectedCalls = [ "navigationService(_:didTakeAlternativeRouteAt:)"]
+        let expectedCalls = ["navigationService(_:didTakeAlternativeRouteAt:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidSwitchToCoincidentOnlineRoute() {
         service.router(routerSpy, didSwitchToCoincidentOnlineRoute: route)
-        let expectedCalls = [ "navigationService(_:didSwitchToCoincidentOnlineRoute:)"]
+        let expectedCalls = ["navigationService(_:didSwitchToCoincidentOnlineRoute:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
     func testDidUpdateAlternatives() {
         service.router(routerSpy, didUpdateAlternatives: [], removedAlternatives: [])
-        let expectedCalls = [ "navigationService(_:didUpdateAlternatives:removedAlternatives:)"]
+        let expectedCalls = ["navigationService(_:didUpdateAlternatives:removedAlternatives:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
 
