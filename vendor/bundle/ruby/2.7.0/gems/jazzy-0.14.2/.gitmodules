@@ -1,0 +1,6 @@
+[submodule "SourceKitten"]
+	path = SourceKitten
+	url = https://github.com/jpsim/SourceKitten.git
+[submodule "spec/integration_specs"]
+	path = spec/integration_specs
+	url = https://github.com/realm/jazzy-integration-specs.git
