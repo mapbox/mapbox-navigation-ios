@@ -41,9 +41,9 @@
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "ad9ae364b2ec706886394e1ac460df7758222d93",
-          "version": "2.6.0"
+          "branch": "maxim/test-release-v2.6",
+          "revision": "422577a7ac72911945ea52a81e4f3169315d888b",
+          "version": null
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
         "state": {
           "branch": null,
-          "revision": "554a15b15ff33cf6757f4cb693c5c285fe58694e",
-          "version": "5.0.3"
+          "revision": "353f80378dcd8f17eefe8550090c6b1ae3c9da23",
+          "version": "5.1.0"
         }
       },
       {
