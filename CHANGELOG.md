@@ -22,6 +22,8 @@
 * Fixed label localization to properly handle Simplified and Traditional Chinese. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Allow simultaneous recognition of map- and annotation- handling gesture recognizers. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Fixed an issue where text in the route duration annotation was not centered correctly on devices with different screen sizes. ([#4130](https://github.com/mapbox/mapbox-navigation-ios/pull/4130))
+* Added `CarPlayManagerDelegate.carPlayManager(_:willAddRouteLineLayer:identifier:for:)`, `CarPlayManagerDelegate.carPlayManager(_:willAddRouteCasingLineLayer:identifier:for:)`,
+`CarPlayManagerDelegate.carPlayManager(_:willAddRouteRestrictedAreas:identifier:for:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteLineLayer:identifier:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteCasingLineLayer:identifier:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteRestrictedAreas:identifier:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteLineLayer:identifier:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteCasingLineLayer:identifier:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteRestrictedAreas:identifier:)` to modify the properties of the default route line layers in `NavigationMapView` during navigation. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 
 ### Location tracking
 
