@@ -59,6 +59,8 @@ class NavigationViewControllerTests: TestCase {
     var newRoute: Route!
     var newRouteResponse: RouteResponse!
     
+    var expectedLineOpacity: Double = 0.2
+    
     override func setUp() {
         super.setUp()
         UNUserNotificationCenter.replaceWithMock()
@@ -547,6 +549,32 @@ class NavigationViewControllerTests: TestCase {
         XCTAssertFalse(style.layerExists(withId: layerIdentifier))
         XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
     }
+    
+    func testNavigationMapViewRouteLineDelegate() {
+        guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
+        let navigationViewController = dependencies.navigationViewController
+        _ = navigationViewController.view // trigger view load
+        
+        guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
+            XCTFail("Failed to get the MapView style object.")
+            return
+        }
+        
+        let route = dependencies.navigationService.route
+        let routeIentifer = route.identifier(.route(isMainRoute: true))
+        let routeCasingIentifer = route.identifier(.routeCasing(isMainRoute: true))
+        navigationViewController.navigationMapView?.addRouteLayer(route)
+        navigationViewController.navigationMapView?.addRouteCasingLayer(route)
+        
+        guard let routelineOpacity = style.layerPropertyValue(for: routeIentifer, property: "line-opacity") as? Double,
+              let casinglineOpacity = style.layerPropertyValue(for: routeCasingIentifer, property: "line-opacity") as? Double else {
+            XCTFail("Route line layer and route casing layer should be present.")
+            return
+        }
+        
+        XCTAssertEqual(expectedLineOpacity, routelineOpacity, accuracy: 1e-3, "Failed to customize route line layer through delegate.")
+        XCTAssertEqual(expectedLineOpacity, casinglineOpacity, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
@@ -562,6 +590,18 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate, Style
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         return customRoadName[location.coordinate] ?? nil
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        var lineLayer = layer
+        lineLayer.lineOpacity = .constant(expectedLineOpacity)
+        return lineLayer
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        var lineLayer = layer
+        lineLayer.lineOpacity = .constant(expectedLineOpacity)
+        return lineLayer
     }
 }
 

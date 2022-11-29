@@ -656,19 +656,19 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(trafficUnknownColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression())
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(trafficUnknownColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression())
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
             
             if isMainRoute {
                 let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 let gradientStops = routeLineCongestionGradient(route,
                                                                 congestionFeatures: congestionFeatures,
                                                                 isSoft: crossfadesCongestionSegments)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                               lineBaseColor: trafficUnknownColor,
                                                                                               isSoft: crossfadesCongestionSegments)))
             } else {
@@ -677,16 +677,20 @@ open class NavigationMapView: UIView {
                                                                     congestionFeatures: route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                                     isMain: false,
                                                                     isSoft: crossfadesCongestionSegments)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                    defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
                     let gradientStops: [Double: UIColor] = [1.0: routeAlternateColor]
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                    defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: routeAlternateColor,
                                                                                                   isSoft: false)))
                 }
             }
+            
+            lineLayer = delegate?.navigationMapView(self,
+                                                    willAddRouteLineLayer: defaultLineLayer,
+                                                    identifier: layerIdentifier) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {
@@ -750,22 +754,26 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(routeCasingColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(routeCasingColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
             
             if isMainRoute {
                 let gradientStops = routeLineCongestionGradient(route)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 let gradientStops: [Double: UIColor] = [1.0: routeAlternateCasingColor]
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                               lineBaseColor: routeAlternateCasingColor,
                                                                                               isSoft: false)))
             }
+            
+            lineLayer = delegate?.navigationMapView(self,
+                                                    willAddRouteCasingLineLayer: defaultLineLayer,
+                                                    identifier: layerIdentifier) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {

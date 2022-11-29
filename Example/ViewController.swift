@@ -787,6 +787,32 @@ extension ViewController: NavigationMapViewDelegate {
 // MARK: - NavigationViewControllerDelegate methods
 
 extension ViewController: NavigationViewControllerDelegate {
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        guard identifier.contains("alternative") else { return nil }
+        var lineLayer = layer
+        lineLayer.lineWidth = .expression(
+            Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel.multiplied(by: 0.7)
+            }
+        )
+        return lineLayer
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        guard identifier.contains("alternative") else { return nil }
+        var lineLayer = layer
+        lineLayer.lineWidth = .expression(
+            Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel
+            }
+        )
+        return lineLayer
+    }
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         if let delegate = UIApplication.shared.delegate as? AppDelegate,

@@ -269,6 +269,36 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
     /**
+     Adjust the default route line layer and return a `LineLayer` that determines the appearance of the route line.
+     
+     If this method is not implemented, the navigation view controller’s map view draws the route line using default `layer`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter layer: A default `LineLayer`  for the route line.
+     - parameter identifier: The `LineLayer` identifier.
+     - returns: A `LineLayer` that is applied to the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:willAddRouteLineLayer:identifier:)`,
+     `CarPlayManagerDelegate.carPlayManager(_:willAddRouteLineLayer:identifier:for:)`.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer?
+    
+    /**
+     Adjust the default casing layer of route line and return a `LineLayer` that determines the appearance of the casing around route line.
+     
+     If this method is not implemented, the navigation view controller’s map view draws the casing layer for the route line using the default `layer`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter layer: A default `LineLayer`  for the casing layer that surrounds route line.
+     - parameter identifier: The `LineLayer` identifier.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:willAddRouteCasingLineLayer:identifier:)`,
+     `CarPlayManagerDelegate.carPlayManager(_:willAddRouteCasingLineLayer:identifier:for:)`.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer?
+    
+    /**
      Returns an `LineLayer` that determines the appearance of the restricted areas portions of the route line.
      
      If this method is not implemented, the navigation view controller’s map view draws the areas using default `LineLayer`.
@@ -507,6 +537,22 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }

@@ -23,6 +23,22 @@ extension NavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  willAddRouteLineLayer layer: LineLayer,
+                                  identifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self,
+                                           willAddRouteLineLayer: layer,
+                                           identifier: identifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  willAddRouteCasingLineLayer layer: LineLayer,
+                                  identifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self,
+                                           willAddRouteCasingLineLayer: layer,
+                                           identifier: identifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   routeRestrictedAreasLineLayerWithIdentifier identifier: String,
                                   sourceIdentifier: String) -> LineLayer? {
         delegate?.navigationViewController(self,
