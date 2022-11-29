@@ -373,7 +373,7 @@ jobs:
             - run:
                 name: MapboxNavigation-Package
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
-      # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section.
+      # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
           steps:
@@ -382,7 +382,7 @@ jobs:
                 command: |
                   xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
                     -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-                    $(find build -name "MapboxNavigation.o") > coverage.lcov
+                    $(find "${HOME}/Library/Developer/Xcode/DerivedData" -name "MapboxNavigation.o") > coverage.lcov
             - run:
                 name: Send code coverage
                 command: |
@@ -472,6 +472,9 @@ jobs:
       notify_success:
         type: boolean
         default: false
+      codecoverage:
+        type: boolean
+        default: true
     macos:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.metal.gen1
@@ -484,7 +487,7 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build test host application and execute tests
-          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test -enableCodeCoverage YES ENABLE_TESTABILITY=YES
+          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
       - when:
           condition: << parameters.codecoverage >>
           steps:
