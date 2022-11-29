@@ -35,6 +35,10 @@ Pod::Spec.new do |s|
 
   s.source_files = "Sources/{MapboxCoreNavigation}/**/*.{h,m,swift}"
 
+  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.resources = ['Sources/MapboxCoreNavigation/MBXInfo.plist']
+
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
