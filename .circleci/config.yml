@@ -64,7 +64,7 @@ commands:
     steps:
       - when:
           condition: << parameters.is_template >>
-          steps: 
+          steps:
             - save_cache:
                 key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
                 paths:
@@ -92,7 +92,7 @@ commands:
     steps:
       - when:
           condition: << parameters.is_template >>
-          steps: 
+          steps:
             - restore_cache:
                 key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
       - unless:
@@ -196,7 +196,7 @@ step-library:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-  
+
   - &save-cache-cocoapods
       save_cache:
         key: nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Tests/CocoaPodsTest/PodInstall/Podfile.lock" }}
@@ -498,7 +498,7 @@ jobs:
       is_base_api:
         type: boolean
         default: false
-      commit_hash: 
+      commit_hash:
         description: "git hash of the commit to be used for generating logs in api_logs folder"
         type: string
     macos:
@@ -617,7 +617,7 @@ jobs:
       - run:
           name: Build SPM Core integration test
           command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
-      
+
   generate-docs-job:
     parameters:
       xcode:
@@ -710,7 +710,6 @@ jobs:
       - run:
           name: Update version
           command: |
-#            pod repo update && pod trunk push MapboxCoreNavigation.podspec
             pod repo update && pod trunk push MapboxNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-gems
