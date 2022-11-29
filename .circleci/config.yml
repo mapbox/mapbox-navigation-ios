@@ -662,34 +662,6 @@ jobs:
                 notify_success: true
       - notify-build-finished
 
-  update-version-job:
-    parameters:
-      xcode:
-        type: string
-        default: "12.5.1"
-    macos:
-      xcode: << parameters.xcode >>
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *restore-cache-gems
-      - *restore-cache-podmaster
-      - *install-gems
-      - *prepare-netrc-file
-      - *add-github-to-known-hosts
-      - install-mbx-ci
-      - run:
-          name: Update version
-          command: |
-            export GITHUB_WRITER_TOKEN=$(mbx-ci github writer public token)
-            git remote set-url origin "https://x-access-token:$GITHUB_WRITER_TOKEN@github.com/mapbox/mapbox-navigation-ios"
-            git config --global user.email no-reply@mapbox.com && git config --global user.name mapbox-ci
-            VERSION=$( echo << pipeline.git.branch >> | sed 's/^trigger-update-version-//' )
-            ./scripts/update-version.sh $VERSION
-      - *save-cache-podmaster
-      - *save-cache-gems
-
 workflows:
   extended-workflow:
     jobs:
@@ -806,9 +778,3 @@ workflows:
             filters:
               branches:
                 only: main
-  update-version-workflow:
-    jobs:
-      - update-version-job:
-          filters:
-            branches:
-              only: /^trigger-update-version-.*/
