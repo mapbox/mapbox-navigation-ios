@@ -1138,6 +1138,14 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayNavigationViewController(self,
+                                                         routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                                         sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   willAddRouteLineLayer layer: LineLayer,
                                   identifier: String) -> LineLayer? {
         return delegate?.carPlayNavigationViewController(self,
@@ -1150,6 +1158,14 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
                                   identifier: String) -> LineLayer? {
         return delegate?.carPlayNavigationViewController(self,
                                                          willAddRouteCasingLineLayer: layer,
+                                                         identifier: identifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  willAddRouteRestrictedAreas layer: LineLayer,
+                                  identifier: String) -> LineLayer? {
+        return delegate?.carPlayNavigationViewController(self,
+                                                         willAddRouteRestrictedAreas: layer,
                                                          identifier: identifier)
     }
 }

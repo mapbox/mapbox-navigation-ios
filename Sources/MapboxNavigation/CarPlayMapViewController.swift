@@ -448,6 +448,14 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   willAddRouteLineLayer layer: LineLayer,
                                   identifier: String) -> LineLayer? {
         delegate?.carPlayMapViewController(self,
@@ -460,6 +468,14 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
                                   identifier: String) -> LineLayer? {
         delegate?.carPlayMapViewController(self,
                                            willAddRouteCasingLineLayer: layer,
+                                           identifier: identifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  willAddRouteRestrictedAreas layer: LineLayer,
+                                  identifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           willAddRouteRestrictedAreas: layer,
                                            identifier: identifier)
     }
 }

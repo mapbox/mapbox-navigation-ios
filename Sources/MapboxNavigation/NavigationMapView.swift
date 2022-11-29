@@ -588,18 +588,22 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(routeRestrictedAreaColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
-            lineLayer?.lineOpacity = .constant(0.5)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(routeRestrictedAreaColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
+            defaultLineLayer.lineOpacity = .constant(0.5)
             
             let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures)
-            lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
+            defaultLineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                          lineBaseColor: routeRestrictedAreaColor))
-            lineLayer?.lineDasharray = .constant([0.5, 2.0])
+            defaultLineLayer.lineDasharray = .constant([0.5, 2.0])
+            
+            lineLayer = delegate?.navigationMapView(self,
+                                                    willAddRouteRestrictedAreas: defaultLineLayer,
+                                                    identifier: layerIdentifier) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {

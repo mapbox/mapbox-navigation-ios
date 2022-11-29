@@ -269,6 +269,19 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
     /**
+     Returns an `LineLayer` that determines the appearance of the restricted areas portions of the route line.
+     
+     If this method is not implemented, the navigation view controller’s map view draws the areas using default `LineLayer`.
+     
+     
+     - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied as restricted areas on the route line.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    
+    /**
      Adjust the default route line layer and return a `LineLayer` that determines the appearance of the route line.
      
      If this method is not implemented, the navigation view controller’s map view draws the route line using default `layer`.
@@ -299,17 +312,19 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer?
     
     /**
-     Returns an `LineLayer` that determines the appearance of the restricted areas portions of the route line.
+     Adjust the default highlighting restricted areas portions of the route and return a `LineLayer` that determines the appearance of the restricted portion.
      
-     If this method is not implemented, the navigation view controller’s map view draws the areas using default `LineLayer`.
-     
+     If this method is not implemented, the navigation view controller’s map view draws the restricted areas on the route line using the default `layer`.
      
      - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter layer: A default `LineLayer`  for the restricted areas portions of the route.
      - parameter identifier: The `LineLayer` identifier.
-     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as restricted areas on the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:willAddRouteRestrictedAreas:identifier:)`,
+     `CarPlayManagerDelegate.carPlayManager(_:willAddRouteRestrictedAreas:identifier:for:)`.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer?
     
     /**
      Returns an `CircleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:)`.
@@ -544,6 +559,14 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
@@ -560,7 +583,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }

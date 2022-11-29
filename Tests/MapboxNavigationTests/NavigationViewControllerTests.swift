@@ -59,7 +59,7 @@ class NavigationViewControllerTests: TestCase {
     var newRoute: Route!
     var newRouteResponse: RouteResponse!
     
-    var expectedLineOpacity: Double = 0.2
+    let expectedLineOpacity: Double = 0.2
     
     override func setUp() {
         super.setUp()
@@ -563,17 +563,21 @@ class NavigationViewControllerTests: TestCase {
         let route = dependencies.navigationService.route
         let routeIentifer = route.identifier(.route(isMainRoute: true))
         let routeCasingIentifer = route.identifier(.routeCasing(isMainRoute: true))
-        navigationViewController.navigationMapView?.addRouteLayer(route)
-        navigationViewController.navigationMapView?.addRouteCasingLayer(route)
+        let restrictedIentifer = route.identifier(.restrictedRouteAreaRoute)
+        navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
+        navigationViewController.navigationMapView?.show([route])
         
         guard let routelineOpacity = style.layerPropertyValue(for: routeIentifer, property: "line-opacity") as? Double,
-              let casinglineOpacity = style.layerPropertyValue(for: routeCasingIentifer, property: "line-opacity") as? Double else {
-            XCTFail("Route line layer and route casing layer should be present.")
+              let casinglineOpacity = style.layerPropertyValue(for: routeCasingIentifer, property: "line-opacity") as? Double,
+              let restrictedOpacity = style.layerPropertyValue(for: restrictedIentifer, property: "line-opacity") as? Double
+        else {
+            XCTFail("Route line layers should all be present.")
             return
         }
         
         XCTAssertEqual(expectedLineOpacity, routelineOpacity, accuracy: 1e-3, "Failed to customize route line layer through delegate.")
         XCTAssertEqual(expectedLineOpacity, casinglineOpacity, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
+        XCTAssertEqual(expectedLineOpacity, restrictedOpacity, accuracy: 1e-3, "Failed to customize route restricted area layer through delegate.")
     }
 }
 
@@ -599,6 +603,12 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate, Style
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+        var lineLayer = layer
+        lineLayer.lineOpacity = .constant(expectedLineOpacity)
+        return lineLayer
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
         var lineLayer = layer
         lineLayer.lineOpacity = .constant(expectedLineOpacity)
         return lineLayer

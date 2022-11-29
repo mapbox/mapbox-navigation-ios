@@ -788,6 +788,7 @@ extension ViewController: NavigationMapViewDelegate {
 
 extension ViewController: NavigationViewControllerDelegate {
     
+    // To modify the width of the alternative route line layer through delegate methods.
     func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
         guard identifier.contains("alternative") else { return nil }
         var lineLayer = layer

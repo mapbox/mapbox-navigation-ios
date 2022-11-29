@@ -40,6 +40,18 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
+    
+    /**
+     Asks the receiver to return a `LineLayer` for highlighting restricted areas portions of the route, given a layer identifier and a source identifier.
+     This method is invoked when `showsRestrictedAreasOnRoute` is enabled, the map view loads and any time routes are added.
+     
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied as restricted areas on the route line.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    
     /**
      Asks the receiver to adjust the default route line layer and return a `LineLayer`, given a layer identifier.
      This method is invoked when the map view loads and any time routes are added.
@@ -69,15 +81,18 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     func navigationMapView(_ navigationMapView: NavigationMapView, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer?
     
     /**
-     Asks the receiver to return a `LineLayer` for highlighting restricted areas portions of the route, given a layer identifier and a source identifier.
-     This method is invoked when `showsRestrictedAreasOnRoute` is enabled, the map view loads and any time routes are added.
+     Asks the receiver to adjust the default highlighting restricted areas portions of the route and return a `LineLayer`, given a layer identifier.
+     This method is invoked when the map view loads and any time routes are added.
      
      - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter layer: A default `LineLayer`  for the restricted areas portions of the route.
      - parameter identifier: The `LineLayer` identifier.
-     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as restricted areas on the route line.
+     
+     - seealso: `CarPlayManagerDelegate.carPlayManager(_:willAddRouteRestrictedAreas:identifier:for:)`,
+     `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteRestrictedAreas:identifier:)`.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    func navigationMapView(_ navigationMapView: NavigationMapView, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer?
     
     /**
      Asks the receiver to return an `LineString` that describes the geometry of the route.
@@ -202,6 +217,14 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
+    func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ navigationMapView: NavigationMapView, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
@@ -218,7 +241,7 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+    func navigationMapView(_ navigationMapView: NavigationMapView, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
