@@ -242,6 +242,12 @@
 * Fixed an issue where simulation `inTunnels` or `onPoorGPS` could teleport user puck to the route origin. ([#4058](https://github.com/mapbox/mapbox-navigation-ios/pull/4058))
 * Fixed an issue where the user location indicator moves out of view when approaching complex intersections. ([#4070](https://github.com/mapbox/mapbox-navigation-ios/pull/4070))
 
+## v2.6.2
+
+### Packaging
+
+* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4273](https://github.com/mapbox/mapbox-navigation-ios/pull/4273))
+
 ## v2.6.1
 
 ### Packaging
