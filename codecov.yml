@@ -1,3 +1,8 @@
+codecov:
+  require_ci_to_pass: false
+  notify:
+    wait_for_ci: false
+
 ignore:
   - "Example"
   - "MapboxNavigationTests"
@@ -11,4 +16,11 @@ coverage:
       default:
         threshold: 1%
     patch: false
-  
+
+comment:
+  require_changes: true
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
