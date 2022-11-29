@@ -5,7 +5,7 @@
 ### Packaging
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v111._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/111.0.2). ([#4255](https://github.com/mapbox/mapbox-navigation-ios/pull/4255))
-* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4255](https://github.com/mapbox/mapbox-directions-swift/pull/4255))
+* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4255](https://github.com/mapbox/mapbox-navigation-ios/pull/4255))
 
 ## v2.7.2
 
