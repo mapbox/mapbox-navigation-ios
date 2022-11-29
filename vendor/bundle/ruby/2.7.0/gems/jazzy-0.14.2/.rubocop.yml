@@ -1,0 +1,248 @@
+AllCops:
+  Exclude:
+    - ./spec/integration_specs/**/*
+    - ./vendor/**/*
+    - ./tmp/**/*
+    - ./SourceKitten/**/*
+  SuggestExtensions: false
+  TargetRubyVersion: 2.6
+
+#- Pending Cops as of 1.26.0 ---------------------------------------------#
+
+Gemspec/DateAssignment: # (new in 1.10)
+  Enabled: true
+Gemspec/RequireMFA: # new in 1.23
+  Enabled: true
+Layout/SpaceBeforeBrackets: # (new in 1.7)
+  Enabled: true
+Lint/AmbiguousAssignment: # (new in 1.7)
+  Enabled: true
+Lint/AmbiguousRange: # (new in 1.19)
+  Enabled: true
+Lint/DeprecatedConstants: # (new in 1.8)
+  Enabled: true
+Lint/DuplicateBranch: # (new in 1.3)
+  Enabled: true
+Lint/DuplicateRegexpCharacterClassElement: # (new in 1.1)
+  Enabled: true
+Lint/EmptyBlock: # (new in 1.1)
+  Enabled: true
+Lint/EmptyClass: # (new in 1.3)
+  Enabled: true
+Lint/EmptyInPattern: # (new in 1.16)
+  Enabled: true
+Lint/IncompatibleIoSelectWithFiberScheduler: # new in 1.21
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock: # (new in 1.8)
+  Enabled: true
+Lint/NoReturnInBeginEndBlocks: # (new in 1.2)
+  Enabled: true
+Lint/NumberedParameterAssignment: # (new in 1.9)
+  Enabled: true
+Lint/OrAssignmentToConstant: # (new in 1.9)
+  Enabled: true
+Lint/RedundantDirGlobSort: # (new in 1.8)
+  Enabled: true
+Lint/RequireRelativeSelfPath: # new in 1.22
+  Enabled: true
+Lint/SymbolConversion: # (new in 1.9)
+  Enabled: true
+Lint/ToEnumArguments: # (new in 1.1)
+  Enabled: true
+Lint/TripleQuotes: # (new in 1.9)
+  Enabled: true
+Lint/UnexpectedBlockArity: # (new in 1.5)
+  Enabled: true
+Lint/UnmodifiedReduceAccumulator: # (new in 1.1)
+  Enabled: true
+Lint/UselessRuby2Keywords: # new in 1.23
+  Enabled: true
+Naming/BlockForwarding: # new in 1.24
+  Enabled: true
+Naming/InclusiveLanguage: # (new in 1.18)
+  Enabled: true
+Security/IoMethods: # new in 1.22
+  Enabled: true
+Style/ArgumentsForwarding: # (new in 1.1)
+  Enabled: true
+Style/CollectionCompact: # (new in 1.2)
+  Enabled: true
+Style/DocumentDynamicEvalDefinition: # (new in 1.1)
+  Enabled: true
+Style/EndlessMethod: # (new in 1.8)
+  Enabled: true
+Style/FileRead: # new in 1.24
+  Enabled: true
+Style/FileWrite: # new in 1.24
+  Enabled: true
+Style/HashConversion: # (new in 1.10)
+  Enabled: true
+Style/HashExcept: # (new in 1.7)
+  Enabled: true
+Style/IfWithBooleanLiteralBranches: # (new in 1.9)
+  Enabled: true
+Style/InPatternThen: # (new in 1.16)
+  Enabled: true
+Style/MapToHash: # new in 1.24
+  Enabled: true
+Style/MultilineInPatternThen: # (new in 1.16)
+  Enabled: true
+Style/NegatedIfElseCondition: # (new in 1.2)
+  Enabled: true
+Style/NestedFileDirname: # new in 1.26
+  Enabled: true
+Style/NilLambda: # (new in 1.3)
+  Enabled: true
+Style/NumberedParameters: # new in 1.22
+  Enabled: true
+Style/NumberedParametersLimit: # new in 1.22
+  Enabled: true
+Style/OpenStructUse: # new in 1.23
+  Enabled: true
+Style/QuotedSymbols: # (new in 1.16)
+  Enabled: true
+Style/RedundantArgument: # (new in 1.4)
+  Enabled: true
+Style/RedundantSelfAssignmentBranch: # (new in 1.19)
+  Enabled: true
+Style/SelectByRegexp: # new in 1.22
+  Enabled: true
+Style/StringChars: # (new in 1.12)
+  Enabled: true
+Style/SwapValues: # (new in 1.1)
+  Enabled: true
+
+# At the moment not ready to be used
+# https://github.com/bbatsov/rubocop/issues/947
+Style/Documentation:
+  Enabled: false
+
+#- Jazzy -----------------------------------------------------------------#
+
+# 20 lines is more reasonable than rubocop's default of 10
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Layout/HeredocIndentation:
+  Enabled: false
+
+# We adopted raise instead of fail.
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+# They are idiomatic
+Lint/AssignmentInCondition:
+  Enabled: false
+
+# Allow backticks
+Style/AsciiComments:
+  Enabled: false
+
+# Indentation clarifies logic branches in implementations
+Style/IfUnlessModifier:
+  Enabled: false
+
+# No enforced convention here.
+Style/SingleLineBlockParams:
+  Enabled: false
+
+# We only add the comment when needed.
+Style/Encoding:
+  Enabled: false
+
+# Having these make it easier to *not* forget to add one when adding a new
+# value and you can simply copy the previous line.
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+# We prefer explicit `a, _ = arr` to `a, = arr` (which could be misread as a stray comma)
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+# For lambdas nested within certain expressions, this rule forces either ugly
+# parens or curly braces that violate the "do/end for multiline blocks" rule.
+Style/Lambda:
+  Enabled: false
+
+# Disallowing indented "when" clauses destroys readability when using the
+# single-line "when/then" style.
+Layout/CaseIndentation:
+  Enabled: false
+
+# These are both subjective judgements that depend on the situation, and are
+# not appropriate as absolute rules.
+Style/GuardClause:
+  Enabled: false
+Style/Next:
+  Enabled: false
+
+# Avoid the least-readable varieties of regular expressions.
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+
+# Sometimes easier to read either way
+Style/AccessorGrouping:
+  Enabled: false
+
+# Avoid mandatory wide indentation
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Layout/LineEndStringConcatenationIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+# Avoid false positives with `Pathname`
+Style/StringConcatenation:
+  Mode: conservative
+
+# Compatibility with earlier Rubocops
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# Too much firing on basic arithmetic
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+
+#- Jazzy specs -----------------------------------------------------------#
+
+# Allow for `should.match /regexp/`.
+Lint/AmbiguousRegexpLiteral:
+  Exclude:
+    - spec/**/*
+
+# Allow `object.should == object` syntax.
+Lint/Void:
+  Exclude:
+    - spec/**/*
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - spec/**/*
+
+Lint/BinaryOperatorWithIdenticalOperands:
+  Exclude:
+    - spec/**/*
