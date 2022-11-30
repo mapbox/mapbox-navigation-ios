@@ -62,6 +62,9 @@ class NavigationServiceTests: TestCase {
         dependencies?.navigationService.locationManager.stopUpdatingLocation()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
+        
+        NavigationSettings.shared.initialize(directions: .shared,
+                                             tileStoreConfiguration: .default)
     }
 
     func testDefaultUserInterfaceUsage() {
@@ -442,6 +445,10 @@ class NavigationServiceTests: TestCase {
     }
 
     func testReroutingFromALocationSendsEvents() {
+        NavigationSettings.shared.initialize(directions: .shared,
+                                             tileStoreConfiguration: .default,
+                                             alternativeRouteDetectionStrategy: .init(refreshesAfterPassingDeviation: false))
+
         dependencies = createDependencies()
 
         let navigationService = dependencies.navigationService

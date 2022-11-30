@@ -80,6 +80,46 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                          "intersections": [
+                            {
+                              "in": 0,
+                              "entry": [
+                                true
+                              ],
+                              "bearings": [
+                                353
+                              ],
+                              "location": [
+                                -76.966906,
+                                38.910736
+                              ]
+                            }
+                          ],
+                          "driving_side": "right",
+                          "geometry": "_p|eiAr~txqC",
+                          "mode": "driving",
+                          "maneuver": {
+                            "bearing_after": 0,
+                            "bearing_before": 173,
+                            "location": [
+                              -76.966906,
+                              38.910736
+                            ],
+                            "type": "arrive",
+                            "instruction": "You have arrived at your destination"
+                          },
+                          "weight": 0,
+                          "duration": 0,
+                          "name": "Ellipse Road Northeast",
+                          "distance": 0,
+                          "voiceInstructions": [
+
+                          ],
+                          "bannerInstructions": [
+
+                          ]
                         }
                     ],
                     "distance": 13651.1
