@@ -40,7 +40,6 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
-    
     /**
      Asks the receiver to return a `LineLayer` for highlighting restricted areas portions of the route, given a layer identifier and a source identifier.
      This method is invoked when `showsRestrictedAreasOnRoute` is enabled, the map view loads and any time routes are added.

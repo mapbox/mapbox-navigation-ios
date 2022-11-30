@@ -59,8 +59,6 @@ class NavigationViewControllerTests: TestCase {
     var newRoute: Route!
     var newRouteResponse: RouteResponse!
     
-    let expectedLineOpacity: Double = 0.2
-    
     override func setUp() {
         super.setUp()
         UNUserNotificationCenter.replaceWithMock()
@@ -552,7 +550,31 @@ class NavigationViewControllerTests: TestCase {
     
     func testNavigationMapViewRouteLineDelegate() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
+        
+        class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
+            let expectedRouteLineOpacity: Double = 0.2
+            let expectedRouteCasingOpacity: Double = 0.3
+            let expectedRestrictedLineOpacity: Double = 0.4
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+                var lineLayer = layer
+                lineLayer.lineOpacity = .constant(expectedRouteLineOpacity)
+                return lineLayer
+            }
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+                var lineLayer = layer
+                lineLayer.lineOpacity = .constant(expectedRouteCasingOpacity)
+                return lineLayer
+            }
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
+                var lineLayer = layer
+                lineLayer.lineOpacity = .constant(expectedRestrictedLineOpacity)
+                return lineLayer
+            }
+        }
+        
+        let delegateMock = NavigationViewControllerDelegateMock()
         let navigationViewController = dependencies.navigationViewController
+        navigationViewController.delegate = delegateMock
         _ = navigationViewController.view // trigger view load
         
         guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
@@ -561,23 +583,22 @@ class NavigationViewControllerTests: TestCase {
         }
         
         let route = dependencies.navigationService.route
-        let routeIentifer = route.identifier(.route(isMainRoute: true))
-        let routeCasingIentifer = route.identifier(.routeCasing(isMainRoute: true))
-        let restrictedIentifer = route.identifier(.restrictedRouteAreaRoute)
+        let routeIdentifier = route.identifier(.route(isMainRoute: true))
+        let routeCasingIdentifier = route.identifier(.routeCasing(isMainRoute: true))
+        let restrictedIdentifier = route.identifier(.restrictedRouteAreaRoute)
         navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
         navigationViewController.navigationMapView?.show([route])
         
-        guard let routelineOpacity = style.layerPropertyValue(for: routeIentifer, property: "line-opacity") as? Double,
-              let casinglineOpacity = style.layerPropertyValue(for: routeCasingIentifer, property: "line-opacity") as? Double,
-              let restrictedOpacity = style.layerPropertyValue(for: restrictedIentifer, property: "line-opacity") as? Double
-        else {
+        guard let routelineOpacity = style.layerPropertyValue(for: routeIdentifier, property: "line-opacity") as? Double,
+              let routeCasingOpacity = style.layerPropertyValue(for: routeCasingIdentifier, property: "line-opacity") as? Double,
+              let restrictedOpacity = style.layerPropertyValue(for: restrictedIdentifier, property: "line-opacity") as? Double else {
             XCTFail("Route line layers should all be present.")
             return
         }
         
-        XCTAssertEqual(expectedLineOpacity, routelineOpacity, accuracy: 1e-3, "Failed to customize route line layer through delegate.")
-        XCTAssertEqual(expectedLineOpacity, casinglineOpacity, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
-        XCTAssertEqual(expectedLineOpacity, restrictedOpacity, accuracy: 1e-3, "Failed to customize route restricted area layer through delegate.")
+        XCTAssertEqual(delegateMock.expectedRouteLineOpacity, routelineOpacity, accuracy: 1e-3, "Failed to customize route line layer through delegate.")
+        XCTAssertEqual(delegateMock.expectedRouteCasingOpacity, routeCasingOpacity, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
+        XCTAssertEqual(delegateMock.expectedRestrictedLineOpacity, restrictedOpacity, accuracy: 1e-3, "Failed to customize route restricted area layer through delegate.")
     }
 }
 
@@ -594,24 +615,6 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate, Style
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         return customRoadName[location.coordinate] ?? nil
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
-        var lineLayer = layer
-        lineLayer.lineOpacity = .constant(expectedLineOpacity)
-        return lineLayer
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
-        var lineLayer = layer
-        lineLayer.lineOpacity = .constant(expectedLineOpacity)
-        return lineLayer
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
-        var lineLayer = layer
-        lineLayer.lineOpacity = .constant(expectedLineOpacity)
-        return lineLayer
     }
 }
 
