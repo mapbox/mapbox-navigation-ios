@@ -4,17 +4,21 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v121._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/121.0.0). ([#4256](https://github.com/mapbox/mapbox-navigation-ios/pull/4256))
-* MapboxNavigation now requires [MapboxMaps v10.10.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.0-beta.1). ([#4256](https://github.com/mapbox/mapbox-navigation-ios/pull/4256))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v122._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/122.0.0). ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* MapboxNavigation now requires [MapboxMaps v10.10.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.0-rc.1). ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 
 ### Routing
 
 * Added `RouterDelegate.router(:shouldProactivelyRerouteFrom:to:completion)`, `NavigationServiceDelegate.navigationService(:shouldProactivelyRerouteFrom:to:completion)` and `NavigationViewControllerDelegate.navigationViewController(:shouldProactivelyRerouteFrom:to:completion)` methods to inform and providing control over each individual proactive rerouting attempt. ([#4229](https://github.com/mapbox/mapbox-navigation-ios/pull/4229))
 * Added `RouteController.updateRouteLeg(to:completionHandler:)` method to allow switching route legs arbitrarily. ([#4261](https://github.com/mapbox/mapbox-navigation-ios/pull/4261))
+* Predictive cache optimization for reducing memory and CPU consumption on very long and complex routes. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* Fixed reset of DR driving out of the tunnel for a brief moment. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 
 ### Map
 
 * The maneuver arrow now extends 50 points along the route before and after an intersection, compared to 30 points previously. ([#4230](https://github.com/mapbox/mapbox-navigation-ios/pull/4230))
+* Fixed issue with simultaneous recognition of tap gesture. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* Fixed label localization to properly handle Simplified and Traditional Chinese. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 
 ### Location tracking
 
