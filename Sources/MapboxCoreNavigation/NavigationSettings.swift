@@ -96,7 +96,7 @@ public class NavigationSettings {
                     navigatorPredictionInterval: TimeInterval? = nil,
                     liveIncidentsOptions: IncidentsOptions? = nil,
                     statusUpdatingSettings: StatusUpdatingSettings? = nil,
-                    logLevel: MapboxCommon.LoggingLevel = .debug) {
+                    logLevel: MapboxCommon.LoggingLevel = .info) {
             self.directions = directions
             self.tileStoreConfiguration = tileStoreConfiguration
             self.routingProviderSource = routingProviderSource
@@ -256,8 +256,7 @@ public class NavigationSettings {
                 utilizeSensorData: utilizeSensorData,
                 navigatorPredictionInterval: navigatorPredictionInterval,
                 liveIncidentsOptions: liveIncidentsOptions,
-                statusUpdatingSettings: statusUpdatingSettings,
-                logLevel: .info
+                statusUpdatingSettings: statusUpdatingSettings
             )
         )
     }
