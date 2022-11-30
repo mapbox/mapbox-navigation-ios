@@ -187,6 +187,13 @@
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
 * Fixed the crash that sometimes occurs when orientation of the view controller that contains `NavigationView` is being changed and `NavigationView`'s parent view is being deallocated at the same time. ([#4118](https://github.com/mapbox/mapbox-navigation-ios/pull/4118))
 
+## 2.7.3
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v111._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/111.0.2). ([#4255](https://github.com/mapbox/mapbox-navigation-ios/pull/4255))
+* This release of MapboxNavigation requires MapboxDirections v2.7._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.7.1 exactly. ([#4255](https://github.com/mapbox/mapbox-navigation-ios/pull/4255))
+
 ## v2.7.2
 
 * Removed the `Hashable`-conforming extension for `CLLocationCoordinate2D` in `MapboxCoreNavigation` to fix a compiler error in applications that define their own `Hashable` conformance for this type. ([#4109](https://github.com/mapbox/mapbox-navigation-ios/pull/4109))
