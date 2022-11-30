@@ -328,6 +328,12 @@
 * Update method deprecation for `HistoryRecording` protocol. Static methods are now preferred over instance ones. ([#3960](https://github.com/mapbox/mapbox-navigation-ios/pull/3960))
 * Fixed an issue where `UserPuckCourseView` is drawn in incorrect position if its location is outside of the bounds of `MapView`. ([#3988](https://github.com/mapbox/mapbox-navigation-ios/pull/3988))
 
+## v2.5.4
+
+### Packaging
+
+* This release of MapboxNavigation requires MapboxDirections v2.6._x_ to prevent an iOS 11 support removal issue. If you use Carthage, it requires MapboxDirections v2.6.1 exactly. ([#4274](https://github.com/mapbox/mapbox-navigation-ios/pull/4274))
+
 ## v2.5.3
 
 ### Packaging
