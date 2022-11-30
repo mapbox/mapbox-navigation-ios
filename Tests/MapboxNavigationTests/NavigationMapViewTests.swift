@@ -140,6 +140,13 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
     }
 
+    func testInitWithCustomMapView() {
+        let customMapView = MapView(frame: .zero)
+        var navigationMapView = NavigationMapView(frame: .zero, navigationCameraType: .carPlay, mapView: customMapView)
+        XCTAssertEqual(navigationMapView.navigationCamera.type, .carPlay)
+        XCTAssertEqual(navigationMapView.mapView, customMapView)
+    }
+
     // MARK: - Route congestion consistency tests
 
     func loadRoute(from jsonFile: String) -> Route {
