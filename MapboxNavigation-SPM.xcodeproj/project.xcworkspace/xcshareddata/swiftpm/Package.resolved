@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "ad9ae364b2ec706886394e1ac460df7758222d93",
-          "version": "2.6.0"
+          "revision": "97ff8ea0fe5220a07b12879a815c9a9d69661933",
+          "version": "2.6.1"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "df9ee6676cd5b3bf5b330ec7568a5644f547201b",
-          "version": "1.1.3"
+          "revision": "fddd1c00396eed152c45a46bea9f47b98e59301d",
+          "version": "1.2.0"
         }
       },
       {
