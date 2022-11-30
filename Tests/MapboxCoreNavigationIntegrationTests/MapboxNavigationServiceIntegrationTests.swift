@@ -69,7 +69,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         Navigator.shared.restartNavigator()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
-        
+
         NavigationSettings.shared.initialize(directions: .shared,
                                              tileStoreConfiguration: .default)
     }
