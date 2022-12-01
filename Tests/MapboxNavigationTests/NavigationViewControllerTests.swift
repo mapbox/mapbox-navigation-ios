@@ -548,7 +548,7 @@ class NavigationViewControllerTests: TestCase {
         XCTAssertFalse(style.sourceExists(withId: sourceIdentifier))
     }
     
-    func testNavigationMapViewRouteLineDelegate() {
+    func testNavigationMapViewWillAddLayerDelegate() {
         guard let dependencies = createDependencies() else { XCTFail("Dependencies are nil"); return }
         
         class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
