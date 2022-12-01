@@ -1146,27 +1146,21 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteLineLayer layer: LineLayer,
-                                  identifier: String) -> LineLayer? {
+                                  willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
         return delegate?.carPlayNavigationViewController(self,
-                                                         willAddRouteLineLayer: layer,
-                                                         identifier: identifier)
+                                                         willAddRouteLineLayer: layer)
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteCasingLineLayer layer: LineLayer,
-                                  identifier: String) -> LineLayer? {
+                                  willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
         return delegate?.carPlayNavigationViewController(self,
-                                                         willAddRouteCasingLineLayer: layer,
-                                                         identifier: identifier)
+                                                         willAddRouteCasingLineLayer: layer)
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteRestrictedAreas layer: LineLayer,
-                                  identifier: String) -> LineLayer? {
+                                  willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
         return delegate?.carPlayNavigationViewController(self,
-                                                         willAddRouteRestrictedAreas: layer,
-                                                         identifier: identifier)
+                                                         willAddRouteRestrictedAreas: layer)
     }
 }
 

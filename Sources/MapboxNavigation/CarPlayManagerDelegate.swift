@@ -366,60 +366,54 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
     
     
     /**
-     Asks the receiver to adjust the default route line layer and return a `LineLayer`, given a layer identifier.
+     Asks the receiver to adjust the default route line layer and return a `LineLayer`.
      This method is invoked when the map view loads and any time routes are added.
      
      - parameter carPlayManager: The `CarPlayManager` object.
      - parameter layer: A default `LineLayer`  for the route line.
-     - parameter identifier: The `LineLayer` identifier.
      - parameter parentViewController: The view controller that contains the map view, which is an
      instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
      - returns: A `LineLayer` that is applied to the route line.
      
-     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteLineLayer:identifier:)` and
-     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteLineLayer:identifier:)`.
+     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteLineLayer:)` and
+     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteLineLayer:)`.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteLineLayer layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer?
     
     /**
-     Asks the receiver to adjust the default casing layer that surrounds route line, and return a `LineLayer`, given a layer identifier.
+     Asks the receiver to adjust the default casing layer that surrounds route line, and return a `LineLayer`.
      This method is invoked when the map view loads and any time routes are added.
      
      - parameter carPlayManager: The `CarPlayManager` object.
      - parameter layer: A default `LineLayer`  for the casing layer that surrounds route line.
-     - parameter identifier: The `LineLayer` identifier.
      - parameter parentViewController: The view controller that contains the map view, which is an
      instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
      - returns: A `LineLayer` that is applied as a casing around the route line.
      
-     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteCasingLineLayer:identifier:)` and
-     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteCasingLineLayer:identifier:)`.
+     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteCasingLineLayer:)` and
+     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteCasingLineLayer:)`.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteCasingLineLayer layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer?
     
     /**
-     Asks the receiver to adjust the default highlighting restricted areas portions of the route, and return a `LineLayer`, given a layer identifier.
+     Asks the receiver to adjust the default highlighting restricted areas portions of the route, and return a `LineLayer`.
      This method is invoked when the map view loads and any time routes are added.
      
      - parameter carPlayManager: The `CarPlayManager` object.
      - parameter layer: A default `LineLayer`  for the restricted areas portions of the route.
-     - parameter identifier: The `LineLayer` identifier.
      - parameter parentViewController: The view controller that contains the map view, which is an
      instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
      - returns: A `LineLayer` that is applied as restricted areas on the route line.
      
-     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteRestrictedAreas:identifier:)` and
-     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteRestrictedAreas:identifier:)`.
+     - seealso: `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:willAddRouteRestrictedAreas:)` and
+     `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:willAddRouteRestrictedAreas:)`.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteRestrictedAreas layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer?
     
     // MARK: Notifications Management
@@ -702,7 +696,6 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteLineLayer layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
@@ -713,7 +706,6 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteCasingLineLayer layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
@@ -724,7 +716,6 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAddRouteRestrictedAreas layer: LineLayer,
-                        identifier: String,
                         for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil

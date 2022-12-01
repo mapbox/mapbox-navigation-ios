@@ -601,9 +601,7 @@ open class NavigationMapView: UIView {
                                                                                          lineBaseColor: routeRestrictedAreaColor))
             defaultLineLayer.lineDasharray = .constant([0.5, 2.0])
             
-            lineLayer = delegate?.navigationMapView(self,
-                                                    willAddRouteRestrictedAreas: defaultLineLayer,
-                                                    identifier: layerIdentifier) ?? defaultLineLayer
+            lineLayer = delegate?.navigationMapView(self, willAddRouteRestrictedAreas: defaultLineLayer) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {
@@ -692,9 +690,7 @@ open class NavigationMapView: UIView {
                 }
             }
             
-            lineLayer = delegate?.navigationMapView(self,
-                                                    willAddRouteLineLayer: defaultLineLayer,
-                                                    identifier: layerIdentifier) ?? defaultLineLayer
+            lineLayer = delegate?.navigationMapView(self, willAddRouteLineLayer: defaultLineLayer) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {
@@ -775,9 +771,7 @@ open class NavigationMapView: UIView {
                                                                                               isSoft: false)))
             }
             
-            lineLayer = delegate?.navigationMapView(self,
-                                                    willAddRouteCasingLineLayer: defaultLineLayer,
-                                                    identifier: layerIdentifier) ?? defaultLineLayer
+            lineLayer = delegate?.navigationMapView(self, willAddRouteCasingLineLayer: defaultLineLayer) ?? defaultLineLayer
         }
         
         if let lineLayer = lineLayer {

@@ -555,17 +555,17 @@ class NavigationViewControllerTests: TestCase {
             let expectedRouteLineOpacity: Double = 0.2
             let expectedRouteCasingOpacity: Double = 0.3
             let expectedRestrictedLineOpacity: Double = 0.4
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
                 var lineLayer = layer
                 lineLayer.lineOpacity = .constant(expectedRouteLineOpacity)
                 return lineLayer
             }
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer, identifier: String) -> LineLayer? {
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
                 var lineLayer = layer
                 lineLayer.lineOpacity = .constant(expectedRouteCasingOpacity)
                 return lineLayer
             }
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer, identifier: String) -> LineLayer? {
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
                 var lineLayer = layer
                 lineLayer.lineOpacity = .constant(expectedRestrictedLineOpacity)
                 return lineLayer
