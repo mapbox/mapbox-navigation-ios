@@ -827,7 +827,17 @@ open class NavigationMapView: UIView {
             lineLayer = LineLayer(id: layerIdentifier)
             lineLayer?.source = sourceIdentifier
             lineLayer?.lineColor = .constant(.init(traversedRouteColor))
+        }
+        
+        let routeCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
+        // Because users could modify the route casing layer property, the traversed route layer should have same property values as the main route casing layer,
+        // except the line color.
+        if let routeCasingLayer = try? mapView.mapboxMap.style.layer(withId: routeCasingLayerIdentifier, type: LineLayer.self) {
             // The traversed route layer should have the same width as the main route casing layer.
+            lineLayer?.lineWidth = routeCasingLayer.lineWidth
+            lineLayer?.lineJoin = routeCasingLayer.lineJoin
+            lineLayer?.lineCap = routeCasingLayer.lineCap
+        } else {
             lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
             lineLayer?.lineJoin = .constant(.round)
             lineLayer?.lineCap = .constant(.round)

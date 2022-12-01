@@ -554,7 +554,9 @@ class NavigationViewControllerTests: TestCase {
         class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
             let expectedRouteLineOpacity: Double = 0.2
             let expectedRouteCasingOpacity: Double = 0.3
+            let expectedRouteCasingWidth: Double = 10.0
             let expectedRestrictedLineOpacity: Double = 0.4
+            
             func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
                 var lineLayer = layer
                 lineLayer.lineOpacity = .constant(expectedRouteLineOpacity)
@@ -563,6 +565,7 @@ class NavigationViewControllerTests: TestCase {
             func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
                 var lineLayer = layer
                 lineLayer.lineOpacity = .constant(expectedRouteCasingOpacity)
+                lineLayer.lineWidth = .constant(expectedRouteCasingWidth)
                 return lineLayer
             }
             func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
@@ -575,6 +578,7 @@ class NavigationViewControllerTests: TestCase {
         let delegateMock = NavigationViewControllerDelegateMock()
         let navigationViewController = dependencies.navigationViewController
         navigationViewController.delegate = delegateMock
+        navigationViewController.routeLineTracksTraversal = true // test the traversed route layer
         _ = navigationViewController.view // trigger view load
         
         guard let style = navigationViewController.navigationMapView?.mapView.mapboxMap.style else {
@@ -586,19 +590,25 @@ class NavigationViewControllerTests: TestCase {
         let routeIdentifier = route.identifier(.route(isMainRoute: true))
         let routeCasingIdentifier = route.identifier(.routeCasing(isMainRoute: true))
         let restrictedIdentifier = route.identifier(.restrictedRouteAreaRoute)
+        let traversedIdentifier = route.identifier(.traversedRoute)
         navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
         navigationViewController.navigationMapView?.show([route])
         
         guard let routelineOpacity = style.layerPropertyValue(for: routeIdentifier, property: "line-opacity") as? Double,
               let routeCasingOpacity = style.layerPropertyValue(for: routeCasingIdentifier, property: "line-opacity") as? Double,
-              let restrictedOpacity = style.layerPropertyValue(for: restrictedIdentifier, property: "line-opacity") as? Double else {
+              let routeCasingWidth = style.layerPropertyValue(for: routeCasingIdentifier, property: "line-width") as? Double,
+              let restrictedOpacity = style.layerPropertyValue(for: restrictedIdentifier, property: "line-opacity") as? Double,
+              let traversedWidth = style.layerPropertyValue(for: traversedIdentifier, property: "line-width") as? Double else {
             XCTFail("Route line layers should all be present.")
             return
         }
         
         XCTAssertEqual(delegateMock.expectedRouteLineOpacity, routelineOpacity, accuracy: 1e-3, "Failed to customize route line layer through delegate.")
         XCTAssertEqual(delegateMock.expectedRouteCasingOpacity, routeCasingOpacity, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
+        XCTAssertEqual(delegateMock.expectedRouteCasingWidth, routeCasingWidth, accuracy: 1e-3, "Failed to customize route casing layer through delegate.")
         XCTAssertEqual(delegateMock.expectedRestrictedLineOpacity, restrictedOpacity, accuracy: 1e-3, "Failed to customize route restricted area layer through delegate.")
+        XCTAssertEqual(delegateMock.expectedRouteCasingWidth, traversedWidth, accuracy: 1e-3,
+                       "The traversed route layer should have the same width as the main route casing layer.")
     }
 }
 
