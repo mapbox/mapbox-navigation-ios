@@ -2,6 +2,8 @@
 
 ## 2.10.0
 
+* Small change for testing code coverage numbers based on head commit.
+
 ### Packaging
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v121._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/121.0.0). ([#4256](https://github.com/mapbox/mapbox-navigation-ios/pull/4256))
