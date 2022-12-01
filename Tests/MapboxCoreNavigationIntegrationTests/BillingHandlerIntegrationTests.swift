@@ -32,10 +32,11 @@ final class BillingHandlerIntegrationTests: TestCase {
     }
 
     override func tearDown() {
-        super.tearDown()
         billingService = nil
         handler = nil
         navigator = nil
+        
+        super.tearDown()
     }
 
     func testPausedPassiveLocationManagerDoNotUpdateStatus() {

@@ -64,14 +64,15 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
     }
     
     override func tearDown() {
-        super.tearDown()
-
-        Navigator.shared.restartNavigator()
+        dependencies?.navigationService.stop()
+        dependencies?.navigationService.router.finishRouting()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
 
         NavigationSettings.shared.initialize(directions: .shared,
                                              tileStoreConfiguration: .default)
+
+        super.tearDown()
     }
 
     func testUserIsOnRoute() {
@@ -633,6 +634,55 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         subject.poorGPSPatience = 5.0
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(5000), "Timer should now have a countdown interval of 5000 millseconds.")
+    }
+
+    func testMultiLegRoute() {
+        let route = Fixture.route(from: "multileg-route", options: routeOptions)
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.speedMultiplier = 100
+
+        print("> create")
+        dependencies = createDependencies(locationSource: locationManager)
+
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
+            CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
+            CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
+        ])
+        let routeResponse = Fixture.routeResponse(from: "multileg-route", options: routeOptions)
+
+        let navigationService = dependencies.navigationService
+        let routeController = navigationService.router as! RouteController
+        routeController.refreshesRoute = false
+
+        let routeUpdated = expectation(description: "Route Updated")
+        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0),
+                                    routeOptions: routeOptions) {
+            success in
+            XCTAssertTrue(success)
+            routeUpdated.fulfill()
+        }
+        wait(for: [routeUpdated], timeout: 5)
+
+        print("> middle")
+
+        locationManager.onTick = { index, _ in
+            if index < 32 {
+                XCTAssertEqual(routeController.routeProgress.legIndex,0)
+            } else {
+                XCTAssertEqual(routeController.routeProgress.legIndex, 1)
+            }
+        }
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.replayCompletionHandler = { _ in
+            replayFinished.fulfill()
+            return false
+        }
+        navigationService.start()
+        wait(for: [replayFinished], timeout: 5)
+
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
 
     func testProactiveRerouting() {

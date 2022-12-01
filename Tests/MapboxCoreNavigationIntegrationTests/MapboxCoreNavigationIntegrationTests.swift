@@ -45,9 +45,10 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
     
     override func tearDown() {
         Navigator.shared.rerouteController.reroutesProactively = true
+        navigation?.stop()
+        navigation?.router.finishRouting()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
-        Navigator.shared.restartNavigator()
 
         super.tearDown()
     }

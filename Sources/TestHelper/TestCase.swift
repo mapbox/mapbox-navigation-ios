@@ -27,6 +27,7 @@ open class TestCase: XCTestCase {
     open override func tearDown() {
         super.tearDown()
         // Reset navigator
+        Navigator._recreateNavigator()
         CoreNavigatorSpy.reset()
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
     }

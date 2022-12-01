@@ -127,7 +127,10 @@ final class Navigator: CoreNavigator {
     
     private static weak var _navigator: Navigator?
     // Used in tests to recreate the navigator
-    static func _recreateNavigator() { _navigator = nil }
+    static func _recreateNavigator() {
+        _navigator?.navigator.shutdown()
+        _navigator = nil
+    }
     
     /**
      Profile setting, used for selecting tiles type for navigation.
