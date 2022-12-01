@@ -557,20 +557,18 @@ class NavigationViewControllerTests: TestCase {
             let expectedRouteCasingWidth: Double = 10.0
             let expectedRestrictedLineOpacity: Double = 0.4
             
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
-                var lineLayer = layer
-                lineLayer.lineOpacity = .constant(expectedRouteLineOpacity)
-                return lineLayer
-            }
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-                var lineLayer = layer
-                lineLayer.lineOpacity = .constant(expectedRouteCasingOpacity)
-                lineLayer.lineWidth = .constant(expectedRouteCasingWidth)
-                return lineLayer
-            }
-            func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
-                var lineLayer = layer
-                lineLayer.lineOpacity = .constant(expectedRestrictedLineOpacity)
+            func navigationViewController(_ navigationViewController: NavigationViewController, willAdd layer: Layer) -> Layer? {
+                guard var lineLayer = layer as? LineLayer else { return nil }
+                if lineLayer.id.contains("main.route_line") {
+                    lineLayer.lineOpacity = .constant(expectedRouteLineOpacity)
+                }
+                if lineLayer.id.contains("main.route_line_casing") {
+                    lineLayer.lineOpacity = .constant(expectedRouteCasingOpacity)
+                    lineLayer.lineWidth = .constant(expectedRouteCasingWidth)
+                }
+                if lineLayer.id.contains("restricted_area_route_line") {
+                    lineLayer.lineOpacity = .constant(expectedRestrictedLineOpacity)
+                }
                 return lineLayer
             }
         }

@@ -455,22 +455,8 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
                                            sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
-        delegate?.carPlayMapViewController(self,
-                                           willAddRouteLineLayer: layer)
-    }
-    
-    public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-        delegate?.carPlayMapViewController(self,
-                                           willAddRouteCasingLineLayer: layer)
-    }
-    
-    public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
-        delegate?.carPlayMapViewController(self,
-                                           willAddRouteRestrictedAreas: layer)
+    public func navigationMapView(_ navigationMapView: NavigationMapView, willAdd layer: Layer) -> Layer? {
+        delegate?.carPlayMapViewController(self, willAdd: layer)
     }
 }
 

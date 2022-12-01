@@ -789,29 +789,26 @@ extension ViewController: NavigationMapViewDelegate {
 extension ViewController: NavigationViewControllerDelegate {
     
     // To modify the width of the alternative route line layer through delegate methods.
-    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
-        guard layer.id.contains("alternative") else { return nil }
-        var lineLayer = layer
-        lineLayer.lineWidth = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                RouteLineWidthByZoomLevel.multiplied(by: 0.7)
-            }
-        )
-        return lineLayer
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-        guard layer.id.contains("alternative") else { return nil }
-        var lineLayer = layer
-        lineLayer.lineWidth = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                RouteLineWidthByZoomLevel
-            }
-        )
+    func navigationViewController(_ navigationViewController: NavigationViewController, willAdd layer: Layer) -> Layer? {
+        guard var lineLayer = layer as? LineLayer else { return nil }
+        if lineLayer.id.contains("alternative.route_line") {
+            lineLayer.lineWidth = .expression(
+                Exp(.interpolate) {
+                    Exp(.linear)
+                    Exp(.zoom)
+                    RouteLineWidthByZoomLevel.multiplied(by: 0.7)
+                }
+            )
+        }
+        if lineLayer.id.contains("alternative.route_line_casing") {
+            lineLayer.lineWidth = .expression(
+                Exp(.interpolate) {
+                    Exp(.linear)
+                    Exp(.zoom)
+                    RouteLineWidthByZoomLevel
+                }
+            )
+        }
         return lineLayer
     }
 

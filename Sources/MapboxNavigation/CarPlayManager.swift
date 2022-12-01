@@ -1145,23 +1145,9 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
     }
     
     public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                                willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
+                                                willAdd layer: Layer) -> Layer? {
         return delegate?.carPlayManager(self,
-                                        willAddRouteLineLayer: layer,
-                                        for: carPlayNavigationViewController)
-    }
-    
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                                willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-        return delegate?.carPlayManager(self,
-                                        willAddRouteCasingLineLayer: layer,
-                                        for: carPlayNavigationViewController)
-    }
-    
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                                willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
-        return delegate?.carPlayManager(self,
-                                        willAddRouteRestrictedAreas: layer,
+                                        willAdd: layer,
                                         for: carPlayNavigationViewController)
     }
 }
@@ -1208,23 +1194,9 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
     }
     
     public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
-                                         willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
+                                         willAdd layer: Layer) -> Layer? {
         delegate?.carPlayManager(self,
-                                 willAddRouteLineLayer: layer,
-                                 for: carPlayMapViewController)
-    }
-    
-    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
-                                         willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-        delegate?.carPlayManager(self,
-                                 willAddRouteCasingLineLayer: layer,
-                                 for: carPlayMapViewController)
-    }
-    
-    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
-                                         willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
-        delegate?.carPlayManager(self,
-                                 willAddRouteRestrictedAreas: layer,
+                                 willAdd: layer,
                                  for: carPlayMapViewController)
     }
 }

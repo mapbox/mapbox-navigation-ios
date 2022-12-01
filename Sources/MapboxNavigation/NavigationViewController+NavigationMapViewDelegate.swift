@@ -31,21 +31,9 @@ extension NavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteLineLayer layer: LineLayer) -> LineLayer? {
+                                  willAdd layer: Layer) -> Layer? {
         delegate?.navigationViewController(self,
-                                           willAddRouteLineLayer: layer)
-    }
-    
-    public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteCasingLineLayer layer: LineLayer) -> LineLayer? {
-        delegate?.navigationViewController(self,
-                                           willAddRouteCasingLineLayer: layer)
-    }
-    
-    public func navigationMapView(_ navigationMapView: NavigationMapView,
-                                  willAddRouteRestrictedAreas layer: LineLayer) -> LineLayer? {
-        delegate?.navigationViewController(self,
-                                           willAddRouteRestrictedAreas: layer)
+                                           willAdd: layer)
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
