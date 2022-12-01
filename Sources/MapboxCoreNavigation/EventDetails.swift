@@ -99,7 +99,7 @@ extension GlobalEventDetails {
     var operatingSystem: String { "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)" }
     var platform: String { ProcessInfo.systemName }
     var sdkVersion: String {
-        return VersionProvider.version(for: .mapboxCoreNavigation)
+        return Bundle.navigationSDKVersion
     }
     var screenBrightness: Int { Int(UIScreen.main.brightness * 100) }
     var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }

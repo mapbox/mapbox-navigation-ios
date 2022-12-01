@@ -186,7 +186,7 @@ open class NavigationEventsManager {
     }
 
     func start() {
-        let shortVersion = VersionProvider.version(for: .mapboxCoreNavigation)
+        let shortVersion = Bundle.navigationSDKVersion
         eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
     }
     
