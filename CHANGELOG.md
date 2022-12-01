@@ -24,6 +24,7 @@
 * Fixed an issue where text in the route duration annotation was not centered correctly on devices with different screen sizes. ([#4130](https://github.com/mapbox/mapbox-navigation-ios/pull/4130))
 * Added `CarPlayManagerDelegate.carPlayManager(_:willAddRouteLineLayer:for:)`, `CarPlayManagerDelegate.carPlayManager(_:willAddRouteCasingLineLayer:for:)`,
 `CarPlayManagerDelegate.carPlayManager(_:willAddRouteRestrictedAreas:for:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteLineLayer:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteCasingLineLayer:)`, `NavigationMapViewDelegate.navigationMapView(_:willAddRouteRestrictedAreas:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteLineLayer:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteCasingLineLayer:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAddRouteRestrictedAreas:)` to modify the properties of the default route line layers in `NavigationMapView` during navigation. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
+* Fixed issue where the traversed route layer doesn't share the same width with the main route casing layer after developers providing their own layer or midfying the layer properties. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 
 ### Location tracking
 
