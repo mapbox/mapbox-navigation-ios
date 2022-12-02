@@ -64,8 +64,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
     }
     
     override func tearDown() {
-        dependencies?.navigationService.stop()
-        dependencies?.navigationService.router.finishRouting()
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
 
@@ -642,7 +640,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
 
-        print("> create")
         dependencies = createDependencies(locationSource: locationManager)
 
         let routeOptions = NavigationRouteOptions(coordinates: [
@@ -664,8 +661,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
             routeUpdated.fulfill()
         }
         wait(for: [routeUpdated], timeout: 5)
-
-        print("> middle")
 
         locationManager.onTick = { index, _ in
             if index < 32 {

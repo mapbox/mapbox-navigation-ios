@@ -90,7 +90,6 @@ class RouteControllerTests: TestCase {
         RouteParserSpy.returnedRoutes = nil
         RouteParserSpy.returnedError = nil
         MapboxRoutingProvider.__testRoutesStub = nil
-        Navigator._recreateNavigator()
         resetNavigationSettings()
         
         super.tearDown()

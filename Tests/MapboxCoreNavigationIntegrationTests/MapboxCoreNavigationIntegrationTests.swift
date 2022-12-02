@@ -45,8 +45,6 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
     
     override func tearDown() {
         Navigator.shared.rerouteController.reroutesProactively = true
-        navigation?.stop()
-        navigation?.router.finishRouting()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
 
@@ -363,9 +361,6 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         var points = [InstructionPoint]()
 
         let spokenInstructionsExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            guard notification.object as? Router === self.navigation.router else {
-                return false
-            }
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -383,9 +378,6 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         }
 
         let visualInstructionsExpectation = expectation(forNotification: .routeControllerDidPassVisualInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            guard notification.object as? Router === self.navigation.router else {
-                return false
-            }
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -409,8 +401,8 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
 
         locationManager.startUpdatingLocation()
 
-        _ = XCTWaiter.wait(for: [replayFinished, spokenInstructionsExpectation, visualInstructionsExpectation],
-                              timeout: locationManager.expectedReplayTime)
+        wait(for: [replayFinished, spokenInstructionsExpectation, visualInstructionsExpectation],
+             timeout: locationManager.expectedReplayTime)
         
         if points.isEmpty {
             XCTFail()

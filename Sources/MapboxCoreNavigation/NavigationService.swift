@@ -570,7 +570,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      */
     private var simulatedLocationSource: SimulatedLocationManager?
 
-    private var simulatedLocationManagerFactory: SimulatedLocationManagerFactory
+    private let simulatedLocationManagerFactory: SimulatedLocationManagerFactory
     
     /**
      A reference to a MapboxDirections service. Used for rerouting.

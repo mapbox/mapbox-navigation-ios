@@ -17,6 +17,7 @@ class NavigationServiceTests: TestCase {
     var customRoutingProvider: RoutingProviderSpy!
     var poorGPSTimer: DispatchTimerSpy!
     var simulatedLocationManagerFactory: SimulatedLocationManagerFactorySpy!
+    var simulatedLocationManager: SimulatedLocationManagerSpy!
 
     var service: MapboxNavigationService!
 
@@ -36,10 +37,6 @@ class NavigationServiceTests: TestCase {
         return service.eventsManager as! NavigationEventsManagerSpy
     }
 
-    var simulatedLocationManager: SimulatedLocationManagerSpy {
-        return simulatedLocationManagerFactory.returnedManager
-    }
-
     var waypoint: Waypoint {
         return route.legs.last!.destination!
     }
@@ -51,7 +48,10 @@ class NavigationServiceTests: TestCase {
         locationManager = NavigationLocationManagerSpy()
         customRoutingProvider = RoutingProviderSpy()
         poorGPSTimer = DispatchTimerSpy(countdown: .microseconds(2500), payload: {})
+
+        simulatedLocationManager = SimulatedLocationManagerSpy(route: route, currentDistance: 100, currentSpeed: 20)
         simulatedLocationManagerFactory = SimulatedLocationManagerFactorySpy()
+        simulatedLocationManagerFactory.returnedManager = simulatedLocationManager
 
         service = makeService()
 

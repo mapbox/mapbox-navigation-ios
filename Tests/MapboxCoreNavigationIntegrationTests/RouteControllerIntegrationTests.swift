@@ -17,23 +17,16 @@ class RouteControllerIntegrationTests: TestCase {
         super.setUp()
 
         routeResponse = makeRouteResponse()
-        reset()
     }
 
     override func tearDown() {
         replayManager?.stopUpdatingLocation()
-        replayManager = nil
 
-        routeController?.finishRouting()
         routeController = nil
-        reset()
+        replayManager = nil
+        MapboxRoutingProvider.__testRoutesStub = nil
 
         super.tearDown()
-    }
-
-    private func reset() {
-        MapboxRoutingProvider.__testRoutesStub = nil
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
     }
 
     func testRouteSnappingOvershooting() {
