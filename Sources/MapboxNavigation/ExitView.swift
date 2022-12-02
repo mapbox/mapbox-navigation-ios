@@ -23,14 +23,7 @@ public class ExitView: StylableView {
         }
     }
     
-    @objc public dynamic var highlightColor: UIColor? {
-        didSet {
-            layer.borderColor = highlightColor?.cgColor
-            imageView.tintColor = highlightColor
-            exitNumberLabel.textColor = highlightColor
-            setNeedsDisplay()
-        }
-    }
+    @objc public dynamic var highlightColor: UIColor?
     
     var side: ExitSide = .right {
         didSet {
