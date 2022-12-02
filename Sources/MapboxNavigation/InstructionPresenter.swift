@@ -34,7 +34,7 @@ class InstructionPresenter {
                   spriteRepository: SpriteRepository = .shared,
                   traitCollection: UITraitCollection,
                   downloadCompletion: ShieldDownloadCompletion?,
-                  isHighlighted: Bool? = false) {
+                  isHighlighted: Bool = false) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.spriteRepository = spriteRepository
@@ -47,7 +47,7 @@ class InstructionPresenter {
     
     let onShieldDownload: ShieldDownloadCompletion?
 
-    let spriteRepository: SpriteRepository
+    private let spriteRepository: SpriteRepository
     
     private let traitCollection: UITraitCollection
     
@@ -279,9 +279,14 @@ class InstructionPresenter {
                 appearance = GenericRouteShield.appearance(for: traitCollection)
             }
             
-            genericRouteShield.foregroundColor = appearance.foregroundColor
+            if isHighlighted {
+                genericRouteShield.foregroundColor = appearance.highlightColor
+                genericRouteShield.borderColor = appearance.highlightColor
+            } else {
+                genericRouteShield.foregroundColor = appearance.foregroundColor
+                genericRouteShield.borderColor = appearance.borderColor
+            }
             genericRouteShield.borderWidth = appearance.borderWidth
-            genericRouteShield.borderColor = appearance.borderColor
             genericRouteShield.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
@@ -324,9 +329,14 @@ class InstructionPresenter {
                 appearance = ExitView.appearance(for: traitCollection)
             }
             
-            exitView.foregroundColor = appearance.foregroundColor
+            if isHighlighted {
+                exitView.foregroundColor = appearance.highlightColor
+                exitView.borderColor = appearance.highlightColor
+            } else {
+                exitView.foregroundColor = appearance.foregroundColor
+                exitView.borderColor = appearance.borderColor
+            }
             exitView.borderWidth = appearance.borderWidth
-            exitView.borderColor = appearance.borderColor
             exitView.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: exitView) else { return nil }

@@ -195,9 +195,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         
         instructionsCardView.backgroundColor = backgroundColor
         instructionsCardView.separatorView.backgroundColor = separatorColor
-        if instructionsCardView.primaryLabel.styleType == .day {
-            instructionsCardView.primaryLabel.showHighlightedTextColor = shouldUseHighlightedColors
-        }
+        instructionsCardView.primaryLabel.showHighlightedTextColor = shouldUseHighlightedColors
         instructionsCardView.secondaryLabel.showHighlightedTextColor = shouldUseHighlightedColors
         instructionsCardView.distanceLabel.showHighlightedTextColor = shouldUseHighlightedColors
         instructionsCardView.maneuverView.shouldShowHighlightedColors = shouldUseHighlightedColors

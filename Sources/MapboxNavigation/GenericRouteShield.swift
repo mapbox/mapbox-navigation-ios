@@ -16,6 +16,14 @@ public class GenericRouteShield: StylableView {
         }
     }
     
+    @objc public dynamic var highlightColor: UIColor? {
+        didSet {
+            layer.borderColor = highlightColor?.cgColor
+            routeLabel.textColor = highlightColor
+            setNeedsDisplay()
+        }
+    }
+    
     //The label that contains the route code.
     lazy var routeLabel: UILabel = {
         let label: UILabel = .forAutoLayout()

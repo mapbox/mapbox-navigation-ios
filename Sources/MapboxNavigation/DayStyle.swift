@@ -186,12 +186,14 @@ open class DayStyle: Style {
         ExitView.appearance(for: traitCollection).cornerRadius = 5.0
         ExitView.appearance(for: traitCollection).foregroundColor = .black
         ExitView.appearance(for: traitCollection).borderColor = .black
+        ExitView.appearance(for: traitCollection).highlightColor = .white
         
         GenericRouteShield.appearance(for: traitCollection).backgroundColor = .clear
         GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
         GenericRouteShield.appearance(for: traitCollection).cornerRadius = 5.0
         GenericRouteShield.appearance(for: traitCollection).foregroundColor = .black
         GenericRouteShield.appearance(for: traitCollection).borderColor = .black
+        GenericRouteShield.appearance(for: traitCollection).highlightColor = .white
         
         UILabel.appearance(for: traitCollection, whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
         UILabel.appearance(for: traitCollection, whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .black

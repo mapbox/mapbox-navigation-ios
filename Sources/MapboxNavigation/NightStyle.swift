@@ -36,9 +36,11 @@ open class NightStyle: DayStyle {
         // `GenericRouteShield` use white color as a default one.
         ExitView.appearance(for: traitCollection).foregroundColor = .white
         ExitView.appearance(for: traitCollection).borderColor = .white
+        ExitView.appearance(for: traitCollection).highlightColor = .black
         
         GenericRouteShield.appearance(for: traitCollection).foregroundColor = .white
         GenericRouteShield.appearance(for: traitCollection).borderColor = .white
+        GenericRouteShield.appearance(for: traitCollection).highlightColor = .black
         
         DistanceRemainingLabel.appearance(for: traitCollection).normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
