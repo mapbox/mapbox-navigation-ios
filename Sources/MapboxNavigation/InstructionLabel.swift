@@ -34,7 +34,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     
     @objc public override var showHighlightedTextColor: Bool {
         didSet {
-            update()
+            updateLabelAttributedText()
         }
     }
     
