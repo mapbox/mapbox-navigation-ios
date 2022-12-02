@@ -181,7 +181,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
         announceSimulationDidChange(.willBeginSimulation)
         
-        simulatedLocationSource = simulatedLocationManagerFactory.makeManager(routeProgress: progress)
+        simulatedLocationSource = simulatedLocationSourceType.init(route: progress.route, currentDistance: 0, currentSpeed: 0)
         simulatedLocationSource?.delegate = self
         simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()
@@ -429,7 +429,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
-        self.simulatedLocationManagerFactory = SimulatedLocationManagerFactory()
+        self.simulatedLocationSourceType = SimulatedLocationManager.self
         super.init()
 
         _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
@@ -509,12 +509,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
          simulating simulationMode: SimulationMode,
          routerType: Router.Type?,
          customActivityType: CLActivityType?,
-         simulatedLocationManagerFactory: SimulatedLocationManagerFactory,
+         simulatedLocationSourceType: SimulatedLocationManager.Type,
          poorGPSTimer: DispatchTimer) {
         self.nativeLocationSource = locationSource
         self.credentials = credentials
         self.simulationMode = simulationMode
-        self.simulatedLocationManagerFactory = simulatedLocationManagerFactory
+        self.simulatedLocationSourceType = simulatedLocationSourceType
         super.init()
 
         _poorGPSTimer = poorGPSTimer
@@ -570,7 +570,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      */
     private var simulatedLocationSource: SimulatedLocationManager?
 
-    private let simulatedLocationManagerFactory: SimulatedLocationManagerFactory
+    private let simulatedLocationSourceType: SimulatedLocationManager.Type
     
     /**
      A reference to a MapboxDirections service. Used for rerouting.

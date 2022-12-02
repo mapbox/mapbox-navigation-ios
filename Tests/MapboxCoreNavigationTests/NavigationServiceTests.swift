@@ -6,6 +6,36 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 
 class NavigationServiceTests: TestCase {
+    final class SimulatedLocationManagerSpy: SimulatedLocationManager {
+        var startUpdatingLocationCalled = false
+        var startUpdatingHeadingCalled = false
+        var stopUpdatingLocationCalled = false
+        var stopUpdatingHeadingCalled = false
+
+        override func startUpdatingLocation() {
+            startUpdatingLocationCalled = true
+        }
+
+        override func startUpdatingHeading() {
+            startUpdatingHeadingCalled = true
+        }
+
+        override func stopUpdatingLocation() {
+            stopUpdatingLocationCalled = true
+        }
+
+        override func stopUpdatingHeading() {
+            stopUpdatingHeadingCalled = true
+        }
+
+        func reset() {
+            startUpdatingLocationCalled = false
+            startUpdatingHeadingCalled = false
+            stopUpdatingLocationCalled = false
+            stopUpdatingHeadingCalled = false
+        }
+    }
+
     let expectationsTimeout = 1.0
 
     let indexedRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
@@ -16,8 +46,6 @@ class NavigationServiceTests: TestCase {
     var locationManager: NavigationLocationManagerSpy!
     var customRoutingProvider: RoutingProviderSpy!
     var poorGPSTimer: DispatchTimerSpy!
-    var simulatedLocationManagerFactory: SimulatedLocationManagerFactorySpy!
-    var simulatedLocationManager: SimulatedLocationManagerSpy!
 
     var service: MapboxNavigationService!
 
@@ -49,10 +77,6 @@ class NavigationServiceTests: TestCase {
         customRoutingProvider = RoutingProviderSpy()
         poorGPSTimer = DispatchTimerSpy(countdown: .microseconds(2500), payload: {})
 
-        simulatedLocationManager = SimulatedLocationManagerSpy(route: route, currentDistance: 100, currentSpeed: 20)
-        simulatedLocationManagerFactory = SimulatedLocationManagerFactorySpy()
-        simulatedLocationManagerFactory.returnedManager = simulatedLocationManager
-
         service = makeService()
 
         let coordinate = routeProgress.nearbyShape.coordinates.first!
@@ -78,7 +102,7 @@ class NavigationServiceTests: TestCase {
                                                         simulating: simulating,
                                                         routerType: RouterSpy.self,
                                                         customActivityType: .automotiveNavigation,
-                                                        simulatedLocationManagerFactory: simulatedLocationManagerFactory,
+                                                        simulatedLocationSourceType: SimulatedLocationManagerSpy.self,
                                                         poorGPSTimer: poorGPSTimer)
         navigationService.delegate = delegate
         return navigationService
@@ -241,20 +265,14 @@ class NavigationServiceTests: TestCase {
         service.simulationMode = .onPoorGPS
         XCTAssertTrue(poorGPSTimer.armCalled)
         XCTAssertFalse(poorGPSTimer.disarmCalled)
-        XCTAssertFalse(simulatedLocationManager.startUpdatingLocationCalled)
-        XCTAssertFalse(simulatedLocationManager.startUpdatingHeadingCalled)
-        XCTAssertFalse(simulatedLocationManager.stopUpdatingLocationCalled)
-        XCTAssertFalse(simulatedLocationManager.stopUpdatingHeadingCalled)
+        XCTAssertFalse( service.locationManager is SimulatedLocationManager)
     }
 
     func testSetInTunnelsSimulationMode() {
         service.simulationMode = .inTunnels
         XCTAssertTrue(poorGPSTimer.armCalled)
         XCTAssertFalse(poorGPSTimer.disarmCalled)
-        XCTAssertFalse(simulatedLocationManager.startUpdatingLocationCalled)
-        XCTAssertFalse(simulatedLocationManager.startUpdatingHeadingCalled)
-        XCTAssertFalse(simulatedLocationManager.stopUpdatingLocationCalled)
-        XCTAssertFalse(simulatedLocationManager.stopUpdatingHeadingCalled)
+        XCTAssertFalse( service.locationManager is SimulatedLocationManager)
     }
 
     func testSetAlwaysSimulationMode() {
@@ -271,6 +289,7 @@ class NavigationServiceTests: TestCase {
         notificationExpectation.expectedFulfillmentCount = 2
 
         service.simulationMode = .always
+        let simulatedLocationManager =  service.locationManager as! SimulatedLocationManagerSpy
         XCTAssertTrue(simulatedLocationManager.startUpdatingLocationCalled)
         XCTAssertTrue(simulatedLocationManager.startUpdatingHeadingCalled)
         XCTAssertFalse(simulatedLocationManager.stopUpdatingLocationCalled)
@@ -292,6 +311,7 @@ class NavigationServiceTests: TestCase {
         service.simulationMode = .always
         poorGPSTimer.resetTestValues()
         delegate.reset()
+        let simulatedLocationManager = service.locationManager as! SimulatedLocationManagerSpy
         simulatedLocationManager.reset()
 
         var callbackCalls = 0

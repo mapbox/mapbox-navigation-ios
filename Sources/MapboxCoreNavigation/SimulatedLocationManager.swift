@@ -23,12 +23,6 @@ fileprivate class SimulatedLocation: CLLocation {
     }
 }
 
-class SimulatedLocationManagerFactory {
-    func makeManager(routeProgress: RouteProgress) -> SimulatedLocationManager {
-        return SimulatedLocationManager(routeProgress: routeProgress)
-    }
-}
-
 /**
  The `SimulatedLocationManager` class simulates location updates along a given route.
  
@@ -59,7 +53,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
     }
 
-    init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
+    public required init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
         self.currentSpeed = currentSpeed
         self.currentDistance = currentDistance
         self.route = route
