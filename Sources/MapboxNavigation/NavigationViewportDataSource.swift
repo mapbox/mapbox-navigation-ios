@@ -125,6 +125,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         NotificationCenter.default.post(name: .navigationCameraViewportDidChange, object: self, userInfo: [
             NavigationCamera.NotificationUserInfoKey.cameraOptions: cameraOptions
         ])
+        print("!!! device orientation: \(UIDevice.current.orientation)")
     }
     
     // MARK: CameraOptions Methods

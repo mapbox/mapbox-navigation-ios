@@ -1010,6 +1010,9 @@ extension NavigationViewController: NavigationServiceDelegate {
 
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
+            if progress.currentLegProgress.currentStep.transportType == .walking && navigationMapView?.mapView.location.options.puckBearingSource == .course {
+                navigationMapView?.mapView.location.options.puckBearingSource = .heading
+            }
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
 

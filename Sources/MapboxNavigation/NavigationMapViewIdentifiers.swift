@@ -42,6 +42,7 @@ extension NavigationMapView {
         static let railroadCrossing = "railroad_crossing"
         static let yieldSign = "yield_sign"
         static let stopSign = "stop_sign"
+        static let minusImage = "minus"
     }
     
     struct ModelKeyIdentifier {
