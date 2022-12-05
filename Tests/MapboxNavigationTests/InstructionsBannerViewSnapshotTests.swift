@@ -405,6 +405,70 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
         assertImageSnapshot(matching: instructionsBannerView,
                             as: .image(precision: 0.95))
     }
+    
+    func testGenericShieldAndExitViewHighlightColor() {
+        class CustomDayStyle: DayStyle {
+            
+            required init() {
+                super.init()
+            }
+            
+            override func apply() {
+                super.apply()
+                
+                PrimaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = UIColor.green
+                GenericRouteShield.appearance().highlightColor = UIColor.blue
+                ExitView.appearance().highlightColor = UIColor.yellow
+            }
+        }
+        
+        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
+        let instructionsBannerView = instructionsView()
+        styleInstructionsView(instructionsBannerView)
+        instructionsBannerView.distance = 50
+        
+        let primaryInstruction: [VisualInstruction.Component] = [
+            .exitCode(text: .init(text: "15",
+                                  abbreviation: nil,
+                                  abbreviationPriority: nil)),
+            .delimiter(text: .init(text: "/",
+                                   abbreviation: nil,
+                                   abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: nil),
+                   alternativeText: .init(text: "CTE",
+                                          abbreviation: nil,
+                                          abbreviationPriority: nil)),
+        ]
+        
+        let secondaryInstruction: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: nil),
+                   alternativeText: .init(text: "SLE",
+                                          abbreviation: nil,
+                                          abbreviationPriority: nil)),
+            .delimiter(text: .init(text: "/",
+                                   abbreviation: nil,
+                                   abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: nil),
+                   alternativeText: .init(text: "TPE",
+                                          abbreviation: nil,
+                                          abbreviationPriority: nil)),
+        ]
+        
+        instructionsBannerView.primaryLabel.showHighlightedTextColor = true
+        instructionsBannerView.secondaryLabel.showHighlightedTextColor = true
+
+        CustomDayStyle().apply()
+        window.addSubview(instructionsBannerView)
+
+        let visualInstructionBanner = makeVisualInstruction(.takeOffRamp,
+                                                            .right,
+                                                            primaryInstruction: primaryInstruction,
+                                                            secondaryInstruction: secondaryInstruction)
+        instructionsBannerView.update(for: visualInstructionBanner)
+
+        assertImageSnapshot(matching: instructionsBannerView,
+                            as: .image(precision: 0.95))
+    }
 }
 
 extension InstructionsBannerViewSnapshotTests {
