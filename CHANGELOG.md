@@ -34,7 +34,7 @@
 * Fixed an issue where empty intersections of the current step could cause a crash. ([#4260](https://github.com/mapbox/mapbox-navigation-ios/pull/4260))
 * Deprecated `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method in favor of `NavigationSettings.initialize(with:)`. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 * Added new parameter that allows configuring logging level for Mapbox SDKs. Checkout new `NavigationSettings.initialize(with:)` method for more information. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
-* Fixed an issue where the `UserHaloCourseView` will be shown under reduced location accuracy mode with `NavigationMapview.reducedAccuracyActivatedMode` as `false`. Right now `UserHaloCourseView` will be applied in only one case: When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`, and the `Precise Location` property in the settings of current application is disabled by user. ([#4285](https://github.com/mapbox/mapbox-navigation-ios/pull/4285))
+* Fixed an issue where the `UserHaloCourseView` will be shown under reduced location accuracy mode with `NavigationMapview.reducedAccuracyActivatedMode` as `false`. Right now `UserHaloCourseView` will be applied in only one case: when user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`, and the `Precise Location` property in the settings of current application is disabled by user. ([#4285](https://github.com/mapbox/mapbox-navigation-ios/pull/4285))
 
 ## v2.9.0
 

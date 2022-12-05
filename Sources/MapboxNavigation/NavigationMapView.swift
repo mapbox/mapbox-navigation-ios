@@ -897,7 +897,7 @@ open class NavigationMapView: UIView {
     var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy {
         didSet {
             // `UserHaloCourseView` will be applied in only one case:
-            // When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`,
+            // when user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`,
             // and the `Precise Location` property in the settings of current application is disabled by user.
             let shouldApply = reducedAccuracyActivatedMode && accuracyAuthorization == .reducedAccuracy
             applyReducedAccuracyMode(shouldApply: shouldApply)
