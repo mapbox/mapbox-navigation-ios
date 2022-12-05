@@ -32,6 +32,8 @@
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
 * `NavigationView.init(frame:tileStoreLocation:navigationMapView:)`, `NavigationView.navigationMapView`, `NavigationView.floatingStackView`, `NavigationView.floatingButtons`, `NavigationView.wayNameView`, `NavigationView.speedLimitView`, `NavigationView.topBannerContainerView` and `NavigationView.bottomBannerContainerView` are now publicly accessible. ([#4249](https://github.com/mapbox/mapbox-navigation-ios/pull/4249))
 * Fixed an issue where empty intersections of the current step could cause a crash. ([#4260](https://github.com/mapbox/mapbox-navigation-ios/pull/4260))
+* Deprecated `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method in favor of `NavigationSettings.initialize(with:)`. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
+* Added new parameter that allows configuring logging level for Mapbox SDKs. Checkout new `NavigationSettings.initialize(with:)` method for more information. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 
 ## v2.9.0
 

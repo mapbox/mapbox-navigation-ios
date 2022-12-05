@@ -1,4 +1,5 @@
 import Foundation
+import MapboxCommon
 import MapboxDirections
 
 /// Defines source of routing engine (online or offline) to be used for requests.
@@ -18,7 +19,7 @@ public struct StatusUpdatingSettings {
      If `nil` - default value will be used.
      */
     public var updatingInterval: TimeInterval?
-    
+
     /**
      Creates new `StatusUpdatingSettings`.
      
@@ -41,10 +42,10 @@ public struct StatusUpdatingSettings {
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(with:)` method.
  */
 public class NavigationSettings {
-    
+
     public enum StoredProperty: CaseIterable {
         case voiceVolume, voiceMuted, distanceUnit
 
@@ -60,82 +61,117 @@ public class NavigationSettings {
         }
     }
 
-    private struct State {
-        static var `default`: State {
-            .init(directions: .shared,
-                  tileStoreConfiguration: .default,
-                  routingProviderSource: .hybrid,
-                  alternativeRouteDetectionStrategy: .init(),
-                  utilizeSensorData: false,
-                  navigatorPredictionInterval: nil,
-                  liveIncidentsOptions: nil,
-                  statusUpdatingSettings: nil)
-        }
+    /// All the values that you can setup NavigationSettings with.
+    public struct Values {
+        let directions: Directions
+        let tileStoreConfiguration: TileStoreConfiguration
+        let routingProviderSource: RoutingProviderSource
+        let alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy?
+        let utilizeSensorData: Bool
+        let navigatorPredictionInterval: TimeInterval?
+        let liveIncidentsOptions: IncidentsOptions?
+        let statusUpdatingSettings: StatusUpdatingSettings?
+        let logLevel: MapboxCommon.LoggingLevel
 
-        var directions: Directions
-        var tileStoreConfiguration: TileStoreConfiguration
-        var routingProviderSource: RoutingProviderSource
-        var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy?
-        var utilizeSensorData: Bool
-        var navigatorPredictionInterval: TimeInterval?
-        var liveIncidentsOptions: IncidentsOptions?
-        var statusUpdatingSettings: StatusUpdatingSettings?
+        /**
+         Creates new `Values` instance.
+
+         - parameter directions: Default `Directions` instance. Some types allow you to customize the directions instance and
+     fall back to the `NavigationSettings.directions` by default.
+         - parameter tileStoreConfiguration: Options for configuring how map and navigation tiles are stored on the device. See
+     `TileStoreConfiguration` for more details.
+         - parameter routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of online vs. offline data for routing.
+         - parameter alternativeRouteDetectionStrategy: Configures how `AlternativeRoute`s will be detected during navigation process.
+         - parameter utilizeSensorData: Enables using sensors data to improve positioning.
+         - parameter navigatorPredictionInterval: Defines approximate navigator prediction between location ticks.
+         - parameter liveIncidentsOptions: Configures Electronic Horizon live incidents.
+         - parameter statusUpdatingSettings: Configures how navigator status is polled.
+         - parameter logLevel: Logging level for Mapbox SDKs.
+         */
+        public init(directions: Directions = .shared,
+                    tileStoreConfiguration: TileStoreConfiguration = .default,
+                    routingProviderSource: RoutingProviderSource = .hybrid,
+                    alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? = .init(),
+                    utilizeSensorData: Bool = false,
+                    navigatorPredictionInterval: TimeInterval? = nil,
+                    liveIncidentsOptions: IncidentsOptions? = nil,
+                    statusUpdatingSettings: StatusUpdatingSettings? = nil,
+                    logLevel: MapboxCommon.LoggingLevel = .info) {
+            self.directions = directions
+            self.tileStoreConfiguration = tileStoreConfiguration
+            self.routingProviderSource = routingProviderSource
+            self.alternativeRouteDetectionStrategy = alternativeRouteDetectionStrategy
+            self.utilizeSensorData = utilizeSensorData
+            self.navigatorPredictionInterval = navigatorPredictionInterval
+            self.liveIncidentsOptions = liveIncidentsOptions
+            self.statusUpdatingSettings = statusUpdatingSettings
+            self.logLevel = logLevel
+        }
     }
 
-    /// Protects access to `_state`.
+    /// Protects access to `_values`.
     private let lock: NSLock = .init()
 
-    private var _state: State?
+    private var _values: Values? {
+        didSet {
+            guard let _values = _values else { return }
 
-    private var state: State {
+            let loggingLevel = NSNumber(value: _values.logLevel.rawValue)
+            LogConfiguration.setLoggingLevelForUpTo(loggingLevel)
+        }
+    }
+
+    private var values: Values {
         lock.lock(); defer {
             lock.unlock()
         }
-        if let state = _state {
-            return state
+        if let values = _values {
+            return values
         }
         else {
-            let defaultState: State = .default
-            _state = defaultState
+            let defaultState: Values = .init()
+            _values = defaultState
             return defaultState
         }
     }
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      */
     public var directions: Directions {
-        state.directions
+        values.directions
     }
 
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
-        state.tileStoreConfiguration
+        values.tileStoreConfiguration
     }
 
     /**
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     Type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of online vs. offline data for routing.
+
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      */
     public var routingProviderSource: RoutingProviderSource {
-        state.routingProviderSource
+        values.routingProviderSource
     }
-    
+
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      
      If set to `nil`, the detection is turned off.
      */
     public var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? {
-        state.alternativeRouteDetectionStrategy
+        values.alternativeRouteDetectionStrategy
     }
-    
+
     /**
      Enables analyzing data from sensors for better location prediction in case of a weak GPS signal, for example in tunnel.
      
@@ -144,9 +180,9 @@ public class NavigationSettings {
      - important: Don't enable sensors if you emulate location updates. The SDK ignores location updates which don't match data from sensors.
      */
     public var utilizeSensorData: Bool {
-        state.utilizeSensorData
+        values.utilizeSensorData
     }
-    
+
     /**
      Defines approximate navigator prediction between location ticks.
      
@@ -154,34 +190,34 @@ public class NavigationSettings {
      
      If not specified (`nilled`), default value will be used.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      */
     public var navigatorPredictionInterval: TimeInterval? {
-        state.navigatorPredictionInterval
+        values.navigatorPredictionInterval
     }
-    
+
     /**
      Configuration on how live incidents on a most probable path are detected.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      
      If set to `nil`, live incidents are turned off (by default).
      */
     public var liveIncidentsOptions: IncidentsOptions? {
-        state.liveIncidentsOptions
+        values.liveIncidentsOptions
     }
-    
+
     /**
      Configuration on how navigator status is polled.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method.
+     You can override this property by using `NavigationSettings.initialize(with:)` method.
      
      If set to `nil`, default settings will be applied
      */
     public var statusUpdatingSettings: StatusUpdatingSettings? {
-        state.statusUpdatingSettings
+        values.statusUpdatingSettings
     }
-    
+
     /**
      Initializes the settings with custom instances of globally used types.
 
@@ -200,7 +236,9 @@ public class NavigationSettings {
        - utilizeSensorData: Enables using sensors data to improve positioning.
        - navigatorPredictionInterval: Defines approximate navigator prediction between location ticks.
        - liveIncidentsOptions: Configures Electronic Horizon live incidents.
+       - statusUpdatingSettings: Configures how navigator status is polled.
      */
+    @available(*, deprecated, renamed: "initialize(with:)")
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
                            routingProviderSource: RoutingProviderSource = .hybrid,
@@ -209,22 +247,41 @@ public class NavigationSettings {
                            navigatorPredictionInterval: TimeInterval? = nil,
                            liveIncidentsOptions: IncidentsOptions? = nil,
                            statusUpdatingSettings: StatusUpdatingSettings? = nil) {
+        self.initialize(
+            with: .init(
+                directions: directions,
+                tileStoreConfiguration: tileStoreConfiguration,
+                routingProviderSource: routingProviderSource,
+                alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy,
+                utilizeSensorData: utilizeSensorData,
+                navigatorPredictionInterval: navigatorPredictionInterval,
+                liveIncidentsOptions: liveIncidentsOptions,
+                statusUpdatingSettings: statusUpdatingSettings
+            )
+        )
+    }
+
+    /**
+     Initializes the settings with custom instances of globally used types.
+
+     If you don't provide custom values, they will be initialized with the defaults.
+
+     - important: If you want to use this method, it should be the first method you use from Navigation SDK.
+     Not doing so will lead to undefined behavior.
+
+     - Parameters:
+       - values: Values to be used for global settings.
+     */
+    public func initialize(with values: Values) {
         lock.lock(); defer {
             lock.unlock()
         }
-        if _state != nil {
-            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`, `navigatorPredictionInterval`, `liveIncidentsOptions`, `statusUpdatingSettings`. This might result in an undefined behaviour.", category: .settings)
+        if _values != nil {
+            Log.warning("Warning: Using NavigationSettings.initialize(with:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`, `navigatorPredictionInterval`, `liveIncidentsOptions`, `statusUpdatingSettings`. This might result in an undefined behaviour.", category: .settings)
         }
-        _state = .init(directions: directions,
-                       tileStoreConfiguration: tileStoreConfiguration,
-                       routingProviderSource: routingProviderSource,
-                       alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy,
-                       utilizeSensorData: utilizeSensorData,
-                       navigatorPredictionInterval: navigatorPredictionInterval,
-                       liveIncidentsOptions: liveIncidentsOptions,
-                       statusUpdatingSettings: statusUpdatingSettings)
+        _values = values
     }
-    
+
     /**
      The volume that the voice controller will use.
      
@@ -235,7 +292,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceVolume, value: voiceVolume)
         }
     }
-    
+
     /**
      Specifies whether to mute the voice controller or not.
      */
@@ -244,7 +301,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceMuted, value: voiceMuted)
         }
     }
-    
+
     /**
      Specifies the preferred distance measurement unit.
      Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
@@ -254,22 +311,22 @@ public class NavigationSettings {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
         }
     }
-    
+
     /**
      The shared navigation settings object that affects the entire application.
      */
     public static let shared: NavigationSettings = .init()
-    
+
     private func notifyChanged(property: StoredProperty, value: Any) {
         UserDefaults.standard.set(value, forKey: property.key.prefixed)
         NotificationCenter.default.post(name: .navigationSettingsDidChange,
                                         object: nil,
                                         userInfo: [property.key: value])
     }
-    
+
     private func setupFromDefaults() {
         for property in StoredProperty.allCases {
-            
+
             guard let val = UserDefaults.standard.object(forKey: property.key.prefixed) else { continue }
             switch property {
             case .voiceVolume:
@@ -287,7 +344,7 @@ public class NavigationSettings {
             }
         }
     }
-    
+
     init() {
         setupFromDefaults()
     }
