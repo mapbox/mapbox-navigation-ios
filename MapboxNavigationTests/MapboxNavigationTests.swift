@@ -216,6 +216,10 @@ class MapboxNavigationTests: XCTestCase {
         wait()
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
         
+        navigationMapView.reducedAccuracyActivatedMode = true
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+        
         navigationMapView.accuracyAuthorization = .fullAccuracy
         let userPuckCourseView = UserPuckCourseView(frame: .init(origin: .zero, size: .init(width: 50.0, height: 50.0)))
         userPuckCourseView.fillColor = .red
