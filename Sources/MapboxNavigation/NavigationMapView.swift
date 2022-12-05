@@ -897,8 +897,8 @@ open class NavigationMapView: UIView {
     var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy {
         didSet {
             // `UserHaloCourseView` will be applied in only one case:
-            // When `NavigationMapView.reducedAccuracyActivatedMode` defaults to `true`, and
-            // the `Precise Location` property in the settings of current application is disabled by user.
+            // When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`,
+            // and the `Precise Location` property in the settings of current application is disabled by user.
             let shouldApply = reducedAccuracyActivatedMode && accuracyAuthorization == .reducedAccuracy
             applyReducedAccuracyMode(shouldApply: shouldApply)
         }
@@ -983,13 +983,13 @@ open class NavigationMapView: UIView {
     
     /**
      Allows to control current user location styling based on accuracy authorization permission on iOS 14 and above.
-     Defaults to `true`.
+     Defaults to `false`.
      
      When user disable the `Precise Location` property in the settings of current application:
-     If `true`, `UserHaloCourseView` will be shown.
      If `false`, user location will be drawn based on style, which was set in `NavigationMapView.userLocationStyle`.
+     If `true`, `UserHaloCourseView` will be shown.
      */
-    @objc dynamic public var reducedAccuracyActivatedMode: Bool = true {
+    @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
             let shouldApply = reducedAccuracyActivatedMode && accuracyAuthorization == .reducedAccuracy
             applyReducedAccuracyMode(shouldApply: shouldApply)
