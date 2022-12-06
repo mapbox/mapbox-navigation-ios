@@ -60,7 +60,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
         if currentDistance != 0 {
             self.remainingRouteShape = route.shape?.trimmed(from: currentDistance, to: LocationDistance.infinity)
         }
-        self.remainingRouteShape = route.shape
+        else {
+            self.remainingRouteShape = route.shape
+        }
         self.locations = route.shape?.coordinates.simulatedLocationsWithTurnPenalties()
 
         super.init()
