@@ -186,12 +186,14 @@ open class DayStyle: Style {
         ExitView.appearance(for: traitCollection).cornerRadius = 5.0
         ExitView.appearance(for: traitCollection).foregroundColor = .black
         ExitView.appearance(for: traitCollection).borderColor = .black
+        ExitView.appearance(for: traitCollection).highlightColor = .white
         
         GenericRouteShield.appearance(for: traitCollection).backgroundColor = .clear
         GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
         GenericRouteShield.appearance(for: traitCollection).cornerRadius = 5.0
         GenericRouteShield.appearance(for: traitCollection).foregroundColor = .black
         GenericRouteShield.appearance(for: traitCollection).borderColor = .black
+        GenericRouteShield.appearance(for: traitCollection).highlightColor = .white
         
         UILabel.appearance(for: traitCollection, whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
         UILabel.appearance(for: traitCollection, whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .black
@@ -456,6 +458,7 @@ open class DayStyle: Style {
         // similar to: `UITraitEnvironment.traitCollectionDidChange(_:)`, or by creating `UITraitCollection`
         // directly.
         let defaultInstructionColor: UIColor
+        let defaultInstructionHighlightedColor: UIColor
         
         let defaultLaneViewPrimaryColor: UIColor
         let defaultLaneViewSecondaryColor: UIColor
@@ -466,6 +469,7 @@ open class DayStyle: Style {
         switch traitCollection.userInterfaceStyle {
         case .light, .unspecified:
             defaultInstructionColor = UIColor.black
+            defaultInstructionHighlightedColor = UIColor.white
             
             defaultLaneViewPrimaryColor = .defaultLaneArrowPrimary
             defaultLaneViewSecondaryColor = .defaultLaneArrowSecondary
@@ -474,6 +478,7 @@ open class DayStyle: Style {
             defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
         case .dark:
             defaultInstructionColor = UIColor.white
+            defaultInstructionHighlightedColor = UIColor.black
             
             defaultLaneViewPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             defaultLaneViewSecondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
@@ -489,12 +494,14 @@ open class DayStyle: Style {
         ExitView.appearance(for: traitCollection).cornerRadius = 5.0
         ExitView.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
         ExitView.appearance(for: traitCollection).borderColor = defaultInstructionColor
+        ExitView.appearance(for: traitCollection).highlightColor = defaultInstructionHighlightedColor
         
         GenericRouteShield.appearance(for: traitCollection).backgroundColor = .clear
         GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
         GenericRouteShield.appearance(for: traitCollection).cornerRadius = 5.0
         GenericRouteShield.appearance(for: traitCollection).foregroundColor = defaultInstructionColor
         GenericRouteShield.appearance(for: traitCollection).borderColor = defaultInstructionColor
+        GenericRouteShield.appearance(for: traitCollection).highlightColor = defaultInstructionHighlightedColor
         
         LaneView.appearance(for: traitCollection).primaryColor = defaultLaneViewPrimaryColor
         LaneView.appearance(for: traitCollection).secondaryColor = defaultLaneViewSecondaryColor

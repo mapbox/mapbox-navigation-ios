@@ -16,6 +16,8 @@ public class GenericRouteShield: StylableView {
         }
     }
     
+    @objc public dynamic var highlightColor: UIColor?
+    
     //The label that contains the route code.
     lazy var routeLabel: UILabel = {
         let label: UILabel = .forAutoLayout()
@@ -94,7 +96,7 @@ public class GenericRouteShield: StylableView {
     /**
      This generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
-    static func criticalHash(styleID: String?, dataSource: DataSource, traitCollection: UITraitCollection) -> String {
+    static func criticalHash(styleID: String?, dataSource: DataSource, traitCollection: UITraitCollection, isHighlighted: Bool = false) -> String {
         var appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
             let carPlayTraitCollection = UITraitCollection(traitsFrom: [
@@ -106,6 +108,7 @@ public class GenericRouteShield: StylableView {
         }
         
         var criticalProperties: [AnyHashable?] = [
+            isHighlighted,
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,

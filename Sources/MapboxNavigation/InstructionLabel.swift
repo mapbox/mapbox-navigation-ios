@@ -25,13 +25,13 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var customTraitCollection: UITraitCollection?
 
     var spriteRepository: SpriteRepository = .shared
-    
+
     var instruction: VisualInstruction? {
         didSet {
             updateLabelAttributedText()
         }
     }
-
+    
     private func updateLabelAttributedText() {
         guard let instruction = instruction else {
             text = nil
@@ -48,8 +48,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                                              dataSource: self,
                                              spriteRepository: spriteRepository,
                                              traitCollection: customTraitCollection ?? traitCollection,
-                                             downloadCompletion: update)
-        
+                                             downloadCompletion: update,
+                                             isHighlighted: showHighlightedTextColor)
         let attributed = presenter.attributedText()
         attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }

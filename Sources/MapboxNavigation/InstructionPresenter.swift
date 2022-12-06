@@ -33,12 +33,14 @@ class InstructionPresenter {
                   dataSource: DataSource,
                   spriteRepository: SpriteRepository = .shared,
                   traitCollection: UITraitCollection,
-                  downloadCompletion: ShieldDownloadCompletion?) {
+                  downloadCompletion: ShieldDownloadCompletion?,
+                  isHighlighted: Bool = false) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.spriteRepository = spriteRepository
         self.traitCollection = traitCollection
         self.onShieldDownload = downloadCompletion
+        self.isHighlighted = isHighlighted
     }
 
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
@@ -50,6 +52,8 @@ class InstructionPresenter {
     private let traitCollection: UITraitCollection
     
     static let labelShieldScaleFactor: CGFloat = 1.2
+    
+    var isHighlighted: Bool = false
     
     func attributedText() -> NSAttributedString {
         guard let source = self.dataSource,
@@ -254,7 +258,8 @@ class InstructionPresenter {
                                cacheKey: String) -> NSAttributedString? {
         let additionalKey = GenericRouteShield.criticalHash(styleID: spriteRepository.styleID(for: idiom),
                                                             dataSource: dataSource,
-                                                            traitCollection: traitCollection)
+                                                            traitCollection: traitCollection,
+                                                            isHighlighted: isHighlighted)
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
@@ -274,9 +279,14 @@ class InstructionPresenter {
                 appearance = GenericRouteShield.appearance(for: traitCollection)
             }
             
-            genericRouteShield.foregroundColor = appearance.foregroundColor
+            if isHighlighted {
+                genericRouteShield.foregroundColor = appearance.highlightColor
+                genericRouteShield.borderColor = appearance.highlightColor
+            } else {
+                genericRouteShield.foregroundColor = appearance.foregroundColor
+                genericRouteShield.borderColor = appearance.borderColor
+            }
             genericRouteShield.borderWidth = appearance.borderWidth
-            genericRouteShield.borderColor = appearance.borderColor
             genericRouteShield.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
@@ -297,7 +307,8 @@ class InstructionPresenter {
         let additionalKey = ExitView.criticalHash(side: side,
                                                   styleID: spriteRepository.styleID(for: idiom),
                                                   dataSource: dataSource,
-                                                  traitCollection: traitCollection)
+                                                  traitCollection: traitCollection,
+                                                  isHighlighted: isHighlighted)
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
@@ -318,9 +329,14 @@ class InstructionPresenter {
                 appearance = ExitView.appearance(for: traitCollection)
             }
             
-            exitView.foregroundColor = appearance.foregroundColor
+            if isHighlighted {
+                exitView.foregroundColor = appearance.highlightColor
+                exitView.borderColor = appearance.highlightColor
+            } else {
+                exitView.foregroundColor = appearance.foregroundColor
+                exitView.borderColor = appearance.borderColor
+            }
             exitView.borderWidth = appearance.borderWidth
-            exitView.borderColor = appearance.borderColor
             exitView.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: exitView) else { return nil }
