@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 2.10.0
+## v2.10.0
 
 ### Packaging
 
@@ -21,6 +21,7 @@
 * Fixed issue with simultaneous recognition of tap gesture. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Fixed label localization to properly handle Simplified and Traditional Chinese. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Allow simultaneous recognition of map- and annotation- handling gesture recognizers. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* Fixed an issue where text in the route duration annotation was not centered correctly on devices with different screen sizes. ([#4130](https://github.com/mapbox/mapbox-navigation-ios/pull/4130))
 
 ### Location tracking
 
