@@ -168,7 +168,7 @@ extension NavigationMapView {
             
             highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
             highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            highlightedBuildingsLayer = delegate?.navigationMapView(self, willAdd: highlightedBuildingsLayer) as? FillExtrusionLayer ?? highlightedBuildingsLayer
+            highlightedBuildingsLayer = customizedLayer(highlightedBuildingsLayer)
             
             // In case if highlighted buildings layer is already present, instead of removing it - update it.
             if mapView.mapboxMap.style.layerExists(withId: identifier) {

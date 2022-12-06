@@ -607,6 +607,8 @@ class NavigationViewControllerTests: TestCase {
         XCTAssertEqual(delegateMock.expectedRestrictedLineOpacity, restrictedOpacity, accuracy: 1e-3, "Failed to customize route restricted area layer through delegate.")
         XCTAssertEqual(delegateMock.expectedRouteCasingWidth, traversedWidth, accuracy: 1e-3,
                        "The traversed route layer should have the same width as the main route casing layer.")
+        XCTAssertNil(style.layerPropertyValue(for: traversedIdentifier, property: "line-opacity") as? Double,
+                     "The traversed route layer shouldn't have other properties modified.")
     }
 }
 

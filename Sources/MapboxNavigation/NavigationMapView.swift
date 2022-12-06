@@ -427,7 +427,7 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
-                    arrowLayer = delegate?.navigationMapView(self, willAdd: arrowLayer) as? LineLayer ?? arrowLayer
+                    arrowLayer = customizedLayer(arrowLayer)
                     
                     let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
@@ -450,7 +450,7 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                    arrowStrokeLayer = delegate?.navigationMapView(self, willAdd: arrowStrokeLayer) as? LineLayer ?? arrowStrokeLayer
+                    arrowStrokeLayer = customizedLayer(arrowStrokeLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
                 }
@@ -492,9 +492,9 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
-                    arrowSymbolLayer = delegate?.navigationMapView(self, willAdd: arrowSymbolLayer) as? SymbolLayer ?? arrowSymbolLayer
+                    arrowSymbolLayer = customizedLayer(arrowSymbolLayer)
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
-                    arrowSymbolCasingLayer = delegate?.navigationMapView(self, willAdd: arrowSymbolCasingLayer) as? SymbolLayer ?? arrowSymbolCasingLayer
+                    arrowSymbolCasingLayer = customizedLayer(arrowSymbolCasingLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowLayer))
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
@@ -604,7 +604,7 @@ open class NavigationMapView: UIView {
             defaultLineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                          lineBaseColor: routeRestrictedAreaColor))
             defaultLineLayer.lineDasharray = .constant([0.5, 2.0])
-            lineLayer = delegate?.navigationMapView(self, willAdd: defaultLineLayer) as? LineLayer ?? defaultLineLayer
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -693,7 +693,7 @@ open class NavigationMapView: UIView {
                 }
             }
             
-            lineLayer = delegate?.navigationMapView(self, willAdd: defaultLineLayer) as? LineLayer ?? defaultLineLayer
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -774,7 +774,7 @@ open class NavigationMapView: UIView {
                                                                                               isSoft: false)))
             }
             
-            lineLayer = delegate?.navigationMapView(self, willAdd: defaultLineLayer) as? LineLayer ?? defaultLineLayer
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -846,7 +846,7 @@ open class NavigationMapView: UIView {
                 defaultLinelayer.lineJoin = .constant(.round)
                 defaultLinelayer.lineCap = .constant(.round)
             }
-            lineLayer = delegate?.navigationMapView(self, willAdd: defaultLinelayer) as? LineLayer ?? defaultLinelayer
+            lineLayer = customizedLayer(defaultLinelayer)
         }
         
         if let lineLayer = lineLayer {
@@ -1223,7 +1223,7 @@ open class NavigationMapView: UIView {
                     var circlesLayer = delegate?.navigationMapView(self,
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
-                    circlesLayer = delegate?.navigationMapView(self, willAdd: circlesLayer) as? CircleLayer ?? circlesLayer
+                    circlesLayer = customizedLayer(circlesLayer)
                     
                     let layerPosition = layerPosition(for: waypointCircleLayerIdentifier, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
@@ -1232,7 +1232,7 @@ open class NavigationMapView: UIView {
                     var symbolsLayer = delegate?.navigationMapView(self,
                                                                    waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
-                    symbolsLayer = delegate?.navigationMapView(self, willAdd: symbolsLayer) as? SymbolLayer ?? symbolsLayer
+                    symbolsLayer = customizedLayer(symbolsLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(waypointCircleLayerIdentifier))
                 }
@@ -1456,7 +1456,7 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
-                symbolLayer = delegate?.navigationMapView(self, willAdd: symbolLayer) as? SymbolLayer ?? symbolLayer
+                symbolLayer = customizedLayer(symbolLayer)
                 
                 let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
                 try mapView.mapboxMap.style.addPersistentLayer(symbolLayer, layerPosition: layerPosition)
@@ -1466,7 +1466,7 @@ open class NavigationMapView: UIView {
                 circleLayer.circleRadius = .constant(5)
                 circleLayer.circleOpacity = .constant(0.75)
                 circleLayer.circleColor = .constant(.init(.white))
-                circleLayer = delegate?.navigationMapView(self, willAdd: circleLayer) as? CircleLayer ?? circleLayer
+                circleLayer = customizedLayer(circleLayer)
                 
                 try mapView.mapboxMap.style.addPersistentLayer(circleLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer))
             }
@@ -1474,6 +1474,16 @@ open class NavigationMapView: UIView {
             Log.error("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).",
                       category: .navigationUI)
         }
+    }
+    
+    func customizedLayer<T>(_ layer: T) -> T where T: Layer {
+        if let customizedLayer = delegate?.navigationMapView(self, willAdd: layer) {
+            guard let customizedLayer = customizedLayer as? T else {
+                preconditionFailure("The customized layer should have the same layer type as the default layer.")
+            }
+            return customizedLayer
+        }
+        return layer
     }
     
     func layerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {
