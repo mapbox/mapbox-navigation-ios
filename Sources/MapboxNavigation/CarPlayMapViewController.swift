@@ -446,6 +446,18 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
                                            routeCasingLineLayerWithIdentifier: identifier,
                                            sourceIdentifier: sourceIdentifier)
     }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, willAdd layer: Layer) -> Layer? {
+        delegate?.carPlayMapViewController(self, willAdd: layer)
+    }
 }
 
 @available(iOS 12.0, *)

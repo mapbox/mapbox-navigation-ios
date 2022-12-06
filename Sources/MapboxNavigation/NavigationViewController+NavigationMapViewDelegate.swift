@@ -31,6 +31,12 @@ extension NavigationViewController: NavigationMapViewDelegate {
     }
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  willAdd layer: Layer) -> Layer? {
+        delegate?.navigationViewController(self,
+                                           willAdd: layer)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   waypointCircleLayerWithIdentifier identifier: String,
                                   sourceIdentifier: String) -> CircleLayer? {
         delegate?.navigationViewController(self,

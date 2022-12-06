@@ -1134,6 +1134,22 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                                         sourceIdentifier: sourceIdentifier,
                                         for: carPlayNavigationViewController)
     }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayManager(self,
+                                        routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                        sourceIdentifier: sourceIdentifier,
+                                        for: carPlayNavigationViewController)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                willAdd layer: Layer) -> Layer? {
+        return delegate?.carPlayManager(self,
+                                        willAdd: layer,
+                                        for: carPlayNavigationViewController)
+    }
 }
 
 // MARK: CarPlayMapViewControllerDelegate Methods
@@ -1165,6 +1181,22 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
         delegate?.carPlayManager(self,
                                  routeCasingLineLayerWithIdentifier: identifier,
                                  sourceIdentifier: sourceIdentifier,
+                                 for: carPlayMapViewController)
+    }
+    
+    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
+                                         routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayManager(self,
+                                 routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                 sourceIdentifier: sourceIdentifier,
+                                 for: carPlayMapViewController)
+    }
+    
+    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
+                                         willAdd layer: Layer) -> Layer? {
+        delegate?.carPlayManager(self,
+                                 willAdd: layer,
                                  for: carPlayMapViewController)
     }
 }

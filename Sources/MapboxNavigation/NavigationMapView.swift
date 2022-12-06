@@ -427,6 +427,7 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
+                    arrowLayer = customizedLayer(arrowLayer)
                     
                     let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.arrowLayer, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: layerPosition)
@@ -449,6 +450,7 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
+                    arrowStrokeLayer = customizedLayer(arrowStrokeLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
                 }
@@ -490,7 +492,9 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    arrowSymbolLayer = customizedLayer(arrowSymbolLayer)
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    arrowSymbolCasingLayer = customizedLayer(arrowSymbolCasingLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowLayer))
                     try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
@@ -588,18 +592,19 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(routeRestrictedAreaColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
-            lineLayer?.lineOpacity = .constant(0.5)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(routeRestrictedAreaColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
+            defaultLineLayer.lineOpacity = .constant(0.5)
             
             let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures)
-            lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
+            defaultLineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                          lineBaseColor: routeRestrictedAreaColor))
-            lineLayer?.lineDasharray = .constant([0.5, 2.0])
+            defaultLineLayer.lineDasharray = .constant([0.5, 2.0])
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -656,19 +661,19 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(trafficUnknownColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression())
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(trafficUnknownColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression())
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
             
             if isMainRoute {
                 let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 let gradientStops = routeLineCongestionGradient(route,
                                                                 congestionFeatures: congestionFeatures,
                                                                 isSoft: crossfadesCongestionSegments)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                               lineBaseColor: trafficUnknownColor,
                                                                                               isSoft: crossfadesCongestionSegments)))
             } else {
@@ -677,16 +682,18 @@ open class NavigationMapView: UIView {
                                                                     congestionFeatures: route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                                     isMain: false,
                                                                     isSoft: crossfadesCongestionSegments)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                    defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
                     let gradientStops: [Double: UIColor] = [1.0: routeAlternateColor]
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                    defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: routeAlternateColor,
                                                                                                   isSoft: false)))
                 }
             }
+            
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -750,22 +757,24 @@ open class NavigationMapView: UIView {
         }
         
         if lineLayer == nil {
-            lineLayer = LineLayer(id: layerIdentifier)
-            lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(routeCasingColor))
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
+            var defaultLineLayer = LineLayer(id: layerIdentifier)
+            defaultLineLayer.source = sourceIdentifier
+            defaultLineLayer.lineColor = .constant(.init(routeCasingColor))
+            defaultLineLayer.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
+            defaultLineLayer.lineJoin = .constant(.round)
+            defaultLineLayer.lineCap = .constant(.round)
             
             if isMainRoute {
                 let gradientStops = routeLineCongestionGradient(route)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 let gradientStops: [Double: UIColor] = [1.0: routeAlternateCasingColor]
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                defaultLineLayer.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                               lineBaseColor: routeAlternateCasingColor,
                                                                                               isSoft: false)))
             }
+            
+            lineLayer = customizedLayer(defaultLineLayer)
         }
         
         if let lineLayer = lineLayer {
@@ -821,10 +830,23 @@ open class NavigationMapView: UIView {
             lineLayer = LineLayer(id: layerIdentifier)
             lineLayer?.source = sourceIdentifier
             lineLayer?.lineColor = .constant(.init(traversedRouteColor))
-            // The traversed route layer should have the same width as the main route casing layer.
-            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-            lineLayer?.lineJoin = .constant(.round)
-            lineLayer?.lineCap = .constant(.round)
+        }
+        
+        if var defaultLinelayer = lineLayer {
+            let routeCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
+            // Because users could modify the route casing layer property, the traversed route layer should have same property values as the main route casing layer,
+            // except the line color.
+            if let routeCasingLayer = try? mapView.mapboxMap.style.layer(withId: routeCasingLayerIdentifier, type: LineLayer.self) {
+                // The traversed route layer should have the same width as the main route casing layer.
+                defaultLinelayer.lineWidth = routeCasingLayer.lineWidth
+                defaultLinelayer.lineJoin = routeCasingLayer.lineJoin
+                defaultLinelayer.lineCap = routeCasingLayer.lineCap
+            } else {
+                defaultLinelayer.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
+                defaultLinelayer.lineJoin = .constant(.round)
+                defaultLinelayer.lineCap = .constant(.round)
+            }
+            lineLayer = customizedLayer(defaultLinelayer)
         }
         
         if let lineLayer = lineLayer {
@@ -1198,17 +1220,19 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(waypointSource, id: waypointSourceIdentifier)
                     
                     let waypointCircleLayerIdentifier = NavigationMapView.LayerIdentifier.waypointCircleLayer
-                    let circlesLayer = delegate?.navigationMapView(self,
+                    var circlesLayer = delegate?.navigationMapView(self,
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
+                    circlesLayer = customizedLayer(circlesLayer)
                     
                     let layerPosition = layerPosition(for: waypointCircleLayerIdentifier, route: route)
                     try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
-                    let symbolsLayer = delegate?.navigationMapView(self,
+                    var symbolsLayer = delegate?.navigationMapView(self,
                                                                    waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
+                    symbolsLayer = customizedLayer(symbolsLayer)
                     
                     try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(waypointCircleLayerIdentifier))
                 }
@@ -1432,6 +1456,8 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
+                symbolLayer = customizedLayer(symbolLayer)
+                
                 let layerPosition = layerPosition(for: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
                 try mapView.mapboxMap.style.addPersistentLayer(symbolLayer, layerPosition: layerPosition)
                 
@@ -1440,12 +1466,24 @@ open class NavigationMapView: UIView {
                 circleLayer.circleRadius = .constant(5)
                 circleLayer.circleOpacity = .constant(0.75)
                 circleLayer.circleColor = .constant(.init(.white))
+                circleLayer = customizedLayer(circleLayer)
+                
                 try mapView.mapboxMap.style.addPersistentLayer(circleLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer))
             }
         } catch {
             Log.error("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).",
                       category: .navigationUI)
         }
+    }
+    
+    func customizedLayer<T>(_ layer: T) -> T where T: Layer {
+        if let customizedLayer = delegate?.navigationMapView(self, willAdd: layer) {
+            guard let customizedLayer = customizedLayer as? T else {
+                preconditionFailure("The customized layer should have the same layer type as the default layer.")
+            }
+            return customizedLayer
+        }
+        return layer
     }
     
     func layerPosition(for layerIdentifier: String, route: Route? = nil, customLayerPosition: MapboxMaps.LayerPosition? = nil) -> MapboxMaps.LayerPosition? {

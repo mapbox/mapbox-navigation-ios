@@ -22,6 +22,8 @@
 * Fixed label localization to properly handle Simplified and Traditional Chinese. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Allow simultaneous recognition of map- and annotation- handling gesture recognizers. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Fixed an issue where text in the route duration annotation was not centered correctly on devices with different screen sizes. ([#4130](https://github.com/mapbox/mapbox-navigation-ios/pull/4130))
+* Added `CarPlayManagerDelegate.carPlayManager(_:willAdd:for:)`, `NavigationMapViewDelegate.navigationMapView(_:willAdd:)` and `NavigationViewControllerDelegate.navigationViewController(_:willAdd:)` to modify the properties of the default layer which will be added to the map view during navigation. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
+* Fixed issue where the traversed route layer doesn't share the same width with the main route casing layer after developers providing their own layer or midfying the layer properties. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 
 ### Location tracking
 
