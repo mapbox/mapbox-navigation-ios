@@ -30,62 +30,69 @@ extension NavigationMapView {
      desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
     func updateAnnotationSymbolImages() throws {
+        try addRouteDurationAnnotationImageToStyle(.leading)
+        try addRouteDurationAnnotationImageToStyle(.trailing)
+    }
+    
+    func addRouteDurationAnnotationImageToStyle(_ tailPosition: RouteDurationAnnotationTailPosition) throws {
         let style = mapView.mapboxMap.style
         
-        guard style.image(withId: "RouteInfoAnnotationLeftHanded") == nil,
-              style.image(withId: "RouteInfoAnnotationRightHanded") == nil else { return }
-        
-        let bottomInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
-        
-        // Right-hand pin
-        if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
-            // define the "stretchable" areas in the image that will be fitted to the text label
-            // These numbers are the pixel offsets into the PDF image asset
-            var stretchX = [ImageStretches(first: Float(33), second: Float(52))]
-            var stretchY = [ImageStretches(first: Float(32), second: Float(35))]
-            // define the "content" area of the image which is the portion that the maps sdk will use
-            // to place the text label within
-            var imageContent = bottomInset > 0 ? ImageContent(left: 34, top: 32, right: 56, bottom: 50) : ImageContent(left: 28, top: 24, right: 56, bottom: 40)
-            
-            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
-            try style.addImage(regularAnnotationImage,
-                               id: "RouteInfoAnnotationRightHanded",
-                               stretchX: stretchX,
-                               stretchY: stretchY,
-                               content: imageContent)
-            
-            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
-            try style.addImage(selectedAnnotationImage,
-                               id: "RouteInfoAnnotationRightHanded-Selected",
-                               stretchX: stretchX,
-                               stretchY: stretchY,
-                               content: imageContent)
+        let routeDurationAnnotationImageIdentifier: String
+        switch tailPosition {
+        case .leading:
+            routeDurationAnnotationImageIdentifier = ImageIdentifier.routeAnnotationLeftHanded
+        case .trailing:
+            routeDurationAnnotationImageIdentifier = ImageIdentifier.routeAnnotationRightHanded
         }
         
-        // Left-hand pin
-        if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
-            // define the "stretchable" areas in the image that will be fitted to the text label
-            // These numbers are the pixel offsets into the PDF image asset
-            var stretchX = [ImageStretches(first: Float(47), second: Float(48))]
-            var stretchY = [ImageStretches(first: Float(28), second: Float(32))]
-            // define the "content" area of the image which is the portion that the maps sdk will use
-            // to place the text label within
-            var imageContent = bottomInset > 0 ? ImageContent(left: 47, top: 28, right: 52, bottom: 40) : ImageContent(left: 28, top: 24, right: 58, bottom: 40)
-            
-            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
-            try style.addImage(regularAnnotationImage,
-                               id: "RouteInfoAnnotationLeftHanded",
-                               stretchX: stretchX,
-                               stretchY: stretchY,
-                               content: imageContent)
-            
-            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
-            try style.addImage(selectedAnnotationImage,
-                               id: "RouteInfoAnnotationLeftHanded-Selected",
-                               stretchX: stretchX,
-                               stretchY: stretchY,
-                               content: imageContent)
-        }
+        let capInsets = UIEdgeInsets(top: 15.0, left: 15.0, bottom: 35.0, right: 15.0)
+        
+        // In case if image was already added to the style - do not add it.
+        guard style.image(withId: routeDurationAnnotationImageIdentifier) == nil,
+              let routeDurationAnnotationImage = Bundle.mapboxNavigation.image(named: routeDurationAnnotationImageIdentifier)?.resizableImage(withCapInsets: capInsets) else { return }
+        
+        let scale = Float(routeDurationAnnotationImage.scale)
+        
+        // Define the "stretchable" areas in the image that will be fitted to the text label.
+        // These numbers are the pixel offsets into the PDF image asset.
+        let stretchXFirst = Float(routeDurationAnnotationImage.capInsets.left) * scale
+        let stretchXSecond = Float(routeDurationAnnotationImage.size.width - routeDurationAnnotationImage.capInsets.right) * scale
+        let stretchYFirst = Float(routeDurationAnnotationImage.capInsets.top) * scale
+        let stretchYSecond = Float(routeDurationAnnotationImage.size.height - routeDurationAnnotationImage.capInsets.bottom) * scale
+        
+        let contentInsets = UIEdgeInsets(top: 10.0, left: 15.0, bottom: 35.0, right: 15.0)
+        let contentBoxLeft = Float(contentInsets.left) * scale
+        let contentBoxRight = Float(routeDurationAnnotationImage.size.width - contentInsets.right) * scale
+        let contentBoxTop = Float(contentInsets.top) * scale
+        let contentBoxBottom = Float(routeDurationAnnotationImage.size.height - contentInsets.bottom) * scale
+        
+        let contentBox = ImageContent(left: contentBoxLeft,
+                                      top: contentBoxTop,
+                                      right: contentBoxRight,
+                                      bottom: contentBoxBottom)
+        
+        let stretchX = [
+            ImageStretches(first: stretchXFirst, second: stretchXSecond)
+        ]
+        
+        let stretchY = [
+            ImageStretches(first: stretchYFirst, second: stretchYSecond)
+        ]
+        
+        let regularAnnotationImage = routeDurationAnnotationImage.tint(routeDurationAnnotationColor)
+        try style.addImage(regularAnnotationImage,
+                           id: routeDurationAnnotationImageIdentifier,
+                           stretchX: stretchX,
+                           stretchY: stretchY,
+                           content: contentBox)
+        
+        let selectedRouteDurationAnnotationImageIdentifier = routeDurationAnnotationImageIdentifier.appending("-Selected")
+        let selectedAnnotationImage = routeDurationAnnotationImage.tint(routeDurationAnnotationSelectedColor)
+        try style.addImage(selectedAnnotationImage,
+                           id: selectedRouteDurationAnnotationImageIdentifier,
+                           stretchX: stretchX,
+                           stretchY: stretchY,
+                           content: contentBox)
     }
     
     private func updateContinuousAlternativeRoutesDurations(along alternativeRoutes: [AlternativeRoute]?) {
