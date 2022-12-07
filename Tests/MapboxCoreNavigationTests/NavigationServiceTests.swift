@@ -287,9 +287,13 @@ class NavigationServiceTests: TestCase {
             return true
         }
         notificationExpectation.expectedFulfillmentCount = 2
+        routerSpy.routeProgress.currentLegProgress.stepIndex = 1
+        let distanceTraveled = route.legs[0].steps[0].distance
 
         service.simulationMode = .always
-        let simulatedLocationManager =  service.locationManager as! SimulatedLocationManagerSpy
+        let simulatedLocationManager = service.locationManager as! SimulatedLocationManagerSpy
+        XCTAssertEqual(simulatedLocationManager.currentDistance, distanceTraveled)
+        XCTAssertTrue(simulatedLocationManager.route === route)
         XCTAssertTrue(simulatedLocationManager.startUpdatingLocationCalled)
         XCTAssertTrue(simulatedLocationManager.startUpdatingHeadingCalled)
         XCTAssertFalse(simulatedLocationManager.stopUpdatingLocationCalled)

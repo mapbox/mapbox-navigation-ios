@@ -181,7 +181,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
         announceSimulationDidChange(.willBeginSimulation)
         
-        simulatedLocationSource = simulatedLocationSourceType.init(route: progress.route, currentDistance: 0, currentSpeed: 0)
+        simulatedLocationSource = simulatedLocationSourceType.init(routeProgress: progress)
         simulatedLocationSource?.delegate = self
         simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()

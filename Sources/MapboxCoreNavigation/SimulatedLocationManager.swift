@@ -48,7 +48,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    public convenience init(routeProgress: RouteProgress) {
+    public required convenience init(routeProgress: RouteProgress) {
         let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled, speed: 0)
         self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
     }
