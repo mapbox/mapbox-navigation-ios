@@ -260,6 +260,8 @@ class MapboxNavigationTests: XCTestCase {
         ]
         var routeName = "two_routes"
         var routes = self.routes(for: coordinates, routeName: routeName)
+        var routeResponse = IndexedRouteResponse(routeResponse: self.routeResponse(for: coordinates, routeName: routeName),
+                                                 routeIndex: 0)
         guard let firstRoute = routes.first,
               let centerCoordinate = routes.first?.shape?.coordinates.centerCoordinate else {
             XCTFail("Data should be valid.")
@@ -276,6 +278,17 @@ class MapboxNavigationTests: XCTestCase {
         wait()
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
         
+        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(center: centerCoordinate))
+        navigationMapView.show(routeResponse)
+        navigationMapView.showWaypoints(on: firstRoute)
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+        
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+        
         coordinates = [
             CLLocationCoordinate2DMake(37.766786656393464, -122.41803651931673),
             CLLocationCoordinate2DMake(37.76850632569678, -122.41628613127037),
@@ -283,12 +296,25 @@ class MapboxNavigationTests: XCTestCase {
         ]
         routeName = "two_routes_with_two_legs"
         routes = self.routes(for: coordinates, routeName: routeName)
+        routeResponse = IndexedRouteResponse(routeResponse: self.routeResponse(for: coordinates, routeName: routeName),
+                                                 routeIndex: 0)
         guard let firstRoute = routes.first else {
             XCTFail("Data should be valid.")
             return
         }
         
         navigationMapView.show(routes)
+        navigationMapView.showWaypoints(on: firstRoute)
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+        
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
+        wait()
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+        
+        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(center: centerCoordinate))
+        navigationMapView.show(routeResponse)
         navigationMapView.showWaypoints(on: firstRoute)
         wait()
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
@@ -347,6 +373,22 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.showWaypoints(on: firstRoute)
         wait()
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+    }
+    
+    func routeResponse(for coordinates: [CLLocationCoordinate2D], routeName: String) -> RouteResponse {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
+        
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = navigationRouteOptions
+        
+        let data = JSONFromFile(name: routeName)
+        
+        let routes = try? decoder.decode([Route].self, from: data)
+        return RouteResponse(httpResponse: nil,
+                             routes: routes,
+                             waypoints: navigationRouteOptions.waypoints,
+                             options: .route(navigationRouteOptions),
+                             credentials: Credentials())
     }
     
     func routes(for coordinates: [CLLocationCoordinate2D], routeName: String) -> [Route] {
