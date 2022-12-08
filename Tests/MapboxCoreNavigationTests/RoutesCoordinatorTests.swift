@@ -11,8 +11,8 @@ final class RoutesCoordinatorTests: TestCase {
     func testNormalCase() {
         let uuid = UUID()
         runTestCases([
-            .init(routes: createRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid, routeIndex: 0, expectedResult: .success(()))
+            .init(routes: createRoutes(), uuid: uuid, legIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid, legIndex: 0, expectedResult: .success(()))
         ])
     }
 
@@ -20,18 +20,18 @@ final class RoutesCoordinatorTests: TestCase {
         let uuid1 = UUID()
         let uuid2 = UUID()
         runTestCases([
-            .init(routes: createRoutes(), uuid: uuid1, routeIndex: 0, expectedResult: .success(())),
-            .init(routes: createRoutes(), uuid: uuid2, routeIndex: 0, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid1, routeIndex: 0, expectedResult: .failure(.endingInvalidActiveNavigation)),
+            .init(routes: createRoutes(), uuid: uuid1, legIndex: 0, expectedResult: .success(())),
+            .init(routes: createRoutes(), uuid: uuid2, legIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid1, legIndex: 0, expectedResult: .failure(.endingInvalidActiveNavigation)),
         ])
     }
 
     func testReroutes() {
         let uuid = UUID()
         runTestCases([
-            .init(routes: createRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
-            .init(routes: createRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: createRoutes(), uuid: uuid, legIndex: 0, expectedResult: .success(())),
+            .init(routes: createRoutes(), uuid: uuid, legIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid, legIndex: 0, expectedResult: .success(())),
         ])
     }
 }
@@ -44,25 +44,25 @@ private extension RoutesCoordinatorTests {
     struct RoutesCoordinatorTestCase {
         let routes: RouteInterface?
         let uuid: UUID
-        let routeIndex: UInt32
+        let legIndex: UInt32
         let expectedResult: Result<Void, RoutesCoordinatorError>
 
     }
 
     func runTestCases(_ testCases: [RoutesCoordinatorTestCase]) {
         var expectedRoutes: RouteInterface? = createRoutes()
-        var expectedRouteIndex = UInt32.max
+        var expectedLegIndex = UInt32.max
         var expectedResult: Result<RoutesCoordinator.RoutesResult, RoutesCoordinatorError>!
 
-        let handler: RoutesCoordinator.RoutesSetupHandler = { routes, routeIndex, alternativeRoutes, completion in
-            XCTAssertEqual(routes?.getRouteId(), expectedRoutes?.getRouteId())
-            XCTAssertEqual(routeIndex, expectedRouteIndex)
-            XCTAssertTrue(alternativeRoutes.isEmpty)
+        let handler: RoutesCoordinator.RoutesSetupHandler = { routesData, legIndex, completion in
+            XCTAssertEqual(routesData?.primaryRoute().getRouteId(), expectedRoutes?.getRouteId())
+            XCTAssertEqual(legIndex, expectedLegIndex)
+            XCTAssertTrue(routesData?.alternativeRoutes().isEmpty ?? true)
             completion(expectedResult.mapError { $0 as Error })
         }
 
-        let coordinator = RoutesCoordinator(routesSetupHandler: { route, routeIndex, alternativeRoutes, completion in
-            handler(route, routeIndex, alternativeRoutes, completion)
+        let coordinator = RoutesCoordinator(routesSetupHandler: { routesData, routeIndex, completion in
+            handler(routesData, routeIndex, completion)
         }, alternativeRoutesSetupHandler: { _, _ in })
 
         for testCase in testCases {
@@ -71,8 +71,10 @@ private extension RoutesCoordinatorTests {
                 expectedResult = testCase.expectedResult
                     .map { (.init(alerts: []), []) }
                 expectedRoutes = routes
-                expectedRouteIndex = testCase.routeIndex
-                coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid, legIndex: testCase.routeIndex, alternativeRoutes: []) { result in
+                expectedLegIndex = testCase.legIndex
+                let routesData = RouteParser.createRoutesData(forPrimaryRoute: routes,
+                                                              alternativeRoutes: [])
+                coordinator.beginActiveNavigation(with: routesData, uuid: testCase.uuid, legIndex: testCase.legIndex) { result in
                     switch (result, expectedResult) {
                     case (.success(let routeInfo), .success(let expectedRouteInfo)):
                         XCTAssertEqual(routeInfo.0, expectedRouteInfo.0)

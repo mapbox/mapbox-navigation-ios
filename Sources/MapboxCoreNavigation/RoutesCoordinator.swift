@@ -9,7 +9,7 @@ final class RoutesCoordinator {
     }
 
     typealias RoutesResult = (mainRouteInfo: RouteInfo?, alternativeRoutes: [RouteAlternative])
-    typealias RoutesSetupHandler = (_ mainRoute: RouteInterface?, _ legIndex: UInt32, _ alternativeRoutes: [RouteInterface], _ completion: @escaping (Result<RoutesResult, Error>) -> Void) -> Void
+    typealias RoutesSetupHandler = (_ routesData: RoutesData?, _ legIndex: UInt32, _ completion: @escaping (Result<RoutesResult, Error>) -> Void) -> Void
     typealias AlternativeRoutesSetupHandler = (_ routes: [RouteInterface], _ completion: @escaping (Result<[RouteAlternative], Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
@@ -36,10 +36,9 @@ final class RoutesCoordinator {
     /// - Parameters:
     ///   - uuid: The UUID of the current active guidances session. All reroutes should have the same uuid.
     ///   - legIndex: The index of the leg along which to begin navigating.
-    func beginActiveNavigation(with route: RouteInterface,
+    func beginActiveNavigation(with routesData: RoutesData,
                                uuid: UUID,
                                legIndex: UInt32,
-                               alternativeRoutes: [RouteInterface],
                                completion: @escaping (Result<RoutesResult, Error>) -> Void) {
         lock.lock()
         if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
@@ -49,7 +48,7 @@ final class RoutesCoordinator {
         state = .activeNavigation(uuid)
         lock.unlock()
 
-        routesSetupHandler(route, legIndex, alternativeRoutes, completion)
+        routesSetupHandler(routesData, legIndex, completion)
     }
 
     /// - Parameters:
@@ -64,7 +63,7 @@ final class RoutesCoordinator {
         state = .passiveNavigation
         lock.unlock()
         // TODO: Is it safe to set the leg index to 0 when unsetting a route?
-        routesSetupHandler(nil, 0, [], completion)
+        routesSetupHandler(nil, 0, completion)
     }
     
     func updateAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {

@@ -281,59 +281,38 @@ open class RouteController: NSObject {
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
                                  completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
-        let routeOptions = indexedRouteResponse.validatedRouteOptions
-        
-        let encoder = JSONEncoder()
-        encoder.userInfo[.options] = routeOptions
         guard let newMainRoute = indexedRouteResponse.currentRoute,
-              let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
-                  completion?(.failure(RouteControllerError.failedToSerializeRoute))
-                  return
+              let routesData = indexedRouteResponse.routesData(routeParserType: routeParserType) else {
+            completion?(.failure(RouteControllerError.failedToSerializeRoute))
+            return
         }
-        
-        let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
-                                .url(forCalculating: routeOptions).absoluteString
-        
-        let parsedRoutes = routeParserType.parseDirectionsResponse(forResponse: routeJSONString,
-                                                                   request: routeRequest,
-                                                                   routeOrigin: indexedRouteResponse.responseOrigin)
-        if parsedRoutes.isValue(),
-           var routes = parsedRoutes.value as? [RouteInterface],
-           routes.count > indexedRouteResponse.routeIndex {
-            self.sharedNavigator.setRoutes(routes.remove(at: indexedRouteResponse.routeIndex),
-                                           uuid: sessionUUID,
-                                           legIndex: UInt32(legIndex),
-                                           alternativeRoutes: routes) { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let info):
-                    let alternativeRoutes = info.1.compactMap {
-                        AlternativeRoute(mainRoute: newMainRoute,
-                                         alternativeRoute: $0)
-                    }
-                    completion?(.success((info.0, alternativeRoutes)))
-                    
-                    let removedRoutes = self.continuousAlternatives.filter { alternative in
-                        !alternativeRoutes.contains(where: {
-                            alternative.id == $0.id
-                        })
-                    }
-                    self.continuousAlternatives = alternativeRoutes
-                    self.report(newAlternativeRoutes: alternativeRoutes,
-                                removedAlternativeRoutes: removedRoutes)
-                    
-                case .failure(let error):
-                    completion?(.failure(error))
+        self.sharedNavigator.setRoutes(routesData,
+                                       uuid: sessionUUID,
+                                       legIndex: UInt32(legIndex),
+                                       completion:  { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let info):
+                let alternativeRoutes = info.1.compactMap {
+                    AlternativeRoute(mainRoute: newMainRoute,
+                                     alternativeRoute: $0)
                 }
+                completion?(.success((info.0, alternativeRoutes)))
+                
+                let removedRoutes = self.continuousAlternatives.filter { alternative in
+                    !alternativeRoutes.contains(where: {
+                        alternative.id == $0.id
+                    })
+                }
+                self.continuousAlternatives = alternativeRoutes
+                self.report(newAlternativeRoutes: alternativeRoutes,
+                            removedAlternativeRoutes: removedRoutes)
+                
+            case .failure(let error):
+                completion?(.failure(error))
             }
-        } else if parsedRoutes.isError() {
-            let reason = (parsedRoutes.error as String?) ?? ""
-            completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
-        } else {
-            completion?(.failure(RouteControllerError.internalError))
-        }
+        })
     }
     
     /**
