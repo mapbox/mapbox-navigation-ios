@@ -424,8 +424,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil,
-                         customActivityType: CLActivityType? = nil
-    ) {
+                         customActivityType: CLActivityType? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels

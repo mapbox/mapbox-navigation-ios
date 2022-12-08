@@ -19,14 +19,14 @@ public class RouteControllerDataSourceFake: RouterDataSource {
 public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     private(set) var recentMessages: [String] = []
 
-    var returnedShouldReroute = true
-    var returnedShouldDiscard = false
-    var returnedShouldPreventReroutesWhenArrivingAt = true
-    var returnedDidArrive = true
-    var returnedShouldDisableBatteryMonitoring = true
+    public var returnedShouldReroute = true
+    public var returnedShouldDiscard = false
+    public var returnedShouldPreventReroutesWhenArrivingAt = true
+    public var returnedDidArrive = true
+    public var returnedShouldDisableBatteryMonitoring = true
 
-    var passedLocation: CLLocation?
-    var passedWaypoint: Waypoint?
+    public var passedLocation: CLLocation?
+    public var passedWaypoint: Waypoint?
 
     public func reset() {
         recentMessages.removeAll()
