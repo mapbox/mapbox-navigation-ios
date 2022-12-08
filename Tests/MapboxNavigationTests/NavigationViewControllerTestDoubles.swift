@@ -17,22 +17,35 @@ class SpeechSynthesizerStub: SpeechSynthesizing {
     var volume: Float = 1.0
     var isSpeaking: Bool = false
     var locale: Locale? = Locale.autoupdatingCurrent
-    var managesAudioSession: Bool = true
+    var managesAudioSession = true
+
+    var passedLocale: Locale?
+    var passedInstruction: SpokenInstruction?
+    var passedInstructions: [SpokenInstruction]?
+
+    var prepareIncomingSpokenInstructionsCalled = false
+    var speakCalled = false
+    var stopSpeakingCalled = false
+    var interruptSpeakingCalled = false
     
     func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
-        // do nothing
+        prepareIncomingSpokenInstructionsCalled = true
+        passedInstructions = instructions
+        passedLocale = locale
     }
     
     func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
-        // do nothing
+        speakCalled = true
+        passedInstruction = instruction
+        passedLocale = locale
     }
     
     func stopSpeaking() {
-        // do nothing
+        stopSpeakingCalled = true
     }
     
     func interruptSpeaking() {
-        // do nothing
+        interruptSpeakingCalled = true
     }
 }
 

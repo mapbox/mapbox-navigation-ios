@@ -143,6 +143,13 @@ extension MultiplexedSpeechSynthesizer: SpeechSynthesizingDelegate {
                                         with: nil)
         }
     }
+
+    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
+        speechSynthesizers.filter { $0.isSpeaking && $0 !== speechSynthesizer}
+            .forEach { $0.interruptSpeaking() }
+        
+        return delegate?.speechSynthesizer(speechSynthesizer, willSpeak: instruction)
+    }
     
     // Just forward delegate calls
     
@@ -152,9 +159,5 @@ extension MultiplexedSpeechSynthesizer: SpeechSynthesizingDelegate {
     
     public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
         delegate?.speechSynthesizer(speechSynthesizer, didInterrupt: interruptedInstruction, with: interruptingInstruction)
-    }
-    
-    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
-        return delegate?.speechSynthesizer(speechSynthesizer, willSpeak: instruction)
     }
 }

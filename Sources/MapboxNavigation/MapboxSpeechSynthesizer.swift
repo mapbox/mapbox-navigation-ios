@@ -141,9 +141,8 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
      - parameter data: audio data, as provided by `remoteSpeechSynthesizer`, to be played.
      */
     open func speak(_ instruction: SpokenInstruction, data: Data) {
-        
         if let audioPlayer = audioPlayer {
-            if let previousInstruction = previousInstruction, audioPlayer.isPlaying{
+            if let previousInstruction = previousInstruction, audioPlayer.isPlaying {
                 delegate?.speechSynthesizer(self,
                                             didInterrupt: previousInstruction,
                                             with: instruction)
