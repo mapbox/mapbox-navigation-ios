@@ -185,7 +185,7 @@ open class InstructionsCardViewController: UIViewController {
             instructionCollectionView.topAnchor.constraint(equalTo: view.safeTopAnchor,
                                                            constant: 10.0),
             instructionCollectionView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
-                                                                constant: -10.0),
+                                                                constant: -12.0),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
             instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
@@ -211,10 +211,10 @@ open class InstructionsCardViewController: UIViewController {
             } else {
                 if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
                     instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
-                                                                                                                  constant: 10.0))
+                                                                                                                  constant: 12.0))
                 } else {
                     instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
-                                                                                                                  constant: 10.0))
+                                                                                                                  constant: 12.0))
                 }
             }
         @unknown default:

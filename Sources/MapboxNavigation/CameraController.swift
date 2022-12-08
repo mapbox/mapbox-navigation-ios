@@ -134,6 +134,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         }
     }
 
+    // FIXME: With new insets, camera takes a moment to recenter when orientation changes
     private var viewportPadding: UIEdgeInsets {
         let courseViewMinimumInsets = UIEdgeInsets(top: 75.0, left: 75.0, bottom: 75.0, right: 75.0)
         var insets = navigationMapView.mapView.safeArea
@@ -144,13 +145,17 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
             fallthrough
         case .regular:
             insets.top += topBannerContainerView.bounds.height
-            insets.bottom += bottomBannerContainerView.bounds.height + 10.0
+            insets.bottom += bottomBannerContainerView.bounds.height + 12.0
         case .compact:
-            let inset = navigationViewData.navigationView.topBannerContainerView.frame.width + 10.0
+            let insetFromStackView = navigationViewData.navigationView.floatingStackView.frame.width + 20.0
+            let insetFromTopBanner = navigationViewData.navigationView.topBannerContainerView.frame.width +
+                                     navigationViewData.navigationView.speedLimitView.frame.width + 20.0
             if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                insets.right += inset
+                insets.right += insetFromTopBanner
+                insets.left += insetFromStackView
             } else {
-                insets.left += inset
+                insets.left += insetFromTopBanner
+                insets.right += insetFromStackView
             }
         @unknown default:
             break

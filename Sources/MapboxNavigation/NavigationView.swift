@@ -46,6 +46,8 @@ open class NavigationView: UIView {
     
     var compactConstraints = [NSLayoutConstraint]()
     var regularConstraints = [NSLayoutConstraint]()
+    var orientation = UIApplication.shared.statusBarOrientation
+    var margins: UILayoutGuide!
     
     // MARK: Data Configuration
     

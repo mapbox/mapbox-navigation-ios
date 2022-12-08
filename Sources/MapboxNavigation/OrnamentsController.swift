@@ -134,10 +134,11 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     private func updateMapViewOrnaments() {
         let bottomBannerHeight = navigationView.bottomBannerContainerView.bounds.height
         let bottomBannerVerticalOffset = navigationView.bounds.height - bottomBannerHeight - navigationView.bottomBannerContainerView.frame.origin.y
-        let defaultOffset: CGFloat = 10.0
-        let x: CGFloat = 10.0
+        let defaultOffset: CGFloat = 12.0
+        let x: CGFloat = 12.0
         let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
         
+        // TODO: Offset the logo margin to align with top/bottom banner in landscape mode
         navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x - navigationView.safeAreaInsets.left,
                                                                            y: y - navigationView.safeAreaInsets.bottom)
         

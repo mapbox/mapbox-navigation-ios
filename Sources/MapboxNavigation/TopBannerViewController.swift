@@ -62,6 +62,8 @@ open class TopBannerViewController: UIViewController {
         return [nextBannerView, statusView, junctionView]
     }
     
+    private var cornerRadius: CGFloat = 15
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -75,6 +77,7 @@ open class TopBannerViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         addConstraints()
+        setupRoundedCorners()
         setupInformationStackView()
     }
     
@@ -115,6 +118,15 @@ open class TopBannerViewController: UIViewController {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
+    }
+    
+    private func setupRoundedCorners() {
+        // FIXME: dynamically set corner radius based on which informationStackView subviews are hidden
+        instructionsBannerView.layer.cornerRadius = cornerRadius
+        instructionsBannerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        
+        nextBannerView.layer.cornerRadius = cornerRadius
+        nextBannerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
     }
     
     
