@@ -40,6 +40,7 @@
 * Fixed an issue where the `UserHaloCourseView` will be shown under reduced location accuracy mode with `NavigationMapview.reducedAccuracyActivatedMode` as `false`. Right now `UserHaloCourseView` will be applied in only one case: when user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`, and the `Precise Location` property in the settings of current application is disabled by user. ([#4285](https://github.com/mapbox/mapbox-navigation-ios/pull/4285))
 * Fixed an issue where `ExitView` used dark style when using InstructionCardViewController instead of light style for both highlighted and default states of the instruction card. ([#4160](https://github.com/mapbox/mapbox-navigation-ios/pull/4160))
 * Added `ExitView.highlightColor` and `GenericShield.highlightColor` properties that allow users to customize the highlight color of `ExitView` and `GenericShield`s to better fit their application `Style`. ([#4160](https://github.com/mapbox/mapbox-navigation-ios/pull/4160))
+* `SimulatedLocationManager`'s  initializer `SimulatedLocationManager.init(route:currentDistance:currentSpeed:)` is now public. ([#4276](https://github.com/mapbox/mapbox-navigation-ios/pull/4276))
 
 ## v2.9.0
 
