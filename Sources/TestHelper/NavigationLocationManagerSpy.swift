@@ -8,6 +8,12 @@ public class NavigationLocationManagerSpy: NavigationLocationManager {
     public var stopUpdatingHeadingCalled = false
     public var requestLocationCalled = false
 
+    public var returnedLocation: CLLocation?
+
+    public override var location: CLLocation? {
+        return returnedLocation
+    }
+
     public override func stopUpdatingLocation() {
         stopUpdatingLocationCalled = true
     }

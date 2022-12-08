@@ -24,7 +24,7 @@ class SimulatedLocationManagerTests: TestCase {
         ]
         let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: NavigationMatchOptions(coordinates: coordinates))![0]
         let locationManager = SimulatedLocationManager(route: route)
-        let locationManagerSpy = SimulatedLocationManagerSpy()
+        let locationManagerSpy = CLLocationManagerDelegateSpy()
         locationManager.delegate = locationManagerSpy
         
         while locationManager.currentDistance < route.shape?.distance() ?? 0 {
@@ -41,7 +41,7 @@ class SimulatedLocationManagerTests: TestCase {
     }
 }
 
-class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {
+class CLLocationManagerDelegateSpy: NSObject, CLLocationManagerDelegate {
     var locations = [CLLocation]()
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

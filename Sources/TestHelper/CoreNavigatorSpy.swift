@@ -54,6 +54,8 @@ public final class CoreNavigatorSpy: CoreNavigator {
         passedLegIndex = nil
         passedAlternativeRoutes = nil
 
+        pauseCalled = false
+        resumeCalled = false
         restartNavigatorCalled = false
 
         setAlternativeRoutesCalled = false
@@ -125,6 +127,8 @@ public final class CoreNavigatorSpy: CoreNavigator {
 
     public static func reset() {
         shared = CoreNavigatorSpy()
+        Self.isSharedInstanceCreated = true
+        Self.datasetProfileIdentifier = .automobile
     }
 
     public init() {}

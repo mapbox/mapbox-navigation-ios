@@ -181,7 +181,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
         announceSimulationDidChange(.willBeginSimulation)
         
-        simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
+        simulatedLocationSource = simulatedLocationSourceType.init(routeProgress: progress)
         simulatedLocationSource?.delegate = self
         simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()
@@ -428,9 +428,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
+        self.simulatedLocationSourceType = SimulatedLocationManager.self
         super.init()
-        resumeNotifications()
-        
+
         _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
             guard let self = self,
                   self.simulationMode == .onPoorGPS ||
@@ -438,6 +438,20 @@ public class MapboxNavigationService: NSObject, NavigationService {
             self.simulate(intent: .poorGPS)
         }
         
+        commonInit(routerType: routerType,
+                   indexedRouteResponse: indexedRouteResponse,
+                   customRoutingProvider: customRoutingProvider,
+                   eventsManagerType: eventsManagerType,
+                   customActivityType: customActivityType)
+    }
+
+    private func commonInit(routerType: Router.Type?,
+                            indexedRouteResponse: IndexedRouteResponse,
+                            customRoutingProvider: RoutingProvider?,
+                            eventsManagerType: NavigationEventsManager.Type?,
+                            customActivityType: CLActivityType?) {
+        resumeNotifications()
+
         let routerType = routerType ?? DefaultRouter.self
         _router = routerType.init(indexedRouteResponse: indexedRouteResponse,
                                   customRoutingProvider: customRoutingProvider,
@@ -485,6 +499,30 @@ public class MapboxNavigationService: NSObject, NavigationService {
                   routerType: routerType,
                   customActivityType: customActivityType)
     }
+
+    init(indexedRouteResponse: IndexedRouteResponse,
+         customRoutingProvider: RoutingProvider?,
+         credentials: Credentials,
+         locationSource: NavigationLocationManager,
+         eventsManagerType: NavigationEventsManager.Type?,
+         simulating simulationMode: SimulationMode,
+         routerType: Router.Type?,
+         customActivityType: CLActivityType?,
+         simulatedLocationSourceType: SimulatedLocationManager.Type,
+         poorGPSTimer: DispatchTimer) {
+        self.nativeLocationSource = locationSource
+        self.credentials = credentials
+        self.simulationMode = simulationMode
+        self.simulatedLocationSourceType = simulatedLocationSourceType
+        super.init()
+
+        _poorGPSTimer = poorGPSTimer
+        commonInit(routerType: routerType,
+                   indexedRouteResponse: indexedRouteResponse,
+                   customRoutingProvider: customRoutingProvider,
+                   eventsManagerType: eventsManagerType,
+                   customActivityType: customActivityType)
+    }
     
     deinit {
         suspendNotifications()
@@ -530,6 +568,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
      The active location simulator. Only used during `SimulationOption.always`, `SimluatedLocationManager.onPoorGPS` and `SimluatedLocationManager.inTunnels`. If there is no simulation active, this property is `nil`.
      */
     private var simulatedLocationSource: SimulatedLocationManager?
+
+    private let simulatedLocationSourceType: SimulatedLocationManager.Type
     
     /**
      A reference to a MapboxDirections service. Used for rerouting.
@@ -725,7 +765,7 @@ extension MapboxNavigationService: RouterDelegate {
             eventsManager.arriveAtWaypoint()
         }
         
-        let shouldAutomaticallyAdvance =  delegate?.navigationService(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
+        let shouldAutomaticallyAdvance = delegate?.navigationService(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
         if !shouldAutomaticallyAdvance {
             stop()
         }

@@ -121,7 +121,6 @@ class NavigationViewControllerTests: TestCase {
         initialRouteResponse = nil
         newRoute = nil
         newRouteResponse = nil
-        Navigator._recreateNavigator()
         UNUserNotificationCenter.removeMock()
     }
     

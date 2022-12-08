@@ -9,10 +9,6 @@ import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
 class RouteControllerTests: TestCase {
-    final class RouterDataSourceSpy: RouterDataSource {
-        var locationManagerType: NavigationLocationManager.Type = NavigationLocationManagerSpy.self
-    }
-
     private let expectationsTimeout = 0.5
     
     private var locationManagerSpy: NavigationLocationManagerSpy!
@@ -79,7 +75,7 @@ class RouteControllerTests: TestCase {
         routeResponse = makeRouteResponse()
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routeProgress = .init(route: routeResponse.routes![0], options: options)
-        nativeRoute = TestRouteProvider.createRoute(routeResponse: response)
+        nativeRoute = TestRouteProvider.createRoute(routeResponse: makeRouteResponse())
 
         singleRouteResponse = makeSingleRouteResponse()
         multilegRouteResponse = makeMultilegRouteResponse()
@@ -94,7 +90,6 @@ class RouteControllerTests: TestCase {
         RouteParserSpy.returnedRoutes = nil
         RouteParserSpy.returnedError = nil
         MapboxRoutingProvider.__testRoutesStub = nil
-        Navigator._recreateNavigator()
         resetNavigationSettings()
         
         super.tearDown()
@@ -109,7 +104,7 @@ class RouteControllerTests: TestCase {
         XCTAssertEqual(controller.routeProgress.legIndex, 0)
     }
 
-    func testConfigurerefreshesRoute() {
+    func testConfigureRefreshesRoute() {
         indexedRouteResponse.validatedRouteOptions.refreshingEnabled = true
         indexedRouteResponse.validatedRouteOptions.profileIdentifier = .automobileAvoidingTraffic
         let controller1 = RouteController(indexedRouteResponse: indexedRouteResponse,
@@ -365,7 +360,7 @@ class RouteControllerTests: TestCase {
             callbackExpectation.fulfill()
         }
 
-        expectation(forNotification: .routeControllerProgressDidChange, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let newLocation = userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
             let rawLocation = userInfo?[RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation
@@ -398,7 +393,7 @@ class RouteControllerTests: TestCase {
             callbackExpectation.fulfill()
         }
 
-        expectation(forNotification: .routeControllerProgressDidChange, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
             let updatedRoadProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             XCTAssertEqual(updatedRoadProgress?.currentLegProgress.currentStepProgress.distanceTraveled, expectedDistanceTraveled)
             return true
@@ -424,7 +419,7 @@ class RouteControllerTests: TestCase {
                                                                          activeGuidanceInfo: activeGuidanceInfo)
         let userInfo = [Navigator.NotificationUserInfoKey.statusKey : status]
 
-        expectation(forNotification: .routeControllerProgressDidChange, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
             let progress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
 
             XCTAssertEqual(progress?.legIndex, 1)
@@ -442,7 +437,7 @@ class RouteControllerTests: TestCase {
 
     func testUpdateRoadName() {
         let status = TestNavigationStatusProvider.createNavigationStatus()
-        expectation(forNotification: .currentRoadNameDidChange, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .currentRoadNameDidChange, object: routeController) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let roadName = userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
             let routeShieldRepresentation = userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
@@ -459,7 +454,7 @@ class RouteControllerTests: TestCase {
 
     func testDoNotUpdateRouteLegProgressIfTooManyStepsLeft() {
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .complete)
-        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateRouteLegProgress(status: status)
@@ -470,7 +465,7 @@ class RouteControllerTests: TestCase {
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .complete)
         let destination = route.legs[0].destination
 
-        expectation(forNotification: .didArriveAtWaypoint, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .didArriveAtWaypoint, object: routeController) { (notification) -> Bool in
             let waypoint = notification.userInfo?[RouteController.NotificationUserInfoKey.waypointKey] as? MapboxDirections.Waypoint
             XCTAssertEqual(waypoint, destination)
             return true
@@ -498,7 +493,7 @@ class RouteControllerTests: TestCase {
             callbackExpectation.fulfill()
         }
 
-        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .didArriveAtWaypoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateRouteLegProgress(status: status)
@@ -1426,7 +1421,7 @@ class RouteControllerTests: TestCase {
 
     func testDoNotUpdateSpokenInstructionProgressIfNilVoiceInstruction() {
         let status = TestNavigationStatusProvider.createNavigationStatus()
-        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateSpokenInstructionProgress(status: status, willReRoute: false)
@@ -1437,7 +1432,7 @@ class RouteControllerTests: TestCase {
     func testDoNotUpdateSpokenInstructionProgressIfWillReroute() {
         let voiceInstruction = VoiceInstruction(ssmlAnnouncement: "a", announcement: "b", remainingStepDistance: 10, index: 0)
         let status = TestNavigationStatusProvider.createNavigationStatus(voiceInstruction: voiceInstruction)
-        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateSpokenInstructionProgress(status: status, willReRoute: true)
@@ -1477,7 +1472,7 @@ class RouteControllerTests: TestCase {
     func testDoNotUpdateVisualInstructionProgressIfNilBannerInstruction() {
         let status = TestNavigationStatusProvider.createNavigationStatus()
         routeController.rawLocation = rawLocation
-        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateVisualInstructionProgress(status: status)
@@ -1487,7 +1482,7 @@ class RouteControllerTests: TestCase {
 
     func testDoNotUpdateVisualInstructionProgressIfNilFirstLocation() {
         let status = TestNavigationStatusProvider.createNavigationStatus(bannerInstruction: bannerInstruction)
-        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateVisualInstructionProgress(status: status)
@@ -1498,7 +1493,7 @@ class RouteControllerTests: TestCase {
     func testDoNotUpdateVisualInstructionProgressIfNilFirstLocationVisualInstruction() {
         let status = TestNavigationStatusProvider.createNavigationStatus(bannerInstruction: bannerInstruction)
         routeController.rawLocation = rawLocation
-        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        let notificationExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
         notificationExpectation.isInverted = true
 
         routeController.updateVisualInstructionProgress(status: status)

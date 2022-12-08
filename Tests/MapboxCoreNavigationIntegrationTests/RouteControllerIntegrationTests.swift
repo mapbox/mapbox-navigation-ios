@@ -10,23 +10,23 @@ import MapboxNavigationNative
 
 class RouteControllerIntegrationTests: TestCase {
     var replayManager: ReplayLocationManager?
+    var routeResponse: RouteResponse!
+    var routeController: RouteController!
 
     override func setUp() {
         super.setUp()
-        reset()
+
+        routeResponse = makeRouteResponse()
     }
 
     override func tearDown() {
+        replayManager?.stopUpdatingLocation()
+
+        routeController = nil
         replayManager = nil
-        reset()
+        MapboxRoutingProvider.__testRoutesStub = nil
 
         super.tearDown()
-    }
-
-    private func reset() {
-        MapboxRoutingProvider.__testRoutesStub = nil
-        Navigator._recreateNavigator()
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
     }
 
     func testRouteSnappingOvershooting() {
@@ -38,9 +38,9 @@ class RouteControllerIntegrationTests: TestCase {
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
-        let routeController = RouteController(indexedRouteResponse: routeResponse,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: routeResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
         locationManager.delegate = routeController
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
@@ -92,9 +92,9 @@ class RouteControllerIntegrationTests: TestCase {
             return
         }
 
-        let routeController = RouteController(indexedRouteResponse: routeResponse,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: routeResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
 
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
@@ -184,9 +184,9 @@ class RouteControllerIntegrationTests: TestCase {
             }
         }
 
-        let routeController = RouteController(indexedRouteResponse: routeResponse,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: routeResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
 
         routeController.delegate = routerDelegateSpy
 
@@ -219,9 +219,9 @@ class RouteControllerIntegrationTests: TestCase {
             alternativesExpectation.fulfill()
         }
 
-        let routeController = RouteController(indexedRouteResponse: routeResponse,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: routeResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
 
         routeController.delegate = routerDelegateSpy
 
@@ -259,9 +259,9 @@ class RouteControllerIntegrationTests: TestCase {
 
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0)
-        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
-                                              customRoutingProvider: routingProviderStub,
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: routingProviderStub,
+                                          dataSource: self)
 
         let locationManager = ReplayLocationManager(locations: offRouteReplayLocation)
         locationManager.startDate = Date()
@@ -296,9 +296,9 @@ class RouteControllerIntegrationTests: TestCase {
 
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0)
-        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
-                                              customRoutingProvider: nil,
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: nil,
+                                          dataSource: self)
 
         let routerDelegateSpy = RouterDelegateSpy()
         let modifyExpectation = expectation(description: "Reroute should request options editing.")
@@ -320,16 +320,16 @@ class RouteControllerIntegrationTests: TestCase {
     }
 
     func testSwitchToOnlineRoute() {
-        let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
                                                         routeIndex: 0,
                                                         responseOrigin: .onboard)
-        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
 
-        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: nil)
+        expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController)
 
         let routeOptions = indexedRouteResponse.validatedRouteOptions
         let encoder = JSONEncoder()
@@ -388,9 +388,9 @@ class RouteControllerIntegrationTests: TestCase {
                                                      routeIndex: 0)))
         }
 
-        let routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
-                                              customRoutingProvider: routingProviderStub,
-                                              dataSource: self)
+        routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: routingProviderStub,
+                                          dataSource: self)
         let routerDelegateSpy = RouterDelegateSpy()
         let routeExpectation = XCTestExpectation(description: "Proactive ReRoute should be called")
 

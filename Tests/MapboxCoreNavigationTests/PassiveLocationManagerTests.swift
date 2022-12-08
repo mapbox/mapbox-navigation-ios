@@ -38,7 +38,6 @@ class PassiveLocationManagerTests: TestCase {
     override func tearDown() {
         super.tearDown()
         PassiveLocationManager.historyDirectoryURL = nil
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
         HistoryRecorder._recreateHistoryRecorder()
     }
 
@@ -233,7 +232,7 @@ class PassiveLocationManagerTests: TestCase {
         let originalSpeedLimit = SpeedLimit(speedKmph: 120, localeUnit: .milesPerHour, localeSign: .mutcd)
         let status = navigationStatus(with: originalSpeedLimit)
 
-        expectation(forNotification: .passiveLocationManagerDidUpdate, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .passiveLocationManagerDidUpdate, object: passiveLocationManager) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let newLocation = userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation
             let rawLocation = userInfo?[PassiveLocationManager.NotificationUserInfoKey.rawLocationKey] as? CLLocation
@@ -277,7 +276,7 @@ class PassiveLocationManagerTests: TestCase {
         let originalSpeedLimit = SpeedLimit(speedKmph: 120, localeUnit: .kilometresPerHour, localeSign: .vienna)
         let status = navigationStatus(with: originalSpeedLimit)
 
-        expectation(forNotification: .passiveLocationManagerDidUpdate, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .passiveLocationManagerDidUpdate, object: passiveLocationManager) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let speedLimit = userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
             let signStandard = userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
@@ -301,7 +300,7 @@ class PassiveLocationManagerTests: TestCase {
         passiveLocationManager.updateLocation(location)
         let status = navigationStatus()
 
-        expectation(forNotification: .passiveLocationManagerDidUpdate, object: nil) { (notification) -> Bool in
+        expectation(forNotification: .passiveLocationManagerDidUpdate, object: passiveLocationManager) { (notification) -> Bool in
             let userInfo = notification.userInfo
 
             XCTAssertNil(userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey])

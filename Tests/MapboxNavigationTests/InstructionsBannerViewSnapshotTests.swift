@@ -515,24 +515,11 @@ class InstructionBannerTest: TestCase {
                                primaryInstruction: [VisualInstruction.Component],
                                secondaryInstruction: [VisualInstruction.Component]?,
                                drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
-        let primary = VisualInstruction(text: "Instruction",
-                                        maneuverType: maneuverType,
-                                        maneuverDirection: maneuverDirection,
-                                        components: primaryInstruction)
-        var secondary: VisualInstruction? = nil
-        if let secondaryInstruction = secondaryInstruction {
-            secondary = VisualInstruction(text: "Instruction",
-                                          maneuverType: maneuverType,
-                                          maneuverDirection: maneuverDirection,
-                                          components: secondaryInstruction)
-        }
-
-        return VisualInstructionBanner(distanceAlongStep: 482.803,
-                                       primary: primary,
-                                       secondary: secondary,
-                                       tertiary: nil,
-                                       quaternary: nil,
-                                       drivingSide: drivingSide)
+        return Fixture.makeVisualInstruction(maneuverType: maneuverType,
+                                             maneuverDirection: maneuverDirection,
+                                             primaryInstruction: primaryInstruction,
+                                             secondaryInstruction: secondaryInstruction,
+                                             drivingSide: drivingSide)
     }
     
     func cacheSprite(for styleURI: StyleURI = .navigationDay) {
