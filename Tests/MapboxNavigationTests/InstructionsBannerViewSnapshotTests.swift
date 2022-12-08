@@ -296,7 +296,6 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
     }
 
     func testExitShields() {
-        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let view = instructionsView()
         styleInstructionsView(view)
         view.maneuverView.isStart = true
@@ -311,14 +310,12 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
         let secondary = VisualInstruction.Component.text(text: .init(text: "Anytown Avenue", abbreviation: "Anytown Ave", abbreviationPriority: 0))
 
         DayStyle().apply()
-        window.addSubview(view)
 
         view.update(for: makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
 
     func testGenericShields() {
-        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let view = instructionsView()
         styleInstructionsView(view)
         view.maneuverView.isStart = true
@@ -331,7 +328,6 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
 
         let secondary = [VisualInstruction.Component.text(text: .init(text: "Vetinari Way", abbreviation: nil, abbreviationPriority: nil))]
 
-        window.addSubview(view)
         DayStyle().apply()
 
         view.update(for: makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
@@ -349,18 +345,20 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
             override func apply() {
                 super.apply()
                 
-                PrimaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = UIColor.green
-                SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = UIColor.red
+                let traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+                PrimaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.green
+                SecondaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.red
                 
-                GenericRouteShield.appearance().foregroundColor = UIColor.blue
-                GenericRouteShield.appearance().borderWidth = 1.0
+                GenericRouteShield.appearance(for: traitCollection).borderWidth = 1.0
+                GenericRouteShield.appearance(for: traitCollection).foregroundColor = UIColor.blue
+                GenericRouteShield.appearance(for: traitCollection).borderColor = UIColor.blue
                 
-                ExitView.appearance().foregroundColor = UIColor.yellow
-                ExitView.appearance().borderWidth = 1.0
+                ExitView.appearance(for: traitCollection).borderWidth = 1.0
+                ExitView.appearance(for: traitCollection).foregroundColor = UIColor.yellow
+                ExitView.appearance(for: traitCollection).borderColor = UIColor.yellow
             }
         }
         
-        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let instructionsBannerView = instructionsView()
         styleInstructionsView(instructionsBannerView)
         instructionsBannerView.distance = 1400 // meters
@@ -392,7 +390,6 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
                                           abbreviationPriority: nil)),
         ]
         
-        window.addSubview(instructionsBannerView)
         CustomDayStyle().apply()
         
         let visualInstructionBanner = makeVisualInstruction(.takeOffRamp,
@@ -416,13 +413,20 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
             override func apply() {
                 super.apply()
                 
-                PrimaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = UIColor.green
-                GenericRouteShield.appearance().highlightColor = UIColor.blue
-                ExitView.appearance().highlightColor = UIColor.yellow
+                let traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+                // Check that PrimaryLabel.normalTextColor is not used
+                PrimaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.blue
+                PrimaryLabel.appearance(for: traitCollection).textColorHighlighted = UIColor.green
+                
+                // Check that SecondaryLabel.textColorHighlighted is not used
+                SecondaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.red
+                SecondaryLabel.appearance(for: traitCollection).textColorHighlighted = UIColor.yellow
+                
+                GenericRouteShield.appearance(for: traitCollection).highlightColor = UIColor.blue
+                ExitView.appearance(for: traitCollection).highlightColor = UIColor.yellow
             }
         }
         
-        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let instructionsBannerView = instructionsView()
         styleInstructionsView(instructionsBannerView)
         instructionsBannerView.distance = 50
@@ -441,24 +445,22 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
         ]
         
         let secondaryInstruction: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: nil),
-                   alternativeText: .init(text: "SLE",
-                                          abbreviation: nil,
-                                          abbreviationPriority: nil)),
+            .exitCode(text: .init(text: "15",
+                                  abbreviation: nil,
+                                  abbreviationPriority: nil)),
             .delimiter(text: .init(text: "/",
                                    abbreviation: nil,
                                    abbreviationPriority: nil)),
             .image(image: .init(imageBaseURL: nil),
-                   alternativeText: .init(text: "TPE",
+                   alternativeText: .init(text: "CTE",
                                           abbreviation: nil,
                                           abbreviationPriority: nil)),
         ]
         
         instructionsBannerView.primaryLabel.showHighlightedTextColor = true
-        instructionsBannerView.secondaryLabel.showHighlightedTextColor = true
+        instructionsBannerView.secondaryLabel.showHighlightedTextColor = false
 
         CustomDayStyle().apply()
-        window.addSubview(instructionsBannerView)
 
         let visualInstructionBanner = makeVisualInstruction(.takeOffRamp,
                                                             .right,
