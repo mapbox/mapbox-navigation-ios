@@ -416,7 +416,7 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
                 let traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
                 // Check that PrimaryLabel.normalTextColor is not used
                 PrimaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.blue
-                PrimaryLabel.appearance(for: traitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).textColorHighlighted = UIColor.green
+                PrimaryLabel.appearance(for: traitCollection).textColorHighlighted = UIColor.green
                 
                 // Check that SecondaryLabel.textColorHighlighted is not used
                 SecondaryLabel.appearance(for: traitCollection).normalTextColor = UIColor.red
