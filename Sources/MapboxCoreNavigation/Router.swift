@@ -39,6 +39,11 @@ public struct IndexedRouteResponse {
         return routeResponse.routes?[routeIndex]
     }
     
+    /**
+     Parses routes in the current response, accounting `routeIndex` to be pointing to the primary route, while all the others being `AlternativeRoute`s.
+     
+     - returns: Array of `AlternativeRoutes` containing relative information to `currentRoute`.
+     */
     public func parseAlternativeRoutes() -> [AlternativeRoute] {
         guard let mainRoute = currentRoute,
               let routesData = routesData(routeParserType: RouteParser.self) else {
