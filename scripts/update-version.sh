@@ -59,13 +59,13 @@ pod update
 cd -
 
 cd Sources/MapboxCoreNavigation/
-cp Info.plist MBXInfo.plist
-plutil -replace CFBundleName -string 'MapboxCoreNavigation' MBXInfo.plist
+cp Info.plist Resources/MBXInfo.plist
+plutil -replace CFBundleName -string 'MapboxCoreNavigation' Resources/MBXInfo.plist
 cd -
 
 cd Sources/MapboxNavigation/
-cp Info.plist MBXInfo.plist
-plutil -replace CFBundleName -string 'MapboxNavigation' MBXInfo.plist
+cp Info.plist Resources/MBXInfo.plist
+plutil -replace CFBundleName -string 'MapboxNavigation' Resources/MBXInfo.plist
 cd -
 
 step "Updating changelog to version ${SHORT_VERSION}…"

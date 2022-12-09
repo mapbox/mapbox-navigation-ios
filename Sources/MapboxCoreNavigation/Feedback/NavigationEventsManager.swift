@@ -186,9 +186,7 @@ open class NavigationEventsManager {
     }
 
     func start() {
-        guard let shortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
-            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
-        }
+        let shortVersion = Bundle.navigationSDKVersion
         eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
     }
     

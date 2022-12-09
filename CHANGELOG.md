@@ -6,6 +6,7 @@
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v122._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/122.0.0). ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * MapboxNavigation now requires [MapboxMaps v10.10.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.0-rc.1). ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* Cocoapods podspec for MapboxCoreNavigation now references resources that will be copied into the application. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 
 ### Routing
 
@@ -41,6 +42,8 @@
 * Fixed an issue where `ExitView` used dark style when using InstructionCardViewController instead of light style for both highlighted and default states of the instruction card. ([#4160](https://github.com/mapbox/mapbox-navigation-ios/pull/4160))
 * Added `ExitView.highlightColor` and `GenericShield.highlightColor` properties that allow users to customize the highlight color of `ExitView` and `GenericShield`s to better fit their application `Style`. ([#4160](https://github.com/mapbox/mapbox-navigation-ios/pull/4160))
 * `SimulatedLocationManager`'s  initializer `SimulatedLocationManager.init(route:currentDistance:currentSpeed:)` is now public. ([#4276](https://github.com/mapbox/mapbox-navigation-ios/pull/4276))
+* Added a console message when a newer version of Navigation SDK is available. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
+* Fixed an issue where `Bundle.string(forMapboxNavigationInfoDictionaryKey:)` and `Bundle.string(forMapboxCoreNavigationInfoDictionaryKey` returned values from the application bundle instead of the Navigation SDK when statically linking using Cocoapods. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 
 ## v2.9.0
 

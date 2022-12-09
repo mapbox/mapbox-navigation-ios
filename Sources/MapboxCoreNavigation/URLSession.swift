@@ -56,10 +56,8 @@ extension URLSession {
             
             var stringForShortVersion: String? {
                 switch name {
-                case mapboxNavigationName:
-                    return Bundle.string(forMapboxNavigationInfoDictionaryKey: "CFBundleShortVersionString")
-                case mapboxCoreNavigationName:
-                    return Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString")
+                case mapboxNavigationName, mapboxCoreNavigationName:
+                    return Bundle.navigationSDKVersion
                 default:
                     return bundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
                 }
