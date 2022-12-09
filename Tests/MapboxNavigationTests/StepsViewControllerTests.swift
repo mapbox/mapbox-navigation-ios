@@ -46,32 +46,33 @@ class StepsViewControllerTests: TestCase {
         let stepsViewController = dependencies.stepsViewController
 
         XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
-//        measure {
-//            // Measure Performance - stepsViewController.rebuildDataSourceIfNecessary()
-//        }
         
         let containsStepsTableView = stepsViewController.view.subviews.contains(stepsViewController.tableView)
         XCTAssertTrue(containsStepsTableView, "StepsViewController does not have a table subview")
         XCTAssertNotNil(stepsViewController.tableView, "TableView not initiated")
     }
 
-    /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
-    func x_testUpdateCellPerformance() {
+    func testUpdateCell() {
         let stepsViewController = dependencies.stepsViewController
-        
+
         // Test that Steps ViewController viewLoads
         XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
-        
-        let stepsTableView = stepsViewController.tableView!
-        
-        measure {
-            for i in 0..<stepsTableView.numberOfRows(inSection: 0) {
-                let indexPath = IndexPath(row: i, section: 0)
-                if let cell = stepsTableView.cellForRow(at: indexPath) as? StepTableViewCell {
-                    stepsViewController.updateCell(cell, at: indexPath)
-                }
-            }
-        }
+
+        let indexPath = IndexPath(row: 0, section: 0)
+        let cell = StepTableViewCell()
+
+        let expectedInstruction = Constants.route.legs[0].steps[1].instructionsDisplayedAlongStep?.last
+        cell.separatorView.isHidden = true
+        stepsViewController.updateCell(cell, at: indexPath)
+
+        XCTAssertEqual(cell.instructionsView.primaryLabel.instruction, expectedInstruction?.primaryInstruction)
+        XCTAssertEqual(cell.instructionsView.secondaryLabel.instruction, expectedInstruction?.secondaryInstruction)
+        XCTAssertTrue(cell.instructionsView.stepListIndicatorView.isHidden)
+        XCTAssertFalse(cell.separatorView.isHidden)
+
+        let lastIndexPath = IndexPath(row: 3, section: 0)
+        stepsViewController.updateCell(cell, at: lastIndexPath)
+        XCTAssertTrue(cell.separatorView.isHidden)
     }
 }
 

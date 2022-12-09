@@ -376,8 +376,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
                                                              distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
 
-    //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.
-    func x_testLocationShouldUseHeading() {
+    func testLocationCourse() {
         dependencies = createDependencies()
 
         let navigation = dependencies.navigationService
@@ -385,6 +384,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
 
         XCTAssertEqual(navigation.router.location!.course, firstLocation.course, "Course should be using course")
+        XCTAssertNil(navigation.router.heading)
 
         let invalidCourseLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: firstLocation.altitude, horizontalAccuracy: firstLocation.horizontalAccuracy, verticalAccuracy: firstLocation.verticalAccuracy, course: -1, speed: firstLocation.speed, timestamp: firstLocation.timestamp)
 
@@ -393,7 +393,8 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [invalidCourseLocation])
         navigation.locationManager!(navigation.locationManager, didUpdateHeading: heading)
 
-        XCTAssertEqual(navigation.router.location!.course, mbTestHeading, "Course should be using bearing")
+        XCTAssertEqual(navigation.router.location!.course, invalidCourseLocation.course, "Course should be using invalid location course")
+        XCTAssertEqual(navigation.router.heading, heading)
     }
 
     // MARK: - Events & Delegation

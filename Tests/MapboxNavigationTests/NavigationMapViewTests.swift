@@ -142,7 +142,7 @@ class NavigationMapViewTests: TestCase {
 
     func testInitWithCustomMapView() {
         let customMapView = MapView(frame: .zero)
-        var navigationMapView = NavigationMapView(frame: .zero, navigationCameraType: .carPlay, mapView: customMapView)
+        let navigationMapView = NavigationMapView(frame: .zero, navigationCameraType: .carPlay, mapView: customMapView)
         XCTAssertEqual(navigationMapView.navigationCamera.type, .carPlay)
         XCTAssertEqual(navigationMapView.mapView, customMapView)
     }

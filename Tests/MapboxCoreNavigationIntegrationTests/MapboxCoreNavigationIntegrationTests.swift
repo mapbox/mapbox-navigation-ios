@@ -275,8 +275,7 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         }
     }
 
-    // NOTE: Investigate when makes it fail on CI and run well locally.
-    func disabled_testArrive() {
+    func testArrive() {
         let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let replayLocations = Array(Fixture.generateTrace(for: route).shiftedToPresent().qualified()[0..<100])
         let routeResponse = RouteResponse(httpResponse: nil,

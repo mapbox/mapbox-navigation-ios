@@ -109,16 +109,4 @@ class DataCacheTests: TestCase {
         XCTAssertEqual(cache.fileCache.cacheKeyForKey("https://cool.com/neat"), cache.fileCache.cacheKeyForKey("https://cool.com/neat"))
         XCTAssertEqual(cache.fileCache.cacheKeyForKey("-"), cache.fileCache.cacheKeyForKey("-"))
     }
-
-    /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
-    func x_testCacheKeyPerformance() {
-        let instructionTurn = "Turn left"
-        let instructionContinue = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 3 miles</prosody></amazon:effect></speak>"
-        measure {
-            for _ in 0...1000 {
-                _ = cache.fileCache.cacheKeyForKey(instructionTurn)
-                _ = cache.fileCache.cacheKeyForKey(instructionContinue)
-            }
-        }
-    }
 }
