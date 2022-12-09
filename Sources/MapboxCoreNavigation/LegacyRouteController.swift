@@ -271,7 +271,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         super.init()
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
-        checkForUpdates()
+        Bundle.checkForNavigationSDKUpdates()
         checkForLocationUsageDescription()
     }
 
@@ -281,25 +281,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         if let del = delegate, del.routerShouldDisableBatteryMonitoring(self) {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
-    }
-
-    private func checkForUpdates() {
-        #if TARGET_IPHONE_SIMULATOR
-        guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
-        let version = VersionProvider.version(for: .mapboxCoreNavigation)
-            let latestVersion = String(describing: version)
-            _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
-                if let _ = error { return }
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
-
-                guard let data = data, let currentVersion = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) else { return }
-
-                if latestVersion != currentVersion {
-                    let updateString = NSLocalizedString("UPDATE_AVAILABLE", bundle: .mapboxCoreNavigation, value: "Mapbox Navigation SDK for iOS version %@ is now available.", comment: "Inform developer an update is available")
-                    Log.warning(String.localizedStringWithFormat(updateString, latestVersion), "https://github.com/mapbox/mapbox-navigation-ios/releases/tag/v\(latestVersion)", category: .settings)
-                }
-            }).resume()
-        #endif
     }
 
     private func checkForLocationUsageDescription() {
