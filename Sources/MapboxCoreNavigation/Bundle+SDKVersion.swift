@@ -50,10 +50,11 @@ extension Bundle {
         let navigationBundles: [Bundle] = [.mapboxCoreNavigation, .mapboxNavigationIfInstalled].compactMap { $0 }
 
         guard let SDKBundle = navigationBundles.first(where: { $0 !== Bundle.main }) else {
-            // Looks like SDK was linked statically
-            // In this case SDK version cannot be resolved without the MBXInfo.plist file
-            // Check that you copy this resource to your app's bundle or link Navigation SDK dynamically
-            preconditionFailure("Unable to resolve Navigation SDK version")
+            preconditionFailure(
+                "Unable to resolve Navigation SDK version, looks like it was linked statically. " +
+                "In this case SDK version cannot be resolved without the MBXInfo.plist file. " +
+                "Check that you copy this resource to your app's bundle or link Navigation SDK dynamically."
+            )
         }
 
         if let sdkVersion = SDKBundle.object(forInfoDictionaryKey: bundleShortVersionKey) as? String {
