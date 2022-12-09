@@ -21,11 +21,6 @@ class ArrivalController: NavigationComponentDelegate {
     var destination: Waypoint?
     var showsEndOfRoute: Bool = true
     
-    var endOfRouteIsActive: Bool {
-        let show = navigationViewData.navigationView.endOfRouteShowConstraint
-        return navigationViewData.navigationView.endOfRouteView != nil && show?.isActive ?? false
-    }
-    
     private lazy var endOfRouteViewController: EndOfRouteViewController = {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let viewController = storyboard.instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
@@ -51,11 +46,10 @@ class ArrivalController: NavigationComponentDelegate {
         
         embedEndOfRoute(into: viewController, onDismiss: onDismiss)
         endOfRouteViewController.destination = destination
-        navigationViewData.navigationView.endOfRouteView?.isHidden = false
-        
-        navigationViewData.navigationView.endOfRouteHideConstraint?.isActive = false
-        navigationViewData.navigationView.endOfRouteShowConstraint?.isActive = true
 
+        let leftInset = navigationMapView.navigationCamera.viewportDataSource.followingMobileCamera.padding?.left
+        let rightInset = navigationMapView.navigationCamera.viewportDataSource.followingMobileCamera.padding?.right
+        
         navigationMapView.navigationCamera.stop()
         
         if let height = navigationViewData.navigationView.endOfRouteHeightConstraint?.constant {
@@ -65,10 +59,11 @@ class ArrivalController: NavigationComponentDelegate {
             if let zoom = cameraOptions.zoom {
                 cameraOptions.zoom = zoom + 1.0
             }
+            
             cameraOptions.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
-                                                 left: 20,
+                                                 left: leftInset ?? 20,
                                                  bottom: height + 20,
-                                                 right: 20)
+                                                 right: rightInset ?? 20)
             cameraOptions.center = destination?.coordinate
             cameraOptions.pitch = 0
             navigationMapView.mapView.camera.ease(to: cameraOptions, duration: duration) { (animatingPosition) in
@@ -91,7 +86,7 @@ class ArrivalController: NavigationComponentDelegate {
         let endOfRoute = endOfRouteViewController
         viewController.addChild(endOfRoute)
         navigationViewData.navigationView.endOfRouteView = endOfRoute.view
-        navigationViewData.navigationView.constrainEndOfRoute()
+        navigationViewData.navigationView.showEndOfRoute()
         endOfRoute.didMove(toParent: viewController)
 
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in

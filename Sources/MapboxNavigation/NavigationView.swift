@@ -39,7 +39,7 @@ import MapboxCoreNavigation
 @IBDesignable
 open class NavigationView: UIView {
     
-    private enum Constants {
+    enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0
     }
@@ -85,13 +85,13 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteShowConstraint: NSLayoutConstraint? = endOfRouteView?.bottomAnchor.constraint(equalTo: bottomAnchor)
     
-    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = endOfRouteView?.topAnchor.constraint(equalTo: bottomAnchor)
-    
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
     var topBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
     
     var bottomBannerContainerViewLayoutConstraints: [NSLayoutConstraint] = []
+    
+    var endOfRouteViewLayoutConstraints: [NSLayoutConstraint] = []
     
     var endOfRouteView: UIView? {
         didSet {
@@ -105,13 +105,9 @@ open class NavigationView: UIView {
         }
     }
     
-    func constrainEndOfRoute() {
-        endOfRouteHideConstraint?.isActive = true
-        
-        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
-        endOfRouteHeightConstraint?.isActive = true
+    func showEndOfRoute() {
+        endOfRouteView?.isHidden = false
+        setupEndOfRouteConstraints()
     }
     
     // MARK: Overlay Views

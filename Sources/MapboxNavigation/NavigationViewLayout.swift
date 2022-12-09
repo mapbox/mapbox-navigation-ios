@@ -374,4 +374,25 @@ extension NavigationView {
         
         NSLayoutConstraint.activate(bottomBannerContainerViewLayoutConstraints)
     }
+    
+    func setupEndOfRouteConstraints() {
+        guard let endOfRouteView = endOfRouteView,
+              let endOfRouteShowConstraint = endOfRouteShowConstraint,
+              let endOfRouteHeightConstraint = endOfRouteHeightConstraint else { return }
+        
+        NSLayoutConstraint.deactivate(endOfRouteViewLayoutConstraints)
+                                
+        let endOfRouteLeadingConstraint  = endOfRouteView.leadingAnchor.constraint(equalTo: bottomBannerContainerView.leadingAnchor)
+        
+        let endOfRouteTrailingConstraint  = endOfRouteView.trailingAnchor.constraint(equalTo: bottomBannerContainerView.trailingAnchor)
+        
+        endOfRouteViewLayoutConstraints = [
+            endOfRouteShowConstraint,
+            endOfRouteHeightConstraint,
+            endOfRouteLeadingConstraint,
+            endOfRouteTrailingConstraint
+        ]
+        
+        NSLayoutConstraint.activate(endOfRouteViewLayoutConstraints)
+    }
 }
