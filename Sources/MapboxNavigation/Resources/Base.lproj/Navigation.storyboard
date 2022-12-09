@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +13,7 @@
         <scene sceneID="D7g-l8-Czc">
             <objects>
                 <viewController storyboardIdentifier="EndOfRouteViewController" id="WD9-Na-hrx" customClass="EndOfRouteViewController" customModule="MapboxNavigation" sceneMemberID="viewController">
-                    <view key="view" contentMode="center" id="IDF-XF-2Ta" userLabel="Root" customClass="EndOfRouteContentView" customModule="MapboxNavigation">
+                    <view key="view" contentMode="scaleToFill" id="IDF-XF-2Ta" userLabel="Root" customClass="EndOfRouteContentView" customModule="MapboxNavigation">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -22,7 +23,7 @@
                                     <constraint firstAttribute="height" constant="1" id="JsN-yF-tXj"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="4jh-bR-wXL" userLabel="Arrival Labels Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4jh-bR-wXL" userLabel="Arrival Labels Container">
                                 <rect key="frame" x="0.0" y="16" width="375" height="60"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have arrived" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4A-Bp-tr5" customClass="EndOfRouteStaticLabel" customModule="MapboxNavigation">
@@ -63,11 +64,11 @@
                                     <constraint firstItem="V4A-Bp-tr5" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="top" id="n8N-UX-05e"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="evE-dd-pMr" userLabel="Rate Your Trip Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evE-dd-pMr" userLabel="Rate Your Trip Container">
                                 <rect key="frame" x="0.0" y="92" width="375" height="54"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate your trip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W5U-cV-cDO" customClass="EndOfRouteStaticLabel" customModule="MapboxNavigation">
-                                        <rect key="frame" x="143.5" y="0.0" width="88" height="17"/>
+                                        <rect key="frame" x="144" y="0.0" width="87.5" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -122,7 +123,7 @@
                                 <rect key="frame" x="0.0" y="350" width="375" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="D6B-Ff-n7b" userLabel="End Navigation Button Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6B-Ff-n7b" userLabel="End Navigation Button Container">
                                 <rect key="frame" x="0.0" y="350" width="375" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4" customClass="EndOfRouteButton" customModule="MapboxNavigation">
@@ -140,27 +141,28 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="unQ-4I-UPo" secondAttribute="trailing" id="1BB-nP-SYc"/>
-                            <constraint firstAttribute="trailing" secondItem="evE-dd-pMr" secondAttribute="trailing" id="3Da-jA-RLx"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="evE-dd-pMr" secondAttribute="trailing" id="3Da-jA-RLx"/>
                             <constraint firstItem="TEs-GQ-xWN" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="bottom" constant="65" id="6IH-iM-ln5"/>
-                            <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" constant="10" id="GFJ-yQ-Cye"/>
-                            <constraint firstAttribute="trailing" secondItem="D6B-Ff-n7b" secondAttribute="trailing" id="Ljt-Gw-pXu"/>
-                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="Qjw-oe-dVe"/>
-                            <constraint firstItem="ekW-06-trL" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="TeT-ls-Ns4"/>
-                            <constraint firstItem="ekW-06-trL" firstAttribute="trailing" secondItem="IDF-XF-2Ta" secondAttribute="trailing" id="UUM-FL-FrV"/>
-                            <constraint firstAttribute="trailing" secondItem="TEs-GQ-xWN" secondAttribute="trailing" id="Vg9-Xi-JtV"/>
+                            <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" constant="10" id="GFJ-yQ-Cye"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="D6B-Ff-n7b" secondAttribute="trailing" id="Ljt-Gw-pXu"/>
+                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="Qjw-oe-dVe"/>
+                            <constraint firstItem="ekW-06-trL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="TeT-ls-Ns4"/>
+                            <constraint firstItem="ekW-06-trL" firstAttribute="trailing" secondItem="P8U-kf-mkb" secondAttribute="trailing" id="UUM-FL-FrV"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="TEs-GQ-xWN" secondAttribute="trailing" id="Vg9-Xi-JtV"/>
                             <constraint firstItem="unQ-4I-UPo" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="WJ9-OZ-x1y"/>
                             <constraint firstAttribute="bottom" secondItem="ekW-06-trL" secondAttribute="bottom" id="f1v-ju-qen"/>
                             <constraint firstItem="unQ-4I-UPo" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" id="gVo-YH-zU7"/>
-                            <constraint firstItem="evE-dd-pMr" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="k0v-jB-TbO"/>
-                            <constraint firstItem="TEs-GQ-xWN" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="lxR-dT-lxi"/>
-                            <constraint firstItem="4jh-bR-wXL" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="muP-uc-2iF"/>
+                            <constraint firstItem="evE-dd-pMr" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="k0v-jB-TbO"/>
+                            <constraint firstItem="TEs-GQ-xWN" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="lxR-dT-lxi"/>
+                            <constraint firstItem="4jh-bR-wXL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="muP-uc-2iF"/>
                             <constraint firstItem="4jh-bR-wXL" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" constant="16" id="rx6-4c-WD7"/>
-                            <constraint firstAttribute="trailing" secondItem="4jh-bR-wXL" secondAttribute="trailing" id="s63-sP-XUC"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="4jh-bR-wXL" secondAttribute="trailing" id="s63-sP-XUC"/>
                             <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="bottom" constant="16" id="vRY-cm-7kg"/>
-                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="bottom" secondItem="IDF-XF-2Ta" secondAttribute="bottom" id="xqf-EL-Wnt"/>
+                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="bottom" secondItem="P8U-kf-mkb" secondAttribute="bottom" id="xqf-EL-Wnt"/>
                             <constraint firstItem="ekW-06-trL" firstAttribute="top" secondItem="D6B-Ff-n7b" secondAttribute="top" id="zG7-CU-Ygb"/>
                         </constraints>
                         <variation key="default">
