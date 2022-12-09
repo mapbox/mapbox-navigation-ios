@@ -524,6 +524,8 @@
 		DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27247264E028B00C0AC37 /* Geometry.swift */; };
 		DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27251264E02D800C0AC37 /* RoadObject.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
+		DF345E4129437EE800EC77A7 /* MBXInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF345E4029437EE800EC77A7 /* MBXInfo.plist */; };
+		DF345E4329437F1000EC77A7 /* Bundle+SDKVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF345E4229437F1000EC77A7 /* Bundle+SDKVersion.swift */; };
 		E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */; };
 		E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */; };
 		E2108B30285866C200CB0875 /* NavigationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2108B2F285866C200CB0875 /* NavigationLog.swift */; };
@@ -1088,7 +1090,6 @@
 		B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VanishingRouteLineTests.swift; sourceTree = "<group>"; };
 		B41299CC26D6DE4D004031A3 /* RouteProgress+Arrival.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteProgress+Arrival.swift"; sourceTree = "<group>"; };
 		B41299CE26D7101F004031A3 /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
-		B417913A2624F9EA001E0348 /* MBXInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		B419BFF125F00A9C0086639B /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
 		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
 		B4319F2E27A35EA8005A706E /* SpriteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRepository.swift; sourceTree = "<group>"; };
@@ -1285,6 +1286,8 @@
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		DF345E4029437EE800EC77A7 /* MBXInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MBXInfo.plist; path = Resources/MBXInfo.plist; sourceTree = "<group>"; };
+		DF345E4229437F1000EC77A7 /* Bundle+SDKVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+SDKVersion.swift"; sourceTree = "<group>"; };
 		E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingServiceMock.swift; sourceTree = "<group>"; };
 		E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterDelegateSpy.swift; sourceTree = "<group>"; };
 		E2108B2F285866C200CB0875 /* NavigationLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLog.swift; sourceTree = "<group>"; };
@@ -2253,6 +2256,7 @@
 		C53C196A1F38E9C1008DB406 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DF345E4029437EE800EC77A7 /* MBXInfo.plist */,
 				C53C196F1F38EA25008DB406 /* Localizable.strings */,
 			);
 			name = Resources;
@@ -2330,12 +2334,12 @@
 				2B28AD7C284F68A1001CD1FB /* AlternativeRouteDetectionStrategy.swift */,
 				B4843886270F8E1600E161E6 /* SimulationType.swift */,
 				2BBED93A267A3AB900F90032 /* BillingHandler.swift */,
+				DF345E4229437F1000EC77A7 /* Bundle+SDKVersion.swift */,
 				C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */,
 				2BF398C0274BDEA8000C9A72 /* Directions.swift */,
 				2B01E4B5274671550002A5F7 /* Directions+RoutingProvider.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				2B02397828B6508700C348D0 /* DefaultRerouteControllerInterface.swift */,
-				B417913A2624F9EA001E0348 /* MBXInfo.plist */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				2BEF16462775C8FD0085E3C6 /* MapMatchingResult.swift */,
@@ -2912,6 +2916,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF345E4129437EE800EC77A7 /* MBXInfo.plist in Resources */,
 				C53C196D1F38EA25008DB406 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3342,6 +3347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF345E4329437F1000EC77A7 /* Bundle+SDKVersion.swift in Sources */,
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
 				E2108B30285866C200CB0875 /* NavigationLog.swift in Sources */,
