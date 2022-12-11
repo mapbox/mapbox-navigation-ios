@@ -1,5 +1,5 @@
-binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "23.2.0-rc.3"
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "122.0.0"
+binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "23.2.1"
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "123.0.0"
 github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v3.1.2"
 github "mapbox/mapbox-directions-swift" "v2.8.0"
