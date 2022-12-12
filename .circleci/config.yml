@@ -86,7 +86,7 @@ commands:
           condition: << parameters.is_template >>
           steps: 
             - save_cache:
-                key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v8-{{ << parameters.key >> }}
                 paths:
                   - api_logs
             - store_artifacts:
@@ -96,7 +96,7 @@ commands:
           condition: << parameters.is_template >>
           steps:
             - save_cache:
-                key: nav-sdk-diff-cache-v7-<< parameters.key >>
+                key: nav-sdk-diff-cache-v8-<< parameters.key >>
                 paths:
                   - api_logs
             - store_artifacts:
@@ -114,50 +114,23 @@ commands:
           condition: << parameters.is_template >>
           steps: 
             - restore_cache:
-                key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v8-{{ << parameters.key >> }}
       - unless:
           condition: << parameters.is_template >>
           steps:
             - restore_cache:
-                key: nav-sdk-diff-cache-v7-<< parameters.key >>
-
-  build-api-diff-cli-tool:
-    description: "Builds CLI tool which produce diff reports"
-    parameters:
-      swift-api-diff-version:
-        type: string
-        default: "v2.0.0-rc.2"
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "8c:24:d5:99:22:42:45:8f:16:6f:8d:24:ee:08:97:13"
-      - restore_cache:
-          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
-      - run:
-          name: Building API Diff Report if Needed
-          command: |
-            if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then 
-              cd scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
-              cd swift-api-diff && swift build --configuration release; 
-            fi
-      - save_cache:
-          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
-          paths:
-            - scripts/swift-api-diff/.build/release/swift-api-diff
+                key: nav-sdk-diff-cache-v8-<< parameters.key >>
 
   run_api_log_in_current_env:
-    parameters:
-      iOS:
-        type: string
-      device:
-        type: string
     steps:
       - run:
-          name: Generating MapboxCoreNavigation API Log
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff doc ./ $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
-      - run:
-          name: Generating MapboxNavigation API Log
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff doc ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+          name: "Build SDK API Logs"
+          command: |
+            set -e -o pipefail -u
+
+            mkdir $CIRCLE_WORKING_DIRECTORY/api_logs
+            $CIRCLE_WORKING_DIRECTORY/scripts/api-compatibility-check/build-api-logs.sh $CIRCLE_WORKING_DIRECTORY $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
+
   run_breaking_changes_detector:
     parameters:
       module_name:
@@ -171,16 +144,7 @@ commands:
           name: Generating << parameters.module_name >> API Diff
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues public token)
-            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >> --ignore-undocumented true)
-            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
-              if [ -z "$LOG" ]; then
-                echo "No breaking changes detected in << parameters.module_name >>"
-              else
-                PR_COMMENT=$'# Breaking Changes in << parameters.module_name >>\n\n'
-                PR_COMMENT+="$LOG"
-                gh pr comment -F - \<<< "$PR_COMMENT"
-              fi
-            fi
+            ./scripts/api-compatibility-check/ci-analyze-api.sh << parameters.module_name >> << parameters.base_api_path >> << parameters.new_api_path >> $CIRCLE_WORKING_DIRECTORY/.breakage-allowlist.txt
 
   carthage-bootstrap:
     steps:
@@ -518,13 +482,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.0.0"
-      device:
-        type: string
-        default: "iPhone 12 Pro Max"
-      iOS:
-        type: string
-        default: "14.5"
+        default: "14.2.0"
       is_base_api:
         type: boolean
         default: false
@@ -574,13 +532,7 @@ jobs:
             - run:
                 name: Checking out commit
                 command: git checkout << parameters.commit_hash >>
-      - build-api-diff-cli-tool
-      - run:
-          name: Move Xcode project aside
-          command: rm -rf *.xcodeproj
-      - run_api_log_in_current_env:
-          iOS: << parameters.iOS >>
-          device: << parameters.device >>
+      - run_api_log_in_current_env
       - when:
           condition: << parameters.is_base_api >>
           steps:
@@ -594,26 +546,13 @@ jobs:
                 key: << parameters.commit_hash >>
 
   api-diff-job:
-    parameters:
-      xcode:
-        type: string
-        default: "13.0.0"
-      device:
-        type: string
-        default: "iPhone 13 Pro Max"
-      iOS:
-        type: string
-        default: "15.0"
     macos:
-      xcode: << parameters.xcode >>
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
+      xcode: 14.2.0
     steps:
       - checkout
       - *add-github-to-known-hosts
       - *prepare-mapbox-file
       - *prepare-netrc-file
-      - build-api-diff-cli-tool
       - install-mbx-ci
       - install-gh-cli
       - restore-api-diff-cache:
@@ -791,7 +730,7 @@ workflows:
           name: "Get old API logs"
           is_base_api: true
           commit_hash: ""
-      - get-api-log-job:
+      - get-api-log-job:          
           name: "Get new API logs"
           commit_hash: << pipeline.git.revision >>
       - api-diff-job:
