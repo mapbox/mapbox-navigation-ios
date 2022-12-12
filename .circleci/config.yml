@@ -802,10 +802,10 @@ workflows:
   test-host-workflow:
     jobs:
       - spm-test-host-job:
-          name: "swift test; Xcode 13.4.1; iOS 15.5"
-          xcode: "13.4.1"
-          iOS: "15.5"
-          device: "iPhone 13"
+          name: "swift test; Xcode 14.0.0; iOS 16.0"
+          xcode: "14.0.0"
+          iOS: "16.0"
+          device: "iPhone 14 Pro Max"
           context: Slack Orb
   main-workflow:
       jobs:
