@@ -42,7 +42,7 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": "maxim/NAVIOS-328-add-support-for-sapa-facilities",
-          "revision": "363c444ee872cca0e24befb8f7def1aecfdc7195",
+          "revision": "8d9519bb789741e3e1f608eeed11db1a114cb6df",
           "version": null
         }
       },
