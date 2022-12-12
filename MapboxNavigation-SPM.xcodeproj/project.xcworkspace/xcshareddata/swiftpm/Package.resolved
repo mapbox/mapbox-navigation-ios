@@ -41,9 +41,9 @@
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "2f91fad31087e6c66bd7cc65f31095babb038493",
-          "version": "2.8.0"
+          "branch": "maxim/NAVIOS-328-add-support-for-sapa-facilities",
+          "revision": "363c444ee872cca0e24befb8f7def1aecfdc7195",
+          "version": null
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "285622fa9734d4b28c9eca10fa59a47699ca39fd",
-          "version": "2.1.0"
+          "revision": "a9ef284deae227c6111c27a3535098c1e9a9d8e3",
+          "version": "2.1.1"
         }
       },
       {
