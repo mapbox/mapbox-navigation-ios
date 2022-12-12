@@ -194,10 +194,11 @@ class RouteControllerIntegrationTests: TestCase {
     }
 
     func testAlternativeRoutesNotReported() {
-        NavigationSettings.shared.initialize(directions: .mocked,
-                                             tileStoreConfiguration: .default,
-                                             routingProviderSource: .hybrid,
-                                             alternativeRouteDetectionStrategy: nil)
+        let settingsValues = NavigationSettings.Values(directions: .mocked,
+                                                       tileStoreConfiguration: .default,
+                                                       routingProviderSource: .hybrid,
+                                                       alternativeRouteDetectionStrategy: nil)
+        NavigationSettings.shared.initialize(with: settingsValues)
 
         let routeOptions = RouteOptions(coordinates: [.init(latitude: 37.33243586131637,
                                                             longitude: -122.03140541047281),

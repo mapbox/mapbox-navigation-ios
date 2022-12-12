@@ -67,9 +67,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         dependencies = nil
         MapboxRoutingProvider.__testRoutesStub = nil
 
-        NavigationSettings.shared.initialize(directions: .shared,
-                                             tileStoreConfiguration: .default)
-
         super.tearDown()
     }
 
@@ -436,9 +433,11 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
     }
 
     func testReroutingFromALocationSendsEvents() {
-        NavigationSettings.shared.initialize(directions: .shared,
-                                             tileStoreConfiguration: .default,
-                                             alternativeRouteDetectionStrategy: .init(refreshesAfterPassingDeviation: false))
+        let settingsValues = NavigationSettings.Values(directions: .mocked,
+                                                       tileStoreConfiguration: .default,
+                                                       routingProviderSource: .offline,
+                                                       alternativeRouteDetectionStrategy: .init(refreshesAfterPassingDeviation: false))
+        NavigationSettings.shared.initialize(with: settingsValues)
 
         dependencies = createDependencies()
 

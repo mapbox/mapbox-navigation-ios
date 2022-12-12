@@ -20,7 +20,12 @@ class PassiveLocationManagerTests: TestCase {
 
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .custom(filePathURL), mapLocation: nil), routingProviderSource: .offline, alternativeRouteDetectionStrategy: .init())
+
+        let settingsValues = NavigationSettings.Values(directions: .mocked,
+                                                       tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .custom(filePathURL), mapLocation: nil),
+                                                       routingProviderSource: .offline,
+                                                       alternativeRouteDetectionStrategy: .init())
+        NavigationSettings.shared.initialize(with: settingsValues)
 
         locationManagerSpy = .init()
         directionsSpy = .init()
