@@ -513,7 +513,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.0.0"
+        default: "14.2.0"
       device:
         type: string
         default: "iPhone 12 Pro Max"
