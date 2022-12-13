@@ -526,6 +526,7 @@ jobs:
       commit_hash: 
         description: "git hash of the commit to be used for generating logs in api_logs folder"
         type: string
+    resource_class: large
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -782,8 +783,7 @@ workflows:
           name: "Get old API logs"
           is_base_api: true
           commit_hash: ""
-      - get-api-log-job:
-          resource_class: large
+      - get-api-log-job:          
           name: "Get new API logs"
           commit_hash: << pipeline.git.revision >>
       - api-diff-job:
