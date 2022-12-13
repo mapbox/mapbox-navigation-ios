@@ -155,13 +155,13 @@ commands:
       - run:
           name: "Build MapboxNavigation"
           command: |
-            xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Debug build
+            xcodebuild -sdk iphonesimulator  -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Debug build
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator -sdk iphonesimulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
       - run:
           name: Generating MapboxNavigation API Log
-          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator -sdk iphonesimulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
   run_breaking_changes_detector:
     parameters:
       module_name:
@@ -783,6 +783,7 @@ workflows:
           is_base_api: true
           commit_hash: ""
       - get-api-log-job:
+          resource_class: large
           name: "Get new API logs"
           commit_hash: << pipeline.git.revision >>
       - api-diff-job:
