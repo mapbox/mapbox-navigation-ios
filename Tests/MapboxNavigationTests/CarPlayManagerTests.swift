@@ -238,7 +238,7 @@ class CarPlayManagerTests: TestCase {
         let mapTemplate = CPMapTemplate()
 
         expect {
-            carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+            self.carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
         }.to(throwAssertion())
     }
 #endif
