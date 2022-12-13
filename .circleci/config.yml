@@ -155,13 +155,13 @@ commands:
       - run:
           name: "Build MapboxNavigation"
           command: |
-            xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -target Example -configuration Debug build
+            xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Debug build
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: ./scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -project MapboxNavigation-SPM.xcodeproj/ -showBuildSettings -configuration Debug | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: ./scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
       - run:
           name: Generating MapboxNavigation API Log
-          command: ./scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -project MapboxNavigation-SPM.xcodeproj/ -showBuildSettings -configuration Debug | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: ./scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
   run_breaking_changes_detector:
     parameters:
       module_name:
@@ -175,16 +175,7 @@ commands:
           name: Generating << parameters.module_name >> API Diff
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues public token)
-            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >> --ignore-undocumented true)
-            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
-              if [ -z "$LOG" ]; then
-                echo "No breaking changes detected in << parameters.module_name >>"
-              else
-                PR_COMMENT=$'# Breaking Changes in << parameters.module_name >>\n\n'
-                PR_COMMENT+="$LOG"
-                gh pr comment -F - \<<< "$PR_COMMENT"
-              fi
-            fi
+            ./scripts/api-compatibility-check/breaking-api-check.py check-api --comment-pr << parameters.base_api_path >> << parameters.new_api_path >>
 
   carthage-bootstrap:
     steps:
