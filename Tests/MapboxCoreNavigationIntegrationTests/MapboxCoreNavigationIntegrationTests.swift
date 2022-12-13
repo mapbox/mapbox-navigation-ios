@@ -533,4 +533,71 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
             XCTAssertNil(error)
         }
     }
+
+    func testAmenitiesReporting() {
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 35.8112, longitude: 140.397245),
+            CLLocationCoordinate2D(latitude: 35.814847, longitude: 140.409267)
+        ])
+        
+        // There is one leg and two steps in the route. Only first step contains rest stop with amenities.
+        // In scope of this test perform simulation of the location changes only for the first step and
+        // verify whether amenities are correctly retrieved from the Navigation Native status.
+        let routeResponse = Fixture.routeResponse(from: "route-with-amenities", options: routeOptions)
+        
+        guard let coordinates = route.legs.first?.steps.first?.shape?.coordinates else {
+            XCTFail("Coordinates should be valid.")
+            return
+        }
+        
+        let currentDate = Date()
+        
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: currentDate + $0.offset)
+        }
+        
+        let replayLocationManager = ReplayLocationManager(locations: locations)
+        replayLocationManager.speedMultiplier = 100
+        
+        navigation = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0),
+                                             credentials: Fixture.credentials,
+                                             locationSource: replayLocationManager,
+                                             simulating: .never)
+        
+        let routeControllerProgressExpectation = expectation(forNotification: .routeControllerProgressDidChange,
+                                                             object: navigation.router) { notification -> Bool in
+            guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+                  let intersections = routeProgress.currentLegProgress.currentStep.intersections,
+                  intersections.count == 6,
+                  let restStop = intersections[4].restStop,
+                  let amenities = restStop.amenities,
+                  amenities.count == 7 else {
+                return false
+            }
+            
+            XCTAssertEqual(amenities[0].type, .toilet)
+            XCTAssertNil(amenities[0].name)
+            XCTAssertNil(amenities[0].brand)
+            
+            XCTAssertEqual(amenities[6].type, .telephone)
+            XCTAssertEqual(amenities[6].name, "test_name")
+            XCTAssertEqual(amenities[6].brand, "test_brand")
+            
+            return true
+        }
+        
+        navigation.start()
+        
+        for location in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
+        }
+        
+        wait(for: [routeControllerProgressExpectation], timeout: waitForInterval)
+    }
 }
