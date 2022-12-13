@@ -515,7 +515,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.2.0"
+        default: "13.4.1"
       device:
         type: string
         default: "iPhone 14"
