@@ -5,7 +5,6 @@ import CarPlayTestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-@available(iOS 12.0, *)
 class CarPlayNavigationViewControllerTests: TestCase {
     
     func testTravelEstimates() {

@@ -5,7 +5,6 @@ import TestHelper
 
 class NavigationGeocodedPlacemarkTests: TestCase {
     
-    @available(iOS 12.0, *)
     func testNavigationGeocodedPlacemarkListItem() {
         
         let title = "title"
