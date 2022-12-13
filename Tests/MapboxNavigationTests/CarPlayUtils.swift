@@ -69,7 +69,6 @@ func createTrip(_ routeChoice: CPRouteChoice) -> CPTrip {
 }
 
 class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
-
     var didBeginNavigationCalled = false
     var didEndNavigationCalled = false
     var legacyDidEndNavigationCalled = false

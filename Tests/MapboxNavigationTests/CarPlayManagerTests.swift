@@ -43,7 +43,9 @@ class CarPlayManagerTests: TestCase {
     override func tearDown() {
         CarPlayMapViewController.unswizzleMethods()
         MapboxRoutingProvider.__testRoutesStub = nil
+        delegate.passedService?.stop()
         carPlayManager = nil
+        delegate = nil
 
         super.tearDown()
     }
@@ -176,6 +178,9 @@ class CarPlayManagerTests: TestCase {
     }
 
     func testPreviewRouteWithDefault() {
+        // Fails on older iOS versions with "Unsupported object MapTemplateSpy"
+        guard #available(iOS 14, *) else { return }
+
         previewRoutes()
 
         XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, 1)
@@ -188,6 +193,9 @@ class CarPlayManagerTests: TestCase {
     }
 
     func testPreviewRouteWithCustomTrip() {
+        // Fails on older iOS versions with "Unsupported object MapTemplateSpy"
+        guard #available(iOS 14, *) else { return }
+        
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
 
@@ -198,6 +206,9 @@ class CarPlayManagerTests: TestCase {
     }
 
     func testPreviewRouteWithCustomPreviewText() {
+        // Fails on older iOS versions with "Unsupported object MapTemplateSpy"
+        guard #available(iOS 14, *) else { return }
+
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
         let startButtonTitle = "Let's roll"
