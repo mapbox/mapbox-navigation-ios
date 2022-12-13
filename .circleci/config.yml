@@ -157,13 +157,13 @@ commands:
           command: |
             xcodebuild -sdk iphoneos  -destination 'generic/platform=iOS' -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Release BUILD_LIBRARY_FOR_DISTRIBUTION=YES build
       - run:
-          name: ""
+          name: "Generating MapboxCoreNavigation API Log"
           command: |
-            xcrun --sdk iphoneos swift-api-digester -dump-sdk -module MapboxCoreNavigation -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json -target arm64-apple-ios16.2 -I $(xcodebuild -destination 'generic/platform=iOS' -sdk iphoneos -project MapboxNavigation-SPM.xcodeproj/ -configuration Release -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+            xcrun --sdk iphoneos swift-api-digester -dump-sdk -module MapboxCoreNavigation -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json -target arm64-apple-ios12 -I $(xcodebuild -destination 'generic/platform=iOS' -sdk iphoneos -project MapboxNavigation-SPM.xcodeproj/ -configuration Release -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
       - run:
           name: Generating MapboxNavigation API Log
           command: |
-            xcrun --sdk iphoneos swift-api-digester -dump-sdk -module MapboxNavigation -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json -target arm64-apple-ios16.2 -I $(xcodebuild -destination 'generic/platform=iOS' -sdk iphoneos -project MapboxNavigation-SPM.xcodeproj/ -configuration Release -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+            xcrun --sdk iphoneos swift-api-digester -dump-sdk -module MapboxNavigation -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json -target arm64-apple-ios12 -I $(xcodebuild -destination 'generic/platform=iOS' -sdk iphoneos -project MapboxNavigation-SPM.xcodeproj/ -configuration Release -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
   run_breaking_changes_detector:
     parameters:
       module_name:
