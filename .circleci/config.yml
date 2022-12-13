@@ -155,13 +155,13 @@ commands:
       - run:
           name: "Build MapboxNavigation"
           command: |
-            xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Debug build
+            xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -scheme MapboxNavigation -configuration Debug build
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module MapboxCoreNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator -sdk iphonesimulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
       - run:
           name: Generating MapboxNavigation API Log
-          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target arm64-apple-ios12.0 $(xcodebuild -destination generic/platform=iOS -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
+          command: scripts/api-compatibility-check/breaking-api-check.py dump -o $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module MapboxNavigation --no-abi --triplet-target x86_64-apple-ios12.0-simulator -sdk iphonesimulator $(xcodebuild -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation-SPM.xcodeproj/ -configuration Debug -showBuildSettings | grep -m 1 "CONFIGURATION_BUILD_DIR" | grep -oEi "\/.*")
   run_breaking_changes_detector:
     parameters:
       module_name:
@@ -516,10 +516,10 @@ jobs:
         default: "14.2.0"
       device:
         type: string
-        default: "iPhone 12 Pro Max"
+        default: "iPhone 14"
       iOS:
         type: string
-        default: "14.5"
+        default: "16.2"
       is_base_api:
         type: boolean
         default: false
