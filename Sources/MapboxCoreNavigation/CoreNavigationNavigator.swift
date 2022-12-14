@@ -19,10 +19,9 @@ protocol CoreNavigator {
     func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?)
     func stopUpdatingElectronicHorizon()
 
-    func setRoutes(_ route: RouteInterface,
+    func setRoutes(_ routesData: RoutesData,
                    uuid: UUID,
                    legIndex: UInt32,
-                   alternativeRoutes: [RouteInterface],
                    completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
     func setAlternativeRoutes(with routes: [RouteInterface],
                               completion: @escaping (Result<[RouteAlternative], Error>) -> Void)
@@ -63,20 +62,18 @@ final class Navigator: CoreNavigator {
     }
 
     private lazy var routeCoordinator: RoutesCoordinator = {
-        .init(routesSetupHandler: { [weak self] route, legIndex, alternativeRoutes, completion in
-            var routesParams: SetRoutesParams? = nil
-            if let route = route {
-                routesParams = SetRoutesParams(primaryRoute: route,
-                                               legIndex: legIndex,
-                                               alternativeRoutes: alternativeRoutes)
-            }
-
-            let reason: SetRoutesReason = route != nil ? .newRoute : .cleanUp
-            self?.navigator.setRoutesFor(routesParams, reason: reason) { [weak self] result in
+        .init(routesSetupHandler: { [weak self] routesData, legIndex, completion in
+            
+            let dataParams = routesData.map { SetRoutesDataParams(routes: $0,
+                                                                  legIndex: legIndex) }
+            
+            let reason: SetRoutesReason = routesData != nil ? .newRoute : .cleanUp
+            self?.navigator.setRoutesDataFor(dataParams,
+                                             reason: reason) { [weak self] result in
                 if result.isValue(),
                    let routesResult = result.value {
                     Log.info("Navigator has been updated, including \(routesResult.alternatives.count) alternatives.", category: .navigation)
-                    completion(.success((route?.getRouteInfo(), routesResult.alternatives)))
+                    completion(.success((routesData?.primaryRoute().getRouteInfo(), routesResult.alternatives)))
                 }
                 else if result.isError() {
                     let reason = (result.error as String?) ?? ""
@@ -284,8 +281,8 @@ final class Navigator: CoreNavigator {
 
     // MARK: - Navigator Updates
 
-    func setRoutes(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, alternativeRoutes: [RouteInterface], completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
-        routeCoordinator.beginActiveNavigation(with: route, uuid: uuid, legIndex: legIndex, alternativeRoutes: alternativeRoutes, completion: completion)
+    func setRoutes(_ routesData: RoutesData, uuid: UUID, legIndex: UInt32, completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
+        routeCoordinator.beginActiveNavigation(with: routesData, uuid: uuid, legIndex: legIndex, completion: completion)
     }
     
     func setAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {

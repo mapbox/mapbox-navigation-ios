@@ -25,6 +25,7 @@
 * Fixed an issue where text in the route duration annotation was not centered correctly on devices with different screen sizes. ([#4130](https://github.com/mapbox/mapbox-navigation-ios/pull/4130))
 * Added `CarPlayManagerDelegate.carPlayManager(_:willAdd:for:)`, `NavigationMapViewDelegate.navigationMapView(_:willAdd:)` and `NavigationViewControllerDelegate.navigationViewController(_:willAdd:)` to modify the properties of the default layer which will be added to the map view during navigation. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 * Fixed issue where the traversed route layer doesn't share the same width with the main route casing layer after developers providing their own layer or midfying the layer properties. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
+* Added `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` and `NavigationMapView.show(_:layerPosition:legIndex:)` methods to draw `IndexedRouteResponse` data and populate view's `routes` and `continuousAlternatives` properties accordingly. ([#4294](https://github.com/mapbox/mapbox-navigation-ios/pull/4294))
 
 ### Location tracking
 
@@ -44,6 +45,7 @@
 * `SimulatedLocationManager`'s  initializer `SimulatedLocationManager.init(route:currentDistance:currentSpeed:)` is now public. ([#4276](https://github.com/mapbox/mapbox-navigation-ios/pull/4276))
 * Added a console message when a newer version of Navigation SDK is available. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 * Fixed an issue where `Bundle.string(forMapboxNavigationInfoDictionaryKey:)` and `Bundle.string(forMapboxCoreNavigationInfoDictionaryKey` returned values from the application bundle instead of the Navigation SDK when statically linking using Cocoapods. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
+* Added `IndexedRouteReponse.parseAlternativeRoutes` method to extract `AlternativeRoute`s data from a response. ([#4294](https://github.com/mapbox/mapbox-navigation-ios/pull/4294))
 
 ## v2.9.0
 

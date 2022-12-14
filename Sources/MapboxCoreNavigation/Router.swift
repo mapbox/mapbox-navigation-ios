@@ -40,6 +40,49 @@ public struct IndexedRouteResponse {
     }
     
     /**
+     Parses routes in the current response, accounting `routeIndex` to be pointing to the primary route, while all the others being `AlternativeRoute`s.
+     
+     - returns: Array of `AlternativeRoutes` containing relative information to `currentRoute`.
+     */
+    public func parseAlternativeRoutes() -> [AlternativeRoute] {
+        guard let mainRoute = currentRoute,
+              let routesData = routesData(routeParserType: RouteParser.self) else {
+            return []
+        }
+        
+        let alternatives = routesData.alternativeRoutes().compactMap {
+            AlternativeRoute(mainRoute: mainRoute,
+                             alternativeRoute: $0)
+        }
+        return alternatives
+    }
+    
+    func routesData(routeParserType: RouteParser.Type) -> RoutesData? {
+        let routeOptions = validatedRouteOptions
+        
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
+        guard let routeData = try? encoder.encode(routeResponse),
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  return nil
+        }
+        
+        let routeRequest = Directions(credentials: routeResponse.credentials)
+            .url(forCalculating: routeOptions).absoluteString
+        
+        let parsedRoutes = routeParserType.parseDirectionsResponse(forResponse: routeJSONString,
+                                                                   request: routeRequest,
+                                                                   routeOrigin: responseOrigin)
+        if parsedRoutes.isValue(),
+           var routes = parsedRoutes.value as? [RouteInterface],
+           routes.indices.contains(routeIndex) {
+            return routeParserType.createRoutesData(forPrimaryRoute: routes.remove(at: routeIndex),
+                                                    alternativeRoutes: routes)
+        }
+        return nil
+    }
+    
+    /**
      Initializes a new `IndexedRouteResponse` object.
      
      - parameter routeResponse: `RouteResponse` object, containing routes and other related info.

@@ -86,16 +86,15 @@ public final class CoreNavigatorSpy: CoreNavigator {
         stopUpdatingElectronicHorizonCalled = true
     }
 
-    public func setRoutes(_ route: RouteInterface,
+    public func setRoutes(_ routesData: RoutesData,
                           uuid: UUID,
                           legIndex: UInt32,
-                          alternativeRoutes: [RouteInterface],
                           completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
         setRoutesCalled = true
-        passedRoute = route
+        passedRoute = routesData.primaryRoute()
         passedUuid = uuid
         passedLegIndex = legIndex
-        passedAlternativeRoutes = alternativeRoutes
+        passedAlternativeRoutes = routesData.alternativeRoutes().map { $0.route }
         completion(returnedSetRoutesResult ?? .success((mainRouteInfo: nil, alternativeRoutes: [])))
     }
 

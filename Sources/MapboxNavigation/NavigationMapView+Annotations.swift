@@ -8,7 +8,12 @@ extension NavigationMapView {
     
     // MARK: Route Duration Annotations
     
-    func showContinuousAlternativeRoutesDurations() {
+    /**
+     Shows a callout containing the relative duration to the primary route of each continuous alternative route.
+     Useful as a way to give the user more information when picking between multiple route alternatives.
+     If the route contains any tolled segments then the callout will specify that as well.
+     */
+    public func showContinuousAlternativeRoutesDurations() {
         // Remove any existing route annotation.
         removeContinuousAlternativeRoutesDurations()
         

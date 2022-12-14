@@ -236,6 +236,62 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Visualizes the given routes and it's alternatives, removing any existing from the map.
+     
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
+     levels are present and `NavigationMapView.crossfadesCongestionSegments` is set to `true`.
+     
+     Waypoints along the route are visualized as markers. Implement `NavigationMapViewDelegate` methods
+     to customize the appearance of the lines and markers representing the routes and waypoints.
+     
+     To only visualize the routes and not the waypoints, or to have more control over the camera,
+     use the `show(_:legIndex:)` method.
+     
+     - parameter routeResponse: `IndexedRouteResponse` containing routes to visualize. The selected route by `routeIndex` is considered primary, while the remaining routes are displayed as if they are currently deselected or inactive.
+     - parameter routesPresentationStyle: Route lines presentation style. By default the map will be
+     updated to fit all routes.
+     - parameter legIndex: The zero-based index of the currently active leg along the active route.
+     The active leg is highlighted more prominently than inactive legs.
+     - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
+     zoom and pan the map.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once routes presentation completes.
+     */
+    public func showcase(_ routeResponse: IndexedRouteResponse,
+                         routesPresentationStyle: RoutesPresentationStyle = .all(),
+                         legIndex: Int? = nil,
+                         animated: Bool = false,
+                         duration: TimeInterval = 1.0,
+                         completion: AnimationCompletionHandler? = nil) {
+        guard let routes = routeResponse.routeResponse.routes,
+              let activeRoute = routeResponse.currentRoute,
+              let coordinates = activeRoute.shape?.coordinates,
+              !coordinates.isEmpty else { return }
+        
+        removeArrow()
+        removeRoutes()
+        removeWaypoints()
+        removeContinuousAlternativesRoutes()
+        
+        switch routesPresentationStyle {
+        case .single:
+            show([activeRoute], layerPosition: customRouteLineLayerPosition, legIndex: legIndex)
+        case .all:
+            show(routeResponse, layerPosition: customRouteLineLayerPosition, legIndex: legIndex)
+        }
+        
+        showWaypoints(on: activeRoute)
+        
+        navigationCamera.stop()
+        fitCamera(to: routes,
+                  routesPresentationStyle: routesPresentationStyle,
+                  animated: animated,
+                  duration: duration,
+                  completion: completion)
+    }
+    
+    /**
      Visualizes the given routes, removing any existing routes from the map.
      
      Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
@@ -263,6 +319,41 @@ open class NavigationMapView: UIView {
         removeContinuousAlternativesRoutesLayers()
         
         self.routes = routes
+        currentLegIndex = legIndex
+        customRouteLineLayerPosition = layerPosition
+        
+        applyRoutesDisplay(layerPosition: layerPosition)
+    }
+    
+    /**
+     Visualizes the given routes and it's alternatives, removing any existing from the map.
+     
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
+     levels are present. Implement `NavigationMapViewDelegate` methods to customize the appearance of
+     the lines representing the routes. To also visualize waypoints and zoom the map to fit,
+     use the `showcase(_:animated:)` method.
+     
+     To undo the effects of this method, use `removeRoutes()` and `removeContinuousAlternativesRoutes()` methods.
+     
+     - parameter routeResponse: `IndexedRouteResponse` containing routes to visualize. The selected route by `routeIndex` is considered primary, while the remaining routes are displayed as if they are currently deselected or inactive.
+     - parameter layerPosition: Position of the first route layer. Remaining routes and their casings
+     are always displayed below the first and all other subsequent route layers. Defaults to `nil`.
+     If layer position is set to `nil`, the route layer appears below the bottommost symbol layer.
+     - parameter legIndex: The zero-based index of the currently active leg along the primary route.
+     The active leg is highlighted more prominently than inactive legs.
+     */
+    public func show(_ routeResponse: IndexedRouteResponse,
+                     layerPosition: MapboxMaps.LayerPosition? = nil,
+                     legIndex: Int? = nil) {
+        guard let mainRoute = routeResponse.currentRoute else {
+            return
+        }
+        
+        removeRoutes()
+        removeContinuousAlternativesRoutesLayers()
+        
+        self.routes = [mainRoute]
+        self.continuousAlternatives = routeResponse.parseAlternativeRoutes()
         currentLegIndex = legIndex
         customRouteLineLayerPosition = layerPosition
         

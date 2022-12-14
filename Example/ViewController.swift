@@ -63,7 +63,8 @@ class ViewController: UIViewController {
     }
 
     func showCurrentRoute() {
-        guard var prioritizedRoutes = routes else { return }
+        guard let routeResponse = indexedRouteResponse,
+              var prioritizedRoutes = routes else { return }
         
         prioritizedRoutes.insert(prioritizedRoutes.remove(at: currentRouteIndex),
                                  at: 0)
@@ -71,7 +72,7 @@ class ViewController: UIViewController {
         // Show congestion levels on alternative route lines if there're multiple routes in the response.
         navigationMapView.showsCongestionForAlternativeRoutes = true
         navigationMapView.showsRestrictedAreasOnRoute = true
-        navigationMapView.show(prioritizedRoutes)
+        navigationMapView.show(routeResponse)
         navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
         navigationMapView.showRouteDurations(along: prioritizedRoutes)
     }
@@ -742,11 +743,9 @@ extension ViewController: NavigationMapViewDelegate {
             }
         }
     }
-
-    func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        guard let index = routes?.firstIndex(where: { $0 === route }),
-              index != indexedRouteResponse?.routeIndex else { return }
-        indexedRouteResponse?.routeIndex = index
+    
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect continuousAlternative: AlternativeRoute) {
+        indexedRouteResponse?.routeIndex = continuousAlternative.indexedRouteResponse.routeIndex
     }
 
     private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
