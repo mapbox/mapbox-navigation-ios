@@ -119,15 +119,6 @@
         }
       },
       {
-        "package": "Quick",
-        "repositoryURL": "https://github.com/Quick/Quick.git",
-        "state": {
-          "branch": null,
-          "revision": "8cce6acd38f965f5baa3167b939f86500314022b",
-          "version": "3.1.2"
-        }
-      },
-      {
         "package": "Solar",
         "repositoryURL": "https://github.com/ceeK/Solar.git",
         "state": {

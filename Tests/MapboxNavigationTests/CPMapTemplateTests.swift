@@ -3,7 +3,6 @@ import TestHelper
 @testable import MapboxNavigation
 import CarPlay
 
-@available(iOS 12.0, *)
 class CPMapTemplateTests: TestCase {
     func testInitializationFromPanDirection() {
         XCTAssertEqual(CLLocationDirection(panDirection: .up), 0)
