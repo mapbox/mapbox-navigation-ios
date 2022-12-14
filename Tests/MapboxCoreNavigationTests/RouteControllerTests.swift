@@ -63,7 +63,6 @@ class RouteControllerTests: TestCase {
     override func setUp() {
         super.setUp()
 
-        resetNavigationSettings()
         delegate = .init()
         locationManagerSpy = .init()
         routingProvider = .init()
@@ -90,7 +89,6 @@ class RouteControllerTests: TestCase {
         RouteParserSpy.returnedRoutes = nil
         RouteParserSpy.returnedError = nil
         MapboxRoutingProvider.__testRoutesStub = nil
-        resetNavigationSettings()
         
         super.tearDown()
     }
@@ -1061,10 +1059,12 @@ class RouteControllerTests: TestCase {
     }
 
     func testNotifyDelegateDidFailToChangeAlternativeRoutesIfNilAlternativeRouteDetectionStrategy() {
-        NavigationSettings.shared.initialize(directions: .shared,
-                                             tileStoreConfiguration: .default,
-                                             routingProviderSource: .hybrid,
-                                             alternativeRouteDetectionStrategy: nil)
+        let settingsValues = NavigationSettings.Values(directions: .mocked,
+                                                       tileStoreConfiguration: .default,
+                                                       routingProviderSource: .hybrid,
+                                                       alternativeRouteDetectionStrategy: nil)
+        NavigationSettings.shared.initialize(with: settingsValues)
+
         let message = "error message"
         let callbackExpectation = expectation(description: "Error updating aternative routes should not be reported")
         callbackExpectation.isInverted = true
@@ -1533,13 +1533,6 @@ class RouteControllerTests: TestCase {
     }
     
     // MARK: Helpers
-
-    private func resetNavigationSettings() {
-        NavigationSettings.shared.initialize(directions: .shared,
-                                             tileStoreConfiguration: .default,
-                                             routingProviderSource: .hybrid,
-                                             alternativeRouteDetectionStrategy: .init())
-    }
 
     private func createRouteAlternative(id: UInt32) -> RouteAlternative {
         let intersectionStep = route.legs[0].steps[3]

@@ -28,7 +28,7 @@ open class TestCase: XCTestCase {
         super.tearDown()
         // Reset navigator
         CoreNavigatorSpy.reset()
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
+        Self.configureSettings()
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.
@@ -36,12 +36,20 @@ open class TestCase: XCTestCase {
         guard !isInitializationCompleted else { return }
         isInitializationCompleted = true
 
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
+        configureSettings()
         Credentials.injectSharedToken(.mockedAccessToken)
         #if canImport(MapboxMaps)
         ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         #endif
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
+    }
+
+    private static func configureSettings() {
+        let settingsValues = NavigationSettings.Values(directions: .mocked,
+                                                       tileStoreConfiguration: .default,
+                                                       routingProviderSource: .hybrid,
+                                                       alternativeRouteDetectionStrategy: .init())
+        NavigationSettings.shared.initialize(with: settingsValues)
     }
 }
