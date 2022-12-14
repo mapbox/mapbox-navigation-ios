@@ -358,7 +358,6 @@ open class NavigationMapView: UIView {
         customRouteLineLayerPosition = layerPosition
         
         applyRoutesDisplay(layerPosition: layerPosition)
-        updateRouteLineWithRouteLineTracksTraversal()
     }
     
     func applyRoutesDisplay(layerPosition: MapboxMaps.LayerPosition? = nil) {
