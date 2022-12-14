@@ -44,8 +44,11 @@ class CarPlayManagerTests: TestCase {
         CarPlayMapViewController.unswizzleMethods()
         MapboxRoutingProvider.__testRoutesStub = nil
         delegate.passedService?.stop()
+
         carPlayManager = nil
         delegate = nil
+        searchDelegate = nil
+        mapTemplateProvider = nil
 
         super.tearDown()
     }
