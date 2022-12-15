@@ -44,7 +44,9 @@ extension MapboxDirections.AmenityType {
         case .FAX:
             self = .fax
         @unknown default:
-            fatalError("Unknown AmenityType value.")
+            self = .undefined
+            Log.fault("Unexpected amenity type.", category: .navigation)
+            assertionFailure("Unexpected amenity type.")
         }
     }
 }
