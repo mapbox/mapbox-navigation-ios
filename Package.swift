@@ -22,7 +22,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .branch("maxim/NAVIOS-328-add-support-for-sapa-facilities")),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.9.0-rc.1")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "1.0.0"),
         .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "123.0.0"),
         .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.10.0"),
