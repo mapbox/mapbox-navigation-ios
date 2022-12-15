@@ -1,0 +1,548 @@
+{
+    "routes": [
+        {
+            "country_crossed": false,
+            "weight_typical": 47.092,
+            "duration_typical": 46.529,
+            "weight_name": "auto",
+            "weight": 37.803,
+            "duration": 37.002,
+            "distance": 1161.482,
+            "legs": [
+                {
+                    "via_waypoints": [
+                        
+                    ],
+                    "admins": [
+                        {
+                            "iso_3166_1_alpha3": "JPN",
+                            "iso_3166_1": "JP"
+                        }
+                    ],
+                    "incidents": [
+                        {
+                            "id": "12474177839982981",
+                            "type": "miscellaneous",
+                            "creation_time": "2022-12-12T21:10:00Z",
+                            "start_time": "2022-12-12T21:10:00Z",
+                            "end_time": "2022-12-12T21:25:00Z",
+                            "iso_3166_1_alpha2": "JP",
+                            "iso_3166_1_alpha3": "JPN",
+                            "description": "Smoothly",
+                            "impact": "low",
+                            "alertc_codes": [
+                                701
+                            ],
+                            "lanes_blocked": [
+                                
+                            ],
+                            "length": 74787,
+                            "south": 35.641681,
+                            "west": 139.946273,
+                            "north": 35.937095,
+                            "east": 140.589248,
+                            "congestion": {
+                                "value": 0
+                            },
+                            "geometry_index_start": 0,
+                            "geometry_index_end": 11,
+                            "affected_road_names": [
+                                "E51/東関東自動車道（高谷～潮来）/Higashikanto Expwy(Koya To Itako)"
+                            ]
+                        }
+                    ],
+                    "annotation": {
+                        "maxspeed": [
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 100,
+                                "unit": "km/h"
+                            }
+                        ],
+                        "congestion_numeric": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "duration": [
+                            3.383,
+                            2.311,
+                            2.89,
+                            2.166,
+                            0.255,
+                            6.044,
+                            2.09,
+                            6.293,
+                            5.492,
+                            2.702,
+                            3.376
+                        ]
+                    },
+                    "weight_typical": 47.092,
+                    "duration_typical": 46.529,
+                    "weight": 37.803,
+                    "duration": 37.002,
+                    "steps": [
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Drive east.</prosody></amazon:effect></speak>",
+                                    "announcement": "Drive east.",
+                                    "distanceAlongGeometry": 1161.482
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In a half mile, Dropped Pin #1 will be on the right.</prosody></amazon:effect></speak>",
+                                    "announcement": "In a half mile, Dropped Pin #1 will be on the right.",
+                                    "distanceAlongGeometry": 1133.148
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Dropped Pin #1 is on the right.</prosody></amazon:effect></speak>",
+                                    "announcement": "Dropped Pin #1 is on the right.",
+                                    "distanceAlongGeometry": 118.056
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        76
+                                    ],
+                                    "duration": 3.383,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": false,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 3.298,
+                                    "geometry_index": 0,
+                                    "location": [
+                                        140.397245,
+                                        35.8112
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "location": [
+                                        140.398394,
+                                        35.811439
+                                    ],
+                                    "geometry_index": 1,
+                                    "admin_index": 0,
+                                    "weight": 5.813,
+                                    "is_urban": false,
+                                    "turn_weight": 0.75,
+                                    "duration": 5.2,
+                                    "bearings": [
+                                        75,
+                                        256,
+                                        262
+                                    ],
+                                    "out": 0,
+                                    "in": 1,
+                                    "turn_duration": 0.007,
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 1,
+                                    "bearings": [
+                                        73,
+                                        252
+                                    ],
+                                    "duration": 2.166,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": false,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 2.112,
+                                    "geometry_index": 3,
+                                    "location": [
+                                        140.400122,
+                                        35.811856
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 1,
+                                    "bearings": [
+                                        74,
+                                        253
+                                    ],
+                                    "duration": 0.255,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": false,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 0.248,
+                                    "geometry_index": 4,
+                                    "location": [
+                                        140.400849,
+                                        35.812031
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "slight left"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "location": [
+                                        140.400929,
+                                        35.81205
+                                    ],
+                                    "geometry_index": 5,
+                                    "admin_index": 0,
+                                    "weight": 19.414,
+                                    "is_urban": false,
+                                    "duration": 19.92,
+                                    "bearings": [
+                                        62,
+                                        71,
+                                        254
+                                    ],
+                                    "rest_stop": {
+                                        "amenities": [
+                                            {
+                                                "type": "toilet"
+                                            },
+                                            {
+                                                "type": "coffee"
+                                            },
+                                            {
+                                                "type": "ATM"
+                                            },
+                                            {
+                                                "type": "baby_care"
+                                            },
+                                            {
+                                                "type": "facilities_for_disabled"
+                                            },
+                                            {
+                                                "type": "shop"
+                                            },
+                                            {
+                                                "type": "telephone",
+                                                "name": "test_name",
+                                                "brand": "test_brand"
+                                            }
+                                        ],
+                                        "guidemap": "https://api.mapbox.com/guidance-views/v1/720576000/sapaguidemap/SA116402",
+                                        "name": "大栄ＰＡ",
+                                        "type": "rest_area"
+                                    },
+                                    "out": 1,
+                                    "in": 2,
+                                    "turn_duration": 0.008,
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        64,
+                                        246,
+                                        252
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 1,
+                                    "turn_weight": 1,
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "turn_duration": 0.008,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": false,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "geometry_index": 9,
+                                    "location": [
+                                        140.407382,
+                                        35.814077
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "Dropped Pin #1 will be on the right"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "right",
+                                        "text": "Dropped Pin #1 will be on the right"
+                                    },
+                                    "distanceAlongGeometry": 1161.482
+                                },
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "Dropped Pin #1 is on the right"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "right",
+                                        "text": "Dropped Pin #1 is on the right"
+                                    },
+                                    "distanceAlongGeometry": 118.056
+                                }
+                            ],
+                            "destinations": "東関東道, 鹿嶋",
+                            "speedLimitUnit": "km/h",
+                            "maneuver": {
+                                "type": "depart",
+                                "instruction": "Drive east on Higashikanto Expwy(Koya To Itako).",
+                                "bearing_after": 76,
+                                "bearing_before": 0,
+                                "location": [
+                                    140.397245,
+                                    35.8112
+                                ]
+                            },
+                            "speedLimitSign": "vienna",
+                            "name": "Higashikanto Expwy(Koya To Itako)",
+                            "weight_typical": 47.092,
+                            "duration_typical": 46.529,
+                            "duration": 37.002,
+                            "distance": 1161.482,
+                            "driving_side": "left",
+                            "weight": 37.803,
+                            "mode": "driving",
+                            "geometry": "_wvhcAyjdxjG}MyfAmIio@sNuz@}Iml@e@_Dca@g{BwKsi@ah@a~Bwe@klB{Sqs@gZg`A"
+                        },
+                        {
+                            "voiceInstructions": [
+                                
+                            ],
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        243
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "admin_index": 0,
+                                    "geometry_index": 11,
+                                    "location": [
+                                        140.409267,
+                                        35.814847
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                
+                            ],
+                            "speedLimitUnit": "km/h",
+                            "maneuver": {
+                                "type": "arrive",
+                                "instruction": "Dropped Pin #1 is on the right.",
+                                "modifier": "right",
+                                "bearing_after": 0,
+                                "bearing_before": 63,
+                                "location": [
+                                    140.409267,
+                                    35.814847
+                                ]
+                            },
+                            "speedLimitSign": "vienna",
+                            "name": "Higashikanto Expwy(Koya To Itako)",
+                            "weight_typical": 0,
+                            "duration_typical": 0,
+                            "duration": 0,
+                            "distance": 0,
+                            "driving_side": "left",
+                            "weight": 0,
+                            "mode": "driving",
+                            "geometry": "}z}hcAez{xjG??"
+                        }
+                    ],
+                    "distance": 1161.482,
+                    "summary": "Higashikanto Expwy(Koya To Itako)"
+                }
+            ],
+            "geometry": "_wvhcAyjdxjG}MyfAmIio@sNuz@}Iml@e@_Dca@g{BwKsi@ah@a~Bwe@klB{Sqs@gZg`A",
+            "voiceLocale": "en-US"
+        }
+    ],
+    "waypoints": [
+        {
+            "distance": 0.88,
+            "name": "E51",
+            "location": [
+                140.397245,
+                35.8112
+            ]
+        },
+        {
+            "distance": 2.249,
+            "name": "E51",
+            "location": [
+                140.409267,
+                35.814847
+            ]
+        }
+    ],
+    "code": "Ok",
+    "uuid": "KqbxcEh_IF7dYvz6Y4uUCpWTk4TtMECgtv338tDvUo-hQY5V_PEUwA=="
+}
+
