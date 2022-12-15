@@ -2,7 +2,7 @@ import XCTest
 import Turf
 import MapboxMaps
 import MapboxDirections
-import Nimble
+import CwlPreconditionTesting
 
 @testable import TestHelper
 @testable import MapboxNavigation
@@ -667,12 +667,17 @@ class NavigationCameraTests: TestCase {
         XCTAssertEqual(zoomRange.lowerBound, 10.0, "Lower bounds should be equal.")
         XCTAssertEqual(zoomRange.upperBound, 22.0, "Upper bounds should be equal.")
 
-        // It should only be possible to set zoom range levels from `0.0` to `22.0`.
-        expect {
+        let preconditionExpectation = expectation(description: "Precondition failed")
+        let caughtException = catchBadInstruction {
+            preconditionExpectation.fulfill()
+            // It should only be possible to set zoom range levels from `0.0` to `22.0`.
             navigationViewportDataSource.options.followingCameraOptions.zoomRange = -1.0...100.0
-        }.to(throwAssertion())
-        XCTAssertEqual(navigationViewportDataSource.options.followingCameraOptions.zoomRange,
-                       0...22)
+        }
+
+        waitForExpectations(timeout: 1.0)
+
+        XCTAssertEqual(navigationViewportDataSource.options.followingCameraOptions.zoomRange, 0...22)
+        XCTAssertNotNil(caughtException)
     }
 #endif
     
@@ -684,16 +689,25 @@ class NavigationCameraTests: TestCase {
             XCTFail(); return
         }
 
-        // It should only be possible to set maximum zoom level between `0.0` and `22.0`.
-        expect {
+        let preconditionExpectation1 = expectation(description: "Precondition failed")
+        let caughtException1 = catchBadInstruction {
+            preconditionExpectation1.fulfill()
+            // It should only be possible to set maximum zoom level between `0.0` and `22.0`.
             navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel = 23.0
-        }.to(throwAssertion())
+        }
 
+        wait(for: [preconditionExpectation1], timeout: 1.0)
+        XCTAssertNotNil(caughtException1)
         XCTAssertEqual(navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel, 22)
-        expect {
-            navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel = -1
-        }.to(throwAssertion())
 
+        let preconditionExpectation2 = expectation(description: "Precondition failed")
+        let caughtException2 = catchBadInstruction {
+            preconditionExpectation2.fulfill()
+            navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel = -1
+        }
+
+        wait(for: [preconditionExpectation2], timeout: 1.0)
+        XCTAssertNotNil(caughtException2)
         XCTAssertEqual(navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel, 0)
     }
 #endif
