@@ -72,7 +72,7 @@ class ViewController: UIViewController {
         // Show congestion levels on alternative route lines if there're multiple routes in the response.
         navigationMapView.showsCongestionForAlternativeRoutes = true
         navigationMapView.showsRestrictedAreasOnRoute = true
-        navigationMapView.show(routeResponse)
+        navigationMapView.showcase(routeResponse)
         navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
         navigationMapView.showRouteDurations(along: prioritizedRoutes)
     }
@@ -223,6 +223,7 @@ class ViewController: UIViewController {
         navigationMapView?.removeRoutes()
         navigationMapView?.removeRouteDurations()
         navigationMapView?.removeWaypoints()
+        navigationMapView?.removeContinuousAlternativesRoutes()
 
         waypoints.removeAll()
     }
