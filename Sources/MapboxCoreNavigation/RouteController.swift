@@ -1091,7 +1091,7 @@ extension RouteController {
         }
         
         let indexedRouteResponse = IndexedRouteResponse(routeResponse: decoded.routeResponse,
-                                                        routeIndex: 0,
+                                                        routeIndex: Int(onlineRoute.getRouteIndex()),
                                                         responseOrigin: onlineRoute.getRouterOrigin())
         guard let newRoute = indexedRouteResponse.currentRoute else {
             return

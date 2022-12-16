@@ -16,6 +16,7 @@
 * Predictive cache optimization for reducing memory and CPU consumption on very long and complex routes. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Fixed reset of DR driving out of the tunnel for a brief moment. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
 * Fix the issue where continuous alternative routes are not vanishied correctly. ([#4283](https://github.com/mapbox/mapbox-navigation-ios/pull/4283))
+* Fixed an issue where switching to a coincident online route sometimes resulted in using a route with different geometry than the original one. ([#4305](https://github.com/mapbox/mapbox-navigation-ios/pull/4305))
 
 ### Map
 
