@@ -78,17 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "a9ef284deae227c6111c27a3535098c1e9a9d8e3",
-          "version": "2.1.1"
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble.git",
-        "state": {
-          "branch": null,
-          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
-          "version": "9.2.1"
+          "revision": "285622fa9734d4b28c9eca10fa59a47699ca39fd",
+          "version": "2.1.0"
         }
       },
       {

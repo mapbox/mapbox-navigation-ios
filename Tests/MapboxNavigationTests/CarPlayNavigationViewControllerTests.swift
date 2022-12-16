@@ -79,8 +79,8 @@ class CarPlayNavigationViewControllerTests: TestCase {
         XCTAssertEqual(actualTravelEstimates?.distanceRemaining.value,
                        expectedTravelEstimates.distanceRemaining.value,
                        "Remaining distances should be equal.")
-        XCTAssertEqual(actualTravelEstimates?.timeRemaining.doubleValue,
-                       expectedTravelEstimates.timeRemaining.doubleValue,
+        XCTAssertEqual(actualTravelEstimates?.timeRemaining,
+                       expectedTravelEstimates.timeRemaining,
                        "Remaining times should be equal.")
     }
 }

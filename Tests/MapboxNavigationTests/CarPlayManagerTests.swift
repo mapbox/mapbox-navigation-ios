@@ -2,7 +2,7 @@ import XCTest
 import CarPlay
 import MapboxDirections
 import CarPlayTestHelper
-import Nimble
+import CwlPreconditionTesting
 @testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
@@ -251,9 +251,15 @@ class CarPlayManagerTests: TestCase {
         let trip = createTrip(routeChoice)
         let mapTemplate = CPMapTemplate()
 
-        expect {
+        let preconditionExpectation = expectation(description: "Precondition failed")
+        let caughtException = catchBadInstruction {
+            preconditionExpectation.fulfill()
             self.carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
-        }.to(throwAssertion())
+        }
+
+        waitForExpectations(timeout: 1.0)
+
+        XCTAssertNotNil(caughtException)
     }
 #endif
 
