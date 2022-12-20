@@ -4,32 +4,26 @@ import CoreLocation
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
-final class RouteStepProgressTests: TestCase {
-    let accuracy: CLLocationDistance = 0.00001
+fileprivate let spokenInstructions = [
+    Fixture.makeSpokenInstruction(),
+    Fixture.makeSpokenInstruction()
+]
+fileprivate let visualInstructions = [
+    Fixture.makeVisualInstruction(maneuverType: .depart),
+    Fixture.makeVisualInstruction(maneuverType: .turn),
+    Fixture.makeVisualInstruction(maneuverType: .arrive)
+]
+fileprivate let accuracy: CLLocationDistance = 0.00001
+fileprivate let distance: CLLocationDistance = 100
 
-    var zeroDistanceStep: RouteStep!
-    var step: RouteStep!
+final class RouteStepProgressTests: TestCase {
     var stepProgress: RouteStepProgress!
     var intersections: [Intersection]!
 
     override func setUp() {
         super.setUp()
-        
-        step = RouteStep(transportType: .automobile,
-                         maneuverLocation: .init(),
-                         maneuverType: .turn,
-                         instructions: "empty",
-                         drivingSide: .right,
-                         distance: 100,
-                         expectedTravelTime: 10)
-        zeroDistanceStep = RouteStep(transportType: .automobile,
-                                     maneuverLocation: .init(),
-                                     maneuverType: .turn,
-                                     instructions: "empty",
-                                     drivingSide: .right,
-                                     distance: 0,
-                                     expectedTravelTime: 10)
-        stepProgress = RouteStepProgress(step: step)
+
+        stepProgress = makeStepProgress()
 
         intersections = [
             Intersection(location: CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
@@ -51,6 +45,21 @@ final class RouteStepProgressTests: TestCase {
                          preferredApproachLanes: nil,
                          usableLaneIndication: nil),
         ]
+    }
+
+    func makeStepProgress(distance: CLLocationDistance = distance,
+                          instructionsSpokenAlongStep: [SpokenInstruction]? = spokenInstructions,
+                          instructionsDisplayedAlongStep: [VisualInstructionBanner]? = visualInstructions) -> RouteStepProgress {
+        let step = RouteStep(transportType: .automobile,
+                         maneuverLocation: .init(),
+                         maneuverType: .turn,
+                         instructions: "empty",
+                         drivingSide: .right,
+                         distance: distance,
+                         expectedTravelTime: 10,
+                         instructionsSpokenAlongStep: instructionsSpokenAlongStep,
+                         instructionsDisplayedAlongStep: instructionsDisplayedAlongStep)
+        return RouteStepProgress(step: step)
     }
 
     func testReturnUpcomingIntersection() {
@@ -95,7 +104,7 @@ final class RouteStepProgressTests: TestCase {
         stepProgress.distanceTraveled = 90
         XCTAssertEqual(stepProgress.durationRemaining, 1, accuracy: accuracy)
 
-        let stepProgress = RouteStepProgress(step: zeroDistanceStep)
+        let stepProgress = makeStepProgress(distance: 0)
         XCTAssertEqual(stepProgress.durationRemaining, 0)
     }
 
@@ -108,12 +117,80 @@ final class RouteStepProgressTests: TestCase {
         stepProgress.distanceTraveled = 100
         XCTAssertEqual(stepProgress.fractionTraveled, 1)
 
-        let stepProgress = RouteStepProgress(step: zeroDistanceStep)
+        let stepProgress = makeStepProgress(distance: 0)
         XCTAssertEqual(stepProgress.fractionTraveled, 1)
     }
 
     func testReturnInitialUserDistanceToManeuverLocation() {
-        XCTAssertEqual(stepProgress.userDistanceToManeuverLocation, step.distance)
+        XCTAssertEqual(stepProgress.userDistanceToManeuverLocation, distance)
+    }
+
+    func testReturnRemainingSpokenInstructions() {
+        XCTAssertEqual(stepProgress.remainingSpokenInstructions, spokenInstructions)
+
+        stepProgress.spokenInstructionIndex = 1
+        XCTAssertEqual(stepProgress.remainingSpokenInstructions, Array(spokenInstructions.suffix(from: 1)))
+
+        stepProgress.spokenInstructionIndex = 2
+        XCTAssertNil(stepProgress.remainingSpokenInstructions)
+    }
+
+    func testReturnRemainingSpokenInstructionsIfNil() {
+        let stepProgress = makeStepProgress(instructionsSpokenAlongStep: nil)
+        XCTAssertNil(stepProgress.remainingSpokenInstructions)
+    }
+
+    func testReturnRemainingSpokenInstructionsIfEmpty() {
+        let stepProgress = makeStepProgress(instructionsSpokenAlongStep: [])
+        XCTAssertNil(stepProgress.remainingSpokenInstructions)
+    }
+
+    func testReturnRemainingVisualInstructions() {
+        XCTAssertEqual(stepProgress.remainingVisualInstructions, visualInstructions)
+
+        stepProgress.visualInstructionIndex = 1
+        XCTAssertEqual(stepProgress.remainingVisualInstructions, Array(visualInstructions.suffix(from: 1)))
+
+        stepProgress.visualInstructionIndex = 3
+        XCTAssertNil(stepProgress.remainingVisualInstructions)
+    }
+
+    func testReturnRemainingVisualInstructionsIfNil() {
+        let stepProgress = makeStepProgress(instructionsDisplayedAlongStep: nil)
+        XCTAssertNil(stepProgress.remainingVisualInstructions)
+    }
+
+    func testReturnRemainingVisualInstructionsIfEmpty() {
+        let stepProgress = makeStepProgress(instructionsDisplayedAlongStep: [])
+        XCTAssertNil(stepProgress.remainingVisualInstructions)
+    }
+
+    func testReturnCurrentSpokenInstruction() {
+        stepProgress.spokenInstructionIndex = 1
+        XCTAssertEqual(stepProgress.currentSpokenInstruction, spokenInstructions[1])
+
+        stepProgress.spokenInstructionIndex = 2
+        XCTAssertNil(stepProgress.currentSpokenInstruction)
+
+        stepProgress.spokenInstructionIndex = -1
+        XCTAssertNil(stepProgress.currentSpokenInstruction)
+
+        let stepProgressWithEmptyInstructions = makeStepProgress(instructionsSpokenAlongStep: [])
+        XCTAssertNil(stepProgressWithEmptyInstructions.currentSpokenInstruction)
+    }
+
+    func testReturnCurrentVisualInstruction() {
+        stepProgress.visualInstructionIndex = 1
+        XCTAssertEqual(stepProgress.currentVisualInstruction, visualInstructions[1])
+
+        stepProgress.visualInstructionIndex = 3
+        XCTAssertNil(stepProgress.currentVisualInstruction)
+
+        stepProgress.visualInstructionIndex = -1
+        XCTAssertNil(stepProgress.currentVisualInstruction)
+
+        let stepProgressWithEmptyInstructions = makeStepProgress(instructionsDisplayedAlongStep: [])
+        XCTAssertNil(stepProgressWithEmptyInstructions.currentVisualInstruction)
     }
 
 }

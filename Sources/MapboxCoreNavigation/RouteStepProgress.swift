@@ -131,7 +131,9 @@ open class RouteStepProgress: Codable {
      An `Array` of remaining `VisualInstruction` for a step.
      */
     public var remainingVisualInstructions: [VisualInstructionBanner]? {
-        guard let visualInstructions = step.instructionsDisplayedAlongStep else { return nil }
+        guard let visualInstructions = step.instructionsDisplayedAlongStep,
+              0..<visualInstructions.count ~= visualInstructionIndex else { return nil }
+
         return Array(visualInstructions.suffix(from: visualInstructionIndex))
     }
 
@@ -144,8 +146,9 @@ open class RouteStepProgress: Codable {
      An `Array` of remaining `SpokenInstruction` for a step.
      */
     public var remainingSpokenInstructions: [SpokenInstruction]? {
-        guard let instructions = step.instructionsSpokenAlongStep else { return nil }
-        guard spokenInstructionIndex < instructions.count else { return nil }
+        guard let instructions = step.instructionsSpokenAlongStep,
+              0..<instructions.count ~= spokenInstructionIndex else { return nil }
+
         return Array(instructions.suffix(from: spokenInstructionIndex))
     }
 
@@ -153,8 +156,9 @@ open class RouteStepProgress: Codable {
      Current spoken instruction for the user's progress along a step.
      */
     public var currentSpokenInstruction: SpokenInstruction? {
-        guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
-        guard spokenInstructionIndex < instructionsSpokenAlongStep.count else { return nil }
+        guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep,
+              0..<instructionsSpokenAlongStep.count ~= spokenInstructionIndex else { return nil }
+
         return instructionsSpokenAlongStep[spokenInstructionIndex]
     }
 
@@ -162,8 +166,9 @@ open class RouteStepProgress: Codable {
      Current visual instruction for the user's progress along a step.
      */
     public var currentVisualInstruction: VisualInstructionBanner? {
-        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep else { return nil }
-        guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
+        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep,
+              0..<instructionsDisplayedAlongStep.count ~= visualInstructionIndex else { return nil }
+
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
     
