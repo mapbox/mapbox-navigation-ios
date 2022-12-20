@@ -456,7 +456,7 @@ extension NavigationMapView {
         let intersectionIndex = stepProgress.intersectionIndex
         let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
         
-        for intersection in stepIntersections?.suffix(from: intersectionIndex) ?? [] {
+        for intersection in stepIntersections?.dropFirst(intersectionIndex) ?? [] {
             if let feature = intersectionFeature(from: intersection) {
                 featureCollection.features.append(feature)
             }

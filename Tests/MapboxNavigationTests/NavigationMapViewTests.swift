@@ -31,6 +31,29 @@ class NavigationMapViewTests: TestCase {
         navigationMapView = nil
         super.tearDown()
     }
+
+    let intersections = [
+        Intersection(location: CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
+                     headings: [],
+                     approachIndex: 0,
+                     outletIndex: 0,
+                     outletIndexes:  .init(integer: 0),
+                     approachLanes: nil,
+                     usableApproachLanes: nil,
+                     preferredApproachLanes: nil,
+                     usableLaneIndication: nil,
+                     yieldSign: true),
+        Intersection(location: CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+                     headings: [],
+                     approachIndex: 0,
+                     outletIndex: 0,
+                     outletIndexes:  .init(integer: 0),
+                     approachLanes: nil,
+                     usableApproachLanes: nil,
+                     preferredApproachLanes: nil,
+                     usableLaneIndication: nil,
+                     stopSign: true),
+    ]
     
     let coordinates: [CLLocationCoordinate2D] = [
         CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -513,5 +536,64 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.enablePredictiveCaching(options: predictiveCacheOptions)
         XCTAssertNotNil(navigationMapView.predictiveCacheManager)
         XCTAssertFalse(navigationMapView.predictiveCacheManager === predictiveCacheManager)
+    }
+
+    func testUpdateIntersectionAnnotationsIfCorrectIndex() {
+        let progress = RouteProgress(route: route, options: options)
+        let stepProgress = progress.currentLegProgress.currentStepProgress
+        stepProgress.intersectionIndex = 1
+        stepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
+
+        navigationMapView.updateIntersectionAnnotations(with: progress)
+        let style = navigationMapView.mapView.mapboxMap.style
+        let source = try? style.source(withId: NavigationMapView.SourceIdentifier.intersectionAnnotationsSource) as? GeoJSONSource
+        let layer = try? style.layer(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
+
+        XCTAssertNotNil(source)
+        XCTAssertNotNil(layer)
+        XCTAssertEqual(layer?.source, NavigationMapView.SourceIdentifier.intersectionAnnotationsSource)
+    }
+
+    func testUpdateIntersectionAnnotationsIfIncorrectIndex() {
+        let progress = RouteProgress(route: route, options: options)
+        let stepProgress = progress.currentLegProgress.currentStepProgress
+        stepProgress.intersectionIndex = 10
+        stepProgress.intersectionsIncludingUpcomingManeuverIntersection = []
+
+        navigationMapView.updateIntersectionAnnotations(with: progress)
+
+        let style = navigationMapView.mapView.mapboxMap.style
+        let source = try? style.source(withId: NavigationMapView.SourceIdentifier.intersectionAnnotationsSource) as? GeoJSONSource
+        let layer = try? style.layer(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
+
+        XCTAssertNotNil(source)
+        XCTAssertNotNil(layer)
+        XCTAssertEqual(layer?.source, NavigationMapView.SourceIdentifier.intersectionAnnotationsSource)
+    }
+
+    func testUpdateIntersectionAnnotationsIfRouteComplete() {
+        let progress = RouteProgress(route: route, options: options)
+        progress.currentLegProgress.stepIndex = route.legs[0].steps.count - 1
+        progress.currentLegProgress.userHasArrivedAtWaypoint = true
+        configureIntersections()
+
+        navigationMapView.updateIntersectionAnnotations(with: progress)
+
+        let style = navigationMapView.mapView.mapboxMap.style
+        XCTAssertFalse(style.sourceExists(withId: NavigationMapView.SourceIdentifier.intersectionAnnotationsSource))
+        XCTAssertFalse(style.layerExists(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer))
+    }
+
+    private func configureIntersections() {
+        let style = navigationMapView.mapView.mapboxMap.style
+        var source = GeoJSONSource()
+        source.data = .empty
+        let sourceIdentifier = NavigationMapView.SourceIdentifier.intersectionAnnotationsSource
+        try! style.addSource(source, id: sourceIdentifier)
+
+        var shapeLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
+        shapeLayer.source = sourceIdentifier
+        try! style.addPersistentLayer(shapeLayer)
+
     }
 }
