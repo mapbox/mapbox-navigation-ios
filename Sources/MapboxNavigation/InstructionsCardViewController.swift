@@ -26,7 +26,7 @@ open class InstructionsCardViewController: UIViewController {
         
         var mutatedSteps = steps
         if mutatedSteps.count > 1 {
-            mutatedSteps = Array(mutatedSteps.suffix(from: stepIndex))
+            mutatedSteps = Array(mutatedSteps.dropFirst(stepIndex))
             mutatedSteps.removeLast()
         }
         

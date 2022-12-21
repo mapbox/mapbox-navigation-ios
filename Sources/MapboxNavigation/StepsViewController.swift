@@ -62,7 +62,7 @@ public class StepsViewController: UIViewController {
 
         // Include all steps on any future legs
         if !routeProgress.isFinalLeg {
-            routeProgress.route.legs.suffix(from: routeProgress.legIndex + 1).forEach {
+            routeProgress.route.legs.dropFirst(routeProgress.legIndex + 1).forEach {
                 var steps = $0.steps
                 // Don't include the last step, it includes nothing
                 _ = steps.popLast()

@@ -157,7 +157,7 @@ open class RouteStepProgress: Codable {
      */
     public var currentSpokenInstruction: SpokenInstruction? {
         guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep,
-              0..<instructionsSpokenAlongStep.count ~= spokenInstructionIndex else { return nil }
+              instructionsSpokenAlongStep.indices.contains(spokenInstructionIndex) else { return nil }
 
         return instructionsSpokenAlongStep[spokenInstructionIndex]
     }
@@ -167,7 +167,7 @@ open class RouteStepProgress: Codable {
      */
     public var currentVisualInstruction: VisualInstructionBanner? {
         guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep,
-              0..<instructionsDisplayedAlongStep.count ~= visualInstructionIndex else { return nil }
+              instructionsDisplayedAlongStep.indices.contains(visualInstructionIndex) else { return nil }
 
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }

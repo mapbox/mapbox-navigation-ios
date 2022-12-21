@@ -88,9 +88,11 @@
 		2C193C31290A9BC30050A57F /* PredictiveCacheManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46D290A8CA10067FDCF /* PredictiveCacheManagerTests.swift */; };
 		2C193C32290A9BC30050A57F /* PredictiveCacheOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46C290A8CA10067FDCF /* PredictiveCacheOptionsTests.swift */; };
 		2C257377292B836B00941307 /* ReentrantImageDownloaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */; };
-		2C257379292B8BEC00941307 /* RouteStepProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C257378292B8BEB00941307 /* RouteStepProgressTests.swift */; };
 		2C2880A1291A82630063E5B7 /* RerouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */; };
 		2C2880A6291AB7A10063E5B7 /* RerouteDetectorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */; };
+		2C36D9002952256400EE37DF /* RouteLegProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FD2952256400EE37DF /* RouteLegProgressTests.swift */; };
+		2C36D9012952256400EE37DF /* RouteStepProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FE2952256400EE37DF /* RouteStepProgressTests.swift */; };
+		2C36D9022952256400EE37DF /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */; };
 		2C4093B5292661FD0099FA0E /* RouteParserSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4093B4292661FD0099FA0E /* RouteParserSpy.swift */; };
 		2C585157292521C20077A558 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		2C58515F292523670077A558 /* RouteControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */; };
@@ -470,7 +472,6 @@
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
-		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53208AA1E81FFB900910266 /* NavigationMapView.swift */; };
 		C5381F03204E052A00A5493E /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5381F01204E03B600A5493E /* UIDevice.swift */; };
 		C53C196D1F38EA25008DB406 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C53C196F1F38EA25008DB406 /* Localizable.strings */; };
@@ -750,9 +751,11 @@
 		2C04E46C290A8CA10067FDCF /* PredictiveCacheOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredictiveCacheOptionsTests.swift; sourceTree = "<group>"; };
 		2C04E46D290A8CA10067FDCF /* PredictiveCacheManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredictiveCacheManagerTests.swift; sourceTree = "<group>"; };
 		2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReentrantImageDownloaderSpy.swift; sourceTree = "<group>"; };
-		2C257378292B8BEB00941307 /* RouteStepProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStepProgressTests.swift; sourceTree = "<group>"; };
 		2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerTests.swift; sourceTree = "<group>"; };
 		2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteDetectorSpy.swift; sourceTree = "<group>"; };
+		2C36D8FD2952256400EE37DF /* RouteLegProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLegProgressTests.swift; sourceTree = "<group>"; };
+		2C36D8FE2952256400EE37DF /* RouteStepProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepProgressTests.swift; sourceTree = "<group>"; };
+		2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		2C4093B4292661FD0099FA0E /* RouteParserSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteParserSpy.swift; sourceTree = "<group>"; };
 		2C585153292521C20077A558 /* MapboxCoreNavigationIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxCoreNavigationIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteControllerIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1155,7 +1158,6 @@
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C520EE911EBB84F9008805BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
 		C520EE941EBBBD55008805BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Navigation.strings; sourceTree = "<group>"; };
-		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; };
 		C5381F01204E03B600A5493E /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		C53C19701F38EACD008DB406 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1482,6 +1484,16 @@
 				2C4093B4292661FD0099FA0E /* RouteParserSpy.swift */,
 			);
 			path = NavNative;
+			sourceTree = "<group>";
+		};
+		2C36D8FC2952256400EE37DF /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				2C36D8FD2952256400EE37DF /* RouteLegProgressTests.swift */,
+				2C36D8FE2952256400EE37DF /* RouteStepProgressTests.swift */,
+				2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */,
+			);
+			path = Progress;
 			sourceTree = "<group>";
 		};
 		2C585154292521C20077A558 /* MapboxCoreNavigationIntegrationTests */ = {
@@ -2385,6 +2397,7 @@
 		C5ADFBD61DDCC7840011824B /* MapboxCoreNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
+				2C36D8FC2952256400EE37DF /* Progress */,
 				2C9DDBE12934C006007F8CFD /* MapboxCoreNavigationTests.swift */,
 				2C9006CD291927B80012CCEA /* MeasurementSystemTests.swift */,
 				2C9006CF291927B80012CCEA /* RerouteTests.swift */,
@@ -2403,7 +2416,6 @@
 				162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */,
 				C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */,
 				C5ABB50D20408D2C00AFA92C /* NavigationServiceTests.swift */,
-				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
 				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
 				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
@@ -2417,7 +2429,6 @@
 				8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */,
 				E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */,
 				2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */,
-				2C257378292B8BEB00941307 /* RouteStepProgressTests.swift */,
 			);
 			name = MapboxCoreNavigationTests;
 			path = Tests/MapboxCoreNavigationTests;
@@ -3480,8 +3491,9 @@
 				2B0C3EE428F6E56600F828DF /* HistoryReaderTests.swift in Sources */,
 				E2B4B22A272A814600FF0F57 /* ReplayLocationManagerTests.swift in Sources */,
 				E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */,
+				2C36D9002952256400EE37DF /* RouteLegProgressTests.swift in Sources */,
+				2C36D9012952256400EE37DF /* RouteStepProgressTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
-				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */,
 				2C9DDBE32934C457007F8CFD /* RouteControllerTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
@@ -3493,6 +3505,7 @@
 				8A9270EA2704F6CC00B606D9 /* BundleAdditionsTests.swift in Sources */,
 				E24CD8202768E36000B6ABBD /* LeakTests.swift in Sources */,
 				B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */,
+				2C36D9022952256400EE37DF /* RouteProgressTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* NavigationServiceTests.swift in Sources */,
@@ -3500,7 +3513,6 @@
 				2C9006D7291927D80012CCEA /* RoutesCoordinatorTests.swift in Sources */,
 				2C9006D6291927D80012CCEA /* RerouteTests.swift in Sources */,
 				11D1F89E269601150053A93F /* NativeHandlersFactoryTests.swift in Sources */,
-				2C257379292B8BEC00941307 /* RouteStepProgressTests.swift in Sources */,
 				2C193C31290A9BC30050A57F /* PredictiveCacheManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
