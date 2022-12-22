@@ -103,7 +103,8 @@ open class RouteStepProgress: Codable {
      The step must contain `intersectionsIncludingUpcomingManeuverIntersection` otherwise this property will be `nil`.
      */
     public var currentIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.startIndex..<intersections.endIndex ~= intersectionIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection,
+              intersections.indices.contains(intersectionIndex) else {
             return nil
         }
 
@@ -132,7 +133,7 @@ open class RouteStepProgress: Codable {
      */
     public var remainingVisualInstructions: [VisualInstructionBanner]? {
         guard let visualInstructions = step.instructionsDisplayedAlongStep,
-              0..<visualInstructions.count ~= visualInstructionIndex else { return nil }
+              visualInstructions.indices.contains(visualInstructionIndex) else { return nil }
 
         return Array(visualInstructions.suffix(from: visualInstructionIndex))
     }
@@ -147,7 +148,7 @@ open class RouteStepProgress: Codable {
      */
     public var remainingSpokenInstructions: [SpokenInstruction]? {
         guard let instructions = step.instructionsSpokenAlongStep,
-              0..<instructions.count ~= spokenInstructionIndex else { return nil }
+              instructions.indices.contains(spokenInstructionIndex) else { return nil }
 
         return Array(instructions.suffix(from: spokenInstructionIndex))
     }
