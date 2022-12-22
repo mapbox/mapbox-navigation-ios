@@ -28,6 +28,7 @@
 * Added `CarPlayManagerDelegate.carPlayManager(_:willAdd:for:)`, `NavigationMapViewDelegate.navigationMapView(_:willAdd:)` and `NavigationViewControllerDelegate.navigationViewController(_:willAdd:)` to modify the properties of the default layer which will be added to the map view during navigation. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 * Fixed issue where the traversed route layer doesn't share the same width with the main route casing layer after developers providing their own layer or midfying the layer properties. ([#4277](https://github.com/mapbox/mapbox-navigation-ios/pull/4277))
 * Added `NavigationMapView.showcase(_:routesPresentationStyle:legIndex:animated:duration:completion:)` and `NavigationMapView.show(_:layerPosition:legIndex:)` methods to draw `IndexedRouteResponse` data and populate view's `routes` and `continuousAlternatives` properties accordingly. ([#4294](https://github.com/mapbox/mapbox-navigation-ios/pull/4294))
+* Fixed an issue where map wouldn't be loaded in active navigation session on CarPlay. ([#4315](https://github.com/mapbox/mapbox-navigation-ios/pull/4315))
 
 ### Location tracking
 
