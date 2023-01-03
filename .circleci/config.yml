@@ -129,7 +129,7 @@ commands:
             set -e -o pipefail -u
 
             mkdir $CIRCLE_WORKING_DIRECTORY/api_logs
-            $CIRCLE_WORKING_DIRECTORY/scripts/api-compatibility-check/build-api-logs.sh $CIRCLE_WORKING_DIRECTORY $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
+            $CIRCLE_WORKING_DIRECTORY/scripts/api-compatibility-check/build-api-logs.sh "12.0" $CIRCLE_WORKING_DIRECTORY $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
 
   run_breaking_changes_detector:
     parameters:

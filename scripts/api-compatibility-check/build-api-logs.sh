@@ -4,18 +4,19 @@
 
 set -e -o pipefail -u
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 <root_dir> <core_module_logs_path> <ui_module_logs_path>"
+if [ $# -ne 4 ]; then
+    echo -e "Usage: $0 <ios_version> <root_dir> <core_module_logs_path> <ui_module_logs_path>\n- <ios-version>: iOS version to build the frameworks for (e.g. 12.0)"
     exit 1
 fi
 
-ROOT_DIR=$1
-CORE_MODULE_LOGS_PATH=$2
-UI_MODULE_LOGS_PATH=$3
+IOS_VERSION=$1
+ROOT_DIR=$2
+CORE_MODULE_LOGS_PATH=$3
+UI_MODULE_LOGS_PATH=$4
 
 PROJECT_PATH=$ROOT_DIR/MapboxNavigation-SPM.xcodeproj/
 
-TARGET=arm64-apple-ios12.0
+TARGET="arm64-apple-ios${IOS_VERSION}"
 SDK=iphoneos
 CONFIGURATION=Release
 
