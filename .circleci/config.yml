@@ -150,7 +150,7 @@ commands:
     steps:
       - run:
           name: Install Dependencies
-          command: carthage bootstrap --platform ios --configuration Debug --use-netrc --use-xcframeworks
+          command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
 step-library:
   - &restore-cache
