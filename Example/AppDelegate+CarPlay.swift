@@ -67,6 +67,23 @@ extension AppDelegate: CPApplicationDelegate {
 // MARK: - CarPlayManagerDelegate methods
 
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
+        guard let indexedRouteResponse = routeChoice.indexedRouteResponse,
+              shouldPreviewRoutes(for: indexedRouteResponse) else { return }
+        currentAppRootViewController?.indexedRouteResponse = indexedRouteResponse
+    }
+    
+    private func shouldPreviewRoutes(for indexedRouteResponse: IndexedRouteResponse) -> Bool {
+        guard let rootResponse = currentAppRootViewController?.indexedRouteResponse else {
+            return true
+        }
+        return indexedRouteResponse.routeResponse.routes != rootResponse.routeResponse.routes ||
+        indexedRouteResponse.routeIndex != rootResponse.routeIndex
+    }
+    
+    func carPlayManagerCanceledRoutesPreview(_ carPlayManager: CarPlayManager) {
+        currentAppRootViewController?.indexedRouteResponse = nil
+    }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
@@ -484,6 +501,8 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         //       navigation as well, otherwise, CarPlay will be in passive navigation and stay out of sync with iOS app. 
         if appDelegate.currentAppRootViewController?.activeNavigationViewController != nil {
             appDelegate.currentAppRootViewController?.beginCarPlayNavigation()
+        } else if let indexedRouteResponse = appDelegate.currentAppRootViewController?.indexedRouteResponse {
+            appDelegate.carPlayManager.previewRoutes(for: indexedRouteResponse)
         }
     }
 

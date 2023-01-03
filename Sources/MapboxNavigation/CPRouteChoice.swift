@@ -21,4 +21,8 @@ extension CPRouteChoice {
         
         return userInfo[IndexedRouteResponseUserInfo.key] as? IndexedRouteResponseUserInfo
     }
+    
+    public var indexedRouteResponse: IndexedRouteResponse? {
+        return indexedRouteResponseUserInfo?.indexedRouteResponse
+    }
 }

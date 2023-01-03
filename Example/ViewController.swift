@@ -75,6 +75,13 @@ class ViewController: UIViewController {
         navigationMapView.showcase(routeResponse)
         navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
         navigationMapView.showRouteDurations(along: prioritizedRoutes)
+        
+        startButton.isEnabled = true
+        clearMap.isHidden = false
+        
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.previewRoutes(for: routeResponse)
+        }
     }
     
     var currentRoute: Route? {
@@ -93,8 +100,6 @@ class ViewController: UIViewController {
                 clearNavigationMapView()
                 return
             }
-            
-            startButton.isEnabled = true
             showCurrentRoute()
         }
     }
@@ -226,6 +231,10 @@ class ViewController: UIViewController {
         navigationMapView?.removeContinuousAlternativesRoutes()
 
         waypoints.removeAll()
+        navigationMapView?.navigationCamera.follow()
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.cancelRoutesPreview()
+        }
     }
     
     func requestNotificationCenterAuthorization() {
@@ -598,7 +607,6 @@ class ViewController: UIViewController {
             self.waypoints = waypoints
         }
         
-        self.clearMap.isHidden = false
         self.longPressHintView.isHidden = true
     }
 

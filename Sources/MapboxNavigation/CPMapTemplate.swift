@@ -31,3 +31,10 @@ extension CLLocationDirection {
     }
 }
 
+extension CPTemplate {
+    var currentActivity: CarPlayActivity? {
+        guard let userInfo = userInfo as? CarPlayUserInfo else { return nil }
+        return userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity
+    }
+}
+
