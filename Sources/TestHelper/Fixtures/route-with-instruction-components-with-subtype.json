@@ -1,0 +1,1329 @@
+{
+    "routes": [
+        {
+            "country_crossed": false,
+            "weight_typical": 298.954,
+            "duration_typical": 186.021,
+            "weight_name": "auto",
+            "weight": 292.818,
+            "duration": 181.012,
+            "distance": 1471.036,
+            "legs": [
+                {
+                    "via_waypoints": [
+                        
+                    ],
+                    "admins": [
+                        {
+                            "iso_3166_1_alpha3": "JPN",
+                            "iso_3166_1": "JP"
+                        }
+                    ],
+                    "annotation": {
+                        "maxspeed": [
+                            {
+                                "unknown": true
+                            },
+                            {
+                                "unknown": true
+                            },
+                            {
+                                "unknown": true
+                            },
+                            {
+                                "unknown": true
+                            },
+                            {
+                                "unknown": true
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 50,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 60,
+                                "unit": "km/h"
+                            }
+                        ],
+                        "congestion_numeric": [
+                            0,
+                            0,
+                            0,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        ],
+                        "duration": [
+                            1.344,
+                            24.651,
+                            7.605,
+                            9.087,
+                            2.696,
+                            13.433,
+                            3.619,
+                            16.194,
+                            0.264,
+                            0.629,
+                            0.593,
+                            0.561,
+                            15.561,
+                            1.02,
+                            0.833,
+                            0.648,
+                            0.5,
+                            0.665,
+                            0.589,
+                            0.552,
+                            1.295,
+                            2.883,
+                            2.873,
+                            2.132,
+                            1.791,
+                            1.954,
+                            2.223,
+                            3.417,
+                            3.079,
+                            1.098,
+                            0.396,
+                            0.459,
+                            1.87,
+                            2.644,
+                            1.304,
+                            1.285,
+                            1.021,
+                            1.035,
+                            1.234,
+                            0.611,
+                            0.925,
+                            0.949,
+                            1.055,
+                            0.859,
+                            1.316,
+                            1.262,
+                            1.075,
+                            1.498,
+                            4.171,
+                            3.291,
+                            4.393,
+                            2.23,
+                            3.437,
+                            0.709,
+                            0.634,
+                            0.693,
+                            0.93,
+                            0.741,
+                            1.056,
+                            0.936,
+                            2.148,
+                            5.373,
+                            5.683
+                        ]
+                    },
+                    "weight_typical": 298.954,
+                    "duration_typical": 186.021,
+                    "weight": 292.818,
+                    "duration": 181.012,
+                    "steps": [
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Drive north on <say-as interpret-as=\"address\">National Road No.1 Line</say-as>. Then, in 700 feet, Turn left at <say-as interpret-as=\"address\">赤羽橋</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Drive north on National Road No.1 Line. Then, in 700 feet, Turn left at 赤羽橋.",
+                                    "distanceAlongGeometry": 219.267
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn left at <say-as interpret-as=\"address\">赤羽橋</say-as>. Then Turn left to take the ramp.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn left at 赤羽橋. Then Turn left to take the ramp.",
+                                    "distanceAlongGeometry": 91.25
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        2
+                                    ],
+                                    "duration": 1.344,
+                                    "mapbox_streets_v8": {
+                                        "class": "trunk"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 1.646,
+                                    "geometry_index": 0,
+                                    "location": [
+                                        139.745061,
+                                        35.652935
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        3,
+                                        94,
+                                        182
+                                    ],
+                                    "duration": 24.651,
+                                    "turn_duration": 0.019,
+                                    "mapbox_streets_v8": {
+                                        "class": "trunk"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 30.174,
+                                    "geometry_index": 1,
+                                    "location": [
+                                        139.745064,
+                                        35.652999
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        5,
+                                        121,
+                                        183,
+                                        284
+                                    ],
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 2,
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "left",
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": true
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "valid": true,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        }
+                                    ],
+                                    "turn_duration": 2.022,
+                                    "traffic_signal": true,
+                                    "mapbox_streets_v8": {
+                                        "class": "trunk"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "geometry_index": 2,
+                                    "location": [
+                                        139.745144,
+                                        35.654166
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "view": {
+                                        "components": [
+                                            {
+                                                "imageURL": "https://api.mapbox.com/guidance-views/v1/1659312000/cityreal/13c00069_o40d?arrow_ids=13c00069_o41a",
+                                                "subType": "cityreal",
+                                                "type": "guidance-view",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "left",
+                                        "text": ""
+                                    },
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "active_direction": "left",
+                                                "active": true,
+                                                "directions": [
+                                                    "left",
+                                                    "slight left"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "slight left"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "slight right"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "slight right"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "text": ""
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "赤羽橋"
+                                            },
+                                            {
+                                                "type": "delimiter",
+                                                "text": "/"
+                                            },
+                                            {
+                                                "mapbox_shield": {
+                                                    "text_color": "white",
+                                                    "name": "jp-metropolitan-road",
+                                                    "display_ref": "319",
+                                                    "base_url": "https://api.mapbox.com/styles/v1"
+                                                },
+                                                "type": "icon",
+                                                "text": "Todou No.319 Line"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "left",
+                                        "text": "赤羽橋 / Todou No.319 Line"
+                                    },
+                                    "distanceAlongGeometry": 219.267
+                                }
+                            ],
+                            "speedLimitUnit": "km/h",
+                            "maneuver": {
+                                "type": "depart",
+                                "instruction": "Drive north on National Road No.1 Line.",
+                                "bearing_after": 2,
+                                "bearing_before": 0,
+                                "location": [
+                                    139.745061,
+                                    35.652935
+                                ]
+                            },
+                            "speedLimitSign": "vienna",
+                            "name": "",
+                            "weight_typical": 59.724,
+                            "duration_typical": 50.796,
+                            "duration": 45.382,
+                            "distance": 219.267,
+                            "driving_side": "left",
+                            "weight": 53.092,
+                            "mode": "driving",
+                            "ref": "National Road No.1 Line",
+                            "geometry": "msa_cAiqjpiG_CE}gA_DwMs@_WsA}EcA"
+                        },
+                        {
+                            "ref": "Todou No.319 Line",
+                            "mode": "driving",
+                            "weight": 22.17,
+                            "distance": 85.517,
+                            "guidance_views": [
+                                {
+                                    "overlay_ids": [
+                                        "13c00069_o41a"
+                                    ],
+                                    "base_id": "13c00069_o40d",
+                                    "type": "cityreal",
+                                    "data_id": "1659312000"
+                                }
+                            ],
+                            "driving_side": "left",
+                            "duration_typical": 17.052,
+                            "weight_typical": 22.17,
+                            "name": "",
+                            "speedLimitSign": "vienna",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn left at 赤羽橋.",
+                                "modifier": "left",
+                                "bearing_after": 274,
+                                "bearing_before": 10,
+                                "location": [
+                                    139.745246,
+                                    35.654897
+                                ]
+                            },
+                            "speedLimitUnit": "km/h",
+                            "bannerInstructions": [
+                                {
+                                    "view": {
+                                        "components": [
+                                            {
+                                                "imageURL": "https://api.mapbox.com/guidance-views/v1/1659312000/entrance/13i00017_o10d?arrow_ids=13i00017_o11a",
+                                                "subType": "entrance",
+                                                "type": "guidance-view",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "left",
+                                        "text": ""
+                                    },
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "active_direction": "left",
+                                                "active": true,
+                                                "directions": [
+                                                    "left"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "text": ""
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "Turn left to take the ramp"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "left",
+                                        "text": "Turn left to take the ramp"
+                                    },
+                                    "distanceAlongGeometry": 85.517
+                                }
+                            ],
+                            "geometry": "ane_cA{|jpiGiAzh@c@`P",
+                            "duration": 17.052,
+                            "junction_name": "赤羽橋",
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn left to take the ramp.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn left to take the ramp.",
+                                    "distanceAlongGeometry": 55.111
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "left",
+                                                "slight left"
+                                            ],
+                                            "valid_indication": "left",
+                                            "valid": true,
+                                            "active": true
+                                        },
+                                        {
+                                            "indications": [
+                                                "slight left"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "slight right"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "slight right"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "primary"
+                                    },
+                                    "location": [
+                                        139.745246,
+                                        35.654897
+                                    ],
+                                    "geometry_index": 5,
+                                    "admin_index": 0,
+                                    "weight": 17.76,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 4.649,
+                                    "turn_weight": 7,
+                                    "duration": 13.433,
+                                    "bearings": [
+                                        30,
+                                        101,
+                                        190,
+                                        274,
+                                        349
+                                    ],
+                                    "out": 3,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        true,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        6,
+                                        94,
+                                        275
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "turn_duration": 0.019,
+                                    "mapbox_streets_v8": {
+                                        "class": "primary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "geometry_index": 6,
+                                    "location": [
+                                        139.744576,
+                                        35.654934
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In a quarter mile, Keep left at <say-as interpret-as=\"address\">一ノ橋ＪＣＴ</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "In a quarter mile, Keep left at 一ノ橋ＪＣＴ.",
+                                    "distanceAlongGeometry": 471.831
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Keep left at <say-as interpret-as=\"address\">一ノ橋ＪＣＴ</say-as> toward <say-as interpret-as=\"address\">目黒</say-as>, <say-as interpret-as=\"address\">戸越</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Keep left at 一ノ橋ＪＣＴ toward 目黒, 戸越.",
+                                    "distanceAlongGeometry": 94.444
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "left"
+                                            ],
+                                            "valid_indication": "left",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "primary_link"
+                                    },
+                                    "location": [
+                                        139.744303,
+                                        35.654952
+                                    ],
+                                    "geometry_index": 7,
+                                    "admin_index": 0,
+                                    "weight": 23.748,
+                                    "is_urban": true,
+                                    "turn_weight": 20,
+                                    "duration": 18.242,
+                                    "bearings": [
+                                        95,
+                                        225,
+                                        277,
+                                        353
+                                    ],
+                                    "out": 1,
+                                    "in": 0,
+                                    "turn_duration": 15.182,
+                                    "classes": [
+                                        "toll"
+                                    ],
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "payment_methods": [
+                                                "general",
+                                                "etc"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": true,
+                                            "active": true
+                                        },
+                                        {
+                                            "payment_methods": [
+                                                "etc"
+                                            ],
+                                            "valid_indication": "straight",
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "primary_link"
+                                    },
+                                    "location": [
+                                        139.744008,
+                                        35.654804
+                                    ],
+                                    "geometry_index": 12,
+                                    "admin_index": 0,
+                                    "weight": 30.215,
+                                    "is_urban": true,
+                                    "toll_collection": {
+                                        "name": "芝公園料金所",
+                                        "type": "toll_booth"
+                                    },
+                                    "turn_weight": 15,
+                                    "classes": [
+                                        "toll"
+                                    ],
+                                    "turn_duration": 15,
+                                    "duration": 27.42,
+                                    "bearings": [
+                                        72,
+                                        274
+                                    ],
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "classes": [
+                                        "toll"
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        96,
+                                        277
+                                    ],
+                                    "duration": 8.1,
+                                    "mapbox_streets_v8": {
+                                        "class": "primary_link"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 9.923,
+                                    "geometry_index": 23,
+                                    "location": [
+                                        139.742508,
+                                        35.654814
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        106,
+                                        120,
+                                        289
+                                    ],
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 1,
+                                    "turn_weight": 48.312,
+                                    "turn_duration": 0.014,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "geometry_index": 27,
+                                    "location": [
+                                        139.741565,
+                                        35.655054
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "view": {
+                                        "components": [
+                                            {
+                                                "imageURL": "https://api.mapbox.com/guidance-views/v1/1659312000/jct/CA062201?arrow_ids=CA06220A",
+                                                "subType": "jct",
+                                                "type": "guidance-view",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "type": "fork",
+                                        "modifier": "left",
+                                        "text": ""
+                                    },
+                                    "secondary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "目黒"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "/"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "戸越"
+                                            }
+                                        ],
+                                        "type": "fork",
+                                        "modifier": "left",
+                                        "text": "目黒 / 戸越"
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "一ノ橋ＪＣＴ"
+                                            },
+                                            {
+                                                "type": "delimiter",
+                                                "text": "/"
+                                            },
+                                            {
+                                                "type": "icon",
+                                                "text": "2"
+                                            }
+                                        ],
+                                        "type": "fork",
+                                        "modifier": "left",
+                                        "text": "一ノ橋ＪＣＴ / 2"
+                                    },
+                                    "distanceAlongGeometry": 485.164
+                                }
+                            ],
+                            "destinations": "C1: 首都高速都心環状線",
+                            "speedLimitUnit": "km/h",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn left to take the ramp.",
+                                "modifier": "left",
+                                "bearing_after": 225,
+                                "bearing_before": 275,
+                                "location": [
+                                    139.744303,
+                                    35.654952
+                                ]
+                            },
+                            "speedLimitSign": "vienna",
+                            "name": "Expwy Inner Circular Route",
+                            "weight_typical": 127.564,
+                            "duration_typical": 66.32,
+                            "guidance_views": [
+                                {
+                                    "overlay_ids": [
+                                        "13i00017_o11a"
+                                    ],
+                                    "base_id": "13i00017_o10d",
+                                    "type": "entrance",
+                                    "data_id": "1659312000"
+                                }
+                            ],
+                            "duration": 66.725,
+                            "distance": 485.164,
+                            "driving_side": "left",
+                            "weight": 128.06,
+                            "mode": "driving",
+                            "geometry": "oqe_cA}aipiGdDfCb@l@v@fCd@fC?fC?hCSxFQjEP|Cd@pBhAfCb@hC?fCQ|HiA~Tw@~Tu@hOkAnL_CfM}EzMmIje@gHxa@iAvKYrC]hDiA`U{Af^"
+                        },
+                        {
+                            "mode": "driving",
+                            "weight": 89.496,
+                            "distance": 681.087,
+                            "guidance_views": [
+                                {
+                                    "overlay_ids": [
+                                        "CA06220A"
+                                    ],
+                                    "base_id": "CA062201",
+                                    "type": "jct",
+                                    "data_id": "1659312000"
+                                }
+                            ],
+                            "driving_side": "left",
+                            "duration_typical": 51.853,
+                            "weight_typical": 89.496,
+                            "name": "Expwy No.2 Line Meguro Line",
+                            "speedLimitSign": "vienna",
+                            "maneuver": {
+                                "type": "fork",
+                                "instruction": "Keep left at 一ノ橋ＪＣＴ toward 目黒/戸越.",
+                                "modifier": "slight left",
+                                "bearing_after": 270,
+                                "bearing_before": 276,
+                                "location": [
+                                    139.739178,
+                                    35.655517
+                                ]
+                            },
+                            "speedLimitUnit": "km/h",
+                            "destinations": "2: 目黒, 戸越",
+                            "bannerInstructions": [
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "Dropped Pin #1 will be on the left"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "left",
+                                        "text": "Dropped Pin #1 will be on the left"
+                                    },
+                                    "distanceAlongGeometry": 681.087
+                                },
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "Dropped Pin #1 is on the left"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "left",
+                                        "text": "Dropped Pin #1 is on the left"
+                                    },
+                                    "distanceAlongGeometry": 83.333
+                                }
+                            ],
+                            "geometry": "ytf_cAsa_piG?|H?zHPxFd@xFt@fHr@fClAlEzAjE`CjEnB~CjEjEjEtDvDfCtGfCnXlEfSfCbZ|ChL~ChSnGhEbAxDl@jEl@tGT|E?xHm@tGk@tR_Ddp@yKds@uK",
+                            "duration": 51.853,
+                            "junction_name": "一ノ橋ＪＣＴ",
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue for a half mile.</prosody></amazon:effect></speak>",
+                                    "announcement": "Continue for a half mile.",
+                                    "distanceAlongGeometry": 667.754
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In a quarter mile, Dropped Pin #1 will be on the left.</prosody></amazon:effect></speak>",
+                                    "announcement": "In a quarter mile, Dropped Pin #1 will be on the left.",
+                                    "distanceAlongGeometry": 402.336
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Dropped Pin #1 is on the left.</prosody></amazon:effect></speak>",
+                                    "announcement": "Dropped Pin #1 is on the left.",
+                                    "distanceAlongGeometry": 83.333
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        96,
+                                        270,
+                                        279
+                                    ],
+                                    "duration": 6.49,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway_link"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 7.938,
+                                    "geometry_index": 34,
+                                    "location": [
+                                        139.739178,
+                                        35.655517
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        74,
+                                        242
+                                    ],
+                                    "duration": 26.46,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway_link"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 32.413,
+                                    "geometry_index": 40,
+                                    "location": [
+                                        139.738395,
+                                        35.655436
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        15,
+                                        19,
+                                        193
+                                    ],
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "classes": [
+                                        "toll",
+                                        "motorway"
+                                    ],
+                                    "in": 1,
+                                    "turn_weight": 26,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "motorway"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "geometry_index": 53,
+                                    "location": [
+                                        139.737213,
+                                        35.653091
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "voiceInstructions": [
+                                
+                            ],
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        349
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "admin_index": 0,
+                                    "geometry_index": 63,
+                                    "location": [
+                                        139.737655,
+                                        35.650312
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                
+                            ],
+                            "speedLimitUnit": "km/h",
+                            "maneuver": {
+                                "type": "arrive",
+                                "instruction": "Dropped Pin #1 is on the left.",
+                                "modifier": "left",
+                                "bearing_after": 0,
+                                "bearing_before": 169,
+                                "location": [
+                                    139.737655,
+                                    35.650312
+                                ]
+                            },
+                            "speedLimitSign": "vienna",
+                            "name": "Expwy No.2 Line Meguro Line",
+                            "weight_typical": 0,
+                            "duration_typical": 0,
+                            "duration": 0,
+                            "distance": 0,
+                            "driving_side": "left",
+                            "weight": 0,
+                            "mode": "driving",
+                            "geometry": "oo|~bAmb|oiG??"
+                        }
+                    ],
+                    "distance": 1471.036,
+                    "summary": "Expwy Inner Circular Route, Expwy No.2 Line Meguro Line"
+                }
+            ],
+            "geometry": "msa_cAiqjpiG_CE}gA_DwMs@_WsA}EcAiAzh@c@`PdDfCb@l@v@fCd@fC?fC?hCSxFQjEP|Cd@pBhAfCb@hC?fCQ|HiA~Tw@~Tu@hOkAnL_CfM}EzMmIje@gHxa@iAvKYrC]hDiA`U{Af^?|H?zHPxFd@xFt@fHr@fClAlEzAjE`CjEnB~CjEjEjEtDvDfCtGfCnXlEfSfCbZ|ChL~ChSnGhEbAxDl@jEl@tGT|E?xHm@tGk@tR_Ddp@yKds@uK",
+            "voiceLocale": "en-US"
+        }
+    ],
+    "waypoints": [
+        {
+            "distance": 0.021,
+            "name": "国道１号線",
+            "location": [
+                139.745061,
+                35.652935
+            ]
+        },
+        {
+            "distance": 11.938,
+            "name": "2",
+            "location": [
+                139.737655,
+                35.650312
+            ]
+        }
+    ],
+    "code": "Ok",
+    "uuid": "KXw3NiSHMUFiInaHFLPsHe2lhUCOz-wdTZWb9XCLrGof-zInbVoZRw=="
+}
