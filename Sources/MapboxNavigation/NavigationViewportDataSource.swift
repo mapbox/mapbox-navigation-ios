@@ -220,7 +220,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
                 
                 var totalDistance: CLLocationDistance = 0.0
-                for (index, step) in routeProgress.currentLeg.steps.suffix(from: nextStepIndex).enumerated() {
+                for (index, step) in routeProgress.currentLeg.steps.dropFirst(nextStepIndex).enumerated() {
                     guard let stepCoordinates = step.shape?.coordinates,
                           let distance = stepCoordinates.distance() else { continue }
                     

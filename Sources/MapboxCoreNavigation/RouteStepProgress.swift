@@ -103,7 +103,8 @@ open class RouteStepProgress: Codable {
      The step must contain `intersectionsIncludingUpcomingManeuverIntersection` otherwise this property will be `nil`.
      */
     public var currentIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.startIndex..<intersections.endIndex ~= intersectionIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection,
+              intersections.indices.contains(intersectionIndex) else {
             return nil
         }
 
@@ -131,7 +132,9 @@ open class RouteStepProgress: Codable {
      An `Array` of remaining `VisualInstruction` for a step.
      */
     public var remainingVisualInstructions: [VisualInstructionBanner]? {
-        guard let visualInstructions = step.instructionsDisplayedAlongStep else { return nil }
+        guard let visualInstructions = step.instructionsDisplayedAlongStep,
+              visualInstructions.indices.contains(visualInstructionIndex) else { return nil }
+
         return Array(visualInstructions.suffix(from: visualInstructionIndex))
     }
 
@@ -144,8 +147,9 @@ open class RouteStepProgress: Codable {
      An `Array` of remaining `SpokenInstruction` for a step.
      */
     public var remainingSpokenInstructions: [SpokenInstruction]? {
-        guard let instructions = step.instructionsSpokenAlongStep else { return nil }
-        guard spokenInstructionIndex < instructions.count else { return nil }
+        guard let instructions = step.instructionsSpokenAlongStep,
+              instructions.indices.contains(spokenInstructionIndex) else { return nil }
+
         return Array(instructions.suffix(from: spokenInstructionIndex))
     }
 
@@ -153,8 +157,9 @@ open class RouteStepProgress: Codable {
      Current spoken instruction for the user's progress along a step.
      */
     public var currentSpokenInstruction: SpokenInstruction? {
-        guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
-        guard spokenInstructionIndex < instructionsSpokenAlongStep.count else { return nil }
+        guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep,
+              instructionsSpokenAlongStep.indices.contains(spokenInstructionIndex) else { return nil }
+
         return instructionsSpokenAlongStep[spokenInstructionIndex]
     }
 
@@ -162,8 +167,9 @@ open class RouteStepProgress: Codable {
      Current visual instruction for the user's progress along a step.
      */
     public var currentVisualInstruction: VisualInstructionBanner? {
-        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep else { return nil }
-        guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
+        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep,
+              instructionsDisplayedAlongStep.indices.contains(visualInstructionIndex) else { return nil }
+
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
     

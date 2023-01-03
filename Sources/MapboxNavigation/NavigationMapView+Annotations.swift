@@ -206,7 +206,8 @@ extension NavigationMapView {
                     } else {
                         // We didn't find a previous point that is on-screen so we'll move forward
                         // through the coordinates looking for one.
-                        for indexedCoordinate in routeShape.coordinates.suffix(from: snappedCoordinate.index) {
+                        let snappedCoordinates = routeShape.coordinates.dropFirst(snappedCoordinate.index)
+                        for indexedCoordinate in snappedCoordinates {
                             if visibleBoundingBox.contains(indexedCoordinate) {
                                 firstOnscreenCoordinate = indexedCoordinate
                                 break
@@ -456,7 +457,7 @@ extension NavigationMapView {
         let intersectionIndex = stepProgress.intersectionIndex
         let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
         
-        for intersection in stepIntersections?.suffix(from: intersectionIndex) ?? [] {
+        for intersection in stepIntersections?.dropFirst(intersectionIndex) ?? [] {
             if let feature = intersectionFeature(from: intersection) {
                 featureCollection.features.append(feature)
             }

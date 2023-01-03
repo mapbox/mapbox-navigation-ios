@@ -16,15 +16,16 @@ extension Match {
     func polylineAroundManeuver(legIndex: Int, stepIndex: Int, distance: CLLocationDistance) -> LineString {
         let precedingLegs = legs.prefix(upTo: legIndex)
         let precedingLegCoordinates = precedingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
-        
-        let precedingSteps = legs[legIndex].steps.prefix(upTo: stepIndex)
+
+        let leg = legs[legIndex]
+        let precedingSteps = leg.steps.prefix(upTo: min(stepIndex, leg.steps.count))
         let precedingStepCoordinates = precedingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
         let precedingPolyline = LineString((precedingLegCoordinates + precedingStepCoordinates).reversed())
 
-        let followingLegs = legs.suffix(from: legIndex).dropFirst()
+        let followingLegs = legs.dropFirst(legIndex + 1)
         let followingLegCoordinates = followingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
         
-        let followingSteps = legs[legIndex].steps.suffix(from: stepIndex)
+        let followingSteps = leg.steps.dropFirst(stepIndex)
         let followingStepCoordinates = followingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
         let followingPolyline = LineString(followingStepCoordinates + followingLegCoordinates)
         
@@ -39,7 +40,7 @@ extension Match {
         if followingPolyline.coordinates.isEmpty {
             return LineString(trimmedPrecedingCoordinates)
         } else {
-            return LineString(trimmedPrecedingCoordinates + followingPolyline.trimmed(from: followingPolyline.coordinates[0], distance: distance)!.coordinates.suffix(from: 1))
+            return LineString(trimmedPrecedingCoordinates + followingPolyline.trimmed(from: followingPolyline.coordinates[0], distance: distance)!.coordinates.dropFirst())
         }
     }
 }
