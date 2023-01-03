@@ -24,3 +24,4 @@ Examples/Swift/Navigation_Example.mobileprovision
 *-pre.podspec
 
 vendor/bundle/ruby/
+.vscode
