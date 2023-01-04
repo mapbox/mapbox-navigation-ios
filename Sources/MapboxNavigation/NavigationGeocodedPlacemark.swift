@@ -86,7 +86,6 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
      
      - returns: A `CPListItem` instance.
      */
-    @available(iOS 12.0, *)
     public func listItem() -> CPListItem {
         let item = CPListItem(text: title,
                               detailText: subtitle,

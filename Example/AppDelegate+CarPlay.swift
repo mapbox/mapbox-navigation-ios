@@ -35,7 +35,6 @@ extension NavigationGeocodedPlacemark {
  - Download and select the provisioning profile for the "Example-CarPlay" example app
  - Be sure to select an iOS simulator or device running iOS 12 or greater
  */
-@available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
     
     func application(_ application: UIApplication,
@@ -67,7 +66,6 @@ extension AppDelegate: CPApplicationDelegate {
 
 // MARK: - CarPlayManagerDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
@@ -264,7 +262,6 @@ extension AppDelegate: CarPlayManagerDelegate {
 
 // MARK: - CarPlaySearchControllerDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CarPlaySearchControllerDelegate {
     
     struct MaximumSearchResults {
@@ -452,7 +449,6 @@ extension GeocodedPlacemark {
 
 // MARK: - CPListTemplateDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
     
     func listTemplate(_ listTemplate: CPListTemplate,

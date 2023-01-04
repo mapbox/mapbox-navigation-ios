@@ -2,7 +2,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import CarPlay
 
-@available(iOS 12.0, *)
 extension CPTrip {
     
     convenience init(indexedRouteResponse: IndexedRouteResponse) {

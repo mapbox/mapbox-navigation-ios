@@ -11,7 +11,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var _carPlayManager: Any? = nil
-    @available(iOS 12.0, *)
     var carPlayManager: CarPlayManager {
         if _carPlayManager == nil {
             _carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.hybrid))
@@ -21,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     var _carPlaySearchController: Any? = nil
-    @available(iOS 12.0, *)
     var carPlaySearchController: CarPlaySearchController {
         if _carPlaySearchController == nil {
             _carPlaySearchController = CarPlaySearchController()
@@ -39,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     var _recentSearchItems: [Any]? = nil
-    @available(iOS 12.0, *)
     var recentSearchItems: [CPListItem]? {
         get {
             _recentSearchItems as! [CPListItem]?

@@ -13,7 +13,6 @@ let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
  
  - seealso: `NavigationViewController`
  */
-@available(iOS 12.0, *)
 open class CarPlayNavigationViewController: UIViewController, BuildingHighlighting {
     
     // MARK: Child Views and Styling Configuration
@@ -1048,7 +1047,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
 
 // MARK: StyleManagerDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -1093,7 +1091,6 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 
 // MARK: NavigationServiceDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
@@ -1110,7 +1107,6 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
 
 // MARK: NavigationMapViewDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
@@ -1150,7 +1146,6 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
     
     @available(iOS 13.0, *)
@@ -1160,7 +1155,6 @@ extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: CPListTemplateDelegate {
     
     public func listTemplate(_ listTemplate: CPListTemplate,

@@ -1,6 +1,5 @@
 import CarPlay
 
-@available(iOS 12.0, *)
 class MapTemplateProvider: NSObject {
     
     weak var delegate: MapTemplateProviderDelegate?
