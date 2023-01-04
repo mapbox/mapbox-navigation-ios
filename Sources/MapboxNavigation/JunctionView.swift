@@ -56,7 +56,7 @@ public class JunctionView: UIImageView {
         
         guard let guidanceView = quaternaryInstruction?.components.first else { return }
         
-        if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
+        if case .guidanceView(let guidanceViewImageRepresentation, _, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
                 show(animated: true)
@@ -70,9 +70,6 @@ public class JunctionView: UIImageView {
                 imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [weak self] (downloadedImage) in
                     DispatchQueue.main.async {
                         guard let self = self else { return }
-                        
-                        self.isCurrentlyVisible = true
-                        self.isHidden = !self.isCurrentlyVisible
                         
                         self.image = downloadedImage
                         self.show(animated: true)
