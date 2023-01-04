@@ -3,12 +3,10 @@ import UIKit
 extension NavigationView {
     
     func setupConstraints() {
-        if orientation == .landscapeLeft || orientation == .landscapeRight{
-            print("!!! landscape left")
+        if UIDevice.current.orientation.isLandscape {
             self.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
         } else {
             self.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-            print("!!! portrait")
         }
         margins = self.layoutMarginsGuide
         
@@ -37,7 +35,7 @@ extension NavigationView {
         let topBannerContainerViewTrailingConstraint: NSLayoutConstraint
         
         // Device is in landscape mode.
-        if orientation == .landscapeRight || orientation == .landscapeLeft {
+        if UIDevice.current.orientation.isLandscape {
             topBannerContainerViewLeadingConstraint = topBannerContainerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
             topBannerContainerViewTrailingConstraint = topBannerContainerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
         } else {
@@ -66,14 +64,12 @@ extension NavigationView {
             
             switch floatingButtonsPosition {
             case .topLeading:
-                print("!!! top leading regular")
                 let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
                 
                 layoutConstraints.append(floatingStackViewLeadingConstraint)
             case .topTrailing:
-                print("!!! top trailing regular")
                 let floatingStackViewLeadingContraint: NSLayoutConstraint
-                if orientation == .landscapeRight {
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
                     floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor)
                 } else {
                     floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
@@ -87,7 +83,7 @@ extension NavigationView {
         let bottomBannerContainerViewLeadingConstraint: NSLayoutConstraint
         
         // Device is in landscape mode.
-        if orientation == .landscapeRight || orientation == .landscapeLeft {
+        if UIDevice.current.orientation.isLandscape {
             bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
             bottomBannerContainerViewLeadingConstraint = bottomBannerContainerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
         } else {
@@ -116,19 +112,23 @@ extension NavigationView {
         
         let wayNameViewConstraints: [NSLayoutConstraint]
         let wayNameViewBottomConstraint: NSLayoutConstraint
+        let wayNameViewCenterXConstraint: NSLayoutConstraint
         
         if let wayNameViewLayoutGuide = wayNameViewLayoutGuide {
             wayNameViewConstraints = wayNameViewLayoutGuide.layoutConstraints(for: wayNameView)
         } else {
-            if orientation == .landscapeLeft || orientation == .landscapeRight {
+            if UIDevice.current.orientation.isLandscape {
                 wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: safeBottomAnchor,
                                                                                       constant: -16)
-
+                // Should a container be used here instead?
+                let landscapeEdge = self.frame.maxX
+                let constant = landscapeEdge/4
+                wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor, constant: constant)
             } else {
                 wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
                                                                                           constant: -12)
+                wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor)
             }
-            let wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor)
             let wayNameViewWidthConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: safeWidthAnchor)
             let wayNameViewHeightConstraint = wayNameView.heightAnchor.constraint(equalToConstant: 40.0)
             
@@ -160,7 +160,7 @@ extension NavigationView {
             switch floatingButtonsPosition {
             case .topLeading:
                 let speedLimitViewTrailingConstraint: NSLayoutConstraint
-                if orientation == .landscapeRight {
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
                     speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
                 } else {
                     speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
@@ -213,32 +213,26 @@ extension NavigationView {
         } else {
             switch floatingButtonsPosition {
             case .topLeading:
-                print("!!! top leading compact")
                 let floatingStackViewLeadingConstraint = floatingStackView.leadingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor)
                 
                 layoutConstraints.append(floatingStackViewLeadingConstraint)
             case .topTrailing:
-                print("!!! top trailing compact")
                 let floatingStackViewTrailingConstraint: NSLayoutConstraint
                 // Device is in landscape mode and notch (if present) is located on the left side.
-                if orientation == .landscapeRight {
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
                     if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                        print("!!! if if")
                         // Language with right-to-left interface layout is used.
                         floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
                                                                                                           constant: -20)
                     } else {
-                        print("!!! if else")
                         // Language with left-to-right interface layout is used.
                         floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
                                                                                                           constant: -20)
                     }
                 } else {
                     if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                        print("!!! else if")
                         floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
                     } else {
-                        print("!!! else else")
                         floatingStackViewTrailingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
                     }
                 }
@@ -259,7 +253,7 @@ extension NavigationView {
         layoutConstraints.append(contentsOf: bottomBannerConstraints)
         
         let resumeButtonLeadingConstraint: NSLayoutConstraint
-        if orientation == .landscapeRight {
+        if UIApplication.shared.statusBarOrientation == .landscapeRight {
             if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
                 resumeButtonLeadingConstraint = resumeButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
             } else {
@@ -284,20 +278,26 @@ extension NavigationView {
         layoutConstraints.append(contentsOf: resumeButtonConstraints)
         
         let wayNameViewConstraints: [NSLayoutConstraint]
-        // FIXME: need center and width anchors constrained to area between bottom banner and trailing edge in landscape
+        
         if let wayNameViewLayoutGuide = wayNameViewLayoutGuide {
             wayNameViewConstraints = wayNameViewLayoutGuide.layoutConstraints(for: wayNameView)
         } else {
             let wayNameViewBottomConstraint: NSLayoutConstraint
+            let wayNameViewCenterXConstraint: NSLayoutConstraint
             
-            if orientation == .landscapeLeft || orientation == .landscapeRight {
+            if UIDevice.current.orientation.isLandscape {
                 wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: safeBottomAnchor,
                                                                                       constant: -16)
+                // Should a container be used instead to align with leading with bottomBanner and the trailing with the superview's trailing?
+                let landscapeEdge = self.frame.maxX
+                let constant = landscapeEdge/4
+                wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor, constant: constant)
             } else {
                 wayNameViewBottomConstraint = wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor,
                                                                                       constant: -12)
+                wayNameViewCenterXConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor)
             }
-            let wayNameViewCenterXConstraint: NSLayoutConstraint = wayNameView.centerXAnchor.constraint(equalTo: safeCenterXAnchor)
+            
             let wayNameViewWidthConstraint: NSLayoutConstraint = wayNameView.widthAnchor.constraint(lessThanOrEqualTo: safeWidthAnchor)
             let wayNameViewHeightConstraint = wayNameView.heightAnchor.constraint(equalToConstant: 40.0)
 
@@ -328,7 +328,7 @@ extension NavigationView {
             switch floatingButtonsPosition {
             case .topLeading:
                 let speedLimitViewTrailingConstraint: NSLayoutConstraint
-                if orientation == .landscapeRight {
+                if UIApplication.shared.statusBarOrientation == .landscapeRight {
                     speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
                 } else {
                     speedLimitViewTrailingConstraint = speedLimitView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
