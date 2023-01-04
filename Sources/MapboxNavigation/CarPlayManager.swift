@@ -240,6 +240,17 @@ public class CarPlayManager: NSObject {
     public var navigationMapView: NavigationMapView? {
         return carPlayMapViewController?.navigationMapView
     }
+    
+    var activeNavigationMapView: NavigationMapView? {
+        if let carPlayNavigationViewController = carPlayNavigationViewController,
+           let validNavigationMapView = carPlayNavigationViewController.navigationMapView {
+            return validNavigationMapView
+        } else if let carPlayMapViewController = carPlayMapViewController {
+            return carPlayMapViewController.navigationMapView
+        } else {
+            return nil
+        }
+    }
 
     var mapTemplateProvider: MapTemplateProvider
     
@@ -828,16 +839,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
         delegate?.carPlayManagerDidEndNavigation(self, byCanceling: false)
     }
     
+    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        // Whenever panning starts - stop any navigation camera updates.
+        activeNavigationMapView?.navigationCamera.stop()
+    }
+    
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        // We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
-        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
-            return
-        }
-        
-        let decelerationRate: CGFloat = 0.9
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4,
-                             y: velocity.y * decelerationRate / 4)
-        updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
+        // After panning is stopped - allow navigation bar dismissal.
+        mapTemplate.automaticallyHidesNavigationBar = true
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -907,24 +916,23 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             didUpdatePanGestureWithTranslation translation: CGPoint,
                             velocity: CGPoint) {
-        updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
-    }
-    
-    private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
-        let navigationMapView: NavigationMapView
-        if let carPlayNavigationViewController = carPlayNavigationViewController,
-           let validNavigationMapView = carPlayNavigationViewController.navigationMapView,
-           mapTemplate == carPlayNavigationViewController.mapTemplate {
-            navigationMapView = validNavigationMapView
-        } else if let carPlayMapViewController = carPlayMapViewController {
-            navigationMapView = carPlayMapViewController.navigationMapView
-        } else {
+        // Map view panning is allowed in all states except routes preview.
+        if currentActivity == .previewing {
             return
         }
-
+        
+        // Continuously prevent navigation bar hiding whenever panning occurs.
+        mapTemplate.automaticallyHidesNavigationBar = false
+        
+        updatePan(by: translation, mapTemplate: mapTemplate)
+    }
+    
+    private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate) {
+        guard let navigationMapView = activeNavigationMapView else { return }
+        
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
         let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
+        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
