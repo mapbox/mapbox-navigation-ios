@@ -176,7 +176,7 @@ class InstructionPresenter {
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
             case .lane(_, _, _):
                 preconditionFailure("Lane component has no attributed string representation.")
-            case .guidanceView(_, let alternativeText):
+            case .guidanceView(_, let alternativeText, _):
                 return NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
             }
         }

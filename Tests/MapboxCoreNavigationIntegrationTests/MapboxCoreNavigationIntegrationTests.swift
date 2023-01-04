@@ -600,4 +600,78 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         
         wait(for: [routeControllerProgressExpectation], timeout: waitForInterval)
     }
+    
+    func testInstructionComponentsReportingWithGuidanceViewKinds() {
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 35.652935, longitude: 139.745061),
+            CLLocationCoordinate2D(latitude: 35.650312, longitude: 139.737655)
+        ])
+        
+        let routeResponse = Fixture.routeResponse(from: "route-with-instruction-components-with-subtype",
+                                                  options: routeOptions)
+        
+        guard let coordinates = route.legs.first?.steps.first?.shape?.coordinates else {
+            XCTFail("Coordinates should be valid.")
+            return
+        }
+        
+        let currentDate = Date()
+        
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: currentDate + $0.offset)
+        }
+        
+        let replayLocationManager = ReplayLocationManager(locations: locations)
+        replayLocationManager.speedMultiplier = 100
+        
+        navigation = MapboxNavigationService(indexedRouteResponse: IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0),
+                                             credentials: Fixture.credentials,
+                                             locationSource: replayLocationManager,
+                                             simulating: .never)
+        
+        let routeControllerProgressExpectation = expectation(forNotification: .routeControllerProgressDidChange,
+                                                             object: navigation.router) { notification -> Bool in
+            guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+                  routeProgress.currentLegProgress.leg.steps.count == 5 else {
+                return false
+            }
+            
+            guard case let .guidanceView(_, _, firstStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[0].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+                XCTFail("Component should be valid.")
+                return false
+            }
+            
+            XCTAssertEqual(firstStepGuidanceViewKind, .realisticUrbanIntersection)
+            
+            guard case let .guidanceView(_, _, secondStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[1].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+                XCTFail("Component should be valid.")
+                return false
+            }
+            
+            XCTAssertEqual(secondStepGuidanceViewKind, .motorwayEntrance)
+            
+            guard case let .guidanceView(_, _, thirdStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[2].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+                XCTFail("Component should be valid.")
+                return false
+            }
+            
+            XCTAssertEqual(thirdStepGuidanceViewKind, .fork)
+            
+            return true
+        }
+        
+        navigation.start()
+        
+        for location in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
+        }
+        
+        wait(for: [routeControllerProgressExpectation], timeout: waitForInterval)
+    }
 }

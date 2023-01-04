@@ -13,7 +13,7 @@ extension VisualInstruction.Component {
             return imageRepresentation.legacyCacheKey ?? "generic-" + alternativeText.text
         case .text, .delimiter, .lane:
             return nil
-        case .guidanceView(let guidanceViewRepresentation, _):
+        case .guidanceView(let guidanceViewRepresentation, _, _):
             guard let imageURL = guidanceViewRepresentation.imageURL else { return nil }
             return "guidance-" + imageURL.absoluteString
         }

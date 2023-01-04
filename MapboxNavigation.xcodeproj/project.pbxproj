@@ -240,6 +240,7 @@
 		8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */; };
 		8A18569926320B8F00F8AE38 /* OverviewCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */; };
 		8A1943A92685DC680066E2F8 /* NavigationGeocodedPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */; };
+		8A1FACF32942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */; };
 		8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */; };
 		8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */; };
 		8A2354EE28877890003E42B4 /* BannerContainerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2354EA28877890003E42B4 /* BannerContainerViewDelegate.swift */; };
@@ -368,6 +369,7 @@
 		8AF1D57028F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56F28F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift */; };
 		8AF1D57128F0C90B00041ED4 /* BannerDismissalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56B28F0B10000041ED4 /* BannerDismissalViewController.swift */; };
 		8AF1D57228F0C90E00041ED4 /* BannerDismissalViewControllerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF1D56D28F0B13500041ED4 /* BannerDismissalViewControllerLayout.swift */; };
+		8AFCE2FA2964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AFCE2F92964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json */; };
 		8AFF2D2326F137CB008267BF /* RoadObjectKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF2D2226F137CB008267BF /* RoadObjectKind.swift */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -910,6 +912,7 @@
 		8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingCameraOptions.swift; sourceTree = "<group>"; };
 		8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewCameraOptions.swift; sourceTree = "<group>"; };
 		8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGeocodedPlacemark.swift; sourceTree = "<group>"; };
+		8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstructionComponentGuidanceViewKind.swift; sourceTree = "<group>"; };
 		8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapViewIdentifiers.swift; sourceTree = "<group>"; };
 		8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineType.swift; sourceTree = "<group>"; };
 		8A2354EA28877890003E42B4 /* BannerContainerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerContainerViewDelegate.swift; sourceTree = "<group>"; };
@@ -1038,6 +1041,7 @@
 		8AF1D56B28F0B10000041ED4 /* BannerDismissalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewController.swift; sourceTree = "<group>"; };
 		8AF1D56D28F0B13500041ED4 /* BannerDismissalViewControllerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerLayout.swift; sourceTree = "<group>"; };
 		8AF1D56F28F0C8FE00041ED4 /* BannerDismissalViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerDismissalViewControllerDelegate.swift; sourceTree = "<group>"; };
+		8AFCE2F92964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-instruction-components-with-subtype.json"; sourceTree = "<group>"; };
 		8AFF2D2226F137CB008267BF /* RoadObjectKind.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectKind.swift; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
 		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2134,6 +2138,7 @@
 		B47C1AE4261FD0A30078546C /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				8AFCE2F92964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json */,
 				8A474195294BBFDA00F231F9 /* route-with-amenities.json */,
 				B4953F5628762CAF0090E4F8 /* route-with-straight-line.json */,
 				B443A48A27BB0CB8000AF101 /* sprite-info.json */,
@@ -2290,6 +2295,7 @@
 				3A8187C824BDAE9C00708F19 /* URLSession.swift */,
 				11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */,
 				8AC85EA328628E4F003F8FC8 /* UIDevice.swift */,
+				8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */,
 				8A7B69912947AA0F00FFC3F5 /* AmenityType.swift */,
 			);
 			name = Extensions;
@@ -2912,6 +2918,7 @@
 				B4A78D2E261FD47700FDF212 /* route-with-mixed-road-classes.json in Resources */,
 				B4A78D2F261FD47700FDF212 /* sthlm-double-back-replay.json in Resources */,
 				B4BB0AD52704D1D7006F502D /* short_route.json in Resources */,
+				8AFCE2FA2964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json in Resources */,
 				B4A78D30261FD47700FDF212 /* route-with-road-classes-single-congestion.json in Resources */,
 				E2D1496D265CFB4D008135A3 /* Images.xcassets in Resources */,
 				B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */,
@@ -3438,6 +3445,7 @@
 				DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */,
 				DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */,
 				2E50E0E6264E49EF009D3848 /* OpenLRIdentifier.swift in Sources */,
+				8A1FACF32942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift in Sources */,
 				2BF398C1274BDEA8000C9A72 /* Directions.swift in Sources */,
 				2E5ACEE9288E877A00300ECA /* EventConstants.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
