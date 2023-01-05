@@ -113,6 +113,14 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
                         selectedPreviewFor trip: CPTrip,
                         using routeChoice: CPRouteChoice)
     
+    /**
+     Called when CarPlay canceled routes preview.
+     This delegate method will be called after canceled the routes preview.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     */
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager)
+    
     // MARK: Monitoring Route Progress and Updates
     
     /**
@@ -516,6 +524,13 @@ public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         selectedPreviewFor trip: CPTrip,
                         using routeChoice: CPRouteChoice) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     

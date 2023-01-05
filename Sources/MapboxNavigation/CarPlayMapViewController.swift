@@ -354,7 +354,7 @@ open class CarPlayMapViewController: UIViewController {
         // Trigger update of view constraints to correctly position views like `SpeedLimitView`.
         view.setNeedsUpdateConstraints()
         
-        guard let activeRoute = navigationMapView.routes?.first else {
+        guard let routes = navigationMapView.routes, !routes.isEmpty else {
             navigationMapView.navigationCamera.follow()
             return
         }
@@ -364,7 +364,7 @@ open class CarPlayMapViewController: UIViewController {
             cameraOptions.pitch = 0
             navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
             
-            navigationMapView.fitCamera(to: [activeRoute])
+            navigationMapView.fitCamera(to: routes)
         }
     }
     
