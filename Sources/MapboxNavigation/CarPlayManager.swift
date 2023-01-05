@@ -622,7 +622,7 @@ extension CarPlayManager {
         self.indexedRouteResponse = nil
         mainMapTemplate?.hideTripPreviews()
         popToRootTemplate(interfaceController: interfaceController, animated: true)
-        delegate?.carPlayManagerCanceledRoutesPreview(self)
+        delegate?.carPlayManagerDidCancelPreview(self)
     }
     
     func shouldPreviewRoutes(for indexedRouteResponse: IndexedRouteResponse) -> Bool {
@@ -637,7 +637,6 @@ extension CarPlayManager {
               }
         
         let modifiedTrip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
-        self.indexedRouteResponse = modifiedTrip.routeChoices.first?.indexedRouteResponse
         
         let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: modifiedTrip,
                                                                  traitCollection: traitCollection,

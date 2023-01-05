@@ -81,7 +81,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         indexedRouteResponse.routeIndex != rootResponse.routeIndex
     }
     
-    func carPlayManagerCanceledRoutesPreview(_ carPlayManager: CarPlayManager) {
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
         currentAppRootViewController?.indexedRouteResponse = nil
     }
     

@@ -119,7 +119,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
      
      - parameter carPlayManager: The CarPlay manager instance.
      */
-    func carPlayManagerCanceledRoutesPreview(_ carPlayManager: CarPlayManager)
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager)
     
     // MARK: Monitoring Route Progress and Updates
     
@@ -530,7 +530,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManagerCanceledRoutesPreview(_ carPlayManager: CarPlayManager) {
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     

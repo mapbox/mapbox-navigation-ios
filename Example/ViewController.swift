@@ -79,9 +79,7 @@ class ViewController: UIViewController {
         startButton.isEnabled = true
         clearMap.isHidden = false
         
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.carPlayManager.previewRoutes(for: routeResponse)
-        }
+        updateCarPlayRoutesPreview()
     }
     
     var currentRoute: Route? {
@@ -232,7 +230,14 @@ class ViewController: UIViewController {
 
         waypoints.removeAll()
         navigationMapView?.navigationCamera.follow()
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+        updateCarPlayRoutesPreview()
+    }
+    
+    private func updateCarPlayRoutesPreview() {
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        if let indexedRouteResponse = indexedRouteResponse {
+            delegate.carPlayManager.previewRoutes(for: indexedRouteResponse)
+        } else {
             delegate.carPlayManager.cancelRoutesPreview()
         }
     }
@@ -250,7 +255,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clearMapPressed(_ sender: Any) {
-        clearNavigationMapView()
+        indexedRouteResponse = nil
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
