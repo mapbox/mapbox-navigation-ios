@@ -2,8 +2,6 @@ import Foundation
 @_spi(Restricted) import MapboxMaps
 import MapboxCoreNavigation
 import MapboxDirections
-
-#if canImport(CarPlay)
 import CarPlay
 
 /**
@@ -465,4 +463,3 @@ extension CarPlayMapViewController: CPSessionConfigurationDelegate {
         applyStyleIfNeeded(contentStyle)
     }
 }
-#endif

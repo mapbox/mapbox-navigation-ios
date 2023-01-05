@@ -2,8 +2,6 @@ import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
 @_spi(Restricted) import MapboxMaps
-
-#if canImport(CarPlay)
 import CarPlay
 
 let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
@@ -1176,5 +1174,3 @@ extension CarPlayNavigationViewController: CPListTemplateDelegate {
         })
     }
 }
-
-#endif
