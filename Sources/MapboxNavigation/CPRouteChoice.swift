@@ -2,7 +2,6 @@ import CarPlay
 import MapboxDirections
 import MapboxCoreNavigation
 
-@available(iOS 12.0, *)
 extension CPRouteChoice {
     
     struct IndexedRouteResponseUserInfo {

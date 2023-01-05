@@ -2,7 +2,6 @@ import Foundation
 import MapboxDirections
 import CarPlay
 
-@available(iOS 12.0, *)
 extension CLLocationDirection {
     init?(panDirection: CPMapTemplate.PanDirection) {
         var horizontalBias: Double? = nil

@@ -2,14 +2,11 @@ import Foundation
 @_spi(Restricted) import MapboxMaps
 import MapboxCoreNavigation
 import MapboxDirections
-
-#if canImport(CarPlay)
 import CarPlay
 
 /**
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
  */
-@available(iOS 12.0, *)
 open class CarPlayMapViewController: UIViewController {
     
     // MARK: UI Elements Configuration
@@ -386,7 +383,6 @@ open class CarPlayMapViewController: UIViewController {
 
 // MARK: StyleManagerDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -420,7 +416,6 @@ extension CarPlayMapViewController: StyleManagerDelegate {
 
 // MARK: NavigationMapViewDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayMapViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
@@ -460,7 +455,6 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlayMapViewController: CPSessionConfigurationDelegate {
     
     @available(iOS 13.0, *)
@@ -469,4 +463,3 @@ extension CarPlayMapViewController: CPSessionConfigurationDelegate {
         applyStyleIfNeeded(contentStyle)
     }
 }
-#endif

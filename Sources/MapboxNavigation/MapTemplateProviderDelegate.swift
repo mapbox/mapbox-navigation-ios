@@ -1,6 +1,5 @@
 import CarPlay
 
-@available(iOS 12.0, *)
 protocol MapTemplateProviderDelegate: AnyObject {
     
     func mapTemplateProvider(_ provider: MapTemplateProvider,

@@ -7,7 +7,6 @@ import Foundation
  
  - note: It is very important you have a single `CarPlaySearchController` instance at any given time. 
  */
-@available(iOS 12.0, *)
 public class CarPlaySearchController: NSObject {
     
     /**
