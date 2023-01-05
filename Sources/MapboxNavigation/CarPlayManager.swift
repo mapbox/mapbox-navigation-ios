@@ -947,8 +947,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         // In case if `CarPlayManager.carPlayNavigationViewController` is not `nil`, it means that
         // active-guidance navigation is currently in progress. Is so, panning should be applied for
         // `NavigationMapView` instance there.
-        guard let navigationMapView = carPlayNavigationViewController?.navigationMapView ??
-                carPlayMapViewController?.navigationMapView else { return }
+        guard let navigationMapView = activeNavigationMapView else { return }
         
         // After `MapView` panning `NavigationCamera` should be moved to idle state to prevent any further changes.
         navigationMapView.navigationCamera.stop()
