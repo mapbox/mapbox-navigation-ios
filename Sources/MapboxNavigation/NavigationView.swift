@@ -106,6 +106,8 @@ open class NavigationView: UIView {
         }
     }
     
+    private var cornerRadius: CGFloat = 15
+    
     func constrainEndOfRoute() {
         endOfRouteHideConstraint?.isActive = true
         
@@ -279,6 +281,14 @@ open class NavigationView: UIView {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         navigationMapView.pinTo(parentView: self)
+        
+        setupTopBannerRoundedCorners()
+    }
+    
+    func setupTopBannerRoundedCorners() {
+        topBannerContainerView.layer.cornerRadius = cornerRadius
+        topBannerContainerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        topBannerContainerView.layer.masksToBounds = true
     }
     
     open override func prepareForInterfaceBuilder() {

@@ -77,7 +77,6 @@ open class TopBannerViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         addConstraints()
-        setupRoundedCorners()
         setupInformationStackView()
     }
     
@@ -113,22 +112,13 @@ open class TopBannerViewController: UIViewController {
     private func setupInformationStackView() {
         addInstructionsBanner()
         let subviews = [lanesView] + secondaryChildren
+        setupNextBannerViewRoundedCorners()
         informationStackView.addArrangedSubviews(subviews)
         for child in informationChildren {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
     }
-    
-    private func setupRoundedCorners() {
-        // FIXME: dynamically set corner radius based on which informationStackView subviews are hidden
-        instructionsBannerView.layer.cornerRadius = cornerRadius
-        instructionsBannerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        
-        nextBannerView.layer.cornerRadius = cornerRadius
-        nextBannerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    }
-    
     
     private func showSecondaryChildren(including secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
