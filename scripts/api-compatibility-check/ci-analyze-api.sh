@@ -29,6 +29,7 @@ echo "Comment is $COMMENT"
 
 if [[ ! $COMMENT == *"🟢"* ]]; then
     gh pr comment --body "$COMMENT"
+    exit 1
 else
     echo "No Breaking Changes"
 fi
