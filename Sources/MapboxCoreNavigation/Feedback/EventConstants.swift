@@ -7,11 +7,7 @@ enum EventKey: String {
     case locationsBefore = "locationsBefore"
     case locationsAfter = "locationsAfter"
     case payload = "payload"
-    case customEventVersion = "customEventVersion"
-}
-
-enum CustomEventType: String {
-    case analytics = "analytics"
+    case customEventVersion = "1.2.3"
 }
 
 enum EventType: String {

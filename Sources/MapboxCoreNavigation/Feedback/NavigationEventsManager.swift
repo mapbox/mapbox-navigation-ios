@@ -184,12 +184,6 @@ open class NavigationEventsManager {
     private func eventAttributes(type: EventType, date: Date = Date()) -> [String : Any] {
         return [EventKey.event.rawValue: type.rawValue, EventKey.created.rawValue: date.ISO8601]
     }
-    
-    private func customEventAttributes(type: CustomEventType, payload: String = "", customEventVersion: String = "", date: Date = Date()) -> [String: Any] {
-        return [EventKey.event.rawValue: type.rawValue, EventKey.payload.rawValue: payload,
-            EventKey.customEventVersion.rawValue: customEventVersion,
-            EventKey.created.rawValue: date.ISO8601]
-    }
 
     func start() {
         guard let shortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
@@ -283,13 +277,26 @@ open class NavigationEventsManager {
     }
     
     func customEvent(payload: String? = nil) -> CustomEventDetails? {
-        var event: CustomEventDetails?
+        guard let dataSource = activeNavigationDataSource else { return nil }
         
-        if let passiveDataSource = passiveNavigationDataSource {
-            event = CustomEventDetails(type: EventType.customEvent, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, payload: payload , passiveDataSource: passiveDataSource)
-        } else if let activeDataSource = activeNavigationDataSource {
-            event = CustomEventDetails(type: EventType.customEvent, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, payload: payload, activeDataSource: activeDataSource)
-        }
+        var event = CustomEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, payload: payload, appMetadata: userInfo)
+        event.event = EventType.customEvent.rawValue
+        event.payload = payload
+        
+//        let jsonEncoder = JSONEncoder()
+//        jsonEncoder.outputFormatting = .prettyPrinted
+//        let eventJSON = try! jsonEncoder.encode(event)
+//        
+//        if let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+//                                                            in: .userDomainMask).first {
+//            let pathWithFileName = documentDirectory.appendingPathComponent("telemetryForDropin.json")
+//            do {
+//                try eventJSON.write(to: pathWithFileName)
+//            } catch {
+//                print("Error writing to JSON file: \(error)")
+//            }
+//        }
+        
         return event
     }
     
@@ -383,11 +390,6 @@ open class NavigationEventsManager {
         return event
     }
     
-    func customEvent(customEventType: CustomEventType, payload: String, customEventVersion: String) {
-        let attributes = customEventAttributes(type: customEventType, payload: payload, customEventVersion: customEventVersion)
-        eventsAPI.sendImmediateEvent(with: attributes)
-    }
-    
     public func sendDropInConnectEvent() {
         sendCustomEvent(payload: "Drop-In UI : started")
     }
@@ -413,6 +415,8 @@ open class NavigationEventsManager {
     
     func sendCustomEvent(payload: String? = nil) {
         guard let attributes = try? customEvent(payload: payload)?.asDictionary() else { return }
+    
+        
         eventsAPI.sendImmediateEvent(with: attributes)
     }
 
