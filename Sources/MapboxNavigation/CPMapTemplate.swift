@@ -2,7 +2,6 @@ import Foundation
 import MapboxDirections
 import CarPlay
 
-@available(iOS 12.0, *)
 extension CLLocationDirection {
     init?(panDirection: CPMapTemplate.PanDirection) {
         var horizontalBias: Double? = nil
@@ -29,6 +28,13 @@ extension CLLocationDirection {
             return nil
         }
         self = heading.wrap(min: 0, max: 360)
+    }
+}
+
+extension CPTemplate {
+    var currentActivity: CarPlayActivity? {
+        guard let userInfo = userInfo as? CarPlayUserInfo else { return nil }
+        return userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity
     }
 }
 

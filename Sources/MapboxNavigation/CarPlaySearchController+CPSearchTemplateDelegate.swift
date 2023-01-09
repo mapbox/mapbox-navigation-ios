@@ -2,7 +2,6 @@ import Foundation
 import CarPlay
 import MapboxDirections
 
-@available(iOS 12.0, *)
 extension CarPlaySearchController: CPSearchTemplateDelegate {
     
     public static let CarPlayGeocodedPlacemarkKey: String = "NavigationGeocodedPlacemark"
@@ -61,7 +60,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlaySearchController: CPListTemplateDelegate {
     
     // MARK: CPListTemplateDelegate Implementation

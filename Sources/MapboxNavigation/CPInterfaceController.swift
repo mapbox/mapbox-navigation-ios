@@ -1,6 +1,5 @@
 import CarPlay
 
-@available(iOS 12.0, *)
 public extension CPInterfaceController {
     
     /**

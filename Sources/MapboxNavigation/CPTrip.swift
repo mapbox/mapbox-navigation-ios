@@ -2,7 +2,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import CarPlay
 
-@available(iOS 12.0, *)
 extension CPTrip {
     
     convenience init(indexedRouteResponse: IndexedRouteResponse) {
@@ -15,7 +14,7 @@ extension CPTrip {
             waypoints = matchOptions.waypoints
         }
         
-        let routeChoices = indexedRouteResponse.routeResponse.routes?.enumerated().map { (routeIndex, route) -> CPRouteChoice in
+        var routeChoices = indexedRouteResponse.routeResponse.routes?.enumerated().map { (routeIndex, route) -> CPRouteChoice in
             let summaryVariants = [
                 DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
                 DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
@@ -33,6 +32,9 @@ extension CPTrip {
             routeChoice.userInfo = userInfo
             return routeChoice
         } ?? []
+        
+        // The selected route within the `IndexedRouteResponse` will default to be the first in route choice.
+        routeChoices.insert(routeChoices.remove(at: indexedRouteResponse.routeIndex), at: 0)
         
         guard let originCoordinate = waypoints.first?.coordinate,
               let destinationCoordinate = waypoints.last?.coordinate else {

@@ -2,6 +2,11 @@
 
 ## v2.11.0
 
+### CarPlay
+
+* Added `CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:)` to notify developers after CarPlay canceled routes preview, and `CarPlayManager.cancelRoutesPreview()` method to cancel routes preview on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
+* Added `CPRouteChoice.indexedRouteResponse` property to allow developers to get access to the `IndexedRouteResponse` of `CPRouteChoice` on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
+
 ### Other changes
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
@@ -39,6 +44,10 @@
 ### Location tracking
 
 * Fixed a rare crash that could happen during route simulation. ([#4153](https://github.com/mapbox/mapbox-navigation-ios/pull/4153))
+
+### CarPlay
+
+* Added the ability to display a junction image for the maneuver on CarPlay. ([#4324](https://github.com/mapbox/mapbox-navigation-ios/pull/4324))
 
 ### Other changes
 

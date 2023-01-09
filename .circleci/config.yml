@@ -144,7 +144,7 @@ commands:
           name: Generating << parameters.module_name >> API Diff
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues public token)
-            ./scripts/api-compatibility-check/ci-analyze-api.sh << parameters.module_name >> << parameters.base_api_path >> << parameters.new_api_path >> $CIRCLE_WORKING_DIRECTORY/.breakage-allowlist.txt
+            ./scripts/api-compatibility-check/ci-analyze-api.sh << parameters.module_name >> << parameters.base_api_path >> << parameters.new_api_path >> $CIRCLE_WORKING_DIRECTORY/.breakage-allowlist
 
   carthage-bootstrap:
     steps:

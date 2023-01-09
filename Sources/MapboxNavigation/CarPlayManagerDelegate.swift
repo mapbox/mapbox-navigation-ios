@@ -11,7 +11,6 @@ import MapboxMaps
  
  If no delegate is set, a default built-in `MapboxNavigationService` will be created and used when a trip begins.
  */
-@available(iOS 12.0, *)
 public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlayManagerDelegateDeprecations {
     
     // MARK: Customizing the Bar Buttons
@@ -113,6 +112,14 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         selectedPreviewFor trip: CPTrip,
                         using routeChoice: CPRouteChoice)
+    
+    /**
+     Called when CarPlay canceled routes preview.
+     This delegate method will be called after canceled the routes preview.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     */
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager)
     
     // MARK: Monitoring Route Progress and Updates
     
@@ -427,7 +434,6 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
                         in mapTemplate: CPMapTemplate) -> Bool
 }
 
-@available(iOS 12.0, *)
 public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
@@ -518,6 +524,13 @@ public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         selectedPreviewFor trip: CPTrip,
                         using routeChoice: CPRouteChoice) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
@@ -700,7 +713,6 @@ public extension CarPlayManagerDelegate {
  
  This protocol redeclares the deprecated methods of the `CarPlayManagerDelegate` protocol for the purpose of calling implementations of these methods that have not been upgraded yet.
  */
-@available(iOS 12.0, *)
 public protocol CarPlayManagerDelegateDeprecations {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor routeResponse: RouteResponse,

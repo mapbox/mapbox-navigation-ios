@@ -35,7 +35,6 @@ extension NavigationGeocodedPlacemark {
  - Download and select the provisioning profile for the "Example-CarPlay" example app
  - Be sure to select an iOS simulator or device running iOS 12 or greater
  */
-@available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
     
     func application(_ application: UIApplication,
@@ -67,8 +66,24 @@ extension AppDelegate: CPApplicationDelegate {
 
 // MARK: - CarPlayManagerDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
+        guard let indexedRouteResponse = routeChoice.indexedRouteResponse,
+              shouldPreviewRoutes(for: indexedRouteResponse) else { return }
+        currentAppRootViewController?.indexedRouteResponse = indexedRouteResponse
+    }
+    
+    private func shouldPreviewRoutes(for indexedRouteResponse: IndexedRouteResponse) -> Bool {
+        guard let rootResponse = currentAppRootViewController?.indexedRouteResponse else {
+            return true
+        }
+        return indexedRouteResponse.routeResponse.routes != rootResponse.routeResponse.routes ||
+        indexedRouteResponse.routeIndex != rootResponse.routeIndex
+    }
+    
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
+        currentAppRootViewController?.indexedRouteResponse = nil
+    }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor indexedRouteResponse: IndexedRouteResponse,
@@ -264,7 +279,6 @@ extension AppDelegate: CarPlayManagerDelegate {
 
 // MARK: - CarPlaySearchControllerDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CarPlaySearchControllerDelegate {
     
     struct MaximumSearchResults {
@@ -452,7 +466,6 @@ extension GeocodedPlacemark {
 
 // MARK: - CPListTemplateDelegate methods
 
-@available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
     
     func listTemplate(_ listTemplate: CPListTemplate,
@@ -488,6 +501,8 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         //       navigation as well, otherwise, CarPlay will be in passive navigation and stay out of sync with iOS app. 
         if appDelegate.currentAppRootViewController?.activeNavigationViewController != nil {
             appDelegate.currentAppRootViewController?.beginCarPlayNavigation()
+        } else if let indexedRouteResponse = appDelegate.currentAppRootViewController?.indexedRouteResponse {
+            appDelegate.carPlayManager.previewRoutes(for: indexedRouteResponse)
         }
     }
 

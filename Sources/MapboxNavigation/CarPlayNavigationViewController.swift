@@ -2,8 +2,6 @@ import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
 @_spi(Restricted) import MapboxMaps
-
-#if canImport(CarPlay)
 import CarPlay
 
 let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
@@ -13,7 +11,6 @@ let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
  
  - seealso: `NavigationViewController`
  */
-@available(iOS 12.0, *)
 open class CarPlayNavigationViewController: UIViewController, BuildingHighlighting {
     
     // MARK: Child Views and Styling Configuration
@@ -919,6 +916,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
         }
         
+        let junctionImage = guidanceViewManeuverRepresentation(for: visualInstruction,
+                                                               navigationService: navigationService)
+        primaryManeuver.junctionImage = junctionImage
+        
         // Estimating the width of Apple's maneuver view
         let bounds: () -> (CGRect) = {
             let widthOfManeuverView = min(self.view.bounds.width - self.view.safeArea.left,
@@ -1009,6 +1010,42 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         carSession.upcomingManeuvers = maneuvers
     }
     
+    /**
+     Returns guidance view image representation if it's present in the current visual instruction.
+     Since CarPlay doesn't support asynchronous maneuvers update, in case if guidance view image is
+     not present in cache - download guidance image first and after that trigger maneuvers update.
+     In case if image is present in cache - update primary maneuver right away.
+     */
+    func guidanceViewManeuverRepresentation(for visualInstruction: VisualInstructionBanner?,
+                                            navigationService: NavigationService) -> UIImage? {
+        guard let quaternaryInstruction = visualInstruction?.quaternaryInstruction,
+              let guidanceView = quaternaryInstruction.components.first,
+              let cacheKey = guidanceView.cacheKey else {
+            return nil
+        }
+        
+        if let cachedImage = ImageRepository.shared.cachedImageForKey(cacheKey) {
+            return cachedImage
+        } else {
+            guard case let .guidanceView(guidanceViewImageRepresentation, _, _) = guidanceView,
+                  let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
+                  let accessToken = navigationService.credentials.accessToken,
+                  let guidanceViewImageURL = URL(string: guidanceImageURL.absoluteString + "&access_token=" + accessToken) else {
+                return nil
+            }
+            
+            ImageRepository.shared.imageWithURL(guidanceViewImageURL,
+                                                cacheKey: cacheKey) { [weak self] _ in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    self.updateManeuvers(navigationService.routeProgress)
+                }
+            }
+            
+            return nil
+        }
+    }
+    
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
         var title = NSLocalizedString("CARPLAY_ARRIVED",
                                       bundle: .mapboxNavigation,
@@ -1048,7 +1085,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
 
 // MARK: StyleManagerDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -1093,7 +1129,6 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 
 // MARK: NavigationServiceDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
@@ -1110,7 +1145,6 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
 
 // MARK: NavigationMapViewDelegate Methods
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,
@@ -1150,7 +1184,6 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
     
     @available(iOS 13.0, *)
@@ -1160,7 +1193,6 @@ extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
     }
 }
 
-@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: CPListTemplateDelegate {
     
     public func listTemplate(_ listTemplate: CPListTemplate,
@@ -1182,5 +1214,3 @@ extension CarPlayNavigationViewController: CPListTemplateDelegate {
         })
     }
 }
-
-#endif

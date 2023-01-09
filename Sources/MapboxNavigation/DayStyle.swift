@@ -447,7 +447,6 @@ open class DayStyle: Style {
      Applies default styling for lane views, exit views and shields on CarPlay versions that support
      light and dark appearance changes.
      */
-    @available(iOS 12.0, *)
     func applyCarPlayManeuversStyling(for traitCollection: UITraitCollection) {
         // On CarPlay, `ExitView` and `GenericRouteShield` styling depends on `UIUserInterfaceStyle`,
         // which was set on CarPlay external screen.

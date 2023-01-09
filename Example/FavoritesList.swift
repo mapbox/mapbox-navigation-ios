@@ -46,7 +46,6 @@ public enum FavoritesList {
             }
         }
         
-        @available(iOS 12.0, *)
         func listItem() -> CPListItem {
             return CPListItem(text: rawValue, detailText: subTitle, image: nil, showsDisclosureIndicator: true)
         }
