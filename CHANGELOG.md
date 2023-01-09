@@ -45,6 +45,10 @@
 
 * Fixed a rare crash that could happen during route simulation. ([#4153](https://github.com/mapbox/mapbox-navigation-ios/pull/4153))
 
+### CarPlay
+
+* Added the ability to display a junction image for the maneuver on CarPlay. ([#4324](https://github.com/mapbox/mapbox-navigation-ios/pull/4324))
+
 ### Other changes
 
 * Fixed potential issue when rerouting and route refreshing happen simultaneously which could lead to old route restoration or even a crash. ([#4238](https://github.com/mapbox/mapbox-navigation-ios/pull/4238))

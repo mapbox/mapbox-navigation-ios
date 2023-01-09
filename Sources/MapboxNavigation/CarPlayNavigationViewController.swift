@@ -916,8 +916,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
         }
         
-        let junctionImage = downloadGuidanceViewManeuverRepresentation(for: visualInstruction,
-                                                                       navigationService: navigationService)
+        let junctionImage = guidanceViewManeuverRepresentation(for: visualInstruction,
+                                                               navigationService: navigationService)
         primaryManeuver.junctionImage = junctionImage
         
         // Estimating the width of Apple's maneuver view
@@ -1011,13 +1011,13 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     /**
-     Downloads guidance view image if it's present in the current visual instruction.
+     Returns guidance view image representation if it's present in the current visual instruction.
      Since CarPlay doesn't support asynchronous maneuvers update, in case if guidance view image is
-     not present in cache - download guidance image first and after that update maneuvers.
+     not present in cache - download guidance image first and after that trigger maneuvers update.
      In case if image is present in cache - update primary maneuver right away.
      */
-    func downloadGuidanceViewManeuverRepresentation(for visualInstruction: VisualInstructionBanner?,
-                                                    navigationService: NavigationService) -> UIImage? {
+    func guidanceViewManeuverRepresentation(for visualInstruction: VisualInstructionBanner?,
+                                            navigationService: NavigationService) -> UIImage? {
         guard let quaternaryInstruction = visualInstruction?.quaternaryInstruction,
               let guidanceView = quaternaryInstruction.components.first,
               let cacheKey = guidanceView.cacheKey else {
