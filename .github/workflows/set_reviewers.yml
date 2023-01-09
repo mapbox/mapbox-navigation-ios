@@ -1,0 +1,30 @@
+name: Set reviewers
+on:
+  pull_request:
+    types: [ opened, reopened, ready_for_review ]
+jobs:
+  process:
+    permissions:
+      pull-requests: write
+      contents: read
+    runs-on: ubuntu-20.04
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.head_ref}}
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7.7'
+
+      - name: install python packages
+        run: |
+          python3 -m pip install requests PyBambooHR retry
+
+      - name: execute py script
+        run: |
+          python3 scripts/reviewers/set_reviewers.py

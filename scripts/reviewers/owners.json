@@ -1,0 +1,29 @@
+[
+  {
+    "teams": [
+      "core"
+    ],
+    "modules": [
+      "Sources/MapboxCoreNavigation"
+    ]
+  },
+  {
+    "teams": [
+      "ui"
+    ],
+    "modules": [
+      "Sources/MapboxNavigation"
+    ]
+  },
+  {
+    "teams": [
+      "devops"
+    ],
+    "modules": [
+      ".circleci",
+      ".github",
+      ".tx",
+      "scripts"
+    ]
+  }
+]

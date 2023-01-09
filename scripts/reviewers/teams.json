@@ -1,0 +1,37 @@
+[
+  {
+    "name": "core",
+    "users": [
+      "Udumft",
+      "chezzdev",
+      "kried"
+    ]
+  },
+  {
+    "name": "ui",
+    "users": [
+      "jill-cardamon",
+      "MaximAlien",
+      "ShanMa1991"
+    ]
+  },
+  {
+    "name": "app",
+    "users": [
+      "azarovalex",
+      "S2Ler"
+    ]
+  },
+  {
+    "name": "devops",
+    "users": [
+      "SevaZhukov"
+    ]
+  },
+  {
+    "name": "any",
+    "users": [
+      "1ec5"
+    ]
+  }
+]
