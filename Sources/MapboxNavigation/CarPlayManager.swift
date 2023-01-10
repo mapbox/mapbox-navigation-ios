@@ -517,18 +517,12 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         
         guard interfaceController?.topTemplate == mainMapTemplate,
               template == interfaceController?.rootTemplate else { return }
-        self.removeRoutesFromMap()
+        
+        removeRoutesFromMap()
     }
     
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
         delegate?.carPlayManager(self, templateWillDisappear: template, animated: animated)
-        
-        guard let interfaceController = interfaceController,
-              let topTemplate = interfaceController.topTemplate,
-              type(of: topTemplate) == CPSearchTemplate.self ||
-                interfaceController.templates.count == 1 else { return }
-
-        navigationMapView?.navigationCamera.follow()
     }
     
     public func templateDidDisappear(_ template: CPTemplate, animated: Bool) {
@@ -956,9 +950,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate) {
         guard let navigationMapView = activeNavigationMapView else { return }
         
-        let coordinate = self.coordinate(of: offset, in: navigationMapView)
-        let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+        var cameraState = navigationMapView.mapView.mapboxMap.cameraState
+        cameraState.center = coordinate(of: offset, in: navigationMapView)
+        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: cameraState))
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
