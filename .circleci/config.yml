@@ -753,9 +753,7 @@ jobs:
       - install-mbx-ci
       - run:
           name: Update version
-          command: |
-            pod repo update && pod trunk push MapboxCoreNavigation.podspec
-            pod repo update && pod trunk push MapboxNavigation.podspec
+          command: python3 scripts/distribute-version.py
       - *save-cache-podmaster
       - *save-cache-gems
 
