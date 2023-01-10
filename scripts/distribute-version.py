@@ -10,4 +10,4 @@ def push_pod(name):
         time.sleep(10)
 
 
-push_pod('MapboxNavigationTest')
+push_pod('MapboxNavigationTestThree')
