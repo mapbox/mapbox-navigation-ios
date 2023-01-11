@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from pprint import pprint
 
 import requests
 
@@ -62,8 +63,7 @@ users = get_done_reviews(prs_url, headers, users, fresh_pulls)
 users = sort_users(users)
 
 print("Available reviewers")
-for user in users:
-    print(user)
+pprint(users)
 
 # get changes
 
