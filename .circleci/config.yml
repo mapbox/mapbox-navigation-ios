@@ -753,6 +753,7 @@ jobs:
       - install-mbx-ci
       - run:
           name: Update version
+          no_output_timeout: 20m
           command: python3 scripts/distribute-version.py
       - *save-cache-podmaster
       - *save-cache-gems
