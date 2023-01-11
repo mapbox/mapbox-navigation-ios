@@ -328,7 +328,6 @@ open class CarPlayMapViewController: UIViewController {
         setupStyleManager()
         setupSpeedLimitView()
         setupWayNameView()
-        navigationMapView.navigationCamera.follow()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -337,6 +336,14 @@ open class CarPlayMapViewController: UIViewController {
         if #available(iOS 13.0, *) {
             applyStyleIfNeeded(sessionConfiguration.contentStyle)
         }
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Whenever `CarPlayMapViewController` appears on a screen - switch camera to the following
+        // mode.
+        navigationMapView.navigationCamera.follow()
     }
     
     @available(iOS 13.0, *)
@@ -355,7 +362,6 @@ open class CarPlayMapViewController: UIViewController {
         view.setNeedsUpdateConstraints()
         
         guard let routes = navigationMapView.routes, !routes.isEmpty else {
-            navigationMapView.navigationCamera.follow()
             return
         }
         

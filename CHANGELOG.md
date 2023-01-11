@@ -48,6 +48,7 @@
 ### CarPlay
 
 * Added the ability to display a junction image for the maneuver on CarPlay. ([#4324](https://github.com/mapbox/mapbox-navigation-ios/pull/4324))
+* Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 
 ### Other changes
 
