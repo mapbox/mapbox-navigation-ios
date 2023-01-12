@@ -6,6 +6,7 @@ import TestHelper
 import struct Polyline.Polyline
 import Turf
 @testable import MapboxCoreNavigation
+import MapboxNavigationNative
 
 class RouteProgressTests: TestCase {
 
@@ -296,6 +297,50 @@ class RouteProgressTests: TestCase {
         XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
         legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])! + (lineString.distance()! - lineString.distance(to: coordinates[5])!) / 2.0
         XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
+    }
+
+    func testDistanceToIntersection() {
+        func navigationState(stepDistanceTraveled: CLLocationDistance) -> NavigationStatus {
+            .init(
+                routeState: .tracking,
+                locatedAlternativeRouteId: nil,
+                stale: false,
+                location: .init(.init()),
+                routeIndex: 0,
+                legIndex: 0,
+                step: 0,
+                isFallback: false,
+                inTunnel: false,
+                predicted: 0,
+                geometryIndex: 0,
+                shapeIndex: 0,
+                intersectionIndex: 0,
+                roads: [],
+                voiceInstruction: nil,
+                bannerInstruction: nil,
+                speedLimit: nil,
+                keyPoints: [],
+                mapMatcherOutput: .init(matches: [], isTeleport: false),
+                offRoadProba: 0,
+                activeGuidanceInfo: .init(
+                    routeProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),
+                    legProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),
+                    step: .init(distanceTraveled: stepDistanceTraveled, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0)
+                ),
+                upcomingRouteAlerts: [],
+                nextWaypointIndex: 0,
+                layer: nil
+            )
+        }
+
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
+        routeProgress.updateDistanceTraveled(navigationStatus: navigationState(stepDistanceTraveled: 0))
+        XCTAssertEqual(round(routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection ?? 0), 81)
+
+        // `updateDistanceTraveled` only reads `activeGuidanceInfo.step.distanceTraveled`, so it is the only valid data
+        // we must provide here.
+        routeProgress.updateDistanceTraveled(navigationStatus: navigationState(stepDistanceTraveled: 50))
+        XCTAssertEqual(round(routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection ?? 0), 31)
     }
     
     func testRouteProggressCodable() {
