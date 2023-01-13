@@ -1,0 +1,22 @@
+[
+  {
+    "name": "core",
+    "users": [
+      "Udumft",
+      "kried"
+    ]
+  },
+  {
+    "name": "ui",
+    "users": [
+      "azarovalex",
+      "S2Ler"
+    ]
+  },
+  {
+    "name": "devops",
+    "users": [
+      "SevaZhukov"
+    ]
+  }
+]
