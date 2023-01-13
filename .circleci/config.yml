@@ -316,7 +316,7 @@ jobs:
         default: true
       codecoverage:
         type: boolean
-        default: true
+        default: false
       verify_localization:
         type: boolean
         default: true
@@ -373,15 +373,24 @@ jobs:
             - run:
                 name: MapboxNavigation-Package
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+      # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
           steps:
+            - run:
+                name: Generate code coverage report
+                command: |
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+                    $(find "${HOME}/Library/Developer/Xcode/DerivedData" -name "MapboxNavigation.o") > coverage.lcov
             - run:
                 name: Send code coverage
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
                   ./codecov
+            - store_artifacts:
+                path: coverage.lcov
       - notify-build-finished
 
   build-example:
@@ -463,6 +472,9 @@ jobs:
       notify_success:
         type: boolean
         default: false
+      codecoverage:
+        type: boolean
+        default: true
     macos:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.metal.gen1
@@ -475,7 +487,24 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build test host application and execute tests
-          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test -enableCodeCoverage YES ENABLE_TESTABILITY=YES
+          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run:
+                name: Generate code coverage report
+                command: |
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+                    $(find build -name "MapboxNavigation.o") > coverage.lcov
+            - run:
+                name: Send code coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/macos/codecov
+                  chmod +x codecov
+                  ./codecov
+            - store_artifacts:
+                path: coverage.lcov
       - notify-build-finished
 
   get-api-log-job:
@@ -755,6 +784,7 @@ workflows:
             xcode: "13.2.1"
             iOS: "15.2"
             device: "iPhone 13 Pro Max"
+            codecoverage: false
             context: Slack Orb
         - build-job:
             name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
@@ -762,13 +792,14 @@ workflows:
             iOS: "15.2"
             device: "iPhone 13 Pro Max"
             spm: true
-            codecoverage: false
+            codecoverage: true
             context: Slack Orb
         - build-job:
             name: "Xcode_13.2.1_iOS_15.2_Release"
             xcode: "13.2.1"
             iOS: "15.2"
             device: "iPhone 13 Pro Max"
+            codecoverage: false
             context: Slack Orb
             configuration: "Release"
         - build-job:
