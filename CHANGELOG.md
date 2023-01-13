@@ -6,6 +6,7 @@
 
 * Added `CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:)` to notify developers after CarPlay canceled routes preview, and `CarPlayManager.cancelRoutesPreview()` method to cancel routes preview on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added `CPRouteChoice.indexedRouteResponse` property to allow developers to get access to the `IndexedRouteResponse` of `CPRouteChoice` on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
+* Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 
 ### Other changes
 
@@ -48,7 +49,6 @@
 ### CarPlay
 
 * Added the ability to display a junction image for the maneuver on CarPlay. ([#4324](https://github.com/mapbox/mapbox-navigation-ios/pull/4324))
-* Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 
 ### Other changes
 
