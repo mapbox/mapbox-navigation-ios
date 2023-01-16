@@ -19,7 +19,7 @@ public final class TestNavigationStatusProvider {
                                               activeGuidanceInfo: ActiveGuidanceInfo? = nil) -> NavigationStatus {
         let fixLocation = FixLocation(location ?? CLLocation(latitude: 37.788443, longitude: -122.4020258))
         let shield = Shield(baseUrl: "shield_url", displayRef: "ref", name: "shield", textColor: "")
-        let road = MapboxNavigationNative.Road(text: "name", imageBaseUrl: "base_image_url", shield: shield)
+        let road = MapboxNavigationNative.RoadName(text: "name", language: "lang", imageBaseUrl: "base_image_url", shield: shield)
         let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42)
         let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false)
         return .init(routeState: routeState,

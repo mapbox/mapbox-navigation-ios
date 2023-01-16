@@ -225,6 +225,7 @@
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
+		7E6CAE392976B346001D749D /* RoadShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6CAE382976B346001D749D /* RoadShield.swift */; };
 		8A0155E828F8EC72009E299C /* BannerPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */; };
 		8A0155EA28F8EC85009E299C /* StackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E928F8EC85009E299C /* StackTests.swift */; };
 		8A0155EC28F8ED38009E299C /* PreviewViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */; };
@@ -897,6 +898,7 @@
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
+		7E6CAE382976B346001D749D /* RoadShield.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadShield.swift; sourceTree = "<group>"; };
 		8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPresentationTests.swift; sourceTree = "<group>"; };
 		8A0155E928F8EC85009E299C /* StackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackTests.swift; sourceTree = "<group>"; };
 		8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerTests.swift; sourceTree = "<group>"; };
@@ -2465,6 +2467,7 @@
 				DA5F44F325F07D3A00F573EC /* RoadObjectStoreDelegate.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectStore.swift */,
 				414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */,
+				7E6CAE382976B346001D749D /* RoadShield.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -3382,6 +3385,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
 				2C04E467290A8C6B0067FDCF /* PredictiveCacheNavigationOptions.swift in Sources */,
+				7E6CAE392976B346001D749D /* RoadShield.swift in Sources */,
 				2B2DC69928F479DE0019232C /* HistoryEvent.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
