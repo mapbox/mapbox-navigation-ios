@@ -378,7 +378,9 @@ class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
             .updatesMostProbablePathKey: position.type() == .update,
             .distancesByRoadObjectKey: distances.map(DistancedRoadObject.init),
         ]
-        NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
+        onMainAsync {
+            NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
+        }
     }
     
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
@@ -386,7 +388,9 @@ class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
             .roadObjectIdentifierKey: info.roadObjectId,
             .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
         ]
-        NotificationCenter.default.post(name: .electronicHorizonDidEnterRoadObject, object: nil, userInfo: userInfo)
+        onMainAsync {
+            NotificationCenter.default.post(name: .electronicHorizonDidEnterRoadObject, object: nil, userInfo: userInfo)
+        }
     }
     
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
@@ -394,14 +398,18 @@ class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
             .roadObjectIdentifierKey: info.roadObjectId,
             .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
         ]
-        NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
+        onMainAsync {
+            NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
+        }
     }
 
     public func onRoadObjectPassed(for info: RoadObjectPassInfo) {
         let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .roadObjectIdentifierKey: info.roadObjectId,
         ]
-        NotificationCenter.default.post(name: .electronicHorizonDidPassRoadObject, object: nil, userInfo: userInfo)
+        onMainAsync {
+            NotificationCenter.default.post(name: .electronicHorizonDidPassRoadObject, object: nil, userInfo: userInfo)
+        }
     }
 }
 
