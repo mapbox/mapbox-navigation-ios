@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "25539af7104ec49ab924ccb566e614fb983ead97",
-          "version": "123.1.0"
+          "revision": "f8b340c60b02a2def90ef12d6ed731e0c6ef1a03",
+          "version": "123.2.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "fddd1c00396eed152c45a46bea9f47b98e59301d",
-          "version": "1.2.0"
+          "revision": "4ad606ba5d7673ea60679a61ff867cc1ff8c8e86",
+          "version": "1.2.1"
         }
       },
       {
