@@ -8,6 +8,13 @@
 * Added `CPRouteChoice.indexedRouteResponse` property to allow developers to get access to the `IndexedRouteResponse` of `CPRouteChoice` on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 
+### Electronic horizon
+
+**Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+
+* `RoadName` type changed from enum to struct with additional properties. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* Electronic Horizon Notifications (`Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, `Notification.Name.electronicHorizonDidPassRoadObject`) are now called on the main thread. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+
 ### Other changes
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
@@ -259,7 +266,7 @@
 * Fixed an issue where the destination building is not highlighted after rerouting. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the incorrect destination building is highlighted after panning the correct building off screen. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the maneuver arrow on the route line overlapped labels for points of interest. ([#4030](https://github.com/mapbox/mapbox-navigation-ios/pull/4030))
-* Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049)) 
+* Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049))
 * Fixed the crash caused by showing a route that doesn't contain coordinates. ([#4046](https://github.com/mapbox/mapbox-navigation-ios/pull/4046))
 
 ### CarPlay
