@@ -401,7 +401,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.turnstile.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.turnstile.rawValue))
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
@@ -417,7 +417,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         navigationService.start()
 
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.routeRetrieval.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
 
         let routeUpdated = expectation(description: "Route updated")
         router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil) {
@@ -559,7 +559,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         expectation(description: "Depart Event Flushed") {
-            eventsManagerSpy.hasEvent(with: EventType.depart.rawValue)
+            eventsManagerSpy.hasQueuedEvent(with: EventType.depart.rawValue)
         }
 
         // MARK: It tells the delegate that the user did arrive
@@ -594,7 +594,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: expectedEventName))
     }
 
     func testRouteControllerDoesNotHaveRetainCycle() {
