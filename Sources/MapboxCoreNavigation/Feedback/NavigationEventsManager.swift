@@ -366,32 +366,32 @@ open class NavigationEventsManager {
 
     public func sendCarPlayConnectEvent() {
         let attributes = eventAttributes(type: .carplayConnect)
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
 
     public func sendCarPlayDisconnectEvent() {
         let attributes = eventAttributes(type: .carplayDisconnect)
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
     
     func sendRouteRetrievalEvent() {
         guard let attributes = try? navigationRouteRetrievalEvent()?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
 
     func sendDepartEvent() {
         guard let attributes = try? navigationDepartEvent()?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
     
     func sendArriveEvent() {
         guard let attributes = try? navigationArriveEvent()?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
 
     func sendPassiveNavigationStart() {
@@ -401,12 +401,12 @@ open class NavigationEventsManager {
         }
 
         guard let attributes = try? passiveNavigationEvent(type: .start)?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
 
     func sendPassiveNavigationStop() {
         guard let attributes = try? passiveNavigationEvent(type: .stop)?.asDictionary() else { return }
-        eventsAPI.sendImmediateEvent(with: attributes)
+        sendEvent(with: attributes)
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -417,7 +417,7 @@ open class NavigationEventsManager {
             }
             
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
-            eventsAPI.sendImmediateEvent(with: eventDictionary)
+            sendEvent(with: eventDictionary)
         }
     }
 
@@ -540,5 +540,13 @@ open class NavigationEventsManager {
     
     func record(_ locations: [CLLocation]) {
         locations.forEach(sessionState.pastLocations.push(_:))
+    }
+
+    private func sendEvent(with attributes: [String : Any]) {
+        if shouldDelayEvents() {
+            eventsAPI.sendQueuedEvent(with: attributes)
+        } else {
+            eventsAPI.sendImmediateEvent(with: attributes)
+        }
     }
 }

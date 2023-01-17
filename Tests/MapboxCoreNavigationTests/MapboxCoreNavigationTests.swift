@@ -25,3 +25,7 @@ func makeRoute() -> Route {
 func makeRouteWithNoDistance() -> Route {
     return Fixture.route(from: jsonFileNameEmptyDistance, options: routeOptions)
 }
+
+func makeRouteProgress() -> RouteProgress {
+    return RouteProgress(route: makeRoute(), options: routeOptions)
+}
