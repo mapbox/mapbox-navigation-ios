@@ -9,6 +9,7 @@ ignore:
   - "MapboxCoreNavigationTests"
   - "MapboxCoreNavigationIntegrationTests"
   - "TestHelper"
+  - "Sources/MapboxNavigation/LanesStyleKit.swift"
 
 coverage:
   status:
