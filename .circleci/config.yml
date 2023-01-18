@@ -658,20 +658,20 @@ workflows:
              branches:
                only:
                  - main
-  api-diff-workflow:
-    jobs:
-      - get-api-log-job:
-          name: "Get old API logs"
-          is_base_api: true
-          commit_hash: ""
-      - get-api-log-job:
-          name: "Get new API logs"
-          commit_hash: << pipeline.git.revision >>
-      - api-diff-job:
-          name: "Create breaking changes PR comment"
-          requires:
-            - "Get old API logs"
-            - "Get new API logs"
+#  api-diff-workflow:
+#    jobs:
+#      - get-api-log-job:
+#          name: "Get old API logs"
+#          is_base_api: true
+#          commit_hash: ""
+#      - get-api-log-job:
+#          name: "Get new API logs"
+#          commit_hash: << pipeline.git.revision >>
+#      - api-diff-job:
+#          name: "Create breaking changes PR comment"
+#          requires:
+#            - "Get old API logs"
+#            - "Get new API logs"
   main-workflow:
     jobs:
       - build-job:
