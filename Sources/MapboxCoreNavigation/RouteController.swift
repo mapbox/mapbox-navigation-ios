@@ -388,8 +388,7 @@ open class RouteController: NSObject {
         updateSpokenInstructionProgress(status: status, willReRoute: isRerouting)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
-        routeProgress.updateDistanceToIntersection(from: snappedLocation)
-        
+
         rerouteAfterArrivalIfNeeded(snappedLocation, status: status)
         
         if status.routeState != .complete {
@@ -507,6 +506,7 @@ open class RouteController: NSObject {
     
     private func update(progress: RouteProgress, status: NavigationStatus, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult, routeShapeIndex: Int) {
         progress.updateDistanceTraveled(navigationStatus: status)
+
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         progress.shapeIndex = routeShapeIndex
         

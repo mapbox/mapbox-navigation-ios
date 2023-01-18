@@ -164,7 +164,6 @@ open class RouteProgress: Codable {
                                               intersectionIndex: currentLegProgress.currentStepProgress.intersectionIndex)
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
-        updateDistanceToIntersection(from: location)
     }
 
     /**
@@ -200,13 +199,14 @@ open class RouteProgress: Codable {
         else {
             updateDistanceTraveled(with: .init(navigationStatus.location))
         }
+        updateDistanceToIntersection()
     }
     
     /**
      Update the distance to intersection according to new location specified.
      - parameter location: Updated user location.
      */
-    func updateDistanceToIntersection(from location: CLLocation) {
+    private func updateDistanceToIntersection() {
         guard var intersections = currentLegProgress.currentStepProgress.step.intersections else { return }
         
         // The intersections array does not include the upcoming maneuver intersection.
@@ -214,10 +214,16 @@ open class RouteProgress: Codable {
             intersections += [upcomingIntersection]
         }
         currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
-        
+
         if let shape = currentLegProgress.currentStep.shape,
-           let upcomingIntersection = currentLegProgress.currentStepProgress.upcomingIntersection {
-            currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
+           let upcomingIntersection = currentLegProgress.currentStepProgress.upcomingIntersection,
+           let coordinateOnStep = shape.coordinateFromStart(
+               distance: currentLegProgress.currentStepProgress.distanceTraveled
+           ) {
+            currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(
+                from: coordinateOnStep,
+                to: upcomingIntersection.location
+            )
         }
         
         updateIntersectionDistances()
