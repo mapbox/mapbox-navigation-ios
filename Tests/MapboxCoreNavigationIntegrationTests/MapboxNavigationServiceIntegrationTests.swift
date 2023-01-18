@@ -527,7 +527,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         // It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.depart.rawValue))
+        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.depart.rawValue))
         // When at a valid location just before the last location
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
         // It tells the delegate that the user did arrive
@@ -535,7 +535,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: expectedEventName))
     }
 
     func testNoReroutesAfterArriving() {
@@ -559,7 +559,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         expectation(description: "Depart Event Flushed") {
-            eventsManagerSpy.hasImmediateEvent(with: EventType.depart.rawValue)
+            eventsManagerSpy.hasQueuedEvent(with: EventType.depart.rawValue)
         }
 
         // MARK: It tells the delegate that the user did arrive
@@ -594,7 +594,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         // It enqueues and flushes an arrival event
         let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: expectedEventName))
     }
 
     func testRouteControllerDoesNotHaveRetainCycle() {

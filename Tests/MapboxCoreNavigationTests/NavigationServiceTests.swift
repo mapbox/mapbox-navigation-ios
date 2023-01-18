@@ -129,7 +129,7 @@ class NavigationServiceTests: TestCase {
 
         XCTAssertTrue(locationManager.startUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.startUpdatingLocationCalled)
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.routeRetrieval.rawValue))
 
         XCTAssertTrue(routerSpy.delegate === service)
         waitForExpectations(timeout: expectationsTimeout)
@@ -144,7 +144,7 @@ class NavigationServiceTests: TestCase {
 
         XCTAssertTrue(locationManager.startUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.startUpdatingLocationCalled)
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.routeRetrieval.rawValue))
 
         XCTAssertTrue(routerSpy.delegate === service)
         waitForExpectations(timeout: expectationsTimeout)
@@ -256,7 +256,7 @@ class NavigationServiceTests: TestCase {
 
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
-        XCTAssertFalse(eventsManager.hasImmediateEvent(with: EventType.cancel.rawValue))
+        XCTAssertFalse(eventsManager.hasQueuedEvent(with: EventType.cancel.rawValue))
 
         waitForExpectations(timeout: expectationsTimeout)
     }
@@ -427,7 +427,7 @@ class NavigationServiceTests: TestCase {
         let feedback = EndOfRouteFeedback(rating: 5, comment: "comment")
         service.endNavigation(feedback: feedback)
 
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.cancel.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.cancel.rawValue))
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
 
@@ -459,7 +459,7 @@ class NavigationServiceTests: TestCase {
         let feedback = EndOfRouteFeedback(rating: 5, comment: "comment")
         service.endNavigation(feedback: feedback)
 
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.cancel.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.cancel.rawValue))
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
 
@@ -479,7 +479,7 @@ class NavigationServiceTests: TestCase {
         let feedback = EndOfRouteFeedback(rating: 5, comment: "comment")
         service.endNavigation(feedback: feedback)
 
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.cancel.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.cancel.rawValue))
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
         XCTAssertEqual(delegate.recentMessages, [])
@@ -529,7 +529,7 @@ class NavigationServiceTests: TestCase {
 
     func testDidUpdate() {
         service.router(routerSpy, didUpdate: routeProgress, with: location, rawLocation: lastLocation)
-        XCTAssertTrue(eventsManager.hasImmediateEvent(with: EventType.depart.rawValue))
+        XCTAssertTrue(eventsManager.hasQueuedEvent(with: EventType.depart.rawValue))
         let expectedCalls = ["navigationService(_:didUpdate:with:rawLocation:)"]
         XCTAssertEqual(delegate.recentMessages, expectedCalls)
     }
