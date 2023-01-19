@@ -77,12 +77,10 @@ open class ReplayLocationManager: NavigationLocationManager {
         verifyParameters()
     }
     
-    public init(history: History, listener: ReplayManagerHistoryEventsListener?) {
-        self.locations = history.rawLocationsShiftedToPresent()
+    public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
+        self.init(locations: history.rawLocationsShiftedToPresent())
         self.events = history.events.map { ReplayEvent(from: $0) }
         self.eventsListener = listener
-        super.init()
-        verifyParameters()
     }
     
     deinit {
