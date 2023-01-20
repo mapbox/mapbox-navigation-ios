@@ -6,7 +6,7 @@
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v123._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/123.2.0). ([#4331](https://github.com/mapbox/mapbox-navigation-ios/pull/4331))
 * MapboxNavigation now requires [MapboxMaps v10.10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.1). ([#4315](https://github.com/mapbox/mapbox-navigation-ios/pull/4315))
-* MapboxCoreNavigation now requires [MapboxDirections v2.9.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.0). ([#4336](https://github.com/mapbox/mapbox-navigation-ios/pull/4336))
+* MapboxCoreNavigation now requires [MapboxDirections v2.9.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.1). ([#4336](https://github.com/mapbox/mapbox-navigation-ios/pull/4336))
 * Cocoapods podspec for MapboxCoreNavigation now references resources that will be copied into the application. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 
 ### Routing
