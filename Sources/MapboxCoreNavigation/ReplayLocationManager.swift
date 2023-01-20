@@ -31,7 +31,7 @@ open class ReplayLocationManager: NavigationLocationManager {
     /**
      Events listener that will receive history events if replaying a `History`.
      */
-    public var eventsListener: ReplayManagerHistoryEventsListener? = nil
+    public weak var eventsListener: ReplayManagerHistoryEventsListener? = nil
     
     /**
      `simulatesLocation` used to indicate whether the location manager is providing simulated locations.
@@ -77,9 +77,13 @@ open class ReplayLocationManager: NavigationLocationManager {
         verifyParameters()
     }
     
-    public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
+    public convenience init(history: History) {
         self.init(locations: history.rawLocationsShiftedToPresent())
         self.events = history.events.map { ReplayEvent(from: $0) }
+    }
+    
+    public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
+        self.init(history: history)
         self.eventsListener = listener
     }
     
@@ -109,7 +113,7 @@ open class ReplayLocationManager: NavigationLocationManager {
                 onTick?(currentIndex, location)
                 nextTickWorkItem?.cancel()
             case .historyEvent(let historyEvent):
-                eventsListener?.onEventPublished(self, event: historyEvent)
+                eventsListener?.replyLocationManager(self, published: historyEvent)
             }
         }
 
@@ -194,8 +198,8 @@ open class ReplayLocationManager: NavigationLocationManager {
 /**
  `ReplayLocationManager`'s listener that will receive events feed when it is replaying a `History` data.
  */
-public protocol ReplayManagerHistoryEventsListener {
-    func onEventPublished(_ manager: ReplayLocationManager, event: HistoryEvent)
+public protocol ReplayManagerHistoryEventsListener: AnyObject {
+    func replyLocationManager(_ manager: ReplayLocationManager, published event: HistoryEvent)
 }
 
 

@@ -1,3 +1,2 @@
 Func CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:) has been added as a protocol requirement
 Constructor MapboxNavigationService.init(history:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:) has been removed
-Constructor ReplayLocationManager.init(history:) has been removed

@@ -50,9 +50,11 @@ internal class StatusUpdateHistoryEvent: UnknownHistoryEvent {
 }
 
 /// History event being pushed by the user
+///
+/// Such events are created by calling `HistoryRecording.pushHistoryEvent(type:jsonData:)`.
 public struct PushRecordHistoryEvent: HistoryEvent {
     public let timestamp: TimeInterval
-    /// The event type in the events log for this custom event.
+    /// The event type specified for this custom event.
     public let type: String
     /// The data value that contains a valid JSON attached to the event.
     public let properties: String
