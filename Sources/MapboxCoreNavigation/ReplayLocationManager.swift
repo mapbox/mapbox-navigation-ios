@@ -224,8 +224,8 @@ struct ReplayEvent {
             case let event as RouteAssignmentHistoryEvent:
                 return ReplayEvent(from: RouteAssignmentHistoryEvent(timestamp: date.timeIntervalSince1970,
                                                                      routeResponse: event.routeResponse))
-            case let event as PushRecordHistoryEvent:
-                return ReplayEvent(from: PushRecordHistoryEvent(timestamp: date.timeIntervalSince1970,
+            case let event as UserPushedHistoryEvent:
+                return ReplayEvent(from: UserPushedHistoryEvent(timestamp: date.timeIntervalSince1970,
                                                                 type: event.type,
                                                                 properties: event.properties))
             case is UnknownHistoryEvent:

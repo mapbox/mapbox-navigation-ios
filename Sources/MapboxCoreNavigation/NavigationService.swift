@@ -840,6 +840,7 @@ extension MapboxNavigationService {
 
 extension MapboxNavigationService: ReplayManagerHistoryEventsListener {
     public func replyLocationManager(_ manager: ReplayLocationManager, published event: HistoryEvent) {
+        // handling `RouteAssignmentHistoryEvent` to replay route updates from user/reroutes/etc.
         if let setRouteEvent = event as? RouteAssignmentHistoryEvent {
             updateRoute(with: setRouteEvent.routeResponse,
                         routeOptions: nil,

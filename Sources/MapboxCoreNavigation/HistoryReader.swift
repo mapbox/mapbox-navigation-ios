@@ -88,7 +88,7 @@ public struct HistoryReader: Sequence {
                                                 status: event.result)
             case .pushHistory:
                 guard let event = record.pushHistory else { break }
-                return PushRecordHistoryEvent(timestamp: timestamp,
+                return UserPushedHistoryEvent(timestamp: timestamp,
                                               type: event.type,
                                               properties: event.properties)
             @unknown default:
