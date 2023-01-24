@@ -26,7 +26,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         }
     }
     
-    var events: [ReplayEvent]
+    private(set) var events: [ReplayEvent]
     
     /**
      Events listener that will receive history events if replaying a `History`.
