@@ -476,6 +476,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      Intializes a new `NavigationService` for replaying a session from provided `History`.
      
      - parameter history: `History` object, containing initial route and location trace to be replayed.
+     - parameter customHistoryEventsListener: Custom `ReplayManagerHistoryEventsListener` which will be used to handle replay events. Default value (`nil`)  will also loop route assignment events to update the `Router`.
      - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter credentials: Credentials to authorize additional data requests throughout the route.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
@@ -483,6 +484,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - returns `nil` if provided `historyFileDump` does not contain valid initial route.
      */
     public convenience init?(history: History,
+                             customHistoryEventsListener: ReplayManagerHistoryEventsListener? = nil,
                              customRoutingProvider: RoutingProvider? = nil,
                              credentials: Credentials,
                              eventsManagerType: NavigationEventsManager.Type? = nil,
@@ -491,13 +493,20 @@ public class MapboxNavigationService: NSObject, NavigationService {
         guard let routeResponse = history.initialRoute else {
             return nil
         }
+        
+        let replayLocationManager = ReplayLocationManager(history: history,
+                                                          listener: customHistoryEventsListener)
         self.init(indexedRouteResponse: routeResponse,
                   customRoutingProvider: customRoutingProvider,
                   credentials: credentials,
-                  locationSource: ReplayLocationManager(history: history),
+                  locationSource: replayLocationManager,
                   eventsManagerType: eventsManagerType,
                   routerType: routerType,
                   customActivityType: customActivityType)
+        
+        if customHistoryEventsListener == nil {
+            replayLocationManager.eventsListener = self
+        }
     }
 
     init(indexedRouteResponse: IndexedRouteResponse,
@@ -826,6 +835,17 @@ extension MapboxNavigationService {
     
     public var locationManagerType: NavigationLocationManager.Type {
         return type(of: locationManager)
+    }
+}
+
+extension MapboxNavigationService: ReplayManagerHistoryEventsListener {
+    public func replyLocationManager(_ manager: ReplayLocationManager, published event: HistoryEvent) {
+        // handling `RouteAssignmentHistoryEvent` to replay route updates from user/reroutes/etc.
+        if let setRouteEvent = event as? RouteAssignmentHistoryEvent {
+            updateRoute(with: setRouteEvent.routeResponse,
+                        routeOptions: nil,
+                        completion: nil)
+        }
     }
 }
 

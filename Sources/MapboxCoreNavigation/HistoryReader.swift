@@ -21,6 +21,16 @@ public struct History {
             return ($0 as? LocationUpdateHistoryEvent)?.location
         }
     }
+    
+    func rawLocationsShiftedToPresent() -> [CLLocation] {
+        return self.rawLocations.enumerated().map { CLLocation(coordinate: $0.element.coordinate,
+                                                               altitude: $0.element.altitude,
+                                                               horizontalAccuracy: $0.element.horizontalAccuracy,
+                                                               verticalAccuracy: $0.element.verticalAccuracy,
+                                                               course: $0.element.course,
+                                                               speed: $0.element.speed,
+                                                               timestamp: Date() + TimeInterval($0.offset)) }
+    }
 }
 
 /// Provides event-by-event access to history files contents.
@@ -78,7 +88,7 @@ public struct HistoryReader: Sequence {
                                                 status: event.result)
             case .pushHistory:
                 guard let event = record.pushHistory else { break }
-                return PushRecordHistoryEvent(timestamp: timestamp,
+                return UserPushedHistoryEvent(timestamp: timestamp,
                                               type: event.type,
                                               properties: event.properties)
             @unknown default:
