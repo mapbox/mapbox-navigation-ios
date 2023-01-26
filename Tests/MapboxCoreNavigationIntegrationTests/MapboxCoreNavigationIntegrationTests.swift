@@ -601,7 +601,7 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         wait(for: [routeControllerProgressExpectation], timeout: waitForInterval)
     }
     
-    func testInstructionComponentsReportingWithGuidanceViewKinds() {
+    func testInstructionComponentsReportingWithGuidanceView() {
         let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 35.652935, longitude: 139.745061),
             CLLocationCoordinate2D(latitude: 35.650312, longitude: 139.737655)
@@ -642,26 +642,20 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
                 return false
             }
             
-            guard case let .guidanceView(_, _, firstStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[0].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+            guard case .guidanceView(_, _) = routeProgress.currentLegProgress.leg.steps[0].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
                 XCTFail("Component should be valid.")
                 return false
             }
-            
-            XCTAssertEqual(firstStepGuidanceViewKind, .realisticUrbanIntersection)
-            
-            guard case let .guidanceView(_, _, secondStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[1].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+
+            guard case .guidanceView(_, _) = routeProgress.currentLegProgress.leg.steps[1].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
                 XCTFail("Component should be valid.")
                 return false
             }
-            
-            XCTAssertEqual(secondStepGuidanceViewKind, .motorwayEntrance)
-            
-            guard case let .guidanceView(_, _, thirdStepGuidanceViewKind) = routeProgress.currentLegProgress.leg.steps[2].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
+
+            guard case .guidanceView(_, _) = routeProgress.currentLegProgress.leg.steps[2].instructionsDisplayedAlongStep?.first?.quaternaryInstruction?.components.first else {
                 XCTFail("Component should be valid.")
                 return false
             }
-            
-            XCTAssertEqual(thirdStepGuidanceViewKind, .fork)
             
             return true
         }
