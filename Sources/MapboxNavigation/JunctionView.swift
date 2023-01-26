@@ -56,7 +56,7 @@ public class JunctionView: UIImageView {
         
         guard let guidanceView = quaternaryInstruction?.components.first else { return }
         
-        if case .guidanceView(let guidanceViewImageRepresentation, _, _) = guidanceView {
+        if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
                 show(animated: true)

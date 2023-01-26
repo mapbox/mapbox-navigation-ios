@@ -18,14 +18,15 @@
 ### Other changes
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
+* Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268)) 
 
 ## v2.10.0
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v123._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/123.1.0). ([#4298](https://github.com/mapbox/mapbox-navigation-ios/pull/4298))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v123._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/123.2.0). ([#4331](https://github.com/mapbox/mapbox-navigation-ios/pull/4331))
 * MapboxNavigation now requires [MapboxMaps v10.10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.1). ([#4315](https://github.com/mapbox/mapbox-navigation-ios/pull/4315))
-* MapboxCoreNavigation now requires [MapboxDirections v2.9.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.0-rc.2). ([#4296](https://github.com/mapbox/mapbox-navigation-ios/pull/4296))
+* MapboxCoreNavigation now requires [MapboxDirections v2.9.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.1). ([#4336](https://github.com/mapbox/mapbox-navigation-ios/pull/4336))
 * Cocoapods podspec for MapboxCoreNavigation now references resources that will be copied into the application. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 
 ### Routing
@@ -63,7 +64,6 @@
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
 * `NavigationView.init(frame:tileStoreLocation:navigationMapView:)`, `NavigationView.navigationMapView`, `NavigationView.floatingStackView`, `NavigationView.floatingButtons`, `NavigationView.wayNameView`, `NavigationView.speedLimitView`, `NavigationView.topBannerContainerView` and `NavigationView.bottomBannerContainerView` are now publicly accessible. ([#4249](https://github.com/mapbox/mapbox-navigation-ios/pull/4249))
 * Fixed an issue where empty intersections of the current step could cause a crash. ([#4260](https://github.com/mapbox/mapbox-navigation-ios/pull/4260))
-* Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268)) 
 * Deprecated `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method in favor of `NavigationSettings.initialize(with:)`. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 * Added new parameter that allows configuring logging level for Mapbox SDKs. Checkout new `NavigationSettings.initialize(with:)` method for more information. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 * Fixed an issue where the `UserHaloCourseView` will be shown under reduced location accuracy mode with `NavigationMapview.reducedAccuracyActivatedMode` as `false`. Right now `UserHaloCourseView` will be applied in only one case: when user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`, and the `Precise Location` property in the settings of current application is disabled by user. ([#4285](https://github.com/mapbox/mapbox-navigation-ios/pull/4285))

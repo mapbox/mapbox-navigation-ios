@@ -1027,7 +1027,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if let cachedImage = ImageRepository.shared.cachedImageForKey(cacheKey) {
             return cachedImage
         } else {
-            guard case let .guidanceView(guidanceViewImageRepresentation, _, _) = guidanceView,
+            guard case let .guidanceView(guidanceViewImageRepresentation, _) = guidanceView,
                   let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
                   let accessToken = navigationService.credentials.accessToken,
                   let guidanceViewImageURL = URL(string: guidanceImageURL.absoluteString + "&access_token=" + accessToken) else {

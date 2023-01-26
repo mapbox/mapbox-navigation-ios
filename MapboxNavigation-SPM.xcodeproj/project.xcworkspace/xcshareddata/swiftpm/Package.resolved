@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "94244ece1cd95f91f18c6325dcbed07de8dcf8b1",
-          "version": "2.9.0-rc.2"
+          "revision": "1f878617c7df86a51880bc961e85b0055cab2dcd",
+          "version": "2.10.0-beta.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "657fe386065c96338440a70c68ffe7444504dfe5",
-          "version": "124.0.0"
+          "revision": "9aef5a469b4ffa6317e060521f1052af756b6ec7",
+          "version": "124.0.1"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "fddd1c00396eed152c45a46bea9f47b98e59301d",
-          "version": "1.2.0"
+          "revision": "4ad606ba5d7673ea60679a61ff867cc1ff8c8e86",
+          "version": "1.2.1"
         }
       },
       {
