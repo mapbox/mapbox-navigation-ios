@@ -2,6 +2,12 @@
 
 ## v2.11.0
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v124._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/124.0.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* MapboxNavigation now requires [MapboxMaps v10.11.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+
 ### CarPlay
 
 * Added `CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:)` to notify developers after CarPlay canceled routes preview, and `CarPlayManager.cancelRoutesPreview()` method to cancel routes preview on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
