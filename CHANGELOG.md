@@ -25,7 +25,7 @@
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
 * Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268))
-* Ensure map-matching considers HOV-only roads as auto accessible [#4333](https://github.com/mapbox/mapbox-navigation-native/pull/4333)
+* Ensure map-matching considers HOV-only roads as auto accessible. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
 * Added `ReplayManagerHistoryEventsListener` to receive events feed when replaying a `History` data. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
 * `UserPushedHistoryEvent` is now public. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
 
