@@ -160,7 +160,7 @@ extension RoadGraph.Edge {
             self.roadClasses = roadClasses
             
             isBridge = native.isBridge
-            names = native.names.map(RoadName.init)
+            names = native.names.compactMap(RoadName.init)
             laneCount = native.laneCount as? UInt
             altitude = native.meanElevation as? Double
             curvature = UInt(native.curvature)

@@ -2,23 +2,40 @@
 
 ## v2.11.0
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v124._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/124.0.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* MapboxNavigation now requires [MapboxMaps v10.11.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+
 ### CarPlay
 
 * Added `CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:)` to notify developers after CarPlay canceled routes preview, and `CarPlayManager.cancelRoutesPreview()` method to cancel routes preview on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added `CPRouteChoice.indexedRouteResponse` property to allow developers to get access to the `IndexedRouteResponse` of `CPRouteChoice` on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 
+### Electronic horizon
+
+**Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+
+* `RoadName` type changed from enum to struct with additional properties. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* Electronic Horizon Notifications (`Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, `Notification.Name.electronicHorizonDidPassRoadObject`) are now called on the main thread. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+
 ### Other changes
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
+* Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268))
+* Ensure map-matching considers HOV-only roads as auto accessible [#4333](https://github.com/mapbox/mapbox-navigation-native/pull/4333)
+* Added `ReplayManagerHistoryEventsListener` to receive events feed when replaying a `History` data. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
+* `UserPushedHistoryEvent` is now public. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
 
 ## v2.10.0
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v123._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/123.1.0). ([#4298](https://github.com/mapbox/mapbox-navigation-ios/pull/4298))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v123._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/123.2.0). ([#4331](https://github.com/mapbox/mapbox-navigation-ios/pull/4331))
 * MapboxNavigation now requires [MapboxMaps v10.10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.10.1). ([#4315](https://github.com/mapbox/mapbox-navigation-ios/pull/4315))
-* MapboxCoreNavigation now requires [MapboxDirections v2.9.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.0-rc.2). ([#4296](https://github.com/mapbox/mapbox-navigation-ios/pull/4296))
+* MapboxCoreNavigation now requires [MapboxDirections v2.9.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.9.1). ([#4336](https://github.com/mapbox/mapbox-navigation-ios/pull/4336))
 * Cocoapods podspec for MapboxCoreNavigation now references resources that will be copied into the application. ([#4280](https://github.com/mapbox/mapbox-navigation-ios/pull/4280))
 
 ### Routing
@@ -56,7 +73,6 @@
 * Fixed an issue where the route progress could be incorrectly calculated for folding back route steps. ([#4234](https://github.com/mapbox/mapbox-navigation-ios/pull/4234))
 * `NavigationView.init(frame:tileStoreLocation:navigationMapView:)`, `NavigationView.navigationMapView`, `NavigationView.floatingStackView`, `NavigationView.floatingButtons`, `NavigationView.wayNameView`, `NavigationView.speedLimitView`, `NavigationView.topBannerContainerView` and `NavigationView.bottomBannerContainerView` are now publicly accessible. ([#4249](https://github.com/mapbox/mapbox-navigation-ios/pull/4249))
 * Fixed an issue where empty intersections of the current step could cause a crash. ([#4260](https://github.com/mapbox/mapbox-navigation-ios/pull/4260))
-* Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268)) 
 * Deprecated `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:navigatorPredictionInterval:liveIncidentsOptions:statusUpdatingSettings:)` method in favor of `NavigationSettings.initialize(with:)`. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 * Added new parameter that allows configuring logging level for Mapbox SDKs. Checkout new `NavigationSettings.initialize(with:)` method for more information. ([#4275](https://github.com/mapbox/mapbox-navigation-ios/pull/4275))
 * Fixed an issue where the `UserHaloCourseView` will be shown under reduced location accuracy mode with `NavigationMapview.reducedAccuracyActivatedMode` as `false`. Right now `UserHaloCourseView` will be applied in only one case: when user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`, and the `Precise Location` property in the settings of current application is disabled by user. ([#4285](https://github.com/mapbox/mapbox-navigation-ios/pull/4285))
@@ -259,7 +275,7 @@
 * Fixed an issue where the destination building is not highlighted after rerouting. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the incorrect destination building is highlighted after panning the correct building off screen. ([#4034](https://github.com/mapbox/mapbox-navigation-ios/pull/4034))
 * Fixed an issue where the maneuver arrow on the route line overlapped labels for points of interest. ([#4030](https://github.com/mapbox/mapbox-navigation-ios/pull/4030))
-* Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049)) 
+* Fixed an issue where `NavigationMapView` injected with `NavigationOptions` isn't visible in active navigation. ([#4049](https://github.com/mapbox/mapbox-navigation-ios/pull/4049))
 * Fixed the crash caused by showing a route that doesn't contain coordinates. ([#4046](https://github.com/mapbox/mapbox-navigation-ios/pull/4046))
 
 ### CarPlay

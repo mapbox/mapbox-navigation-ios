@@ -1,2 +1,5 @@
 Func CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:) has been added as a protocol requirement
 Constructor MapboxNavigationService.init(history:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:) has been removed
+EnumElement RoadName.name has been removed
+EnumElement RoadName.code has been removed
+Enum RoadName has been changed to a Struct

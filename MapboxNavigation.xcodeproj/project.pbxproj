@@ -225,6 +225,7 @@
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
+		7E6CAE392976B346001D749D /* RoadShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6CAE382976B346001D749D /* RoadShield.swift */; };
 		8A0155E828F8EC72009E299C /* BannerPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */; };
 		8A0155EA28F8EC85009E299C /* StackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155E928F8EC85009E299C /* StackTests.swift */; };
 		8A0155EC28F8ED38009E299C /* PreviewViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */; };
@@ -240,7 +241,6 @@
 		8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */; };
 		8A18569926320B8F00F8AE38 /* OverviewCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */; };
 		8A1943A92685DC680066E2F8 /* NavigationGeocodedPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */; };
-		8A1FACF32942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */; };
 		8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */; };
 		8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */; };
 		8A2354EE28877890003E42B4 /* BannerContainerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2354EA28877890003E42B4 /* BannerContainerViewDelegate.swift */; };
@@ -897,6 +897,7 @@
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
+		7E6CAE382976B346001D749D /* RoadShield.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadShield.swift; sourceTree = "<group>"; };
 		8A0155E728F8EC72009E299C /* BannerPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPresentationTests.swift; sourceTree = "<group>"; };
 		8A0155E928F8EC85009E299C /* StackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackTests.swift; sourceTree = "<group>"; };
 		8A0155EB28F8ED38009E299C /* PreviewViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerTests.swift; sourceTree = "<group>"; };
@@ -912,7 +913,6 @@
 		8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingCameraOptions.swift; sourceTree = "<group>"; };
 		8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewCameraOptions.swift; sourceTree = "<group>"; };
 		8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGeocodedPlacemark.swift; sourceTree = "<group>"; };
-		8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstructionComponentGuidanceViewKind.swift; sourceTree = "<group>"; };
 		8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapViewIdentifiers.swift; sourceTree = "<group>"; };
 		8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineType.swift; sourceTree = "<group>"; };
 		8A2354EA28877890003E42B4 /* BannerContainerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerContainerViewDelegate.swift; sourceTree = "<group>"; };
@@ -2295,7 +2295,6 @@
 				3A8187C824BDAE9C00708F19 /* URLSession.swift */,
 				11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */,
 				8AC85EA328628E4F003F8FC8 /* UIDevice.swift */,
-				8A1FACF22942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift */,
 				8A7B69912947AA0F00FFC3F5 /* AmenityType.swift */,
 			);
 			name = Extensions;
@@ -2465,6 +2464,7 @@
 				DA5F44F325F07D3A00F573EC /* RoadObjectStoreDelegate.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectStore.swift */,
 				414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */,
+				7E6CAE382976B346001D749D /* RoadShield.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -3382,6 +3382,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
 				2C04E467290A8C6B0067FDCF /* PredictiveCacheNavigationOptions.swift in Sources */,
+				7E6CAE392976B346001D749D /* RoadShield.swift in Sources */,
 				2B2DC69928F479DE0019232C /* HistoryEvent.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
@@ -3445,7 +3446,6 @@
 				DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */,
 				DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */,
 				2E50E0E6264E49EF009D3848 /* OpenLRIdentifier.swift in Sources */,
-				8A1FACF32942C6BA0051FE76 /* VisualInstructionComponentGuidanceViewKind.swift in Sources */,
 				2BF398C1274BDEA8000C9A72 /* Directions.swift in Sources */,
 				2E5ACEE9288E877A00300ECA /* EventConstants.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
