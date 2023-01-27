@@ -17,7 +17,7 @@ public struct RoadShield: Equatable {
     /// The shield text.
     public let name: String
 
-    /// The shield text color.
+    ///  The string indicating the color of the text to be rendered on the route shield, e.g. "black".
     public let textColor: String
 
     /// Creates a new `Shield` instance.
@@ -25,7 +25,7 @@ public struct RoadShield: Equatable {
     ///   - baseUrl: The base url for a shield image.
     ///   - displayRef: The shield display reference.
     ///   - name: The shield text.
-    ///   - textColor: The shield text color.
+    ///   - textColor: The string indicating the color of the text to be rendered on the route shield.
     public init(baseUrl: String, displayRef: String, name: String, textColor: String) {
         self.baseUrl = baseUrl
         self.displayRef = displayRef
