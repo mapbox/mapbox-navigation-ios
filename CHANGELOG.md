@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v124._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/124.0.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
-* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
-* MapboxNavigation now requires [MapboxMaps v10.11.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0-beta.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v125._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/125.0.0). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
+* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-beta.2). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
+* MapboxNavigation now requires [MapboxMaps v10.11.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0-rc.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
 
 ### CarPlay
 
