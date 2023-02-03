@@ -345,7 +345,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if options.followingCameraOptions.paddingUpdatesAllowed || followingMobileCamera.padding == nil {
                 followingMobileCamera.padding = UIEdgeInsets(top: followingMobileCameraAnchor.y,
                                                              left: viewportPadding.left,
-                                                             bottom: UIScreen.main.bounds.height - followingMobileCameraAnchor.y + 1.0,
+                                                             bottom: mapView.bounds.height - followingMobileCameraAnchor.y + 1.0,
                                                              right: viewportPadding.right)
                 
                 if let mainCarPlayScreen = UIScreen.mainCarPlay {
