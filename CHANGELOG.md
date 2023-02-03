@@ -17,6 +17,7 @@
 * Added `CarPlayManagerDelegate.carPlayManagerDidCancelPreview(_:)` to notify developers after CarPlay canceled routes preview, and `CarPlayManager.cancelRoutesPreview()` method to cancel routes preview on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added `CPRouteChoice.indexedRouteResponse` property to allow developers to get access to the `IndexedRouteResponse` of `CPRouteChoice` on CarPlay. ([#4311](https://github.com/mapbox/mapbox-navigation-ios/pull/4311))
 * Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
+* Added a new configuration property `CarPlayManager.startFreeDriveAutomatically` that controls whether `CarPlayManager` starts a Free Drive session automatically on map load. If you set this property to false, you can start a Free Drive session using `CarPlayMapViewController.startFreeDriveNavigation()` method. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
 
 ### Electronic horizon
 

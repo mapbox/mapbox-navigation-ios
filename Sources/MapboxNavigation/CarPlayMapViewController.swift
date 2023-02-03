@@ -6,6 +6,8 @@ import CarPlay
 
 /**
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
+
+ - important: Loading `CarPlayMapViewController` view will start a Free Drive session by default. You can change default behavior using `CarPlayMapViewController.startFreeDriveAutomatically` property. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.
  */
 open class CarPlayMapViewController: UIViewController {
     
@@ -63,6 +65,12 @@ open class CarPlayMapViewController: UIViewController {
             return self.view as! NavigationMapView
         }
     }
+
+    /// Controls whether `CarPlayMapViewController` starts a Free Drive session automatically on map load.
+    ///
+    /// If you set this property to false, you can start a Free Drive session using
+    /// `CarPlayMapViewController.startFreeDriveNavigation()` method.
+    public var startFreeDriveAutomatically: Bool = true
     
     // MARK: Bar Buttons Configuration
     
@@ -270,8 +278,18 @@ open class CarPlayMapViewController: UIViewController {
         
         self.wayNameView = wayNameView
     }
-    
-    func setupPassiveLocationProvider() {
+
+    /// Starts a Free Drive session if it is not started already.
+    ///
+    /// Free Drive session starts automatically on map load by default. You can change this behavior using
+    /// `CarPlayMapViewController.startFreeDriveAutomatically` method.
+    ///
+    /// - note: Paused Free Drive sessions are not resumed by this method.
+    public func startFreeDriveNavigation() {
+        guard !(navigationMapView.mapView.location.locationProvider is PassiveLocationProvider) else {
+            return // free drive already setup
+        }
+
         let passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
@@ -319,7 +337,9 @@ open class CarPlayMapViewController: UIViewController {
     
     public override func loadView() {
         setupNavigationMapView()
-        setupPassiveLocationProvider()
+        if startFreeDriveAutomatically {
+            startFreeDriveNavigation()
+        }
     }
     
     public override func viewDidLoad() {

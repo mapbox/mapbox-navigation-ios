@@ -9,6 +9,8 @@ import MapboxMaps
  Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of your `CarPlayManager` instance.
  
  - note: It is very important you have a single `CarPlayManager` instance at any given time. This should be managed by your `UIApplicationDelegate` class if you choose to supply your `accessToken` to the `CarPlayManager.eventsManager` via `NavigationEventsManager` initializer, instead of the Info.plist.
+ 
+ - important: `CarPlayManager` view will start a Free Drive session by default when CarPlay interface is connected. You can change default behavior using `CarPlayManager.startFreeDriveAutomatically` property. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.
  */
 public class CarPlayManager: NSObject {
     
@@ -35,6 +37,15 @@ public class CarPlayManager: NSObject {
     public static var isConnected = false
     
     // MARK: Navigation Configuration
+
+    /// Controls whether `CarPlayManager` starts a Free Drive session automatically on map load.
+    ///
+    /// If you set this property to false, you can start a Free Drive session using
+    /// `CarPlayMapViewController.startFreeDriveNavigation()` method. For example:
+    /// ```
+    /// carPlayManager.carPlayMapViewController?.startFreeDriveNavigation()
+    /// ```
+    public var startFreeDriveAutomatically: Bool = true
     
     /**
      Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
@@ -386,6 +397,7 @@ extension CarPlayManager: CPApplicationDelegate {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         self.carWindow = window
@@ -1266,6 +1278,7 @@ extension CarPlayManager {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window
