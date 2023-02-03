@@ -348,10 +348,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                              bottom: mapView.bounds.height - followingMobileCameraAnchor.y + 1.0,
                                                              right: viewportPadding.right)
                 
-                if let mainCarPlayScreen = UIScreen.mainCarPlay {
+                if mapView.window?.screen.traitCollection.userInterfaceIdiom == .carPlay {
                     followingCarPlayCamera.padding = UIEdgeInsets(top: followingCarPlayCameraAnchor.y,
                                                                   left: carPlayCameraPadding.left,
-                                                                  bottom: mainCarPlayScreen.bounds.height - followingCarPlayCameraAnchor.y + 1.0,
+                                                                  bottom: mapView.bounds.height - followingCarPlayCameraAnchor.y + 1.0,
                                                                   right: carPlayCameraPadding.right)
                 } else {
                     followingCarPlayCamera.padding = carPlayCameraPadding
