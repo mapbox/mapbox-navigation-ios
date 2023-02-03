@@ -1,4 +1,4 @@
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" == 23.3.0-beta.1
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 124.0.1
-github "mapbox/mapbox-directions-swift" == 2.10.0-beta.1
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 125.0.0
+github "mapbox/mapbox-directions-swift" == 2.10.0-beta.2
 github "mapbox/mapbox-events-ios" ~> 1.0.0
