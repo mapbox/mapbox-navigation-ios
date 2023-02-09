@@ -609,6 +609,12 @@ class NavigationViewControllerTests: TestCase {
         XCTAssertNil(style.layerPropertyValue(for: traversedIdentifier, property: "line-opacity") as? Double,
                      "The traversed route layer shouldn't have other properties modified.")
     }
+
+    func testInstanciatesFromStoryboards() {
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.mapboxNavigation)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NavigationViewController") as? NavigationViewController
+        XCTAssertNotNil(controller)
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
