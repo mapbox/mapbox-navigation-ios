@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>RATING_ACCESSIBILITY_SET</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@stars@</string>
+	</dict>
+	<key>RATING_STARS_FORMAT</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@stars@</string>
+	</dict>
+	<key>NAVIGATION_REPORT_ISSUES</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@items@</string>
+	</dict>
+</dict>
+</plist>
