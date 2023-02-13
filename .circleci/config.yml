@@ -861,10 +861,7 @@ workflows:
             filters:
               tags:
                 only: /^v\d+\.\d+\.\d+(-.+)?$/
-        - ios-trigger-metrics:
-            filters:
-              branches:
-                only: main
+        - ios-trigger-metrics
   update-version-workflow:
     jobs:
       - update-version-job:
