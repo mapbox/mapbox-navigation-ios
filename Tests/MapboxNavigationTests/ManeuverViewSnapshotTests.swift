@@ -83,13 +83,43 @@ class ManeuverViewSnapshotTests: TestCase {
                             as: .image(precision: 0.95))
     }
 
-    func testRoundabout() {
-        let incrementer: CGFloat = 45
-        let size = CGSize(width: maneuverView.bounds.width * (360 / incrementer), height: maneuverView.bounds.height)
+    func testManeuverTypes() {
+        let types: [ManeuverType] = [
+            .takeRoundabout,
+            .exitRoundabout,
+            .takeRotary,
+            .exitRotary,
+            .turnAtRoundabout,
+            .reachFork,
+            .reachEnd,
+            .useLane,
+            .heedWarning
+        ]
+        let size = CGSize(width: maneuverView.bounds.width * CGFloat(types.count), height: maneuverView.bounds.height)
         let views = UIView(frame: CGRect(origin: .zero, size: size))
 
-        for bearing in stride(from: CGFloat(0), to: CGFloat(360), by: incrementer) {
-            let position = CGPoint(x: maneuverView.bounds.width * (bearing / incrementer), y: 0)
+        for (i, type) in types.enumerated() {
+            let position = CGPoint(x: maneuverView.bounds.width * CGFloat(i), y: 0)
+            let view = ManeuverView(frame: CGRect(origin: position, size: maneuverView.bounds.size))
+            view.backgroundColor = .white
+            view.visualInstruction = maneuverInstruction(type, .right, CLLocationDegrees(60))
+            views.addSubview(view)
+        }
+
+        assertImageSnapshot(matching: views.layer, as: .image(precision: 0.95))
+    }
+
+    func testRoundabout() {
+        let smallAngles = Array(stride(from: CGFloat(0), to: CGFloat(45), by: 15))
+        let normalAngles = Array(stride(from: CGFloat(45), to: CGFloat(315), by: 45))
+        let largeAngles = Array(stride(from: CGFloat(315), to: CGFloat(361), by: 15))
+        let angles = smallAngles + normalAngles + largeAngles
+
+        let size = CGSize(width: maneuverView.bounds.width * CGFloat(angles.count), height: maneuverView.bounds.height)
+        let views = UIView(frame: CGRect(origin: .zero, size: size))
+
+        for (i, bearing) in angles.enumerated() {
+            let position = CGPoint(x: maneuverView.bounds.width * CGFloat(i), y: 0)
             let view = ManeuverView(frame: CGRect(origin: position, size: maneuverView.bounds.size))
             view.backgroundColor = .white
             view.visualInstruction = maneuverInstruction(.takeRoundabout, .right, CLLocationDegrees(bearing))
