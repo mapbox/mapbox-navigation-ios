@@ -90,6 +90,7 @@
 		2C257377292B836B00941307 /* ReentrantImageDownloaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */; };
 		2C2880A1291A82630063E5B7 /* RerouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */; };
 		2C2880A6291AB7A10063E5B7 /* RerouteDetectorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */; };
+		2C295AB9299B9E9600FC74E8 /* AccountsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C295AB8299B9E9600FC74E8 /* AccountsTests.swift */; };
 		2C36D9002952256400EE37DF /* RouteLegProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FD2952256400EE37DF /* RouteLegProgressTests.swift */; };
 		2C36D9012952256400EE37DF /* RouteStepProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FE2952256400EE37DF /* RouteStepProgressTests.swift */; };
 		2C36D9022952256400EE37DF /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */; };
@@ -755,6 +756,7 @@
 		2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReentrantImageDownloaderSpy.swift; sourceTree = "<group>"; };
 		2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerTests.swift; sourceTree = "<group>"; };
 		2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteDetectorSpy.swift; sourceTree = "<group>"; };
+		2C295AB8299B9E9600FC74E8 /* AccountsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsTests.swift; sourceTree = "<group>"; };
 		2C36D8FD2952256400EE37DF /* RouteLegProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLegProgressTests.swift; sourceTree = "<group>"; };
 		2C36D8FE2952256400EE37DF /* RouteStepProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepProgressTests.swift; sourceTree = "<group>"; };
 		2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
@@ -2434,6 +2436,7 @@
 				8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */,
 				E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */,
 				2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */,
+				2C295AB8299B9E9600FC74E8 /* AccountsTests.swift */,
 			);
 			name = MapboxCoreNavigationTests;
 			path = Tests/MapboxCoreNavigationTests;
@@ -3514,6 +3517,7 @@
 				E24CD8202768E36000B6ABBD /* LeakTests.swift in Sources */,
 				B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */,
 				2C36D9022952256400EE37DF /* RouteProgressTests.swift in Sources */,
+				2C295AB9299B9E9600FC74E8 /* AccountsTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* NavigationServiceTests.swift in Sources */,
