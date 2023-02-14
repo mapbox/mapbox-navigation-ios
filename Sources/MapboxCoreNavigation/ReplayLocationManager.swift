@@ -74,12 +74,19 @@ open class ReplayLocationManager: NavigationLocationManager {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
         self.events = locations.map { ReplayEvent(from: $0) }
         super.init()
+        
         verifyParameters()
+        advanceEventsForNextLoop()
     }
     
-    public convenience init(history: History) {
-        self.init(locations: history.rawLocationsShiftedToPresent())
+    public init(history: History) {
+        self.locations = history.rawLocations.sorted { $0.timestamp < $1.timestamp }
         self.events = history.events.map { ReplayEvent(from: $0) }
+        
+        super.init()
+        
+        verifyParameters()
+        advanceEventsForNextLoop()
     }
     
     public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
@@ -113,6 +120,9 @@ open class ReplayLocationManager: NavigationLocationManager {
                 onTick?(currentIndex, location)
                 nextTickWorkItem?.cancel()
             case .historyEvent(let historyEvent):
+                if let locationUpdate = historyEvent as? LocationUpdateHistoryEvent {
+                    delegate?.locationManager?(self, didUpdateLocations: [locationUpdate.location])
+                }
                 eventsListener?.replyLocationManager(self, published: historyEvent)
             }
         }
