@@ -76,7 +76,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         super.init()
         
         verifyParameters()
-        advanceEventsForNextLoop()
+        advanceEventsForNextLoop(starting: Date())
     }
     
     public init(history: History) {
@@ -86,7 +86,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         super.init()
         
         verifyParameters()
-        advanceEventsForNextLoop()
+        advanceEventsForNextLoop(starting: Date())
     }
     
     public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
@@ -177,11 +177,11 @@ open class ReplayLocationManager: NavigationLocationManager {
     }
 
     /// Shift `events` and  `locations` so that sent locations always have increasing timestamps, taking into account event deltas.
-    private func advanceEventsForNextLoop() {
+    private func advanceEventsForNextLoop(starting startDate: Date? = nil) {
         /// Previous location that is used to calculate deltas between locations.
         var previousOldLocation = events.last!
         /// Previous timestamp that is used to advance timestamps.
-        var previousNewLocationTimestamp = previousOldLocation.date
+        var previousNewLocationTimestamp = startDate ?? previousOldLocation.date
 
         var advancedLocations: [CLLocation] = []
         
