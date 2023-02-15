@@ -312,6 +312,8 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
                         templateDidDisappear template: CPTemplate,
                         animated: Bool)
     
+    // MARK: Map Panning
+    
     /**
      Called when the system detects a user starting to pan a map template visible on the screen.
      
@@ -329,6 +331,24 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         didEndPanGesture template: CPMapTemplate)
+    
+    /**
+     Called when the panning interface will close on a map template.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template that disappeared from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willDismissPanningInterface template: CPMapTemplate)
+    
+    /**
+     Called when the panning interface did close on a map template.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template that disappeared from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didDismissPanningInterface template: CPMapTemplate)
     
     /**
      Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
@@ -667,6 +687,22 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         didEndPanGesture template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willDismissPanningInterface template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didDismissPanningInterface template: CPMapTemplate) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     

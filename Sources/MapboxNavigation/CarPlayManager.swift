@@ -937,6 +937,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
             let shouldShowRecenterButton = carPlayMapViewController.navigationMapView.navigationCamera.state == .idle
             carPlayMapViewController.recenterButton.isHidden = !shouldShowRecenterButton
         }
+        
+        delegate?.carPlayManager(self, willDismissPanningInterface: mapTemplate)
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -945,6 +947,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         self.currentActivity = currentActivity
         
         updateNavigationButtons(for: mapTemplate)
+        
+        delegate?.carPlayManager(self, didDismissPanningInterface: mapTemplate)
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
