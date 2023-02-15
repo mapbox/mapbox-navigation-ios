@@ -889,16 +889,12 @@ extension RouteController: Router {
     }
 
     private func shouldStartNewBillingSession(for newRoute: Route, routeOptions: RouteOptions?) -> Bool {
-        guard let routeOptions = routeOptions else {
-            // Waypoints are read from routeOptions.
-            // If new route without routeOptions, it means we have the same waypoints.
-            return false
-        }
-        guard !routeOptions.waypoints.isEmpty else {
+        let newRouteWaypoints = newRoute.legs.compactMap { $0.destination }
+
+        guard !newRouteWaypoints.isEmpty else {
             return false // Don't need to bil for routes without waypoints
         }
 
-        let newRouteWaypoints = routeOptions.waypoints.dropFirst()
         let currentRouteRemaingWaypoints = routeProgress.remainingWaypoints
 
         guard newRouteWaypoints.count == currentRouteRemaingWaypoints.count else {
