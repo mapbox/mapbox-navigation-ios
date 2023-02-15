@@ -147,21 +147,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
 
     private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
 
-    var route: Route? {
-        didSet {
-            reset()
-        }
-    }
-    
-    private func reset() {
-        if let shape = route?.shape {
-            queue.async { [shape, weak self] in
-                self?.remainingRouteShape = shape
-                self?.locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
-            }
-        }
-    }
-    
+    private(set) var route: Route
     private var routeProgress: RouteProgress?
     
     private var _nextDate: Date? = nil
@@ -175,15 +161,34 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     private var slicedIndex: Int? = nil
+
+    func update(route: Route) {
+        // NOTE: this method is expected to be called on the main thred, onMainQueueSync is used as extra check
+        onMainAsync { [weak self] in
+            self?.route = route
+            if let shape = route.shape {
+                self?.queue.async { [shape, weak self] in
+                    self?.reset(with: shape)
+                }
+            }
+        }
+    }
+
+    private func reset(with shape: LineString?) {
+        guard let shape = shape else { return }
+
+        remainingRouteShape = shape
+        locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+    }
     
-    internal func tick() {
+    func tick() {
         let (
             expectedSegmentTravelTimes,
             originalShape
         ) = onMainQueueSync {
             (
                 routeProgress?.currentLeg.expectedSegmentTravelTimes,
-                route?.shape
+                route.shape
             )
         }
 
@@ -227,7 +232,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
            let nextCoordinateOnRoute = originalShape.coordinates.after(index: closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
             let distance = originalShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
-            currentSpeed =  min(max(distance / time, minimumSpeed), maximumSpeed)
+            currentSpeed = min(max(distance / time, minimumSpeed), maximumSpeed)
             slicedIndex = max(closestCoordinateOnRouteIndex - 1, 0)
         } else {
             let closestLocation = locations[closestCoordinateOnRouteIndex]
@@ -256,7 +261,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
 
     open override func copy() -> Any {
-        let copy = SimulatedLocationManager(route: route!)
+        let copy = SimulatedLocationManager(route: route)
         copy.currentDistance = currentDistance
         copy.simulatedLocation = simulatedLocation
         copy.currentSpeed = currentSpeed
@@ -278,7 +283,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
 
         let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-        let shape = router.routeProgress.route.shape
+        let progress = router.routeProgress
+        let shape = progress.route.shape
         let currentSpeed = self.currentSpeed
 
         queue.async { [weak self] in
@@ -291,14 +297,15 @@ open class SimulatedLocationManager: NavigationLocationManager {
                 self.currentDistance = closestCoordinate.distance
                 newClosestCoordinate = closestCoordinate.coordinate
             } else {
-                self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled, speed: currentSpeed)
-                newClosestCoordinate = router.routeProgress.route.shape?.coordinateFromStart(distance: self.currentDistance)
+                self.currentDistance = calculateCurrentDistance(progress.distanceTraveled, speed: currentSpeed)
+                newClosestCoordinate = shape?.coordinateFromStart(distance: self.currentDistance)
             }
 
             onMainQueueSync {
-                self.routeProgress = router.routeProgress
-                self.route = router.routeProgress.route
+                self.routeProgress = progress
+                self.route = progress.route
             }
+            self.reset(with: shape)
             self.remainingRouteShape = self.remainingRouteShape.sliced(from: newClosestCoordinate)
             self.slicedIndex = nil
         }

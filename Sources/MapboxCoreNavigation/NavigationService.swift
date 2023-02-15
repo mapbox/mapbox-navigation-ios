@@ -799,7 +799,7 @@ extension MapboxNavigationService: RouterDelegate {
     
     public func router(_ router: Router, didSwitchToCoincidentOnlineRoute coincideRoute: Route) {
         //update the route progress model of the simulated location manager, if applicable.
-        simulatedLocationSource?.route = router.route
+        simulatedLocationSource?.update(route: router.route)
         
         delegate?.navigationService(self, didSwitchToCoincidentOnlineRoute: coincideRoute)
     }
