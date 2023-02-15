@@ -11,7 +11,8 @@ enum NavigationBillingMethod: String {
 @objc(MBXAccounts)
 public class Accounts: NSObject {
     @objc public static var serviceSkuToken: String? {
-        return BillingHandler.shared.serviceSkuToken
+        let serviceSkuToken = BillingHandler.shared.serviceSkuToken
+        return serviceSkuToken.isEmpty ? nil : serviceSkuToken
     }
 
     @objc public static var serviceAccessToken: String? {
