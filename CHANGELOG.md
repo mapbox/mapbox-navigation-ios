@@ -34,6 +34,7 @@
 * Added `ReplayManagerHistoryEventsListener` to receive events feed when replaying a `History` data. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
 * `UserPushedHistoryEvent` is now public. ([#4342](https://github.com/mapbox/mapbox-navigation-ios/pull/4342))
 * Fixed `NavigationViewController` instantiation from the Storyboard. ([#4356](https://github.com/mapbox/mapbox-navigation-ios/pull/4356))
+* Fixed a possibly broken roundabout maneuver icon for extremely sharp turn. ([#4359](https://github.com/mapbox/mapbox-navigation-ios/pull/4359))
 
 ## v2.10.0
 
