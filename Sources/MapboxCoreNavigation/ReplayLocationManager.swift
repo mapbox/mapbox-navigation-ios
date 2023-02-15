@@ -74,12 +74,19 @@ open class ReplayLocationManager: NavigationLocationManager {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
         self.events = locations.map { ReplayEvent(from: $0) }
         super.init()
+        
         verifyParameters()
+        advanceEventsForNextLoop(starting: Date())
     }
     
-    public convenience init(history: History) {
-        self.init(locations: history.rawLocationsShiftedToPresent())
+    public init(history: History) {
+        self.locations = history.rawLocations.sorted { $0.timestamp < $1.timestamp }
         self.events = history.events.map { ReplayEvent(from: $0) }
+        
+        super.init()
+        
+        verifyParameters()
+        advanceEventsForNextLoop(starting: Date())
     }
     
     public convenience init(history: History, listener: ReplayManagerHistoryEventsListener?) {
@@ -113,6 +120,9 @@ open class ReplayLocationManager: NavigationLocationManager {
                 onTick?(currentIndex, location)
                 nextTickWorkItem?.cancel()
             case .historyEvent(let historyEvent):
+                if let locationUpdate = historyEvent as? LocationUpdateHistoryEvent {
+                    delegate?.locationManager?(self, didUpdateLocations: [locationUpdate.location])
+                }
                 eventsListener?.replyLocationManager(self, published: historyEvent)
             }
         }
@@ -167,11 +177,11 @@ open class ReplayLocationManager: NavigationLocationManager {
     }
 
     /// Shift `events` and  `locations` so that sent locations always have increasing timestamps, taking into account event deltas.
-    private func advanceEventsForNextLoop() {
+    private func advanceEventsForNextLoop(starting startDate: Date? = nil) {
         /// Previous location that is used to calculate deltas between locations.
         var previousOldLocation = events.last!
         /// Previous timestamp that is used to advance timestamps.
-        var previousNewLocationTimestamp = previousOldLocation.date
+        var previousNewLocationTimestamp = startDate ?? previousOldLocation.date
 
         var advancedLocations: [CLLocation] = []
         

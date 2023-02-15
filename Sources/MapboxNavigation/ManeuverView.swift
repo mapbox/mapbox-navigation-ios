@@ -1,5 +1,6 @@
 import UIKit
 import MapboxDirections
+import Turf
 
 /// A view that contains a simple image indicating a type of maneuver.
 @IBDesignable
@@ -115,8 +116,9 @@ open class ManeuverView: UIView {
         case .reachFork:
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor)
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
-        case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor, roundabout_angle: CGFloat(visualInstruction.finalHeading ?? 180))
+        case .takeRoundabout, .turnAtRoundabout, .takeRotary, .exitRotary, .exitRoundabout:
+            let angle = normalizedRoundaboutAngle(visualInstruction.finalHeading ?? 180)
+            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor, roundabout_angle: angle)
             flip = drivingSide == .left
             
         case .arrive:
@@ -174,5 +176,14 @@ open class ManeuverView: UIView {
         // Explicitly mark the view as non-opaque.
         // This is needed to obtain correct compositing since we implement our own draw function that includes transparency.
         isOpaque = false
+    }
+
+    private func normalizedRoundaboutAngle(_ angle: LocationDegrees) -> CGFloat {
+        if angle == 0 { return angle }
+
+        let minimumDistinguishAngle = 50.0
+        let maximumDistinguishAngle = 310.0
+        return max(min(maximumDistinguishAngle, angle), minimumDistinguishAngle)
+
     }
 }
