@@ -877,11 +877,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
         // Whenever panning starts - stop any navigation camera updates.
         activeNavigationMapView?.navigationCamera.stop()
+        delegate?.carPlayManager(self, didBeginPanGesture: mapTemplate)
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
         // After panning is stopped - allow navigation bar dismissal.
         mapTemplate.automaticallyHidesNavigationBar = true
+        delegate?.carPlayManager(self, didEndPanGesture: mapTemplate)
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {

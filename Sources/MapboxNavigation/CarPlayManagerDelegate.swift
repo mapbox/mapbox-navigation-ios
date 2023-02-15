@@ -313,6 +313,24 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
                         animated: Bool)
     
     /**
+     Called when the system detects a user starting to pan a map template visible on the screen.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template that disappeared from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didBeginPanGesture template: CPMapTemplate)
+    
+    /**
+     Called when the system detects a user stops panning a map template.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template that disappeared from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didEndPanGesture template: CPMapTemplate)
+    
+    /**
      Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
      This method is invoked when the map view loads and any time routes are added.
      
@@ -633,6 +651,22 @@ public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         templateDidDisappear template: CPTemplate,
                         animated: Bool) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didBeginPanGesture template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didEndPanGesture template: CPMapTemplate) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
