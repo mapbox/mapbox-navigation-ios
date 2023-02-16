@@ -6,12 +6,12 @@ public struct LocalizedRoadObjectName: Equatable {
     /// The name of the road object.
     public let language: String
 
-    /// 2 letters language code or "Unspecified" or empty string, e.g. en or ja.
+    /// 2 letters language code, e.g. en or ja.
     public let text: String
 
     /// Initializes a new `LocalizedRoadObjectName` object.
     /// - Parameters:
-    ///   - language: 2 letters language code or "Unspecified" or empty string.
+    ///   - language: 2 letters language code, e.g. en or ja.
     ///   - text: The name of the road object.
     public init(language: String, text: String) {
         self.language = language
