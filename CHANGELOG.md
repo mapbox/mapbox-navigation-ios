@@ -26,6 +26,10 @@
 * `RoadName` type changed from enum to struct with additional properties. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
 * Electronic Horizon Notifications (`Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, `Notification.Name.electronicHorizonDidPassRoadObject`) are now called on the main thread. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
 
+### Location tracking
+
+* Fixed a possible crash that could happen during route simulation. ([#4366](https://github.com/mapbox/mapbox-navigation-ios/pull/4366))
+
 ### Other changes
 
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
