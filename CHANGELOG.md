@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v125._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/125.0.0). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
-* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-beta.2). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
-* MapboxNavigation now requires [MapboxMaps v10.11.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0-rc.1). ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4351))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v126._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/126.0.0). ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-rc.1). ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* MapboxNavigation now requires [MapboxMaps v10.11.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0). ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
 
 ### Camera
 
@@ -25,6 +25,7 @@
 
 * `RoadName` type changed from enum to struct with additional properties. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
 * Electronic Horizon Notifications (`Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, `Notification.Name.electronicHorizonDidPassRoadObject`) are now called on the main thread. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))
+* Added `RoadObjectKind.IC` and `RoadObjectKind.JCT` for interchanges and junctions and the corresponding structs `Interchange` and `Junction`. ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
 
 ### Location tracking
 
@@ -40,6 +41,9 @@
 * Fixed `NavigationViewController` instantiation from the Storyboard. ([#4356](https://github.com/mapbox/mapbox-navigation-ios/pull/4356))
 * Fixed a possibly broken roundabout maneuver icon for extremely sharp turn. ([#4359](https://github.com/mapbox/mapbox-navigation-ios/pull/4359))
 * Fixed not working Speech generation if no navigation session started. ([#4362](https://github.com/mapbox/mapbox-navigation-ios/pull/4362))
+* Limited number of reported alternatives to 2, i.e. the `updatedAlternatives` parameter in `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` has maximum size of 2. ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* Increased terminal offboard route request timeout from 4 to 15 seconds. ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* Sped up onboard routing cancellation. ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
 
 ## v2.10.0
 
