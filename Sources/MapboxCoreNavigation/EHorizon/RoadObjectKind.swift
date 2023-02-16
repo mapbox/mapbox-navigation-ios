@@ -64,6 +64,12 @@ extension RoadObject {
          Reserved for future use.
          */
         case userDefined
+
+        /// Japan-specific Interchange info, refers to an expressway entrance and exit, e.g.  Wangannarashino IC.
+        case ic(Interchange?)
+
+        /// Japan-specific Junction info, refers to a place where multiple expressways meet, e.g. Ariake JCT.
+        case jct(Junction?)
         
         init(_ native: MapboxNavigationNative.RoadObjectType) {
             switch native {
@@ -83,6 +89,10 @@ extension RoadObject {
                 self = .bridge
             case .railwayCrossing:
                 self = .railroadCrossing
+            case .ic:
+                self = .ic(nil)
+            case .jct:
+                self = .jct(nil)
             case .custom:
                 self = .userDefined
             @unknown default:
@@ -108,6 +118,10 @@ extension RoadObject {
                 self = .bridge
             case .railwayCrossing:
                 self = .railroadCrossing
+            case .ic:
+                self = .ic(metadata.isIcInfo() ? Interchange(metadata.getIcInfo()) : nil)
+            case .jct:
+                self = .jct(metadata.isJctInfo() ? Junction(metadata.getJctInfo()) : nil)
             case .custom:
                 self = .userDefined
             @unknown default:
