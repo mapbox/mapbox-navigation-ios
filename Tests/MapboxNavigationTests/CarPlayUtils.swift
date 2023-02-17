@@ -74,9 +74,15 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var legacyDidEndNavigationCalled = false
     var didPresentCalled = false
     var didFailToFetchRouteCalled = false
+    var didBeginPanGestureCalled = false
+    var didEndPanGestureCalled = false
+    var didShowPanningInterfaceCalled = false
+    var willDismissPanningInterfaceCalled = false
+    var didDismissPanningInterfaceCalled = false
 
     var passedService: NavigationService?
     var passedError: DirectionsError?
+    var passedTemplate: CPMapTemplate?
     var passedNavigationEndedByCanceling = false
 
     var returnedTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
@@ -145,6 +151,36 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         didFailToFetchRouteCalled = true
         passedError = error
         return nil
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didBeginPanGesture template: CPMapTemplate) {
+        didBeginPanGestureCalled = true
+        passedTemplate = template
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didEndPanGesture template: CPMapTemplate) {
+        didEndPanGestureCalled = true
+        passedTemplate = template
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didShowPanningInterface template: CPMapTemplate) {
+        didShowPanningInterfaceCalled = true
+        passedTemplate = template
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willDismissPanningInterface template: CPMapTemplate) {
+        willDismissPanningInterfaceCalled = true
+        passedTemplate = template
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didDismissPanningInterface template: CPMapTemplate) {
+        didDismissPanningInterfaceCalled = true
+        passedTemplate = template
     }
 }
 

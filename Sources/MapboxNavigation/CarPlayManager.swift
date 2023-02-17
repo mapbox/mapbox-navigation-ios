@@ -877,11 +877,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
         // Whenever panning starts - stop any navigation camera updates.
         activeNavigationMapView?.navigationCamera.stop()
+        delegate?.carPlayManager(self, didBeginPanGesture: mapTemplate)
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
         // After panning is stopped - allow navigation bar dismissal.
         mapTemplate.automaticallyHidesNavigationBar = true
+        delegate?.carPlayManager(self, didEndPanGesture: mapTemplate)
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -928,6 +930,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         
         self.currentActivity = currentActivity
+        delegate?.carPlayManager(self, didShowPanningInterface: mapTemplate)
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -935,6 +938,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
             let shouldShowRecenterButton = carPlayMapViewController.navigationMapView.navigationCamera.state == .idle
             carPlayMapViewController.recenterButton.isHidden = !shouldShowRecenterButton
         }
+
+        delegate?.carPlayManager(self, willDismissPanningInterface: mapTemplate)
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -943,6 +948,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         self.currentActivity = currentActivity
         
         updateNavigationButtons(for: mapTemplate)
+        delegate?.carPlayManager(self, didDismissPanningInterface: mapTemplate)
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate,

@@ -245,6 +245,51 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(navigationService?.simulationMode, .inTunnels)
     }
 
+    func testDidBeginPanGesture() {
+        let mapTemplate = CPMapTemplate()
+        carPlayManager.mapTemplateDidBeginPanGesture(mapTemplate)
+        XCTAssertTrue(delegate.didBeginPanGestureCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+    }
+
+    func testDidEndPanGesture() {
+        let mapTemplate = CPMapTemplate()
+        carPlayManager.mapTemplate(mapTemplate, didEndPanGestureWithVelocity: .zero)
+        XCTAssertTrue(delegate.didEndPanGestureCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+        XCTAssertTrue(mapTemplate.automaticallyHidesNavigationBar)
+    }
+
+    func testDidShowPanningInterface() {
+        let mapTemplate = CPMapTemplate()
+        carPlayManager.mapTemplateDidShowPanningInterface(mapTemplate)
+        XCTAssertTrue(delegate.didShowPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+    }
+
+    func testWillDismissPanningInterface() {
+        let mapTemplate = CPMapTemplate()
+        carPlayManager.mapTemplateWillDismissPanningInterface(mapTemplate)
+        XCTAssertTrue(delegate.willDismissPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+    }
+
+    func testDoNotDismissPanningInterfaceIfNoCurrentActivity() {
+        let mapTemplate = CPMapTemplate()
+        carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)
+        XCTAssertFalse(delegate.didDismissPanningInterfaceCalled)
+    }
+
+    func testDidDismissPanningInterface() {
+        let mapTemplate = CPMapTemplate()
+        mapTemplate.userInfo = [CarPlayManager.currentActivityKey: CarPlayActivity.browsing]
+
+        carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)
+        XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+    }
+
 #if arch(x86_64) && canImport(Darwin)
     func testStartingInvalidTrip() {
         let routeChoice = createInvalidRouteChoice()

@@ -387,6 +387,53 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willAdd layer: Layer,
                         for parentViewController: UIViewController) -> Layer?
+
+    // MARK: Map Panning
+
+    /**
+     Called when the system detects a user starting to pan a map template visible on the screen.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template on which the gesture was started.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didBeginPanGesture template: CPMapTemplate)
+
+    /**
+     Called when the system detects a user stops panning a map template.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template on which the gesture was ended.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didEndPanGesture template: CPMapTemplate)
+
+    /**
+     Called when the pan interface appears on the map template.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template on which the panning interface is shown.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didShowPanningInterface template: CPMapTemplate)
+
+    /**
+     Called when the panning interface will disappear on a map template.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template on which the panning interface will be dismissed.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willDismissPanningInterface template: CPMapTemplate)
+
+    /**
+     Called when the panning interface disappeared on a map template.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter template: The template on which the panning interface was dismissed.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didDismissPanningInterface template: CPMapTemplate)
     
     // MARK: Notifications Management
     
@@ -677,6 +724,46 @@ public extension CarPlayManagerDelegate {
                         for parentViewController: UIViewController) -> Layer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didBeginPanGesture template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didEndPanGesture template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didShowPanningInterface template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willDismissPanningInterface template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didDismissPanningInterface template: CPMapTemplate) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
