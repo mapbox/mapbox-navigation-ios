@@ -889,24 +889,22 @@ extension RouteController: Router {
     }
 
     private func shouldStartNewBillingSession(for newRoute: Route, routeOptions: RouteOptions?) -> Bool {
-        guard let routeOptions = routeOptions else {
-            // Waypoints are read from routeOptions.
-            // If new route without routeOptions, it means we have the same waypoints.
-            return false
-        }
-        guard !routeOptions.waypoints.isEmpty else {
+        let newRouteWaypoints = newRoute.legs.compactMap { $0.destination }
+
+        guard !newRouteWaypoints.isEmpty else {
             return false // Don't need to bil for routes without waypoints
         }
 
-        let newRouteWaypoints = routeOptions.waypoints.dropFirst()
         let currentRouteRemaingWaypoints = routeProgress.remainingWaypoints
 
         guard newRouteWaypoints.count == currentRouteRemaingWaypoints.count else {
+            Log.info("A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.", category: .billing)
             return true
         }
 
         for (newWaypoint, currentWaypoint) in zip(newRouteWaypoints, currentRouteRemaingWaypoints) {
             if newWaypoint.coordinate.distance(to: currentWaypoint.coordinate) > 100 {
+                Log.info("A new route waypoint \(newWaypoint) is further than 100 meters from current waypoint \(currentWaypoint), leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide. ", category: .billing)
                 return true
             }
         }

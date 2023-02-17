@@ -202,6 +202,14 @@ final class BillingHandlerIntegrationTests: TestCase {
         let (initialRouteResponse, _) = Fixture.route(waypoints: initialRouteWaypoints)
         let (newRouteResponse, _) = Fixture.route(waypoints: newRouteWaypoints)
 
+        /// Simulate a case when leg destination is different from requested route waypoints.
+        let modifyLegs = { (leg: RouteLeg) in
+            guard let legDestination = leg.destination else { return }
+            leg.destination = Waypoint(coordinate: .init(latitude: legDestination.coordinate.latitude + 1,
+                                                         longitude: legDestination.coordinate.longitude))
+        }
+        initialRouteResponse.routes?.first?.legs.forEach(modifyLegs)
+        newRouteResponse.routes?.first?.legs.forEach(modifyLegs)
         let dataSource = DataSource()
         let routeController = RouteController(indexedRouteResponse: IndexedRouteResponse(routeResponse: initialRouteResponse, routeIndex: 0),
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
