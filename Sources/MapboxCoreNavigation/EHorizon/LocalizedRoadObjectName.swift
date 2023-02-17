@@ -3,10 +3,10 @@ import MapboxNavigationNative
 
 /// Road object information, like interchange name.
 public struct LocalizedRoadObjectName: Equatable {
-    /// The name of the road object.
+    /// 2 letters language code, e.g. en or ja.
     public let language: String
 
-    /// 2 letters language code, e.g. en or ja.
+    /// The name of the road object.
     public let text: String
 
     /// Initializes a new `LocalizedRoadObjectName` object.
