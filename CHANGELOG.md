@@ -28,6 +28,7 @@
 
 ### Other changes
 
+* Added log messages about trip session events. ([#4363](https://github.com/mapbox/mapbox-navigation-ios/pull/4363))
 * Fixed an issue where an incorrect upcoming intersection index cause a crash. ([#4314](https://github.com/mapbox/mapbox-navigation-ios/pull/4314))
 * Fixed an issue where `RouteProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection` could be incorrectly calculated for folding back route steps. ([#4268](https://github.com/mapbox/mapbox-navigation-ios/pull/4268))
 * Ensure map-matching considers HOV-only roads as auto accessible. ([#4333](https://github.com/mapbox/mapbox-navigation-ios/pull/4333))

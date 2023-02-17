@@ -898,11 +898,13 @@ extension RouteController: Router {
         let currentRouteRemaingWaypoints = routeProgress.remainingWaypoints
 
         guard newRouteWaypoints.count == currentRouteRemaingWaypoints.count else {
+            Log.info("A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.", category: .billing)
             return true
         }
 
         for (newWaypoint, currentWaypoint) in zip(newRouteWaypoints, currentRouteRemaingWaypoints) {
             if newWaypoint.coordinate.distance(to: currentWaypoint.coordinate) > 100 {
+                Log.info("A new route waypoint \(newWaypoint) is further than 100 meters from current waypoint \(currentWaypoint), leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide. ", category: .billing)
                 return true
             }
         }
