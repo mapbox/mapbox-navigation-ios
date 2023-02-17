@@ -8,3 +8,5 @@ Constructor MapboxNavigationService.init(history:customRoutingProvider:credentia
 EnumElement RoadName.name has been removed
 EnumElement RoadName.code has been removed
 Enum RoadName has been changed to a Struct
+EnumElement RoadObject.Kind.ic has been added as a new enum case
+EnumElement RoadObject.Kind.jct has been added as a new enum case
