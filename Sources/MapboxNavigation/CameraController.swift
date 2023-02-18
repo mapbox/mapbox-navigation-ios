@@ -122,7 +122,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
             break
         case .idle, .transitionToOverview, .overview:
             navigationViewController.overviewButton.isHidden = true
-            navigationViewData.navigationView.resumeButton.isHidden = false
+            navigationViewData.navigationView.resumeButton.isHidden = true
             navigationViewData.navigationView.wayNameView.containerView.isHidden = true
             break
         }
