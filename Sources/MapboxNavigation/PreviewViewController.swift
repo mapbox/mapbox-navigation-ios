@@ -211,7 +211,7 @@ public class PreviewViewController: UIViewController {
         navigationView.speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
         // Update current road name. In case if road name is not available `WayNameView` is hidden.
-        let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             navigationView.wayNameView.label.updateRoad(roadName: roadName, representation: representation)

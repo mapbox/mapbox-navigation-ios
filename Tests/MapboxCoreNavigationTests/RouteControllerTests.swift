@@ -438,9 +438,11 @@ class RouteControllerTests: TestCase {
         expectation(forNotification: .currentRoadNameDidChange, object: routeController) { (notification) -> Bool in
             let userInfo = notification.userInfo
             let roadName = userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+            let localizedRoadName = userInfo?[RouteController.NotificationUserInfoKey.localizedRoadNameKey] as? String
             let routeShieldRepresentation = userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
 
             XCTAssertEqual(roadName, status.roadName)
+            XCTAssertEqual(localizedRoadName, status.localizedRoadName())
             XCTAssertEqual(routeShieldRepresentation, status.routeShieldRepresentation)
 
             return true

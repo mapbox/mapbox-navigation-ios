@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.12.0
+
+### Visual instructions
+* `MapboxRoadNameView` now renders localized road names. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
+* Added `localizedRoadNameKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding string value contains localized road name. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
+
 ## v2.11.0
 
 ### Packaging
