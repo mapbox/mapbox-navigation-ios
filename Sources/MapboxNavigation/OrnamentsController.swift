@@ -167,7 +167,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
     
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             navigationView.wayNameView.label.updateRoad(roadName: roadName, representation: representation)

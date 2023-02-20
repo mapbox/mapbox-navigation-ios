@@ -13,6 +13,7 @@ public final class TestNavigationStatusProvider {
                                               geometryIndex: UInt32 = 0,
                                               shapeIndex: UInt32 = 0,
                                               intersectionIndex: UInt32 = 0,
+                                              roads: [MapboxNavigationNative.RoadName]? = nil,
                                               voiceInstruction: VoiceInstruction? = nil,
                                               bannerInstruction: BannerInstruction? = nil,
                                               speedLimit: SpeedLimit? = nil,
@@ -20,6 +21,7 @@ public final class TestNavigationStatusProvider {
         let fixLocation = FixLocation(location ?? CLLocation(latitude: 37.788443, longitude: -122.4020258))
         let shield = Shield(baseUrl: "shield_url", displayRef: "ref", name: "shield", textColor: "")
         let road = MapboxNavigationNative.RoadName(text: "name", language: "lang", imageBaseUrl: "base_image_url", shield: shield)
+        let roadNames = roads ?? [road]
         let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42)
         let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false)
         return .init(routeState: routeState,
@@ -35,7 +37,7 @@ public final class TestNavigationStatusProvider {
                      geometryIndex: geometryIndex,
                      shapeIndex: shapeIndex,
                      intersectionIndex: intersectionIndex,
-                     roads: [road],
+                     roads: roadNames,
                      voiceInstruction: voiceInstruction,
                      bannerInstruction: bannerInstruction,
                      speedLimit: speedLimit,
