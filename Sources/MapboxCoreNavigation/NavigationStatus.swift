@@ -9,8 +9,10 @@ extension NavigationStatus {
     var roadName: String {
         roads.map({ $0.text }).prefix(while: { $0 != NavigationStatus.nameDelimeter }).joined(separator: " ")
     }
-    
-    ///New `localizedRoadName` property that returns all localized names for road.
+
+    /// Returns the localized road name.
+    /// - Parameter locale: The locale that determines the chosen language.
+    /// - Returns: The localized road name.
     func localizedRoadName(locale: Locale = .nationalizedCurrent) -> String {
         roads.first { $0.language == locale.languageCode }?.text ?? roadName
     }
