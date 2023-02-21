@@ -3,9 +3,18 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension NavigationStatus {
+    private static let nameDelimeter = "/"
+
     /// Legacy `roadName` property that returns first road name based on the `roads` array.
     var roadName: String {
-        roads.map({ $0.text }).prefix(while: { $0 != "/" }).joined(separator: " ")
+        roads.map({ $0.text }).prefix(while: { $0 != NavigationStatus.nameDelimeter }).joined(separator: " ")
+    }
+
+    /// Returns the localized road name.
+    /// - Parameter locale: The locale that determines the chosen language.
+    /// - Returns: The localized road name.
+    func localizedRoadName(locale: Locale = .nationalizedCurrent) -> String {
+        roads.first { $0.language == locale.languageCode }?.text ?? roadName
     }
     
     // This `routeShieldRepresentation` property returns the image representation of current road shield based on the `roads` array as the `VisualInstruction.Component.ImageRepresentation`.

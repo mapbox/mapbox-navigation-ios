@@ -866,7 +866,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             wayNameView.label.updateRoad(roadName: roadName, representation: representation, idiom: .carPlay)
