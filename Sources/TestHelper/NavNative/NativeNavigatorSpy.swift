@@ -14,6 +14,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     public var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?
     public var passedDescriptorsTrackerOptions: PredictiveLocationTrackerOptions?
     public var passedDatasetTrackerOptions: PredictiveLocationTrackerOptions?
+    public var passedRemovedRerouteObserver: RerouteObserver?
 
     public var rerouteController: RerouteControllerInterface!
     public var rerouteDetector: RerouteDetectorInterface!
@@ -52,6 +53,10 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     public override func changeLeg(forLeg leg: UInt32, callback: @escaping ChangeLegCallback) {
         passedLeg = leg
         callback(returnedChangeLegResult)
+    }
+
+    public override func removeRerouteObserver(for observer: RerouteObserver) {
+        passedRemovedRerouteObserver = observer
     }
 
     @_implementationOnly public override func setRerouteControllerForController(_ controller: RerouteControllerInterface) {

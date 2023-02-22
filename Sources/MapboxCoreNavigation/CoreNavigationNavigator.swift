@@ -235,6 +235,7 @@ final class Navigator: CoreNavigator {
     
     private func unsubscribeNavigator() {
         stopUpdatingElectronicHorizon()
+        rerouteController.invalidate()
         if let navigatorStatusObserver = navigatorStatusObserver {
             navigator.removeObserver(for: navigatorStatusObserver)
         }
