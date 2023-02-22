@@ -47,7 +47,7 @@
 * Limited number of reported alternatives to 2, i.e. the `updatedAlternatives` parameter in `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` has maximum size of 2. ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
 * Increased terminal offboard route request timeout from 4 to 15 seconds. ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
 * Sped up onboard routing cancellation. ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
-* Fixed an issue when a rerouting could cause a memory leak. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
+* Fixed an issue when a rerouting could cause a memory leak. ([#4380](https://github.com/mapbox/mapbox-navigation-ios/pull/4380))
 
 ## v2.10.0
 
