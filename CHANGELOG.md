@@ -25,6 +25,7 @@
 * Added the ability to pan a map view on CarPlay. ([#4288](https://github.com/mapbox/mapbox-navigation-ios/pull/4288))
 * Added a new configuration property `CarPlayManager.startFreeDriveAutomatically` that controls whether `CarPlayManager` starts a Free Drive session automatically on map load. If you set this property to false, you can start a Free Drive session using `CarPlayMapViewController.startFreeDriveNavigation()` method. ([#4352](https://github.com/mapbox/mapbox-navigation-ios/pull/4352))
 * Added new `CarPlayManagerDelegate` methods `carPlayManager(_:didBeginPanGesture:)`, `carPlayManager(_:didEndPanGesture:)`, `carPlayManager(_:didShowPanningInterface:)`, `carPlayManager(_:willDismissPanningInterface:)`, and `carPlayManager(_:didDismissPanningInterface:)` to notify about pan gesture events. ([#4368](https://github.com/mapbox/mapbox-navigation-ios/pull/4368))
+* Added `CarPlayManagerDelegate.carPlayManager(_:willPresent:)` method to allow developers to query or customize properties of the `CarPlayNavigationViewController` before it is presented. ([#4376](https://github.com/mapbox/mapbox-navigation-ios/pull/4376))
 
 ### Electronic horizon
 

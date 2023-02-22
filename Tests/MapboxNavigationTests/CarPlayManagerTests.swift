@@ -224,6 +224,13 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.first, customTrip)
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, startButtonTitle)
     }
+    
+    func testWillPresentNavigationViewController() {
+        startNavigation()
+        
+        XCTAssertTrue(delegate.willPresentCalled)
+        XCTAssertEqual(delegate.passedWillPresentNavigationViewController, carPlayManager.carPlayNavigationViewController)
+    }
 
     func testStartWhenConfiguredToSimulate() {
         carPlayManager.simulatesLocations = true
