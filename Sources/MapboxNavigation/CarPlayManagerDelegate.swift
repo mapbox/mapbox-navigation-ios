@@ -235,6 +235,21 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
      and enable when disconnected.
      */
     func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+    
+    /**
+     Called when the CarPlayManager creates a new CarPlayNavigationViewController upon start of a
+     navigation session.
+     
+     Implementing this method will allow developers to query or customize properties of the
+     CarPlayNavigationViewController before it is presented. For example, a developer may wish to perform custom map styling
+     on the presented NavigationMapView.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter navigationViewController: The CarPlayNavigationViewController that will be presented
+     on the CarPlay display.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willPresent navigationViewController: CarPlayNavigationViewController)
 
     /**
      Called when the CarPlayManager presents a new CarPlayNavigationViewController upon start of a
@@ -627,6 +642,14 @@ public extension CarPlayManagerDelegate {
     func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return true
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        willPresent navigationViewController: CarPlayNavigationViewController) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
 
     /**

@@ -72,6 +72,7 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var didBeginNavigationCalled = false
     var didEndNavigationCalled = false
     var legacyDidEndNavigationCalled = false
+    var willPresentCalled = false
     var didPresentCalled = false
     var didFailToFetchRouteCalled = false
     var didBeginPanGestureCalled = false
@@ -84,6 +85,7 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var passedError: DirectionsError?
     var passedTemplate: CPMapTemplate?
     var passedNavigationEndedByCanceling = false
+    var passedWillPresentNavigationViewController: CarPlayNavigationViewController?
 
     var returnedTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
     var returnedTrip: CPTrip?
@@ -117,6 +119,11 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         XCTAssertTrue(didBeginNavigationCalled)
         legacyDidEndNavigationCalled = true
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPresent navigationViewController: CarPlayNavigationViewController) {
+        willPresentCalled = true
+        passedWillPresentNavigationViewController = navigationViewController
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
