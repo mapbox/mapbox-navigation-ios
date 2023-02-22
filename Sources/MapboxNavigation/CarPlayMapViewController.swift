@@ -316,7 +316,7 @@ open class CarPlayMapViewController: UIViewController {
         speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
-        let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             wayNameView.label.updateRoad(roadName: roadName, representation: representation, idiom: .carPlay)
