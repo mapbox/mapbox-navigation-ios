@@ -12,6 +12,7 @@ class NavigationMapViewTests: TestCase {
         CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
     ]))
     var navigationMapView: NavigationMapView!
+    var navigator: CoreNavigator!
     
     let options: NavigationRouteOptions = .init(coordinates: [
         CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
@@ -23,11 +24,13 @@ class NavigationMapViewTests: TestCase {
     }()
     
     override func setUp() {
+        navigator = Navigator.shared
         super.setUp()
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
     }
     
     override func tearDown() {
+        navigator = nil
         navigationMapView = nil
         super.tearDown()
     }
