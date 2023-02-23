@@ -134,4 +134,10 @@ final class RerouteControllerTests: TestCase {
         wait(for: [expectation], timeout: 1)
     }
 
+    func testInvalidate() {
+        rerouteController.invalidate()
+        XCTAssertTrue(navigatorSpy.passedRerouteController === navigatorSpy.getRerouteController())
+        XCTAssertTrue(navigatorSpy.passedRemovedRerouteObserver === rerouteController)
+    }
+
 }
