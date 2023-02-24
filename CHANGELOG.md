@@ -4,9 +4,12 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v126._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/126.0.0). ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
-* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-rc.1). ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
-* MapboxNavigation now requires [MapboxMaps v10.11.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0). ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v126._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/126.0.1). ([#4386](https://github.com/mapbox/mapbox-navigation-ios/pull/4386))
+* MapboxCoreNavigation now requires [MapboxDirections v2.10.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.10.0-rc.2). ([#4386](https://github.com/mapbox/mapbox-navigation-ios/pull/4386))
+* MapboxNavigation now requires [MapboxMaps v10.11.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.11.0). ([#4386](https://github.com/mapbox/mapbox-navigation-ios/pull/4386))
+
+### Routing
+* Increased the distance at which the navigator discards passed alternative route in `NavigationServiceDelegate.navigationService(_:didUpdateAlternatives:removedAlternatives:)`. This reduces the chance of discarding alternative routes to which a driver deviated from the primary route. ([#4386](https://github.com/mapbox/mapbox-navigation-ios/pull/4386))
 
 ### Visual instructions
 * `MapboxRoadNameView` now renders localized road names. ([#4375](https://github.com/mapbox/mapbox-navigation-ios/pull/4375))
