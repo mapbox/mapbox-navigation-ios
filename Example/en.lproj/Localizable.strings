@@ -28,3 +28,18 @@
 /* Title of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
+/* No comment provided by engineer. */
+"Start Cycling" = "Start Cycling";
+
+/* No comment provided by engineer. */
+"Start Driving" = "Start Driving";
+
+/* No comment provided by engineer. */
+"Start Driving Avoiding Traffic" = "Start Driving Avoiding Traffic";
+
+/* No comment provided by engineer. */
+"Start Navigation" = "Start Navigation";
+
+/* No comment provided by engineer. */
+"Start Walking" = "Start Walking";
+

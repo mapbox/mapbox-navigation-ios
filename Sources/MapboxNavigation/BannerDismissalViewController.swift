@@ -85,7 +85,7 @@ public class BannerDismissalViewController: UIViewController, Banner {
         
         let backButtonTitle = NSLocalizedString("BACK",
                                                 bundle: .mapboxNavigation,
-                                                value: "BACK",
+                                                value: "Back",
                                                 comment: "Title of the back button.")
         
         backButton.setTitle(backButtonTitle, for: .normal)
