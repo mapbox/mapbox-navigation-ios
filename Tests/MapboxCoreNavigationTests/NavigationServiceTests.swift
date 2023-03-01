@@ -165,6 +165,16 @@ class NavigationServiceTests: TestCase {
         XCTAssertEqual(routerSpy.passedLocations, [location])
     }
 
+    func testStartIgnoresManagerLocationWhenSimulationModeAlways() {
+        locationManager.returnedLocation = location
+        service.simulationMode = .always
+        service.start()
+
+        XCTAssertTrue(routerSpy.didUpdateLocationsCalled)
+        let expectedCoordinate = route.shape!.coordinates.first!
+        XCTAssertEqual(routerSpy.passedLocations?.first?.coordinate, expectedCoordinate)
+    }
+
     func testStartIfNilRouterLocationAndSimulatedLocation() {
         let coordinate = route.shape!.coordinates.first!
         service.start()
