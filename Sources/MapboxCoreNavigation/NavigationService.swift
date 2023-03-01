@@ -239,7 +239,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func start() {
         // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
         if router.location == nil {
-            if let currentLocation = locationManager.location {
+            if let currentLocation = locationManager.location, simulationMode != .always {
                 router.locationManager?(nativeLocationSource, didUpdateLocations: [
                    currentLocation
                 ])
