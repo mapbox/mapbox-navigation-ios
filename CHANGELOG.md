@@ -1,5 +1,18 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.12.0
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v127._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/127.0.0). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
+* MapboxCoreNavigation now requires [MapboxDirections v2.11.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-alpha.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
+* MapboxNavigation now requires [MapboxMaps v10.12.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0-beta.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
+
+### Electronic horizon
+
+**Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+* Added`Interchange.identifier` and `Junction.identifier` fields. ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
+
 ## v2.11.0
 
 ### Packaging
