@@ -65,6 +65,7 @@
 * Increased terminal offboard route request timeout from 4 to 15 seconds. ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
 * Sped up onboard routing cancellation. ([#4367](https://github.com/mapbox/mapbox-navigation-ios/pull/4367))
 * Fixed an issue when a rerouting could cause a memory leak. ([#4380](https://github.com/mapbox/mapbox-navigation-ios/pull/4380))
+* Fixed usage of real GPS locations in simulated routes ([#4394](https://github.com/mapbox/mapbox-navigation-ios/pull/4394))
 
 ## v2.10.0
 
