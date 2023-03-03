@@ -47,10 +47,10 @@ class PassiveLocationManagerTests: TestCase {
     }
 
     func testHandleDidUpdateLocations() {
+        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
         passiveLocationManager.locationManager(locationManagerSpy, didUpdateLocations: [location])
 
-        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.freeDrive.rawValue))
+        XCTAssertTrue(eventsManagerSpy.sendPassiveNavigationStartCalled)
     }
 
     func testHandleDidUpdateHeading() {
@@ -121,6 +121,7 @@ class PassiveLocationManagerTests: TestCase {
     }
 
     func testUpdatedLocationIfSuccess() {
+        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
         passiveLocationManager.updateLocation(location) { result in
             guard case .success(let updatedLocation) = result else {
                 return XCTFail("Expected a success but got a failure with \(result)")
@@ -133,15 +134,15 @@ class PassiveLocationManagerTests: TestCase {
         XCTAssertTrue(navigatorSpy.updateLocationCalled)
         XCTAssertEqual(navigatorSpy.passedLocation, location)
 
-        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.freeDrive.rawValue))
+        XCTAssertTrue(eventsManagerSpy.sendPassiveNavigationStartCalled)
 
         eventsManagerSpy.reset()
         passiveLocationManager.updateLocation(location)
-        XCTAssertFalse(eventsManagerSpy.hasQueuedEvent(with: EventType.freeDrive.rawValue), "Do not report navigation twice")
+        XCTAssertFalse(eventsManagerSpy.sendPassiveNavigationStartCalled, "Do not report navigation twice")
     }
 
     func testUpdatedLocationIfFailure() {
+        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
         navigatorSpy.onUpdateLocation = { passedLocation in
             XCTAssertEqual(passedLocation, self.location)
             return false
@@ -152,8 +153,7 @@ class PassiveLocationManagerTests: TestCase {
             }
             XCTAssertEqual(error as! PassiveLocationManagerError, PassiveLocationManagerError.failedToChangeLocation)
         }
-        let eventsManagerSpy = passiveLocationManager.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.freeDrive.rawValue))
+        XCTAssertTrue(eventsManagerSpy.sendPassiveNavigationStartCalled)
     }
 
     func testUpdatedLocationNoRunningBillingSession() {

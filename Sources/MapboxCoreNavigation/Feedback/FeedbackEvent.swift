@@ -6,6 +6,38 @@ import Foundation
  Conforms to the `Codable` protocol, so the application can store the event persistently.
  */
 public class FeedbackEvent: Codable {
+    let contentType: FeedbackContent
+
+    enum FeedbackContent: Codable {
+        case common(FeedbackCommonEvent)
+        case native(FeedbackMetadata)
+    }
+
+    convenience init(eventDetails: NavigationEventDetails) {
+        self.init(contentType: .common(FeedbackCommonEvent(eventDetails: eventDetails)))
+    }
+
+    convenience init(metadata: FeedbackMetadata) {
+        self.init(contentType: .native(metadata))
+    }
+
+    init(contentType: FeedbackContent) {
+        self.contentType = contentType
+    }
+
+    /// :nodoc:
+    public var contents: [String: Any] {
+        switch contentType {
+            case .common(let data):
+                return data.contents
+            case .native(let data):
+                return data.contents
+        }
+    }
+}
+
+// To be removed after only NN Telemetry is used
+class FeedbackCommonEvent: Codable {
     let coreEvent: CoreFeedbackEvent
     
     init(eventDetails: NavigationEventDetails) {
@@ -34,8 +66,7 @@ public class FeedbackEvent: Codable {
         coreEvent.eventDictionary["description"] = description
     }
     
-    /// :nodoc:
-    public var contents: [String: Any] {
+    var contents: [String: Any] {
         coreEvent.eventDictionary
     }
 }

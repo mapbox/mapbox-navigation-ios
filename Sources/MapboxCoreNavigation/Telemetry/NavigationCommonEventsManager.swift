@@ -32,11 +32,10 @@ public protocol ActiveNavigationEventsManagerDataSource: AnyObject {
 }
 
 /**
- The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
+ The `NavigationCommonEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox
+ Common telemetry framework.
  */
-open class NavigationEventsManager {
-    static let applicationSessionIdentifier = UUID()
-    
+class NavigationCommonEventsManager: NavigationTelemetryManager {
     // MARK: Configuring Events
     
     /**
@@ -44,12 +43,12 @@ open class NavigationEventsManager {
      For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
      To include this information, use the following keys: "name", "version", "userId", and "sessionId".
     */
-    public var userInfo: [String: String?]? = nil
+    var userInfo: [String: String?]? = nil
     
     /**
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
-    public var delaysEventFlushing = true
+    var delaysEventFlushing = true
     
     // MARK: Storing Data and Datasources
     
@@ -58,11 +57,11 @@ open class NavigationEventsManager {
     /**
      The unique identifier of the navigation session used for events.
      */
-    public var sessionId: String {
+    var sessionId: String {
         sessionState.identifier.uuidString
     }
     
-    var outstandingFeedbackEvents = [CoreFeedbackEvent]()
+    private var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
     func withBackupDataSource(active forcedActiveDataSource: ActiveNavigationEventsManagerDataSource?,
                               passive forcedPassiveDataSource: PassiveNavigationEventsManagerDataSource?,
@@ -101,21 +100,12 @@ open class NavigationEventsManager {
 
     private let accessToken: String
 
-    @available(*, deprecated, renamed: "init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)")
-    public convenience init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
-                         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
-                         accessToken possibleToken: String? = nil,
-                         mobileEventsManager: MMEEventsManager = .shared()) {
-        mobileEventsManager.disableLocationMetrics()
-        self.init(activeNavigationDataSource: activeNavigationDataSource, passiveNavigationDataSource: passiveNavigationDataSource, accessToken: possibleToken)
-    }
+    required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
+                  passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
+                  accessToken possibleToken: String? = nil) {
+        accessToken = possibleToken ?? NavigationCommonEventsManager.obtainAccessToken()
 
-    public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
-                         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
-                         accessToken possibleToken: String? = nil) {
-        accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
-
-        let options = NavigationEventsManager.createEventsServerOptions(accessToken: accessToken)
+        let options = NavigationCommonEventsManager.createEventsServerOptions(accessToken: accessToken)
         self.eventsAPI = EventsService.getOrCreate(for: options)
         self.telemetryService = TelemetryService.getOrCreate(for: options)
 
@@ -127,9 +117,9 @@ open class NavigationEventsManager {
          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
          accessToken possibleToken: String? = nil,
          eventsAPI: EventsAPI) {
-        accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
+        accessToken = possibleToken ?? NavigationCommonEventsManager.obtainAccessToken()
 
-        let options = NavigationEventsManager.createEventsServerOptions(accessToken: accessToken)
+        let options = NavigationCommonEventsManager.createEventsServerOptions(accessToken: accessToken)
         self.eventsAPI = eventsAPI
         self.telemetryService = TelemetryService.getOrCreate(for: options)
 
@@ -159,7 +149,7 @@ open class NavigationEventsManager {
     }
 
     private static func createEventsServerOptions(accessToken: String) -> EventsServerOptions {
-        EventsServerOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent, deferredDeliveryServiceOptions: nil)
+        EventsServerOptions(token: accessToken, userAgentFragment: NavigationCommonEventsManager.userAgent, deferredDeliveryServiceOptions: nil)
     }
 
     private static var userAgent: String = {
@@ -187,57 +177,36 @@ open class NavigationEventsManager {
 
     func start() {
         let shortVersion = Bundle.navigationSDKVersion
-        eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
+        eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationCommonEventsManager.userAgent, sdkVersion: shortVersion)
     }
     
     // MARK: Sending Feedback Events
-    
-    /**
-     Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - returns: Returns a feedback event.
-     
-     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
-     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
-     
-     - Postcondition:
-     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
-     */
-    public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
+
+    func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
         guard let eventDetails = navigationFeedbackEvent(screenshotOption: screenshotOption) else { return nil }
         return FeedbackEvent(eventDetails: eventDetails)
     }
-    
-    /**
-     Send active navigation feedback to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
-    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
-        feedback.update(with: type, description: description)
-        sendFeedbackEvents([feedback.coreEvent])
+
+    func sendActiveNavigationFeedback(_ feedback: FeedbackEvent,
+                                      type: ActiveNavigationFeedbackType,
+                                      description: String?,
+                                      source: FeedbackSource,
+                                      completionHandler: UserFeedbackCompletionHandler?) {
+        guard case .common(let event) = feedback.contentType else { return }
+
+        event.update(with: type, description: description)
+        sendFeedbackEvents([event.coreEvent])
     }
-    
-    /**
-     Send passive navigation feedback to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
-    public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
-                                              type: PassiveNavigationFeedbackType,
-                                              description: String? = nil) {
-        feedback.update(with: type, description: description)
-        sendFeedbackEvents([feedback.coreEvent])
+
+    func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
+                                       type: PassiveNavigationFeedbackType,
+                                       description: String?,
+                                       source: FeedbackSource,
+                                       completionHandler: UserFeedbackCompletionHandler?) {
+        guard case .common(let event) = feedback.contentType else { return }
+
+        event.update(with: type, description: description)
+        sendFeedbackEvents([event.coreEvent])
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
@@ -364,12 +333,12 @@ open class NavigationEventsManager {
         return event
     }
 
-    public func sendCarPlayConnectEvent() {
+    func sendCarPlayConnectEvent() {
         let attributes = eventAttributes(type: .carplayConnect)
         sendEvent(with: attributes)
     }
 
-    public func sendCarPlayDisconnectEvent() {
+    func sendCarPlayDisconnectEvent() {
         let attributes = eventAttributes(type: .carplayDisconnect)
         sendEvent(with: attributes)
     }

@@ -2,7 +2,7 @@ import XCTest
 import MapboxNavigationNative
 import MapboxDirections
 import TestHelper
-@testable import MapboxCoreNavigation
+@_spi(MapboxInternal) @testable import MapboxCoreNavigation
 
 private let customConfigKey = "com.mapbox.navigation.custom-config"
 
@@ -29,6 +29,7 @@ class NativeHandlersFactoryTests: TestCase {
 
     override func tearDown() {
         UserDefaults.resetStandardUserDefaults()
+        NavigationTelemetryConfiguration.useNavNativeTelemetryEvents = false
         super.tearDown()
     }
     
@@ -36,6 +37,19 @@ class NativeHandlersFactoryTests: TestCase {
         let expectedCustomConfig = [
             "features": [
                 "useInternalReroute": true
+            ]
+        ]
+        _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
+        let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
+        XCTAssertTrue(config == expectedCustomConfig)
+    }
+
+    func testCustomConfigIfUsingNavNativeEvents() {
+        NavigationTelemetryConfiguration.useNavNativeTelemetryEvents = true
+        let expectedCustomConfig = [
+            "features": [
+                "useInternalReroute": true,
+                "useTelemetryNavigationEvents": true
             ]
         ]
         _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)

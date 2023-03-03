@@ -1,6 +1,33 @@
 import MapboxNavigationNative
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
+
+enum RouteChangeReason {
+    /// Clean a route.
+    case cleanUp
+
+    /// Set a new route, use by default.
+    case startNewRoute
+
+    /// Route index changed to an alternative.
+    case switchToAlternative
+
+    /// New route from different starting point to previous destinations.
+    case reroute
+
+    /// Recreate Navigator after losing internet connection.
+    case fallbackToOffline
+
+    /// Recreate Navigator after restoring internet connection.
+    case restoreToOnline
+
+    /// Navigator used offline route and new route is available from the server.
+    case switchToOnline
+
+    /// Fastest Route available (and should be switched),
+    case fastestRouteAvailable
+}
 
 protocol CoreNavigator {
     static var shared: Self { get }
@@ -22,6 +49,7 @@ protocol CoreNavigator {
     func setRoutes(_ routesData: RoutesData,
                    uuid: UUID,
                    legIndex: UInt32,
+                   reason: RouteChangeReason,
                    completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
     func setAlternativeRoutes(with routes: [RouteInterface],
                               completion: @escaping (Result<[RouteAlternative], Error>) -> Void)
@@ -29,6 +57,10 @@ protocol CoreNavigator {
                      completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void)
 
     func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void)
+
+    func makeTelemetry(eventsMetadataProvider: EventsMetadataInterface) -> Telemetry
+
+    func makeEventsMetadataProvider() -> EventsMetadataProvider
 
     func resume()
     func pause()
@@ -62,14 +94,13 @@ final class Navigator: CoreNavigator {
     }
 
     private lazy var routeCoordinator: RoutesCoordinator = {
-        .init(routesSetupHandler: { [weak self] routesData, legIndex, completion in
+        .init(routesSetupHandler: { [weak self] routesData, legIndex, reason, completion in
             
             let dataParams = routesData.map { SetRoutesDataParams(routes: $0,
                                                                   legIndex: legIndex) }
-            
-            let reason: SetRoutesReason = routesData != nil ? .newRoute : .cleanUp
+
             self?.navigator.setRoutesDataFor(dataParams,
-                                             reason: reason) { [weak self] result in
+                                             reason: reason.navNativeValue) { [weak self] result in
                 if result.isValue(),
                    let routesResult = result.value {
                     Log.info("Navigator has been updated, including \(routesResult.alternatives.count) alternatives.", category: .navigation)
@@ -146,10 +177,12 @@ final class Navigator: CoreNavigator {
         cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
+
         roadObjectStore = RoadObjectStore(navigator.roadObjectStore())
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
         rerouteController = RerouteController(navigator, config: NativeHandlersFactory.configHandle())
-        
+        eventAppState = EventAppState()
+
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
     }
@@ -174,13 +207,21 @@ final class Navigator: CoreNavigator {
         cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
-        
+
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
         rerouteController = RerouteController(navigator, config: NativeHandlersFactory.configHandle())
         
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
+    }
+
+    func makeTelemetry(eventsMetadataProvider: EventsMetadataInterface) -> Telemetry {
+        navigator.getTelemetryForEventsMetadataProvider(eventsMetadataProvider)
+    }
+
+    func makeEventsMetadataProvider() -> EventsMetadataProvider {
+        EventsMetadataProvider(appState: eventAppState)
     }
     
     private weak var navigatorStatusObserver: NavigatorStatusObserver?
@@ -257,6 +298,8 @@ final class Navigator: CoreNavigator {
     private(set) var roadObjectMatcher: RoadObjectMatcher
     
     private var isSubscribedToElectronicHorizon = false
+
+    private var eventAppState: EventAppState
     
     private var electronicHorizonOptions: ElectronicHorizonOptions? {
         didSet {
@@ -282,8 +325,16 @@ final class Navigator: CoreNavigator {
 
     // MARK: - Navigator Updates
 
-    func setRoutes(_ routesData: RoutesData, uuid: UUID, legIndex: UInt32, completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
-        routeCoordinator.beginActiveNavigation(with: routesData, uuid: uuid, legIndex: legIndex, completion: completion)
+    func setRoutes(_ routesData: RoutesData,
+                   uuid: UUID,
+                   legIndex: UInt32,
+                   reason: RouteChangeReason,
+                   completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
+        routeCoordinator.beginActiveNavigation(with: routesData,
+                                               uuid: uuid,
+                                               legIndex: legIndex,
+                                               reason: reason,
+                                               completion: completion)
     }
     
     func setAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
@@ -458,4 +509,27 @@ class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
 enum NavigatorError: Swift.Error {
     case failedToUpdateRoutes(reason: String)
     case failedToUpdateAlternativeRoutes(reason: String)
+}
+
+extension RouteChangeReason {
+    var navNativeValue: SetRoutesReason {
+        switch self {
+            case .cleanUp:
+                return .cleanUp
+            case .startNewRoute:
+                return .newRoute
+            case .switchToAlternative:
+                return .alternative
+            case .reroute:
+                return .reroute
+            case .fallbackToOffline:
+                return .fallbackToOffline
+            case .restoreToOnline:
+                return .restoreToOnline
+            case .switchToOnline:
+                return .switchToOnline
+            case .fastestRouteAvailable:
+                return .fastestRoute
+        }
+    }
 }

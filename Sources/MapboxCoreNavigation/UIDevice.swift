@@ -9,4 +9,16 @@ extension UIDevice {
         return false
         #endif
     }
+
+    var screenOrientation: UIDeviceOrientation {
+        let screenOrientation: UIDeviceOrientation
+        if orientation.isValidInterfaceOrientation {
+            screenOrientation = orientation
+        } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+            screenOrientation = .portrait
+        } else {
+            screenOrientation = .landscapeLeft
+        }
+        return screenOrientation
+    }
 }
