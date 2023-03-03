@@ -275,21 +275,24 @@ open class RouteController: NSObject {
      Asynchronously updates NavNative navigator with the new `IndexedRouteResponse`.
      - parameter indexedRouteResponse: New route response to apply to the navigator.
      - parameter legIndex: A leg index, to start routing from.
+     - parameter reason: A reason for updating navigator.
      - parameter completion: A completion that will be called once the navigator is updated indicating
      whether the change was successful.
      */
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
+                                 reason: RouteChangeReason,
                                  completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
         guard let newMainRoute = indexedRouteResponse.currentRoute,
               let routesData = indexedRouteResponse.routesData(routeParserType: routeParserType) else {
             completion?(.failure(RouteControllerError.failedToSerializeRoute))
             return
         }
-        self.sharedNavigator.setRoutes(routesData,
-                                       uuid: sessionUUID,
-                                       legIndex: UInt32(legIndex),
-                                       completion:  { [weak self] result in
+        sharedNavigator.setRoutes(routesData,
+                                  uuid: sessionUUID,
+                                  legIndex: UInt32(legIndex),
+                                  reason: reason,
+                                  completion:  { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -398,11 +401,17 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
+        updateNavigator(with: indexedRouteResponse,
+                        fromLegIndex: self.routeProgress.legIndex,
+                        reason: .fallbackToOffline,
+                        completion: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
+        updateNavigator(with: indexedRouteResponse,
+                        fromLegIndex: self.routeProgress.legIndex,
+                        reason: .restoreToOnline,
+                        completion: nil)
     }
 
     func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
@@ -683,7 +692,9 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: self.indexedRouteResponse, fromLegIndex: 0) { [weak self] _ in
+        updateNavigator(with: self.indexedRouteResponse,
+                        fromLegIndex: 0,
+                        reason: .startNewRoute) { [weak self] _ in
             self?.isInitialized = true
         }
     }
@@ -852,15 +863,19 @@ extension RouteController: Router {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
-        if shouldStartNewBillingSession(for: route, routeOptions: routeOptions) {
+        let shouldStartNewBillingSession = shouldStartNewBillingSession(for: route, routeOptions: routeOptions)
+        if shouldStartNewBillingSession {
             BillingHandler.shared.stopBillingSession(with: sessionUUID)
             BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         }
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         let routeProgress = RouteProgress(route: route, options: routeOptions)
+        let reason = routeChangeReason(shouldStartNewBillingSession: shouldStartNewBillingSession,
+                                       isProactiveRerouting: isProactive)
         updateNavigator(with: indexedRouteResponse,
-                        fromLegIndex: routeProgress.legIndex) { [weak self] result in
+                        fromLegIndex: routeProgress.legIndex,
+                        reason: reason) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
@@ -876,6 +891,19 @@ extension RouteController: Router {
                 completion?(false)
             }
         }
+    }
+
+    private func routeChangeReason(shouldStartNewBillingSession: Bool,
+                                   isProactiveRerouting: Bool) -> RouteChangeReason {
+        let reason: RouteChangeReason
+        if isProactiveRerouting {
+            reason = .fastestRouteAvailable
+        } else if shouldStartNewBillingSession {
+            reason = .startNewRoute
+        } else {
+            reason = .reroute
+        }
+        return reason
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
@@ -1097,7 +1125,8 @@ extension RouteController {
         }
         
         updateNavigator(with: indexedRouteResponse,
-                        fromLegIndex: 0) { [weak self] result in
+                        fromLegIndex: 0,
+                        reason: .switchToOnline) { [weak self] result in
             guard let self = self else { return }
             self.routeProgress = RouteProgress(route: newRoute,
                                                 options: decoded.routeOptions)

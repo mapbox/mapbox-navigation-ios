@@ -324,6 +324,15 @@ public class Fixture: NSObject {
         return leg
     }
 
+    public static func createFeedbackEvent() -> FeedbackEvent {
+        let sessionState = SessionState(currentRoute: nil, originalRoute: nil, routeIdentifier: nil)
+        var event = PassiveNavigationEventDetails(dataSource: PassiveNavigationEventsManagerDataSourceSpy(),
+                                                  sessionState: sessionState)
+        event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
+        event.event = "feedback"
+        return FeedbackEvent(eventDetails: event)
+    }
+
     public static let credentials: Credentials = .mocked
 }
 

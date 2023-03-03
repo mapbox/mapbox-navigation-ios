@@ -9,7 +9,7 @@ final class RoutesCoordinator {
     }
 
     typealias RoutesResult = (mainRouteInfo: RouteInfo?, alternativeRoutes: [RouteAlternative])
-    typealias RoutesSetupHandler = (_ routesData: RoutesData?, _ legIndex: UInt32, _ completion: @escaping (Result<RoutesResult, Error>) -> Void) -> Void
+    typealias RoutesSetupHandler = (_ routesData: RoutesData?, _ legIndex: UInt32, _ reason: RouteChangeReason, _ completion: @escaping (Result<RoutesResult, Error>) -> Void) -> Void
     typealias AlternativeRoutesSetupHandler = (_ routes: [RouteInterface], _ completion: @escaping (Result<[RouteAlternative], Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
@@ -32,13 +32,15 @@ final class RoutesCoordinator {
         state = .passiveNavigation
     }
 
-
     /// - Parameters:
     ///   - uuid: The UUID of the current active guidances session. All reroutes should have the same uuid.
     ///   - legIndex: The index of the leg along which to begin navigating.
+    ///   - reason: The reason for updating routes.
+    ///   - completion: The completion that will be called once the navigator is updated indicating whether the change was successful.
     func beginActiveNavigation(with routesData: RoutesData,
                                uuid: UUID,
                                legIndex: UInt32,
+                               reason: RouteChangeReason,
                                completion: @escaping (Result<RoutesResult, Error>) -> Void) {
         lock.lock()
         if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
@@ -48,7 +50,7 @@ final class RoutesCoordinator {
         state = .activeNavigation(uuid)
         lock.unlock()
 
-        routesSetupHandler(routesData, legIndex, completion)
+        routesSetupHandler(routesData, legIndex, reason, completion)
     }
 
     /// - Parameters:
@@ -63,7 +65,7 @@ final class RoutesCoordinator {
         state = .passiveNavigation
         lock.unlock()
         // TODO: Is it safe to set the leg index to 0 when unsetting a route?
-        routesSetupHandler(nil, 0, completion)
+        routesSetupHandler(nil, 0, .cleanUp, completion)
     }
     
     func updateAlternativeRoutes(with routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {

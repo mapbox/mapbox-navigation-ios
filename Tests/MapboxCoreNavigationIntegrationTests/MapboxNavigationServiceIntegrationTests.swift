@@ -396,14 +396,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
     // MARK: - Events & Delegation
 
-    func testTurnstileEventSentUponInitialization() {
-        // MARK: it sends a turnstile event upon initialization
-
-        let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
-        let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.turnstile.rawValue))
-    }
-
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
         let navigationService = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
@@ -417,7 +409,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         navigationService.start()
 
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasImmediateEvent(with: EventType.routeRetrieval.rawValue))
+        XCTAssertTrue(eventsManagerSpy.sendRouteRetrievalEventCalled)
 
         let routeUpdated = expectation(description: "Route updated")
         router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil) {
@@ -509,7 +501,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 0.1)
     }
 
-    func testGeneratingAnArrivalEvent() {
+    func testCallArrivalCallback() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: trace)
         dependencies = createDependencies(locationSource: locationManager)
@@ -525,17 +517,10 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         }
         wait(for: [replyFinished], timeout: locationManager.expectedReplayTime)
 
-        // It queues and flushes a Depart event
-        let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.depart.rawValue))
         // When at a valid location just before the last location
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
         // It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
-
-        // It enqueues and flushes an arrival event
-        let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: expectedEventName))
     }
 
     func testNoReroutesAfterArriving() {
@@ -556,11 +541,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         }
         navigation.start()
         wait(for: [replayFinished], timeout: 10)
-
-        let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        expectation(description: "Depart Event Flushed") {
-            eventsManagerSpy.hasQueuedEvent(with: EventType.depart.rawValue)
-        }
 
         // MARK: It tells the delegate that the user did arrive
         expectation(description: "Arrival delegate message fired") {
@@ -591,10 +571,6 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         }
 
         waitForExpectations(timeout: 5, handler: nil)
-
-        // It enqueues and flushes an arrival event
-        let expectedEventName = EventType.arrive.rawValue
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: expectedEventName))
     }
 
     func testRouteControllerDoesNotHaveRetainCycle() {

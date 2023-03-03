@@ -149,6 +149,20 @@ class RouteControllerTests: TestCase {
         let statusWithIncorrectLegIndex = TestNavigationStatusProvider.createNavigationStatus(stepIndex: 11)
         XCTAssertFalse(routeController.isValidNavigationStatus(statusWithIncorrectLegIndex))
     }
+
+    func testInitiallyConfigureNavigator() {
+        navigatorSpy.reset()
+        let controller = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                         customRoutingProvider: routingProvider,
+                                         dataSource: dataSource,
+                                         navigatorType: CoreNavigatorSpy.self,
+                                         routeParserType: RouteParserSpy.self)
+
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, controller.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+        XCTAssertEqual(navigatorSpy.passedReason, .startNewRoute)
+    }
     
     func testReturnLocation() {
         XCTAssertNil(routeController.location)
@@ -216,6 +230,7 @@ class RouteControllerTests: TestCase {
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+        XCTAssertEqual(navigatorSpy.passedReason, .fallbackToOffline)
     }
     
     func testRestoreToOnline() {
@@ -225,6 +240,7 @@ class RouteControllerTests: TestCase {
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+        XCTAssertEqual(navigatorSpy.passedReason, .restoreToOnline)
     }
     
     func testStartUpdatingElectronicHorizon() {
@@ -636,24 +652,77 @@ class RouteControllerTests: TestCase {
     }
     
     func testRerouteWhenReroutingAndNavigatorSucceed() {
-        let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
+        let response = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
         
         routeController.reroute(from: rawLocation, along: routeProgress)
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, 0)
-        XCTAssertEqual(navigatorSpy.passedAlternativeRoutes?.count, 0)
+        XCTAssertEqual(navigatorSpy.passedReason, .reroute)
         
         XCTAssertFalse(routeController.isRerouting)
         XCTAssertFalse(routeController.didProactiveReroute)
         
         XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
-        guard case .route(let expectedRouteOptions) = singleRouteResponse.options else {
+    }
+
+    func testUpdateRouteIfShouldStartNewBillingSession() {
+        let response = IndexedRouteResponse(routeResponse: multilegRouteResponse, routeIndex: 0)
+        routingProvider.returnedRoutesResult = .success(response)
+        guard case .route(let routeOptions) = multilegRouteResponse.options else {
             XCTFail()
             return
         }
-        XCTAssertEqual(routeController.routeProgress.routeOptions, expectedRouteOptions)
+        routeController.updateRoute(with: response, routeOptions: routeOptions, isProactive: false, completion: nil)
+
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, 0)
+        XCTAssertEqual(navigatorSpy.passedReason, .startNewRoute)
+        XCTAssertEqual(navigatorSpy.passedAlternativeRoutes?.count, 0)
+
+        XCTAssertFalse(routeController.isRerouting)
+        XCTAssertFalse(routeController.didProactiveReroute)
+
+        XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
+        XCTAssertEqual(routeController.routeProgress.routeOptions, routeOptions)
+    }
+
+    func testUpdateRouteIfShouldNotStartNewBillingSession() {
+        let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
+        routingProvider.returnedRoutesResult = .success(response)
+        routeController.updateRoute(with: response, routeOptions: options, isProactive: false, completion: nil)
+
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, 0)
+        XCTAssertEqual(navigatorSpy.passedReason, .startNewRoute)
+        XCTAssertEqual(navigatorSpy.passedAlternativeRoutes?.count, 0)
+
+        XCTAssertFalse(routeController.isRerouting)
+        XCTAssertFalse(routeController.didProactiveReroute)
+
+        XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
+        XCTAssertEqual(routeController.routeProgress.routeOptions, options)
+    }
+
+    func testUpdateRouteIfFasterRoute() {
+        let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
+        routingProvider.returnedRoutesResult = .success(response)
+        routeController.updateRoute(with: response, routeOptions: options, isProactive: true, completion: nil)
+
+        XCTAssertTrue(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
+        XCTAssertEqual(navigatorSpy.passedLegIndex, 0)
+        XCTAssertEqual(navigatorSpy.passedReason, .fastestRouteAvailable)
+        XCTAssertEqual(navigatorSpy.passedAlternativeRoutes?.count, 0)
+
+        XCTAssertFalse(routeController.isRerouting)
+        XCTAssertTrue(routeController.didProactiveReroute)
+
+        XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
+        XCTAssertEqual(routeController.routeProgress.routeOptions, options)
     }
     
     func testRerouteWhenReroutingAndNavigatorFailed() {
@@ -1347,6 +1416,7 @@ class RouteControllerTests: TestCase {
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
+        XCTAssertEqual(navigatorSpy.passedReason, .reroute)
         waitForExpectations(timeout: expectationsTimeout)
     }
 

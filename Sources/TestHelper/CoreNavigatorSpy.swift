@@ -2,6 +2,7 @@ import MapboxDirections
 import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
 
 public final class CoreNavigatorSpy: CoreNavigator {
     public static var shared: CoreNavigatorSpy = .init()
@@ -28,6 +29,7 @@ public final class CoreNavigatorSpy: CoreNavigator {
     public var passedLocation: CLLocation?
     public var passedElectronicHorizonOptions: MapboxCoreNavigation.ElectronicHorizonOptions?
     public var passedRoutes: [RouteInterface]?
+    public var passedReason: RouteChangeReason?
 
     public var returnedSetRoutesResult: Result<RoutesCoordinator.RoutesResult, Error>?
     public var returnedSetAlternativeRoutesResult: Result<[RouteAlternative], Error>?
@@ -46,12 +48,15 @@ public final class CoreNavigatorSpy: CoreNavigator {
     public var roadObjectMatcher = RoadObjectMatcher(RoadObjectMatcherSpy())
 
     public var rerouteController: MapboxCoreNavigation.RerouteController = RerouteControllerSpy()
+    var returnedTelemetry: TelemetrySpy?
+    var returnedEventsMetadataProvider = EventsMetadataProvider(appState: .init())
 
     public func reset() {
         setRoutesCalled = false
         passedRoute = nil
         passedUuid = nil
         passedLegIndex = nil
+        passedReason = nil
         passedAlternativeRoutes = nil
 
         pauseCalled = false
@@ -89,11 +94,13 @@ public final class CoreNavigatorSpy: CoreNavigator {
     public func setRoutes(_ routesData: RoutesData,
                           uuid: UUID,
                           legIndex: UInt32,
+                          reason: RouteChangeReason,
                           completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
         setRoutesCalled = true
         passedRoute = routesData.primaryRoute()
         passedUuid = uuid
         passedLegIndex = legIndex
+        passedReason = reason
         passedAlternativeRoutes = routesData.alternativeRoutes().map { $0.route }
         completion(returnedSetRoutesResult ?? .success((mainRouteInfo: nil, alternativeRoutes: [])))
     }
@@ -114,6 +121,14 @@ public final class CoreNavigatorSpy: CoreNavigator {
         passedLocation = location
         let result = onUpdateLocation?(location) ?? true
         completion(result)
+    }
+
+    public func makeTelemetry(eventsMetadataProvider: EventsMetadataInterface) -> Telemetry {
+        returnedTelemetry ?? TelemetrySpy()
+    }
+
+    public func makeEventsMetadataProvider() -> EventsMetadataProvider {
+        returnedEventsMetadataProvider
     }
 
     public func pause() {

@@ -54,10 +54,10 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testEventsSentWhenCarPlayConnectedAndDisconnected() {
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.carplayConnect.rawValue))
-        
+        XCTAssertTrue(eventsManagerSpy.sendCarPlayConnectEventCalled)
+
         simulateCarPlayDisconnection(carPlayManager)
-        XCTAssertTrue(eventsManagerSpy.hasQueuedEvent(with: EventType.carplayDisconnect.rawValue))
+        XCTAssertTrue(eventsManagerSpy.sendCarPlayDisconnectEventCalled)
     }
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
