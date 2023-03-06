@@ -129,9 +129,13 @@ public class PreviewViewController: UIViewController {
     
     // MARK: - UIViewController setting-up methods
     
+    var mapTileStore: TileStoreConfiguration.Location? {
+        NavigationSettings.shared.tileStoreConfiguration.mapLocation
+    }
+    
     func setupNavigationView() -> NavigationView {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        let navigationView = NavigationView(frame: frame)
+        let navigationView = NavigationView(frame: frame, tileStoreLocation: mapTileStore)
         navigationView.navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         return navigationView

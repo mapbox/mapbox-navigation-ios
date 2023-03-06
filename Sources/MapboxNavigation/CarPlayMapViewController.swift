@@ -60,6 +60,10 @@ open class CarPlayMapViewController: UIViewController {
         }
     }
     
+    var mapTileStore: TileStoreConfiguration.Location? {
+        NavigationSettings.shared.tileStoreConfiguration.mapLocation
+    }
+    
     var navigationMapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
@@ -225,7 +229,9 @@ open class CarPlayMapViewController: UIViewController {
     }
     
     func setupNavigationMapView() {
-        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds,
+                                                  navigationCameraType: .carPlay,
+                                                  tileStoreLocation: mapTileStore)
         navigationMapView.delegate = self
         navigationMapView.mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak navigationMapView] _ in
             navigationMapView?.localizeLabels()
