@@ -131,12 +131,9 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     private func updateNavigationCameraViewport() {
         if let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource {
             let newViewport = viewportPadding
-            let mapViewBounds = navigationMapView.mapView.bounds
+            let visibleRect = navigationMapView.mapView.bounds.inset(by: newViewport)
 
-            let visibleWidth = mapViewBounds.width - newViewport.left - newViewport.right
-            let visibleHeight = mapViewBounds.size.height - newViewport.top - newViewport.bottom
-
-            guard visibleWidth > 0, visibleHeight > 0 else {
+            guard visibleRect.size.width > 0, visibleRect.size.height > 0 else {
                 // The viewport padding is bigger than the map itself,
                 // this usually means that it is being fully overlapped by one of the banners
                 // In this case, we ignore new viewport to avoid unexpected camera jumps
