@@ -222,7 +222,8 @@ open class NavigationView: UIView {
      - parameter navigationMapView: Custom `NavigationMapView` instance to supersede the default one.
      */
     public init(frame: CGRect,
-                tileStoreLocation: TileStoreConfiguration.Location? = .default,
+                tileStoreLocation: TileStoreConfiguration.Location? = NavigationSettings.shared.tileStoreConfiguration.mapLocation
+,
                 navigationMapView: NavigationMapView? = nil) {
         navigationMapView?.translatesAutoresizingMaskIntoConstraints = false
         self.navigationMapView = navigationMapView ?? NavigationMapView(frame: frame, tileStoreLocation: tileStoreLocation)

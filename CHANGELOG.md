@@ -13,6 +13,10 @@
 **Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
 * Added`Interchange.identifier` and `Junction.identifier` fields. ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
 
+### Map
+
+* Fixed an issue when `NavigationMapView` would not display a map, when using CarPlay and custom tile storage location. ([#4399](https://github.com/mapbox/mapbox-navigation-ios/pull/4399))
+
 ### Camera
 
 * Fixes an issue where the camera's position was not calculated correctly when banners fully overlapped the map. ([#4400](https://github.com/mapbox/mapbox-navigation-ios/pull/4400))
