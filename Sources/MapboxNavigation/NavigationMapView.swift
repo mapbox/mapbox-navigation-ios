@@ -1720,7 +1720,8 @@ open class NavigationMapView: UIView {
      */
     public init(frame: CGRect,
                 navigationCameraType: NavigationCameraType = .mobile,
-                tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+                tileStoreLocation: TileStoreConfiguration.Location? = NavigationSettings.shared.tileStoreConfiguration.mapLocation
+) {
         super.init(frame: frame)
         let mapView = makeMapView(
             frame: frame,

@@ -473,10 +473,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var navigationService: NavigationService
     
-    var mapTileStore: TileStoreConfiguration.Location? {
-        NavigationSettings.shared.tileStoreConfiguration.mapLocation
-    }
-    
     /**
      The map view showing the route and the user’s location.
      */
@@ -625,9 +621,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     func setupNavigationMapView() {
-        let navigationMapView = NavigationMapView(frame: view.bounds,
-                                                  navigationCameraType: .carPlay,
-                                                  tileStoreLocation: mapTileStore)
+        let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
         navigationMapView.userLocationStyle = .courseView()
         navigationMapView.delegate = self
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
