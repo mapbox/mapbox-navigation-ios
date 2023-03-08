@@ -8,6 +8,11 @@
 * MapboxCoreNavigation now requires [MapboxDirections v2.11.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-alpha.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
 * MapboxNavigation now requires [MapboxMaps v10.12.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0-beta.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
 
+### Visual instructions
+* Fixed duplication of the road name components in the road shield and the label. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
+* Added support for localized road shields. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
+* Added `localizedRouteShieldRepresentationKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding value contains  localized route shield data. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
+
 ### Electronic horizon
 
 **Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.

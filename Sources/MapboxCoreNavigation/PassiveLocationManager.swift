@@ -241,7 +241,8 @@ open class PassiveLocationManager: NSObject {
             .matchesKey: matches,
             .roadNameKey: status.roadName,
             .localizedRoadNameKey: status.localizedRoadName(),
-            .routeShieldRepresentationKey: status.routeShieldRepresentation
+            .routeShieldRepresentationKey: status.routeShieldRepresentation,
+            .localizedRouteShieldRepresentationKey: status.localizedRouteShieldRepresentation()
         ]
         if let speedLimit = speedLimit {
             userInfo[.speedLimitKey] = speedLimit

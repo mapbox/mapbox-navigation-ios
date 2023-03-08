@@ -149,7 +149,8 @@ public extension Notification.Name {
      
      The user info dictionary contains the keys `PassiveLocationManager.NotificationUserInfoKey.locationKey`, `PassiveLocationManager.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationManager.NotificationUserInfoKey.matchesKey`,  `PassiveLocationManager.NotificationUserInfoKey.roadNameKey`,
      `PassiveLocationManager.NotificationUserInfoKey.localizedRoadNameKey`,
-     `PassiveLocationManager.NotificationUserInfoKey.mapMatchingResultKey` and `PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey`.
+     `PassiveLocationManager.NotificationUserInfoKey.mapMatchingResultKey`,
+     `PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey`and `PassiveLocationManager.NotificationUserInfoKey.localizedRouteShieldRepresentationKey`.
      
      - seealso: `routeControllerProgressDidUpdate`
      */
@@ -340,11 +341,16 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the localized current road name.
          */
         public static let localizedRoadNameKey: NotificationUserInfoKey = .init(rawValue: "localizedRoadName")
-        
+
         /**
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the road shield the user is currently traveling on.
          */
         public static let routeShieldRepresentationKey: NotificationUserInfoKey = .init(rawValue: "routeShieldRepresentation")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the localized road shield the user is currently traveling on.
+         */
+        public static let localizedRouteShieldRepresentationKey: NotificationUserInfoKey = .init(rawValue: "localizedRouteShieldRepresentation")
         
         /**
          A key in the user info dictionary of a `Notification.Name.didArriveAtWaypoint` notification. The corresponding value is a `MapboxDirections.Waypoint` object representing the current destination waypoint.
@@ -451,6 +457,11 @@ extension PassiveLocationManager {
          A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the road shield the user is currently traveling on.
          */
         public static let routeShieldRepresentationKey: NotificationUserInfoKey = .init(rawValue: "routeShieldRepresentation")
+
+        /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the localized road shield the user is currently traveling on.
+         */
+        public static let localizedRouteShieldRepresentationKey: NotificationUserInfoKey = .init(rawValue: "localizedRouteShieldRepresentation")
         
         /**
          A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the maximum speed limit of the current road.
