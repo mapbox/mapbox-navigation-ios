@@ -16,6 +16,7 @@
 ### Map
 
 * Fixed an issue when `NavigationMapView` would not display a map, when using CarPlay and custom tile storage location. ([#4399](https://github.com/mapbox/mapbox-navigation-ios/pull/4399))
+* Added `NavigationMapView.addDestinationAnnotation(_:identifier:styleLoaded:)`, `NavigationMapView.removeDestinationAnnotation(_:)` to present and remove the final destination annotation on a NavigationMapView. ([#4253](https://github.com/mapbox/mapbox-navigation-ios/pull/4253))
 
 ### Camera
 
