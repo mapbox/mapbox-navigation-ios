@@ -96,6 +96,15 @@ final class RouteStepProgressTests: TestCase {
 
         stepProgress.distanceTraveled = 90
         XCTAssertEqual(stepProgress.distanceRemaining, 10)
+
+        stepProgress.distanceTraveled = 99.5
+        XCTAssertEqual(stepProgress.distanceRemaining, 0.5)
+
+        stepProgress.distanceTraveled = 100
+        XCTAssertEqual(stepProgress.distanceRemaining, 0)
+
+        stepProgress.distanceTraveled = 100.1
+        XCTAssertEqual(stepProgress.distanceRemaining, 0)
     }
 
     func testReturnDurationRemaining() {

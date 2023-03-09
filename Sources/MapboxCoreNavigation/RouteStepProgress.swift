@@ -41,7 +41,7 @@ open class RouteStepProgress: Codable {
      Total distance in meters remaining on current step.
      */
     public var distanceRemaining: CLLocationDistance {
-        return step.distance - distanceTraveled
+        return max(step.distance - distanceTraveled, 0)
     }
 
     /**

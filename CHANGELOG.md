@@ -21,6 +21,9 @@
 
 * Fixes an issue where the camera's position was not calculated correctly when banners fully overlapped the map. ([#4400](https://github.com/mapbox/mapbox-navigation-ios/pull/4400))
 
+### Other changes
+* Fixes possible display negative remaining distance value. ([#4402](https://github.com/mapbox/mapbox-navigation-ios/pull/4402))
+
 ## v2.11.0
 
 ### Packaging
