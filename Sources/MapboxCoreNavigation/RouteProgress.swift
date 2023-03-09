@@ -92,7 +92,7 @@ open class RouteProgress: Codable {
      Total distance remaining in meters along route.
      */
     public var distanceRemaining: CLLocationDistance {
-        return route.distance - distanceTraveled
+        return max(route.distance - distanceTraveled, 0)
     }
 
     /**

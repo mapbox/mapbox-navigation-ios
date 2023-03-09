@@ -113,7 +113,9 @@ open class InstructionsCardViewController: UIViewController {
                 let visibleStep = remainingSteps[indexPath.row]
                 let isCurrentCardStep = currentCardStep == visibleStep
                 let distance = isCurrentCardStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
-                container.updateInstructionCard(distance: distance, isCurrentCardStep: isCurrentCardStep)
+                let normalizedDistance = max(distance, 0)
+                container.updateInstructionCard(distance: normalizedDistance,
+                                                isCurrentCardStep: isCurrentCardStep)
             }
         }
     }
