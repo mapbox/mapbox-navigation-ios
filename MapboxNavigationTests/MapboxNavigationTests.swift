@@ -374,7 +374,51 @@ class MapboxNavigationTests: XCTestCase {
         wait()
         assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
     }
-    
+
+    func testMultiLegRouteWithAlternatives() {
+        navigationMapView._locationChangesAllowed = false
+        navigationMapView.authorizationStatus = .denied
+        navigationMapView.userLocationStyle = nil
+
+        let timeout: TimeInterval = 2.0
+        let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        wait(for: [styleLoadedExpectation], timeout: timeout)
+
+        let center = CLLocationCoordinate2D(latitude: 37.412221, longitude: -121.887143)
+        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(center: center,
+                                                                        zoom: 9.5,
+                                                                        bearing: 0.0,
+                                                                        pitch: 0.0))
+
+        let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+            mapLoadedExpectation.fulfill()
+        }
+        wait(for: [mapLoadedExpectation], timeout: timeout)
+
+        let coordinates = [
+            CLLocationCoordinate2DMake(37.330536, -122.030373),
+            CLLocationCoordinate2DMake(37.412221, -121.887143),
+            CLLocationCoordinate2DMake(37.493855, -121.936005)
+        ]
+        let routeName = "multileg-route-alternatives"
+        let routes = routes(for: coordinates, routeName: routeName)
+        guard let mainRoute = routes.first else {
+            XCTFail("Route should be valid.")
+            return
+        }
+
+        navigationMapView.show(routes, legIndex: 0)
+        navigationMapView.showRouteDurations(along: routes)
+        navigationMapView.showWaypoints(on: mainRoute)
+        wait()
+
+        assertImageSnapshot(matching: UIImageView(image: navigationMapView.snapshot()), as: .image(precision: 0.95))
+    }
+
     func routeResponse(for coordinates: [CLLocationCoordinate2D], routeName: String) -> RouteResponse {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         

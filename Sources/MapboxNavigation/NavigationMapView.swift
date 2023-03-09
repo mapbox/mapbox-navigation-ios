@@ -1297,9 +1297,6 @@ open class NavigationMapView: UIView {
         let shape = delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? FeatureCollection(features: features)
         
         if route.legs.count > 1 {
-            removeAlternativeRoutes()
-            routes = [route]
-            
             do {
                 let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
                 

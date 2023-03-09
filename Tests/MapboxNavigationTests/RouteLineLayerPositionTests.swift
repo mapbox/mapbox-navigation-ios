@@ -21,7 +21,6 @@ class RouteLineLayerPositionTests: TestCase {
     }()
     
     func testRouteLineLayerPosition() {
-        
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
         
         let styleJSONObject: [String: Any] = [
@@ -331,6 +330,41 @@ class RouteLineLayerPositionTests: TestCase {
         ]
         allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to add route line at certain position with different circle layers.")
+    }
+
+    func testLayersForMultiLegRouteWithAlternatives() {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.330536, longitude: -122.030373),
+            CLLocationCoordinate2D(latitude: 37.412221, longitude: -121.887143),
+            CLLocationCoordinate2D(latitude: 37.493855, longitude: -121.936005),
+        ])
+
+        let response = Fixture.routeResponse(from: "multileg-route-alternatives",
+                                             options: navigationRouteOptions)
+        let routeResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
+        let mainRoute = routeResponse.currentRoute!
+        let routes = response.routes!
+
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
+        let mapLoadingExpectation = expectation(description: "Map loading expectation")
+        mapLoadingExpectation.assertForOverFulfill = false
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
+            mapLoadingExpectation.fulfill()
+        })
+
+
+        wait(for: [mapLoadingExpectation], timeout: 1.0)
+        navigationMapView.showcase(routes)
+        navigationMapView.showWaypoints(on: mainRoute)
+
+        let allLayerIds = Set(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id }))
+        var expectedLayers: Set<String> = []
+        routes.enumerated().forEach {
+            expectedLayers.insert($0.element.identifier(.route(isMainRoute: $0.offset == 0)))
+            expectedLayers.insert($0.element.identifier(.routeCasing(isMainRoute: $0.offset == 0)))
+        }
+
+        XCTAssertTrue(allLayerIds.isSuperset(of: expectedLayers))
     }
     
     func addCircleLayerInRuntime(mapView: MapView,
