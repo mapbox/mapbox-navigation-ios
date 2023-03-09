@@ -456,10 +456,12 @@ class RouteControllerTests: TestCase {
             let roadName = userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
             let localizedRoadName = userInfo?[RouteController.NotificationUserInfoKey.localizedRoadNameKey] as? String
             let routeShieldRepresentation = userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            let localizedRouteShieldRepresentation = userInfo?[RouteController.NotificationUserInfoKey.localizedRouteShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
 
             XCTAssertEqual(roadName, status.roadName)
             XCTAssertEqual(localizedRoadName, status.localizedRoadName())
             XCTAssertEqual(routeShieldRepresentation, status.routeShieldRepresentation)
+            XCTAssertEqual(localizedRouteShieldRepresentation, status.localizedRouteShieldRepresentation())
 
             return true
         }

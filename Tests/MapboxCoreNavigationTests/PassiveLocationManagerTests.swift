@@ -245,6 +245,7 @@ class PassiveLocationManagerTests: TestCase {
             let localizedRoadName = userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRoadNameKey] as? String
             let matches = userInfo?[PassiveLocationManager.NotificationUserInfoKey.matchesKey] as? [Match]
             let routeShieldRepresentation = userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as?  VisualInstruction.Component.ImageRepresentation
+            let localizedRouteShieldRepresentation = userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRouteShieldRepresentationKey] as?  VisualInstruction.Component.ImageRepresentation
             let mapMatchingResult = userInfo?[PassiveLocationManager.NotificationUserInfoKey.mapMatchingResultKey] as? MapMatchingResult
             let speedLimit = userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
             let signStandard = userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
@@ -263,6 +264,7 @@ class PassiveLocationManagerTests: TestCase {
             XCTAssertEqual(localizedRoadName, "localized name")
             XCTAssertEqual(matches, expectedMatches)
             XCTAssertEqual(routeShieldRepresentation, status.routeShieldRepresentation)
+            XCTAssertEqual(localizedRouteShieldRepresentation, status.localizedRouteShieldRepresentation())
             XCTAssertNotNil(mapMatchingResult)
             XCTAssertEqual(speedLimit, expectedSpeedLimit)
             XCTAssertEqual(signStandard, .mutcd)
@@ -388,10 +390,13 @@ class PassiveLocationManagerTests: TestCase {
 
     private func navigationStatus(with speedLimit: SpeedLimit? = nil) -> NavigationStatus {
         let shield = Shield(baseUrl: "shield_url", displayRef: "ref", name: "shield", textColor: "")
+        let localizedShield = Shield(baseUrl: "localized_shield_url", displayRef: "ref", name: "shield", textColor: "")
         let roads: [MapboxNavigationNative.RoadName] = [
-            .init(text: "name", language: "", imageBaseUrl: nil, shield: shield),
+            .init(text: "name", language: "", imageBaseUrl: nil, shield: nil),
+            .init(text: "shield name", language: "", imageBaseUrl: nil, shield: shield),
             .init(text: "/", language: "", imageBaseUrl: nil, shield: nil),
             .init(text: "localized name", language: Locale.nationalizedCurrent.languageCode ?? "", imageBaseUrl: nil, shield: nil),
+            .init(text: "localized shield name", language: Locale.nationalizedCurrent.languageCode ?? "", imageBaseUrl: nil, shield: localizedShield),
         ]
         return TestNavigationStatusProvider.createNavigationStatus(roads: roads,
                                                                    speedLimit: speedLimit)

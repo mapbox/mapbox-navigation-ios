@@ -169,7 +169,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
         let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
-            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.localizedRouteShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             navigationView.wayNameView.label.updateRoad(roadName: roadName, representation: representation)
             
             // The `WayNameView` will be hidden when not under following camera state.

@@ -318,7 +318,7 @@ open class CarPlayMapViewController: UIViewController {
         
         let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRoadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
-            let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.localizedRouteShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
             wayNameView.label.updateRoad(roadName: roadName, representation: representation, idiom: .carPlay)
             wayNameView.containerView.isHidden = false
         } else {

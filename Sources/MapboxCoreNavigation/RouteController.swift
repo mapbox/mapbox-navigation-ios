@@ -477,7 +477,8 @@ open class RouteController: NSObject {
         let userInfo: [NotificationUserInfoKey: Any] = [
             NotificationUserInfoKey.roadNameKey: status.roadName,
             NotificationUserInfoKey.localizedRoadNameKey: status.localizedRoadName(),
-            NotificationUserInfoKey.routeShieldRepresentationKey: status.routeShieldRepresentation
+            NotificationUserInfoKey.routeShieldRepresentationKey: status.routeShieldRepresentation,
+            NotificationUserInfoKey.localizedRouteShieldRepresentationKey: status.localizedRouteShieldRepresentation()
         ]
         NotificationCenter.default.post(name: .currentRoadNameDidChange, object: self, userInfo: userInfo)
     }
