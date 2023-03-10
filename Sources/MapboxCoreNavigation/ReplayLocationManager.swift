@@ -15,14 +15,19 @@ open class ReplayLocationManager: NavigationLocationManager {
      */
     public var speedMultiplier: TimeInterval = 1
     
+    private var _locations: [CLLocation]
     /**
      `locations` to be replayed.
      */
     public var locations: [CLLocation] {
-        didSet {
+        get {
+            _locations
+        }
+        set {
+            _locations = newValue
             currentIndex = 0
             verifyParameters()
-            self.events = locations.map { ReplayEvent(from: $0) }
+            self.events = _locations.map { ReplayEvent(from: $0) }
         }
     }
     
@@ -71,7 +76,7 @@ open class ReplayLocationManager: NavigationLocationManager {
     private var nextTickWorkItem: DispatchWorkItem?
     
     public init(locations: [CLLocation]) {
-        self.locations = locations.sorted { $0.timestamp < $1.timestamp }
+        self._locations = locations.sorted { $0.timestamp < $1.timestamp }
         self.events = locations.map { ReplayEvent(from: $0) }
         super.init()
         
@@ -80,7 +85,7 @@ open class ReplayLocationManager: NavigationLocationManager {
     }
     
     public init(history: History) {
-        self.locations = history.rawLocations.sorted { $0.timestamp < $1.timestamp }
+        self._locations = history.rawLocations.sorted { $0.timestamp < $1.timestamp }
         self.events = history.events.map { ReplayEvent(from: $0) }
         
         super.init()
@@ -201,7 +206,7 @@ open class ReplayLocationManager: NavigationLocationManager {
             
             previousNewLocationTimestamp = newTimestamp
         }
-        self.locations = advancedLocations
+        self._locations = advancedLocations
     }
 }
 

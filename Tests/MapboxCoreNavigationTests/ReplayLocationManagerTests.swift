@@ -117,4 +117,33 @@ final class ReplayLocationManagerTests: TestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(0.2))
         XCTAssertGreaterThan(ticksCount, 1)
     }
+    
+    func testHistoryInitializationDoesNotLooseCustomEvents() {
+        let firstLocation = CLLocation(coordinate: .init(latitude: 0, longitude: 0),
+                                       altitude: 0,
+                                       horizontalAccuracy: 0,
+                                       verticalAccuracy: 0,
+                                       timestamp: Date())
+        let secondLocation = CLLocation(coordinate: .init(latitude: 1, longitude: 1),
+                                        altitude: 0,
+                                        horizontalAccuracy: 0,
+                                        verticalAccuracy: 0,
+                                        timestamp: Date())
+        
+        let manager = ReplayLocationManager(history: History(events: [
+            LocationUpdateHistoryEvent(timestamp: Date().timeIntervalSince1970,
+                                       location: firstLocation),
+            UserPushedHistoryEvent(timestamp: Date().timeIntervalSince1970,
+                                   type: "test",
+                                   properties: "properties"),
+            LocationUpdateHistoryEvent(timestamp: Date().timeIntervalSince1970,
+                                       location: secondLocation)
+        ]))
+        
+        XCTAssert(manager.events.contains {
+            guard case let .historyEvent(event) = $0.kind else { return false }
+            
+            return event is UserPushedHistoryEvent
+        })
+    }
 }
