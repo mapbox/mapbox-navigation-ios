@@ -21,6 +21,7 @@
 ### Map
 
 * Fixed an issue when `NavigationMapView` would not display a map, when using CarPlay and custom tile storage location. ([#4399](https://github.com/mapbox/mapbox-navigation-ios/pull/4399))
+* Fixed non displayed alternative routes for multi legs routes. ([#4404](https://github.com/mapbox/mapbox-navigation-ios/pull/4404))
 
 ### Camera
 

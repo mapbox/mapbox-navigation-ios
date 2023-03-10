@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C3ADC5029BA8B19001AA409 /* multileg-route-alternatives.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADC4F29BA8B19001AA409 /* multileg-route-alternatives.json */; };
+		2C3ADC5129BA8C32001AA409 /* multileg-route-alternatives.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADC4F29BA8B19001AA409 /* multileg-route-alternatives.json */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */; };
@@ -92,6 +94,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C3ADC4F29BA8B19001AA409 /* multileg-route-alternatives.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "multileg-route-alternatives.json"; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -378,6 +381,7 @@
 		8AE170B62853F72F00257E2C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2C3ADC4F29BA8B19001AA409 /* multileg-route-alternatives.json */,
 				8AF3423F2857DE4800791E33 /* two_routes.json */,
 				8A8EDF1B284ABE55009DE805 /* route.json */,
 				8AF3423A2857C1C400791E33 /* two_routes_with_two_legs.json */,
@@ -704,6 +708,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AF3423C2857C5CC00791E33 /* two_routes_with_two_legs.json in Resources */,
+				2C3ADC5129BA8C32001AA409 /* multileg-route-alternatives.json in Resources */,
 				8A8EDF1C284ABE55009DE805 /* route.json in Resources */,
 				8AC81F66284832E200662395 /* LaunchScreen.storyboard in Resources */,
 				8AC81F63284832E200662395 /* Assets.xcassets in Resources */,
@@ -718,6 +723,7 @@
 			files = (
 				8AF3423D2857C64B00791E33 /* route.json in Resources */,
 				8AF342412857DE4800791E33 /* two_routes.json in Resources */,
+				2C3ADC5029BA8B19001AA409 /* multileg-route-alternatives.json in Resources */,
 				8AF3423E2857C64D00791E33 /* two_routes_with_two_legs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
