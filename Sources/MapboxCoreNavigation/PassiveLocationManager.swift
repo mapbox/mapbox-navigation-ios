@@ -430,8 +430,6 @@ extension TileEndpointConfiguration {
                   dataset: datasetProfileIdentifier.rawValue,
                   version: tilesVersion,
                   token: accessToken,
-                  userAgent: URLSession.userAgent,
-                  navigatorVersion: "",
                   isFallback: targetVersion != nil,
                   versionBeforeFallback: targetVersion ?? tilesVersion,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
