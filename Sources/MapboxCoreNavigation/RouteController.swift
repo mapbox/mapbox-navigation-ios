@@ -368,7 +368,7 @@ open class RouteController: NSObject {
         unsubscribeNotifications()
         routeTask?.cancel()
     }
-    
+
     private func update(to status: NavigationStatus) {
         guard let rawLocation = rawLocation,
               isValidNavigationStatus(status)
@@ -377,11 +377,12 @@ open class RouteController: NSObject {
         let snappedLocation = CLLocation(status.location)
         updateIndexes(status: status, progress: routeProgress)
         // Notify observers if the step’s remaining distance has changed.
+        let routeAlertProvider = self as RouteAlertProvider
         update(progress: routeProgress,
                status: status,
                with: snappedLocation,
                rawLocation: rawLocation,
-               upcomingRouteAlerts: status.upcomingRouteAlerts,
+               upcomingRouteAlerts: routeAlertProvider.routeAlerts(with: status),
                mapMatchingResult: MapMatchingResult(status: status),
                routeShapeIndex: Int(status.geometryIndex))
         
@@ -398,6 +399,13 @@ open class RouteController: NSObject {
             // Check for faster route proactively (if reroutesProactively is enabled)
             refreshAndCheckForFasterRoute(from: snappedLocation, routeProgress: routeProgress)
         }
+    }
+
+    // TODO: Remove the usage of deprecated method after updating to the NN version
+    // with the fix for ids in the upcomingRouteAlerts
+    @available(*, deprecated)
+    func routeAlerts(with status: NavigationStatus) -> [UpcomingRouteAlert] {
+        status.upcomingRouteAlerts
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
@@ -1143,6 +1151,11 @@ extension RouteController {
     }
 }
 
+fileprivate protocol RouteAlertProvider {
+    func routeAlerts(with status: NavigationStatus) -> [UpcomingRouteAlert]
+}
+
+extension RouteController: RouteAlertProvider {}
 
 enum RouteControllerError: Error {
     case internalError

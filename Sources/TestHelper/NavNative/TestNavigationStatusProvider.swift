@@ -17,7 +17,8 @@ public final class TestNavigationStatusProvider {
                                               voiceInstruction: VoiceInstruction? = nil,
                                               bannerInstruction: BannerInstruction? = nil,
                                               speedLimit: SpeedLimit? = nil,
-                                              activeGuidanceInfo: ActiveGuidanceInfo? = nil) -> NavigationStatus {
+                                              activeGuidanceInfo: ActiveGuidanceInfo? = nil,
+                                              upcomingRouteAlertUpdates: [UpcomingRouteAlertUpdate] = []) -> NavigationStatus {
         let fixLocation = FixLocation(location ?? CLLocation(latitude: 37.788443, longitude: -122.4020258))
         let shield = Shield(baseUrl: "shield_url", displayRef: "ref", name: "shield", textColor: "")
         let road = MapboxNavigationNative.RoadName(text: "name", language: "lang", imageBaseUrl: "base_image_url", shield: shield)
@@ -46,6 +47,7 @@ public final class TestNavigationStatusProvider {
                      offRoadProba: 0,
                      activeGuidanceInfo: activeGuidanceInfo,
                      upcomingRouteAlerts: [],
+                     upcomingRouteAlertUpdates: upcomingRouteAlertUpdates,
                      nextWaypointIndex: 0,
                      layer: nil)
     }
