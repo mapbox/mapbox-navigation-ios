@@ -57,7 +57,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
         delegate = NavigationServiceDelegateSpy()
         routeResponse = makeRouteResponse()
         route = routeResponse.routes!.first!
-        initialRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
+        initialRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
 
         alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)

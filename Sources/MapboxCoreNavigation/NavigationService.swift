@@ -317,7 +317,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)")
     public convenience init(routeResponse: RouteResponse,
                             routeIndex: Int,
                             routeOptions: RouteOptions,
@@ -350,7 +350,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)")
     public convenience init(routeResponse: RouteResponse,
                             routeIndex: Int,
                             routeOptions: RouteOptions,
@@ -384,17 +384,17 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routerType: An optional router type to use for traversing the route.
      - parameter customActivityType: Custom `CLActivityType` to be used for location updates. If not specified, SDK will pick it automatically for current navigation profile.
      */
-    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)")
     required public convenience init(routeResponse: RouteResponse,
-                         routeIndex: Int,
-                         routeOptions: RouteOptions,
-                         customRoutingProvider: RoutingProvider? = nil,
-                         credentials: Credentials,
-                         locationSource: NavigationLocationManager? = nil,
-                         eventsManagerType: NavigationEventsManager.Type? = nil,
-                         simulating simulationMode: SimulationMode? = nil,
-                         routerType: Router.Type? = nil,
-                         customActivityType: CLActivityType? = nil) {
+                                     routeIndex: Int,
+                                     routeOptions: RouteOptions,
+                                     customRoutingProvider: RoutingProvider? = nil,
+                                     credentials: Credentials,
+                                     locationSource: NavigationLocationManager? = nil,
+                                     eventsManagerType: NavigationEventsManager.Type? = nil,
+                                     simulating simulationMode: SimulationMode? = nil,
+                                     routerType: Router.Type? = nil,
+                                     customActivityType: CLActivityType? = nil) {
         self.init(indexedRouteResponse: .init(routeResponse: routeResponse,
                                               routeIndex: routeIndex),
                   customRoutingProvider: customRoutingProvider,
@@ -416,6 +416,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
+     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
      */
     required public init(indexedRouteResponse: IndexedRouteResponse,
                          customRoutingProvider: RoutingProvider? = nil,
@@ -424,7 +425,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil,
-                         customActivityType: CLActivityType? = nil) {
+                         customActivityType: CLActivityType? = nil,
+                         userInfo: [String: String?]? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
@@ -442,14 +444,16 @@ public class MapboxNavigationService: NSObject, NavigationService {
                    indexedRouteResponse: indexedRouteResponse,
                    customRoutingProvider: customRoutingProvider,
                    eventsManagerType: eventsManagerType,
-                   customActivityType: customActivityType)
+                   customActivityType: customActivityType,
+                   userInfo: userInfo)
     }
 
     private func commonInit(routerType: Router.Type?,
                             indexedRouteResponse: IndexedRouteResponse,
                             customRoutingProvider: RoutingProvider?,
                             eventsManagerType: NavigationEventsManager.Type?,
-                            customActivityType: CLActivityType?) {
+                            customActivityType: CLActivityType?,
+                            userInfo: [String: String?]?) {
         resumeNotifications()
 
         let routerType = routerType ?? DefaultRouter.self
@@ -462,6 +466,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         let eventType = eventsManagerType ?? NavigationEventsManager.self
         _eventsManager = eventType.init(activeNavigationDataSource: self,
                                         accessToken: self.credentials.accessToken)
+        _eventsManager?.userInfo = userInfo
         locationManager.activityType = customActivityType ?? options.activityType
         bootstrapEvents()
         
@@ -481,6 +486,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter credentials: Credentials to authorize additional data requests throughout the route.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter routerType: An optional router type to use for traversing the route.
+     - parameter customActivityType: Custom `CLActivityType` to be used for location updates. If not specified, SDK will pick it automatically for current navigation profile.
+     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
      - returns `nil` if provided `historyFileDump` does not contain valid initial route.
      */
     public convenience init?(history: History,
@@ -489,7 +496,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                              credentials: Credentials,
                              eventsManagerType: NavigationEventsManager.Type? = nil,
                              routerType: Router.Type? = nil,
-                             customActivityType: CLActivityType? = nil) {
+                             customActivityType: CLActivityType? = nil,
+                             userInfo: [String: String?]? = nil) {
         guard let routeResponse = history.initialRoute else {
             return nil
         }
@@ -502,7 +510,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                   locationSource: replayLocationManager,
                   eventsManagerType: eventsManagerType,
                   routerType: routerType,
-                  customActivityType: customActivityType)
+                  customActivityType: customActivityType,
+                  userInfo: userInfo)
         
         if customHistoryEventsListener == nil {
             replayLocationManager.eventsListener = self
@@ -518,7 +527,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
          routerType: Router.Type?,
          customActivityType: CLActivityType?,
          simulatedLocationSourceType: SimulatedLocationManager.Type,
-         poorGPSTimer: DispatchTimer) {
+         poorGPSTimer: DispatchTimer,
+         userInfo: [String: String?]? = nil
+    ) {
         self.nativeLocationSource = locationSource
         self.credentials = credentials
         self.simulationMode = simulationMode
@@ -530,7 +541,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                    indexedRouteResponse: indexedRouteResponse,
                    customRoutingProvider: customRoutingProvider,
                    eventsManagerType: eventsManagerType,
-                   customActivityType: customActivityType)
+                   customActivityType: customActivityType,
+                   userInfo: userInfo)
     }
     
     deinit {

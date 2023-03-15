@@ -92,6 +92,7 @@
 		2C18A12E2988729C00750CEE /* EventStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C18A12D2988729C00750CEE /* EventStep.swift */; };
 		2C193C31290A9BC30050A57F /* PredictiveCacheManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46D290A8CA10067FDCF /* PredictiveCacheManagerTests.swift */; };
 		2C193C32290A9BC30050A57F /* PredictiveCacheOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46C290A8CA10067FDCF /* PredictiveCacheOptionsTests.swift */; };
+		2C234B4329AEAD2B00830723 /* PassiveLocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */; };
 		2C257377292B836B00941307 /* ReentrantImageDownloaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */; };
 		2C2880A1291A82630063E5B7 /* RerouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */; };
 		2C2880A6291AB7A10063E5B7 /* RerouteDetectorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */; };
@@ -108,7 +109,6 @@
 		2C58515F292523670077A558 /* RouteControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */; };
 		2C585164292530AF0077A558 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
 		2C585165292530B70077A558 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
-		2C585167292531340077A558 /* PassiveLocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */; };
 		2C59B995298330F8003D4EA0 /* FeedbackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B994298330F8003D4EA0 /* FeedbackMetadata.swift */; };
 		2C67751C290AC4A6009C5EE4 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */; };
@@ -142,6 +142,9 @@
 		2CA6105429802ACF003E49A7 /* MonitorConnectivityTypeProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA6105329802ACF003E49A7 /* MonitorConnectivityTypeProviderTests.swift */; };
 		2CAEABD12930D25300DE851A /* MapboxNavigationServiceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEABD02930D25300DE851A /* MapboxNavigationServiceIntegrationTests.swift */; };
 		2CAEABD32930D87B00DE851A /* RouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEABD22930D87B00DE851A /* RouterSpy.swift */; };
+		2CAEDB1D29AEC08B00E59543 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CAEDB1C29AEC08B00E59543 /* MapboxNavigationNative.framework */; platformFilter = ios; };
+		2CAEDB1E29AEC08B00E59543 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CAEDB1C29AEC08B00E59543 /* MapboxNavigationNative.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CAEDB2029AF7F4200E59543 /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
 		2CC3043529A3DCDE00A3318F /* NavigationStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3043429A3DCDE00A3318F /* NavigationStatusTests.swift */; };
 		2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */; };
 		2CE25130291A56D900C0FA15 /* IdleTimerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2512E291A56CE00C0FA15 /* IdleTimerManagerTests.swift */; };
@@ -152,6 +155,7 @@
 		2CF3F8CD2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF3F8CC2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift */; };
 		2CF5F5CA298155EC00B34C8C /* NavigationNativeEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5F5C82981500E00B34C8C /* NavigationNativeEventsManagerTests.swift */; };
 		2CF5F5CC29816B2000B34C8C /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5F5CB29816B2000B34C8C /* Telemetry.swift */; };
+		2CF8318B29AEBB0F001D26C9 /* NativeTelemetryIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE1B2F329ACDC4E00745556 /* NativeTelemetryIntegrationTests.swift */; };
 		2CFAE203291C4E8300562E5F /* TestNavigationStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFAE202291C4E8300562E5F /* TestNavigationStatusProvider.swift */; };
 		2CFBC1CE2940BD230073EFFA /* MultiplexedSpeechSynthesizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFBC1CD2940BD230073EFFA /* MultiplexedSpeechSynthesizerTests.swift */; };
 		2E50E0C0264E35CA009D3848 /* RoadObjectMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50E0BF264E35CA009D3848 /* RoadObjectMatcher.swift */; };
@@ -577,8 +581,6 @@
 		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
 		E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
-		E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDAA265E22B900E158E0 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; };
 		E2C1CDAB265E22B900E158E0 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDAD265E22BD00E158E0 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; };
@@ -692,8 +694,8 @@
 				E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */,
 				E2C1CDB1265E22C100E158E0 /* MapboxCommon.xcframework in Embed Frameworks */,
 				E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
-				E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */,
 				E2C1CDAE265E22BD00E158E0 /* Turf.xcframework in Embed Frameworks */,
+				2CAEDB1E29AEC08B00E59543 /* MapboxNavigationNative.framework in Embed Frameworks */,
 				E2C1CDAB265E22B900E158E0 /* Polyline.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -833,8 +835,10 @@
 		2CA6105329802ACF003E49A7 /* MonitorConnectivityTypeProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorConnectivityTypeProviderTests.swift; sourceTree = "<group>"; };
 		2CAEABD02930D25300DE851A /* MapboxNavigationServiceIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxNavigationServiceIntegrationTests.swift; sourceTree = "<group>"; };
 		2CAEABD22930D87B00DE851A /* RouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterSpy.swift; sourceTree = "<group>"; };
+		2CAEDB1C29AEC08B00E59543 /* MapboxNavigationNative.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxNavigationNative.framework; path = "Carthage/Build/MapboxNavigationNative.xcframework/ios-arm64_x86_64-simulator/MapboxNavigationNative.framework"; sourceTree = "<group>"; };
 		2CC3043429A3DCDE00A3318F /* NavigationStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStatusTests.swift; sourceTree = "<group>"; };
 		2CDF5C962919628100C41082 /* NavigationLocationManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerSpy.swift; sourceTree = "<group>"; };
+		2CE1B2F329ACDC4E00745556 /* NativeTelemetryIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTelemetryIntegrationTests.swift; sourceTree = "<group>"; };
 		2CE2512E291A56CE00C0FA15 /* IdleTimerManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdleTimerManagerTests.swift; sourceTree = "<group>"; };
 		2CE89C2A299E6C2A000A2E34 /* InterchangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterchangeTests.swift; sourceTree = "<group>"; };
 		2CE89C2C299E6D09000A2E34 /* JunctionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JunctionTests.swift; sourceTree = "<group>"; };
@@ -1428,9 +1432,9 @@
 			files = (
 				E2C1CDAA265E22B900E158E0 /* Polyline.xcframework in Frameworks */,
 				E2C1CDB0265E22C100E158E0 /* MapboxCommon.xcframework in Frameworks */,
-				E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */,
 				E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */,
 				E2C1CDAD265E22BD00E158E0 /* Turf.xcframework in Frameworks */,
+				2CAEDB1D29AEC08B00E59543 /* MapboxNavigationNative.framework in Frameworks */,
 				E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1580,6 +1584,7 @@
 		2C585154292521C20077A558 /* MapboxCoreNavigationIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
+				2CE1B2F329ACDC4E00745556 /* NativeTelemetryIntegrationTests.swift */,
 				2CAEABD02930D25300DE851A /* MapboxNavigationServiceIntegrationTests.swift */,
 				2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */,
 				2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */,
@@ -1588,16 +1593,6 @@
 			);
 			name = MapboxCoreNavigationIntegrationTests;
 			path = Tests/MapboxCoreNavigationIntegrationTests;
-			sourceTree = "<group>";
-		};
-		2CE89C29299E6C17000A2E34 /* EV */ = {
-			isa = PBXGroup;
-			children = (
-				2CE89C2A299E6C2A000A2E34 /* InterchangeTests.swift */,
-				2CE89C2C299E6D09000A2E34 /* JunctionTests.swift */,
-				2CE89C2E299E6E08000A2E34 /* RoadObjectKindTests.swift */,
-			);
-			path = EV;
 			sourceTree = "<group>";
 		};
 		2C856447297AD64C006EFCBB /* Telemetry */ = {
@@ -1625,6 +1620,23 @@
 				2CA6104C297EF78C003E49A7 /* DeviceSpy.swift */,
 			);
 			path = System;
+			sourceTree = "<group>";
+		};
+		2CE1B2F229ACDA4A00745556 /* Telemtry */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Telemtry;
+			sourceTree = "<group>";
+		};
+		2CE89C29299E6C17000A2E34 /* EV */ = {
+			isa = PBXGroup;
+			children = (
+				2CE89C2A299E6C2A000A2E34 /* InterchangeTests.swift */,
+				2CE89C2C299E6D09000A2E34 /* JunctionTests.swift */,
+				2CE89C2E299E6E08000A2E34 /* RoadObjectKindTests.swift */,
+			);
+			path = EV;
 			sourceTree = "<group>";
 		};
 		2CF3F8C92926D38A00BB2B9C /* Helper */ = {
@@ -1723,6 +1735,7 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
+				2CE1B2F229ACDA4A00745556 /* Telemtry */,
 				2CF3F8C92926D38A00BB2B9C /* Helper */,
 				8A0155E628F8EC58009E299C /* Preview */,
 				8AB316BD26BC9F1800C3AC76 /* Camera */,
@@ -2174,6 +2187,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2CAEDB1C29AEC08B00E59543 /* MapboxNavigationNative.framework */,
 				E2C9D8A8268DCE31005D8955 /* XCTest.framework */,
 				E2CC18F3265FA28900D61CBC /* Cedar.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
@@ -3130,7 +3144,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C585167292531340077A558 /* PassiveLocationManagerIntegrationTests.swift in Sources */,
+				2CF8318B29AEBB0F001D26C9 /* NativeTelemetryIntegrationTests.swift in Sources */,
+				2CAEDB2029AF7F4200E59543 /* Dictionary+Equality.swift in Sources */,
 				2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */,
 				2C9DDBE42934D8FD007F8CFD /* MapboxCoreNavigationIntegrationTests.swift in Sources */,
 				2C58515F292523670077A558 /* RouteControllerIntegrationTests.swift in Sources */,
@@ -3438,6 +3453,7 @@
 				2CF3F8CD2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift in Sources */,
 				DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */,
 				355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */,
+				2C234B4329AEAD2B00830723 /* PassiveLocationManagerIntegrationTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneSnapshotTests.swift in Sources */,
 				B47C1B86261FD3E00078546C /* NavigationPlotter.swift in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
@@ -4243,7 +4259,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 140;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/MapboxNavigationNative.xcframework/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = Sources/MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -4270,7 +4289,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 140;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/MapboxNavigationNative.xcframework/ios-arm64_x86_64-simulator",
+				);
 				INFOPLIST_FILE = Sources/MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
