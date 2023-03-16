@@ -41,6 +41,7 @@ class NavigationServiceTests: TestCase {
     let indexedRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
     var location: CLLocation!
     var lastLocation: CLLocation!
+    var userInfo: [String: String?] = ["key": "value"]
 
     var delegate: NavigationServiceDelegateSpy!
     var locationManager: NavigationLocationManagerSpy!
@@ -103,7 +104,8 @@ class NavigationServiceTests: TestCase {
                                                         routerType: RouterSpy.self,
                                                         customActivityType: .automotiveNavigation,
                                                         simulatedLocationSourceType: SimulatedLocationManagerSpy.self,
-                                                        poorGPSTimer: poorGPSTimer)
+                                                        poorGPSTimer: poorGPSTimer,
+                                                        userInfo: userInfo)
         navigationService.delegate = delegate
         return navigationService
     }
@@ -120,6 +122,11 @@ class NavigationServiceTests: TestCase {
         } else {
             XCTAssertFalse(usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
         }
+    }
+
+    func testSetUserInfoToEventsManager() {
+        service = makeService()
+        XCTAssertEqual(eventsManager.userInfo, userInfo)
     }
 
     func testStartIfNeverSimulation() {
