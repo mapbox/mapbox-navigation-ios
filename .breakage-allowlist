@@ -1,1 +1,3 @@
 Func CarPlayManagerDelegate.carPlayManager(_:willPresent:) has been added as a protocol requirement
+Constructor MapboxNavigationService.init(history:customHistoryEventsListener:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:) has been removed
+Constructor MapboxNavigationService.init(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:) has been removed

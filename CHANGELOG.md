@@ -8,6 +8,9 @@
 * MapboxCoreNavigation now requires [MapboxDirections v2.11.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-alpha.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
 * MapboxNavigation now requires [MapboxMaps v10.12.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0-rc.1). ([#4408](https://github.com/mapbox/mapbox-navigation-ios/pull/4408))
 
+### Routing
+* Added an optional `userInfo` argument to the `NavigationService(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)` and `NavigationService(history:customHistoryEventsListener:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:userInfo:)`. ([#4395](https://github.com/mapbox/mapbox-navigation-ios/pull/4395))
+
 ### Visual instructions
 * Fixed duplication of the road name components in the road shield and the label. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
 * Added support for localized road shields. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
