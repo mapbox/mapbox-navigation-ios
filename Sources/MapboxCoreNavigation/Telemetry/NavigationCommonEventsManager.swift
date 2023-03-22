@@ -209,7 +209,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
         sendFeedbackEvents([event.coreEvent])
     }
     
-    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
+    func navigationCancelEvent(rating potentialRating: Int?, comment: String?) -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? EventRating.unrated
@@ -358,7 +358,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
         sendEvent(with: attributes)
     }
     
-    func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
+    func sendCancelEvent(rating: Int?, comment: String?) {
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary() else { return }
         sendEvent(with: attributes)
     }

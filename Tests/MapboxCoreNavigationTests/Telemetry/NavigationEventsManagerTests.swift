@@ -10,6 +10,7 @@ final class NavigationCommonEventsManagerSpy: NavigationCommonEventsManager {
     var sendPassiveNavigationFeedbackCalled = false
     var sendCarPlayConnectEventCalled = false
     var sendCarPlayDisconnectEventCalled = false
+    var sendCancelEventCalled = false
 
     var passedFeedbackEvent: FeedbackEvent?
     var passedSource: FeedbackSource?
@@ -17,6 +18,8 @@ final class NavigationCommonEventsManagerSpy: NavigationCommonEventsManager {
     var passedPassiveNavigationType: PassiveNavigationFeedbackType?
     var passedDescription: String?
     var passedCompletionHandler: UserFeedbackCompletionHandler?
+    var passedRating: Int?
+    var passedComment: String?
 
     var returnedFeedbackEvent: FeedbackEvent? = Fixture.createFeedbackEvent()
 
@@ -57,6 +60,12 @@ final class NavigationCommonEventsManagerSpy: NavigationCommonEventsManager {
 
     override func sendCarPlayDisconnectEvent() {
         sendCarPlayDisconnectEventCalled = true
+    }
+
+    override func sendCancelEvent(rating: Int?, comment: String?) {
+        sendCancelEventCalled = true
+        passedRating = rating
+        passedComment = comment
     }
 }
 
@@ -225,5 +234,13 @@ class NavigationEventsManagerTests: TestCase {
         let event = eventManager.createFeedback()
         XCTAssertEqual(navNativeEventsManager?.createFeedbackCalled, true)
         XCTAssertNotNil(event)
+    }
+
+    func testSendCancelNavigationEventIfDefault() {
+        configureEventsManager(useNavNative: false)
+        eventManager.sendCancelEvent(rating: 5, comment: "comment")
+        XCTAssertEqual(commonEventsManager?.sendCancelEventCalled, true)
+        XCTAssertEqual(commonEventsManager?.passedRating, 5)
+        XCTAssertEqual(commonEventsManager?.passedComment, "comment")
     }
 }

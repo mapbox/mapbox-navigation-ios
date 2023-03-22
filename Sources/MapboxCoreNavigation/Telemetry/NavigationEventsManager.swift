@@ -225,7 +225,7 @@ open class NavigationEventsManager {
     }
 
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        commonEventsManager?.sendCancelEvent()
+        commonEventsManager?.sendCancelEvent(rating: rating, comment: comment)
     }
 
     func sendPassiveNavigationStart() {

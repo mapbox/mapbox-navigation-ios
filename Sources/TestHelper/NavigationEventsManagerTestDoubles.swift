@@ -39,6 +39,8 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     var passedPassiveNavigationType: PassiveNavigationFeedbackType?
     var passedDescription: String?
     var passedCompletionHandler: UserFeedbackCompletionHandler?
+    var passedRating: Int?
+    var passedComment: String?
 
     var returnedFeedbackEvent: FeedbackEvent? = Fixture.createFeedbackEvent()
 
@@ -140,8 +142,10 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         sendRouteRetrievalEventCalled = true
     }
 
-    public override func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
+    public override func sendCancelEvent(rating: Int?, comment: String?) {
         sendCancelEventCalled = true
+        passedRating = rating
+        passedComment = comment
     }
 
     public override func sendPassiveNavigationStart() {
