@@ -33,8 +33,8 @@
 ### Other changes
 
 * Fixed an issue where `ReplayLocationManager` init with `History` removed all custom history events. ([#4403](https://github.com/mapbox/mapbox-navigation-ios/pull/4403))
-* Fixed possible display negative remaining distance value. ([#4402](https://github.com/mapbox/mapbox-navigation-ios/pull/4402))
-* Fixed non-sent parameters for 'navigation.cancel' telemetry event. ([#4413](https://github.com/mapbox/mapbox-navigation-ios/pull/4413))
+* Fixed a potential issue where negative remaining distance values could be displayed.  ([#4402](https://github.com/mapbox/mapbox-navigation-ios/pull/4402))
+* Fixed a problem where certain parameters were not being sent for the 'navigation.cancel' telemetry event. ([#4413](https://github.com/mapbox/mapbox-navigation-ios/pull/4413))
 
 ## v2.11.0
 
