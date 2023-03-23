@@ -88,6 +88,8 @@ open class RouteController: NSObject {
             }
         }
     }
+
+    private var routeAlerts: [String: UpcomingRouteAlert] = [:]
     
     // MARK: Tracking the Progress
     
@@ -301,6 +303,10 @@ open class RouteController: NSObject {
                     AlternativeRoute(mainRoute: newMainRoute,
                                      alternativeRoute: $0)
                 }
+                let alerts = routesData.primaryRoute().getRouteInfo().alerts
+                self.routeAlerts = alerts.reduce(into: [:]) { dictionary, alert in
+                    dictionary[alert.roadObject.id] = alert
+                }
                 completion?(.success((info.0, alternativeRoutes)))
                 
                 let removedRoutes = self.continuousAlternatives.filter { alternative in
@@ -377,12 +383,10 @@ open class RouteController: NSObject {
         let snappedLocation = CLLocation(status.location)
         updateIndexes(status: status, progress: routeProgress)
         // Notify observers if the step’s remaining distance has changed.
-        let routeAlertProvider = self as RouteAlertProvider
         update(progress: routeProgress,
                status: status,
                with: snappedLocation,
                rawLocation: rawLocation,
-               upcomingRouteAlerts: routeAlertProvider.routeAlerts(with: status),
                mapMatchingResult: MapMatchingResult(status: status),
                routeShapeIndex: Int(status.geometryIndex))
         
@@ -401,11 +405,12 @@ open class RouteController: NSObject {
         }
     }
 
-    // TODO: Remove the usage of deprecated method after updating to the NN version
-    // with the fix for ids in the upcomingRouteAlerts
-    @available(*, deprecated)
-    func routeAlerts(with status: NavigationStatus) -> [UpcomingRouteAlert] {
-        status.upcomingRouteAlerts
+    func upcomingRouteAlerts(with status: NavigationStatus) -> [RouteAlert] {
+        let routeAlertsUpdates = status.upcomingRouteAlertUpdates
+        return routeAlertsUpdates.compactMap {
+            guard let alert = routeAlerts[$0.id] else { return nil }
+            return RouteAlert(alert, distanceToStart: $0.distanceToStart)
+        }
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
@@ -523,10 +528,14 @@ open class RouteController: NSObject {
         }
     }
     
-    private func update(progress: RouteProgress, status: NavigationStatus, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult, routeShapeIndex: Int) {
+    private func update(progress: RouteProgress,
+                        status: NavigationStatus,
+                        with location: CLLocation,
+                        rawLocation: CLLocation,
+                        mapMatchingResult: MapMatchingResult,
+                        routeShapeIndex: Int) {
         progress.updateDistanceTraveled(navigationStatus: status)
-
-        progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
+        progress.upcomingRouteAlerts = upcomingRouteAlerts(with: status)
         progress.shapeIndex = routeShapeIndex
         
         //Fire the delegate method
@@ -1150,12 +1159,6 @@ extension RouteController {
         }
     }
 }
-
-fileprivate protocol RouteAlertProvider {
-    func routeAlerts(with status: NavigationStatus) -> [UpcomingRouteAlert]
-}
-
-extension RouteController: RouteAlertProvider {}
 
 enum RouteControllerError: Error {
     case internalError

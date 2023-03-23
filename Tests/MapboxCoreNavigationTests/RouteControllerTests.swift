@@ -417,6 +417,30 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: expectationsTimeout)
     }
 
+    func testReturnRoadAlertWhenNavigationStatusDidChange() {
+        let alerts = indexedRouteResponse.routesData(routeParserType: RouteParser.self)?.primaryRoute().getRouteInfo().alerts
+        let alert = alerts!.first!
+
+        let alertUpdate = UpcomingRouteAlertUpdate(id: alert.roadObject.id, distanceToStart: 100)
+        let status = TestNavigationStatusProvider.createNavigationStatus(upcomingRouteAlertUpdates: [alertUpdate])
+        let userInfo = [Navigator.NotificationUserInfoKey.statusKey : status]
+
+        expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
+            guard let progress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
+                XCTFail("Route progress should be valid.")
+                return true
+            }
+
+            XCTAssertEqual(progress.upcomingRouteAlerts[0].distanceToStart, 100)
+            XCTAssertEqual(progress.upcomingRouteAlerts[0].roadObject.identifier, alert.roadObject.id)
+            return true
+        }
+
+        routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
+        NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
     func testUpdateIndexesWhenNavigationStatusDidChange() {
         let response = IndexedRouteResponse(routeResponse: multilegRouteResponse, routeIndex: 0)
         routeController = makeRouteController(routeResponse: response)
