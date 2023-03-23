@@ -445,6 +445,8 @@ class NavigationServiceTests: TestCase {
         service.endNavigation(feedback: feedback)
 
         XCTAssertTrue(eventsManager.sendCancelEventCalled)
+        XCTAssertEqual(eventsManager.passedRating, 5)
+        XCTAssertEqual(eventsManager.passedComment, "comment")
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
 
@@ -477,6 +479,10 @@ class NavigationServiceTests: TestCase {
         service.endNavigation(feedback: feedback)
 
         XCTAssertTrue(eventsManager.sendCancelEventCalled)
+        XCTAssertEqual(eventsManager.passedRating, 5)
+        XCTAssertEqual(eventsManager.passedComment, "comment")
+        XCTAssertEqual(eventsManager.passedRating, 5)
+        XCTAssertEqual(eventsManager.passedComment, "comment")
         XCTAssertTrue(locationManager.stopUpdatingHeadingCalled)
         XCTAssertTrue(locationManager.stopUpdatingLocationCalled)
 

@@ -103,18 +103,18 @@ class NavigationCommonEventsManagerTests: TestCase {
 
     func testNoCancelEventIfNoDatasource() {
         eventManager.activeNavigationDataSource = nil
-        eventManager.sendCancelEvent()
+        eventManager.sendCancelEvent(rating: 5, comment: "comment")
         XCTAssertFalse(eventsAPI.hasQueuedEvent(with: EventType.cancel.rawValue))
     }
 
     func testSendCancelEventIfDelaysFlushing() {
-        eventManager.sendCancelEvent()
+        eventManager.sendCancelEvent(rating: 5, comment: "comment")
         XCTAssertTrue(eventsAPI.hasQueuedEvent(with: EventType.cancel.rawValue))
     }
 
     func testSendCancelEventIfDoesNotDelayFlushing() {
         eventManager.delaysEventFlushing = false
-        eventManager.sendCancelEvent()
+        eventManager.sendCancelEvent(rating: 5, comment: "comment")
         XCTAssertTrue(eventsAPI.hasImmediateEvent(with: EventType.cancel.rawValue))
     }
 
