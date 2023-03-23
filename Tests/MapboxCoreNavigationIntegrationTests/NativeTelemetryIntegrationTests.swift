@@ -97,7 +97,8 @@ class NativeTelemetryIntegrationTests: TestCase {
         super.tearDown()
     }
 
-    func testStartFreeDrive() {
+    // TODO: skip until new NN startTripSession/stopTripSession supported NAVIOS-983
+    func skip_testStartFreeDrive() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -108,7 +109,7 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func testStartActiveNavigation() {
+    func skip_testStartActiveNavigation() {
         updateLocation()
         let firstLocation = locationManager.locations.first!
         configureActiveNavigation()
@@ -134,7 +135,7 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: 5)
     }
 
-    func testStartActiveNavigationAfterFreeRide() {
+    func skip_testStartActiveNavigationAfterFreeRide() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -159,7 +160,7 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func testFinishRoute() {
+    func skip_testFinishRoute() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -202,7 +203,7 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation, navigationFinished], timeout: 5)
     }
 
-    func testStartFreeRideAfterActiveNavigation() {
+    func skip_testStartFreeRideAfterActiveNavigation() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)

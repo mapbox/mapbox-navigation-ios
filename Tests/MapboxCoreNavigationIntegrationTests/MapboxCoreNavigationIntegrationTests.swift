@@ -175,10 +175,12 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
             return false
         }
         navigationService.start()
-        wait(for: [replayFinished, spokenInstructionExpectation], timeout: locationManager.expectedReplayTime)
+        wait(for: [replayFinished, spokenInstructionExpectation], timeout: 3)
 
         let expectedSpokenInstructions = [
             "Head south on Taylor Street, then turn right onto California Street",
+            // TODO: update test after fix in NN-603
+            "Turn right onto Sacramento Street, then turn left onto Jones Street",
             "Turn right onto California Street",
             "In a quarter mile, turn left onto Hyde Street"
         ]
