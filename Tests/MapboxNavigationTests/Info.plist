@@ -21,6 +21,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location Usage Description</string>
 	<key>CFBundleVersion</key>
-	<string>141</string>
+	<string>142</string>
 </dict>
 </plist>

@@ -1,22 +1,22 @@
 PODS:
-  - MapboxCommon (23.4.0-rc.1)
-  - MapboxCoreMaps (10.12.0-rc.1):
-    - MapboxCommon (~> 23.4.0-rc)
-  - MapboxCoreNavigation (2.12.0-beta.2):
+  - MapboxCommon (23.4.0)
+  - MapboxCoreMaps (10.12.0):
+    - MapboxCommon (~> 23.4)
+  - MapboxCoreNavigation (2.12.0-beta.3):
     - MapboxDirections-pre (= 2.11.0-alpha.1)
     - MapboxMobileEvents (~> 1.0)
     - MapboxNavigationNative (~> 129.0.0)
   - MapboxDirections-pre (2.11.0-alpha.1):
     - Polyline (~> 5.0)
     - Turf (~> 2.6.1)
-  - MapboxMaps (10.12.0-rc.1):
-    - MapboxCommon (= 23.4.0-rc.1)
-    - MapboxCoreMaps (= 10.12.0-rc.1)
+  - MapboxMaps (10.12.0):
+    - MapboxCommon (= 23.4.0)
+    - MapboxCoreMaps (= 10.12.0)
     - MapboxMobileEvents (= 1.0.10)
     - Turf (~> 2.0)
   - MapboxMobileEvents (1.0.10)
-  - MapboxNavigation (2.12.0-beta.2):
-    - MapboxCoreNavigation (= 2.12.0-beta.2)
+  - MapboxNavigation (2.12.0-beta.3):
+    - MapboxCoreNavigation (= 2.12.0-beta.3)
     - MapboxMaps (~> 10.12.0-rc.1)
     - MapboxMobileEvents (~> 1.0)
     - MapboxSpeech (~> 2.0)
@@ -52,13 +52,13 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: 43d22459a736a031d84ec878c919c3e0c7b5e6c3
-  MapboxCoreMaps: 639f3264678fb3cb0ed455a7ff40d8c507f8855f
-  MapboxCoreNavigation: cf61cca09e7a3e844d8609db6238c0b8707b15b2
+  MapboxCommon: 2945d39158111455f353524f3c2ad356bd8d546a
+  MapboxCoreMaps: 511ba1f7876e635431b741cab5e9278219d906f6
+  MapboxCoreNavigation: 4ab1fd423d5b28c7bf4d556c50996bc2fc0ce903
   MapboxDirections-pre: 2741f1147b69240915d9ab8963c4c0aff53abcb4
-  MapboxMaps: 758d7eff723c49fd00f2f8480366e0e06867393f
+  MapboxMaps: a9978d13d1cba0403c5bdd2ab3b71418924075d2
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MapboxNavigation: 985e0c64de03c47e15442b09677f1bc22aed44b6
+  MapboxNavigation: d2d4b9ea1856c3158e2a4430db55ddb6a5a9ccb8
   MapboxNavigationNative: 706f9d920c01e7b6d9d6fed946cb7e4b14eced61
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
@@ -67,4 +67,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 20f356205cc7a366d6b3c177155b683e2d62b354
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.11.3
