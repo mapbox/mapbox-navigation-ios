@@ -412,6 +412,86 @@ class RouteControllerIntegrationTests: TestCase {
 
         RouteControllerProactiveReroutingInterval = defaultInterval
     }
+
+    func testReturnRouteObjectes() {
+        let coordinates = [
+            CLLocationCoordinate2D(latitude: 35.634688, longitude: 139.790845),
+            CLLocationCoordinate2D(latitude: 35.635951, longitude: 139.778818),
+            CLLocationCoordinate2D(latitude: 35.550703, longitude: 139.785936),
+            CLLocationCoordinate2D(latitude: 35.66031, longitude: 140.025875),
+        ]
+        let options = NavigationRouteOptions(coordinates: coordinates)
+        options.refreshingEnabled = true
+        let routeResponse = Fixture.routeResponse(from: "route-with-road-objects-japan", options: options)
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse,
+                                                        routeIndex: 0)
+        let route = indexedRouteResponse.currentRoute!
+        let locations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let locationManager = ReplayLocationManager(locations: Array(locations))
+        replayManager = locationManager
+        routeController = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: MapboxRoutingProvider(.offline),
+                                          dataSource: self)
+        locationManager.delegate = routeController
+        let routerDelegateSpy = RouterDelegateSpy()
+        routeController.delegate = routerDelegateSpy
+
+        let updateExpectation = XCTestExpectation(description: "DidUpdate should be called")
+
+        let routesData = indexedRouteResponse.routesData(routeParserType: RouteParser.self)!
+        let expectedAlerts = routesData.primaryRoute().getRouteInfo().alerts
+
+        var index = 0
+        routerDelegateSpy.onDidUpdate = { arguments in
+            let (progress, _, _) = arguments
+
+            XCTAssertEqual(progress.upcomingRouteAlerts.map { $0.roadObject.kind.navNativeValue }, expectedAlerts.map { $0.roadObject.type })
+            let expectedDistances = expectedAlerts.map { $0.distanceToStart - progress.distanceTraveled  }
+            for (i, actualAlert) in progress.upcomingRouteAlerts.enumerated() {
+                XCTAssertEqual(actualAlert.distanceToStart, expectedDistances[i], accuracy: 0.1)
+            }
+            index += 1
+            
+            if index == 5 {
+                locationManager.stopUpdatingLocation()
+                updateExpectation.fulfill()
+            }
+        }
+
+        locationManager.speedMultiplier = 10
+        locationManager.startUpdatingLocation()
+
+        wait(for: [updateExpectation], timeout: 3)
+    }
+}
+
+extension MapboxCoreNavigation.RoadObject.Kind {
+    var navNativeValue: MapboxNavigationNative.RoadObjectType {
+        switch self {
+        case .incident:
+            return .incident
+        case .tollCollection:
+            return .tollCollectionPoint
+        case .borderCrossing:
+            return .borderCrossing
+        case .tunnel:
+            return .tunnel
+        case .serviceArea:
+            return .serviceArea
+        case .restrictedArea:
+            return .restrictedArea
+        case .bridge:
+            return .bridge
+        case .railroadCrossing:
+            return .bridge
+        case .userDefined:
+            return .custom
+        case .ic:
+            return .ic
+        case .jct:
+            return .jct
+        }
+    }
 }
 
 extension RouteControllerIntegrationTests: RouterDataSource {

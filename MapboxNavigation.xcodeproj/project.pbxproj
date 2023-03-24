@@ -110,6 +110,8 @@
 		2C585165292530B70077A558 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		2C585167292531340077A558 /* PassiveLocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */; };
 		2C59B995298330F8003D4EA0 /* FeedbackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B994298330F8003D4EA0 /* FeedbackMetadata.swift */; };
+		2C60D94829CCAC8900DE9FE7 /* route-with-road-objects-japan.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */; };
+		2C60D94929CCAC8900DE9FE7 /* route-with-road-objects-japan.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */; };
 		2C67751C290AC4A6009C5EE4 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */; };
 		2C7FAF96291ABE62000217A7 /* TestRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */; };
@@ -806,6 +808,7 @@
 		2C58516229252FE20077A558 /* MapboxCoreNavigationIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCoreNavigationIntegrationTests.swift; sourceTree = "<group>"; };
 		2C585166292531340077A558 /* PassiveLocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		2C59B994298330F8003D4EA0 /* FeedbackMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackMetadata.swift; sourceTree = "<group>"; };
+		2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-road-objects-japan.json"; sourceTree = "<group>"; };
 		2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingHandlerIntegrationTests.swift; sourceTree = "<group>"; };
 		2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouteProvider.swift; sourceTree = "<group>"; };
 		2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerSpy.swift; sourceTree = "<group>"; };
@@ -2258,6 +2261,7 @@
 		B47C1AE4261FD0A30078546C /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */,
 				8AFCE2F92964E2EE00EBFC11 /* route-with-instruction-components-with-subtype.json */,
 				8A474195294BBFDA00F231F9 /* route-with-amenities.json */,
 				B4953F5628762CAF0090E4F8 /* route-with-straight-line.json */,
@@ -2983,6 +2987,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C60D94929CCAC8900DE9FE7 /* route-with-road-objects-japan.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3032,6 +3037,7 @@
 				E2D1497D265CFB5B008135A3 /* 878.gph.gz in Resources */,
 				B4A78D27261FD47700FDF212 /* DCA-Arboretum.json in Resources */,
 				8A474196294BBFDB00F231F9 /* route-with-amenities.json in Resources */,
+				2C60D94829CCAC8900DE9FE7 /* route-with-road-objects-japan.json in Resources */,
 				2B5F6C342912B9430062E3B5 /* DCA-Arboretum-duration-edited.json in Resources */,
 				2B45758B28F56A160074039A /* ag_history.pbf.gz in Resources */,
 				B4A78D28261FD47700FDF212 /* routeWithInstructions.json in Resources */,

@@ -18,8 +18,8 @@ public struct RouteAlert {
      */
     public let distanceToStart: CLLocationDistance
     
-    init(_ native: UpcomingRouteAlert) {
+    init(_ native: UpcomingRouteAlert, distanceToStart: CLLocationDistance) {
         self.roadObject = RoadObject(native.roadObject)
-        self.distanceToStart = native.distanceToStart
+        self.distanceToStart = distanceToStart
     }
 }
