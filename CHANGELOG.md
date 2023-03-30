@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v129._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/129.0.0). ([#4414](https://github.com/mapbox/mapbox-navigation-ios/pull/4414))
-* MapboxCoreNavigation now requires [MapboxDirections v2.11.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-alpha.1). ([#4396](https://github.com/mapbox/mapbox-navigation-ios/pull/4396))
-* MapboxNavigation now requires [MapboxMaps v10.12.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0-rc.1). ([#4408](https://github.com/mapbox/mapbox-navigation-ios/pull/4408))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v130._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/130.0.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
+* MapboxCoreNavigation now requires [MapboxDirections v2.11.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-rc.1). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
+* MapboxNavigation now requires [MapboxMaps v10.12.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
 
 ### Routing
 * Added an optional `userInfo` argument to the `NavigationService(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)` and `NavigationService(history:customHistoryEventsListener:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:userInfo:)`. ([#4395](https://github.com/mapbox/mapbox-navigation-ios/pull/4395))
