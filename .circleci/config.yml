@@ -659,8 +659,11 @@ jobs:
             cp -a "$OUTPUT" /tmp/generated-docs
       - *save-cache-podmaster
       - *save-cache-gems
+      - run:
+          name: Compress Artifacts
+          command: tar -cvzf /tmp/docs.tar.gz /tmp/generated-docs
       - store_artifacts:
-          path: /tmp/generated-docs
+          path: /tmp/docs.tar.gz
           destination: docs
       - when:
           condition: << pipeline.git.tag >>
