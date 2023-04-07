@@ -5,13 +5,14 @@
 ### Packaging
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v130._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/130.0.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
-* MapboxCoreNavigation now requires [MapboxDirections v2.11.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0-rc.1). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
-* MapboxNavigation now requires [MapboxMaps v10.12.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
+* MapboxNavigation now requires [MapboxMaps v10.12._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
 
 ### Routing
+
 * Added an optional `userInfo` argument to the `NavigationService(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)` and `NavigationService(history:customHistoryEventsListener:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:userInfo:)`. ([#4395](https://github.com/mapbox/mapbox-navigation-ios/pull/4395))
 
 ### Visual instructions
+
 * Fixed duplication of the road name components in the road shield and the label. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
 * Added support for localized road shields. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
 * Added `localizedRouteShieldRepresentationKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding value contains  localized route shield data. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
@@ -35,6 +36,7 @@
 * Fixed an issue where `ReplayLocationManager` init with `History` removed all custom history events. ([#4403](https://github.com/mapbox/mapbox-navigation-ios/pull/4403))
 * Fixed a potential issue where negative remaining distance values could be displayed.  ([#4402](https://github.com/mapbox/mapbox-navigation-ios/pull/4402))
 * Fixed a problem where certain parameters were not being sent for the 'navigation.cancel' telemetry event. ([#4413](https://github.com/mapbox/mapbox-navigation-ios/pull/4413))
+* Added support for voice languages in offline: Lithuanian, Hungarian, Finnish, Serbian, Greek, Czech, and Slovak. ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
 
 ## v2.11.0
 
