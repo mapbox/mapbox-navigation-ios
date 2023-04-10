@@ -41,9 +41,9 @@
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "1061623d294c47657e029f1105c3c3aa44ca1f8a",
-          "version": "2.11.0-rc.1"
+          "branch": "vk/NAVIOS-977-leg-notifications",
+          "revision": "7b12dc2f474e5ae4f33c07458d324aab5be6b568",
+          "version": null
         }
       },
       {
