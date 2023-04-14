@@ -2,6 +2,11 @@
 
 ## v2.13.0
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v131._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/131.0.0). ([#4429](https://github.com/mapbox/mapbox-navigation-ios/pull/4429))
+* MapboxNavigation now requires [MapboxMaps v10.13.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.13.0-beta.1). ([#4429](https://github.com/mapbox/mapbox-navigation-ios/pull/4429))
+
 ### Map
 
 * Fixed an issue with route callouts being slightly displaced. ([#4427](https://github.com/mapbox/mapbox-navigation-ios/pull/4427))
