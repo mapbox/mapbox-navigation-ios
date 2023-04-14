@@ -312,8 +312,8 @@ extension NavigationMapView {
         let offsetExpression = Exp(.match) {
             Exp(.get) { "tailPosition" }
             0
-            Exp(.literal) { [0.5, -1.0] }
-            Exp(.literal) { [-0.5, -1.0] }
+            Exp(.literal) { [0.7, -1.7] }
+            Exp(.literal) { [-0.7, -1.7] }
         }
         shapeLayer.iconOffset = .expression(offsetExpression)
         shapeLayer.textOffset = .expression(offsetExpression)

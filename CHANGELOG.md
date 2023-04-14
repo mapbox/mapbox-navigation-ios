@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.13.0
+
+### Map
+
+* Fixed an issue with route callouts being slightly displaced. ([#4427](https://github.com/mapbox/mapbox-navigation-ios/pull/4427))
+
 ## v2.12.0
 
 ### Packaging
@@ -9,9 +15,11 @@
 * MapboxNavigation now requires [MapboxMaps v10.12.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.12.0). ([#4417](https://github.com/mapbox/mapbox-navigation-ios/pull/4417))
 
 ### Routing
+
 * Added an optional `userInfo` argument to the `NavigationService(indexedRouteResponse:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:customActivityType:userInfo:)` and `NavigationService(history:customHistoryEventsListener:customRoutingProvider:credentials:eventsManagerType:routerType:customActivityType:userInfo:)`. ([#4395](https://github.com/mapbox/mapbox-navigation-ios/pull/4395))
 
 ### Visual instructions
+
 * Fixed duplication of the road name components in the road shield and the label. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
 * Added support for localized road shields. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
 * Added `localizedRouteShieldRepresentationKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding value contains  localized route shield data. ([#4401](https://github.com/mapbox/mapbox-navigation-ios/pull/4401))
