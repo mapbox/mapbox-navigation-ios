@@ -32,12 +32,14 @@ maps_releases = requests.get(
     headers=headers
 ).json()
 maps_version = get_dependency_version(maps_releases)
+maps_version = '10.12.0'
 
 nav_native_releases = requests.get(
     'https://api.github.com/repos/mapbox/mapbox-navigation-native/releases',
     headers=headers
 ).json()
 nav_native_version = get_dependency_version(nav_native_releases)
+nav_native_version = '130.0.0'
 
 package_swift_file_name = 'Package.swift'
 package_swift = open(package_swift_file_name, 'r').read()
