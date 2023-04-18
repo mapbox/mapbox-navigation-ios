@@ -167,6 +167,7 @@ commands:
           name: Prepare snapshot
           command: |
             export GITHUB_TOKEN=$(mbx-ci github writer private token)
+            pip3 install requests
             python3 scripts/snapshot/prepare-snapshot.py
 
   trigger-onetap:
