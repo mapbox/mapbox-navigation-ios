@@ -20,12 +20,12 @@ latest_tag = get_latest_tag(tags)
 print('Latest no-patch release is ' + latest_tag)
 
 snapshot_base_branch = get_snapshot_branch(latest_tag)
-print('Snapshot branch is ' + snapshot_base_branch)
+print('Snapshot base branch is ' + snapshot_base_branch)
 subprocess.run("git checkout " + snapshot_base_branch, shell=True, check=True)
 
 snapshot_branch = 'snapshot_' + str(datetime.date.today())
-print(snapshot_branch)
-subprocess.run("git checkout -b " + snapshot_base_branch, shell=True, check=True)
+print('Snapshot branch is ' + snapshot_branch)
+subprocess.run("git checkout -b " + snapshot_branch, shell=True, check=True)
 
 maps_releases = requests.get(
     'https://api.github.com/repos/mapbox/mapbox-maps-android-internal/releases',
