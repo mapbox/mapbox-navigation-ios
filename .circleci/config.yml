@@ -157,7 +157,8 @@ commands:
       - run:
           name: Pre-snapshot check
           command: |
-            export GITHUB_TOKEN=$(./mbx-ci github writer private token)
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
+            pip3 install requests
             python3 scripts/snapshot/pre-snapshot-check.py
 
   prepare-snapshot:
@@ -165,14 +166,20 @@ commands:
       - run:
           name: Prepare snapshot
           command: |
-            export GITHUB_TOKEN=$(./mbx-ci github writer private token)
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
+            git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
+            git config user.email "release-bot@mapbox.com"
+            git config user.name "Mapbox Releases"
+            pip3 install requests
             python3 scripts/snapshot/prepare-snapshot.py
 
   trigger-onetap:
     steps:
       - run:
           name: Trigger onetap
-          command: python3 scripts/snapshot/trigger-onetap.py
+          command: |
+            pip3 install requests
+            python3 scripts/snapshot/trigger-onetap.py
 
 step-library:
   - &restore-cache
