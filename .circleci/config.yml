@@ -779,6 +779,7 @@ jobs:
     steps:
       - checkout
       - install-mbx-ci
+      - *prepare-netrc-file
       - prepare-snapshot
       - trigger-onetap
 
