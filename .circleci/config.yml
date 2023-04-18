@@ -937,12 +937,12 @@ workflows:
       - release-weekly-snapshot
   pre-snapshot-workflow:
     # Run workflow every Thursday at 23:59 UTC
-    triggers:
-      - schedule:
-          cron: "59 23 * * 4"
-          filters:
-            branches:
-              only:
-                - main
+#    triggers:
+#      - schedule:
+#          cron: "59 23 * * 4"
+#          filters:
+#            branches:
+#              only:
+#                - main
     jobs:
       - pre-snapshot-check
