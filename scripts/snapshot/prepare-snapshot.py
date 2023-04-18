@@ -39,7 +39,24 @@ nav_native_releases = requests.get(
 ).json()
 nav_native_version = get_dependency_version(nav_native_releases)
 
-# TODO update dependencies
+package_swift_file_name = 'Package.swift'
+package_swift = open(package_swift_file_name, 'r').read()
+package_swift_lines = open(package_swift_file_name, 'r').readlines()
+for line in package_swift_lines:
+    if '.package(name: "MapboxNavigationNative"' in line and nav_native_version:
+        package_swift = package_swift.replace(
+            line,
+            '        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", .exact("' + nav_native_version + '")),\n'
+        )
+    if '.package(name: "MapboxMaps"' in line and maps_version:
+        package_swift = package_swift.replace(
+            line,
+            '        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("' + maps_version + '")),\n'
+        )
+open(package_swift_file_name, 'w').write(package_swift)
+
+subprocess.run('xcodebuild -resolvePackageDependencies -project MapboxNavigation-SPM.xcodeproj', shell=True, check=True)
+subprocess.run('swift package resolve', shell=True, check=True)
 
 subprocess.run('git add . && git commit -m "Bump dependencies" && git push -u origin ' + snapshot_branch, shell=True,
                check=True)
