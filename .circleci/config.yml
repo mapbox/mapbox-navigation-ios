@@ -157,7 +157,7 @@ commands:
       - run:
           name: Pre-snapshot check
           command: |
-            export GITHUB_TOKEN=$(./mbx-ci github writer private token)
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
             pip3 install requests
             python3 scripts/snapshot/pre-snapshot-check.py
 
@@ -166,7 +166,7 @@ commands:
       - run:
           name: Prepare snapshot
           command: |
-            export GITHUB_TOKEN=$(./mbx-ci github writer private token)
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
             python3 scripts/snapshot/prepare-snapshot.py
 
   trigger-onetap:
