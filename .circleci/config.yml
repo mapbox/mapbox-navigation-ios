@@ -168,6 +168,9 @@ commands:
           command: |
             export GITHUB_TOKEN=$(mbx-ci github writer private token)
             pip3 install requests
+            git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
+            git config user.email "release-bot@mapbox.com"
+            git config user.name "Mapbox Releases"
             python3 scripts/snapshot/prepare-snapshot.py
 
   trigger-onetap:
