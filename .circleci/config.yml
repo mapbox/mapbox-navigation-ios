@@ -158,6 +158,7 @@ commands:
           name: Pre-snapshot check
           command: |
             export GITHUB_TOKEN=$(./mbx-ci github writer private token)
+            pip3 install requests
             python3 scripts/snapshot/pre-snapshot-check.py
 
   prepare-snapshot:
