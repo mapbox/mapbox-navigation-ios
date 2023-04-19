@@ -1,4 +1,10 @@
 import datetime
+import os
+
+import requests
+
+github_token = os.getenv("GITHUB_TOKEN")
+headers = {"Authorization": "Bearer " + github_token}
 
 
 def is_rc_or_ga(release_name):
@@ -31,9 +37,18 @@ def get_dependency_version(releases):
     return None
 
 
+def get_dependency_version_from_tags(tags):
+    for tag in tags:
+        commit = requests.get(tag['commit']['url'], headers=headers).json()
+        if not is_current_week(commit['commit']['committer']['date']):
+            return None
+        if not is_patch(tag['name']):
+            return tag['name']
+
+
 def get_latest_tag(tags):
-    for tag in reversed(tags):
-        tag_name = tag['ref'].replace('refs/tags/', '')
+    for tag in tags:
+        tag_name = tag['name']
         if tag_name.startswith('v') and tag_name.partition('-')[0].endswith('.0'):
             return tag_name
 

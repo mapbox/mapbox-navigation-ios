@@ -5,17 +5,18 @@ import sys
 
 import requests
 
-from utils import get_latest_tag, get_snapshot_branch, is_snapshot_week, get_dependency_version
+from utils import get_latest_tag, get_snapshot_branch, is_snapshot_week, get_dependency_version, \
+    get_dependency_version_from_tags
 
 github_token = os.getenv("GITHUB_TOKEN")
 headers = {"Authorization": "Bearer " + github_token}
 
-releases = requests.get('https://api.github.com/repos/mapbox/mapbox-navigation-android/releases').json()
+releases = requests.get('https://api.github.com/repos/mapbox/mapbox-navigation-ios/releases', headers=headers).json()
 if not is_snapshot_week(releases):
     print('Navigation SDK snapshot must not be released today (rc or GA release was released this week).')
     sys.exit(1)
 
-tags = requests.get('https://api.github.com/repos/mapbox/mapbox-navigation-android/git/refs/tags').json()
+tags = requests.get('https://api.github.com/repos/mapbox/mapbox-navigation-ios/tags', headers=headers).json()
 latest_tag = get_latest_tag(tags)
 print('Latest no-patch release is ' + latest_tag)
 
@@ -28,27 +29,29 @@ print('Snapshot branch is ' + snapshot_branch)
 subprocess.run("git checkout -b " + snapshot_branch, shell=True, check=True)
 
 maps_releases = requests.get(
-    'https://api.github.com/repos/mapbox/mapbox-maps-android-internal/releases',
+    'https://api.github.com/repos/mapbox/mapbox-maps-ios/releases',
     headers=headers
 ).json()
 maps_version = get_dependency_version(maps_releases)
 
-nav_native_releases = requests.get(
-    'https://api.github.com/repos/mapbox/mapbox-navigation-native/releases',
+nav_native_tags = requests.get(
+    'https://api.github.com/repos/mapbox/mapbox-navigation-native-ios/tags',
     headers=headers
 ).json()
-nav_native_version = get_dependency_version(nav_native_releases)
+nav_native_version = get_dependency_version_from_tags(nav_native_tags)
 
 package_swift_file_name = 'Package.swift'
 package_swift = open(package_swift_file_name, 'r').read()
 package_swift_lines = open(package_swift_file_name, 'r').readlines()
 for line in package_swift_lines:
     if '.package(name: "MapboxNavigationNative"' in line and nav_native_version:
+        print('Bumping Nav Native to ' + nav_native_version)
         package_swift = package_swift.replace(
             line,
             '        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", .exact("' + nav_native_version + '")),\n'
         )
     if '.package(name: "MapboxMaps"' in line and maps_version:
+        print('Bumping Maps to ' + maps_version)
         package_swift = package_swift.replace(
             line,
             '        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("' + maps_version + '")),\n'

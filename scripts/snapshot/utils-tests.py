@@ -9,10 +9,9 @@ class TestUtils(unittest.TestCase):
 
     def test_get_latest_tag(self):
         tags = [
-            {'ref': 'refs/tags/v2.12.0-beta.3'},
-            {'ref': 'refs/tags/v2.12.0-rc.1'},
-            {'ref': 'refs/tags/androidauto-v0.22.0'},
-            {'ref': 'refs/tags/v2.11.1'},
+            {'name': 'v2.11.1'},
+            {'name': 'v2.12.0-rc.1'},
+            {'name': 'v2.12.0-beta.3'},
         ]
         self.assertEqual(utils.get_latest_tag(tags), 'v2.12.0-rc.1')
 
