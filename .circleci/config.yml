@@ -152,6 +152,35 @@ commands:
           name: Install Dependencies
           command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
+  pre-snapshot-check:
+    steps:
+      - run:
+          name: Pre-snapshot check
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
+            pip3 install requests
+            python3 scripts/snapshot/pre-snapshot-check.py
+
+  prepare-snapshot:
+    steps:
+      - run:
+          name: Prepare snapshot
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github writer private token)
+            git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
+            git config user.email "release-bot@mapbox.com"
+            git config user.name "Mapbox Releases"
+            pip3 install requests
+            python3 scripts/snapshot/prepare-snapshot.py
+
+  trigger-onetap:
+    steps:
+      - run:
+          name: Trigger onetap
+          command: |
+            pip3 install requests
+            python3 scripts/snapshot/trigger-onetap.py
+
 step-library:
   - &restore-cache
       restore_cache:
@@ -728,6 +757,32 @@ jobs:
       - *save-cache-podmaster
       - *save-cache-gems
 
+  pre-snapshot-check:
+    parameters:
+      xcode:
+        type: string
+        default: "13.4.1"
+    macos:
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
+      - install-mbx-ci
+      - pre-snapshot-check
+
+  release-weekly-snapshot:
+    parameters:
+      xcode:
+        type: string
+        default: "13.4.1"
+    macos:
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
+      - install-mbx-ci
+      - *prepare-netrc-file
+      - prepare-snapshot
+      - trigger-onetap
+
 workflows:
   extended-workflow:
     jobs:
@@ -877,3 +932,25 @@ workflows:
           filters:
             branches:
               only: /^trigger-distribute-version-.*/
+  weekly-snapshot-workflow:
+    # Run workflow every Friday at 23:59 UTC
+    triggers:
+      - schedule:
+          cron: "59 23 * * 5"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - release-weekly-snapshot
+  pre-snapshot-workflow:
+    # Run workflow every Thursday at 23:59 UTC
+    triggers:
+      - schedule:
+          cron: "59 23 * * 4"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - pre-snapshot-check
