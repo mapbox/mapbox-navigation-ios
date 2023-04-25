@@ -62,6 +62,8 @@ open class PassiveLocationManager: NSObject {
     }()
 
     private let navigatorType: CoreNavigator.Type
+
+    private let navigationSessionManager: NavigationSessionManager
     
     /**
      The underlying navigator that performs map matching.
@@ -260,10 +262,12 @@ open class PassiveLocationManager: NSObject {
          eventsManagerType: NavigationEventsManager.Type?,
          userInfo: [String: String?]?,
          datasetProfileIdentifier: ProfileIdentifier?,
-         navigatorType: CoreNavigator.Type) {
+         navigatorType: CoreNavigator.Type,
+         navigationSessionManager: NavigationSessionManager) {
         self.navigatorType = navigatorType
         self.directions = directions
         self.systemLocationManager = systemLocationManager
+        self.navigationSessionManager = navigationSessionManager
 
         super.init()
 
@@ -294,6 +298,7 @@ open class PassiveLocationManager: NSObject {
         self.navigatorType = Navigator.self
         self.directions = directions
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
+        self.navigationSessionManager = NavigationSessionManagerImp.shared
 
         super.init()
 
@@ -326,10 +331,12 @@ open class PassiveLocationManager: NSObject {
         subscribeNotifications()
 
         BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
+        navigationSessionManager.reportStartNavigation()
     }
     
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        navigationSessionManager.reportStopNavigation()
         eventsManager.withBackupDataSource(active: nil, passive: self) {
             if self.rawLocation != nil {
                 self.eventsManager.sendPassiveNavigationStop()
