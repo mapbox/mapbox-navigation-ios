@@ -11,6 +11,7 @@ class PassiveLocationManagerTests: TestCase {
     private var eventsManagerType: NavigationEventsManagerSpy!
     private var navigatorSpy: CoreNavigatorSpy!
     private var locationManagerSpy: NavigationLocationManagerSpy!
+    private var navigationSessionManagerSpy: NavigationSessionManagerSpy!
 
     private var passiveLocationManager: PassiveLocationManager!
     private var delegate: PassiveLocationManagerDelegateSpy!
@@ -30,12 +31,14 @@ class PassiveLocationManagerTests: TestCase {
         locationManagerSpy = .init()
         directionsSpy = .init()
         navigatorSpy = CoreNavigatorSpy.shared
+        navigationSessionManagerSpy = NavigationSessionManagerSpy.shared
         passiveLocationManager = PassiveLocationManager(directions: directionsSpy,
                                                         systemLocationManager: locationManagerSpy,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         userInfo: [:],
                                                         datasetProfileIdentifier: .cycling,
-                                                        navigatorType: CoreNavigatorSpy.self)
+                                                        navigatorType: CoreNavigatorSpy.self,
+                                                        navigationSessionManager: navigationSessionManagerSpy)
         delegate = PassiveLocationManagerDelegateSpy()
         passiveLocationManager.delegate = delegate
     }
@@ -44,6 +47,7 @@ class PassiveLocationManagerTests: TestCase {
         super.tearDown()
         PassiveLocationManager.historyDirectoryURL = nil
         HistoryRecorder._recreateHistoryRecorder()
+        NavigationSessionManagerSpy.shared.reset()
     }
 
     func testHandleDidUpdateLocations() {
@@ -111,8 +115,10 @@ class PassiveLocationManagerTests: TestCase {
     }
 
     func testStartNavigation() {
+        navigationSessionManagerSpy.reset()
         passiveLocationManager.startUpdatingLocation()
         XCTAssertTrue(locationManagerSpy.startUpdatingLocationCalled)
+        XCTAssertFalse(navigationSessionManagerSpy.reportStartNavigationCalled, "Should not report start twice")
     }
 
     func testDidNoThrowIfDidUpdateNilLocation() {
@@ -372,14 +378,16 @@ class PassiveLocationManagerTests: TestCase {
         XCTAssertTrue(locationManagerSpy.delegate === passiveLocationManager)
     }
 
-    func testSetDatasetProfileIdentifier() {
+    func testInitialize() {
         _ = PassiveLocationManager(directions: directionsSpy,
                                    systemLocationManager: locationManagerSpy,
                                    eventsManagerType: NavigationEventsManagerSpy.self,
                                    userInfo: [:],
                                    datasetProfileIdentifier: .walking,
-                                   navigatorType: CoreNavigatorSpy.self)
+                                   navigatorType: CoreNavigatorSpy.self,
+                                   navigationSessionManager: navigationSessionManagerSpy)
         XCTAssertEqual(CoreNavigatorSpy.datasetProfileIdentifier, .walking)
+        XCTAssertTrue(navigationSessionManagerSpy.reportStartNavigationCalled)
     }
 
     func testCreateDefaultManager() {

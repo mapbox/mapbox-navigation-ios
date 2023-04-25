@@ -10,7 +10,8 @@ import MapboxNavigationNative
 
 class RouteControllerTests: TestCase {
     private let expectationsTimeout = 0.5
-    
+
+    private var navigationSessionManagerSpy: NavigationSessionManagerSpy!
     private var locationManagerSpy: NavigationLocationManagerSpy!
     private var navigatorSpy: CoreNavigatorSpy!
     private var nativeNavigatorSpy: NativeNavigatorSpy!
@@ -75,6 +76,7 @@ class RouteControllerTests: TestCase {
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routeProgress = .init(route: routeResponse.routes![0], options: options)
         nativeRoute = TestRouteProvider.createRoute(routeResponse: makeRouteResponse())
+        navigationSessionManagerSpy = NavigationSessionManagerSpy.shared
 
         singleRouteResponse = makeSingleRouteResponse()
         multilegRouteResponse = makeMultilegRouteResponse()
@@ -89,6 +91,7 @@ class RouteControllerTests: TestCase {
         RouteParserSpy.returnedRoutes = nil
         RouteParserSpy.returnedError = nil
         MapboxRoutingProvider.__testRoutesStub = nil
+        NavigationSessionManagerSpy.shared.reset()
         
         super.tearDown()
     }
@@ -156,12 +159,14 @@ class RouteControllerTests: TestCase {
                                          customRoutingProvider: routingProvider,
                                          dataSource: dataSource,
                                          navigatorType: CoreNavigatorSpy.self,
-                                         routeParserType: RouteParserSpy.self)
+                                         routeParserType: RouteParserSpy.self,
+                                         navigationSessionManager: navigationSessionManagerSpy)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, controller.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
         XCTAssertEqual(navigatorSpy.passedReason, .startNewRoute)
+        XCTAssertTrue(navigationSessionManagerSpy.reportStartNavigationCalled)
     }
     
     func testReturnLocation() {
@@ -700,6 +705,7 @@ class RouteControllerTests: TestCase {
             XCTFail()
             return
         }
+        navigationSessionManagerSpy.reset()
         routeController.updateRoute(with: response, routeOptions: routeOptions, isProactive: false, completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
@@ -713,6 +719,7 @@ class RouteControllerTests: TestCase {
 
         XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
         XCTAssertEqual(routeController.routeProgress.routeOptions, routeOptions)
+        XCTAssertFalse(navigationSessionManagerSpy.reportStartNavigationCalled, "Should not report start twice")
     }
 
     func testUpdateRouteIfShouldNotStartNewBillingSession() {
@@ -1367,6 +1374,8 @@ class RouteControllerTests: TestCase {
     func testDoNotUpdateRouteIfFinishedRouting() {
         let newResponse = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routeController.finishRouting()
+        
+        XCTAssertTrue(navigationSessionManagerSpy.reportStopNavigationCalled)
         let expectation = expectation(description: "Should not call callback")
         expectation.isInverted = true
         routeController.updateRoute(with: newResponse, routeOptions: options) { _ in
@@ -1659,7 +1668,8 @@ class RouteControllerTests: TestCase {
                                          customRoutingProvider: routingProvider,
                                          dataSource: dataSource,
                                          navigatorType: CoreNavigatorSpy.self,
-                                         routeParserType: RouteParserSpy.self)
+                                         routeParserType: RouteParserSpy.self,
+                                         navigationSessionManager: navigationSessionManagerSpy)
         controller.delegate = delegate
         navigatorSpy.reset()
         return controller

@@ -11,6 +11,10 @@
 
 * Fixed an issue with route callouts being slightly displaced. ([#4427](https://github.com/mapbox/mapbox-navigation-ios/pull/4427))
 
+### Other changes
+
+* Added support for Native Telemetry `Navigator.startNavigationSession()` and `Navigator.stopNavigationSession()` for correct report of navigation session type to telemetry. ([#4435](https://github.com/mapbox/mapbox-navigation-ios/pull/4435))
+
 ## v2.12.0
 
 ### Packaging

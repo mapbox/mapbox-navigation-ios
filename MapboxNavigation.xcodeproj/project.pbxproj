@@ -104,6 +104,7 @@
 		2C36D9022952256400EE37DF /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */; };
 		2C4093B5292661FD0099FA0E /* RouteParserSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4093B4292661FD0099FA0E /* RouteParserSpy.swift */; };
 		2C484CDA2979AD6F00EAAE78 /* EventsMetadataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C484CD92979AD6F00EAAE78 /* EventsMetadataProviderTests.swift */; };
+		2C4D0A2E29F6DC900063BF52 /* NavigationSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D0A2D29F6DC900063BF52 /* NavigationSessionManager.swift */; };
 		2C585157292521C20077A558 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		2C58515F292523670077A558 /* RouteControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */; };
 		2C585164292530AF0077A558 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -151,6 +152,8 @@
 		2CE89C2B299E6C2A000A2E34 /* InterchangeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE89C2A299E6C2A000A2E34 /* InterchangeTests.swift */; };
 		2CE89C2D299E6D09000A2E34 /* JunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE89C2C299E6D09000A2E34 /* JunctionTests.swift */; };
 		2CE89C2F299E6E08000A2E34 /* RoadObjectKindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE89C2E299E6E08000A2E34 /* RoadObjectKindTests.swift */; };
+		2CEC5C5629F71714001B5EC2 /* NavigationSessionManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEC5C5529F71714001B5EC2 /* NavigationSessionManagerSpy.swift */; };
+		2CEC5C5829F71D9A001B5EC2 /* NavigationSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEC5C5729F71D9A001B5EC2 /* NavigationSessionManagerTests.swift */; };
 		2CF3F8CB2926D3E600BB2B9C /* URLCacheSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF3F8CA2926D3E600BB2B9C /* URLCacheSpy.swift */; };
 		2CF3F8CD2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF3F8CC2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift */; };
 		2CF5F5CA298155EC00B34C8C /* NavigationNativeEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5F5C82981500E00B34C8C /* NavigationNativeEventsManagerTests.swift */; };
@@ -803,6 +806,7 @@
 		2C36D8FF2952256400EE37DF /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		2C4093B4292661FD0099FA0E /* RouteParserSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteParserSpy.swift; sourceTree = "<group>"; };
 		2C484CD92979AD6F00EAAE78 /* EventsMetadataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsMetadataProviderTests.swift; sourceTree = "<group>"; };
+		2C4D0A2D29F6DC900063BF52 /* NavigationSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSessionManager.swift; sourceTree = "<group>"; };
 		2C585153292521C20077A558 /* MapboxCoreNavigationIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxCoreNavigationIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C58515E292523670077A558 /* RouteControllerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteControllerIntegrationTests.swift; sourceTree = "<group>"; };
 		2C58516229252FE20077A558 /* MapboxCoreNavigationIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCoreNavigationIntegrationTests.swift; sourceTree = "<group>"; };
@@ -844,6 +848,8 @@
 		2CE89C2A299E6C2A000A2E34 /* InterchangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterchangeTests.swift; sourceTree = "<group>"; };
 		2CE89C2C299E6D09000A2E34 /* JunctionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JunctionTests.swift; sourceTree = "<group>"; };
 		2CE89C2E299E6E08000A2E34 /* RoadObjectKindTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectKindTests.swift; sourceTree = "<group>"; };
+		2CEC5C5529F71714001B5EC2 /* NavigationSessionManagerSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSessionManagerSpy.swift; sourceTree = "<group>"; };
+		2CEC5C5729F71D9A001B5EC2 /* NavigationSessionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSessionManagerTests.swift; sourceTree = "<group>"; };
 		2CF3F8CA2926D3E600BB2B9C /* URLCacheSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLCacheSpy.swift; sourceTree = "<group>"; };
 		2CF3F8CC2926D5DE00BB2B9C /* BimodalImageCacheSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BimodalImageCacheSpy.swift; sourceTree = "<group>"; };
 		2CF5F5C82981500E00B34C8C /* NavigationNativeEventsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationNativeEventsManagerTests.swift; sourceTree = "<group>"; };
@@ -1571,6 +1577,7 @@
 		2C484CD82979AD5C00EAAE78 /* Telemetry */ = {
 			isa = PBXGroup;
 			children = (
+				2CEC5C5729F71D9A001B5EC2 /* NavigationSessionManagerTests.swift */,
 				2C856453297B1884006EFCBB /* NavigationCommonEventsManagerTests.swift */,
 				162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */,
 				2C484CD92979AD6F00EAAE78 /* EventsMetadataProviderTests.swift */,
@@ -1599,6 +1606,7 @@
 		2C856447297AD64C006EFCBB /* Telemetry */ = {
 			isa = PBXGroup;
 			children = (
+				2C4D0A2D29F6DC900063BF52 /* NavigationSessionManager.swift */,
 				2C18A12D2988729C00750CEE /* EventStep.swift */,
 				2C18A12B29886F8C00750CEE /* EventFixLocation.swift */,
 				2C856450297AE0A6006EFCBB /* NavigationEventsManager.swift */,
@@ -2221,6 +2229,7 @@
 		B47C1ACE261FD0A30078546C /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
+				2CEC5C5529F71714001B5EC2 /* NavigationSessionManagerSpy.swift */,
 				2CA61049297EF6D9003E49A7 /* System */,
 				2C2880A2291AB7240063E5B7 /* NavNative */,
 				2C9006C9291927850012CCEA /* DummyRoute.swift */,
@@ -3487,6 +3496,7 @@
 				E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */,
 				B47C1B59261FD3B70078546C /* DummyLocationManager.swift in Sources */,
 				B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */,
+				2CEC5C5629F71714001B5EC2 /* NavigationSessionManagerSpy.swift in Sources */,
 				B47C1B1E261FD3290078546C /* CoreLocation.swift in Sources */,
 				E2F08C70269DB17C002EFDC5 /* AccessToken.swift in Sources */,
 				2C9006CA291927850012CCEA /* RoutingProviderSpy.swift in Sources */,
@@ -3575,6 +3585,7 @@
 				118D883826F8CA0700B2ED7B /* PassiveNavigationFeedbackType.swift in Sources */,
 				2BBED92F265E2C7D00F90032 /* NativeHandlersFactory.swift in Sources */,
 				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
+				2C4D0A2E29F6DC900063BF52 /* NavigationSessionManager.swift in Sources */,
 				2C295ACA299BF76000FC74E8 /* Junction.swift in Sources */,
 				2E6656F9264EC912009463EE /* Result+Expected.swift in Sources */,
 				8A7B69922947AA0F00FFC3F5 /* AmenityType.swift in Sources */,
@@ -3657,6 +3668,7 @@
 				E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */,
 				2C36D9002952256400EE37DF /* RouteLegProgressTests.swift in Sources */,
 				2CA6105429802ACF003E49A7 /* MonitorConnectivityTypeProviderTests.swift in Sources */,
+				2CEC5C5829F71D9A001B5EC2 /* NavigationSessionManagerTests.swift in Sources */,
 				2C36D9012952256400EE37DF /* RouteStepProgressTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */,
