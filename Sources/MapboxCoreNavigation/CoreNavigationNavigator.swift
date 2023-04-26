@@ -365,7 +365,6 @@ final class Navigator: CoreNavigator {
     
     deinit {
         unsubscribeNavigator()
-        
     }
 }
 
