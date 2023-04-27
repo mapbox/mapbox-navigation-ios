@@ -19,6 +19,9 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     public var rerouteController: RerouteControllerInterface!
     public var rerouteDetector: RerouteDetectorInterface!
 
+    public var startNavigationSessionCalled = false
+    public var stopNavigationSessionCalled = false
+
     public init() {
         let factory = NativeHandlersFactory(tileStorePath: "", credentials: DirectionsSpy.shared.credentials)
         super.init(config: NativeHandlersFactory.configHandle(),
@@ -69,5 +72,13 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
 
     @_implementationOnly public override func getRerouteDetector() -> RerouteDetectorInterface {
         return rerouteDetector ?? RerouteDetectorSpy()
+    }
+
+    public override func startNavigationSession() {
+        startNavigationSessionCalled = true
+    }
+
+    public override func stopNavigationSession() {
+        stopNavigationSessionCalled = true
     }
 }

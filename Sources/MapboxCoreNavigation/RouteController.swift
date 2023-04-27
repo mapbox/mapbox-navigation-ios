@@ -242,6 +242,7 @@ open class RouteController: NSObject {
 
     private let navigatorType: CoreNavigator.Type
     private let routeParserType: RouteParser.Type
+    private let navigationSessionManager: NavigationSessionManager
 
     var navigator: MapboxNavigationNative.Navigator {
         return sharedNavigator.navigator
@@ -369,6 +370,7 @@ open class RouteController: NSObject {
     public func finishRouting() {
         guard !hasFinishedRouting else { return }
         hasFinishedRouting = true
+        navigationSessionManager.reportStopNavigation()
         removeRoutes(completion: nil)
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
@@ -658,6 +660,7 @@ open class RouteController: NSObject {
 
         self.navigatorType = Navigator.self
         self.routeParserType = RouteParser.self
+        self.navigationSessionManager = NavigationSessionManagerImp.shared
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
 
@@ -681,7 +684,8 @@ open class RouteController: NSObject {
          customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource,
          navigatorType: CoreNavigator.Type,
-         routeParserType: RouteParser.Type) {
+         routeParserType: RouteParser.Type,
+         navigationSessionManager: NavigationSessionManager) {
         Self.checkUniqueInstance()
 
         self.navigatorType = navigatorType
@@ -690,6 +694,7 @@ open class RouteController: NSObject {
         self.dataSource = source
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
+        self.navigationSessionManager = navigationSessionManager
 
         super.init()
 
@@ -714,6 +719,7 @@ open class RouteController: NSObject {
                         fromLegIndex: 0,
                         reason: .startNewRoute) { [weak self] _ in
             self?.isInitialized = true
+            self?.navigationSessionManager.reportStartNavigation()
         }
     }
     

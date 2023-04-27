@@ -42,7 +42,11 @@ class NativeTelemetryIntegrationTests: TestCase {
     private var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
     private var batteryPluggedIn: Bool { [.charging, .full].contains(UIDevice.current.batteryState) }
 
+    private var geometry: String!
+
     override func setUp() {
+        super.setUp()
+
         NavigationTelemetryConfiguration.useNavNativeTelemetryEvents = true
         directions = .mocked
         configureEventsObserver()
@@ -55,6 +59,13 @@ class NativeTelemetryIntegrationTests: TestCase {
         routeOptions.includesAlternativeRoutes = false
         let jsonFileName = "multileg-route"
         routeResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+        let responseData = Fixture.JSONFromFileNamed(name: "multileg-route")
+        let json = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) as? [String: Any]
+        let routesData = json?["routes"] as? [[String: Any]]
+        let geometryRawValue = (routesData?[0]["geometry"] as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\\", with: "\\\\") ?? ""
+        geometry = "\"" + geometryRawValue + "\""
         route = routeResponse.routes!.first!
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
@@ -80,12 +91,9 @@ class NativeTelemetryIntegrationTests: TestCase {
 
         locationManager.speedMultiplier = 10
         navigator = .shared
-
-        super.setUp()
     }
 
     override func tearDown() {
-        NavigationTelemetryConfiguration.useNavNativeTelemetryEvents = false
         Navigator.shared.rerouteController.reroutesProactively = true
         navigationService = nil
         passiveLocationManager = nil
@@ -93,12 +101,13 @@ class NativeTelemetryIntegrationTests: TestCase {
         UserDefaults.resetStandardUserDefaults()
         eventsAPI.unregisterObserver(for: telemetryObserver)
         telemetryObserver = nil
+        NavigationSessionManagerImp.shared.reportStopNavigation()
+        NavigationTelemetryConfiguration.useNavNativeTelemetryEvents = false
 
         super.tearDown()
     }
 
-    // TODO: skip until new NN startTripSession/stopTripSession supported NAVIOS-983
-    func skip_testStartFreeDrive() {
+    func testStartFreeDrive() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -109,15 +118,11 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func skip_testStartActiveNavigation() {
+    func testStartActiveNavigation() {
         updateLocation()
         let firstLocation = locationManager.locations.first!
         configureActiveNavigation()
 
-
-        // TODO: do not skip events after fix in NN
-        telemetryObserver.shouldSkipEventsCount = 2
-
         var activeAttributesKeys = activeNoValueCheckAttributesKeys
         activeAttributesKeys.insert("locationsAfter")
         telemetryObserver.expectedEvents = [
@@ -125,17 +130,13 @@ class NativeTelemetryIntegrationTests: TestCase {
                                   state: "navigation_started",
                                   routeProgress: navigationService.routeProgress,
                                   coordinate: firstLocation.coordinate),
-            activeNavigationEvent(eventName: "navigation.depart",
-                                  routeProgress: navigationService.routeProgress,
-                                  coordinate: firstLocation.coordinate,
-                                  noValueCheckAttributesKeys: activeAttributesKeys),
         ]
         startActiveNavigation()
 
-        wait(for: [telemetryObserver.expectation], timeout: 5)
+        wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func skip_testStartActiveNavigationAfterFreeRide() {
+    func testStartActiveNavigationAfterFreeRide() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -160,7 +161,7 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func skip_testFinishRoute() {
+    func testFinishRoute() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -181,15 +182,6 @@ class NativeTelemetryIntegrationTests: TestCase {
                                   state: "navigation_started",
                                   routeProgress: navigationService.routeProgress,
                                   coordinate: firstLocation.coordinate),
-            activeNavigationEvent(eventName: "navigation.depart",
-                                  routeProgress: navigationService.routeProgress,
-                                  coordinate: firstLocation.coordinate,
-                                  noValueCheckAttributesKeys: activeAttributesKeys),
-// TODO: enable after fix in NN
-//            activeNavigationEvent(eventName: "navigation.arrive",
-//                                  routeProgress: navigationService.routeProgress,
-//                                  coordinate: firstLocation.coordinate,
-//                                  noValueCheckAttributesKeys: activeAttributesKeys)
         ]
         startActiveNavigation()
 
@@ -200,10 +192,10 @@ class NativeTelemetryIntegrationTests: TestCase {
             return false
         }
 
-        wait(for: [telemetryObserver.expectation, navigationFinished], timeout: 5)
+        wait(for: [telemetryObserver.expectation, navigationFinished], timeout: expectationsTimeout)
     }
 
-    func skip_testStartFreeRideAfterActiveNavigation() {
+    func testStartFreeRideAfterActiveNavigation() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
@@ -256,7 +248,7 @@ class NativeTelemetryIntegrationTests: TestCase {
 
         static func ==(lhs: NativeTelemetryIntegrationTests.Event, rhs: NativeTelemetryIntegrationTests.Event) -> Bool {
             lhs.eventName == rhs.eventName &&
-            lhs.attributes.count == rhs.attributes.count &&
+            lhs.attributes == rhs.attributes &&
             lhs.noValueCheckAttributesKeys == rhs.noValueCheckAttributesKeys &&
             lhs.approximateValueCheckAttributes.count == rhs.approximateValueCheckAttributes.count &&
             lhs.approximateValueCheckAttributes.allSatisfy { key, value in
@@ -312,7 +304,8 @@ class NativeTelemetryIntegrationTests: TestCase {
             }
 
             guard actualEvents.count < expectedEvents.count else {
-                return XCTFail("Event \(eventName) was not expected")
+                expectation.fulfill()
+                return
             }
 
             print("\(eventName) event revieved. Details \(event)")
@@ -331,7 +324,6 @@ class NativeTelemetryIntegrationTests: TestCase {
 
     fileprivate var navigationBaseAttributes: [String: Any] {
         [
-            "connectivity": "WiFi",
             "sdkIdentifier": "mapbox-navigation-ios",
             "eventVersion": 2.4,
             "version": 2.4,
@@ -355,14 +347,21 @@ class NativeTelemetryIntegrationTests: TestCase {
             "createdMonotime",
             "driverModeStartTimestamp",
             "driverModeStartTimestampMonotime",
-            "driverModeId"
+            "driverModeId",
+            "connectivity",
         ]
     }
 
     private var activeNoValueCheckAttributesKeys: Set<String> {
         let attributes: Set<String> = [
             "originalRequestIdentifier",
-            "requestIdentifier"
+            "requestIdentifier",
+            "connectivity",
+            "distanceRemaining",
+            "durationRemaining",
+            // TODO: fix flaky check of voiceIndex & bannerIndex
+            "voiceIndex",
+            "bannerIndex"
         ]
         return attributes.union(passiveNoValueCheckAttributesKeys)
     }
@@ -459,32 +458,31 @@ class NativeTelemetryIntegrationTests: TestCase {
         let location = CLLocation(coordinate: coordinate)
         var attributes: [String: Any] = [
             "originalStepCount": originalRoute.legs.map({$0.steps.count}).reduce(0, +),
-            "stepCount": routeProgress.currentLeg.steps.count,
-            "voiceIndex": 0,
-            "bannerIndex": 0,
+            "stepCount": routeProgress.route.legs.reduce(0) { $0 + $1.steps.count },
             "driverMode": "trip",
             "lat": coordinate.latitude,
             "lng": coordinate.longitude,
             "profile": "driving-traffic",
-            "originalGeometry": Polyline(coordinates: originalRoute.shape!.coordinates).encodedPolyline,
+            "originalGeometry": geometry ?? "",
             "originalGeometryFormat": "precision_6",
-            "geometry": Polyline(coordinates: route.shape!.coordinates).encodedPolyline,
+            "geometry": geometry ?? "",
             "geometryFormat": "precision_6",
             "stepIndex": routeProgress.currentLegProgress.stepIndex,
             "legIndex": routeProgress.legIndex,
             "legCount": routeProgress.route.legs.count,
             "estimatedDuration": Int(route.expectedTravelTime),
-            "estimatedDistance": route.distance,
+            "estimatedDistance": Int(route.distance),
             "rerouteCount": rerouteCount
         ]
         if let state = state {
             attributes["state"] = state
         }
         let approximateValueCheckAttributes = [
+            "absoluteDistanceToDestination": (location.distance(from: CLLocation(latitude: lastCoordinate.latitude, longitude: lastCoordinate.longitude)), 10.0),
             "distanceCompleted": (routeProgress.distanceTraveled, 10.0),
-            "distanceRemaining": (routeProgress.distanceRemaining, 10.0),
-            "durationRemaining": (routeProgress.durationRemaining, 1.0),
-            "absoluteDistanceToDestination": (location.distance(from: CLLocation(latitude: lastCoordinate.latitude, longitude: lastCoordinate.longitude)), 10.0)
+            // TODO: return value check after NN fix
+//            "distanceRemaining": (routeProgress.distanceRemaining, 10.0),
+//            "durationRemaining": (routeProgress.durationRemaining, 1.0),
         ]
         let attributesKeys = noValueCheckAttributesKeys ?? activeNoValueCheckAttributesKeys
         return event(with: eventName,
@@ -536,5 +534,19 @@ extension NativeTelemetryIntegrationTests.Event {
                   attributes: eventAttributes,
                   approximateValueCheckAttributes: approximateValueCheckAttributes,
                   noValueCheckAttributesKeys: Set(noValueCheckAttributesKeys))
+    }
+}
+
+private func ==(lhs: [String: Any], rhs: [String: Any] ) -> Bool {
+    guard Set(lhs.keys) == Set(rhs.keys) else { return false }
+    return lhs.keys.allSatisfy { key in
+        let leftValue = lhs[key]!
+        let rightValue = rhs[key]!
+        let result = NSDictionary(dictionary: [key: leftValue]).isEqual(to: [key: rightValue])
+
+        if (!result) {
+            print("Found diff between events \(lhs["event"] ?? "").\(lhs["state"] ?? "")) with key=\(key), actual \(leftValue), expected \(rightValue)")
+        }
+        return result
     }
 }

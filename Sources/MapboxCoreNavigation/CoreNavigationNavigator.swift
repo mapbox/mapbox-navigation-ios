@@ -116,7 +116,7 @@ final class Navigator: CoreNavigator {
                     completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
                 }
             }
-        }, alternativeRoutesSetupHandler: {[weak self] routes, completion in
+        }, alternativeRoutesSetupHandler: { [weak self] routes, completion in
             self?.navigator.setAlternativeRoutesForRoutes(routes, callback: { result in
                 if result.isValue(),
                    let alternatives = result.value as? [RouteAlternative] {
@@ -152,7 +152,7 @@ final class Navigator: CoreNavigator {
     static var isSharedInstanceCreated: Bool {
         _navigator != nil
     }
-    
+
     private static weak var _navigator: Navigator?
     
     /**
@@ -195,6 +195,7 @@ final class Navigator: CoreNavigator {
      */
     func restartNavigator(forcing version: String? = nil) {
         unsubscribeNavigator()
+        let previousNavigationSessionState = navigator.storeNavigationSession()
         navigator.shutdown()
         
         let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
@@ -211,7 +212,8 @@ final class Navigator: CoreNavigator {
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
         rerouteController = RerouteController(navigator, config: NativeHandlersFactory.configHandle())
-        
+
+        navigator.restoreNavigationSession(for: previousNavigationSessionState)
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
     }
