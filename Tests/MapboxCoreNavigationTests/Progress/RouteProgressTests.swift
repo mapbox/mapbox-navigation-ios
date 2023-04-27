@@ -327,6 +327,7 @@ class RouteProgressTests: TestCase {
                 geometryIndex: 0,
                 shapeIndex: 0,
                 intersectionIndex: 0,
+                alternativeRouteIndices: [],
                 roads: [],
                 voiceInstruction: nil,
                 bannerInstruction: nil,

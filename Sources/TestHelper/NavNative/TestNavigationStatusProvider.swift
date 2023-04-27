@@ -38,6 +38,7 @@ public final class TestNavigationStatusProvider {
                      geometryIndex: geometryIndex,
                      shapeIndex: shapeIndex,
                      intersectionIndex: intersectionIndex,
+                     alternativeRouteIndices: [],
                      roads: roadNames,
                      voiceInstruction: voiceInstruction,
                      bannerInstruction: bannerInstruction,
