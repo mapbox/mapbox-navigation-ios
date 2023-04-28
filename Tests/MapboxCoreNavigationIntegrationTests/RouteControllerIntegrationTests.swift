@@ -490,6 +490,8 @@ extension MapboxCoreNavigation.RoadObject.Kind {
             return .ic
         case .jct:
             return .jct
+        case .notification:
+            return .notification
         }
     }
 }
