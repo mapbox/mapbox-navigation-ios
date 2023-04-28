@@ -71,6 +71,10 @@ extension RoadObject {
         /// Japan-specific Junction info, refers to a place where multiple expressways meet, e.g. Ariake JCT.
         case jct(Junction?)
         
+        /// :nodoc:
+        /// Not supported yet
+        case notification
+        
         init(_ native: MapboxNavigationNative.RoadObjectType) {
             switch native {
             case .incident:
@@ -95,6 +99,8 @@ extension RoadObject {
                 self = .jct(nil)
             case .custom:
                 self = .userDefined
+            case .notification:
+                self = .notification
             @unknown default:
                 fatalError("Unknown MapboxNavigationNative.RoadObjectType value.")
             }
@@ -124,6 +130,8 @@ extension RoadObject {
                 self = .jct(metadata.isJctInfo() ? Junction(metadata.getJctInfo()) : nil)
             case .custom:
                 self = .userDefined
+            case .notification:
+                self = .notification
             @unknown default:
                 fatalError("Unknown MapboxNavigationNative.RoadObjectType value.")
             }
