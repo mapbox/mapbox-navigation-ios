@@ -76,6 +76,7 @@ class RerouteController {
     private var reroutingRequest: NavigationProviderRequest?
     private var latestRouteResponse: (response: RouteResponse, options: RouteOptions)?
     private var isCancelled = false
+    private var isInvalidated = false
     
     private weak var navigator: MapboxNavigationNative.Navigator?
 
@@ -98,6 +99,9 @@ class RerouteController {
     }
 
     func invalidate() {
+        guard !isInvalidated else { return }
+
+        isInvalidated = true
         navigator?.removeRerouteObserver(for: self)
         navigator?.setRerouteControllerForController(defaultRerouteController.nativeInterface)
     }
