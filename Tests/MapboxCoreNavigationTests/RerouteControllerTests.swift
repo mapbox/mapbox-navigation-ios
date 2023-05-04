@@ -140,4 +140,12 @@ final class RerouteControllerTests: TestCase {
         XCTAssertTrue(navigatorSpy.passedRemovedRerouteObserver === rerouteController)
     }
 
+    func testDoNotInvalidateTwice() {
+        rerouteController.invalidate()
+        navigatorSpy.passedRemovedRerouteObserver = nil
+
+        rerouteController.invalidate()
+        XCTAssertNil(navigatorSpy.passedRemovedRerouteObserver)
+    }
+
 }
