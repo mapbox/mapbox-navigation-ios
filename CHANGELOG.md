@@ -14,6 +14,7 @@
 ### Other changes
 
 * Added support for Native Telemetry `Navigator.startNavigationSession()` and `Navigator.stopNavigationSession()` for correct report of navigation session type to telemetry. ([#4435](https://github.com/mapbox/mapbox-navigation-ios/pull/4435))
+* Fixed a possible crash that could happen while configuring predictive cache before navigation started. ([#4444](https://github.com/mapbox/mapbox-navigation-ios/pull/4444))
 
 ## v2.12.0
 
