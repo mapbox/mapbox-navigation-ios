@@ -46,6 +46,7 @@ public final class TestNavigationStatusProvider {
                      keyPoints: [],
                      mapMatcherOutput: mapMatcherOutput,
                      offRoadProba: 0,
+                     offRoadStateProvider: .unknown,
                      activeGuidanceInfo: activeGuidanceInfo,
                      upcomingRouteAlerts: [],
                      upcomingRouteAlertUpdates: upcomingRouteAlertUpdates,

@@ -335,6 +335,7 @@ class RouteProgressTests: TestCase {
                 keyPoints: [],
                 mapMatcherOutput: .init(matches: [], isTeleport: false),
                 offRoadProba: 0,
+                offRoadStateProvider: .unknown,
                 activeGuidanceInfo: .init(
                     routeProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),
                     legProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),

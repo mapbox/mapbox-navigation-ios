@@ -22,15 +22,51 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.11.0-rc.1")),
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "1.0.0"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "132.0.0"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("10.13.0-rc.1")),
-        .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "3.0.0"),
-        .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
-        .package(name: "CwlPreconditionTesting", url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
-        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .exact("1.9.0")),
-        .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
+        .package(
+            name: "MapboxDirections",
+            url: "https://github.com/mapbox/mapbox-directions-swift.git",
+            from: "2.10.0"
+        ),
+        .package(
+            name: "MapboxMobileEvents",
+            url: "https://github.com/mapbox/mapbox-events-ios.git",
+            from: "1.0.0"
+        ),
+        .package(
+            name: "MapboxNavigationNative",
+            url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
+            from: "132.2.0"
+        ),
+        .package(
+            name: "MapboxMaps",
+            url: "https://github.com/mapbox/mapbox-maps-ios.git",
+            from: "10.13.1"
+        ),
+        .package(
+            name: "Solar",
+            url: "https://github.com/ceeK/Solar.git",
+            from: "3.0.0"
+        ),
+        .package(
+            name: "MapboxSpeech",
+            url: "https://github.com/mapbox/mapbox-speech-swift.git",
+            from: "2.0.0"
+        ),
+        .package(
+            name: "CwlPreconditionTesting",
+            url: "https://github.com/mattgallagher/CwlPreconditionTesting.git",
+            from: "2.1.0"
+        ),
+        .package(
+            name: "SnapshotTesting",
+            url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
+            .exact("1.9.0")
+        ),
+        .package(
+            name: "OHHTTPStubs",
+            url: "https://github.com/AliSoftware/OHHTTPStubs.git",
+            from: "9.1.0"
+        ),
     ],
     targets: [
         .target(
