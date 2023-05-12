@@ -40,6 +40,11 @@ nav_native_tags = requests.get(
 ).json()
 nav_native_version = get_dependency_version_from_tags(nav_native_tags)
 
+ignore_snapshot_dependencies = sys.argv[1]
+if (not maps_version or not nav_native_version) and ignore_snapshot_dependencies == 'false':
+    print('Cancel workflow. Not all dependencies are ready')
+    sys.exit(1)
+
 package_swift_file_name = 'Package.swift'
 package_swift = open(package_swift_file_name, 'r').read()
 package_swift_lines = open(package_swift_file_name, 'r').readlines()

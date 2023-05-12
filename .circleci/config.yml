@@ -3,6 +3,14 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.4.2
 
+parameters:
+  weekly_snapshot:
+    type: boolean
+    default: false
+  ignore_snapshot_dependencies:
+    type: boolean
+    default: false
+
 commands:
   install-mbx-ci:
     steps:
@@ -171,7 +179,7 @@ commands:
             git config user.email "release-bot@mapbox.com"
             git config user.name "Mapbox Releases"
             pip3 install requests
-            python3 scripts/snapshot/prepare-snapshot.py
+            python3 scripts/snapshot/prepare-snapshot.py << pipeline.parameters.ignore_snapshot_dependencies >>
 
   trigger-onetap:
     steps:
@@ -941,6 +949,10 @@ workflows:
             branches:
               only:
                 - main
+    jobs:
+      - release-weekly-snapshot
+  weekly-snapshot-manual-workflow:
+    when: << pipeline.parameters.weekly_snapshot >>
     jobs:
       - release-weekly-snapshot
   pre-snapshot-workflow:
