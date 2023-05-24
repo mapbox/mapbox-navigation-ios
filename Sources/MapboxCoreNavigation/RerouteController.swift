@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxCommon
 @_implementationOnly import MapboxNavigationNative_Private
 
 /**
@@ -121,7 +122,7 @@ class RerouteController {
 extension RerouteController: RerouteObserver {
     func onSwitchToAlternative(forRoute route: RouteInterface) {
         guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
-                                        routeResponse: route.getResponseJson()) else {
+                                        routeResponse: route.getResponseJsonRef()) else {
             return
         }
         
@@ -155,7 +156,8 @@ extension RerouteController: RerouteObserver {
                                                          routeOrigin: origin)
             self.latestRouteResponse = nil
         } else {
-            guard let decodedResponse = Self.decode(routeResponse: routeResponse,
+            guard let responseData = routeResponse.data(using: .utf8),
+                  let decodedResponse = Self.decode(routeResponse: responseData,
                                                     routeOptions: decodedRequest.routeOptions,
                                                     credentials: decodedRequest.credentials) else {
                 delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
@@ -189,7 +191,16 @@ extension RerouteController: RerouteObserver {
 }
 
 extension RerouteController {
-    static internal func decode(routeRequest: String, routeResponse: String) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+    static internal func decode(routeRequest: String, routeResponse: DataRef) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+        var result: (routeOptions: RouteOptions, routeResponse: RouteResponse)?
+        routeResponse.withData { responseData in
+            result = decode(routeRequest: routeRequest,
+                            routeResponse: responseData)
+        }
+        return result
+    }
+    
+    static internal func decode(routeRequest: String, routeResponse: Data) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
         guard let decodedRequest = decode(routeRequest: routeRequest),
               let decodedResponse = decode(routeResponse: routeResponse,
                                            routeOptions: decodedRequest.routeOptions,
@@ -210,19 +221,15 @@ extension RerouteController {
                 credentials: Credentials(requestURL: requestURL))
     }
 
-    static internal func decode(routeResponse: String,
+    static internal func decode(routeResponse: Data,
                                 routeOptions: RouteOptions,
                                 credentials: Credentials) -> RouteResponse? {
-        guard let data = routeResponse.data(using: .utf8) else {
-            return nil
-        }
-
         let decoder = JSONDecoder()
         decoder.userInfo[.options] = routeOptions
         decoder.userInfo[.credentials] = credentials
 
         return try? decoder.decode(RouteResponse.self,
-                                   from: data)
+                                   from: routeResponse)
     }
 }
 

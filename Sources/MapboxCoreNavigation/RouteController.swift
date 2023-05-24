@@ -1137,7 +1137,7 @@ extension RouteController {
             return
         }
         guard let decoded = RerouteController.decode(routeRequest: onlineRoute.getRequestUri(),
-                                                     routeResponse: onlineRoute.getResponseJson()) else {
+                                                     routeResponse: onlineRoute.getResponseJsonRef()) else {
             return
         }
         

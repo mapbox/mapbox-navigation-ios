@@ -1086,7 +1086,7 @@ open class NavigationMapView: UIView {
             case .none:
                 mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
             }
-            mapView.location.options.puckBearingSource = .course
+            mapView.location.options.puckBearing = .course
         }
     }
     

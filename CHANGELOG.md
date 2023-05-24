@@ -7,6 +7,10 @@
 * MapboxCoreNavigation now requires [MapboxNavigationNative v134._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/134.0.0). ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
 * MapboxNavigation now requires [MapboxMaps v10.14.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-beta.1). ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
 
+### Other changes
+
+* Optimized performance of route response parsing for reroutes, continuous alternatives and similar use-cases. ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
+
 ## v2.13.0
 
 ### Packaging
