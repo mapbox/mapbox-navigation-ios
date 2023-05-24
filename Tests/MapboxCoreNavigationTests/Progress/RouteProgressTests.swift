@@ -316,6 +316,7 @@ class RouteProgressTests: TestCase {
             .init(
                 routeState: .tracking,
                 locatedAlternativeRouteId: nil,
+                primaryRouteId: nil,
                 stale: false,
                 location: .init(.init()),
                 routeIndex: 0,
@@ -323,6 +324,7 @@ class RouteProgressTests: TestCase {
                 step: 0,
                 isFallback: false,
                 inTunnel: false,
+                inParkingAisle: false,
                 predicted: 0,
                 geometryIndex: 0,
                 shapeIndex: 0,
@@ -331,10 +333,11 @@ class RouteProgressTests: TestCase {
                 roads: [],
                 voiceInstruction: nil,
                 bannerInstruction: nil,
-                speedLimit: nil,
+                speedLimit: .init(speed: nil, localeUnit: .kilometresPerHour, localeSign: .vienna),
                 keyPoints: [],
                 mapMatcherOutput: .init(matches: [], isTeleport: false),
                 offRoadProba: 0,
+                offRoadStateProvider: .unknown,
                 activeGuidanceInfo: .init(
                     routeProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),
                     legProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),

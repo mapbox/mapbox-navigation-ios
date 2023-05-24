@@ -484,6 +484,11 @@ class NavigatorStatusObserver: NavigatorObserver {
 }
 
 class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
+    func onRouteAlternativesUpdated(forOnlinePrimaryRoute onlinePrimaryRoute: RouteInterface?,
+                                    alternatives: [RouteAlternative],
+                                    removedAlternatives: [RouteAlternative]) {
+        // do nothing
+    }
 
     func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) {
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
