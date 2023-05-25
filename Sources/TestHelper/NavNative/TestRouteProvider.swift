@@ -17,14 +17,13 @@ public final class TestRouteProvider {
 
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+        guard let routeData = try? encoder.encode(routeResponse) else {
             XCTFail("Failed to encode generated test Route.")
             return nil
         }
         let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
 
-        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponseDataRef: .init(data: routeData),
                                                                request: routeRequest,
                                                                routeOrigin: RouterOrigin.custom)
         var generatedRoute: RouteInterface? = nil

@@ -105,7 +105,8 @@ public struct HistoryReader: Sequence {
                 // Route reset
                 return nil
             }
-            guard let decodedInfo = RerouteController.decode(routeRequest: routeRequest, routeResponse: routeResponse),
+            guard let responseData = routeResponse.data(using: .utf8),
+                  let decodedInfo = RerouteController.decode(routeRequest: routeRequest, routeResponse: responseData),
                   let routes = decodedInfo.routeResponse.routes,
                   routes.indices.contains(Int(setRoute.routeIndex))
             else {

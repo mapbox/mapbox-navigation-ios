@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import UIKit
 @_implementationOnly import MapboxNavigationNative_Private
+import MapboxCommon
 
 class NavigationNativeEventsManager: NavigationTelemetryManager {
     var delaysEventFlushing = true
@@ -134,6 +135,16 @@ class NavigationNativeEventsManager: NavigationTelemetryManager {
                      feedbackSubType: feedbackSubType,
                      feedbackSource: source.description,
                      description: description ?? "",
-                     screenshot: feedbackMetadata.screenshot)
+                     screenshot: feedbackMetadata.screenshot?.toDataRef())
+    }
+}
+
+extension String {
+    func toDataRef() -> DataRef? {
+        if let data = self.data(using: .utf8),
+           let encodedData = Data(base64Encoded: data) {
+            return .init(data: encodedData)
+        }
+        return nil
     }
 }

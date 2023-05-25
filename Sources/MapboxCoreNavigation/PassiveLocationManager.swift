@@ -213,26 +213,24 @@ open class PassiveLocationManager: NSObject {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
 
-        switch status.speedLimit?.localeSign {
+        switch status.speedLimit.localeSign {
         case .mutcd:
             signStandard = .mutcd
         case .vienna:
             signStandard = .viennaConvention
-        case .none:
-            signStandard = nil
-        case .some(_):
+        @unknown default:
+            assertionFailure("Unknown native speed limit sign locale.")
             break
         }
 
-        if let speed = status.speedLimit?.speedKmph as? Double {
-            switch status.speedLimit?.localeUnit {
+        if let speed = status.speedLimit.speed?.doubleValue {
+            switch status.speedLimit.localeUnit {
             case .milesPerHour:
-                speedLimit = Measurement(value: speed, unit: .kilometersPerHour).converted(to: .milesPerHour)
+                speedLimit = Measurement(value: speed, unit: .milesPerHour)
             case .kilometresPerHour:
                 speedLimit = Measurement(value: speed, unit: .kilometersPerHour)
-            case .none:
-                speedLimit = nil
-            case .some(_):
+            @unknown default:
+                assertionFailure("Unknown native speed limit unit.")
                 break
             }
         }

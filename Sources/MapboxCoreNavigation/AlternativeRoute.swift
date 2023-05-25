@@ -46,7 +46,7 @@ public struct AlternativeRoute: Identifiable {
     init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) {
         self.id = nativeRouteAlternative.id
         guard let decoded = RerouteController.decode(routeRequest: nativeRouteAlternative.route.getRequestUri(),
-                                                     routeResponse: nativeRouteAlternative.route.getResponseJson()) else {
+                                                     routeResponse: nativeRouteAlternative.route.getResponseJsonRef()) else {
             return nil
         }
 

@@ -240,7 +240,7 @@ class PassiveLocationManagerTests: TestCase {
     func testHandleNotificationNavigationStatusDidChange() {
         passiveLocationManager.updateLocation(location)
 
-        let originalSpeedLimit = SpeedLimit(speedKmph: 120, localeUnit: .milesPerHour, localeSign: .mutcd)
+        let originalSpeedLimit = SpeedLimit(speed: 120, localeUnit: .kilometresPerHour, localeSign: .mutcd)
         let status = navigationStatus(with: originalSpeedLimit)
 
         expectation(forNotification: .passiveLocationManagerDidUpdate, object: passiveLocationManager) { (notification) -> Bool in
@@ -256,7 +256,7 @@ class PassiveLocationManagerTests: TestCase {
             let speedLimit = userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
             let signStandard = userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
 
-            let expectedSpeedLimit = Measurement<UnitSpeed>(value: originalSpeedLimit.speedKmph as! Double,
+            let expectedSpeedLimit = Measurement<UnitSpeed>(value: originalSpeedLimit.speed!.doubleValue,
                                                             unit: .kilometersPerHour).converted(to: .milesPerHour)
             let expectedMatches = [Match(legs: [],
                                          shape: nil,
@@ -288,7 +288,7 @@ class PassiveLocationManagerTests: TestCase {
     func testHandleNotificationNavigationStatusDidChangeIfViennaConvention() {
         passiveLocationManager.updateLocation(location)
 
-        let originalSpeedLimit = SpeedLimit(speedKmph: 120, localeUnit: .kilometresPerHour, localeSign: .vienna)
+        let originalSpeedLimit = SpeedLimit(speed: 120, localeUnit: .kilometresPerHour, localeSign: .vienna)
         let status = navigationStatus(with: originalSpeedLimit)
 
         expectation(forNotification: .passiveLocationManagerDidUpdate, object: passiveLocationManager) { (notification) -> Bool in
@@ -296,7 +296,7 @@ class PassiveLocationManagerTests: TestCase {
             let speedLimit = userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
             let signStandard = userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
 
-            let expectedSpeedLimit = Measurement<UnitSpeed>(value: originalSpeedLimit.speedKmph as! Double,
+            let expectedSpeedLimit = Measurement<UnitSpeed>(value: originalSpeedLimit.speed!.doubleValue,
                                                             unit: .kilometersPerHour)
 
             XCTAssertEqual(speedLimit, expectedSpeedLimit)
@@ -319,7 +319,7 @@ class PassiveLocationManagerTests: TestCase {
             let userInfo = notification.userInfo
 
             XCTAssertNil(userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey])
-            XCTAssertNil(userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey])
+            XCTAssertEqual(userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard, .viennaConvention)
 
             return true
         }

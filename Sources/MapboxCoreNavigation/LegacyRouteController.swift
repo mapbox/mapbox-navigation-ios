@@ -242,7 +242,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         self.init(alongRouteAtIndex:routeIndex,
                   in: routeResponse,
                   options: options,
-                  routingProvider: routingProvider,
+                  customRoutingProvider: routingProvider,
                   dataSource: source)
     }
     
