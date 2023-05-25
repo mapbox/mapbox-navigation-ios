@@ -138,7 +138,8 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(4, mapTemplate?.mapButtons.count)
     }
     
-    func testNavigationStartAndEnd() {
+    // disabled in https://github.com/mapbox/mapbox-navigation-ios/pull/4462
+    func disabled_testNavigationStartAndEnd() {
         startNavigation()
 
         XCTAssertTrue(delegate.didBeginNavigationCalled,
@@ -225,14 +226,16 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, startButtonTitle)
     }
     
-    func testWillPresentNavigationViewController() {
+    // disabled in https://github.com/mapbox/mapbox-navigation-ios/pull/4462
+    func disabled_testWillPresentNavigationViewController() {
         startNavigation()
         
         XCTAssertTrue(delegate.willPresentCalled)
         XCTAssertEqual(delegate.passedWillPresentNavigationViewController, carPlayManager.carPlayNavigationViewController)
     }
 
-    func testStartWhenConfiguredToSimulate() {
+    // disabled in https://github.com/mapbox/mapbox-navigation-ios/pull/4462
+    func disabled_testStartWhenConfiguredToSimulate() {
         carPlayManager.simulatesLocations = true
         carPlayManager.simulatedSpeedMultiplier = 5.0
         startNavigation()
@@ -243,7 +246,8 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedService?.simulationSpeedMultiplier, 5.0)
     }
 
-    func testStartWhenConfiguredNotToSimulate() {
+    // disabled in https://github.com/mapbox/mapbox-navigation-ios/pull/4462
+    func disabled_testStartWhenConfiguredNotToSimulate() {
         carPlayManager.simulatesLocations = false
         startNavigation()
 

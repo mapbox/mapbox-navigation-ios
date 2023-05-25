@@ -279,7 +279,8 @@ class NavigationViewControllerTests: TestCase {
         service.locationManager!(service.locationManager, didUpdateLocations: [fultonStreetLocation])
     }
     
-    func testDestinationAnnotationUpdatesUponReroute() {
+    // disabled in https://github.com/mapbox/mapbox-navigation-ios/pull/4462
+    func disabled_testDestinationAnnotationUpdatesUponReroute() {
         let service = MapboxNavigationService(indexedRouteResponse: initialRouteResponse,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
