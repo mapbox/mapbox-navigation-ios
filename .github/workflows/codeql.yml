@@ -36,6 +36,13 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
+      - name: Prepare netrc
+        run: |
+          echo "machine api.mapbox.com" >> ~/.netrc
+          echo "login mapbox" >> ~/.netrc
+          echo "password ${{ secrets.SDK_REGISTRY_TOKEN }}" >> ~/.netrc
+          chmod 0600 ~/.netrc
+
       - name: Build
         run: |
           /usr/bin/xcodebuild build -project /Users/runner/work/mapbox-navigation-ios/mapbox-navigation-ios/MapboxNavigation-SPM.xcodeproj -target Example CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
