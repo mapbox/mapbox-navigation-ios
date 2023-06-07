@@ -36,8 +36,9 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+      - name: Build
+        run: |
+          /usr/bin/xcodebuild build -project /Users/runner/work/mapbox-navigation-ios/mapbox-navigation-ios/MapboxNavigation-SPM.xcodeproj -target Example CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
