@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "machine api.mapbox.com" >> ~/.netrc
           echo "login mapbox" >> ~/.netrc
-          echo "password ${{ secrets.SDK_REGISTRY_TOKEN }}" >> ~/.netrc
+          echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
           chmod 0600 ~/.netrc
 
       - name: Build
