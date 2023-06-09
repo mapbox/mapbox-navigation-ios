@@ -285,10 +285,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "15.2"
+        default: "16.2"
       xcode:
         type: string
-        default: "13.2.1"
+        default: "14.2.0"
       lint:
         type: boolean
         default: false
@@ -297,6 +297,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -891,17 +892,17 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_install"
+            name: "Xcode_14.2.0_iOS_16.4_CP_install"
             update: false
-            xcode: "13.2.1"
-            iOS: "15.2"
+            xcode: "14.2.0"
+            iOS: "16.2"
             archive: true
             context: Slack Orb
         - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_update"
+            name: "Xcode_14.0.1_iOS_15.5_CP_update"
             update: true
-            xcode: "13.2.1"
-            iOS: "15.2"
+            xcode: "14.0.1"
+            iOS: "15.5"
             lint: true
             context: Slack Orb
         - build-example:
