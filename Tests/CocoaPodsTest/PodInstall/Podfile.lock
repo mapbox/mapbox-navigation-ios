@@ -1,28 +1,28 @@
 PODS:
-  - MapboxCommon (23.6.0-beta.1)
-  - MapboxCoreMaps (10.14.0-beta.1):
-    - MapboxCommon (~> 23.6.0-beta)
+  - MapboxCommon (23.6.0-rc.1)
+  - MapboxCoreMaps (10.14.0-rc.1):
+    - MapboxCommon (~> 23.6.0-rc)
   - MapboxCoreNavigation (2.14.0-beta.1):
-    - MapboxDirections-pre (= 2.11.0-rc.1)
+    - MapboxDirections (~> 2.10.0)
     - MapboxMobileEvents (~> 1.0)
-    - MapboxNavigationNative (~> 134.0.0)
-  - MapboxDirections-pre (2.11.0-rc.1):
+    - MapboxNavigationNative (~> 136.0.0)
+  - MapboxDirections (2.10.0):
     - Polyline (~> 5.0)
     - Turf (~> 2.6.1)
-  - MapboxMaps (10.14.0-beta.1):
-    - MapboxCommon (= 23.6.0-beta.1)
-    - MapboxCoreMaps (= 10.14.0-beta.1)
+  - MapboxMaps (10.14.0-rc.1):
+    - MapboxCommon (= 23.6.0-rc.1)
+    - MapboxCoreMaps (= 10.14.0-rc.1)
     - MapboxMobileEvents (= 1.0.10)
     - Turf (~> 2.0)
   - MapboxMobileEvents (1.0.10)
   - MapboxNavigation (2.14.0-beta.1):
     - MapboxCoreNavigation (= 2.14.0-beta.1)
-    - MapboxMaps (= 10.14.0-beta.1)
+    - MapboxMaps (= 10.14.0-rc.1)
     - MapboxMobileEvents (~> 1.0)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
-  - MapboxNavigationNative (134.0.0):
-    - MapboxCommon (~> 23.6.0-beta.1)
+  - MapboxNavigationNative (136.0.0):
+    - MapboxCommon (~> 23.6.0-rc.1)
   - MapboxSpeech (2.1.1)
   - Polyline (5.1.0)
   - Solar-dev (3.0.1)
@@ -36,7 +36,7 @@ SPEC REPOS:
   trunk:
     - MapboxCommon
     - MapboxCoreMaps
-    - MapboxDirections-pre
+    - MapboxDirections
     - MapboxMaps
     - MapboxMobileEvents
     - MapboxNavigationNative
@@ -52,14 +52,14 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: f829a692f634615946fa699b12318139a24a61d5
-  MapboxCoreMaps: 7936826535384982e8ed25e6515925444464ff7f
-  MapboxCoreNavigation: 63c0f3c385fff500dc8f2655a0826e484bbdc935
-  MapboxDirections-pre: 0cc87359ada104780eeefc4fb6e97770b73c0f7a
-  MapboxMaps: 614946e152cb4dfa34089d402471409d5abacdcc
+  MapboxCommon: 1bed7498396b2471365136f9ccb2cbc76a5bdc3f
+  MapboxCoreMaps: 317efac0776b3ccc8835497b90652da37dae8e4d
+  MapboxCoreNavigation: 852a5c50c508f7269cf2ac6241ad75476ee4d672
+  MapboxDirections: a620d78a54312c392323ba211df8ae7dd9a28ab4
+  MapboxMaps: c52d557e70550f629b156d307ad352f834daf08f
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MapboxNavigation: d0976d60e897af598317dd46d97fbf224a1d4d14
-  MapboxNavigationNative: 404e6b83cb5d4f9545a5012211d58053f21ae88b
+  MapboxNavigation: b9d5cc932f29daca815826232eb78de61805a89f
+  MapboxNavigationNative: 9e457f62c8f34637e7a9910b68bfdd4fb1ef42ff
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
@@ -67,4 +67,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 20f356205cc7a366d6b3c177155b683e2d62b354
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1

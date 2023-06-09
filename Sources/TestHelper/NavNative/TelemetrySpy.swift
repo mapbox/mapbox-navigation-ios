@@ -71,4 +71,8 @@ final class EventsMetadataInterfaceSpy: EventsMetadataInterface {
               connectivity: "",
               appMetadata: nil)
     }
+
+    func screenshot() -> ScreenshotFormat? {
+        nil
+    }
 }

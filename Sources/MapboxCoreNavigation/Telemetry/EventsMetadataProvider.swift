@@ -58,6 +58,12 @@ final class EventsMetadataProvider: EventsMetadataInterface {
                      connectivity: connectivity,
                      appMetadata: appMetadata)
     }
+
+    func screenshot() -> ScreenshotFormat? {
+        captureScreen(scaledToFit: 250)
+            .flatMap { $0.jpegData(compressionQuality: 0.2) }
+            .map { ScreenshotFormat(jpeg: .init(data: $0), base64: nil) }
+    }
 }
 
 extension AVAudioSession: AudioSessionInfoProvider {
