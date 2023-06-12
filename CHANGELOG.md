@@ -4,12 +4,14 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v134._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/134.0.0). ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
-* MapboxNavigation now requires [MapboxMaps v10.14.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-beta.1). ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v136._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/136.0.0). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
+* MapboxNavigation now requires [MapboxMaps v10.14.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-rc.1). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
 
 ### Other changes
 
 * Optimized performance of route response parsing for reroutes, continuous alternatives and similar use-cases. ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
+* Fixed an issue with too high alternative route requests frequency in case of only one route being present in the route response.
+- Fixed an issue with positioning lag in tunnels.
 
 ## v2.13.0
 

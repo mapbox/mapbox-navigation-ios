@@ -90,8 +90,7 @@ final class NavigationNativeEventsManagerTests: TestCase {
         XCTAssertEqual(telemetry.passedUserFeedback?.description, "description")
         XCTAssertEqual(telemetry.passedUserFeedback?.feedbackType, "incorrect_audio_guidance")
         XCTAssertEqual(telemetry.passedUserFeedback?.feedbackSubType, ["guidance_too_early"])
-        XCTAssertEqual(telemetry.passedUserFeedback?.feedbackSource, "reroute")
-        XCTAssertEqual(telemetry.passedUserFeedback?.screenshot, image.toDataRef())
+        XCTAssertEqual(telemetry.passedUserFeedback?.screenshot?.base64, image)
         XCTAssertNotNil(telemetry.passedFeedbackMetadata)
 
         let location = CLLocation(latitude: 37.208674, longitude: 19.524650)
@@ -130,8 +129,7 @@ final class NavigationNativeEventsManagerTests: TestCase {
         XCTAssertEqual(telemetry.passedUserFeedback?.description, "description")
         XCTAssertEqual(telemetry.passedUserFeedback?.feedbackType, "incorrect_visual")
         XCTAssertEqual(telemetry.passedUserFeedback?.feedbackSubType, ["incorrect_speed_limit"])
-        XCTAssertEqual(telemetry.passedUserFeedback?.feedbackSource, "reroute")
-        XCTAssertEqual(telemetry.passedUserFeedback?.screenshot, image.toDataRef())
+        XCTAssertEqual(telemetry.passedUserFeedback?.screenshot?.base64, image)
         XCTAssertNotNil(telemetry.passedFeedbackMetadata)
 
         let location = CLLocation(latitude: 37.208674, longitude: 19.524650)

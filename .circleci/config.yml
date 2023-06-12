@@ -283,12 +283,9 @@ jobs:
       update:
         type: boolean
         default: false
-      iOS:
-        type: string
-        default: "15.2"
       xcode:
         type: string
-        default: "13.2.1"
+        default: "14.2.0"
       lint:
         type: boolean
         default: false
@@ -297,6 +294,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -316,11 +314,11 @@ jobs:
           condition: << parameters.update >>
           steps:
             - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
-      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 13 Pro Max' clean build
+      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'generic/platform=iOS Simulator' -sdk iphonesimulator clean build
       - when:
           condition: << parameters.archive >>
           steps:
-            - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -sdk iphoneos<< parameters.iOS >> -destination generic/platform=iOS clean archive CODE_SIGNING_ALLOWED="NO"
+            - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'generic/platform=iOS Simulator' -sdk iphonesimulator clean archive CODE_SIGNING_ALLOWED="NO"
       - when:
           condition: << parameters.lint >>
           steps:
@@ -891,17 +889,15 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_install"
+            name: "Xcode_14.2.0 pod install"
             update: false
-            xcode: "13.2.1"
-            iOS: "15.2"
+            xcode: "14.2.0"
             archive: true
             context: Slack Orb
         - pod-job:
-            name: "Xcode_13.2.1_iOS_15.2_CP_update"
+            name: "Xcode_14.3 pod update"
             update: true
-            xcode: "13.2.1"
-            iOS: "15.2"
+            xcode: "14.3.1"
             lint: true
             context: Slack Orb
         - build-example:

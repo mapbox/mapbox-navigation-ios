@@ -133,9 +133,8 @@ class NavigationNativeEventsManager: NavigationTelemetryManager {
         }
         return .init(feedbackType: type.typeKey,
                      feedbackSubType: feedbackSubType,
-                     feedbackSource: source.description,
                      description: description ?? "",
-                     screenshot: feedbackMetadata.screenshot?.toDataRef())
+                     screenshot: .init(jpeg: nil, base64: feedbackMetadata.screenshot))
     }
 }
 
