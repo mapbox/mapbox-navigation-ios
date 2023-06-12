@@ -283,9 +283,6 @@ jobs:
       update:
         type: boolean
         default: false
-      iOS:
-        type: string
-        default: "16.2"
       xcode:
         type: string
         default: "14.2.0"
@@ -317,11 +314,11 @@ jobs:
           condition: << parameters.update >>
           steps:
             - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
-      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 13 Pro Max' clean build
+      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'generic/platform=iOS Simulator' -sdk iphonesimulator clean build
       - when:
           condition: << parameters.archive >>
           steps:
-            - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -sdk iphoneos<< parameters.iOS >> -destination generic/platform=iOS clean archive CODE_SIGNING_ALLOWED="NO"
+            - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'generic/platform=iOS Simulator' -sdk iphonesimulator clean archive CODE_SIGNING_ALLOWED="NO"
       - when:
           condition: << parameters.lint >>
           steps:
@@ -892,17 +889,15 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - pod-job:
-            name: "Xcode_14.2.0_iOS_16.4_CP_install"
+            name: "Xcode_14.2.0 pod install"
             update: false
             xcode: "14.2.0"
-            iOS: "16.2"
             archive: true
             context: Slack Orb
         - pod-job:
-            name: "Xcode_14.0.1_iOS_15.5_CP_update"
+            name: "Xcode_14.3 pod update"
             update: true
-            xcode: "14.0.1"
-            iOS: "15.5"
+            xcode: "14.3.1"
             lint: true
             context: Slack Orb
         - build-example:
