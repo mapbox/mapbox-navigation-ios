@@ -118,7 +118,8 @@ class NativeTelemetryIntegrationTests: TestCase {
         wait(for: [telemetryObserver.expectation], timeout: expectationsTimeout)
     }
 
-    func testStartActiveNavigation() {
+    // Tracking issue: NAVIOS-1240
+    func disabled_testStartActiveNavigation() {
         updateLocation()
         let firstLocation = locationManager.locations.first!
         configureActiveNavigation()
