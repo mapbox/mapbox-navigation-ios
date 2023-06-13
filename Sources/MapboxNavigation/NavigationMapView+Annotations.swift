@@ -112,9 +112,9 @@ extension NavigationMapView {
         
         for (index, alternativeRoute) in routes.enumerated() {
             guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape,
-                  let annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance
-                                                                                   - alternativeRoute.infoFromDeviationPoint.distance
-                                                                                   + continuousAlternativeDurationAnnotationOffset)?.coordinate else {
+                  let annotationCoordinate = routeShape.trimmed(from: alternativeRoute.alternativeRouteIntersection.location,
+                                                                distance: continuousAlternativeDurationAnnotationOffset)?.coordinates.last
+            else {
                 return
             }
             
