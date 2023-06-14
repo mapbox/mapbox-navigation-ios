@@ -10,8 +10,9 @@
 ### Other changes
 
 * Optimized performance of route response parsing for reroutes, continuous alternatives and similar use-cases. ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
+* Fixed inconsistent time difference callouts positions for alternative routes. ([#4473](https://github.com/mapbox/mapbox-navigation-ios/pull/4473))
 * Fixed an issue with too high alternative route requests frequency in case of only one route being present in the route response.
-- Fixed an issue with positioning lag in tunnels.
+* Fixed an issue with positioning lag in tunnels.
 
 ## v2.13.0
 
