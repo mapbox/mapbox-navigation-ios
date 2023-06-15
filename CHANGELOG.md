@@ -7,6 +7,10 @@
 * MapboxCoreNavigation now requires [MapboxNavigationNative v136._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/136.0.0). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
 * MapboxNavigation now requires [MapboxMaps v10.14.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-rc.1). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
 
+### CarPlay
+
+* Fixed an issue where starting navigation while connected to CarPlay but not having window active resulted in CarPlay view to be stuck at preview screen. ([#4477](https://github.com/mapbox/mapbox-navigation-ios/pull/4477))
+
 ### Other changes
 
 * Optimized performance of route response parsing for reroutes, continuous alternatives and similar use-cases. ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
