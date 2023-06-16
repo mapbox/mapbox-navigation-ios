@@ -10,6 +10,9 @@ parameters:
   ignore_snapshot_dependencies:
     type: boolean
     default: false
+  ignore_snapshot_week:
+    type: boolean
+    default: false
 
 commands:
   install-mbx-ci:
@@ -179,7 +182,7 @@ commands:
             git config user.email "release-bot@mapbox.com"
             git config user.name "Mapbox Releases"
             pip3 install requests
-            python3 scripts/snapshot/prepare-snapshot.py << pipeline.parameters.ignore_snapshot_dependencies >>
+            python3 scripts/snapshot/prepare-snapshot.py << pipeline.parameters.ignore_snapshot_dependencies >> << pipeline.parameters.ignore_snapshot_week >>
 
   trigger-onetap:
     steps:

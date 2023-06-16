@@ -12,7 +12,8 @@ github_token = os.getenv("GITHUB_TOKEN")
 headers = {"Authorization": "Bearer " + github_token}
 
 releases = requests.get('https://api.github.com/repos/mapbox/mapbox-navigation-ios/releases', headers=headers).json()
-if not is_snapshot_week(releases):
+ignore_snapshot_week = sys.argv[2]
+if not is_snapshot_week(releases) and ignore_snapshot_week == 'false':
     print('Navigation SDK snapshot must not be released today (rc or GA release was released this week).')
     sys.exit(1)
 
