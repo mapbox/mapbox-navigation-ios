@@ -10,6 +10,7 @@
 ### CarPlay
 
 * Fixed an issue where starting navigation while connected to CarPlay but not having window active resulted in CarPlay view to be stuck at preview screen. ([#4477](https://github.com/mapbox/mapbox-navigation-ios/pull/4477))
+* Fixed an issue where maneuver arrow was not changing color following day/night style automatic toggling. ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4482))
 
 ### Other changes
 
