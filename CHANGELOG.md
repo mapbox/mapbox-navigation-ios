@@ -4,19 +4,22 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v136._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/136.0.0). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v137._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/137.0.0). ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
 * MapboxNavigation now requires [MapboxMaps v10.14.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-rc.1). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
 
 ### CarPlay
 
 * Fixed an issue where starting navigation while connected to CarPlay but not having window active resulted in CarPlay view to be stuck at preview screen. ([#4477](https://github.com/mapbox/mapbox-navigation-ios/pull/4477))
 
+### Routing
+* Fixed an issue where `NavigationSettings.tileStoreConfiguration.navigatorLocation.tileStoreURL` was used as a base url for route refresh requests instead of `NavigationSettings.directions.credentials.host`. ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
+
 ### Other changes
 
 * Optimized performance of route response parsing for reroutes, continuous alternatives and similar use-cases. ([#4462](https://github.com/mapbox/mapbox-navigation-ios/pull/4462))
 * Fixed inconsistent time difference callouts positions for alternative routes. ([#4473](https://github.com/mapbox/mapbox-navigation-ios/pull/4473))
-* Fixed an issue with too high alternative route requests frequency in case of only one route being present in the route response.
-* Fixed an issue with positioning lag in tunnels.
+* Fixed an issue with too high alternative route requests frequency in case of only one route being present in the route response. ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
+* Fixed an issue with positioning lag in tunnels. ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
 
 ## v2.13.0
 

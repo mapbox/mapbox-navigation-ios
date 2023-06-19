@@ -67,7 +67,7 @@ class NativeHandlersFactoryTests: TestCase {
             "features": [
                 "custom_feature_key": "custom_feature_value",
                 "useInternalReroute": true
-            ]
+            ] as [String : Any]
         ]
         _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
