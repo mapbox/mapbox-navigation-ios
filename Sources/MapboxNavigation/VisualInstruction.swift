@@ -116,18 +116,15 @@ extension VisualInstruction {
      - returns: A `UIImage` representing the maneuver.
      */
     @available(iOS 13.0, *)
-    func maneuverImage(side: DrivingSide, userInterfaceStyle: UIUserInterfaceStyle) -> UIImage? {
+    func maneuverImage(side: DrivingSide,
+                       type styleType: StyleType?
+    ) -> UIImage? {
         let color: UIColor
-        switch userInterfaceStyle {
-        case .unspecified:
+        switch styleType {
+        case .day, .none:
             color = .black
-        case .light:
-            color = .black
-        case .dark:
+        case .night:
             color = .white
-        @unknown default:
-            Log.error("Error occured with unknown UIUserInterfaceStyle.", category: .navigationUI)
-            return nil
         }
         return maneuverViewImage(drivingSide: side,
                                  color: color,
