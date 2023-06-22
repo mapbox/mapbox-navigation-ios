@@ -335,14 +335,13 @@ class RouteControllerIntegrationTests: TestCase {
         let routeOptions = indexedRouteResponse.validatedRouteOptions
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
-                  XCTFail()
-                  return
+        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse) else {
+            XCTFail()
+            return
         }
         let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
                                 .url(forCalculating: routeOptions).absoluteString
-        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponseDataRef: .init(data: routeData),
                                                                request: routeRequest,
                                                                routeOrigin: indexedRouteResponse.responseOrigin)
         let userInfo: [MapboxCoreNavigation.Navigator.NotificationUserInfoKey: Any] = [

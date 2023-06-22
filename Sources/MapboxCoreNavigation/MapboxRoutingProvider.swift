@@ -172,7 +172,8 @@ public class MapboxRoutingProvider: RoutingProvider {
     }
     
     private func parseResponse<ResponseType: Codable>(
-        requestId: RequestId, userInfo: [CodingUserInfoKey : Any],
+        requestId: RequestId,
+        userInfo: [CodingUserInfoKey : Any],
         result: Expected<NSString, MapboxNavigationNative.RouterError>,
         completion: @escaping (Result<ResponseType, DirectionsError>) -> Void
     ) {
@@ -192,7 +193,8 @@ public class MapboxRoutingProvider: RoutingProvider {
     }
     
     private func parseResponse<ResponseType: Codable>(
-        requestId: RequestId, userInfo: [CodingUserInfoKey : Any],
+        requestId: RequestId,
+        userInfo: [CodingUserInfoKey : Any],
         result data: Data,
         error: Error?,
         completion: @escaping (Result<ResponseType, DirectionsError>) -> Void
@@ -384,9 +386,9 @@ public class MapboxRoutingProvider: RoutingProvider {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
-        
-        let session = (options: routeOptions as DirectionsOptions,
-                       credentials: self.settings.directions.credentials)
+
+        let credentials = settings.directions.credentials
+        let session = (options: routeOptions as DirectionsOptions, credentials: credentials)
         
         guard let responseIdentifier = indexedRouteResponse.routeResponse.identifier else {
             DispatchQueue.main.async {
@@ -402,6 +404,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile,
+                                                 baseURL: credentials.host.absoluteString,
+                                                 token: credentials.accessToken ?? "",
                                                  currentRouteGeometryIndex: currentRouteShapeIndex.map { NSNumber(value: $0) },
                                                  additionalParams: [:])
 

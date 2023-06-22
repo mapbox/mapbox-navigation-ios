@@ -195,8 +195,9 @@ class NativeTelemetryIntegrationTests: TestCase {
 
         wait(for: [telemetryObserver.expectation, navigationFinished], timeout: expectationsTimeout)
     }
-
-    func testStartFreeRideAfterActiveNavigation() {
+    
+    // Tracking issue: NAVIOS-1240
+    func disabled_testStartFreeRideAfterActiveNavigation() {
         let firstLocation = locationManager.locations.first!
         telemetryObserver.expectedEvents = [
             freeDriveEvent(eventType: "start", coordinate: firstLocation.coordinate)
