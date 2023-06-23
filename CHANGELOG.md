@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.15.0
+
+### Other changes
+
+* Fixed an issue when starting `NavigationViewController` with injected `NavigationService` (for example via CarPlay) could result in alternative routes not showing on the map. ([#4489](https://github.com/mapbox/mapbox-navigation-ios/pull/4489)) 
+
 ## v2.14.0
 
 ### Packaging
