@@ -275,11 +275,15 @@ class ViewController: UIViewController {
     
     public func beginNavigationWithCarPlay(navigationService: NavigationService) {
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
-        navigationViewController.didConnectToCarPlay()
 
-        guard activeNavigationViewController == nil else { return }
+        guard activeNavigationViewController == nil else {
+            activeNavigationViewController?.didConnectToCarPlay()
+            return
+        }
 
-        presentAndRemoveNavigationMapView(navigationViewController)
+        presentAndRemoveNavigationMapView(navigationViewController) {
+            navigationViewController.didConnectToCarPlay()
+        }
     }
     
     func beginCarPlayNavigation() {
