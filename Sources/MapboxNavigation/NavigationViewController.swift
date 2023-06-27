@@ -491,6 +491,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if usesNightStyleInDarkMode && self.traitCollection.userInterfaceStyle == .dark {
             styleManager.applyStyle(type: .night)
         }
+        
+        updateContinuousAlternatives()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
