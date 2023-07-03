@@ -74,6 +74,13 @@ extension RoadObject {
         /// :nodoc:
         /// Not supported yet
         case notification
+
+        /// :nodoc:
+        /// Not supported yet
+        case mergingArea
+
+        /// Unknown
+        case unknown
         
         init(_ native: MapboxNavigationNative.RoadObjectType) {
             switch native {
@@ -101,8 +108,11 @@ extension RoadObject {
                 self = .userDefined
             case .notification:
                 self = .notification
+            case .mergingArea:
+                self = .mergingArea
             @unknown default:
-                fatalError("Unknown MapboxNavigationNative.RoadObjectType value.")
+                Log.error("Unknown MapboxNavigationNative.RoadObjectType value: \(native).", category: .navigation)
+                self = .unknown
             }
         }
         
@@ -132,8 +142,11 @@ extension RoadObject {
                 self = .userDefined
             case .notification:
                 self = .notification
+            case .mergingArea:
+                self = .mergingArea
             @unknown default:
-                fatalError("Unknown MapboxNavigationNative.RoadObjectType value.")
+                Log.error("Unknown MapboxNavigationNative.RoadObjectType value: \(type).", category: .navigation)
+                self = .unknown
             }
         }
     }

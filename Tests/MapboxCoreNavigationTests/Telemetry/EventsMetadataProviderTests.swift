@@ -151,7 +151,7 @@ final class EventsMetadataProviderTests: TestCase {
         XCTAssertEqual(provider.provideEventsMetadata().audioType, 3)
     }
 
-    func testReturnconnectivity() {
+    func testReturnConnectivity() {
         let type = "type"
         connectivityTypeProvider.connectivityType = type
         XCTAssertEqual(provider.provideEventsMetadata().connectivity, type)

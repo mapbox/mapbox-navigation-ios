@@ -2,6 +2,19 @@
 
 ## v2.15.0
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v142._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/142.0.0). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+* MapboxNavigation now requires [MapboxMaps v10.15.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.15.0-beta.1). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+
+### Routing
+*  Route request timeout errors are now considered failures as opposed to cancellations. `RouterDelegate.router(_:didFailToRerouteWith:)` will be called in this case. ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+
+### Electronic horizon
+
+**Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+* Added `RoadObjectKind.unknown` for an unknown type of road object. ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+
 ### Other changes
 
 * Fixed an issue when starting `NavigationViewController` with injected `NavigationService` (for example via CarPlay) could result in alternative routes not showing on the map. ([#4489](https://github.com/mapbox/mapbox-navigation-ios/pull/4489)) 
@@ -11,7 +24,7 @@
 ### Packaging
 
 * MapboxCoreNavigation now requires [MapboxNavigationNative v137._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/137.0.0). ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
-* MapboxNavigation now requires [MapboxMaps v10.14.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0-rc.1). ([#4472](https://github.com/mapbox/mapbox-navigation-ios/pull/4472))
+* MapboxNavigation now requires [MapboxMaps v10.14.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.14.0). ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
 
 ### CarPlay
 
