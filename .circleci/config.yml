@@ -443,7 +443,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.2.1"
+        default: "13.3.1"
       spm:
         type: boolean
         default: true
@@ -458,7 +458,7 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build Example app
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.2,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
       - notify-build-finished
 
   ios-trigger-metrics:
@@ -478,12 +478,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.0.0"
+        default: "13.3.1"
       device:
         type: string
       iOS:
         type: string
-        default: "14.5"
+        default: "15.4"
       notify_success:
         type: boolean
         default: false
@@ -655,18 +655,18 @@ jobs:
 
   spm-core-integration-test-job:
     macos:
-      xcode: "13.0.0"
+      xcode: "13.3.1"
     steps:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max" build
 
   spm-ui-integration-test-job:
     macos:
-      xcode: "13.2.1"
+      xcode: "13.3.1"
     steps:
       - checkout
       - install-bash5
@@ -682,7 +682,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.0.0"
+        default: "13.3.1"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -819,7 +819,7 @@ workflows:
           context: Slack Orb
           notify_success: true
       - spm-ui-integration-test-job:
-          name: "Xcode 13.2.1; SPM UI test"
+          name: "Xcode 13.3.1; SPM UI test"
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00
@@ -860,9 +860,9 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
-            xcode: "13.2.1"
-            iOS: "15.2"
+            name: "Xcode_13.3.1_iOS_15.4_SPM_Debug"
+            xcode: "13.3.1"
+            iOS: "15.4"
             device: "iPhone 13 Pro Max"
             spm: true
             codecoverage: true
@@ -876,9 +876,9 @@ workflows:
             context: Slack Orb
             configuration: "Release"
         - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_SPM_Release"
-            xcode: "13.2.1"
-            iOS: "15.2"
+            name: "Xcode_13.3.1_iOS_15.4_SPM_Release"
+            xcode: "13.3.1"
+            iOS: "15.4"
             device: "iPhone 13 Pro Max"
             spm: true
             codecoverage: false
@@ -916,7 +916,7 @@ workflows:
             name: "Build Example"
             context: Slack Orb
         - spm-core-integration-test-job:
-            name: "Xcode 13; iOS 15.0; SPM Core test"
+            name: "Xcode 13.3; iOS 15.4; SPM Core test"
         - build-job:
             name: "Core integration test; Xcode 14; iOS 16.0"
             xcode: "14.0.0"
