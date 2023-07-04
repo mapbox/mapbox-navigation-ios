@@ -491,6 +491,10 @@ extension MapboxCoreNavigation.RoadObject.Kind {
             return .jct
         case .notification:
             return .notification
+        case .mergingArea:
+            return .mergingArea
+        case .unknown:
+            return .custom
         }
     }
 }

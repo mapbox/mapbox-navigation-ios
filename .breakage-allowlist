@@ -1,3 +1,2 @@
-EnumElement RoadObject.Kind.notification has been added as a new enum case
-Func Directions.calculateOffline(options:completionHandler:) is no longer open for subclassing
-Func Directions.calculateWithCache(options:completionHandler:) is no longer open for subclassing
+EnumElement RoadObject.Kind.mergingArea has been added as a new enum case
+EnumElement RoadObject.Kind.unknown has been added as a new enum case

@@ -48,7 +48,8 @@ public enum ReroutingError: Error {
         case .rerouteInProgress:
             self = .anotherRerouteInProgress
         @unknown default:
-            fatalError("Unknown MapboxNavigationNative.RerouteError value.")
+            Log.error("Unknown MapboxNavigationNative.RerouteError value: \(nativeError.type).", category: .navigation)
+            self = .unknown
         }
     }
 }
