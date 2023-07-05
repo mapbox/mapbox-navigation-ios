@@ -10,6 +10,10 @@
 ### Routing
 *  Route request timeout errors are now considered failures as opposed to cancellations. `RouterDelegate.router(_:didFailToRerouteWith:)` will be called in this case. ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
 
+### CarPlay
+
+* Added new `CarPlayManagerDelegate.carPlayManagerWillCancelPreview(_:configuration:)` delegate method to allow for customization of route cancellation behavior. If `configuration.popToRoot` is `true`, the `popToRootTemplate` method is called to navigate to the root template. This change enhances the flexibility of route cancellation in CarPlay. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
+
 ### Electronic horizon
 
 **Note:** The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
