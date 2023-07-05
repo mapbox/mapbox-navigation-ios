@@ -66,6 +66,7 @@ class EndOfRouteViewController: UIViewController {
         setPlaceholderText()
         styleCommentView()
         commentViewContainer.alpha = 0.0 //setting initial hidden state
+        staticYouHaveArrived.text = NSLocalizedString("END_OF_ROUTE_ARRIVED", bundle: .mapboxNavigation, value:"You have arrived", comment:"Title used for arrival")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -143,6 +144,7 @@ class EndOfRouteViewController: UIViewController {
     
     private func updateInterface() {
         guard let name = destination?.name?.nonEmptyString else { return styleForUnnamedDestination() }
+        staticYouHaveArrived.isHidden = false
         primary.text = name
     }
 
@@ -152,7 +154,7 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func styleForUnnamedDestination() {
-        staticYouHaveArrived.alpha = 0.0
+        staticYouHaveArrived.isHidden = true
         primary.text = NSLocalizedString("END_OF_ROUTE_ARRIVED", bundle: .mapboxNavigation, value:"You have arrived", comment:"Title used for arrival")
     }
     
