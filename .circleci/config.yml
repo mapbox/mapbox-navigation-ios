@@ -820,13 +820,13 @@ workflows:
           notify_success: true
       - spm-ui-integration-test-job:
           name: "Xcode 14.1.0; SPM UI test"
-#    triggers:
-#       - schedule:
-#           cron: "0 0 * * *" # Once per day at 00:00
-#           filters:
-#             branches:
-#               only:
-#                 - main
+    triggers:
+       - schedule:
+           cron: "0 0 * * *" # Once per day at 00:00
+           filters:
+             branches:
+               only:
+                 - main
   api-diff-workflow:
     jobs:
       - get-api-log-job:
