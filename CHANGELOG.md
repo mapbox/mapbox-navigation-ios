@@ -12,7 +12,7 @@
 
 ### CarPlay
 
-* Added new `CarPlayManagerDelegate.carPlayManagerWillCancelPreview(_:configuration:)` delegate method to allow for customization of route cancellation behavior. If `configuration.popToRoot` is `true`, the `popToRootTemplate` method is called to navigate to the root template. This change enhances the flexibility of route cancellation in CarPlay. ([#xxxx](https://github.com/mapbox/mapbox-navigation-ios/pull/xxxx))
+* Added new `CarPlayManagerDelegate.carPlayManagerWillCancelPreview(_:configuration:)` delegate method to allow for customization of route cancellation behavior. If `configuration.popToRoot` is `true`, the `popToRootTemplate` method is called to navigate to the root template. This change enhances the flexibility of route cancellation in CarPlay. ([#4495](https://github.com/mapbox/mapbox-navigation-ios/pull/4495))
 
 ### Electronic horizon
 
