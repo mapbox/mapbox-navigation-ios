@@ -344,13 +344,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.0.0"
+        default: "14.1.0"
       device:
         type: string
-        default: "iPhone 12 Pro Max"
+        default: "iPhone 14 Pro Max"
       iOS:
         type: string
-        default: "14.5"
+        default: "16.1"
       spm:
         type: boolean
         default: false
@@ -465,7 +465,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.0.0"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -666,7 +666,7 @@ jobs:
 
   spm-ui-integration-test-job:
     macos:
-      xcode: "13.3.1"
+      xcode: "14.1.0"
     steps:
       - checkout
       - install-bash5
@@ -682,7 +682,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -726,7 +726,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.4.1"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -754,7 +754,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.4.1"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -778,7 +778,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.4.1"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     steps:
@@ -790,7 +790,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.4.1"
+        default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
     steps:
@@ -805,28 +805,28 @@ workflows:
   extended-workflow:
     jobs:
       - spm-test-job:
-          name: "swift test; Xcode 13.0.0; iOS 14.5"
-          xcode: "13.0.0"
-          iOS: "14.5"
-          device: "iPhone 12 Pro Max"
+          name: "swift test; Xcode 14.1.0; iOS 16.1"
+          xcode: "14.1.0"
+          iOS: "16.1"
+          device: "iPhone 14 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-test-job:
-          name: "swift test; Xcode 13.0.0; iOS 15.0"
-          xcode: "13.0.0"
-          iOS: "15.0"
-          device: "iPhone 11 Pro Max"
+          name: "swift test; Xcode 14.1.0; iOS 15.5"
+          xcode: "14.1.0"
+          iOS: "15.5"
+          device: "iPhone 13 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-ui-integration-test-job:
-          name: "Xcode 13.3.1; SPM UI test"
-    triggers:
-       - schedule:
-           cron: "0 0 * * *" # Once per day at 00:00
-           filters:
-             branches:
-               only:
-                 - main
+          name: "Xcode 14.1.0; SPM UI test"
+#    triggers:
+#       - schedule:
+#           cron: "0 0 * * *" # Once per day at 00:00
+#           filters:
+#             branches:
+#               only:
+#                 - main
   api-diff-workflow:
     jobs:
       - get-api-log-job:
@@ -868,18 +868,18 @@ workflows:
             codecoverage: true
             context: Slack Orb
         - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_Release"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
+            name: "Xcode_14.1.0_iOS_16.1_Release"
+            xcode: "14.1.0"
+            iOS: "16.1"
+            device: "iPhone 14 Pro Max"
             codecoverage: false
             context: Slack Orb
             configuration: "Release"
         - build-job:
-            name: "Xcode_13.3.1_iOS_15.4_SPM_Release"
-            xcode: "13.3.1"
-            iOS: "15.4"
-            device: "iPhone 13 Pro Max"
+            name: "Xcode_14.1.0_iOS_16.1_SPM_Release"
+            xcode: "14.1.0"
+            iOS: "16.1"
+            device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
@@ -893,9 +893,9 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_14.0_iOS_16.0"
-            xcode: "14.0.0"
-            iOS: "16.0"
+            name: "Xcode_14.1_iOS_16.1"
+            xcode: "14.1.0"
+            iOS: "16.1"
             device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: false
@@ -907,7 +907,7 @@ workflows:
             archive: true
             context: Slack Orb
         - pod-job:
-            name: "Xcode_14.3 pod update"
+            name: "Xcode_14.3.1 pod update"
             update: true
             xcode: "14.3.1"
             lint: true
@@ -918,9 +918,9 @@ workflows:
         - spm-core-integration-test-job:
             name: "Xcode 13.3; iOS 15.4; SPM Core test"
         - build-job:
-            name: "Core integration test; Xcode 14; iOS 16.0"
-            xcode: "14.0.0"
-            iOS: "16.0"
+            name: "Core integration test; Xcode 14.1; iOS 16.1"
+            xcode: "14.1.0"
+            iOS: "16.1"
             device: "iPhone 14 Pro Max"
             scheme: "MapboxCoreNavigationIntegrationTests"
             codecoverage: false
