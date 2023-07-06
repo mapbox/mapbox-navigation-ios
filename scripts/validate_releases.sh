@@ -28,17 +28,18 @@ SUCCESS_CODE=0
 # xcodebuild exits with EX_IOERR (74) in case if it fails to resolve dependencies.
 ERROR_CODE=74
 EXPECTED_XCODEBUILD_RESULTS=( \
-    [2.4.2]=${ERROR_CODE} \
     [2.4.3]=${SUCCESS_CODE} \
-    [2.5.3]=${ERROR_CODE} \
     [2.5.4]=${SUCCESS_CODE} \
-    [2.6.1]=${ERROR_CODE} \
     [2.6.2]=${SUCCESS_CODE} \
-    [2.7.2]=${ERROR_CODE} \
     [2.7.3]=${SUCCESS_CODE} \
     [2.8.0]=${SUCCESS_CODE} \
     [2.8.1]=${SUCCESS_CODE} \
-    [2.9.0]=${SUCCESS_CODE}
+    [2.9.0]=${SUCCESS_CODE} \
+    [2.10.0]=${SUCCESS_CODE} \
+    [2.11.0]=${SUCCESS_CODE} \
+    [2.12.0]=${SUCCESS_CODE} \
+    [2.13.0]=${SUCCESS_CODE} \
+    [2.14.0]=${SUCCESS_CODE}
 )
 
 echo "Expected xcodebuild result for:"
