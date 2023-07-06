@@ -353,7 +353,7 @@ public class NavigationSettings {
             version: Bundle.navigationSDKVersion,
             packageName: "com.mapbox.navigation"
         ))
-        if Bundle.mapboxNavigationIfInstalled != nil {
+        if Bundle.usesDefaultUserInterface {
             SdkInfoRegistryFactory.getInstance().registerSdkInformation(forInfo: .init(
                 name: "mapbox-navigation-ui-ios",
                 version: Bundle.navigationSDKVersion,

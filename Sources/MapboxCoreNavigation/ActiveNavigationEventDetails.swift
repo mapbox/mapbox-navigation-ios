@@ -54,10 +54,10 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var percentTimeInForeground: Int = 0
     var percentTimeInPortrait: Int = 0
     
-    init(dataSource: ActiveNavigationEventsManagerDataSource, session: SessionState, defaultInterface: Bool, appMetadata: [String: String?]? = nil) {
+    init(dataSource: ActiveNavigationEventsManagerDataSource, session: SessionState, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp
-        sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+        sdkIdentifier = URLSession.navigationSdkIdentifierForTelemetry
         profile = dataSource.routeProgress.routeOptions.profileIdentifier.rawValue
         simulation = dataSource.locationManagerType is SimulatedLocationManager.Type
         

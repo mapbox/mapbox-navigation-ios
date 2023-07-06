@@ -196,8 +196,10 @@ final class BillingHandler {
     private(set) static var shared: BillingHandler = {
         let accessToken = NavigationSettings.shared.directions.credentials.accessToken
         precondition(accessToken != nil, "A Mapbox access token is required. Go to <https://account.mapbox.com/access-tokens/>. In Info.plist, set the MBXAccessToken key to your access token.")
-        let service = ProductionBillingService(accessToken: accessToken ?? "",
-                                               userAgent: URLSession.userAgent)
+        let service = ProductionBillingService(
+            accessToken: accessToken ?? "",
+            userAgent: URLSession.navigationSdkCoreUserAgentFragment
+        )
         return .init(service: service)
     }()
 

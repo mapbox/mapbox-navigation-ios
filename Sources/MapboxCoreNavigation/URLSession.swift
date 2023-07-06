@@ -9,61 +9,12 @@ extension URLSession {
      The user agent string for any HTTP requests performed directly within MapboxCoreNavigation or MapboxNavigation.
      */
     public static let userAgent: String = {
-        // Bundles in order from the application level on down
-        #if SWIFT_PACKAGE
-        let bundles: [Bundle?] = [
-            .main,
-            .mapboxNavigationIfInstalled,
-            .mapboxCoreNavigation
+        var bundleComponents: [String] = [
+            mainBundleUserAgentFragment,
+            navigationSdkCoreUserAgentFragment,
         ]
-        #else
-        let bundles: [Bundle?] = [
-            .main,
-            .mapboxNavigationIfInstalled,
-            .mapboxCoreNavigation,
-            .init(for: Directions.self),
-        ]
-        #endif
-
-        let bundleComponents = bundles.compactMap { (bundle) -> String? in
-            guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
-            
-            let defaultMapboxNavigationBundleName = "MapboxNavigation"
-            let defaultMapboxCoreNavigationBundleName = "MapboxCoreNavigation"
-            
-            #if SWIFT_PACKAGE
-            let mapboxNavigationName = "MapboxNavigation_MapboxNavigation"
-            #else
-            let mapboxNavigationName = defaultMapboxNavigationBundleName
-            #endif
-
-            #if SWIFT_PACKAGE
-            let mapboxCoreNavigationName = "MapboxNavigation_MapboxCoreNavigation"
-            #else
-            let mapboxCoreNavigationName = defaultMapboxCoreNavigationBundleName
-            #endif
-            
-            var bundleName: String {
-                switch name {
-                case mapboxNavigationName:
-                    return defaultMapboxNavigationBundleName
-                case mapboxCoreNavigationName:
-                    return defaultMapboxCoreNavigationBundleName
-                default:
-                    return name
-                }
-            }
-            
-            var stringForShortVersion: String? {
-                switch name {
-                case mapboxNavigationName, mapboxCoreNavigationName:
-                    return Bundle.navigationSDKVersion
-                default:
-                    return bundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-                }
-            }
-            guard let version = stringForShortVersion else { return nil }
-            return "\(bundleName)/\(version)"
+        if Bundle.usesDefaultUserInterface {
+            bundleComponents.append(navigationSdkUserAgentFragment)
         }
 
         let system: String
@@ -108,5 +59,36 @@ extension URLSession {
         ]
         
         return components.joined(separator: " ")
+    }()
+
+    internal static let navigationSdkCoreUserAgentFragment: String = {
+        "\(Bundle.navigationSdkCoreIdentifier)/\(Bundle.navigationSDKVersion)"
+    }()
+
+    internal static let navigationSdkUserAgentFragment: String = {
+        "\(Bundle.navigationSdkIdentifier)/\(Bundle.navigationSDKVersion)"
+    }()
+
+    internal static let navigationSdkUserAgentFragmentForTelemetry: String = {
+        if Bundle.usesDefaultUserInterface {
+            return navigationSdkUserAgentFragment
+        } else {
+            return navigationSdkCoreUserAgentFragment
+        }
+    }()
+
+    internal static let navigationSdkIdentifierForTelemetry: String = {
+        if Bundle.usesDefaultUserInterface {
+            return Bundle.navigationSdkIdentifier
+        } else {
+            return Bundle.navigationSdkCoreIdentifier
+        }
+    }()
+
+    internal static let mainBundleUserAgentFragment: String = {
+        let bundle = Bundle.main
+        let name = bundle.bundleName
+        let version = bundle.bundleShortVersion
+        return "\(bundle.bundleName)/\(bundle.bundleShortVersion ?? "n/a")"
     }()
 }
