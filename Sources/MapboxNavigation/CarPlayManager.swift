@@ -636,9 +636,13 @@ extension CarPlayManager {
      */
     public func cancelRoutesPreview() {
         guard self.indexedRouteResponse != nil else { return }
+        var configuration = CarPlayManagerCancelPreviewConfiguration()
+        delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
         self.indexedRouteResponse = nil
         mainMapTemplate?.hideTripPreviews()
-        popToRootTemplate(interfaceController: interfaceController, animated: true)
+        if configuration.popToRoot {
+            popToRootTemplate(interfaceController: interfaceController, animated: true)
+        }
         delegate?.carPlayManagerDidCancelPreview(self)
     }
     
