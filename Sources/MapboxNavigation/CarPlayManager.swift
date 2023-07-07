@@ -747,7 +747,7 @@ extension CarPlayManager {
         }
         backButton.title = NSLocalizedString("CARPLAY_PREVIEW_BACK",
                                              bundle: .mapboxNavigation,
-                                             value: "BACK",
+                                             value: "Back",
                                              comment: "Title for trip preview back button")
         return backButton
     }
