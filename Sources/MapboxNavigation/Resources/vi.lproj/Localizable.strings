@@ -1,8 +1,14 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
 
+/* Title of the back button. */
+"BACK" = "Quay lại";
+
 /* Title for alternatives selection list button */
 "CARPLAY_ALTERNATIVES" = "Thay Tuyến";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Không tìm thấy tuyến đường thay thế.";
 
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Đã đến nơi rồi";
@@ -39,6 +45,9 @@
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Tóm tắt";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Quay lại";
 
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Đánh giá chuyến đi của bạn";
@@ -265,5 +274,3 @@
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ và %2$@";
 
-/* Button title for back button in preview . */
-"BACK" = "Quay lại";

@@ -1,3 +1,15 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+
+/* Title of the back button. */
+"BACK" = "Back";
+
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatives";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
+
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Ha llegado";
 
@@ -33,6 +45,9 @@
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Vista previa";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Back";
 
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Calificar su viaje";
@@ -75,6 +90,12 @@
 
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "¿Cómo podemos mejorar?";
+
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ faster";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Ruta más rápida encontrada";
@@ -121,6 +142,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ longer";
+
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
 "NAVIGATION_REPORT_CANCEL" = "Cancelar";
 
@@ -129,6 +153,9 @@
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No hay calificación.";
+
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
 
 /* General category of feedback where something looks incorrect. */
 "PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Parece incorrecto";
@@ -148,8 +175,20 @@
 /* Feedback that a street is permanently blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Calle cerrada permanentemente";
 
-/* Feedback that a street is temporary blocked off. */
+/* Feedback that a street is temporarily blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Calle cerrada temporalmente";
+
+/* Feedback that there is a congestion on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";
+
+/* Feedback that there is a moderate traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Moderate";
+
+/* Feedback that there is no traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
+
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Wrong traffic";
 
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Posicionamiento";
@@ -210,6 +249,18 @@
 
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "La ruta tiene caminos angostos al tránsito";
+
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Same distance";
+
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "Same time";
+
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ shorter";
+
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ slower";
 
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Máx";

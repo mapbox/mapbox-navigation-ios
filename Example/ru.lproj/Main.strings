@@ -9,7 +9,7 @@
 "iiq-Gf-SKY.normalTitle" = "Моделирование маршрута";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
-"nMe-Tl-a1N.normalTitle" = "Начать";
+"nMe-Tl-a1N.normalTitle" = "Начать навигацию";
 
 /* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
 "zxr-0T-HBr.title" = "Навигация Mapbox";

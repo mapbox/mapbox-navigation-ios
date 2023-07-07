@@ -1,8 +1,14 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
 
+/* Title of the back button. */
+"BACK" = "ANTERIOR";
+
 /* Title for alternatives selection list button */
 "CARPLAY_ALTERNATIVES" = "Alternatives";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No s'ha trobat cap ruta alternativa.";
 
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Heu arribat";
@@ -39,6 +45,9 @@
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Visió General";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "ANTERIOR";
 
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Valora el viatge";
