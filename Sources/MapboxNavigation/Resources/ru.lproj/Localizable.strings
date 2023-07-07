@@ -1,3 +1,15 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+
+/* Title of the back button. */
+"BACK" = "Назад";
+
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Другие";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Других маршрутов не найдено.";
+
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Вы прибыли";
 
@@ -33,6 +45,9 @@
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Обзор";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Назад";
 
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Оцените вашу поездку";
@@ -75,6 +90,12 @@
 
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Чем мы можем помочь?";
+
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "Быстрее на %@";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Найден маршрут быстрее";
@@ -121,6 +142,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "Дольше на %@";
+
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
 "NAVIGATION_REPORT_CANCEL" = "Отмена";
 
@@ -151,7 +175,7 @@
 /* Feedback that a street is permanently blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Дорога закрыта навсегда";
 
-/* Feedback that a street is temporary blocked off. */
+/* Feedback that a street is temporarily blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Дорога временно закрыта";
 
 /* Feedback that there is a congestion on the road. */
@@ -225,6 +249,18 @@
 
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Маршрут включал слишком узкие дороги";
+
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "То же расстояние";
+
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "То же время";
+
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "Короче на %@";
+
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "Медленнее на %@";
 
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Скорость";

@@ -30,5 +30,10 @@
 			<string>%ld awọn irawọ ṣeto.</string>
 		</dict>
 	</dict>
+	<key>NAVIGATION_REPORT_ISSUES</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@items@</string>
+	</dict>
 </dict>
 </plist>

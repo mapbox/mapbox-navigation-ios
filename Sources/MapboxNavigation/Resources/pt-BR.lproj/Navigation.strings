@@ -1,6 +1,6 @@
 
-/* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
-"UpZ-gr-OKM.text" = "Retraçando rota...";
+/* Class = "UIButton"; normalTitle = "End Navigation"; ObjectID = "5f2-dT-la4"; */
+"5f2-dT-la4.normalTitle" = "End Navigation";
 
-/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
-"xTH-eK-F5H.text" = "Gravando Áudio";
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "Rate your trip";
