@@ -397,6 +397,7 @@ extension CarPlayManager: CPApplicationDelegate {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        carPlayMapViewController.userInfo = eventsManager.userInfo
         carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
