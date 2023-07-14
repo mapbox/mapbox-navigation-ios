@@ -25,6 +25,7 @@ class CarPlayManagerTests: TestCase {
 
         CarPlayMapViewController.swizzleMethods()
         eventsManagerSpy = NavigationEventsManagerSpy()
+        eventsManagerSpy.userInfo = ["key": "value"]
         carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.offline),
                                         eventsManager: eventsManagerSpy,
                                         carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
@@ -299,6 +300,14 @@ class CarPlayManagerTests: TestCase {
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
         XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+    }
+
+    func testConfigureCarPlayMapViewController() {
+        let interfaceController = FakeCPInterfaceController(context: #function)
+        let window = CPWindow()
+        carPlayManager.application(.shared, didConnectCarInterfaceController: interfaceController, to: window)
+        let carPlayMapViewController = carPlayManager.carPlayMapViewController
+        XCTAssertEqual(carPlayMapViewController?.userInfo, eventsManagerSpy.userInfo)
     }
 
 #if arch(x86_64) && canImport(Darwin)
