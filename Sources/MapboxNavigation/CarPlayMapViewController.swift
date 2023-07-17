@@ -66,6 +66,9 @@ open class CarPlayMapViewController: UIViewController {
         }
     }
 
+    /// An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
+    public var userInfo: [String: String?]?
+
     /// Controls whether `CarPlayMapViewController` starts a Free Drive session automatically on map load.
     ///
     /// If you set this property to false, you can start a Free Drive session using
@@ -186,7 +189,7 @@ open class CarPlayMapViewController: UIViewController {
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
     
     // MARK: Initialization Methods
-    
+
     /**
      Initializes a new CarPlay map view controller.
      
@@ -194,7 +197,7 @@ open class CarPlayMapViewController: UIViewController {
      */
     public required init(styles: [Style]) {
         self.styles = styles
-        
+
         super.init(nibName: nil, bundle: nil)
         
         sessionConfiguration = CPSessionConfiguration(delegate: self)
@@ -210,7 +213,7 @@ open class CarPlayMapViewController: UIViewController {
             return nil
         }
         self.styles = styles
-        
+
         super.init(coder: decoder)
     }
     
@@ -290,7 +293,7 @@ open class CarPlayMapViewController: UIViewController {
             return // free drive already setup
         }
 
-        let passiveLocationManager = PassiveLocationManager()
+        let passiveLocationManager = PassiveLocationManager(userInfo: userInfo)
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         
