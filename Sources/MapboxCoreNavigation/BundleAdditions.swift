@@ -87,10 +87,8 @@ extension Bundle {
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
-    class var usesDefaultUserInterface: Bool {
-        return mapboxNavigationIfInstalled != nil
-    }
-    
+    static let usesDefaultUserInterface: Bool = mapboxNavigationIfInstalled != nil
+
     /**
      Returns a dictionary of `MBXInfo.plist` in Mapbox Core Navigation.
      */
@@ -130,4 +128,21 @@ extension Bundle {
             return Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: key) as? String
         }
     }
+
+    internal var bundleName: String {
+        if let cfBundleName = object(forInfoDictionaryKey: "CFBundleName") as? String {
+            return cfBundleName
+        } else if let bundleIdentifier = bundleIdentifier {
+            return bundleIdentifier
+        } else {
+            return URL(fileURLWithPath: bundlePath).lastPathComponent
+        }
+    }
+
+    internal var bundleShortVersion: String? {
+        object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+
+    internal static let navigationSdkCoreIdentifier: String = "mapbox-navigation-ios"
+    internal static let navigationSdkIdentifier: String = "mapbox-navigation-ui-ios"
 }

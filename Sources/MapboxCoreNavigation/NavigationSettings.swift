@@ -1,6 +1,7 @@
 import Foundation
 import MapboxCommon
 import MapboxDirections
+@_implementationOnly import MapboxCommon_Private
 
 /// Defines source of routing engine (online or offline) to be used for requests.
 public typealias RoutingProviderSource = MapboxRoutingProvider.Source
@@ -347,6 +348,18 @@ public class NavigationSettings {
 
     init() {
         setupFromDefaults()
+        SdkInfoRegistryFactory.getInstance().registerSdkInformation(forInfo: .init(
+            name: "mapbox-navigation-ios",
+            version: Bundle.navigationSDKVersion,
+            packageName: "com.mapbox.navigation"
+        ))
+        if Bundle.usesDefaultUserInterface {
+            SdkInfoRegistryFactory.getInstance().registerSdkInformation(forInfo: .init(
+                name: "mapbox-navigation-ui-ios",
+                version: Bundle.navigationSDKVersion,
+                packageName: "com.mapbox.navigation"
+            ))
+        }
     }
 }
 
