@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v142._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/142.0.0). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
-* MapboxNavigation now requires [MapboxMaps v10.15.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.15.0-beta.1). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v144._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/144.0.0). ([#4506](https://github.com/mapbox/mapbox-navigation-ios/pull/4506))
+* MapboxNavigation now requires [MapboxMaps v10.15.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.15.0-rc.1). ([#4506](https://github.com/mapbox/mapbox-navigation-ios/pull/4506))
 
 ### Routing
 *  Route request timeout errors are now considered failures as opposed to cancellations. `RouterDelegate.router(_:didFailToRerouteWith:)` will be called in this case. ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
