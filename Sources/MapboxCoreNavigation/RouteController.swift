@@ -636,6 +636,11 @@ open class RouteController: NSObject {
                   customRoutingProvider: customRoutingProvider,
                   dataSource: source)
     }
+
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
+        guard !hasFinishedRouting else { return }
+        navigationSessionManager.reportStopNavigation()
+    }
     
     private static func checkUniqueInstance() {
         Self.instanceLock.lock()
@@ -755,6 +760,10 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigatorWantsSwitchToCoincideOnlineRoute),
                                                name: .navigatorWantsSwitchToCoincideOnlineRoute,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationWillTerminate(_:)),
+                                               name: UIApplication.willTerminateNotification,
                                                object: nil)
         rerouteController.delegate = self
     }

@@ -1638,7 +1638,25 @@ class RouteControllerTests: TestCase {
         controller.updateVisualInstructionProgress(status: status)
         waitForExpectations(timeout: expectationsTimeout)
     }
-    
+
+    func testReportStopNavigationOnApplicationTermination() {
+        NotificationCenter.default.post(name: UIApplication.willTerminateNotification,
+                                        object: nil,
+                                        userInfo: nil)
+
+        XCTAssertTrue(navigationSessionManagerSpy.reportStopNavigationCalled)
+    }
+
+    func testDoNotReportStopNavigationOnApplicationTerminationIfElreadyFinished() {
+        routeController.finishRouting()
+        navigationSessionManagerSpy.reportStopNavigationCalled = false
+        NotificationCenter.default.post(name: UIApplication.willTerminateNotification,
+                                        object: nil,
+                                        userInfo: nil)
+
+        XCTAssertFalse(navigationSessionManagerSpy.reportStopNavigationCalled)
+    }
+
     // MARK: Helpers
 
     private func createRouteAlternative(id: UInt32) -> RouteAlternative {
