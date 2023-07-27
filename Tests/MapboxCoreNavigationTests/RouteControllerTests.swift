@@ -706,7 +706,11 @@ class RouteControllerTests: TestCase {
             return
         }
         navigationSessionManagerSpy.reset()
-        routeController.updateRoute(with: response, routeOptions: routeOptions, isProactive: false, completion: nil)
+        routeController.updateRoute(with: response,
+                                    routeOptions: routeOptions,
+                                    isProactive: false,
+                                    isAlternative: false,
+                                    completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -725,7 +729,11 @@ class RouteControllerTests: TestCase {
     func testUpdateRouteIfShouldNotStartNewBillingSession() {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
-        routeController.updateRoute(with: response, routeOptions: options, isProactive: false, completion: nil)
+        routeController.updateRoute(with: response,
+                                    routeOptions: options,
+                                    isProactive: false,
+                                    isAlternative: false,
+                                    completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -743,7 +751,11 @@ class RouteControllerTests: TestCase {
     func testUpdateRouteIfFasterRoute() {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
-        routeController.updateRoute(with: response, routeOptions: options, isProactive: true, completion: nil)
+        routeController.updateRoute(with: response,
+                                    routeOptions: options,
+                                    isProactive: true,
+                                    isAlternative: false,
+                                    completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
