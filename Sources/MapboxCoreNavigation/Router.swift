@@ -317,6 +317,7 @@ protocol InternalRouter: AnyObject {
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
+                     isAlternative: Bool,
                      completion: ((Bool) -> Void)?)
 }
 
@@ -457,7 +458,8 @@ extension InternalRouter where Self: Router {
                     // Prefer the most optimal route (the first one) over the route that matched the original choice.
                     self.updateRoute(with: indexedResponse,
                                      routeOptions: routeOptions ?? self.routeProgress.routeOptions,
-                                     isProactive: true) { [weak self] success in
+                                     isProactive: true,
+                                     isAlternative: false) { [weak self] success in
                         self?.isRerouting = false
                     }
                 }
