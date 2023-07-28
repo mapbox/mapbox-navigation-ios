@@ -24,6 +24,7 @@
 
 * Fixed an issue when starting `NavigationViewController` with injected `NavigationService` (for example via CarPlay) could result in alternative routes not showing on the map. ([#4489](https://github.com/mapbox/mapbox-navigation-ios/pull/4489))
 * Fixed an issue where the `EndOfRouteViewController` was not properly localized. ([#4494](https://github.com/mapbox/mapbox-navigation-ios/pull/4494))
+* Fix sending events to Native Telemetry on application termination. ([#4508](https://github.com/mapbox/mapbox-navigation-ios/pull/4508))
 
 ## v2.14.0
 
