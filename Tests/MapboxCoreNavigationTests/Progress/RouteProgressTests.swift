@@ -343,10 +343,10 @@ class RouteProgressTests: TestCase {
                     legProgress: .init(distanceTraveled: 0, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0),
                     step: .init(distanceTraveled: stepDistanceTraveled, fractionTraveled: 0, remainingDistance: 0, remainingDuration: 0)
                 ),
-                upcomingRouteAlerts: [],
                 upcomingRouteAlertUpdates: [],
                 nextWaypointIndex: 0,
-                layer: nil
+                layer: nil,
+                isSyntheticLocation: false
             )
         }
 
