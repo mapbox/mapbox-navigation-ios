@@ -52,7 +52,8 @@ extension Incident {
                   longDescription: incidentInfo.longDescription,
                   numberOfBlockedLanes: incidentInfo.numLanesBlocked?.intValue,
                   congestionLevel: incidentInfo.congestion?.value?.intValue,
-                  affectedRoadNames: incidentInfo.affectedRoadNames
+                  affectedRoadNames: incidentInfo.affectedRoadNames,
+                  trafficCodes: .init(incidentInfo.trafficCodes)
         )
     }
 }
@@ -73,5 +74,16 @@ extension Incident.Impact {
         @unknown default:
             fatalError("Unknown IncidentImpact value.")
         }
+    }
+}
+
+extension Incident.TrafficCodes {
+    init?(_ data: [String: NSNumber]) {
+        let codableData = Dictionary(uniqueKeysWithValues: data.map { ($0.key, $0.value.uint32Value) })
+        guard let json = try? JSONEncoder().encode(codableData),
+              let decoded = try? JSONDecoder().decode(Incident.TrafficCodes.self, from: json) else {
+            return nil
+        }
+        self = decoded
     }
 }
