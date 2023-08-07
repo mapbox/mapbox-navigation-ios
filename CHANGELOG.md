@@ -6,6 +6,10 @@
 
 * MapboxCoreNavigation now requires [MapboxDirections v2.11.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0). ([#4523](https://github.com/mapbox/mapbox-navigation-ios/pull/4523))
 
+### Other changes
+
+* Added filling jartic traffic codes info reported `Incident`s while navigating. ([#4524](https://github.com/mapbox/mapbox-navigation-ios/pull/4524))
+
 ## v2.15.0
 
 ### Packaging
