@@ -18,7 +18,7 @@ extension Bundle {
             else { fatalError("MapboxNavigationResources.bundle not found!") }
             
             guard let resourceBundle = Bundle(url: resourceBundleURL)
-                else { fatalError("Cannot access MySDK.bundle!") }
+                else { fatalError("Cannot access MapboxNavigationResources.bundle!") }
             
             return resourceBundle
             #endif
