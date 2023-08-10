@@ -149,13 +149,13 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
     }
 
     private static func createEventsServerOptions(accessToken: String) -> EventsServerOptions {
-        EventsServerOptions(token: accessToken, userAgentFragment: NavigationCommonEventsManager.userAgent, deferredDeliveryServiceOptions: nil)
+        .init(
+            token: accessToken,
+            userAgentFragment: URLSession.navigationSdkUserAgentFragmentForTelemetry,
+            deferredDeliveryServiceOptions: nil
+        )
     }
 
-    private static var userAgent: String = {
-        Bundle.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-    }()
-    
     deinit {
         suspendNotifications()
     }
@@ -177,7 +177,10 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
 
     func start() {
         let shortVersion = Bundle.navigationSDKVersion
-        eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationCommonEventsManager.userAgent, sdkVersion: shortVersion)
+        eventsAPI.sendTurnstileEvent(
+            sdkIdentifier: URLSession.navigationSdkIdentifierForTelemetry,
+            sdkVersion: shortVersion
+        )
     }
     
     // MARK: Sending Feedback Events
@@ -213,7 +216,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? EventRating.unrated
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, appMetadata: userInfo)
         event.event = EventType.cancel.rawValue
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -246,7 +249,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, appMetadata: userInfo)
         event.event = EventType.depart.rawValue
         return event
     }
@@ -254,7 +257,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, appMetadata: userInfo)
         event.event = EventType.arrive.rawValue
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
 
@@ -286,7 +289,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
         var event: NavigationEventDetails
     
         if let activeNavigationDataSource = activeNavigationDataSource {
-            event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
+            event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource, session: sessionState, appMetadata: userInfo)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
             event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, appMetadata: userInfo)
         } else {
@@ -314,7 +317,7 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, appMetadata: userInfo)
         event.event = eventType
         event.created = timestamp
         

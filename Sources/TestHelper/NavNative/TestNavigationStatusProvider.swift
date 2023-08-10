@@ -50,9 +50,9 @@ public final class TestNavigationStatusProvider {
                      offRoadProba: 0,
                      offRoadStateProvider: .unknown,
                      activeGuidanceInfo: activeGuidanceInfo,
-                     upcomingRouteAlerts: [],
                      upcomingRouteAlertUpdates: upcomingRouteAlertUpdates,
                      nextWaypointIndex: 0,
-                     layer: nil)
+                     layer: nil,
+                     isSyntheticLocation: false)
     }
 }

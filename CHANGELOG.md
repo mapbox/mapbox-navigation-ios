@@ -1,11 +1,21 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.16.0
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxDirections v2.11.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0). ([#4523](https://github.com/mapbox/mapbox-navigation-ios/pull/4523))
+
+### Other changes
+
+* Added filling jartic traffic codes info reported `Incident`s while navigating. ([#4524](https://github.com/mapbox/mapbox-navigation-ios/pull/4524))
+
 ## v2.15.0
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v142._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/142.0.0). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
-* MapboxNavigation now requires [MapboxMaps v10.15.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.15.0-beta.1). ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v148._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/148.0.0). ([#4518](https://github.com/mapbox/mapbox-navigation-ios/pull/4518))
+* MapboxNavigation now requires [MapboxMaps v10.15.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.15.0). ([#4518](https://github.com/mapbox/mapbox-navigation-ios/pull/4518))
 
 ### Routing
 *  Route request timeout errors are now considered failures as opposed to cancellations. `RouterDelegate.router(_:didFailToRerouteWith:)` will be called in this case. ([#4490](https://github.com/mapbox/mapbox-navigation-ios/pull/4490))
@@ -24,6 +34,7 @@
 
 * Fixed an issue when starting `NavigationViewController` with injected `NavigationService` (for example via CarPlay) could result in alternative routes not showing on the map. ([#4489](https://github.com/mapbox/mapbox-navigation-ios/pull/4489))
 * Fixed an issue where the `EndOfRouteViewController` was not properly localized. ([#4494](https://github.com/mapbox/mapbox-navigation-ios/pull/4494))
+* Fix sending events to Native Telemetry on application termination. ([#4508](https://github.com/mapbox/mapbox-navigation-ios/pull/4508))
 
 ## v2.14.0
 
