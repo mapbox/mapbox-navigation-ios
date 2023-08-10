@@ -443,7 +443,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       spm:
         type: boolean
         default: true
@@ -478,12 +478,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       device:
         type: string
       iOS:
         type: string
-        default: "15.4"
+        default: "16.4"
       notify_success:
         type: boolean
         default: false
@@ -509,12 +509,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       device:
         type: string
       iOS:
         type: string
-        default: "15.4"
+        default: "16.4"
       notify_success:
         type: boolean
         default: false
@@ -655,14 +655,14 @@ jobs:
 
   spm-core-integration-test-job:
     macos:
-      xcode: "13.3.1"
+      xcode: "14.3.1"
     steps:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max" build
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=16.4,name=iPhone 13 Pro Max" build
 
   spm-ui-integration-test-job:
     macos:
@@ -853,16 +853,16 @@ workflows:
   main-workflow:
       jobs:
         - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_Debug"
-            xcode: "13.2.1"
-            iOS: "15.2"
+            name: "Xcode_14.3.1_iOS_15.2_Debug"
+            xcode: "14.3.1"
+            iOS: "16.4"
             device: "iPhone 13 Pro Max"
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_13.3.1_iOS_15.4_SPM_Debug"
-            xcode: "13.3.1"
-            iOS: "15.4"
+            name: "Xcode_14.3.1_iOS_15.4_SPM_Debug"
+            xcode: "14.3.1"
+            iOS: "16.4"
             device: "iPhone 13 Pro Max"
             spm: true
             codecoverage: true
