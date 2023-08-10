@@ -873,9 +873,9 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4_SPM_Debug"
-            xcode: "14.3.1"
-            iOS: "16.4"
+            name: "Xcode_14.1_iOS_16.1_SPM_Debug"
+            xcode: "14.1"
+            iOS: "16.1"
             device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: true
