@@ -374,6 +374,7 @@ jobs:
         default: "MapboxCoreNavigation"
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -406,7 +407,7 @@ jobs:
                 xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       - when:
           condition: << parameters.spm >>
           steps:
@@ -418,7 +419,7 @@ jobs:
                 command: xcodebuild -resolvePackageDependencies
             - run:
                 name: MapboxNavigation-Package
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
@@ -443,12 +444,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       spm:
         type: boolean
         default: true
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -458,7 +460,7 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build Example app
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       - notify-build-finished
 
   ios-trigger-metrics:
@@ -468,6 +470,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -478,17 +481,18 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       device:
         type: string
       iOS:
         type: string
-        default: "15.4"
+        default: "16.4"
       notify_success:
         type: boolean
         default: false
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -509,12 +513,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "13.3.1"
+        default: "14.3.1"
       device:
         type: string
       iOS:
         type: string
-        default: "15.4"
+        default: "16.4"
       notify_success:
         type: boolean
         default: false
@@ -523,7 +527,7 @@ jobs:
         default: true
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.metal.gen1
+    resource_class: macos.x86.medium.gen2
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -568,6 +572,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - when:
@@ -625,6 +630,7 @@ jobs:
       xcode: 14.2.0
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *add-github-to-known-hosts
@@ -655,18 +661,20 @@ jobs:
 
   spm-core-integration-test-job:
     macos:
-      xcode: "13.3.1"
+      xcode: "14.3.1"
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max" build
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=16.4,name=iPhone 13 Pro Max" build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
 
   spm-ui-integration-test-job:
     macos:
       xcode: "14.1.0"
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - install-bash5
@@ -687,6 +695,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *restore-cache-gems
@@ -731,6 +740,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *restore-cache-gems
@@ -759,6 +769,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *restore-cache-gems
@@ -781,6 +792,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - install-mbx-ci
@@ -793,6 +805,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - install-mbx-ci
@@ -853,17 +866,17 @@ workflows:
   main-workflow:
       jobs:
         - build-job:
-            name: "Xcode_13.2.1_iOS_15.2_Debug"
-            xcode: "13.2.1"
-            iOS: "15.2"
-            device: "iPhone 13 Pro Max"
+            name: "Xcode_14.3.1_iOS_16.4_Debug"
+            xcode: "14.3.1"
+            iOS: "16.4"
+            device: "iPhone 14 Pro Max"
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_13.3.1_iOS_15.4_SPM_Debug"
-            xcode: "13.3.1"
-            iOS: "15.4"
-            device: "iPhone 13 Pro Max"
+            name: "Xcode_14.1_iOS_16.1_SPM_Debug"
+            xcode: "14.1"
+            iOS: "16.1"
+            device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: true
             context: Slack Orb
@@ -916,7 +929,7 @@ workflows:
             name: "Build Example"
             context: Slack Orb
         - spm-core-integration-test-job:
-            name: "Xcode 13.3; iOS 15.4; SPM Core test"
+            name: "Xcode 14.3.1; iOS 16.4; SPM Core test"
         - build-job:
             name: "Core integration test; Xcode 14.1; iOS 16.1"
             xcode: "14.1.0"
