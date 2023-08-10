@@ -407,7 +407,7 @@ jobs:
                 xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       - when:
           condition: << parameters.spm >>
           steps:
@@ -460,7 +460,7 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build Example app
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       - notify-build-finished
 
   ios-trigger-metrics:
@@ -669,7 +669,7 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=16.4,name=iPhone 13 Pro Max" build
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=16.4,name=iPhone 13 Pro Max" build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
 
   spm-ui-integration-test-job:
     macos:
