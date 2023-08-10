@@ -17,7 +17,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * [Professionally designed map styles](https://www.mapbox.com/maps/) for daytime and nighttime driving
 * Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/maps/) and user feedback
 * Traffic avoidance and proactive rerouting based on current conditions in [over 55 countries](https://docs.mapbox.com/help/how-mapbox-works/directions/#traffic-data)
-* Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
+* Natural-sounding turn instructions
 * [Support for over two dozen languages](https://docs.mapbox.com/ios/navigation/overview/localization-and-internationalization/)
 
 ## [Documentation](https://docs.mapbox.com/ios/api/navigation/)
