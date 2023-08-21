@@ -980,18 +980,16 @@ extension CarPlayManager: CPMapTemplateDelegate {
     
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate) {
         guard let navigationMapView = activeNavigationMapView else { return }
-        
-        var cameraState = navigationMapView.mapView.mapboxMap.cameraState
-        cameraState.center = coordinate(of: offset, in: navigationMapView)
-        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: cameraState))
+
+        navigationMapView.mapView.mapboxMap.setCamera(to: dragCameraOptions(with: offset, in: navigationMapView))
     }
 
-    func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
+    private func dragCameraOptions(with offset: CGPoint, in navigationMapView: NavigationMapView) -> CameraOptions {
         let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
+        let endCameraPoint = CGPoint(x: centerPoint.x + offset.x, y: centerPoint.y + offset.y)
 
-        return navigationMapView.mapView.mapboxMap.coordinate(for: endCameraPoint)
+        return navigationMapView.mapView.mapboxMap.dragCameraOptions(from: centerPoint, to: endCameraPoint)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
