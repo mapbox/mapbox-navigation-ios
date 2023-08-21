@@ -11,6 +11,7 @@
 ### Other changes
 
 * Added filling jartic traffic codes info reported `Incident`s while navigating. ([#4524](https://github.com/mapbox/mapbox-navigation-ios/pull/4524))
+* Fixed initial pan gesture in CarPlay. ([#4534](https://github.com/mapbox/mapbox-navigation-ios/pull/4534))
 
 ## v2.15.0
 
