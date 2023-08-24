@@ -10,7 +10,7 @@ The Navigation SDK tries to compensate and be as energy conscious as possible. F
 
 # What else can the developer do?
 
-Apps that use this SDK often begin by showing a preview map view where the route will go. Then, the user initiates navigation and the `NavigationViewController` is presented. However, the preview map is longer necessary to keep around in memory. 
+Apps that use this SDK often begin by showing a preview map view where the route will go. Then, the user initiates navigation and the `NavigationViewController` is presented. However, the preview map is no longer necessary to keep around in memory. 
 
 UIKit will remove `NavigationMapView` from the view hierarchy when using `UIModalPresentationStyle.fullScreen`, but if you choose to use another presentation style, you can remove the preview map view from the current view using `UIView.removeFromSuperview()`:
 
