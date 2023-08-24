@@ -696,9 +696,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         return self
     }
     
-    var topViewController: ContainerViewController?
+    // :nodoc:
+    public private(set) var topContainerViewController: ContainerViewController?
     
-    var bottomViewController: ContainerViewController?
+    // :nodoc:
+    public private(set) var bottomContainerViewController: ContainerViewController?
     
     var arrivalController: ArrivalController?
     var cameraController: CameraController?
@@ -751,7 +753,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return viewController
         }()
         
-        topViewController = topBanner
+        topContainerViewController = topBanner
         
         return topBanner
     }
@@ -764,7 +766,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return viewController
         }()
         
-        bottomViewController = bottomBanner
+        bottomContainerViewController = bottomBanner
         
         return bottomBanner
     }
@@ -819,11 +821,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             components.append(overlayController)
         }
         
-        if let topViewController = topViewController {
+        if let topViewController = topContainerViewController {
             components.append(topViewController)
         }
         
-        if let bottomViewController = bottomViewController {
+        if let bottomViewController = bottomContainerViewController {
             components.append(bottomViewController)
         }
         
