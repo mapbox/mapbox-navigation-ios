@@ -7,7 +7,7 @@ protocol ConnectivityTypeProvider {
 
 protocol NetworkMonitor: AnyObject {
     func start(queue: DispatchQueue)
-    var pathUpdateHandler: (@Sendable (_ newPath: NWPath) -> Void)? { get set }
+    var pathUpdateHandler: ((_ newPath: NWPath) -> Void)? { get set }
 }
 
 protocol NetworkPath {
