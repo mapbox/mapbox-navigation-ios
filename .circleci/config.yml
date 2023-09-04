@@ -904,7 +904,7 @@ workflows:
             name: "Xcode_14.1.0_iOS_15.5"
             xcode: "14.1.0"
             iOS: "15.5"
-            device: "iPhone 11 Pro Max"
+            device: "iPhone 13 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
