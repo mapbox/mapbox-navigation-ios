@@ -5,9 +5,9 @@
 ### Packaging
 
 * MapboxNavigation now requires Xcode 14.1 or newer. ([#4537](https://github.com/mapbox/mapbox-navigation-ios/pull/4537))
-* MapboxCoreNavigation now requires [MapboxDirections v2.11.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.0). ([#4523](https://github.com/mapbox/mapbox-navigation-ios/pull/4523))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v156._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/156.0.0). ([#4537](https://github.com/mapbox/mapbox-navigation-ios/pull/4537))
-* MapboxNavigation now requires [MapboxMaps v10.16.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.0-rc.1). ([#4537](https://github.com/mapbox/mapbox-navigation-ios/pull/4537))
+* MapboxCoreNavigation now requires [MapboxDirections v2.11.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.11.1). ([#4543](https://github.com/mapbox/mapbox-navigation-ios/pull/4543))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v157._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/157.0.0). ([#4543](https://github.com/mapbox/mapbox-navigation-ios/pull/4543))
+* MapboxNavigation now requires [MapboxMaps v10.16.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.0). ([#4543](https://github.com/mapbox/mapbox-navigation-ios/pull/4543))
 
 ### Other changes
 
