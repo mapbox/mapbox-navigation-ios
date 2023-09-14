@@ -64,8 +64,8 @@ class NativeTelemetryIntegrationTests: TestCase {
         let routesData = json?["routes"] as? [[String: Any]]
         let geometryRawValue = (routesData?[0]["geometry"] as? String)?
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: "\\", with: "\\\\") ?? ""
-        geometry = "\"" + geometryRawValue + "\""
+            .trimmingCharacters(in: .init(charactersIn: "\"")) ?? ""
+        geometry = geometryRawValue
         route = routeResponse.routes!.first!
         indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
@@ -195,7 +195,7 @@ class NativeTelemetryIntegrationTests: TestCase {
 
         wait(for: [telemetryObserver.expectation, navigationFinished], timeout: expectationsTimeout)
     }
-    
+
     // Tracking issue: NAVIOS-1240
     func disabled_testStartFreeRideAfterActiveNavigation() {
         let firstLocation = locationManager.locations.first!
@@ -359,8 +359,6 @@ class NativeTelemetryIntegrationTests: TestCase {
             "originalRequestIdentifier",
             "requestIdentifier",
             "connectivity",
-            "distanceRemaining",
-            "durationRemaining",
             // TODO: fix flaky check of voiceIndex & bannerIndex
             "voiceIndex",
             "bannerIndex"
@@ -482,9 +480,8 @@ class NativeTelemetryIntegrationTests: TestCase {
         let approximateValueCheckAttributes = [
             "absoluteDistanceToDestination": (location.distance(from: CLLocation(latitude: lastCoordinate.latitude, longitude: lastCoordinate.longitude)), 10.0),
             "distanceCompleted": (routeProgress.distanceTraveled, 10.0),
-            // TODO: return value check after NN fix
-//            "distanceRemaining": (routeProgress.distanceRemaining, 10.0),
-//            "durationRemaining": (routeProgress.durationRemaining, 1.0),
+            "distanceRemaining": (routeProgress.distanceRemaining, 10.0),
+            "durationRemaining": (routeProgress.durationRemaining, 1.0),
         ]
         let attributesKeys = noValueCheckAttributesKeys ?? activeNoValueCheckAttributesKeys
         return event(with: eventName,
