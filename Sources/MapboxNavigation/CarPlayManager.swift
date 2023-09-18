@@ -1025,7 +1025,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                    animated: Bool,
                                    completion: ((Bool, Error?) -> Void)? = nil) {
         guard let interfaceController = interfaceController,
-              interfaceController.templates.count > 1 else { return }
+              interfaceController.templates.count > 1 else {
+            completion?(false, nil)
+            return
+        }
         
         if #available(iOS 14.0, *) {
             interfaceController.popToRootTemplate(animated: animated, completion: completion)
@@ -1039,7 +1042,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                  rootTemplate: CPTemplate,
                                  animated: Bool,
                                  completion: ((Bool, Error?) -> Void)? = nil) {
-        guard let interfaceController = interfaceController else { return }
+        guard let interfaceController = interfaceController else {
+            completion?(false, nil)
+            return
+        }
         
         if #available(iOS 14.0, *) {
             interfaceController.setRootTemplate(rootTemplate,

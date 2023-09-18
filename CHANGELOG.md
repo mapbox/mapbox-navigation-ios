@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.17.0
+
+### CarPlay
+
+* Fixed behavior when completion was not called in case of an error in CarPlayManager. ([#4548](https://github.com/mapbox/mapbox-navigation-ios/pull/4548))
+
 ## v2.16.0
 
 ### Packaging
