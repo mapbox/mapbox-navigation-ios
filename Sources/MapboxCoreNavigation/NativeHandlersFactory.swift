@@ -93,8 +93,6 @@ class NativeHandlersFactory {
                     tileStore: tileStore,
                     inMemoryTileCache: nil,
                     onDiskTileCache: nil,
-                    mapMatchingSpatialCache: nil,
-                    threadsCount: nil,
                     endpointConfig: endpointConfig)
     }()
     

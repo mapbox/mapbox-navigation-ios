@@ -346,7 +346,8 @@ class RouteProgressTests: TestCase {
                 upcomingRouteAlertUpdates: [],
                 nextWaypointIndex: 0,
                 layer: nil,
-                isSyntheticLocation: false
+                isSyntheticLocation: false,
+                correctedLocationData: nil
             )
         }
 
