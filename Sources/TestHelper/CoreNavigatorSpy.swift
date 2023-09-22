@@ -156,8 +156,6 @@ class GraphAccessorSpy: GraphAccessor {
                                      tileStore: nil,
                                      inMemoryTileCache: nil,
                                      onDiskTileCache: nil,
-                                     mapMatchingSpatialCache: nil,
-                                     threadsCount: nil,
                                      endpointConfig: nil)
         let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
         super.init(cache: cache)
@@ -171,8 +169,6 @@ class RoadObjectMatcherSpy: MapboxNavigationNative.RoadObjectMatcher {
                                      tileStore: nil,
                                      inMemoryTileCache: nil,
                                      onDiskTileCache: nil,
-                                     mapMatchingSpatialCache: nil,
-                                     threadsCount: nil,
                                      endpointConfig: nil)
         let cache = CacheFactory.build(for: tileConfig, config: configHandle, historyRecorder: nil)
         super.init(cache: cache)
