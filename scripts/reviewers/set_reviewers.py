@@ -12,9 +12,9 @@ pr_number = os.environ['PR_NUMBER']
 token = os.environ['GITHUB_TOKEN']
 
 prs_url = "https://api.github.com/repos/mapbox/mapbox-navigation-ios/pulls"
-pr_url = prs_url + "/" + pr_number
+pr_url = f"{prs_url}/{pr_number}"
 
-headers = {"Authorization": "Bearer " + token}
+headers = {"Authorization": f"Bearer {token}"}
 pr = requests.get(pr_url, headers=headers).json()
 
 if pr['draft']:
@@ -26,12 +26,13 @@ current_reviewers = list(map(lambda reviewer: reviewer['login'], pr['requested_r
 
 # check existing approvals on pr
 
-reviews_url = pr_url + "/reviews"
+reviews_url = f"{pr_url}/reviews"
 reviews = requests.get(reviews_url, headers=headers).json()
-for review in reviews:
-    if review['state'] == 'APPROVED':
-        current_reviewers.append(review['user']['login'])
-
+current_reviewers.extend(
+    review['user']['login']
+    for review in reviews
+    if review['state'] == 'APPROVED'
+)
 if len(current_reviewers) >= 2:
     print("2 or more reviewers already assigned")
     exit()
@@ -50,7 +51,7 @@ users = get_current_reviews(users, pulls)
 
 # get users done reviews
 
-closed_pulls_url = prs_url + "?state=closed&per_page=100"
+closed_pulls_url = f"{prs_url}?state=closed&per_page=100"
 closed_pulls = requests.get(closed_pulls_url, headers=headers).json()
 
 today = datetime.date.today()
@@ -67,7 +68,7 @@ pprint(users)
 
 # get changes
 
-pr_files_url = pr_url + '/files'
+pr_files_url = f'{pr_url}/files'
 pr_files = requests.get(pr_files_url, headers=headers).json()
 changed_modules = get_changed_modules(pr_files)
 
@@ -89,5 +90,5 @@ print(found_reviewers)
 
 # assign reviewers
 
-pr_url = prs_url + '/%s/requested_reviewers'
+pr_url = f'{prs_url}/%s/requested_reviewers'
 requests.post(pr_url % pr_number, json={'reviewers': found_reviewers}, headers=headers)

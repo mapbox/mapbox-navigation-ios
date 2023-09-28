@@ -28,12 +28,13 @@ def TriggerPipeline(token, commit, ci_ref):
 
     print(response.request.url)
 
-    if response.status_code != 201 and response.status_code != 200:
-        print("Error triggering the CircleCI: %s." % response.json()["message"])
-        sys.exit(1)
-    else:
+    if response.status_code in {201, 200}:
         response_dict = json.loads(response.text)
-        print("Started run_ios_navigation_benchmark: %s" % response_dict)
+        print(f"Started run_ios_navigation_benchmark: {response_dict}")
+
+    else:
+        print(f'Error triggering the CircleCI: {response.json()["message"]}.')
+        sys.exit(1)
 
 def main():
     token = os.getenv("MOBILE_METRICS_TOKEN")

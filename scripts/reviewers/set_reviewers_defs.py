@@ -7,15 +7,11 @@ def parse_users(teams, author):
     users = []
     for team in teams:
         team_name = team['name']
-        for user in team['users']:
-            if user == author:
-                continue
-            users.append({
-                'login': user,
-                'team': team_name,
-                'reviews': 0,
-                'done_reviews': 0
-            })
+        users.extend(
+            {'login': user, 'team': team_name, 'reviews': 0, 'done_reviews': 0}
+            for user in team['users']
+            if user != author
+        )
     return users
 
 
@@ -47,7 +43,7 @@ def get_fresh_pulls(all_pulls, today):
 def get_done_reviews(prs_url, headers, users, fresh_pulls):
     for pull in fresh_pulls:
         pull_number = pull['number']
-        reviews_url = prs_url + "/" + str(pull_number) + "/reviews"
+        reviews_url = f"{prs_url}/{str(pull_number)}/reviews"
         reviews = requests.get(reviews_url, headers=headers).json()
         for review in reviews:
             if review['state'] == 'APPROVED':

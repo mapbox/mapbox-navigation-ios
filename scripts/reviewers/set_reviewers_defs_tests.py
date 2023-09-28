@@ -84,8 +84,8 @@ class SetReviewersDefsTest(unittest.TestCase):
             {'state': 'APPROVED', 'user': {'login': 'user1'}},
             {'state': 'APPROVED', 'user': {'login': 'user2'}},
         ]
-        responses.add(responses.GET, prs_url + '/1/reviews', json=reviews_1)
-        responses.add(responses.GET, prs_url + '/2/reviews', json=reviews_2)
+        responses.add(responses.GET, f'{prs_url}/1/reviews', json=reviews_1)
+        responses.add(responses.GET, f'{prs_url}/2/reviews', json=reviews_2)
         expected_reviews = [
             {'login': 'user1', 'done_reviews': 2},
             {'login': 'user2', 'done_reviews': 1}

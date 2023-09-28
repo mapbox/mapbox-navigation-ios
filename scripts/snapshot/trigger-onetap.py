@@ -12,8 +12,8 @@ if token is None:
     print("Error triggering because CIRCLE_TOKEN is not set")
     sys.exit(1)
 
-snapshot_branch = 'snapshot_' + str(datetime.date.today())
-print("Snapshot branch " + snapshot_branch)
+snapshot_branch = f'snapshot_{str(datetime.date.today())}'
+print(f"Snapshot branch {snapshot_branch}")
 
 url = "https://circleci.com/api/v2/project/github/mapbox/1tap-ios/pipeline"
 
@@ -31,9 +31,10 @@ data = {
 
 response = requests.post(url, auth=(token, ""), headers=headers, json=data)
 
-if response.status_code != 201 and response.status_code != 200:
-    print("Error triggering the CircleCI: %s." % response.json()["message"])
-    sys.exit(1)
-else:
+if response.status_code in {201, 200}:
     response_dict = json.loads(response.text)
-    print("Started run_weekly_snapshot: %s" % response_dict)
+    print(f"Started run_weekly_snapshot: {response_dict}")
+
+else:
+    print(f'Error triggering the CircleCI: {response.json()["message"]}.')
+    sys.exit(1)
