@@ -7,7 +7,7 @@ from utils import is_snapshot_week, get_dependency_version, get_latest_tag, get_
     get_dependency_version_from_tags
 
 github_token = os.getenv("GITHUB_TOKEN")
-headers = {"Authorization": "Bearer " + github_token}
+headers = {"Authorization": f"Bearer {github_token}"}
 
 
 def build_message():
@@ -25,9 +25,8 @@ def build_message():
         'https://api.github.com/repos/mapbox/mapbox-maps-ios/releases',
         headers=headers
     ).json()
-    maps_version = get_dependency_version(maps_releases)
-    if maps_version:
-        message += ':white_check_mark: Maps ' + maps_version + ' is ready.\n'
+    if maps_version := get_dependency_version(maps_releases):
+        message += f':white_check_mark: Maps {maps_version}' + ' is ready.\n'
     else:
         message += ':siren: Expected Maps release was not released.\n'
 
@@ -35,9 +34,11 @@ def build_message():
         'https://api.github.com/repos/mapbox/mapbox-navigation-native-ios/tags',
         headers=headers
     ).json()
-    nav_native_version = get_dependency_version_from_tags(nav_native_tags)
-    if nav_native_version:
-        message += ':white_check_mark: Nav Native ' + nav_native_version + ' is ready.\n'
+    if nav_native_version := get_dependency_version_from_tags(nav_native_tags):
+        message += (
+            f':white_check_mark: Nav Native {nav_native_version}'
+            + ' is ready.\n'
+        )
     else:
         message += ':siren: Expected Nav Native release was not released.\n'
 
@@ -45,7 +46,7 @@ def build_message():
     latest_tag = get_latest_tag(tags)
     snapshot_branch = get_snapshot_branch(latest_tag)
 
-    message += 'Snapshot branch is *' + snapshot_branch + '*.\n'
+    message += f'Snapshot branch is *{snapshot_branch}' + '*.\n'
 
     message += '*Release time is today night.*\n'
 

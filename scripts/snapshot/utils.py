@@ -4,7 +4,7 @@ import os
 import requests
 
 github_token = os.getenv("GITHUB_TOKEN")
-headers = {"Authorization": "Bearer " + github_token}
+headers = {"Authorization": f"Bearer {github_token}"}
 
 
 def is_rc_or_ga(release_name):
@@ -23,18 +23,23 @@ def is_current_week(release_created_date):
 
 
 def is_snapshot_week(releases):
-    for release in releases:
-        if is_current_week(release['created_at']) and is_rc_or_ga(release['name']):
-            return False
-    return True
+    return not any(
+        is_current_week(release['created_at']) and is_rc_or_ga(release['name'])
+        for release in releases
+    )
 
 
 def get_dependency_version(releases):
-    for release in releases:
-        if is_current_week(release['created_at']) and not is_patch(
-                release['name']) and not ('private' in release['name']):
-            return release['name'].replace('v', '')
-    return None
+    return next(
+        (
+            release['name'].replace('v', '')
+            for release in releases
+            if is_current_week(release['created_at'])
+            and not is_patch(release['name'])
+            and 'private' not in release['name']
+        ),
+        None,
+    )
 
 
 def get_dependency_version_from_tags(tags):
@@ -58,8 +63,7 @@ def get_latest_tag(tags):
 # latest tag rc - future version rc or stable - release branch
 # latest tag stable - future version alpha or beta - main branch
 def get_snapshot_branch(latest_tag):
-    if 'beta' in latest_tag or 'alpha' in latest_tag \
-            or ('rc' not in latest_tag and 'beta' not in latest_tag and 'alpha' not in latest_tag):
+    if 'beta' in latest_tag or 'alpha' in latest_tag or 'rc' not in latest_tag:
         return 'main'
     else:
         return 'release-' + latest_tag.partition('.0')[0]
