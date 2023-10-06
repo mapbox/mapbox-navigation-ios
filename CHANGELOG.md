@@ -11,6 +11,10 @@
 
 * Fixed behavior when completion was not called in case of an error in CarPlayManager. ([#4548](https://github.com/mapbox/mapbox-navigation-ios/pull/4548))
 
+### Location tracking
+* Improved ramp detection and reduced unexpected jumps between parallel elevated roads. ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
+* Fixed false-positive "exiting the tunnel" mapmatching errors. ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
+
 ## v2.16.0
 
 ### Packaging
