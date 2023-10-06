@@ -4,11 +4,16 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v158._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/158.0.0). ([#4550](https://github.com/mapbox/mapbox-navigation-ios/pull/4550))
+* MapboxNavigation now requires [MapboxMaps v10.16.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.1). ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v159._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/159.0.0). ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
 
 ### CarPlay
 
 * Fixed behavior when completion was not called in case of an error in CarPlayManager. ([#4548](https://github.com/mapbox/mapbox-navigation-ios/pull/4548))
+
+### Location tracking
+* Improved ramp detection and reduced unexpected jumps between parallel elevated roads. ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
+* Fixed false-positive "exiting the tunnel" mapmatching errors. ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
 
 ## v2.16.0
 
