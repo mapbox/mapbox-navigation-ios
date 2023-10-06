@@ -4,7 +4,8 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now requires [MapboxNavigationNative v158._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/158.0.0). ([#4550](https://github.com/mapbox/mapbox-navigation-ios/pull/4550))
+* MapboxNavigation now requires [MapboxMaps v10.16.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.1). ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v159._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/159.0.0). ([#4557](https://github.com/mapbox/mapbox-navigation-ios/pull/4557))
 
 ### CarPlay
 
