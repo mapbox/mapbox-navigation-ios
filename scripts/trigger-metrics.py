@@ -22,7 +22,7 @@ def TriggerPipeline(token, commit, ci_ref):
     }
 
     # Branch in mobile-metrics repo if you want to trigger a custom pipeline
-    # data["branch"] = "test"
+    data["branch"] = "azarovalex/ignore-unzip-errors"
 
     response = requests.post(url, auth=(token, ""), headers=headers, json=data)
 
