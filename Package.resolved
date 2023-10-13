@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "caa5c3486b14e63ee89db253df54d61c49ba5704",
-          "version": "159.0.0"
+          "revision": "7f3a62751e250166e56120c5854239287ab22b46",
+          "version": "160.0.0"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
-          "version": "1.2.2"
+          "revision": "8f4d2753f0e4778c76d5f05ad16c74f707390531",
+          "version": "1.2.3"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
+          "revision": "f0afe204b4266337066a436becab62fdd2b32378",
+          "version": "2.7.0"
         }
       }
     ]
