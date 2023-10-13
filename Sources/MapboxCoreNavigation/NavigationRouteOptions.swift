@@ -26,10 +26,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
                    queryItems: queryItems)
         includesAlternativeRoutes = true
         attributeOptions = [.expectedTravelTime, .maximumSpeedLimit]
-        if profileIdentifier == .cycling {
-            // https://github.com/mapbox/mapbox-navigation-ios/issues/3495
-            attributeOptions.update(with: .congestionLevel)
-        } else {
+        if profileIdentifier == .automobileAvoidingTraffic {
             attributeOptions.update(with: .numericCongestionLevel)
         }
         includesExitRoundaboutManeuver = true
@@ -91,7 +88,10 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
         },
                    profileIdentifier: profileIdentifier,
                    queryItems: queryItems)
-        attributeOptions = [.numericCongestionLevel, .expectedTravelTime]
+        attributeOptions = [.expectedTravelTime]
+        if profileIdentifier == .automobileAvoidingTraffic {
+            attributeOptions.update(with: .numericCongestionLevel)
+        }
         if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
             attributeOptions.insert(.maximumSpeedLimit)
         }

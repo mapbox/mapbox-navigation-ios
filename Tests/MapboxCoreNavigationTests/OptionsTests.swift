@@ -30,15 +30,15 @@ class OptionsTests: TestCase {
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates).attributeOptions,
                        [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile).attributeOptions,
-                       [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
+                       [.expectedTravelTime, .maximumSpeedLimit])
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic).attributeOptions,
                        [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
         // https://github.com/mapbox/mapbox-navigation-ios/issues/3495
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .cycling).attributeOptions,
-                       [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit])
+                       [.expectedTravelTime, .maximumSpeedLimit])
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .walking).attributeOptions,
-                       [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
+                       [.expectedTravelTime, .maximumSpeedLimit])
         XCTAssertEqual(NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .init(rawValue: "mapbox/unicycling")).attributeOptions,
-                       [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
+                       [.expectedTravelTime, .maximumSpeedLimit])
     }
 }
