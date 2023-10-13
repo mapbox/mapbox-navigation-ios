@@ -46,13 +46,13 @@ To install the MapboxNavigation framework in an application using [Swift Package
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `2.16.0` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `2.17.0` as the minimum version requirement. Click Next.
 
 To install the MapboxNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
 // Latest stable release
-.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.16.0")
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.17.0")
 // Latest prerelease
 .package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.17.0-beta.1"))
 ```
@@ -72,8 +72,8 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    # Latest stable release
-   pod 'MapboxCoreNavigation', '~> 2.16'
-   pod 'MapboxNavigation', '~> 2.16'
+   pod 'MapboxCoreNavigation', '~> 2.17'
+   pod 'MapboxNavigation', '~> 2.17'
    # Latest prerelease
    pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.17.0-beta.1'
    pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.17.0-beta.1'
@@ -101,7 +101,7 @@ To install the MapboxNavigation framework using [Carthage](https://github.com/Ca
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
    # Latest stable release
-   github "mapbox/mapbox-navigation-ios" ~> 2.16
+   github "mapbox/mapbox-navigation-ios" ~> 2.17
    # Latest prerelease
    github "mapbox/mapbox-navigation-ios" "v2.17.0-beta.1"
    ```
