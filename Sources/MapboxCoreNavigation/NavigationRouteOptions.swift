@@ -92,10 +92,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
                    profileIdentifier: profileIdentifier,
                    queryItems: queryItems)
         attributeOptions = [.expectedTravelTime]
-        if profileIdentifier == .cycling {
-            // https://github.com/mapbox/mapbox-navigation-ios/issues/3495
-            attributeOptions.update(with: .congestionLevel)
-        } else {
+        if profileIdentifier == .automobileAvoidingTraffic {
             attributeOptions.update(with: .numericCongestionLevel)
         }
         if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
