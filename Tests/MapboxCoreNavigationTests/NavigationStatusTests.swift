@@ -156,18 +156,15 @@ final class NavigationStatusTests: TestCase {
         XCTAssertNil(representation1.shield)
         XCTAssertNil(representation1.imageBaseURL)
 
-        let invalidURLString = "|||"
-        let shield2 = Shield(baseUrl: invalidURLString, displayRef: "ref", name: "shield", textColor: "")
+        let shield2 = Shield(baseUrl: "|||", displayRef: "ref", name: "shield", textColor: "")
         let roadNonValidImageBaseUrlString = RoadName(text: "name",
                                                       language: "",
-                                                      imageBaseUrl: invalidURLString,
+                                                      imageBaseUrl: "|||",
                                                       shield: shield2)
         let status2 = status(with: [roadNonValidImageBaseUrlString])
         let representation2 = status2.routeShieldRepresentation
-        XCTAssertEqual(invalidURLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                       representation2.shield?.baseURL.absoluteString)
-        XCTAssertEqual(invalidURLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                       representation2.imageBaseURL?.absoluteString)
+        XCTAssertNil(representation2.shield)
+        XCTAssertNil(representation2.imageBaseURL)
 
         let shield3 = Shield(baseUrl: "", displayRef: "ref", name: "shield", textColor: "")
         let roadEmptyImageBaseUrlString = RoadName(text: "name",
