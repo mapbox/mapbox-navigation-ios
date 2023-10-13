@@ -5,7 +5,7 @@ PODS:
   - MapboxCoreNavigation (2.17.0-beta.1):
     - MapboxDirections (~> 2.11.1)
     - MapboxMobileEvents (~> 1.0)
-    - MapboxNavigationNative (~> 159.0.0)
+    - MapboxNavigationNative (~> 160.0.0)
   - MapboxDirections (2.11.1):
     - Polyline (~> 5.0)
     - Turf (~> 2.6.1)
@@ -21,7 +21,7 @@ PODS:
     - MapboxMobileEvents (~> 1.0)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
-  - MapboxNavigationNative (159.0.0):
+  - MapboxNavigationNative (160.0.0):
     - MapboxCommon (~> 23.8)
   - MapboxSpeech (2.1.1)
   - Polyline (5.1.0)
@@ -54,12 +54,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: b2c348867dfed7d7a23545e6c2024d712bfda10f
   MapboxCoreMaps: c66f482b5ea983cf873122853c4ee94c159bec43
-  MapboxCoreNavigation: 9c31ddfa1adc4d396cb6257609adce52ffd98a12
+  MapboxCoreNavigation: 37153692421de4728b621bb81b5de5a4d20661e9
   MapboxDirections: 31d61b8369d5dde6f6828f72905ab9a7e054cd2c
   MapboxMaps: fdbe05e3899abd24f31a7f91789586e44e57f7fc
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
   MapboxNavigation: 6ff6cf5ac63d9c12ca78eea9e19e4c6feddf70e5
-  MapboxNavigationNative: fff991d15708bb063ded25be6fb296d23c6a8308
+  MapboxNavigationNative: f501a2f469374e6ad1caa807c9fd8ac8e3b49082
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
