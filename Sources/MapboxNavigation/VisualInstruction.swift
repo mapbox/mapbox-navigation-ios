@@ -121,7 +121,7 @@ extension VisualInstruction {
     ) -> UIImage? {
         let color: UIColor
         switch userInterfaceStyle {
-        case .dark, .none:
+        case .dark:
             color = .white
         default:
             color = .black
