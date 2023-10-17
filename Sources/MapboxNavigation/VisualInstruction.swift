@@ -117,14 +117,14 @@ extension VisualInstruction {
      */
     @available(iOS 13.0, *)
     func maneuverImage(side: DrivingSide,
-                       type styleType: StyleType?
+                       userInterfaceStyle: UIUserInterfaceStyle
     ) -> UIImage? {
         let color: UIColor
-        switch styleType {
-        case .day, .none:
+        switch userInterfaceStyle {
+        case .dark, .none:
             color = .white
-        case .night:
-            color = .white
+        default:
+            color = .black
         }
         return maneuverViewImage(drivingSide: side,
                                  color: color,
