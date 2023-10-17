@@ -919,8 +919,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         // Add maneuver arrow
         if #available(iOS 13.0, *) {
+            let userInterfaceStyle = traitCollection.userInterfaceStyle
             primaryManeuver.symbolImage = visualInstruction.primaryInstruction.maneuverImage(side: visualInstruction.drivingSide,
-                                                                                             type: styleManager?.currentStyleType)
+                                                                                             userInterfaceStyle: userInterfaceStyle)
         } else {
             primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
         }
