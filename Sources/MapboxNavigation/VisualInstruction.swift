@@ -122,7 +122,7 @@ extension VisualInstruction {
         let color: UIColor
         switch styleType {
         case .day, .none:
-            color = .black
+            color = .white
         case .night:
             color = .white
         }
