@@ -661,8 +661,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
         let preventRerouting = RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
 
-        let roadName = roadName(at: location) ?? roadName(at: rawLocation)
-
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
             navigationMapView?.moveUserLocation(to: location, animated: true)
@@ -731,8 +729,8 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
     public func updateMapStyle(_ style: Style) {
         currentStyleType = style.styleType
         currentStyle = style
-        let styleURI = StyleURI(url: style.mapStyleURL)
-        if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+        if let styleURI = StyleURI(url: style.mapStyleURL),
+           navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
             navigationMapView?.mapView.mapboxMap.style.uri = styleURI
             navigationMapView?.mapView.mapboxMap.loadStyleURI(styleURI) { [weak self] result in
                 switch result {
