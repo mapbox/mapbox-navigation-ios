@@ -9,10 +9,6 @@ import MapboxMaps
 import MapboxCoreMaps
 import Turf
 
-/**
- A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
- */
-public typealias ContainerViewController = UIViewController & NavigationComponent
 
 /**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
@@ -29,7 +25,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  Guidance session. The trip session is stopped when the instance is deallocated. For more info read the
  [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
  */
-open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData, BuildingHighlighting {
+open class NavigationSimpleViewController: UIViewController, NavigationStatusPresenter, NavigationViewData, BuildingHighlighting {
     
     // MARK: Accessing the View Hierarchy
     
@@ -685,53 +681,165 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             navigationMapView?.removeIntersectionAnnotations()
         }
     }
-}
+    
+    // MARK: Notifications Observer Methods
 
-// MARK: Notifications Observer Methods
+    func observeNotifications(_ service: NavigationService) {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(progressDidChange(_:)),
+                                               name: .routeControllerProgressDidChange,
+                                               object: service.router)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(rerouted(_:)),
+                                               name: .routeControllerDidReroute,
+                                               object: service.router)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(refresh(_:)),
+                                               name: .routeControllerDidRefreshRoute,
+                                               object: service.router)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(simulationStateDidChange(_:)),
+                                               name: .navigationServiceSimulationDidChange,
+                                               object: service)
+    }
 
-func observeNotifications(_ service: NavigationService) {
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(progressDidChange(_:)),
-                                           name: .routeControllerProgressDidChange,
-                                           object: service.router)
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerProgressDidChange,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerDidReroute,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerDidRefreshRoute,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationServiceSimulationDidChange,
+                                                  object: nil)
+    }
     
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(rerouted(_:)),
-                                           name: .routeControllerDidReroute,
-                                           object: service.router)
-    
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(refresh(_:)),
-                                           name: .routeControllerDidRefreshRoute,
-                                           object: service.router)
-    
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(simulationStateDidChange(_:)),
-                                           name: .navigationServiceSimulationDidChange,
-                                           object: service)
-}
+    @objc func progressDidChange(_ notification: NSNotification) {
+        guard let progress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation,
+              let service = navigationOptions?.navigationService,
+              let rawLocation = notification.userInfo?[RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation else {
+            assertionFailure("RouteProgress and CLLocation should be available.")
+            return
+        }
+        
+        // Check to see if we're in a tunnel.
+        checkTunnelState(at: location, along: progress)
+        
+        // Pass the message onto our navigation components.
+        for component in navigationComponents {
+            component.navigationService(service, didUpdate: progress, with: location, rawLocation: rawLocation)
+        }
 
-func suspendNotifications() {
-    NotificationCenter.default.removeObserver(self,
-                                              name: .routeControllerProgressDidChange,
-                                              object: nil)
-    
-    NotificationCenter.default.removeObserver(self,
-                                              name: .routeControllerDidReroute,
-                                              object: nil)
-    
-    NotificationCenter.default.removeObserver(self,
-                                              name: .routeControllerDidRefreshRoute,
-                                              object: nil)
-    
-    NotificationCenter.default.removeObserver(self,
-                                              name: .navigationServiceSimulationDidChange,
-                                              object: nil)
+        // If the user has arrived, don't snap the user puck.
+        // In case if user drives beyond the waypoint, we should accurately depict this.
+        guard let destination = progress.currentLeg.destination else {
+            preconditionFailure("Current leg has no destination")
+        }
+        let preventRerouting = RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
+
+        let roadName = roadName(at: location) ?? roadName(at: rawLocation)
+        ornamentsController?.labelCurrentRoadName(suggestedName: roadName)
+
+        let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
+        if movePuckToCurrentLocation {
+            navigationMapView?.moveUserLocation(to: location, animated: true)
+        }
+
+        attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)
+    }
+
+    @objc func rerouted(_ notification: NSNotification) {
+        guard let route = notification.userInfo?[RouteController.NotificationUserInfoKey.routeKey] as? Route,
+              let service = navigationOptions?.navigationService,
+              let proactive = notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool else {
+            assertionFailure("RouteProgress and CLLocation should be available.")
+            return
+        }
+        
+        for component in navigationComponents {
+            component.navigationService(service, didRerouteAlong: route, at: notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation, proactive: proactive)
+        }
+    }
+
+    @objc func refresh(_ notification: NSNotification) {
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+              let service = navigationOptions?.navigationService else {
+            assertionFailure("RouteProgress and CLLocation should be available.")
+            return
+        }
+        
+        for component in navigationComponents {
+            component.navigationService(service, didRefresh: routeProgress)
+        }
+    }
+
+    @objc func simulationStateDidChange(_ notification: NSNotification) {
+        guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
+              let progress = navigationOptions?.navigationService?.routeProgress,
+              let service = navigationOptions?.navigationService,
+              let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
+              else { return }
+
+        switch simulationState {
+        case .willBeginSimulation:
+            navigationMapView?.storeLocationProviderBeforeSimulation()
+            for component in navigationComponents {
+                component.navigationService(service, willBeginSimulating: progress, becauseOf: .poorGPS)
+            }
+        case .didBeginSimulation:
+            for component in navigationComponents {
+                component.navigationService(service, didBeginSimulating: progress, becauseOf: .poorGPS)
+            }
+            setUpSimulatedLocationProvider()
+        case .willEndSimulation:
+            for component in navigationComponents {
+                component.navigationService(service, willEndSimulating: progress, becauseOf: .poorGPS)
+            }
+            navigationMapView?.useStoredLocationProvider()
+        case .didEndSimulation:
+            for component in navigationComponents {
+                component.navigationService(service, didEndSimulating: progress, becauseOf: .poorGPS)
+            }
+        default:
+            break
+        }
+    }
+
+    private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
+        let inTunnel = navigationService.isInTunnel(at: location, along: progress)
+        
+        // Entering tunnel
+        if !isTraversingTunnel, inTunnel {
+            isTraversingTunnel = true
+            
+            if usesNightStyleWhileInTunnel {
+                styleManager?.applyStyle(type: .night)
+            }
+        }
+        
+        // Exiting tunnel
+        if isTraversingTunnel, !inTunnel {
+            isTraversingTunnel = false
+            styleManager.timeOfDayChanged()
+        }
+    }
 }
 
 // MARK: - NavigationViewDelegate methods
 
-extension NavigationViewController: NavigationViewDelegate {
+extension NavigationSimpleViewController: NavigationViewDelegate {
     
     func navigationView(_ view: NavigationView, didTap cancelButton: CancelButton) {
         handleCancelAction()
@@ -747,127 +855,12 @@ extension NavigationViewController: NavigationViewDelegate {
     }
 }
 
-@objc func progressDidChange(_ notification: NSNotification) {
-    guard let progress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
-          let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation,
-          let service = navigationOptions?.navigationService,
-          let rawLocation = notification.userInfo?[RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation else {
-        assertionFailure("RouteProgress and CLLocation should be available.")
-        return
-    }
-    
-    // Check to see if we're in a tunnel.
-    checkTunnelState(at: location, along: progress)
-    
-    // Pass the message onto our navigation components.
-    for component in navigationComponents {
-        component.navigationService(service, didUpdate: progress, with: location, rawLocation: rawLocation)
-    }
-
-    // If the user has arrived, don't snap the user puck.
-    // In case if user drives beyond the waypoint, we should accurately depict this.
-    guard let destination = progress.currentLeg.destination else {
-        preconditionFailure("Current leg has no destination")
-    }
-    let preventRerouting = RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-    let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
-
-    let roadName = roadName(at: location) ?? roadName(at: rawLocation)
-    ornamentsController?.labelCurrentRoadName(suggestedName: roadName)
-
-    let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
-    if movePuckToCurrentLocation {
-        navigationMapView?.moveUserLocation(to: location, animated: true)
-    }
-
-    attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)
-}
-
-@objc func rerouted(_ notification: NSNotification) {
-    guard let route = notification.userInfo?[RouteController.NotificationUserInfoKey.routeKey] as? Route,
-          let service = navigationOptions?.navigationService,
-          let proactive = notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool else {
-        assertionFailure("RouteProgress and CLLocation should be available.")
-        return
-    }
-    
-    for component in navigationComponents {
-        component.navigationService(service, didRerouteAlong: route, at: notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation, proactive: proactive)
-    }
-}
-
-@objc func refresh(_ notification: NSNotification) {
-    guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
-          let service = navigationOptions?.navigationService else {
-        assertionFailure("RouteProgress and CLLocation should be available.")
-        return
-    }
-    
-    for component in navigationComponents {
-        component.navigationService(service, didRefresh: routeProgress)
-    }
-}
-
-@objc func simulationStateDidChange(_ notification: NSNotification) {
-    guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
-          let progress = navigationOptions?.navigationService?.routeProgress,
-          let service = navigationOptions?.navigationService,
-          let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
-          else { return }
-
-    switch simulationState {
-    case .willBeginSimulation:
-        navigationMapView?.storeLocationProviderBeforeSimulation()
-        for component in navigationComponents {
-            component.navigationService(service, willBeginSimulating: progress, becauseOf: .poorGPS)
-        }
-    case .didBeginSimulation:
-        for component in navigationComponents {
-            component.navigationService(service, didBeginSimulating: progress, becauseOf: .poorGPS)
-        }
-        setUpSimulatedLocationProvider()
-    case .willEndSimulation:
-        for component in navigationComponents {
-            component.navigationService(service, willEndSimulating: progress, becauseOf: .poorGPS)
-        }
-        navigationMapView?.useStoredLocationProvider()
-    case .didEndSimulation:
-        for component in navigationComponents {
-            component.navigationService(service, didEndSimulating: progress, becauseOf: .poorGPS)
-        }
-    default:
-        break
-    }
-}
-
-private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-    let inTunnel = navigationService.isInTunnel(at: location, along: progress)
-    
-    // Entering tunnel
-    if !isTraversingTunnel, inTunnel {
-        isTraversingTunnel = true
-        
-        if usesNightStyleWhileInTunnel {
-            styleManager?.applyStyle(type: .night)
-        }
-    }
-    
-    // Exiting tunnel
-    if isTraversingTunnel, !inTunnel {
-        isTraversingTunnel = false
-        styleManager.timeOfDayChanged()
-    }
-}
-
 // MARK: StyleManagerDelegate
 
-extension NavigationViewController: StyleManagerDelegate {
+extension NavigationSimpleViewController: StyleManagerDelegate {
     
     func roadName(at location: CLLocation) -> String? {
-        guard let roadName = delegate?.navigationViewController(self, roadNameAt: location) else {
-            return nil
-        }
-        return roadName
+        return nil
     }
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -915,7 +908,7 @@ extension NavigationViewController: StyleManagerDelegate {
 
 // MARK: CarPlayConnectionObserver methods
 
-extension NavigationViewController: CarPlayConnectionObserver {
+extension NavigationSimpleViewController: CarPlayConnectionObserver {
     
     public func didConnectToCarPlay() {
         navigationComponents.compactMap({ $0 as? CarPlayConnectionObserver }).forEach {
