@@ -154,11 +154,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
         }
     }
     
-    /**
-     Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
-     */
-    public var usesNightStyleWhileInTunnel: Bool = true
-    
     // MARK: Setting Route and Navigation Experience
     
     /**
@@ -208,6 +203,17 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
     public var route: Route? {
         navigationService.route
     }
+    
+    /**
+     The currently applied style. Use `StyleManager.applyStyle(type:)` to update this value.
+     */
+    public private(set) var currentStyleType: StyleType?
+    
+    /**
+     The current style associated with `currentStyleType`. Calling `StyleManager.applyStyle(type:)` will
+     result in this value being updated.
+     */
+    public private(set) var currentStyle: Style?
     
     /**
      Current `RouteResponse` object, as provided by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
@@ -260,7 +266,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
                                        simulating: navigationOptions?.simulationMode)
         
         setupControllers(navigationOptions)
-        setupStyleManager(navigationOptions)
         
         viewObservers.forEach {
             $0?.navigationViewDidLoad(view)
@@ -406,10 +411,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
         setupNavigationService()
         setupNavigationCamera()
         
-        if usesNightStyleInDarkMode && self.traitCollection.userInterfaceStyle == .dark {
-            styleManager.applyStyle(type: .night)
-        }
-        
         observeNotifications(navigationService!)
     }
     
@@ -418,12 +419,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
 
         viewObservers.forEach {
             $0?.navigationViewWillAppear(animated)
-        }
-    }
-    
-    override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if usesNightStyleInDarkMode {
-            transitionStyle(to: newCollection)
         }
     }
     
@@ -526,57 +521,22 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
     fileprivate func handleCancelAction() {
         dismiss(animated: true, completion: nil)
     }
-    
-    /**
-     Shows the current speed limit on the map view.
-     
-     The default value of this property is `true`.
-     */
-    public var showsSpeedLimits: Bool {
-        get {
-            loadViewIfNeeded()
-            return ornamentsController?.showsSpeedLimits ?? false
-        }
-        set {
-            loadViewIfNeeded()
-            ornamentsController?.showsSpeedLimits = newValue
-        }
-    }
-    
-    /**
-     Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
-     
-     Defaults to `false`.
-     */
-    public var detailedFeedbackEnabled: Bool {
-        get {
-            loadViewIfNeeded()
-            return ornamentsController?.detailedFeedbackEnabled ?? false
-        }
-        set {
-            loadViewIfNeeded()
-            ornamentsController?.detailedFeedbackEnabled = newValue
-        }
-    }
         
     var containerViewController: UIViewController {
         return self
     }
     
     var cameraController: CameraController?
-    var ornamentsController: OrnamentsController?
     var routeOverlayController: NavigationMapView.RouteOverlayController?
     var viewObservers: [NavigationComponentDelegate?] = []
     
     func setupControllers(_ navigationOptions: NavigationOptions?) {
         routeOverlayController = NavigationMapView.RouteOverlayController(self)
         cameraController = CameraController(self)
-        ornamentsController = OrnamentsController(self, eventsManager: navigationService.eventsManager)
         
         viewObservers = [
             routeOverlayController,
-            cameraController,
-            ornamentsController
+            cameraController
         ]
         
         subviewInits.append { [weak self] in
@@ -607,75 +567,30 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
         if let cameraController = cameraController {
             components.append(cameraController)
         }
-        
-        if let overlayController = ornamentsController {
-            components.append(overlayController)
-        }
         return components
     }
     
     // MARK: Styling the Layout
     
     /**
-     If true, the map style and UI will automatically be updated given the time of day.
-     */
-    public var automaticallyAdjustsStyleForTimeOfDay = true {
-        didSet {
-            styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
-        }
-    }
-    
-    /**
      Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
      */
     public var waypointStyle: WaypointStyle = .annotation
-    
-    /**
-     Controls whether night style will be used whenever dark mode is enabled. Defaults to `false`.
-     */
-    public var usesNightStyleInDarkMode: Bool = false
     
     var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
     var passedApproachingDestinationThreshold: Bool = false
     var currentLeg: RouteLeg?
     var buildingWasFound: Bool = false
     
-    /**
-     Controls the styling of NavigationViewController and its components.
-     
-     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
-     */
-    public private(set) var styleManager: StyleManager!
-    
-    func setupStyleManager(_ navigationOptions: NavigationOptions?) {
-        styleManager = StyleManager()
-        styleManager.delegate = self
-        styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
-        
-        if let currentStyle = styleManager.currentStyle {
-            updateMapStyle(currentStyle)
-        }
-    }
-    
-    var currentStatusBarStyle: UIStatusBarStyle = .default
-    
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
-            return currentStatusBarStyle
-        }
-    }
-    
-    func transitionStyle(to newCollection: UITraitCollection) {
-        if newCollection.userInterfaceStyle == .dark {
-            styleManager.applyStyle(type: .night)
-        } else {
-            styleManager.applyStyle(type: .day)
+            return .default
         }
     }
     
     func updateIntersectionsAlongRoute() {
         if annotatesIntersectionsAlongRoute {
-            navigationMapView?.updateIntersectionSymbolImages(styleType: styleManager?.currentStyleType)
+            navigationMapView?.updateIntersectionSymbolImages(styleType: currentStyleType)
             navigationMapView?.updateIntersectionAnnotations(with: navigationService.routeProgress)
         } else {
             navigationMapView?.removeIntersectionAnnotations()
@@ -733,9 +648,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
             return
         }
         
-        // Check to see if we're in a tunnel.
-        checkTunnelState(at: location, along: progress)
-        
         // Pass the message onto our navigation components.
         for component in navigationComponents {
             component.navigationService(service, didUpdate: progress, with: location, rawLocation: rawLocation)
@@ -750,7 +662,6 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
         let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
 
         let roadName = roadName(at: location) ?? roadName(at: rawLocation)
-        ornamentsController?.labelCurrentRoadName(suggestedName: roadName)
 
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
@@ -816,23 +727,24 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
             break
         }
     }
-
-    private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-        let inTunnel = navigationService.isInTunnel(at: location, along: progress)
-        
-        // Entering tunnel
-        if !isTraversingTunnel, inTunnel {
-            isTraversingTunnel = true
-            
-            if usesNightStyleWhileInTunnel {
-                styleManager?.applyStyle(type: .night)
+    
+    public func updateMapStyle(_ style: Style) {
+        currentStyleType = style.styleType
+        currentStyle = style
+        let styleURI = StyleURI(url: style.mapStyleURL)
+        if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+            navigationMapView?.mapView.mapboxMap.style.uri = styleURI
+            navigationMapView?.mapView.mapboxMap.loadStyleURI(styleURI) { [weak self] result in
+                switch result {
+                case .success(_):
+                    // In case if buildings layer present - update its background color.
+                    self?.navigationMapView?.updateBuildingsLayerIfPresent()
+                case .failure(let error):
+                    Log.error("Failed to load \(styleURI) with error: \(error.localizedDescription).",
+                              category: .navigationUI)
+                }
             }
-        }
-        
-        // Exiting tunnel
-        if isTraversingTunnel, !inTunnel {
-            isTraversingTunnel = false
-            styleManager.timeOfDayChanged()
+            updateIntersectionsAlongRoute()
         }
     }
 }
@@ -852,57 +764,6 @@ extension NavigationSimpleViewController: NavigationViewDelegate {
         // In case if `NavigationMapView` is injected re-subscription should be performed.
         cameraController?.suspendNotifications()
         cameraController?.resumeNotifications()
-    }
-}
-
-// MARK: StyleManagerDelegate
-
-extension NavigationSimpleViewController: StyleManagerDelegate {
-    
-    func roadName(at location: CLLocation) -> String? {
-        return nil
-    }
-    
-    public func location(for styleManager: StyleManager) -> CLLocation? {
-        if let location = navigationService.router.location {
-            return location
-        } else if let firstCoord = route?.shape?.coordinates.first {
-            return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
-        } else {
-            return nil
-        }
-    }
-    
-    public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        updateMapStyle(style)
-    }
-    
-    private func updateMapStyle(_ style: Style) {
-        let styleURI = StyleURI(url: style.mapStyleURL)
-        if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            navigationMapView?.mapView.mapboxMap.style.uri = styleURI
-        }
-        
-        ornamentsController?.updateStyle(styleURI: styleURI)
-        currentStatusBarStyle = style.statusBarStyle ?? .default
-        updateIntersectionsAlongRoute()
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
-    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
-              let styleURI = mapboxMap.style.uri else { return }
-        
-        mapboxMap.loadStyleURI(styleURI) { [weak self] result in
-            switch result {
-            case .success(_):
-                // In case if buildings layer present - update its background color.
-                self?.navigationMapView?.updateBuildingsLayerIfPresent()
-            case .failure(let error):
-                Log.error("Failed to load \(styleURI) with error: \(error.localizedDescription).",
-                          category: .navigationUI)
-            }
-        }
     }
 }
 
