@@ -617,6 +617,7 @@
 		E2DAFABA27BCF3C200BA12BD /* RoutesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */; };
 		E2F08C70269DB17C002EFDC5 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
+		F61983CB2AE2D4F70052C45D /* NavigationSimpleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61983CA2AE2D4F60052C45D /* NavigationSimpleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1412,6 +1413,7 @@
 		E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesCoordinator.swift; sourceTree = "<group>"; };
 		E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+NavigationAdditions.swift"; sourceTree = "<group>"; };
+		F61983CA2AE2D4F60052C45D /* NavigationSimpleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSimpleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1873,6 +1875,7 @@
 				8AC4091F279918930075248E /* NavigationViewDelegate.swift */,
 				8AC4091D279918470075248E /* NavigationViewLayout.swift */,
 				2B3ED3B3260A162900861A84 /* NavigationViewData.swift */,
+				F61983CA2AE2D4F60052C45D /* NavigationSimpleViewController.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				2B3ED3952609FB2300861A84 /* CameraController.swift */,
 				8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */,
@@ -3324,6 +3327,7 @@
 				B41299CF26D7101F004031A3 /* CLLocationCoordinate2D.swift in Sources */,
 				8AD2210F27C434CD000734A5 /* TitleLabel.swift in Sources */,
 				8A01B15C28DBC22A006A50AF /* PreviewViewControllerLayout.swift in Sources */,
+				F61983CB2AE2D4F70052C45D /* NavigationSimpleViewController.swift in Sources */,
 				8A50A3CB26EC09FB00894A8E /* FeedbackSubtypeCollectionViewCell.swift in Sources */,
 				8A50A3D326EC0AE100894A8E /* IdleTimerManager.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
