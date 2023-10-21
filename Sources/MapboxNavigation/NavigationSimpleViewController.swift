@@ -57,6 +57,9 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
             navigationViewportDataSource?.options.followingCameraOptions.paddingUpdatesAllowed = true
             navigationViewportDataSource?.options.followingCameraOptions.zoomUpdatesAllowed = true
             navigationViewportDataSource?.options.followingCameraOptions.followsLocationCourse = false
+            validNavigationMapView.mapView.ornaments.options.logo.visibility = .hidden
+            validNavigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
+            validNavigationMapView.mapView.ornaments.options.compass.visibility = .hidden
             
             validNavigationMapView.navigationCamera.follow()
             
