@@ -5,7 +5,7 @@ import MapboxSpeech
 import AVFoundation
 import UserNotifications
 import MobileCoreServices
-import MapboxMaps
+@_spi(Restricted) import MapboxMaps
 import MapboxCoreMaps
 import Turf
 
