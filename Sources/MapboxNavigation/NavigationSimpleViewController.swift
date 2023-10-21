@@ -670,15 +670,13 @@ open class NavigationSimpleViewController: UIViewController, NavigationStatusPre
     }
 
     @objc func rerouted(_ notification: NSNotification) {
-        guard let route = notification.userInfo?[RouteController.NotificationUserInfoKey.routeKey] as? Route,
-              let service = navigationOptions?.navigationService,
-              let proactive = notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool else {
+        guard let service = navigationOptions?.navigationService else {
             assertionFailure("RouteProgress and CLLocation should be available.")
             return
         }
         
         for component in navigationComponents {
-            component.navigationService(service, didRerouteAlong: route, at: notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation, proactive: proactive)
+            component.navigationService(service, didRerouteAlong: service.route, at: notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation, proactive: false)
         }
     }
 
