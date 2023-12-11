@@ -187,7 +187,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
      - parameter styleURI: The `StyleURI` that the map is presenting.
      */
     func updateStyle(styleURI: StyleURI?) {
-        navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
+//        navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
     }
     
     /**

@@ -1033,9 +1033,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             return nil
         }
         
-        if let cachedImage = ImageRepository.shared.cachedImageForKey(cacheKey) {
-            return cachedImage
-        } else {
+//        if let cachedImage = ImageRepository.shared.cachedImageForKey(cacheKey) {
+//            return cachedImage
+//        } else {
             guard case let .guidanceView(guidanceViewImageRepresentation, _) = guidanceView,
                   let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
                   let accessToken = navigationService.credentials.accessToken,
@@ -1052,7 +1052,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             }
             
             return nil
-        }
+//        }
     }
     
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
@@ -1113,7 +1113,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             mapboxMapStyle?.uri = styleURI
         }
         
-        wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
+//        wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
         updateMapTemplateStyle()
         updateManeuvers(navigationService.routeProgress)
         updateIntersectionsAlongRoute()

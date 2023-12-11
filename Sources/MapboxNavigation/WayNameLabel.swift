@@ -8,7 +8,7 @@ import MapboxDirections
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {
     
-    var spriteRepository: SpriteRepository = .shared
+//    var spriteRepository: SpriteRepository = .shared
     var representation: VisualInstruction.Component.ImageRepresentation?
     
     @objc dynamic public var roadShieldBlackColor: UIColor = .roadShieldBlackColor
@@ -21,24 +21,24 @@ open class WayNameLabel: StylableLabel {
     @objc dynamic public var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
     
     // When the map style changes, update the sprite repository and the label.
-    func updateStyle(styleURI: StyleURI?, idiom: UIUserInterfaceIdiom = .phone) {
-        spriteRepository.updateStyle(styleURI: styleURI, idiom: idiom) { [weak self] _ in
-            guard let self = self, let roadName = self.text else { return }
-            
-            self.setup(with: roadName, idiom: idiom)
-        }
-    }
+//    func updateStyle(styleURI: StyleURI?, idiom: UIUserInterfaceIdiom = .phone) {
+//        spriteRepository.updateStyle(styleURI: styleURI, idiom: idiom) { [weak self] _ in
+//            guard let self = self, let roadName = self.text else { return }
+//            
+//            self.setup(with: roadName, idiom: idiom)
+//        }
+//    }
     
     func updateRoad(roadName: String,
                     representation: VisualInstruction.Component.ImageRepresentation? = nil,
                     idiom: UIUserInterfaceIdiom = .phone) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepresentation(for: representation, idiom: idiom) { [weak self] _ in
-                guard let self = self else { return }
-                self.representation = representation
-                self.setup(with: roadName, idiom: idiom)
-            }
+//            spriteRepository.updateRepresentation(for: representation, idiom: idiom) { [weak self] _ in
+//                guard let self = self else { return }
+//                self.representation = representation
+//                self.setup(with: roadName, idiom: idiom)
+//            }
         }
         setup(with: roadName, idiom: idiom)
     }
@@ -53,37 +53,37 @@ open class WayNameLabel: StylableLabel {
      - parameter idiom: The `UIUserInterfaceIdiom` that the `WayNameLabel` is going to be displayed in.
      */
     private func setup(with roadName: String, idiom: UIUserInterfaceIdiom) {
-        let shieldRepresentation = representation?.shield
-        let legacyRoadShieldImage = spriteRepository.getLegacyShield(with: representation)
+//        let shieldRepresentation = representation?.shield
+//        let legacyRoadShieldImage = spriteRepository.getLegacyShield(with: representation)
         
         // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
         // The shield name for US state road is `circle-white` in Streets source v8 style.
-        if let shieldRepresentation = shieldRepresentation,
-           shieldRepresentation.name == "circle-white",
-           let legacyRoadShieldImage = legacyRoadShieldImage {
-            setAttributedText(roadName: roadName,
-                              roadShieldImage: legacyRoadShieldImage)
-            
-            return
-        }
+//        if let shieldRepresentation = shieldRepresentation,
+//           shieldRepresentation.name == "circle-white",
+//           let legacyRoadShieldImage = legacyRoadShieldImage {
+//            setAttributedText(roadName: roadName,
+//                              roadShieldImage: legacyRoadShieldImage)
+//            
+//            return
+//        }
         
         // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
-        if let roadShieldImage = spriteRepository.roadShieldImage(from: shieldRepresentation, idiom: idiom) {
-            setAttributedText(roadName: roadName,
-                              roadShieldImage: roadShieldImage,
-                              roadShieldText: shieldRepresentation?.text,
-                              roadShieldTextColor: shieldRepresentation?.textColor)
-            
-            return
-        }
+//        if let roadShieldImage = spriteRepository.roadShieldImage(from: shieldRepresentation, idiom: idiom) {
+//            setAttributedText(roadName: roadName,
+//                              roadShieldImage: roadShieldImage,
+//                              roadShieldText: shieldRepresentation?.text,
+//                              roadShieldTextColor: shieldRepresentation?.textColor)
+//            
+//            return
+//        }
         
         // In case if legacy shield icon is available - use it.
-        if let legacyRoadShieldImage = legacyRoadShieldImage {
-            setAttributedText(roadName: roadName,
-                              roadShieldImage: legacyRoadShieldImage)
-            
-            return
-        }
+//        if let legacyRoadShieldImage = legacyRoadShieldImage {
+//            setAttributedText(roadName: roadName,
+//                              roadShieldImage: legacyRoadShieldImage)
+//            
+//            return
+//        }
         
         // In case if neither generic nor legacy shield images are available - show only road name.
         text = roadName

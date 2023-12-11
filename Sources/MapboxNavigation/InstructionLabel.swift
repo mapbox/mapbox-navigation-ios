@@ -24,7 +24,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     weak var instructionDelegate: VisualInstructionDelegate?
     var customTraitCollection: UITraitCollection?
 
-    var spriteRepository: SpriteRepository = .shared
+//    var spriteRepository: SpriteRepository = .shared
 
     var instruction: VisualInstruction? {
         didSet {
@@ -46,7 +46,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
         
         let presenter = InstructionPresenter(instruction,
                                              dataSource: self,
-                                             spriteRepository: spriteRepository,
+//                                             spriteRepository: spriteRepository,
                                              traitCollection: customTraitCollection ?? traitCollection,
                                              downloadCompletion: update,
                                              isHighlighted: showHighlightedTextColor)

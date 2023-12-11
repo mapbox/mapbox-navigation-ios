@@ -432,7 +432,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
             mapboxMapStyle.uri = styleURI
         }
         
-        wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
+//        wayNameView?.label.updateStyle(styleURI: styleURI, idiom: .carPlay)
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {

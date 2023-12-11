@@ -48,35 +48,36 @@ public class JunctionView: UIImageView {
      Updates the quaternary guidance view  banner image with a given `VisualInstructionBanner`.
      */
     public func update(for visualInstruction: VisualInstructionBanner?, service: NavigationService) {
-        let quaternaryInstruction = visualInstruction?.quaternaryInstruction
+        hide(delay: 0, animated: false)
+//        let quaternaryInstruction = visualInstruction?.quaternaryInstruction
+//        
+//        if quaternaryInstruction == nil {
+//            hide(delay: 10, animated: true)
+//        }
+//        
+//        guard let guidanceView = quaternaryInstruction?.components.first else { return }
         
-        if quaternaryInstruction == nil {
-            hide(delay: 10, animated: true)
-        }
-        
-        guard let guidanceView = quaternaryInstruction?.components.first else { return }
-        
-        if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
-            if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
-                image = cachedImage
-                show(animated: true)
-            } else {
-                guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
-                let baseURLString = imageURL.absoluteString
-                guard let accessToken = service.credentials.accessToken else { return }
-                let stringURL = baseURLString + "&access_token=" + accessToken
-
-                guard let guidanceViewImageURL = URL(string: stringURL) else { return }
-                imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [weak self] (downloadedImage) in
-                    DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        
-                        self.image = downloadedImage
-                        self.show(animated: true)
-                    }
-                }
-            }
-        }
+//        if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
+//            if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
+//                image = cachedImage
+//                show(animated: true)
+//            } else {
+//                guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
+//                let baseURLString = imageURL.absoluteString
+//                guard let accessToken = service.credentials.accessToken else { return }
+//                let stringURL = baseURLString + "&access_token=" + accessToken
+//
+//                guard let guidanceViewImageURL = URL(string: stringURL) else { return }
+//                imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [weak self] (downloadedImage) in
+//                    DispatchQueue.main.async {
+//                        guard let self = self else { return }
+//                        
+//                        self.image = downloadedImage
+//                        self.show(animated: true)
+//                    }
+//                }
+//            }
+//        }
     }
     
     /**

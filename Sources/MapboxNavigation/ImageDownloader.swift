@@ -24,6 +24,8 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     init(sessionConfiguration: URLSessionConfiguration = .default,
          operationType: ImageDownload.Type = ImageDownloadOperation.self) {
         self.sessionConfiguration = sessionConfiguration
+        self.sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        self.sessionConfiguration.urlCache = nil
         self.operationType = operationType
 
         self.downloadQueue = OperationQueue()

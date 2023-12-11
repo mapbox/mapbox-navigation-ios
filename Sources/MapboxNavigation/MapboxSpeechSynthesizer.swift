@@ -47,7 +47,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
      */
     public private(set) var remoteSpeechSynthesizer: SpeechSynthesizer
     
-    private var cache: BimodalDataCache
+//    private var cache: BimodalDataCache
     private var audioTask: URLSessionDataTask?
     
     private var previousInstruction: SpokenInstruction?
@@ -65,7 +65,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /// - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/) used to authorize Mapbox Voice API requests. If an access token is not specified when initializing the speech synthesizer object, it should be specified in the `MBXAccessToken` key in the main application bundle’s Info.plist.
     /// - parameter host: An optional hostname to the server API. The Mapbox Voice API endpoint is used by default.
     public init(accessToken: String? = nil, host: String? = nil) {
-        self.cache = DataCache()
+//        self.cache = DataCache()
         
         var hostString = host
         if let host = host, let url = URL(string: host) {
@@ -79,7 +79,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     ///
     /// - parameter remoteSpeechSynthesizer: Custom `SpeechSynthesizer` used to provide voice data.
     public init(remoteSpeechSynthesizer: SpeechSynthesizer) {
-        self.cache = DataCache()
+//        self.cache = DataCache()
         self.remoteSpeechSynthesizer = remoteSpeechSynthesizer
     }
     
@@ -245,10 +245,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     private func cache(_ data: Data, forKey key: String, with locale: Locale) {
-        cache.store(data, forKey: locale.identifier + key, toDisk: true, completion: nil)
+//        cache.store(data, forKey: locale.identifier + key, toDisk: true, completion: nil)
     }
     private func cachedDataForKey(_ key: String, with locale: Locale) -> Data? {
-        return cache.data(forKey: locale.identifier + key)
+        return nil //cache.data(forKey: locale.identifier + key)
     }
     
     private func hasCachedSpokenInstructionForKey(_ key: String, with locale: Locale) -> Bool {
