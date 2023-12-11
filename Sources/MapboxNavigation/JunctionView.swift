@@ -115,7 +115,7 @@ public class JunctionView: UIImageView {
     }
     
     var isCurrentlyVisible: Bool = false
-    var imageRepository: ImageRepository = .shared
+//    var imageRepository: ImageRepository = .shared
     
     public override init(frame: CGRect) {
         super.init(frame: frame)

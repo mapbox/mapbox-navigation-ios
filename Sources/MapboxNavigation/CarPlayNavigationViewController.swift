@@ -1027,31 +1027,32 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     func guidanceViewManeuverRepresentation(for visualInstruction: VisualInstructionBanner?,
                                             navigationService: NavigationService) -> UIImage? {
-        guard let quaternaryInstruction = visualInstruction?.quaternaryInstruction,
-              let guidanceView = quaternaryInstruction.components.first,
-              let cacheKey = guidanceView.cacheKey else {
-            return nil
-        }
+        return nil
+//        guard let quaternaryInstruction = visualInstruction?.quaternaryInstruction,
+//              let guidanceView = quaternaryInstruction.components.first,
+//              let cacheKey = guidanceView.cacheKey else {
+//            return nil
+//        }
         
 //        if let cachedImage = ImageRepository.shared.cachedImageForKey(cacheKey) {
 //            return cachedImage
 //        } else {
-            guard case let .guidanceView(guidanceViewImageRepresentation, _) = guidanceView,
-                  let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
-                  let accessToken = navigationService.credentials.accessToken,
-                  let guidanceViewImageURL = URL(string: guidanceImageURL.absoluteString + "&access_token=" + accessToken) else {
-                return nil
-            }
-            
-            ImageRepository.shared.imageWithURL(guidanceViewImageURL,
-                                                cacheKey: cacheKey) { [weak self] _ in
-                DispatchQueue.main.async {
-                    guard let self = self else { return }
-                    self.updateManeuvers(navigationService.routeProgress)
-                }
-            }
-            
-            return nil
+//            guard case let .guidanceView(guidanceViewImageRepresentation, _) = guidanceView,
+//                  let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
+//                  let accessToken = navigationService.credentials.accessToken,
+//                  let guidanceViewImageURL = URL(string: guidanceImageURL.absoluteString + "&access_token=" + accessToken) else {
+//                return nil
+//            }
+//            
+//            ImageRepository.shared.imageWithURL(guidanceViewImageURL,
+//                                                cacheKey: cacheKey) { [weak self] _ in
+//                DispatchQueue.main.async {
+//                    guard let self = self else { return }
+//                    self.updateManeuvers(navigationService.routeProgress)
+//                }
+//            }
+//            
+//            return nil
 //        }
     }
     
