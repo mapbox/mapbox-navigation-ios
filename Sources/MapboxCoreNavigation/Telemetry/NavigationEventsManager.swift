@@ -1,7 +1,6 @@
 import Foundation
 import CoreLocation
 import UIKit
-import MapboxMobileEvents
 import MapboxDirections
 
 /**
@@ -45,15 +44,6 @@ open class NavigationEventsManager {
      */
     public var sessionId: String {
         commonEventsManager?.sessionId ?? NavigationEventsManager.applicationSessionIdentifier.uuidString
-    }
-
-    @available(*, deprecated, renamed: "init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)")
-    public convenience init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
-                            passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
-                            accessToken possibleToken: String? = nil,
-                            mobileEventsManager: MMEEventsManager = .shared()) {
-        mobileEventsManager.disableLocationMetrics()
-        self.init(activeNavigationDataSource: activeNavigationDataSource, passiveNavigationDataSource: passiveNavigationDataSource, accessToken: possibleToken)
     }
 
     public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,

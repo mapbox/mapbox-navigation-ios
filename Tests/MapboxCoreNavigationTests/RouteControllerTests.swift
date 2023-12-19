@@ -350,11 +350,11 @@ class RouteControllerTests: TestCase {
     func testUpdatedHeading() {
         XCTAssertNil(routeController.heading)
         
-        let heading = CLHeading(heading: 50, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: 50, accuracy: 1)
         routeController.locationManager(locationManagerSpy, didUpdateHeading: heading)
         XCTAssertEqual(routeController.heading, heading)
         
-        let headingAfterFinished = CLHeading(heading: 10, accuracy: 1)!
+        let headingAfterFinished = CLHeadingSpy(heading: 10, accuracy: 1)
         routeController.finishRouting()
         routeController.locationManager(locationManagerSpy, didUpdateHeading: headingAfterFinished)
         XCTAssertEqual(routeController.heading, heading)
@@ -583,7 +583,7 @@ class RouteControllerTests: TestCase {
     }
     
     func testSendRerouteNotificationIfRoutingProviderFailed() {
-        let heading = CLHeading(heading: 50, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: 50, accuracy: 1)
         routeController.heading = heading
         
         expectation(forNotification: .routeControllerWillReroute, object: routeController) { (notification) -> Bool in
@@ -609,7 +609,7 @@ class RouteControllerTests: TestCase {
     }
     
     func testSendRerouteNotificationIfRoutingProviderSucceed() {
-        let heading = CLHeading(heading: 50, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: 50, accuracy: 1)
         routeController.heading = heading
         
         let didFailToReroutExpectation = expectation(description: "Did fail to reroute call on delegate")
@@ -644,7 +644,7 @@ class RouteControllerTests: TestCase {
     }
     
     func testSendRerouteNotificationIfRoutIsEmptyRoute() {
-        let heading = CLHeading(heading: 50, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: 50, accuracy: 1)
         routeController.heading = heading
         
         let didFailToReroutExpectation = expectation(description: "Did fail to reroute call on delegate")

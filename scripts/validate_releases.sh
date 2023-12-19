@@ -39,7 +39,9 @@ EXPECTED_XCODEBUILD_RESULTS=( \
     [2.11.0]=${SUCCESS_CODE} \
     [2.12.0]=${SUCCESS_CODE} \
     [2.13.0]=${SUCCESS_CODE} \
-    [2.14.0]=${SUCCESS_CODE}
+    [2.15.0]=${SUCCESS_CODE} \
+    [2.16.0]=${SUCCESS_CODE} \
+    [2.17.0]=${SUCCESS_CODE}
 )
 
 echo "Expected xcodebuild result for:"
