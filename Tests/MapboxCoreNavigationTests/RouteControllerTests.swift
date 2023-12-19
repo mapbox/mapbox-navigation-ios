@@ -28,7 +28,9 @@ class RouteControllerTests: TestCase {
     private var routeResponse: RouteResponse!
     private var singleRouteResponse: RouteResponse!
     private var multilegRouteResponse: RouteResponse!
-    
+    private var singleDecodedRoute: Route!
+    private var singleRouteInterface: RouteInterface!
+
     private let rawLocation = CLLocation(latitude: 47.208674, longitude: 9.524650)
     private var locationWithDate: CLLocation {
         let coordinate = CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841)
@@ -79,6 +81,8 @@ class RouteControllerTests: TestCase {
         navigationSessionManagerSpy = NavigationSessionManagerSpy.shared
 
         singleRouteResponse = makeSingleRouteResponse()
+        singleRouteInterface = TestRouteProvider.createRoute(routeResponse: singleRouteResponse)!
+        singleDecodedRoute = makeSingleDecodedRoute(with: singleRouteInterface)
         multilegRouteResponse = makeMultilegRouteResponse()
 
         routeController = makeRouteController()
@@ -1237,16 +1241,16 @@ class RouteControllerTests: TestCase {
     }
 
     func testSwitchToCoincideOnlineRouteIfNavNativeFailed() {
-        let route = TestRouteProvider.createRoute(routeResponse: singleRouteResponse)!
+        let route = singleRouteInterface!
         let callbackExpectation = expectation(description: "Switch to coincident online route should be reported")
         delegate.onDidSwitchToCoincideRoute = { actualRoute in
-            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            XCTAssertEqual(actualRoute, self.singleDecodedRoute)
             callbackExpectation.fulfill()
         }
 
         expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController) { (notification) -> Bool in
             let actualRoute = notification.userInfo?[RouteController.NotificationUserInfoKey.coincidentRouteKey] as? Route
-            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            XCTAssertEqual(actualRoute, self.singleDecodedRoute)
             return true
         }
         navigatorSpy.returnedSetRoutesResult = .failure(DirectionsError.unableToRoute)
@@ -1257,21 +1261,21 @@ class RouteControllerTests: TestCase {
         XCTAssertEqual(routeController.indexedRouteResponse.routeIndex, 0)
         XCTAssertEqual(routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
         XCTAssertEqual(routeController.continuousAlternatives.count, 0)
-        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleRouteResponse.routes?[0].legs)
+        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleDecodedRoute.legs)
         waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testSwitchToCoincideOnlineRouteIfNavNativeSucceed() {
-        let route = TestRouteProvider.createRoute(routeResponse: singleRouteResponse)!
+        let route = singleRouteInterface!
         let callbackExpectation = expectation(description: "Switch to coincident online route should be reported")
         delegate.onDidSwitchToCoincideRoute = { actualRoute in
-            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            XCTAssertEqual(actualRoute, self.singleDecodedRoute)
             callbackExpectation.fulfill()
         }
 
         expectation(forNotification: .routeControllerDidSwitchToCoincidentOnlineRoute, object: routeController) { (notification) -> Bool in
             let actualRoute = notification.userInfo?[RouteController.NotificationUserInfoKey.coincidentRouteKey] as? Route
-            XCTAssertEqual(actualRoute, self.singleRouteResponse.routes?[0])
+            XCTAssertEqual(actualRoute, self.singleDecodedRoute)
             return true
         }
 
@@ -1280,7 +1284,7 @@ class RouteControllerTests: TestCase {
 
         XCTAssertEqual(routeController.indexedRouteResponse.routeIndex, 0)
         XCTAssertEqual(routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
-        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleRouteResponse.routes?[0].legs)
+        XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleDecodedRoute.legs)
         waitForExpectations(timeout: expectationsTimeout)
     }
 
@@ -1713,6 +1717,12 @@ class RouteControllerTests: TestCase {
         let routeOptions = options
         routeOptions.shapeFormat = .polyline
         return Fixture.routeResponse(from: "route", options: routeOptions)
+    }
+
+    private func makeSingleDecodedRoute(with routeInterface: RouteInterface) -> Route {
+        let decoded = RerouteController.decode(routeRequest: routeInterface.getRequestUri(),
+                                               routeResponse: routeInterface.getResponseJsonRef())!
+        return decoded.routeResponse.routes![0]
     }
 
     private func makeMultilegRouteResponse() -> RouteResponse {
