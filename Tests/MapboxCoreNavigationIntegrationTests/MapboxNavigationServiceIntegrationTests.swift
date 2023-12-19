@@ -386,7 +386,7 @@ class MapboxNavigationServiceIntegrationTests: TestCase {
 
         let invalidCourseLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: firstLocation.altitude, horizontalAccuracy: firstLocation.horizontalAccuracy, verticalAccuracy: firstLocation.verticalAccuracy, course: -1, speed: firstLocation.speed, timestamp: firstLocation.timestamp)
 
-        let heading = CLHeading(heading: mbTestHeading, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: mbTestHeading, accuracy: 1)
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [invalidCourseLocation])
         navigation.locationManager!(navigation.locationManager, didUpdateHeading: heading)

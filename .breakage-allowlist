@@ -1,1 +1,2 @@
 Constructor NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:) has been removed
+Import MapboxMobileEvents has been removed
