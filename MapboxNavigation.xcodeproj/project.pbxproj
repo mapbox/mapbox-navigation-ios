@@ -458,10 +458,7 @@
 		B432986228D53AF4005AFB98 /* URLDataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B432986028D53AEB005AFB98 /* URLDataCacheTests.swift */; };
 		B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44177F72649B08400781319 /* UserLocationStyle.swift */; };
 		B443A48B27BB0CB8000AF101 /* sprite-info.json in Resources */ = {isa = PBXBuildFile; fileRef = B443A48A27BB0CB8000AF101 /* sprite-info.json */; };
-		B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */; };
 		B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B456A8EB2620D26A00FD86D8 /* LeakTest.swift */; };
-		B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B473E901278651DD00D9E821 /* NavigationLocationProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */; };
 		B47BD90227B1E53D00338EE9 /* WayNameViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47BD90127B1E53D00338EE9 /* WayNameViewTests.swift */; };
 		B47C1B05261FD0C00078546C /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B47C1AFF261FD0A30078546C /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -581,8 +578,6 @@
 		E2BBB458273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BBB457273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift */; };
 		E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; };
 		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
-		E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDAA265E22B900E158E0 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; };
@@ -591,12 +586,10 @@
 		E2C1CDAE265E22BD00E158E0 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDB0265E22C100E158E0 /* MapboxCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; };
 		E2C1CDB1265E22C100E158E0 /* MapboxCommon.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDB2265E439300E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
 		E2C1CDB3265E43BC00E158E0 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		E2C623A726CBFCE1005769FA /* OnMainQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C623A626CBFCE1005769FA /* OnMainQueue.swift */; };
 		E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C9D8A6268DCB7B005D8955 /* XCTestCase++.swift */; };
 		E2C9D8A9268DCE31005D8955 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C9D8A8268DCE31005D8955 /* XCTest.framework */; };
-		E2CC18F4265FA28900D61CBC /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2CC18F3265FA28900D61CBC /* Cedar.framework */; };
 		E2D14952265CF97D008135A3 /* CarPlayTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2D1495B265CF9D1008135A3 /* CPNavigationSessionFake.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D14957265CF9D1008135A3 /* CPNavigationSessionFake.m */; };
 		E2D1495C265CF9D1008135A3 /* CPBarButton+MBTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D14958265CF9D1008135A3 /* CPBarButton+MBTestable.m */; };
@@ -697,7 +690,6 @@
 			files = (
 				E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */,
 				E2C1CDB1265E22C100E158E0 /* MapboxCommon.xcframework in Embed Frameworks */,
-				E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
 				E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */,
 				E2C1CDAE265E22BD00E158E0 /* Turf.xcframework in Embed Frameworks */,
 				E2C1CDAB265E22B900E158E0 /* Polyline.xcframework in Embed Frameworks */,
@@ -1178,13 +1170,9 @@
 		B432986028D53AEB005AFB98 /* URLDataCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLDataCacheTests.swift; sourceTree = "<group>"; };
 		B44177F72649B08400781319 /* UserLocationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStyle.swift; sourceTree = "<group>"; };
 		B443A48A27BB0CB8000AF101 /* sprite-info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sprite-info.json"; sourceTree = "<group>"; };
-		B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "MMEEventsManager+Spy.m"; path = "include/MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
-		B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MMEEventsManager+Spy.h"; path = "include/MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
-		B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLHeadingPrivate.h; path = include/CLHeadingPrivate.h; sourceTree = "<group>"; };
 		B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationProviderTests.swift; sourceTree = "<group>"; };
 		B47BD90127B1E53D00338EE9 /* WayNameViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayNameViewTests.swift; sourceTree = "<group>"; };
-		B47C1AAA261FCDF30078546C /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
 		B47C1ACF261FD0A30078546C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTestDoubles.swift; sourceTree = "<group>"; };
 		B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyURLSessionDataTask.swift; sourceTree = "<group>"; };
@@ -1264,7 +1252,6 @@
 		C5ADFBD91DDCC7840011824B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyRouteController.swift; sourceTree = "<group>"; };
 		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
-		C5BF7370206AB0DE00CDBB6D /* MapboxCoreNavigationTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapboxCoreNavigationTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
 		C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayNavigationViewController.swift; sourceTree = "<group>"; };
@@ -1382,7 +1369,6 @@
 		E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplayLocationManagerTests.swift; sourceTree = "<group>"; };
 		E2BBB457273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerDelegateSpy.swift; sourceTree = "<group>"; };
 		E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
-		E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
 		E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = Carthage/Build/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
 		E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
 		E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
@@ -1390,7 +1376,6 @@
 		E2C623A626CBFCE1005769FA /* OnMainQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnMainQueue.swift; sourceTree = "<group>"; };
 		E2C9D8A6268DCB7B005D8955 /* XCTestCase++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase++.swift"; sourceTree = "<group>"; };
 		E2C9D8A8268DCE31005D8955 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		E2CC18F3265FA28900D61CBC /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = "Carthage/Checkouts/mapbox-events-ios/Frameworks/Cedar.framework"; sourceTree = "<group>"; };
 		E2D1494E265CF97D008135A3 /* CarPlayTestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CarPlayTestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarPlayTestHelper.h; sourceTree = "<group>"; };
 		E2D14951265CF97D008135A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1442,7 +1427,6 @@
 				E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */,
 				E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */,
 				E2C1CDAD265E22BD00E158E0 /* Turf.xcframework in Frameworks */,
-				E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1454,7 +1438,6 @@
 				3595FE49219190420035B765 /* TestHelper.framework in Frameworks */,
 				3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */,
 				35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */,
-				E2CC18F4265FA28900D61CBC /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1464,7 +1447,6 @@
 			files = (
 				E2C9D8A9268DCE31005D8955 /* XCTest.framework in Frameworks */,
 				E2C1CDB3265E43BC00E158E0 /* MapboxCoreNavigation.framework in Frameworks */,
-				E2C1CDB2265E439300E158E0 /* MapboxMobileEvents.xcframework in Frameworks */,
 				2C67751C290AC4A6009C5EE4 /* MapboxNavigationNative.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2189,14 +2171,12 @@
 			isa = PBXGroup;
 			children = (
 				E2C9D8A8268DCE31005D8955 /* XCTest.framework */,
-				E2CC18F3265FA28900D61CBC /* Cedar.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
 				E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */,
 				E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */,
 				E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */,
 				E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */,
 				E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */,
-				E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2212,18 +2192,6 @@
 				8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */,
 			);
 			name = "Instructions Card";
-			sourceTree = "<group>";
-		};
-		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
-			isa = PBXGroup;
-			children = (
-				B47C1AAA261FCDF30078546C /* CTestHelper.h */,
-				B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */,
-				B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */,
-				B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */,
-			);
-			name = CTestHelper;
-			path = Sources/CTestHelper;
 			sourceTree = "<group>";
 		};
 		B47C1ACE261FD0A30078546C /* TestHelper */ = {
@@ -2438,7 +2406,6 @@
 			children = (
 				E2D1494F265CF97D008135A3 /* CarPlayTestHelper */,
 				B47C1ACE261FD0A30078546C /* TestHelper */,
-				B47C1AA8261FCDF30078546C /* CTestHelper */,
 				8DF8E4DD2202694100B29FEF /* Documents */,
 				C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */,
 				351BEBD81E5BCC28006FE110 /* MapboxNavigation */,
@@ -2553,7 +2520,6 @@
 				11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
-				C5BF7370206AB0DE00CDBB6D /* MapboxCoreNavigationTests-Bridging-Header.h */,
 				C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */,
 				C5ABB50D20408D2C00AFA92C /* NavigationServiceTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
@@ -2718,8 +2684,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B47C1B05261FD0C00078546C /* TestHelper.h in Headers */,
-				B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */,
-				B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3104,14 +3068,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Turf.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxSpeech.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
-				"$(SRCROOT)/Carthage/Checkouts/mapbox-events-ios/Frameworks/Cedar.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SnappyShrimp.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OHHTTPStubs.framework",
 			);
 			name = "Carthage copy frameworks";
@@ -3485,7 +3444,6 @@
 				E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */,
 				B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */,
 				2C9006CB291927850012CCEA /* CoreNavigatorSpy.swift in Sources */,
-				B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */,
 				2CDF5C972919628100C41082 /* NavigationLocationManagerSpy.swift in Sources */,
 				B47C1B47261FD3A90078546C /* Date.swift in Sources */,
 				2C9006CC291927850012CCEA /* DummyRoute.swift in Sources */,
@@ -4324,7 +4282,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxCoreNavigationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tests/MapboxCoreNavigationTests/MapboxCoreNavigationTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
@@ -4346,7 +4304,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxCoreNavigationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tests/MapboxCoreNavigationTests/MapboxCoreNavigationTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
 			name = Release;

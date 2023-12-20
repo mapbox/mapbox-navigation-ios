@@ -228,7 +228,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testDidUpdateHeading() {
-        let heading = CLHeading(heading: 5.0, accuracy: 1.0)!
+        let heading = CLHeadingSpy(heading: 5.0, accuracy: 1.0)
         service.locationManager(locationManager, didUpdateHeading: heading)
 
         XCTAssertTrue(routerSpy.didUpdateHeadingCalled)

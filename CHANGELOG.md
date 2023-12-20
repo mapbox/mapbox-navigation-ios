@@ -1,10 +1,20 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## main
+## v2.18.0
+
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.16.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.3). ([#4565](https://github.com/mapbox/mapbox-navigation-ios/pull/4565))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v180._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/180.0.0). ([#4565](https://github.com/mapbox/mapbox-navigation-ios/pull/4565))
+* MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4565](https://github.com/mapbox/mapbox-navigation-ios/pull/4565))
 
 ### Routing
 
 * `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. 
+
+### Other changes
+
+* Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4565](https://github.com/mapbox/mapbox-navigation-ios/pull/4565))
 
 ## v2.17.0
 

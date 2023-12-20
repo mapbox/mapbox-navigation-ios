@@ -1,8 +1,6 @@
+import CoreLocation
 import Foundation
 @_spi(MapboxInternal) @testable import MapboxCoreNavigation
-#if SWIFT_PACKAGE
-import CTestHelper
-#endif
 
 public class PassiveNavigationDataSourceSpy: PassiveNavigationEventsManagerDataSource {
     public var rawLocation: CLLocation? = nil
@@ -181,4 +179,37 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         arriveAtDestinationCalled = true
     }
 
+}
+
+public class CLHeadingSpy: CLHeading {
+    private var heading: Double
+    private var accuracy: Double
+
+    public init(heading: Double, accuracy: Double) {
+        self.heading = heading
+        self.accuracy = accuracy
+        super.init()
+    }
+    
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override var magneticHeading: CLLocationDirection {
+        get {
+            return heading
+        }
+        set {
+            heading = newValue
+        }
+    }
+
+    public override var headingAccuracy: CLLocationDirection {
+        get {
+            return accuracy
+        }
+        set {
+            accuracy = newValue
+        }
+    }
 }

@@ -23,9 +23,8 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", from: "2.11.1"),
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "1.0.0"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "160.0.0"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.16.1"),
+        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "180.0.0"),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.16.3"),
         .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "3.0.0"),
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
         .package(name: "CwlPreconditionTesting", url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
@@ -37,7 +36,6 @@ let package = Package(
             name: "MapboxCoreNavigation",
             dependencies: [
                 "MapboxDirections",
-                "MapboxMobileEvents",
                 "MapboxNavigationNative",
             ],
             exclude: ["Info.plist"],
@@ -54,15 +52,8 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [.copy("Resources/MBXInfo.plist")]),
         .target(
-            name: "CTestHelper",
-            dependencies: [
-                "MapboxMobileEvents",
-                "MapboxCoreNavigation",
-            ]),
-        .target(
             name: "TestHelper",
             dependencies: [
-                "CTestHelper",
                 "CwlPreconditionTesting",
                 "MapboxCoreNavigation",
                 "MapboxNavigation",
