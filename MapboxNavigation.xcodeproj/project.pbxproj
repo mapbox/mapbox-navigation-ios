@@ -115,6 +115,8 @@
 		2C60D94929CCAC8900DE9FE7 /* route-with-road-objects-japan.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */; };
 		2C67751C290AC4A6009C5EE4 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		2C71DE02292F821E00620775 /* BillingHandlerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */; };
+		2C7EBE072B34804200B7B12A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EBE062B34804200B7B12A /* PrivacyInfo.xcprivacy */; };
+		2C7EBE092B34891000B7B12A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EBE082B34891000B7B12A /* PrivacyInfo.xcprivacy */; };
 		2C7FAF96291ABE62000217A7 /* TestRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */; };
 		2C7FAF98291BB1CA000217A7 /* RerouteControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */; };
 		2C848BA02982A0C90055BECF /* NavigationEventsManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C848B9F2982A0C90055BECF /* NavigationEventsManagerError.swift */; };
@@ -806,6 +808,8 @@
 		2C59B994298330F8003D4EA0 /* FeedbackMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackMetadata.swift; sourceTree = "<group>"; };
 		2C60D94029CCAC8900DE9FE7 /* route-with-road-objects-japan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-road-objects-japan.json"; sourceTree = "<group>"; };
 		2C71DE01292F821E00620775 /* BillingHandlerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingHandlerIntegrationTests.swift; sourceTree = "<group>"; };
+		2C7EBE062B34804200B7B12A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Resources/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2C7EBE082B34891000B7B12A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Resources/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		2C7FAF95291ABE62000217A7 /* TestRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouteProvider.swift; sourceTree = "<group>"; };
 		2C7FAF97291BB1CA000217A7 /* RerouteControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerSpy.swift; sourceTree = "<group>"; };
 		2C848B9F2982A0C90055BECF /* NavigationEventsManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerError.swift; sourceTree = "<group>"; };
@@ -1699,6 +1703,7 @@
 				C520EE921EBB84F9008805BC /* Navigation.storyboard */,
 				DAAE5F321EAE4C4700832871 /* Localizable.strings */,
 				DA35256E2010A5200048DDFC /* Localizable.stringsdict */,
+				2C7EBE082B34891000B7B12A /* PrivacyInfo.xcprivacy */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2370,6 +2375,7 @@
 			children = (
 				DF345E4029437EE800EC77A7 /* MBXInfo.plist */,
 				C53C196F1F38EA25008DB406 /* Localizable.strings */,
+				2C7EBE062B34804200B7B12A /* PrivacyInfo.xcprivacy */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2971,6 +2977,7 @@
 				DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */,
 				351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */,
 				C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */,
+				2C7EBE092B34891000B7B12A /* PrivacyInfo.xcprivacy in Resources */,
 				DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3037,6 +3044,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C7EBE072B34804200B7B12A /* PrivacyInfo.xcprivacy in Resources */,
 				DF345E4129437EE800EC77A7 /* MBXInfo.plist in Resources */,
 				C53C196D1F38EA25008DB406 /* Localizable.strings in Resources */,
 			);
