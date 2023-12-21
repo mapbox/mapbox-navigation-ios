@@ -39,7 +39,10 @@ let package = Package(
                 "MapboxNavigationNative",
             ],
             exclude: ["Info.plist"],
-            resources: [.copy("Resources/MBXInfo.plist")]),
+            resources: [
+                .copy("Resources/MBXInfo.plist"),
+                .copy("Resources/PrivacyInfo.xcprivacy"),
+            ]),
         .target(
             name: "MapboxNavigation",
             dependencies: [
@@ -50,7 +53,10 @@ let package = Package(
                 "Solar",
             ],
             exclude: ["Info.plist"],
-            resources: [.copy("Resources/MBXInfo.plist")]),
+            resources: [
+                .copy("Resources/MBXInfo.plist"),
+                .copy("Resources/PrivacyInfo.xcprivacy")
+            ]),
         .target(
             name: "TestHelper",
             dependencies: [
