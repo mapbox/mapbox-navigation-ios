@@ -14,7 +14,7 @@
 
 ### Map
 
-* Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4574](https://github.com/mapbox/mapbox-navigation-ios/pull/4574))
+* Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4576](https://github.com/mapbox/mapbox-navigation-ios/pull/4576))
 
 ### Other changes
 
