@@ -10,7 +10,11 @@
 
 ### Routing
 
-* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. 
+* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. ([#4564](https://github.com/mapbox/mapbox-navigation-ios/pull/4564))
+
+### Map
+
+* Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4574](https://github.com/mapbox/mapbox-navigation-ios/pull/4574))
 
 ### Other changes
 
