@@ -1,0 +1,276 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+
+/* Title of the back button. */
+"BACK" = "Back";
+
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatives";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "You have arrived";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continue";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Current Location";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Dismiss";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "End";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Go";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "More Routes";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Mute";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overview";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Back";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Rate your trip";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Confusing audio";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Guidance too early";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Guidance too late";
+
+/* Specific route feedback that audio guidance instruction is missing */
+"CONFUSING_AUDIO_INSTRUCTION_MISSING_FEEDBACK" = "Instruction missing";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciation incorrect";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Road name repeated";
+
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Close";
+
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "You have arrived";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "How can we improve?";
+
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ faster";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Faster Route Found";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Thank you for your report!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Report Problem";
+
+/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Exit info incorrect";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Looks incorrect";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Instruction missing";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Instruction unnecessary";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Lane guidance incorrect";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maneuver incorrect";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Street name incorrect";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Turn icon incorrect";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ longer";
+
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Cancel";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No rating set.";
+
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
+
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Looks incorrect";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+
+/* Specific route feedback for incorrect street name. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Street name incorrect";
+
+/* General category of feedback where there is an issue on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Road issue";
+
+/* Feedback that map shows a non-existant road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Missing road";
+
+/* Feedback that a street is permanently blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Street permanently blocked off";
+
+/* Feedback that a street is temporarily blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Street temporarily blocked off";
+
+/* Feedback that there is a congestion on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";
+
+/* Feedback that there is a moderate traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Moderate";
+
+/* Feedback that there is no traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
+
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Wrong traffic";
+
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Positioning";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Set %ld-star rating";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld star(s) set.";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Rerouting…";
+
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Tolls";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Route quality";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Cars not allowed on street";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Routed down a one way";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Route includes missing roads";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Route non drivable";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Route not preferred";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Street permanently blocked off";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Route had roads too narrow to pass";
+
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Same distance";
+
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "Same time";
+
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ shorter";
+
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ slower";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ and %2$@";
+
