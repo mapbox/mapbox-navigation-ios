@@ -5,18 +5,7 @@
 	<key>RATING_ACCESSIBILITY_SET</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-		<key>stars</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>one</key>
-			<string>Ustaw ocenę %ld-gwiazdkową</string>
-			<key>other</key>
-			<string>Ustaw ocenę %ld-gwiazdkową</string>
-		</dict>
+		<string>Ustaw ocenę %ld-gwiazdkową</string>
 	</dict>
 	<key>RATING_STARS_FORMAT</key>
 	<dict>
