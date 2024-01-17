@@ -104,7 +104,7 @@
 "FEEDBACK_THANK_YOU" = "Dziękujemy za Twoją opinię!";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Zgłoś problem";
+"FEEDBACK_TITLE" = "Przekaż uwagi";
 
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Dostosuj głośność, aby słyszeć instrukcje";
