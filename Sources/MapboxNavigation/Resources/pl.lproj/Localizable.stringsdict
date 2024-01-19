@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>RATING_ACCESSIBILITY_SET</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Ustaw ocenę %ld-gwiazdkową</string>
+	</dict>
+	<key>RATING_STARS_FORMAT</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@stars@</string>
+		<key>stars</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld gwiazdka ustawiona.</string>
+			<key>other</key>
+			<string>%ld gwiazdki ustawione.</string>
+		</dict>
+	</dict>
+	<key>NAVIGATION_REPORT_ISSUES</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@items@</string>
+		<key>items</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>Wyślij 1 element</string>
+			<key>other</key>
+			<string>Wyślij %ld elementów</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
