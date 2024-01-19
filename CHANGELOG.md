@@ -11,10 +11,15 @@
 ### Routing
 
 * `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. ([#4564](https://github.com/mapbox/mapbox-navigation-ios/pull/4564))
+* Fixed an issue where the `.speedLimitKey` key in the `.passiveLocationManagerDidUpdate` notification contained `0` on roads with no speed limit. The value is now correctly set to `Double.infinity`. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584))
 
 ### Map
 
 * Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4576](https://github.com/mapbox/mapbox-navigation-ios/pull/4576))
+
+### User interface
+
+* `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
 
 ### Other changes
 
