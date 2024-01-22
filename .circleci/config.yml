@@ -419,7 +419,7 @@ jobs:
                 command: xcodebuild -resolvePackageDependencies
             - run:
                 name: MapboxNavigation-Package
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
+                command: xcodebuild -enableThreadSanitizer YES -run-tests-until-failure -test-repetition-relaunch-enabled YES -only-testing:MapboxNavigationTests/ImageDownloaderTests -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
