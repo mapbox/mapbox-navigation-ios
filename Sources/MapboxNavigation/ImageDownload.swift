@@ -52,7 +52,7 @@ final class ImageDownloadOperation: Operation, ImageDownload {
         return state == .finished
     }
 
-    override var isConcurrent: Bool {
+    override var isAsynchronous: Bool {
         return true
     }
 
