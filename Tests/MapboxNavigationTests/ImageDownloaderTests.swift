@@ -169,7 +169,7 @@ class ImageDownloaderTests: TestCase {
 
     func testDownloadWithImmidiateCancel() {
         let incorrectUrl = URL(fileURLWithPath: "/incorrect_url")
-        downloader.download(with: incorrectUrl, completion: nil)
+        downloader.download(with: incorrectUrl, completion: {_,_ in })
         let operation = (downloader.activeOperation(with: incorrectUrl) as! ImageDownloadOperation)
         operation.cancel()
         
@@ -181,7 +181,7 @@ class ImageDownloaderTests: TestCase {
 
     func testDownloadWithImmidiateCancelFromAnotherThread() {
         let incorrectUrl = URL(fileURLWithPath: "/incorrect_url")
-        downloader.download(with: incorrectUrl, completion: nil)
+        downloader.download(with: incorrectUrl, completion: {_,_ in })
         let operation = (downloader.activeOperation(with: incorrectUrl) as! ImageDownloadOperation)
         DispatchQueue.global().sync {
             operation.cancel()

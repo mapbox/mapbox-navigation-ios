@@ -8,10 +8,10 @@ final class ReentrantImageDownloaderSpy: ReentrantImageDownloader {
     var returnedDownloadResults = [URL: Data]()
     var returnedOperation: ImageDownload?
 
-    func download(with url: URL, completion: CachedResponseCompletionHandler?) -> Void {
+    func download(with url: URL, completion: @escaping CachedResponseCompletionHandler) -> Void {
         passedDownloadUrl = url
         let response = cachedResponse(with: returnedDownloadResults[url], url: url)
-        completion?(response, response == nil ? DirectionsError.noData : nil)
+        completion(response, response == nil ? DirectionsError.noData : nil)
     }
 
     func activeOperation(with url: URL) -> ImageDownload? {

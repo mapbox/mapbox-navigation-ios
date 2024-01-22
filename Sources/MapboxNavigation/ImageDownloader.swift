@@ -6,7 +6,7 @@ typealias CachedResponseCompletionHandler = (CachedURLResponse?, Error?) -> Void
 typealias ImageDownloadCompletionHandler = (DownloadError?) -> Void
 
 protocol ReentrantImageDownloader {
-    func download(with url: URL, completion: CachedResponseCompletionHandler?) -> Void
+    func download(with url: URL, completion: @escaping CachedResponseCompletionHandler) -> Void
     func activeOperation(with url: URL) -> ImageDownload?
     func setOperationType(_ operationType: ImageDownload.Type?)
 }
@@ -42,21 +42,18 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         urlSession.invalidateAndCancel()
     }
 
-    func download(with url: URL, completion: CachedResponseCompletionHandler?) {
+    func download(with url: URL, completion: @escaping CachedResponseCompletionHandler) {
         accessQueue.sync {
             let request = URLRequest(url)
-            var operation: ImageDownload
             if let activeOperation = self.unsafeActiveOperation(with: url) {
-                operation = activeOperation
+                activeOperation.addCompletion(completion)
             } else {
-                operation = self.operationType.init(request: request, in: self.urlSession)
+                let operation = self.operationType.init(request: request, in: self.urlSession)
+                operation.addCompletion(completion)
                 self.operations[url] = operation
                 if let operation = operation as? Operation {
                     self.downloadQueue.addOperation(operation)
                 }
-            }
-            if let completion = completion {
-                operation.addCompletion(completion)
             }
         }
     }
