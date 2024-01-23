@@ -31,15 +31,12 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
         cacheSprite()
         reverseDelegate = TextReversingDelegate()
         silentDelegate = DefaultBehaviorDelegate()
-        spriteRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
     }
 
     override func tearDown() {
         super.tearDown()
 
         clearDiskCache()
-        spriteRepository.imageDownloader.setOperationType(nil)
-        ImageDownloadOperationSpy.reset()
     }
     
     func testCustomVisualInstructionDelegate() {
@@ -290,11 +287,11 @@ class InstructionsBannerViewIntegrationTests: InstructionBannerTest {
     private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component) {
         guard case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component,
               let imageURL = imageRepresentation.imageURL(scale: VisualInstruction.Component.scale, format: .png)  else { return }
-        let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(imageURL)!
         let data = ShieldImage.i280.image.pngData()!
         let response = URLResponse(url: imageURL, mimeType: nil, expectedContentLength: data.count, textEncodingName: nil)
-        operation.fireAllCompletions(CachedURLResponse(response: response, data: data), error: nil)
-
+        (spriteRepository.imageDownloader as! ImageDownloaderSpy).fireCompletion(
+            for: imageURL, result: .success(CachedURLResponse(response: response, data: data))
+        )
         XCTAssertNotNil(spriteRepository.getLegacyShield(with: imageRepresentation))
     }
 }

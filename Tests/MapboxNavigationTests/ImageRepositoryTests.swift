@@ -4,12 +4,11 @@ import TestHelper
 
 class ImageRepositoryTests: TestCase {
     lazy var repository: ImageRepository = {
-        let repo = ImageRepository.shared
         let config = URLSessionConfiguration.default
         config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        repo.sessionConfiguration = config
+        let downloader = LegacyImageDownloader(configuration: config)
 
-        return repo
+        return ImageRepository(withDownloader: downloader)
     }()
 
     override func setUp() {
