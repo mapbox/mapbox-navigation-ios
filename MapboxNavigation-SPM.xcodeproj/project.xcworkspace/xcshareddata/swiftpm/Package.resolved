@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "f9c766afbc69d2685f8a95157b0c1a177da20465",
-          "version": "23.8.5"
+          "revision": "065cb97a83b8bf8d8584ab56cb6ebed898cc0c97",
+          "version": "23.8.6"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "a7847acfef0c62e0a0135804f029e92f026b3c43",
-          "version": "10.16.3"
+          "revision": "798644dafccc37c3be17127e39638f39d6cd57e3",
+          "version": "10.16.4"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "1678e9d0cc1d462d2b97473da685464009908b6a",
-          "version": "10.16.3"
+          "revision": "05a275f685ac95982716d87ccb677ebad417c252",
+          "version": "10.16.4"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "57c5e8a4adf0fd84def504d68c54f92caddf1b17",
-          "version": "180.0.0"
+          "revision": "a8f1894703d5bf605979cfa81b6e0a43bcff53e9",
+          "version": "182.0.0"
         }
       },
       {

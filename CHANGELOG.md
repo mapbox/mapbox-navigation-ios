@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.16.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.3). ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v180._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/180.0.0). ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
+* MapboxNavigation now requires [MapboxMaps v10.16.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.4). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v182._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/182.0.0). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
 * MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
@@ -26,6 +26,7 @@
 
 * Added PrivacyInfo.xcprivacy support. ([#4573](https://github.com/mapbox/mapbox-navigation-ios/pull/4573))
 * Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
+* Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 
 ## v2.17.0
 

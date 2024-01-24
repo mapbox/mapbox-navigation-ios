@@ -491,9 +491,6 @@ class NavigationViewControllerTests: TestCase {
         let dayStyleURI: StyleURI = .navigationDay
         
         let spriteRepository = SpriteRepository.shared
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 1.0
-        spriteRepository.sessionConfiguration = config
         
         let styleLoadedExpectation = XCTestExpectation(description: "Style updated expectation.")
         spriteRepository.updateStyle(styleURI: nightStyleURI) { _ in
