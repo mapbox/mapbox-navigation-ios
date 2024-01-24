@@ -59,7 +59,7 @@ License: [MIT License](https://github.com/raphaelmor/Polyline/blob/master/LICENS
 
 Mapbox Navigation for iOS version 1.2.1 and earlier is licensed under an ISC license.
 
-Copyright © 2014–2023, Mapbox
+Copyright © 2014–2024, Mapbox
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is 
 hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
