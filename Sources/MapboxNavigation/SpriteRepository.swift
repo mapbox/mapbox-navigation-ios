@@ -3,33 +3,25 @@ import MapboxMaps
 import MapboxCoreNavigation
 import MapboxDirections
 
+typealias ImageDownloadCompletionHandler = (DownloadError?) -> Void
+
 class SpriteRepository {
     let baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     private let defaultStyleURI: StyleURI = .navigationDay
-    private let requestTimeOut: TimeInterval = 10
     private(set) var userInterfaceIdiomStyles = [UIUserInterfaceIdiom: StyleURI]()
 
-    private(set) var imageDownloader: ReentrantImageDownloader
+    private(set) var imageDownloader: ImageDownloaderProtocol
     let requestCache: URLCaching
     let derivedCache: BimodalImageCache
 
-    var sessionConfiguration: URLSessionConfiguration {
-        didSet {
-            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
-        }
-    }
-
     static let shared = SpriteRepository.init()
 
-    init(imageDownloader: ReentrantImageDownloader? = nil,
+    init(imageDownloader: ImageDownloaderProtocol? = nil,
          requestCache: URLCaching = URLDataCache(),
          derivedCache: BimodalImageCache = ImageCache()) {
-        self.sessionConfiguration = URLSessionConfiguration.default
-        self.sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
         self.requestCache = requestCache
         self.derivedCache = derivedCache
-
-        self.imageDownloader = imageDownloader ?? ImageDownloader(sessionConfiguration: sessionConfiguration)
+        self.imageDownloader = imageDownloader ?? ImageRepository.defaultImageDownloader
     }
 
     func updateStyle(styleURI: StyleURI?,
@@ -135,8 +127,8 @@ class SpriteRepository {
     }
     
     func downloadInfo(_ infoURL: URL, completion: @escaping (Data?) -> Void) {
-        imageDownloader.download(with: infoURL, completion: { [weak self] (cachedResponse, error)  in
-            guard let strongSelf = self, let cachedResponse = cachedResponse else {
+        imageDownloader.download(with: infoURL, completion: { [weak self] result in
+            guard let strongSelf = self, case let .success(cachedResponse) = result else {
                 completion(nil)
                 return
             }
@@ -147,9 +139,9 @@ class SpriteRepository {
     }
     
     func downloadImage(imageURL: URL, completion: @escaping (UIImage?) -> Void) {
-        imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
+        imageDownloader.download(with: imageURL, completion: { [weak self] result in
             guard let strongSelf = self,
-                  let cachedResponse = cachedResponse,
+                  case let .success(cachedResponse) = result,
                   let image = UIImage(data: cachedResponse.data, scale: VisualInstruction.Component.scale) else {
                 completion(nil)
                 return
