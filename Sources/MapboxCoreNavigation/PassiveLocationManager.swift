@@ -223,7 +223,10 @@ open class PassiveLocationManager: NSObject {
             break
         }
 
-        if let speed = status.speedLimit.speed?.doubleValue {
+        if var speed = status.speedLimit.speed?.doubleValue {
+            // speedLimit == 0 represents that there is no speed limit, meaning that the limit is known to be infinite.
+            // Not to be confused with speedLimit == nil in case we don't know the limit.
+            if speed == 0 { speed = .infinity }
             switch status.speedLimit.localeUnit {
             case .milesPerHour:
                 speedLimit = Measurement(value: speed, unit: .milesPerHour)
