@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.16.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.3). ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v180._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/180.0.0). ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
+* MapboxNavigation now requires [MapboxMaps v10.16.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.4). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v182._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/182.0.0). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
 * MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
