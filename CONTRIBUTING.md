@@ -127,10 +127,9 @@ The .strings files should still be in the original English – that’s expecte
 ## Adding tests
 
 ### Supported devices:
-- iPhone 11 Pro Max, iOS 13.7
-- iPhone 13 Pro Max, iOS 15.2
-- iPhone 13 Pro Max, iOS 15.4
+- iPhone 13 Pro Max, iOS 15.5
 - iPhone 14 Pro Max, iOS 16.1
+- iPhone 15 Pro Max, iOS 17.2
 
 ### Adding a unit test suite
 
