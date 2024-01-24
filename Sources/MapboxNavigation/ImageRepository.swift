@@ -43,7 +43,7 @@ class ImageRepository {
             return
         }
 
-        let _ = imageDownloader.download(with: imageURL, completion: { [weak self] result in
+        imageDownloader.download(with: imageURL, completion: { [weak self] result in
             guard let strongSelf = self,
                   case let .success(cachedResponse) = result,
                   let image = UIImage(data: cachedResponse.data, scale: UIScreen.main.scale) else {
