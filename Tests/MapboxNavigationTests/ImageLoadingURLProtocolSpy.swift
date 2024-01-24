@@ -11,9 +11,9 @@ final class ImageLoadingURLProtocolSpy: URLProtocol {
     }
 
     private static let lock: NSLock = .init()
-    private static var responseData: [URL: Result<Data, Error>] = [:]
-    private static var activeRequests: [URL: URLRequest] = [:]
-    private static var pastRequests: [URL: URLRequest] = [:]
+    private(set) static var responseData: [URL: Result<Data, Error>] = [:]
+    private(set) static var activeRequests: [URL: URLRequest] = [:]
+    private(set) static var pastRequests: [URL: URLRequest] = [:]
     private static let imageLoadingSemaphore = DispatchSemaphore(value: 1)
 
     private var loadingStopped: Bool = false
