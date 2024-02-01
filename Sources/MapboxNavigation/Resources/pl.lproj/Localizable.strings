@@ -1,0 +1,275 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+
+/* Title of the back button. */
+"BACK" = "Wstecz";
+
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatywy";
+
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Nie znaleziono alternatywnych tras.";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Dotarłeś";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Co chciałbyś zrobić?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Kontynuuj";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Obecna lokalizacja";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Odrzuć";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Zakończ";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Wyjdź z nawigacji";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Opinie";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Ruszaj";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Więcej tras";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Wycisz";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Przegląd";
+
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Wstecz";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Oceń swój przejazd";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Oceń swoją podróż";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Przesłano";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Wyłącz wyciszenie";
+
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Mylący komunikat";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Zbyt wczesna wskazówka";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Zbyt późna wskazówka";
+
+/* Specific route feedback that audio guidance instruction is missing */
+"CONFUSING_AUDIO_INSTRUCTION_MISSING_FEEDBACK" = "Brak instrukcji";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Niepoprawna wymowa";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Powtórzona nazwa drogi";
+
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Zamknij";
+
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Włącz dokładną lokalizację, aby nawigować";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Dotarłeś";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Jak możemy zwiększyć jakość usług?";
+
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ szybciej";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Znaleziono szybszą trasę";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Dziękujemy za Twoją opinię!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Przekaż uwagi";
+
+/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Dostosuj głośność, aby słyszeć instrukcje";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Nieprawidłowy limit prędkości";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Niepoprawne informacje o wyjeździe";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Wygląda niepoprawnie";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Brak instrukcji";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Niepotrzebna instrukcja";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Niepoprawna informacja o pasie";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Niepoprawny manewr";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Niepoprawna nazwa ulicy";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Niepoprawna ikona skrętu";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ i %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ dłużej";
+
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Anuluj";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Wyślij %ld element(ów)";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Brak ustawionej oceny.";
+
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Słaby sygnał GPS";
+
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Wygląda niepoprawnie";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Nieprawidłowy limit prędkości";
+
+/* Specific route feedback for incorrect street name. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Niepoprawna nazwa ulicy";
+
+/* General category of feedback where there is an issue on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Zdarzenie na drodze";
+
+/* Feedback that map shows a non-existant road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Brakująca droga";
+
+/* Feedback that a street is permanently blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Ulica na stałe zablokowana";
+
+/* Feedback that a street is temporarily blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Ulica tymczasowo zablokowana";
+
+/* Feedback that there is a congestion on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Korek";
+
+/* Feedback that there is a moderate traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Umiarkowany ruch";
+
+/* Feedback that there is no traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "Brak ruchu";
+
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Nieprawidłowy ruch";
+
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Pozycjonowanie";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Kliknij, aby zresetować ocenę do zera.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Ustaw ocenę %ld-gwiazdkową";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld gwiazdka(ek) ustawionych.";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Trwa przeliczanie trasy…";
+
+/* Button title for resume tracking */
+"RESUME" = "Wznów";
+
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Bez opłat";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Opłaty";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Nieoczekiwana trasa alternatywna";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Jakość trasy";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Samochody nie są dozwolone na ulicy";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Niepoprawna trasa";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Trasa prowadzi pod prąd na drodze jednokierunkowej";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Zakazany skręt";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Trasa zawiera nieistniejące drogi";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Trasa niedostępna";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Trasa nieoptymalna";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Zamknięta droga";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Ulica na stałe zablokowana";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Trasa zawiera zbyt wąskie drogi";
+
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Ta sama odległość";
+
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "Ten sam czas";
+
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ krótsza";
+
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ wolniejsza";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Symulacja nawigacji z prędkością %@×";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, przez %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ i %2$@";

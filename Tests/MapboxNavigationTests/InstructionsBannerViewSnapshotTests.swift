@@ -499,7 +499,8 @@ class InstructionBannerTest: TestCase {
     override func setUp() {
         super.setUp()
 
-        spriteRepository = SpriteRepository(requestCache: URLCacheSpy(),
+        spriteRepository = SpriteRepository(imageDownloader: ImageDownloaderSpy(),
+                                            requestCache: URLCacheSpy(),
                                             derivedCache: BimodalImageCacheSpy())
     }
 

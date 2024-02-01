@@ -1,29 +1,28 @@
 import UIKit
 
 class ImageRepository {
-    public var sessionConfiguration: URLSessionConfiguration {
-        didSet {
-            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
-        }
-    }
-
-    public static let shared = ImageRepository.init()
+    static let shared = ImageRepository()
 
     let imageCache: BimodalImageCache
-    fileprivate(set) var imageDownloader: ReentrantImageDownloader
-    private let requestTimeOut: TimeInterval = 10
+    fileprivate(set) var imageDownloader: ImageDownloaderProtocol
 
     var useDiskCache: Bool
 
-    required init(withDownloader downloader: ReentrantImageDownloader? = nil,
+    required init(withDownloader downloader: ImageDownloaderProtocol? = nil,
                   cache: BimodalImageCache? = nil,
                   useDisk: Bool = true) {
-        sessionConfiguration = URLSessionConfiguration.default
-        sessionConfiguration.timeoutIntervalForRequest = self.requestTimeOut
-        imageDownloader = downloader ?? ImageDownloader(sessionConfiguration: sessionConfiguration)
+        imageDownloader = downloader ?? Self.defaultImageDownloader
         imageCache = cache ?? ImageCache()
         useDiskCache = useDisk
     }
+
+    static let defaultImageDownloader: ImageDownloaderProtocol = {
+        if #available(iOS 13.0, *) {
+            return ImageDownloader()
+        } else {
+            return LegacyImageDownloader()
+        }
+    }()
 
     func resetImageCache(_ completion: CompletionHandler?) {
         imageCache.clearMemory()
@@ -44,16 +43,11 @@ class ImageRepository {
             return
         }
 
-        let _ = imageDownloader.download(with: imageURL, completion: { [weak self] (cachedResponse, error) in
+        imageDownloader.download(with: imageURL, completion: { [weak self] result in
             guard let strongSelf = self,
-                  let data = cachedResponse?.data,
-                  let image = UIImage(data: data, scale: UIScreen.main.scale) else {
+                  case let .success(cachedResponse) = result,
+                  let image = UIImage(data: cachedResponse.data, scale: UIScreen.main.scale) else {
                 completion(nil)
-                return
-            }
-
-            guard error == nil else {
-                completion(image)
                 return
             }
 

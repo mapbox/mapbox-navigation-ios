@@ -179,8 +179,6 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
 
         let expectedSpokenInstructions = [
             "Head south on Taylor Street, then turn right onto California Street",
-            // TODO: update test after fix in NN-603
-            "Turn right onto Sacramento Street, then turn left onto Jones Street",
             "Turn right onto California Street",
             "In a quarter mile, turn left onto Hyde Street"
         ]

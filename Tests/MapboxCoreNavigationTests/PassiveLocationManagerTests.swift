@@ -59,7 +59,7 @@ class PassiveLocationManagerTests: TestCase {
 
     func testHandleDidUpdateHeading() {
         let callbackExpectation = expectation(description: "Heading Callback")
-        let heading = CLHeading(heading: 50, accuracy: 1)!
+        let heading = CLHeadingSpy(heading: 50, accuracy: 1)
         delegate.onHeadingUpdate = { actualHeading in
             XCTAssertEqual(actualHeading, heading)
             callbackExpectation.fulfill()

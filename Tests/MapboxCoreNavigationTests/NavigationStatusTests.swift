@@ -156,15 +156,20 @@ final class NavigationStatusTests: TestCase {
         XCTAssertNil(representation1.shield)
         XCTAssertNil(representation1.imageBaseURL)
 
-        let shield2 = Shield(baseUrl: "|||", displayRef: "ref", name: "shield", textColor: "")
-        let roadNonValidImageBaseUrlString = RoadName(text: "name",
-                                                      language: "",
-                                                      imageBaseUrl: "|||",
-                                                      shield: shield2)
-        let status2 = status(with: [roadNonValidImageBaseUrlString])
-        let representation2 = status2.routeShieldRepresentation
-        XCTAssertNil(representation2.shield)
-        XCTAssertNil(representation2.imageBaseURL)
+        if #available(iOS 17.0, *) {
+            // These URLs are considered valid on iOS 17+
+            // https://developer.apple.com/documentation/foundation/url/3126806-init
+        } else {
+            let shield2 = Shield(baseUrl: "|||", displayRef: "ref", name: "shield", textColor: "")
+            let roadNonValidImageBaseUrlString = RoadName(text: "name",
+                                                          language: "",
+                                                          imageBaseUrl: "|||",
+                                                          shield: shield2)
+            let status2 = status(with: [roadNonValidImageBaseUrlString])
+            let representation2 = status2.routeShieldRepresentation
+            XCTAssertNil(representation2.shield)
+            XCTAssertNil(representation2.imageBaseURL)
+        }
 
         let shield3 = Shield(baseUrl: "", displayRef: "ref", name: "shield", textColor: "")
         let roadEmptyImageBaseUrlString = RoadName(text: "name",

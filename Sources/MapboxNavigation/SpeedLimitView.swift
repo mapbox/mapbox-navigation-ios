@@ -144,7 +144,12 @@ public class SpeedLimitView: UIView {
             let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Max", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
             SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
         case .viennaConvention:
-            SpeedLimitStyleKit.drawVienna(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, regulatoryColor: regulatoryBorderColor, limit: formattedSpeedLimit)
+            if let speedLimit, speedLimit.value.isInfinite {
+                let image = UIImage(named: "infinite-speed-limit", in: .mapboxNavigation, compatibleWith: nil)
+                image?.draw(in: bounds)
+            } else {
+                SpeedLimitStyleKit.drawVienna(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, regulatoryColor: regulatoryBorderColor, limit: formattedSpeedLimit)
+            }
         }
     }
     

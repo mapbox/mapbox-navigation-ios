@@ -1,10 +1,32 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## main
+## v2.18.0
+
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.16.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.4). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v182._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/182.0.0). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
+* Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
 ### Routing
 
-* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. 
+* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`. ([#4564](https://github.com/mapbox/mapbox-navigation-ios/pull/4564))
+* Fixed an issue where the `.speedLimitKey` key in the `.passiveLocationManagerDidUpdate` notification contained `0` on roads with no speed limit. The value is now correctly set to `Double.infinity`. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584))
+
+### Map
+
+* Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4576](https://github.com/mapbox/mapbox-navigation-ios/pull/4576))
+
+### User interface
+
+* `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
+
+### Other changes
+
+* Added PrivacyInfo.xcprivacy support. ([#4573](https://github.com/mapbox/mapbox-navigation-ios/pull/4573))
+* Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
+* Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 
 ## v2.17.0
 

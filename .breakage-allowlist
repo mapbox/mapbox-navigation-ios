@@ -1,3 +1,2 @@
-EnumElement RoadObject.Kind.mergingArea has been added as a new enum case
-EnumElement RoadObject.Kind.unknown has been added as a new enum case
-Func CarPlayManagerDelegate.carPlayManagerWillCancelPreview(_:configuration:) has been added as a protocol requirement
+Constructor NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:) has been removed
+Import MapboxMobileEvents has been removed

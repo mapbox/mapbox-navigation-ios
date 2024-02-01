@@ -876,6 +876,14 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - build-job:
+            name: "Xcode_15.2_iOS_17.2_SPM_Debug"
+            xcode: "15.2"
+            iOS: "17.2"
+            device: "iPhone 15 Pro Max"
+            spm: true
+            codecoverage: true
+            context: Slack Orb
+        - build-job:
             name: "Xcode_14.1_iOS_16.1_SPM_Debug"
             xcode: "14.1"
             iOS: "16.1"
@@ -964,29 +972,29 @@ workflows:
           filters:
             branches:
               only: /^trigger-distribute-version-.*/
-  weekly-snapshot-workflow:
-    # Run workflow every Friday at 23:59 UTC
-    triggers:
-      - schedule:
-          cron: "59 23 * * 5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - release-weekly-snapshot
+#  weekly-snapshot-workflow:
+#    # Run workflow every Friday at 23:59 UTC
+#    triggers:
+#      - schedule:
+#          cron: "59 23 * * 5"
+#          filters:
+#            branches:
+#              only:
+#                - main
+#    jobs:
+#      - release-weekly-snapshot
   weekly-snapshot-manual-workflow:
     when: << pipeline.parameters.weekly_snapshot >>
     jobs:
       - release-weekly-snapshot
-  pre-snapshot-workflow:
-    # Run workflow every Thursday at 23:59 UTC
-    triggers:
-      - schedule:
-          cron: "59 23 * * 4"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - pre-snapshot-check
+#  pre-snapshot-workflow:
+#    # Run workflow every Thursday at 23:59 UTC
+#    triggers:
+#      - schedule:
+#          cron: "59 23 * * 4"
+#          filters:
+#            branches:
+#              only:
+#                - main
+#    jobs:
+#      - pre-snapshot-check

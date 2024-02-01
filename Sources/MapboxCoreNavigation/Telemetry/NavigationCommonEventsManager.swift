@@ -1,7 +1,6 @@
 import Foundation
 import CoreLocation
 import UIKit
-import MapboxMobileEvents
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
 
