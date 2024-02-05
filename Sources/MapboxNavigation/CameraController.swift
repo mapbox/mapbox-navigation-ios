@@ -139,10 +139,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                 // In this case, we ignore new viewport to avoid unexpected camera jumps
                 return
             }
+            viewportDebugView?.frame = navigationMapView.mapView.bounds.inset(by: newViewport)
 
             navigationViewportDataSource.viewportPadding = newViewport
         }
     }
+
+    private var viewportDebugView: UIView?
 
     private var viewportPadding: UIEdgeInsets {
         let courseViewMinimumInsets = UIEdgeInsets(top: 75.0, left: 75.0, bottom: 75.0, right: 75.0)
@@ -189,6 +192,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         
         navigationMapView.userLocationStyle = .courseView()
         navigationViewData.navigationView.resumeButton.isHidden = true
+        let viewportDebugView = UIView(frame: .zero)
+        viewportDebugView.layer.borderWidth = 2
+        viewportDebugView.layer.borderColor = UIColor.blue.cgColor
+        viewportDebugView.backgroundColor = .clear
+        viewportDebugView.translatesAutoresizingMaskIntoConstraints = false
+        navigationMapView.addSubview(viewportDebugView)
+        self.viewportDebugView = viewportDebugView
     }
     
     func navigationViewWillAppear(_: Bool) {
