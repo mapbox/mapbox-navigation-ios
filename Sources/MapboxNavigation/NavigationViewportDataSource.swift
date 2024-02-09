@@ -370,7 +370,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
             .map({ $0.shape?.coordinates })
         let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStepProgress.remainingStepCoordinates()
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
-        let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+
+        var carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+        // NOTE: We need this extra padding in CarPlay to avoid overlap of the route, street name labels, and control buttons.
+        carPlayCameraPadding.top += 20 // destination pin
+        carPlayCameraPadding.bottom += 38.0 // way name view
         let overviewCameraOptions = options.overviewCameraOptions
         
         if overviewCameraOptions.pitchUpdatesAllowed || overviewMobileCamera.pitch == nil {
@@ -423,12 +427,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                            bearing: overviewMobileCamera.bearing,
                                                            edgeInsets: viewportPadding,
                                                            maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
-
-            // NOTE: zoom method adds some extra padding to the viewport. We need this extra padding in CarPlay
-            // to avoid overlap of the route, street name labels, and control buttons.
-            overviewCarPlayCamera.zoom = zoom(remainingCoordinatesOnRoute,
-                                              edgeInsets: carPlayCameraPadding,
-                                              maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
+            overviewCarPlayCamera.zoom = overviewCameraZoom(remainingCoordinatesOnRoute,
+                                                            pitch: overviewCarPlayCamera.pitch,
+                                                            bearing: overviewCarPlayCamera.bearing,
+                                                            edgeInsets: carPlayCameraPadding,
+                                                            maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
         }
         
         if overviewCameraOptions.paddingUpdatesAllowed || overviewMobileCamera.padding == nil {
