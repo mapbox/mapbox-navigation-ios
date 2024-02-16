@@ -12,10 +12,15 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     var previousProgress: RouteProgress?
     var timer: DispatchTimer?
     
-    let dateFormatter = DateFormatter()
-    let dateComponentsFormatter = DateComponentsFormatter()
-    let distanceFormatter = DistanceFormatter()
-    
+    /// Arrival date formatter for banner view.
+    public let dateFormatter = DateFormatter()
+
+    /// Date components formatter for banner view.
+    public let dateComponentsFormatter = DateComponentsFormatter()
+
+    /// Distance formatter for banner view.
+    public let distanceFormatter = DistanceFormatter()
+
     var verticalCompactConstraints = [NSLayoutConstraint]()
     var verticalRegularConstraints = [NSLayoutConstraint]()
     
