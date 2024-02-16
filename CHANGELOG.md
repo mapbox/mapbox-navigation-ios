@@ -21,6 +21,8 @@
 ### User interface
 
 * `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
+* `TopBannerViewController.delegate` and `TopBannerViewController.instructionsBannerView` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595)) 
+* `BottomBannerViewController.dateFormatter`, `BottomBannerViewController.dateComponentsFormatter`, `BottomBannerViewController.distanceFormatter` and `InstructionsBannerView.distanceFormatter` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595))
 
 ### Other changes
 
