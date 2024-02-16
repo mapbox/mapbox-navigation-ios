@@ -370,7 +370,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
             .map({ $0.shape?.coordinates })
         let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStepProgress.remainingStepCoordinates()
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
-        let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+
+        var carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+        // NOTE: We need this extra padding in CarPlay to avoid overlap of the route, street name labels, and control buttons.
+        carPlayCameraPadding.top += 20 // destination pin
+        carPlayCameraPadding.bottom += 38.0 // way name view
         let overviewCameraOptions = options.overviewCameraOptions
         
         if overviewCameraOptions.pitchUpdatesAllowed || overviewMobileCamera.pitch == nil {
@@ -389,17 +393,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 overviewCarPlayCamera.center = center
             }
         }
-        
-        if overviewCameraOptions.zoomUpdatesAllowed || overviewMobileCamera.zoom == nil {
-            overviewMobileCamera.zoom = zoom(remainingCoordinatesOnRoute,
-                                             edgeInsets: viewportPadding,
-                                             maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
-            
-            overviewCarPlayCamera.zoom = zoom(remainingCoordinatesOnRoute,
-                                              edgeInsets: carPlayCameraPadding,
-                                              maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
-        }
-        
+
         overviewMobileCamera.anchor = anchor(bounds: mapView.bounds,
                                              edgeInsets: viewportPadding)
         
@@ -425,6 +419,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             overviewMobileCamera.bearing = !isWalking ? bearing : headingDirection
             overviewCarPlayCamera.bearing = bearing
+        }
+
+        if overviewCameraOptions.zoomUpdatesAllowed || overviewMobileCamera.zoom == nil {
+            overviewMobileCamera.zoom = overviewCameraZoom(remainingCoordinatesOnRoute,
+                                                           pitch: overviewMobileCamera.pitch,
+                                                           bearing: overviewMobileCamera.bearing,
+                                                           edgeInsets: viewportPadding,
+                                                           maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
+            overviewCarPlayCamera.zoom = overviewCameraZoom(remainingCoordinatesOnRoute,
+                                                            pitch: overviewCarPlayCamera.pitch,
+                                                            bearing: overviewCarPlayCamera.bearing,
+                                                            edgeInsets: carPlayCameraPadding,
+                                                            maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
         }
         
         if overviewCameraOptions.paddingUpdatesAllowed || overviewMobileCamera.padding == nil {
@@ -454,7 +461,23 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let mapViewBearing = Double(mapView?.cameraState.bearing ?? 0.0)
         return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
     }
-    
+
+    func overviewCameraZoom(_ coordinates: [CLLocationCoordinate2D],
+                            pitch: CGFloat?,
+                            bearing: CLLocationDirection?,
+                            edgeInsets: UIEdgeInsets,
+                            defaultZoomLevel: Double = 12.0,
+                            maxZoomLevel: Double = 22.0,
+                            minZoomLevel: Double = 2.0) -> CGFloat {
+        guard let mapView = mapView else { return CGFloat(defaultZoomLevel) }
+
+        let options = mapView.mapboxMap.camera(for: coordinates,
+                                               padding: edgeInsets,
+                                               bearing: 0,
+                                               pitch: 0)
+        return CGFloat(max(min(options.zoom ?? defaultZoomLevel, maxZoomLevel), minZoomLevel))
+    }
+
     func zoom(_ coordinates: [CLLocationCoordinate2D],
               pitch: Double = 0.0,
               maxPitch: Double = 0.0,
