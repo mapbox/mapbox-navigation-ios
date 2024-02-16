@@ -28,6 +28,7 @@
 * Added PrivacyInfo.xcprivacy support. ([#4573](https://github.com/mapbox/mapbox-navigation-ios/pull/4573))
 * Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
+* Fixed the possible situation when the upcoming route leg is rendered above the active route leg. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 
 ## v2.17.0
 
