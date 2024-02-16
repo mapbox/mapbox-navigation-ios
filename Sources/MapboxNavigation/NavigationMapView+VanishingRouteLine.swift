@@ -433,8 +433,8 @@ extension NavigationMapView {
                         return self.congestionColor(for: nil, isMain: isMain)
                     }
                 }
-                
-                return self.routeCasingColor
+
+                return .clear
             }
         })
         

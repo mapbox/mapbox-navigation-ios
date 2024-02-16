@@ -426,6 +426,27 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.trafficLowColor)
     }
 
+    func testGenerateRouteLineGradientWithMultilegRoute() {
+        let coordinates: [CLLocationCoordinate2D] = [
+            CLLocationCoordinate2D(latitude: 37.798, longitude: -122.398),
+            CLLocationCoordinate2D(latitude: 37.795, longitude: -122.398),
+            CLLocationCoordinate2D(latitude: 37.795, longitude: -122.395),
+        ]
+        let congestionSegment: CongestionSegment = (coordinates, CongestionLevel.low)
+        var feature = Feature(geometry: .lineString(LineString(congestionSegment.0)))
+        feature.properties = [
+            CongestionAttribute: .string(String(describing: congestionSegment.1)),
+            CurrentLegAttribute: false
+        ]
+        let congestionFeatures = [feature]
+
+        let routeLineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures: congestionFeatures,
+                                                                              isMain: true,
+                                                                              isSoft: false)
+        XCTAssertEqual(routeLineGradient.count, 1)
+        XCTAssertEqual(routeLineGradient[0.0], .clear)
+    }
+
     func testGenerateRouteLineRestrictedGradient() {
         let coordinates: [CLLocationCoordinate2D] = [
             CLLocationCoordinate2D(latitude: 1, longitude: 0),
