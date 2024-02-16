@@ -13,8 +13,10 @@ open class TopBannerViewController: UIViewController {
     
     // MARK: Displaying Instructions
     
-    weak var delegate: TopBannerViewControllerDelegate? = nil
-    
+    /// The delegate for the view controller.
+    /// - seealso: TopBannerViewControllerDelegate
+    public weak var delegate: TopBannerViewControllerDelegate? = nil
+
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
     
     var routeProgress: RouteProgress?
@@ -25,7 +27,8 @@ open class TopBannerViewController: UIViewController {
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
-    lazy var instructionsBannerView: InstructionsBannerView = {
+    /// A banner view that contains the current step instructions and responds to tap and swipe gestures.
+    public private(set) lazy var instructionsBannerView: InstructionsBannerView = {
         let banner: InstructionsBannerView = .forAutoLayout()
         banner.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
         banner.delegate = self
