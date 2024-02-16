@@ -109,8 +109,9 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    let distanceFormatter = DistanceFormatter()
-    
+    /// Distance formatter for banner view.
+    public let distanceFormatter = DistanceFormatter()
+
     /**
      The remaining distance of current step in meters.
      */
