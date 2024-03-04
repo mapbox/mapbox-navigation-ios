@@ -1,22 +1,22 @@
 PODS:
-  - MapboxCommon (23.8.6)
-  - MapboxCoreMaps (10.16.4):
-    - MapboxCommon (~> 23.8)
-  - MapboxCoreNavigation (2.18.0-beta.1):
-    - MapboxDirections (~> 2.11.1)
+  - MapboxCommon (23.9.0)
+  - MapboxCoreMaps (10.16.5):
+    - MapboxCommon (~> 23.9)
+  - MapboxCoreNavigation (2.18.0-rc.2):
+    - MapboxDirections (~> 2.12.0)
     - MapboxNavigationNative (~> 182.0.0)
-  - MapboxDirections (2.11.1):
+  - MapboxDirections (2.12.0):
     - Polyline (~> 5.0)
-    - Turf (~> 2.6.1)
-  - MapboxMaps (10.16.4):
-    - MapboxCommon (= 23.8.6)
-    - MapboxCoreMaps (= 10.16.4)
+    - Turf (~> 2.7.0)
+  - MapboxMaps (10.16.5):
+    - MapboxCommon (= 23.9.0)
+    - MapboxCoreMaps (= 10.16.5)
     - MapboxMobileEvents (= 1.0.10)
-    - Turf (~> 2.0)
+    - Turf (= 2.7.0)
   - MapboxMobileEvents (1.0.10)
-  - MapboxNavigation (2.18.0-beta.1):
-    - MapboxCoreNavigation (= 2.18.0-beta.1)
-    - MapboxMaps (~> 10.16.4)
+  - MapboxNavigation (2.18.0-rc.2):
+    - MapboxCoreNavigation (= 2.18.0-rc.2)
+    - MapboxMaps (~> 10.16.5)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
   - MapboxNavigationNative (182.0.0):
@@ -24,7 +24,7 @@ PODS:
   - MapboxSpeech (2.1.1)
   - Polyline (5.1.0)
   - Solar-dev (3.0.1)
-  - Turf (2.6.1)
+  - Turf (2.7.0)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -50,19 +50,19 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: 90f76693dc02438acbb5ea9a5b266a4c0eb1c875
-  MapboxCoreMaps: 7b07d1ca8c454a4381daf09df901b9d6bf90bce0
-  MapboxCoreNavigation: a9b6fca52022442d2ce797bead869df33404c786
-  MapboxDirections: 31d61b8369d5dde6f6828f72905ab9a7e054cd2c
-  MapboxMaps: cbb38845a9bf49b124f0e937975d560a4e01894e
+  MapboxCommon: e89c490cccd7ea9efcdc0e74b4ce1dbd9b4a875a
+  MapboxCoreMaps: 920f194f4f8b37f5731e0bdb82296d96ac4276f5
+  MapboxCoreNavigation: 25319df3d3a0b69c50ce917e0d8b3582c0a72d40
+  MapboxDirections: 4676f626df320732dcf74612223e568d39588320
+  MapboxMaps: e8d94fb4782295df68172ce7ed567da8228c629e
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MapboxNavigation: 37d1da09035c613223be06c4b87633a77f5bc6c1
+  MapboxNavigation: d0cf913d77373f14bdc414953f8ac38e7a284f85
   MapboxNavigationNative: f2cbb7eddb712a541edb7f4c9ed286f02ede5c12
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
-  Turf: 469ce2c3d22e5e8e4818d5a3b254699a5c89efa4
+  Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
 
 PODFILE CHECKSUM: bde8103af0e9b326531ee57cf1fa935cbd5f2e18
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.3
