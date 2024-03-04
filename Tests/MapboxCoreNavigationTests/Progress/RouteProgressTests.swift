@@ -335,7 +335,7 @@ class RouteProgressTests: TestCase {
                 bannerInstruction: nil,
                 speedLimit: .init(speed: nil, localeUnit: .kilometresPerHour, localeSign: .vienna),
                 keyPoints: [],
-                mapMatcherOutput: .init(matches: [], isTeleport: false),
+                mapMatcherOutput: .init(matches: [], isTeleport: false, totalCandidatesCount: 0),
                 offRoadProba: 0,
                 offRoadStateProvider: .unknown,
                 activeGuidanceInfo: .init(
@@ -347,7 +347,8 @@ class RouteProgressTests: TestCase {
                 nextWaypointIndex: 0,
                 layer: nil,
                 isSyntheticLocation: false,
-                correctedLocationData: nil
+                correctedLocationData: nil, 
+                mapMatchedSystemTime: Date()
             )
         }
 
