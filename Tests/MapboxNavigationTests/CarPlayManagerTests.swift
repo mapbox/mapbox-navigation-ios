@@ -6,6 +6,7 @@ import CwlPreconditionTesting
 @testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
+import MapboxMaps
 
 class CarPlayManagerTests: TestCase {
     var carPlayManager: CarPlayManager!
@@ -60,7 +61,23 @@ class CarPlayManagerTests: TestCase {
         simulateCarPlayDisconnection(carPlayManager)
         XCTAssertTrue(eventsManagerSpy.sendCarPlayDisconnectEventCalled)
     }
-    
+
+    func testReturnSourceCircleLayer() {
+        let id = "test"
+        let layer = CircleLayer(id: id)
+        delegate.circleLayer = layer
+        let expectedLayerId = delegate.carPlayManager(carPlayManager, waypointCircleLayerWithIdentifier: id, sourceIdentifier: id)?.id
+        XCTAssertEqual(layer.id, expectedLayerId)
+    }
+
+    func testReturnSourceSymbolLayer() {
+        let id = "test"
+        let layer = SymbolLayer(id: id)
+        delegate.symbolLayer = layer
+        let expectedLayerId = delegate.carPlayManager(carPlayManager, waypointSymbolLayerWithIdentifier: id, sourceIdentifier: id)?.id
+        XCTAssertEqual(layer.id, expectedLayerId)
+    }
+
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         let searchDelegate = TestCarPlaySearchControllerDelegate()
         let searchButtonHandler: ((CPBarButton) -> Void) = { [weak self] _ in
