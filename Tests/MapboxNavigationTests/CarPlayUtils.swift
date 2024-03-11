@@ -4,8 +4,10 @@ import CarPlay
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 @testable import MapboxDirections
+@testable import MapboxMaps
 import CarPlayTestHelper
 import TestHelper
+
 
 func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
     let interfaceController = FakeCPInterfaceController(context: #function)
@@ -92,6 +94,20 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var returnedLeadingBarButtons: [CPBarButton]?
     var returnedTrailingBarButtons: [CPBarButton]?
     var returnedMapButtons: [CPMapButton]?
+    var symbolLayer: SymbolLayer?
+    var circleLayer: CircleLayer?
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, 
+                        waypointCircleLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> CircleLayer? {
+        circleLayer
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, 
+                        waypointSymbolLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> SymbolLayer? {
+        symbolLayer
+    }
 
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         willPreview trip: CPTrip) -> CPTrip {

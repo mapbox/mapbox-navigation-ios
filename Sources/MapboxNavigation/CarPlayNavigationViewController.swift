@@ -1156,6 +1156,22 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
 
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     
+    public func navigationMapView(_ navigationMapView: NavigationMapView, 
+                                  waypointCircleLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> CircleLayer? {
+        delegate?.carPlayNavigationViewController(self,
+                                                  waypointCircleLayerWithIdentifier: identifier,
+                                                  sourceIdentifier: sourceIdentifier)
+    }
+
+    public func navigationMapView(_ navigationMapView: NavigationMapView, 
+                                  waypointSymbolLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.carPlayNavigationViewController(self,
+                                                  waypointSymbolLayerWithIdentifier: identifier,
+                                                  sourceIdentifier: sourceIdentifier)
+    }
+
     public func navigationMapView(_ navigationMapView: NavigationMapView,
                                   didAdd finalDestinationAnnotation: PointAnnotation,
                                   pointAnnotationManager: PointAnnotationManager) {

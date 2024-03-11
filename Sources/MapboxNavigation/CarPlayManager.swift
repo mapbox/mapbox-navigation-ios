@@ -1144,6 +1144,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
 // MARK: CarPlayNavigationViewControllerDelegate Methods
 
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                waypointCircleLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> MapboxMaps.CircleLayer? {
+        delegate?.carPlayManager(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                waypointSymbolLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.carPlayManager(self, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
     
     public func carPlayNavigationViewControllerWillDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                                            byCanceling canceled: Bool) {
