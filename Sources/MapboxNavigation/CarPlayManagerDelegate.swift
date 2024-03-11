@@ -293,6 +293,32 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging, CarPlay
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager)
 
+    /**
+     Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `SymbolLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        waypointSymbolLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> SymbolLayer?
+
+    /**
+     Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `CircleLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `CircleLayer` that the map applies to all waypoints.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        waypointCircleLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> CircleLayer?
+
     // MARK: Transitioning Between Templates
 
     /**
@@ -690,6 +716,26 @@ public extension CarPlayManagerDelegate {
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        waypointSymbolLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> SymbolLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        waypointCircleLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> CircleLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
     }
 
     /**

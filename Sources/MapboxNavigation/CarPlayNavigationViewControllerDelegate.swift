@@ -58,7 +58,33 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                          routeLineLayerWithIdentifier identifier: String,
                                          sourceIdentifier: String) -> LineLayer?
-    
+
+    /**
+     Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter identifier: The `SymbolLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         waypointSymbolLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> SymbolLayer?
+
+    /**
+     Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter identifier: The `CircleLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `CircleLayer` that the map applies to all waypoints.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         waypointCircleLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> CircleLayer?
+
     /**
      Asks the receiver to return a `LineLayer` for the casing layer that surrounds route line,
      given a layer identifier and a source identifier.
@@ -133,7 +159,27 @@ public extension CarPlayNavigationViewControllerDelegate {
                                          pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
     }
-    
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         waypointSymbolLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> SymbolLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         waypointCircleLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> CircleLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
