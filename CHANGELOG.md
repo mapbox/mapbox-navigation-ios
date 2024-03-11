@@ -98,7 +98,7 @@
 
 * Fixed an issue where starting navigation while connected to CarPlay but not having window active resulted in CarPlay view to be stuck at preview screen. ([#4477](https://github.com/mapbox/mapbox-navigation-ios/pull/4477))
 * Fixed an issue where maneuver arrow was not changing color following day/night style automatic toggling. ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4482))
-* Add ability to configure waypoints via `CarPlayManagerDelegate` object ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
+* Added the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
 
 ### Routing
 * Fixed an issue where `NavigationSettings.tileStoreConfiguration.navigatorLocation.tileStoreURL` was used as a base url for route refresh requests instead of `NavigationSettings.directions.credentials.host`. ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
