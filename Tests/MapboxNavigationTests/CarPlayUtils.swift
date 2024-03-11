@@ -4,7 +4,7 @@ import CarPlay
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 @testable import MapboxDirections
-@testable import MapboxMaps
+import MapboxMaps
 import CarPlayTestHelper
 import TestHelper
 
