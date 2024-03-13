@@ -1,21 +1,21 @@
 PODS:
-  - MapboxCommon (23.9.0)
-  - MapboxCoreMaps (10.16.5):
+  - MapboxCommon (23.9.1)
+  - MapboxCoreMaps (10.16.6):
     - MapboxCommon (~> 23.9)
-  - MapboxCoreNavigation (2.18.0-rc.2):
+  - MapboxCoreNavigation (2.18.0-rc.3):
     - MapboxDirections (~> 2.12.0)
     - MapboxNavigationNative (~> 202.0.0)
   - MapboxDirections (2.12.0):
     - Polyline (~> 5.0)
     - Turf (~> 2.7.0)
-  - MapboxMaps (10.16.5):
-    - MapboxCommon (= 23.9.0)
-    - MapboxCoreMaps (= 10.16.5)
+  - MapboxMaps (10.16.6):
+    - MapboxCommon (= 23.9.1)
+    - MapboxCoreMaps (= 10.16.6)
     - MapboxMobileEvents (= 1.0.10)
     - Turf (= 2.7.0)
   - MapboxMobileEvents (1.0.10)
-  - MapboxNavigation (2.18.0-rc.2):
-    - MapboxCoreNavigation (= 2.18.0-rc.2)
+  - MapboxNavigation (2.18.0-rc.3):
+    - MapboxCoreNavigation (= 2.18.0-rc.3)
     - MapboxMaps (~> 10.16.5)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
@@ -50,13 +50,13 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: e89c490cccd7ea9efcdc0e74b4ce1dbd9b4a875a
-  MapboxCoreMaps: 920f194f4f8b37f5731e0bdb82296d96ac4276f5
-  MapboxCoreNavigation: bc5498a56c9e5c18ce9581ecc02ae47c1059e75e
+  MapboxCommon: 20466d839cc43381c44df09d19f7f794b55b9a93
+  MapboxCoreMaps: c21f433decbb295874f0c2464e492166db813b56
+  MapboxCoreNavigation: dddd3789a05e8a34aa430003b2740360c44c4e35
   MapboxDirections: 4676f626df320732dcf74612223e568d39588320
-  MapboxMaps: e8d94fb4782295df68172ce7ed567da8228c629e
+  MapboxMaps: c3b36646b9038706bbceb5de203bcdd0f411e9d0
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MapboxNavigation: d0cf913d77373f14bdc414953f8ac38e7a284f85
+  MapboxNavigation: cce9c9e1d6da892f3c37103333edc78706e2f9da
   MapboxNavigationNative: 65bc7bdab133ee5c36a13c0d2b10d3c53e111073
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
@@ -65,4 +65,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bde8103af0e9b326531ee57cf1fa935cbd5f2e18
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.11.3
