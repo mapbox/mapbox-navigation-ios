@@ -24,7 +24,7 @@ public final class TestNavigationStatusProvider {
         let road = MapboxNavigationNative.RoadName(text: "name", language: "lang", imageBaseUrl: "base_image_url", shield: shield)
         let roadNames = roads ?? [road]
         let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42)
-        let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false)
+        let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false, totalCandidatesCount: 1)
         return .init(routeState: routeState,
                      locatedAlternativeRouteId: nil,
                      primaryRouteId: nil,
@@ -54,6 +54,7 @@ public final class TestNavigationStatusProvider {
                      nextWaypointIndex: 0,
                      layer: nil,
                      isSyntheticLocation: false,
-                     correctedLocationData: nil)
+                     correctedLocationData: nil, 
+                     mapMatchedSystemTime: Date())
     }
 }

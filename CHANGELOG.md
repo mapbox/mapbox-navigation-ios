@@ -4,8 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.16.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.4). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v182._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/182.0.0). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxNavigation now requires [MapboxMaps v10.16.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.5). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
+* MapboxCoreNavigation now requires [MapboxDirections v2.12.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.12.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v202._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/202.0.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
 * MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
@@ -24,6 +25,10 @@
 * `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
 * `TopBannerViewController.delegate` and `TopBannerViewController.instructionsBannerView` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595)) 
 * `BottomBannerViewController.dateFormatter`, `BottomBannerViewController.dateComponentsFormatter`, `BottomBannerViewController.distanceFormatter` and `InstructionsBannerView.distanceFormatter` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595))
+
+### CarPlay
+
+* Added the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4606](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
 
 ### Other changes
 
@@ -98,7 +103,6 @@
 
 * Fixed an issue where starting navigation while connected to CarPlay but not having window active resulted in CarPlay view to be stuck at preview screen. ([#4477](https://github.com/mapbox/mapbox-navigation-ios/pull/4477))
 * Fixed an issue where maneuver arrow was not changing color following day/night style automatic toggling. ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4482))
-* Added the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4482](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
 
 ### Routing
 * Fixed an issue where `NavigationSettings.tileStoreConfiguration.navigatorLocation.tileStoreURL` was used as a base url for route refresh requests instead of `NavigationSettings.directions.credentials.host`. ([#4483](https://github.com/mapbox/mapbox-navigation-ios/pull/4483))
