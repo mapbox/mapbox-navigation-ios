@@ -10,6 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    var carPlayRouteVoiceController: RouteVoiceController? = nil
     var _carPlayManager: Any? = nil
     var carPlayManager: CarPlayManager {
         if _carPlayManager == nil {

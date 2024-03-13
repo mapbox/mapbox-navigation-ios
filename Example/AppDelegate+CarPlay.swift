@@ -101,10 +101,16 @@ extension AppDelegate: CarPlayManagerDelegate {
             return navigationService
         }
         
-        return MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
-                                       customRoutingProvider: nil,
-                                       credentials: NavigationSettings.shared.directions.credentials,
-                                       simulating: desiredSimulationMode)
+        let credentials = NavigationSettings.shared.directions.credentials
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
+                                                        customRoutingProvider: nil,
+                                                        credentials: credentials,
+                                                        simulating: desiredSimulationMode)
+        self.carPlayRouteVoiceController = RouteVoiceController(navigationService: navigationService,
+                                                                accessToken: credentials.accessToken,
+                                                                host: credentials.host.absoluteString)
+        
+        return navigationService
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
@@ -132,6 +138,7 @@ extension AppDelegate: CarPlayManagerDelegate {
                                         byCanceling canceled: Bool) {
         // Dismiss NavigationViewController if it's present in the navigation stack
         currentAppRootViewController?.dismissActiveNavigationViewController()
+        self.carPlayRouteVoiceController = nil
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {

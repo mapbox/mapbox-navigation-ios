@@ -655,7 +655,21 @@ class ViewController: UIViewController {
     }
     
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
-        let navigationOptions = NavigationOptions(navigationService: navigationService, predictiveCacheOptions: PredictiveCacheOptions())
+        let credentials = navigationService.credentials
+        let navigationOptions = NavigationOptions(
+            navigationService: navigationService,
+            voiceController: RouteVoiceController(
+                navigationService: navigationService,
+                speechSynthesizer: MultiplexedSpeechSynthesizer(
+                    [],
+                    accessToken: credentials.accessToken,
+                    host: credentials.host.absoluteString
+                ),
+                accessToken: credentials.accessToken,
+                host: credentials.host.absoluteString
+            ),
+            predictiveCacheOptions: PredictiveCacheOptions()
+        )
         
         let navigationViewController = NavigationViewController(for: navigationService.indexedRouteResponse,
                                                                 navigationOptions: navigationOptions)
