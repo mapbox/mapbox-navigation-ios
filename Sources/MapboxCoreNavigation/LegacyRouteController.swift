@@ -151,15 +151,16 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         updateRoute(with: indexedRouteResponse,
                     routeOptions: routeOptions,
                     isProactive: false,
-                    isAlternative: false,
-                    completion: completion)
+                    isAlternative: false) { result in
+            completion?(result.isSuccess)
+        }
     }
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      isAlternative: Bool,
-                     completion: ((Bool) -> Void)?) {
+                     completion: ((Result<Void, Error>) -> Void)?) {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
@@ -167,7 +168,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         routeProgress = RouteProgress(route: route, options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
         announce(reroute: route, at: location, proactive: isProactive)
-        completion?(true)
+        completion?(.success(()))
     }
 
     

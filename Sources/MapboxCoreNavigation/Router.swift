@@ -318,7 +318,7 @@ protocol InternalRouter: AnyObject {
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      isAlternative: Bool,
-                     completion: ((Bool) -> Void)?)
+                     completion: ((Result<Void, Error>) -> Void)?)
 }
 
 extension InternalRouter where Self: Router {

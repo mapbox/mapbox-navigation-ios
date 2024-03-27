@@ -37,6 +37,7 @@
 * Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 * Fixed the possible situation when the upcoming route leg is rendered above the active route leg. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 * Fixed a main thread hang on NavigationViewController creation. ([#4617](https://github.com/mapbox/mapbox-navigation-ios/pull/4617))
+* Fixed error reporting in `RouteController/reroute(from:along:)`. ([#4618](https://github.com/mapbox/mapbox-navigation-ios/pull/4618))
 
 ## v2.17.0
 
