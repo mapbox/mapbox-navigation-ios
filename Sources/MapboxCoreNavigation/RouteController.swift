@@ -867,8 +867,8 @@ extension RouteController: Router {
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
                 guard case let .route(routeOptions) = response.options else {
-                    announceReroutingError(with: ReroutingError.routeError)
-                    self.isRerouting = false; return
+                    self.isRerouting = false
+                    return announceReroutingError(with: ReroutingError.routeError)
                 }
                 self.updateRoute(with: indexedResponse,
                                  routeOptions: routeOptions,
