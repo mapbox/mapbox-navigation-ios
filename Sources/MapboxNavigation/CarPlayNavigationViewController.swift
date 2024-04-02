@@ -288,13 +288,15 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                 currentUserInterfaceStyle = .dark
             }
         }
-        
+
+        let backgroundColor = delegate?.carPlayNavigationViewController(self, guidanceBackgroundColor: currentUserInterfaceStyle)
+
         switch currentUserInterfaceStyle {
         case .dark:
-            mapTemplate.guidanceBackgroundColor = .black
+            mapTemplate.guidanceBackgroundColor = backgroundColor ?? .black
             mapTemplate.tripEstimateStyle = .dark
         default:
-            mapTemplate.guidanceBackgroundColor = .white
+            mapTemplate.guidanceBackgroundColor = backgroundColor ?? .white
             mapTemplate.tripEstimateStyle = .light
         }
     }
@@ -916,14 +918,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             text += "\n\(secondaryText)"
         }
         primaryManeuver.instructionVariants = [text]
-        
-        // Add maneuver arrow
-        if #available(iOS 13.0, *) {
-            primaryManeuver.symbolImage = visualInstruction.primaryInstruction.maneuverImage(side: visualInstruction.drivingSide,
-                                                                                             type: styleManager?.currentStyleType)
-        } else {
-            primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
-        }
+
+        primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
         
         let junctionImage = guidanceViewManeuverRepresentation(for: visualInstruction,
                                                                navigationService: navigationService)
