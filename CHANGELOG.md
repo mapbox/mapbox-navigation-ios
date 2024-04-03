@@ -28,8 +28,8 @@
 
 ### CarPlay
 
-* Add the ability to configure `CPMapTemplate.guidanceBackgroundColor` via delegate method ([#4620](https://github.com/mapbox/mapbox-navigation-ios/pull/4620))
-* Add the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4606](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
+* Added the ability to configure `CPMapTemplate.guidanceBackgroundColor` via delegate method ([#4620](https://github.com/mapbox/mapbox-navigation-ios/pull/4620))
+* Added the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4606](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
 
 ### Other changes
 
