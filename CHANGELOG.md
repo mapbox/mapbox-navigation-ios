@@ -4,6 +4,7 @@
 
 ### Packaging
 
+* Add ability to configure `CPMapTemplate.guidanceBackgroundColor` via delegate method https://github.com/mapbox/mapbox-navigation-ios/pull/4620#pullrequestreview-1974123920
 * MapboxNavigation now requires [MapboxMaps v10.16.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.5). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
 * MapboxCoreNavigation now requires [MapboxDirections v2.12.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.12.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v202._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/202.0.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
