@@ -289,7 +289,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             }
         }
 
-        let backgroundColor = delegate?.carPlayNavigationViewController(self, guidanceBackgroundColor: currentUserInterfaceStyle)
+        let backgroundColor = delegate?.carPlayNavigationViewController(self, guidanceBackgroundColorFor: currentUserInterfaceStyle)
 
         switch currentUserInterfaceStyle {
         case .dark:
