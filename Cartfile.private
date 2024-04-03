@@ -1,2 +1,0 @@
-github "mattgallagher/CwlPreconditionTesting.git" ~> 2.1.0
-github "pointfreeco/swift-snapshot-testing" == 1.9.0

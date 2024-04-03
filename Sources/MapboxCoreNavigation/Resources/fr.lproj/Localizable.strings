@@ -1,3 +1,0 @@
-/* Inform developer an update is available */
-"UPDATE_AVAILABLE" = "La version %@ du SDK iOS Mapbox est maintenant disponible";
-
