@@ -1,0 +1,64 @@
+version: 2.1
+
+jobs:
+  build-job:
+    parameters:
+      xcode:
+        type: string
+      ios:
+        type: string
+      mac_runner:
+        type: string
+    macos:
+      xcode: << parameters.xcode >>
+    resource_class: << parameters.mac_runner >>
+    steps:
+      - checkout
+      - run:
+          name: Prepare .mapbox file
+          command: |
+            echo "pk.foo.bar" > ~/.mapbox
+      - run:
+          name: Prepare .netrc file
+          command: |
+            echo "machine api.mapbox.com" >> ~/.netrc
+            echo "login mapbox" >> ~/.netrc
+            echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+            chmod 600 ~/.netrc
+      - run:
+          name: Install iOS runtime if needed
+          command: |
+            xcrun simctl list runtimes
+            if ! xcrun simctl list runtimes | grep -q "<< parameters.ios >>"; then
+              brew install aria2 xcodesorg/made/xcodes
+              sudo xcodes runtimes install "iOS << parameters.ios >>"
+            else
+              echo "Runtime << parameters.ios >> is already installed, skipping..."
+            fi
+      - run:
+          name: Build Examples
+          command: |
+            xcodebuild -project Examples/Examples.xcodeproj -scheme CoreSDKExample \
+                -sdk iphonesimulator -configuration Release \
+                -destination 'platform=iOS Simulator,name=iPhone 11,OS=<< parameters.ios >>' \
+                clean build \
+                CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+      
+workflows:
+  workflow:
+    jobs:
+      - build-job:
+          matrix: 
+            parameters:
+              xcode: ["15.0.0", "15.3.0"]
+              ios: ["15.0", "17.2"]
+              mac_runner: ["macos.m1.medium.gen1"]
+          context:
+            - 'SDK Registry Token'
+      - build-job:
+          name: "build-job-17.0-macos.x86.medium.gen2-15.1.0"
+          xcode: "15.1.0"
+          ios: "17.0"
+          mac_runner: "macos.x86.medium.gen2"
+          context:
+              - 'SDK Registry Token'
