@@ -1245,7 +1245,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
 
     public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
-                                                guidanceBackgroundColor style: UIUserInterfaceStyle) -> UIColor? {
+                                                guidanceBackgroundColorFor style: UIUserInterfaceStyle) -> UIColor? {
         delegate?.carPlayNavigationViewController(self, guidanceBackgroundColor: style)
     }
 
