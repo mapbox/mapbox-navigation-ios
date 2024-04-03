@@ -4,5 +4,5 @@ Func CarPlayManagerDelegate.carPlayManager(_:waypointCircleLayerWithIdentifier:s
 Func CarPlayManagerDelegate.carPlayManager(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
 Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:waypointCircleLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
 Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
-Func CarPlayManagerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColor:) has been added as a protocol requirement
-Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColor:) has been added as a protocol requirement
+Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColorFor:) has been added as a protocol requirement
+Func CarPlayManagerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColorFor:) has been added as a protocol requirement
