@@ -1243,7 +1243,12 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 // MARK: CarPlayMapViewControllerDelegate Methods
 
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
-    
+
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                guidanceBackgroundColorFor style: UIUserInterfaceStyle) -> UIColor? {
+        delegate?.carPlayNavigationViewController(self, guidanceBackgroundColorFor: style)
+    }
+
     public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager) {
