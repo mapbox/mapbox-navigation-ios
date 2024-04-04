@@ -850,14 +850,20 @@ extension RouteController: Router {
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
-        guard !hasFinishedRouting else { return }
+        guard !hasFinishedRouting else { 
+            Log.info("Previous reroute is not finished - hasFinishedRouting \(hasFinishedRouting)", category: .navigation)
+            return
+        }
         guard customRoutingProvider != nil else {
             rerouteController.forceReroute()
             return
         }
         
         // Avoid interrupting an ongoing reroute
-        if isRerouting { return }
+        if isRerouting { 
+            Log.info("Previous reroute is not finished - isRerouting \(isRerouting)", category: .navigation)
+            return
+        }
         isRerouting = true
 
         announceImpendingReroute(at: location)
