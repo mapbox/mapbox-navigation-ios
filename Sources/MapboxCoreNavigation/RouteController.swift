@@ -288,9 +288,11 @@ open class RouteController: NSObject {
                                  completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
         guard let newMainRoute = indexedRouteResponse.currentRoute,
               let routesData = indexedRouteResponse.routesData(routeParserType: routeParserType) else {
+            Log.error("Failed to parse routes data", category: .navigation)
             completion?(.failure(RouteControllerError.failedToSerializeRoute))
             return
         }
+        Log.info("Did parse routes data", category: .navigation)
         sharedNavigator.setRoutes(routesData,
                                   uuid: sessionUUID,
                                   legIndex: UInt32(legIndex),
@@ -867,6 +869,7 @@ extension RouteController: Router {
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
                 guard case let .route(routeOptions) = response.options else {
+                    Log.error("Passed map matching options for reroute \(response.options)", category: .navigation)
                     self.isRerouting = false
                     self.announceReroutingError(with: ReroutingError.routeError)
                     return

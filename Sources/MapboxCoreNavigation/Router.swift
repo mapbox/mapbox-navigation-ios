@@ -62,10 +62,19 @@ public struct IndexedRouteResponse {
         
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(routeResponse) else {
-                  return nil
+
+        var routeData: Data?
+        do {
+            routeData = try encoder.encode(routeResponse)
+        } catch {
+            Log.error("Failed to encode route response: \(routeResponse)", category: .navigation)
         }
-        
+
+        guard let routeData = routeData else {
+            Log.error("Nil route data after parsing", category: .navigation)
+            return nil
+        }
+
         let routeRequest = Directions(credentials: routeResponse.credentials)
             .url(forCalculating: routeOptions).absoluteString
         
@@ -73,10 +82,17 @@ public struct IndexedRouteResponse {
                                                                    request: routeRequest,
                                                                    routeOrigin: responseOrigin)
         if parsedRoutes.isValue(),
-           var routes = parsedRoutes.value as? [RouteInterface],
-           routes.indices.contains(routeIndex) {
-            return routeParserType.createRoutesData(forPrimaryRoute: routes.remove(at: routeIndex),
-                                                    alternativeRoutes: routes)
+           var routes = parsedRoutes.value as? [RouteInterface] {
+            if routes.indices.contains(routeIndex) {
+                Log.info("Did parse directions response", category: .navigation)
+                return routeParserType.createRoutesData(forPrimaryRoute: routes.remove(at: routeIndex),
+                                                        alternativeRoutes: routes)
+            } else {
+                Log.error("Failed to start routes data parsing: \(routeIndex) index out of \(routes.count) routes", category: .navigation)
+            }
+        }
+        if parsedRoutes.isError() {
+            Log.error("Failed to parse directions response: \(parsedRoutes.error as? String ?? "-")", category: .navigation)
         }
         return nil
     }
