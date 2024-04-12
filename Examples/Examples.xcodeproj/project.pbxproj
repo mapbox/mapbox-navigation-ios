@@ -10,15 +10,46 @@
 		2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
 		2C6A3C7C2BA466AA0039BBC9 /* NavigationControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */; };
 		2C8586BE2BB4902500A6E5C5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */; };
+		2CA319E92BC986EA0071176E /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
+		2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
+		2CA31A112BC9878A0071176E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F82BC9878A0071176E /* Constants.swift */; };
+		2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */; };
+		2CA31A132BC9878A0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA319FA2BC9878A0071176E /* Assets.xcassets */; };
+		2CA31A142BC9878A0071176E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA319FB2BC9878A0071176E /* LaunchScreen.storyboard */; };
+		2CA31A152BC9878A0071176E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA319FD2BC9878A0071176E /* Main.storyboard */; };
+		2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */; };
+		2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A012BC9878A0071176E /* History-Recording.swift */; };
+		2CA31A182BC9878A0071176E /* Advanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A022BC9878A0071176E /* Advanced.swift */; };
+		2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */; };
+		2CA31A1A2BC9878A0071176E /* Offline-Regions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A042BC9878A0071176E /* Offline-Regions.swift */; };
+		2CA31A1B2BC9878A0071176E /* Embedded-Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A052BC9878A0071176E /* Embedded-Navigation.swift */; };
+		2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A062BC9878A0071176E /* Basic.swift */; };
+		2CA31A1D2BC9878A0071176E /* EmbeddedExamples.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */; };
+		2CA31A1E2BC9878A0071176E /* Beta-Query-Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */; };
+		2CA31A1F2BC9878A0071176E /* CustomBottomBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CA31A0A2BC9878A0071176E /* CustomBottomBannerView.xib */; };
+		2CA31A202BC9878A0071176E /* CustomBarsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0B2BC9878A0071176E /* CustomBarsViewController.swift */; };
+		2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0C2BC9878A0071176E /* CustomBottomBannerView.swift */; };
+		2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0D2BC9878A0071176E /* ExampleTableViewController.swift */; };
+		2CA31A232BC9878A0071176E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0E2BC9878A0071176E /* AppDelegate.swift */; };
+		2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A102BC9878A0071176E /* SceneDelegate.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469142BA31C1F0075A32B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469132BA31C1F0075A32B /* ContentView.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		2CE469272BA31FE30075A32B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469262BA31FE30075A32B /* MapView.swift */; };
 		2CE469292BA31FF00075A32B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469282BA31FF00075A32B /* MapViewController.swift */; };
-		DF9297512BBD4B680047329A /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = DF9297502BBD4B680047329A /* MapboxNavigationCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2CA319F02BC986EA0071176E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DF4660812BBC75C400A0B2E4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -35,6 +66,28 @@
 		2C6A3C792BA3AE780039BBC9 /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControlsView.swift; sourceTree = "<group>"; };
 		2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2CA319F52BC986EA0071176E /* AdditionalExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdditionalExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CA319F82BC9878A0071176E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleContainerViewController.swift; sourceTree = "<group>"; };
+		2CA319FA2BC9878A0071176E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2CA319FC2BC9878A0071176E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2CA319FE2BC9878A0071176E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Styled-UI-Elements.swift"; sourceTree = "<group>"; };
+		2CA31A012BC9878A0071176E /* History-Recording.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Recording.swift"; sourceTree = "<group>"; };
+		2CA31A022BC9878A0071176E /* Advanced.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Advanced.swift; sourceTree = "<group>"; };
+		2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Voice-Controller.swift"; sourceTree = "<group>"; };
+		2CA31A042BC9878A0071176E /* Offline-Regions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Offline-Regions.swift"; sourceTree = "<group>"; };
+		2CA31A052BC9878A0071176E /* Embedded-Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Embedded-Navigation.swift"; sourceTree = "<group>"; };
+		2CA31A062BC9878A0071176E /* Basic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Basic.swift; sourceTree = "<group>"; };
+		2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EmbeddedExamples.storyboard; sourceTree = "<group>"; };
+		2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Beta-Query-Parameters.swift"; sourceTree = "<group>"; };
+		2CA31A0A2BC9878A0071176E /* CustomBottomBannerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomBottomBannerView.xib; sourceTree = "<group>"; };
+		2CA31A0B2BC9878A0071176E /* CustomBarsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomBarsViewController.swift; sourceTree = "<group>"; };
+		2CA31A0C2BC9878A0071176E /* CustomBottomBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomBottomBannerView.swift; sourceTree = "<group>"; };
+		2CA31A0D2BC9878A0071176E /* ExampleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableViewController.swift; sourceTree = "<group>"; };
+		2CA31A0E2BC9878A0071176E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2CA31A0F2BC9878A0071176E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CA31A102BC9878A0071176E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSDKExampleApp.swift; sourceTree = "<group>"; };
 		2CE469132BA31C1F0075A32B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -46,11 +99,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2CA319EC2BC986EA0071176E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CE4690B2BA31C1F0075A32B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF9297512BBD4B680047329A /* MapboxNavigationCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,9 +144,54 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		2CA319F72BC9878A0071176E /* AdditionalExamples */ = {
+			isa = PBXGroup;
+			children = (
+				2CA319F82BC9878A0071176E /* Constants.swift */,
+				2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */,
+				2CA319FA2BC9878A0071176E /* Assets.xcassets */,
+				2CA319FB2BC9878A0071176E /* LaunchScreen.storyboard */,
+				2CA319FD2BC9878A0071176E /* Main.storyboard */,
+				2CA319FF2BC9878A0071176E /* Examples */,
+				2CA31A0D2BC9878A0071176E /* ExampleTableViewController.swift */,
+				2CA31A0E2BC9878A0071176E /* AppDelegate.swift */,
+				2CA31A0F2BC9878A0071176E /* Info.plist */,
+				2CA31A102BC9878A0071176E /* SceneDelegate.swift */,
+			);
+			path = AdditionalExamples;
+			sourceTree = "<group>";
+		};
+		2CA319FF2BC9878A0071176E /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
+				2CA31A012BC9878A0071176E /* History-Recording.swift */,
+				2CA31A022BC9878A0071176E /* Advanced.swift */,
+				2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */,
+				2CA31A042BC9878A0071176E /* Offline-Regions.swift */,
+				2CA31A052BC9878A0071176E /* Embedded-Navigation.swift */,
+				2CA31A062BC9878A0071176E /* Basic.swift */,
+				2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */,
+				2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */,
+				2CA31A092BC9878A0071176E /* CustomBars */,
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
+		2CA31A092BC9878A0071176E /* CustomBars */ = {
+			isa = PBXGroup;
+			children = (
+				2CA31A0A2BC9878A0071176E /* CustomBottomBannerView.xib */,
+				2CA31A0B2BC9878A0071176E /* CustomBarsViewController.swift */,
+				2CA31A0C2BC9878A0071176E /* CustomBottomBannerView.swift */,
+			);
+			path = CustomBars;
+			sourceTree = "<group>";
+		};
 		2CE469052BA31C1F0075A32B = {
 			isa = PBXGroup;
 			children = (
+				2CA319F72BC9878A0071176E /* AdditionalExamples */,
 				2CE469102BA31C1F0075A32B /* CoreSDKExample */,
 				DF92974F2BBD4A910047329A /* mapbox-navigation-ios */,
 				2CE4690F2BA31C1F0075A32B /* Products */,
@@ -99,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */,
+				2CA319F52BC986EA0071176E /* AdditionalExamples.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +222,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2CA319E22BC986EA0071176E /* AdditionalExamples */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CA319F22BC986EA0071176E /* Build configuration list for PBXNativeTarget "AdditionalExamples" */;
+			buildPhases = (
+				2CA319E42BC986EA0071176E /* Sources */,
+				2CA319EC2BC986EA0071176E /* Frameworks */,
+				2CA319EE2BC986EA0071176E /* Resources */,
+				2CA319F02BC986EA0071176E /* Embed Frameworks */,
+				2CA319F12BC986EA0071176E /* Apply Mapbox Tokens */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdditionalExamples;
+			packageProductDependencies = (
+			);
+			productName = CoreSDKExample;
+			productReference = 2CA319F52BC986EA0071176E /* AdditionalExamples.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2CE4690D2BA31C1F0075A32B /* CoreSDKExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CE4691C2BA31C200075A32B /* Build configuration list for PBXNativeTarget "CoreSDKExample" */;
@@ -133,7 +259,6 @@
 			);
 			name = CoreSDKExample;
 			packageProductDependencies = (
-				DF9297502BBD4B680047329A /* MapboxNavigationCore */,
 			);
 			productName = CoreSDKExample;
 			productReference = 2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */;
@@ -170,11 +295,25 @@
 			projectRoot = "";
 			targets = (
 				2CE4690D2BA31C1F0075A32B /* CoreSDKExample */,
+				2CA319E22BC986EA0071176E /* AdditionalExamples */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2CA319EE2BC986EA0071176E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CA31A142BC9878A0071176E /* LaunchScreen.storyboard in Resources */,
+				2CA31A132BC9878A0071176E /* Assets.xcassets in Resources */,
+				2CA31A1F2BC9878A0071176E /* CustomBottomBannerView.xib in Resources */,
+				2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */,
+				2CA31A1D2BC9878A0071176E /* EmbeddedExamples.storyboard in Resources */,
+				2CA31A152BC9878A0071176E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CE4690C2BA31C1F0075A32B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -186,6 +325,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2CA319F12BC986EA0071176E /* Apply Mapbox Tokens */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Apply Mapbox Tokens";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
+			showEnvVarsInLog = 0;
+		};
 		2CE4691F2BA31C8F0075A32B /* Apply Mapbox Tokens */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -204,12 +364,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "token_file=~/.mapbox\ntoken=\"$(cat $token_file 2>/dev/null)\"\nif [ \"$token\" ]; then\n  plutil -replace MBXAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\n  echo 'warning: Missing Mapbox access token'\n  exit -1\nfi\n";
+			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2CA319E42BC986EA0071176E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */,
+				2CA31A1B2BC9878A0071176E /* Embedded-Navigation.swift in Sources */,
+				2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */,
+				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
+				2CA319E92BC986EA0071176E /* Navigation.swift in Sources */,
+				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
+				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
+				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
+				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
+				2CA31A1E2BC9878A0071176E /* Beta-Query-Parameters.swift in Sources */,
+				2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */,
+				2CA31A112BC9878A0071176E /* Constants.swift in Sources */,
+				2CA31A182BC9878A0071176E /* Advanced.swift in Sources */,
+				2CA31A232BC9878A0071176E /* AppDelegate.swift in Sources */,
+				2CA31A1A2BC9878A0071176E /* Offline-Regions.swift in Sources */,
+				2CA31A202BC9878A0071176E /* CustomBarsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CE4690A2BA31C1F0075A32B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -226,7 +409,92 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		2CA319FB2BC9878A0071176E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2CA319FC2BC9878A0071176E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2CA319FD2BC9878A0071176E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2CA319FE2BC9878A0071176E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		2CA319F32BC986EA0071176E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AdditionalExamples/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.additional-examples";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2CA319F42BC986EA0071176E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AdditionalExamples/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.additional-examples";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		2CE4691A2BA31C200075A32B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -372,7 +640,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.v3-example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.core-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -404,7 +672,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.v3-example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.core-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -415,6 +683,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2CA319F22BC986EA0071176E /* Build configuration list for PBXNativeTarget "AdditionalExamples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CA319F32BC986EA0071176E /* Debug */,
+				2CA319F42BC986EA0071176E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2CE469092BA31C1F0075A32B /* Build configuration list for PBXProject "Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -434,13 +711,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		DF9297502BBD4B680047329A /* MapboxNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationCore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2CE469062BA31C1F0075A32B /* Project object */;
 }

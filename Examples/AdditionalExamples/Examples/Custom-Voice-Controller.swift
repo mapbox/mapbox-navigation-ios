@@ -97,6 +97,8 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
                 players.forEach {
                     $0?.volume = value
                 }
+            @unknown default:
+                print("unknown volume value")
             }
         }
     }
