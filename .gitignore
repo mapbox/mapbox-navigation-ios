@@ -26,3 +26,4 @@ Examples/Swift/Navigation_Example.mobileprovision
 vendor/bundle/ruby/
 .vscode
 .swiftpm
+XCFrameworks/
