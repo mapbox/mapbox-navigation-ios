@@ -28,8 +28,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", from: "24.3.1"),
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "305.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.3.1"),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: "305.0.0"),
     ],
     targets: [
         .target(
