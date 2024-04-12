@@ -3,16 +3,16 @@
 
 import PackageDescription
 
-let version = "3.0.0-rc.1"
+let version = "3.0.0-rc.99"
 
 let binaries = [
-    "MapboxCoreMaps": "e03cbb9f9c60dcaaa6f58b83d57d7796e95d5cd9ae4e47cc194b7c917c930e31",
-    "MapboxDirections": "974559a90d6aba462bb0527001456dc16ffd3ae506791cfd3d61fc986fe02d0e",
-    "MapboxMaps": "97485654d30264683df34e9cf0be5e4d09262759b3b1550ea21910172413e8fe",
-    "Turf": "2f5fffc7075f8582aca328f13b49e14cfb13d3ed1ee0789e53d657d827860b6f",
-    "MapboxNavigationCore": "17f52c9aa1d941638489a3f2d55e8184ce17012c8eee0156e86cdcfbdb4bf189",
-    "_MapboxNavigationUXPrivate": "1ee894eee848474826d5ab21761067d966e7343e0f436b985d21489fe6b2c3e2",
-    "MapboxNavigationUIKit": "1111111",
+    "MapboxCoreMaps": "2f514f7127673d21e6074b949f5ca224d3c847a82513ed247a4bb3d4e0c0c271",
+    "MapboxDirections": "fc246f668f167879d08f0de519d6884b1e9c01a77c641fd07fdce79fd316fe38",
+    "MapboxMaps": "3c8fee306569216b0cade7d27bb66e7138cca01eed34d738ebeb6f204e820be1",
+    "Turf": "595897f7f4117394c1b25f31c497feb539fc91b711099313c5cfc321b4bbfca8",
+    "MapboxNavigationCore": "d6b3dbdf80e2894b45a84898b4905b2ae6ec95b4cfb0812fa23f059fa3feaedb",
+    "_MapboxNavigationUXPrivate": "6dbb7a32a50464a2e4f5f0ab851ad03fbebf6c0fb8bcb9d660322529489f4806",
+    "MapboxNavigationUIKit": "06c550195001293b09e96a36fd4c42288cb97bd9f10ec1dfa9ad45eadff0b580",
 ]
 
 let package = Package(
@@ -48,22 +48,13 @@ let package = Package(
     ] + binaryTargets()
 )
 
-let usesRemoteBinaries = true
-
 func binaryTargets() -> [Target] {
     return binaries.map { binaryName, checksum in
-        if usesRemoteBinaries {
-            return Target.binaryTarget(
-                name: binaryName,
-                url: "https://api.mapbox.com/downloads/v2/navsdk-v3-ios" +
-                    "/releases/ios/packages/\(version)/\(binaryName).xcframework.zip",
-                checksum: checksum
-            )
-        } else {
-            return Target.binaryTarget(
-                name: binaryName,
-                path: "./XCFrameworks/\(binaryName).xcframework"
-            )
-        }
+        Target.binaryTarget(
+            name: binaryName,
+            url: "https://api.mapbox.com/downloads/v2/navsdk-v3-ios" +
+                "/releases/ios/packages/\(version)/\(binaryName).xcframework.zip",
+            checksum: checksum
+        )
     }
 }
