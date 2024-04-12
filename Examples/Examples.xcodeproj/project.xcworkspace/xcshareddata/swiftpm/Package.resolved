@@ -17,6 +17,15 @@
         "revision" : "07c5743dfd8283badae9020d4c47c0e7f9d605c3",
         "version" : "305.0.0"
       }
+    },
+    {
+      "identity" : "mapboxgeocoder.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/mapboxgeocoder.swift",
+      "state" : {
+        "revision" : "10c497840c9e1142194563f402ddc903310a935d",
+        "version" : "0.15.0"
+      }
     }
   ],
   "version" : 2
