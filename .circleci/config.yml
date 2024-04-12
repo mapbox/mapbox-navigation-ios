@@ -38,11 +38,15 @@ jobs:
       - run:
           name: Build Examples
           command: |
-            xcodebuild -project Examples/Examples.xcodeproj -scheme CoreSDKExample \
-                -sdk iphonesimulator -configuration Release \
-                -destination 'platform=iOS Simulator,name=iPhone 11,OS=<< parameters.ios >>' \
-                clean build \
-                CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+            samples=("UIKitExample" "CoreSDKExample" "AdditionalExamples")
+
+            for sampleName in "${samples[@]}"; do
+              xcodebuild -project Examples/Examples.xcodeproj -scheme $sampleName \
+                  -sdk iphonesimulator -configuration Release \
+                  -destination 'platform=iOS Simulator,name=iPhone 11,OS=<< parameters.ios >>' \
+                  clean build \
+                  CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+            done
       
 workflows:
   workflow:
