@@ -1,4 +1,5 @@
 import UIKit
+import MapboxNavigationCore
 import MapboxNavigationUIKit
 
 class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
@@ -14,6 +15,9 @@ class PresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             return
         }
         
+        if let dataSource = fromViewController.navigationMapView.navigationCamera.viewportDataSource as? MobileViewportDataSource {
+            dataSource.options.followingCameraOptions = FollowingCameraOptions()
+        }
         // Replace default `NavigationMapView` in `NavigationViewController` with `NavigationMapView`
         // that was used in `PreviewViewController`.
         toViewController.navigationMapView = fromViewController.navigationMapView
