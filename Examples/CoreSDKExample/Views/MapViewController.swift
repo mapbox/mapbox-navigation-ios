@@ -56,7 +56,7 @@ final class MapViewController: UIViewController {
         navigationMapView.mapView.ornaments.compassView.isHidden = true
         navigationMapView.delegate = self
         // Possible configuration
-        navigationMapView.showTrafficOnRouteLine = true
+        navigationMapView.showsTrafficOnRouteLine = true
     }
 
     private func observePreviewRoute() {
