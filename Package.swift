@@ -28,15 +28,15 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", from: "24.3.1"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "305.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", from: "24.3.1"),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "305.0.0"),
     ],
     targets: [
         .target(
             name: "MapboxNavigationCoreWrapper",
             dependencies: binaries.keys.map { .byName(name: $0) } + [
-                "MapboxCommon",
-                "MapboxNavigationNative"
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
             ]
         ),
         .target(
