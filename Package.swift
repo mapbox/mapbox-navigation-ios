@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let version = "3.0.0-rc.99"
+let version = "3.0.0"
 
 let binaries = [
     "MapboxCoreMaps": "2f514f7127673d21e6074b949f5ca224d3c847a82513ed247a4bb3d4e0c0c271",
