@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
+		2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CB2BC99C050097715C /* MapboxNavigationCore */; };
+		2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CD2BC99C090097715C /* MapboxNavigationCore */; };
+		2C72A2D02BC99C090097715C /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */; };
 		2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		2CA31A112BC9878A0071176E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F82BC9878A0071176E /* Constants.swift */; };
 		2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */; };
@@ -142,6 +145,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C72A2D02BC99C090097715C /* MapboxNavigationUIKit in Frameworks */,
+				2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +331,8 @@
 			);
 			name = AdditionalExamples;
 			packageProductDependencies = (
+				2C72A2CD2BC99C090097715C /* MapboxNavigationCore */,
+				2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */,
 			);
 			productName = CoreSDKExample;
 			productReference = 2CA319F52BC986EA0071176E /* AdditionalExamples.app */;
@@ -370,6 +378,7 @@
 			);
 			name = CoreSDKExample;
 			packageProductDependencies = (
+				2C72A2CB2BC99C050097715C /* MapboxNavigationCore */,
 			);
 			productName = CoreSDKExample;
 			productReference = 2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */;
@@ -969,6 +978,18 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2C72A2CB2BC99C050097715C /* MapboxNavigationCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationCore;
+		};
+		2C72A2CD2BC99C090097715C /* MapboxNavigationCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationCore;
+		};
+		2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationUIKit;
+		};
 		2CA31A9A2BC992DB0071176E /* MapboxNavigationCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigationCore;
