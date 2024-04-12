@@ -53,14 +53,14 @@ let usesRemoteBinaries = true
 func binaryTargets() -> [Target] {
     return binaries.map { binaryName, checksum in
         if usesRemoteBinaries {
-            Target.binaryTarget(
+            return Target.binaryTarget(
                 name: binaryName,
                 url: "https://api.mapbox.com/downloads/v2/navsdk-v3-ios" +
                     "/releases/ios/packages/\(version)/\(binaryName).xcframework.zip",
                 checksum: checksum
             )
         } else {
-            Target.binaryTarget(
+            return Target.binaryTarget(
                 name: binaryName,
                 path: "./XCFrameworks/\(binaryName).xcframework"
             )
