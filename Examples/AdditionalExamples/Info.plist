@@ -4,8 +4,6 @@
 <dict>
 	<key>MBXAccessToken</key>
 	<string>YOUR_MAPBOX_ACCESS_TOKEN</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Get the user location for navigation purposes.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -30,5 +28,7 @@
 		<string>audio</string>
 		<string>location</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<false/>
 </dict>
 </plist>

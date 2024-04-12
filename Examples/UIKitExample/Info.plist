@@ -28,5 +28,7 @@
 		<string>audio</string>
 		<string>location</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<false/>
 </dict>
 </plist>
