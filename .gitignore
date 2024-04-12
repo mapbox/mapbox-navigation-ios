@@ -27,3 +27,4 @@ vendor/bundle/ruby/
 .vscode
 .swiftpm
 XCFrameworks/
+Package.resolved
