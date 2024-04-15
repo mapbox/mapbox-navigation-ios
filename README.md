@@ -17,7 +17,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * Natural-sounding turn instructions
 * Support for over two dozen languages
 
-## [Documentation](https://docs.mapbox.com/ios/navigation/v3/api-reference/)
+### [Documentation](https://docs.mapbox.com/ios/navigation/v3/api-reference/)
 
 ## Requirements
 
