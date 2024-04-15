@@ -13,7 +13,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     public weak var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
-            if isSpeaking {
+            if muted, isSpeaking {
                 interruptSpeaking()
             }
         }

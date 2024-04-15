@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.16.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.5). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
+* MapboxNavigation now requires [MapboxMaps v10.17.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.17.0). ([#4628](https://github.com/mapbox/mapbox-navigation-ios/pull/4628))
 * MapboxCoreNavigation now requires [MapboxDirections v2.12.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.12.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v202._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/202.0.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v204._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/202.0.0). ([#4628](https://github.com/mapbox/mapbox-navigation-ios/pull/4628))
 * MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
@@ -37,6 +37,8 @@
 * Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
 * Fixed the possible situation when the upcoming route leg is rendered above the active route leg. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
+* Fixed a main thread hang on NavigationViewController creation. ([#4617](https://github.com/mapbox/mapbox-navigation-ios/pull/4617))
+* Fixed error reporting in `RouteController/reroute(from:along:)`. ([#4618](https://github.com/mapbox/mapbox-navigation-ios/pull/4618))
 
 ## v2.17.0
 
