@@ -202,3 +202,4 @@ We welcome feedback and code contributions! Please see [CONTRIBUTING.md](./CONTR
 ## License
 
 The Mapbox Navigation SDK for iOS is released under the Mapbox Terms of Service. See [LICENSE.md](./LICENSE.md) for details.
+
