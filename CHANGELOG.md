@@ -4,22 +4,22 @@
 
 ### Map
 
-* Fixed double finger tap gesture zoom out position.
-* Added the support for automatically changing the map style to dark when entering tunnels.
+* Fixed an issue where the map's zoom level would not remain fixed when zooming out using the "double touch to zoom out" gesture.
+* Added automatic switch to the dark map style when entering tunnels.
 * Fixed `NavigationMapView` DocC.
-* Fixed a rare incorrect route line displaying after rerouting.
+* Fixed an issue where an incorrect route line was occasionally displayed after a rerouting.
 
 ### Banners and guidance instructions
 
-* Added support for the road shied name in the `WayNameView`.
-* Fixed double road name setting.
+* Added support for displaying road shields in the `WayNameView`.
+* Fixed a flickering road name issue when using custom road names provided through `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)`.
 
 ### Other changes
 
 * Optimized `NavigationRoutes` initialization.
-* Fixed not-applied colors from `DayStyle` and `NightStyle` to `DistanceRemainingLabel`, `FeedbackViewController`, `CarPlayCompassView`, and `ArrivalTimeLabel`.
-* Fixed a possible data race in the audio player.
-* Fixed `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` call when the user arrives at the destination waypoint for a route leg.
+* Fixed an issue where `DayStyle` and `NightStyle` colors were not being applied to `DistanceRemainingLabel`, `FeedbackViewController`, `CarPlayCompassView`, and `ArrivalTimeLabel`.
+* Fixed a potential data race issue in the audio player.
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` method that is called when the user arrives at the destination waypoint for a route leg.
 
 ## v3.0.0
 
