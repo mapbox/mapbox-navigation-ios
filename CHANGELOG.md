@@ -1,5 +1,26 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.0.1
+
+### Map
+
+* Fixed an issue where the map's zoom level would not remain fixed when zooming out using the "double touch to zoom out" gesture.
+* Added automatic switch to the dark map style when entering tunnels.
+* Fixed `NavigationMapView` DocC.
+* Fixed an issue where an incorrect route line was occasionally displayed after a rerouting.
+
+### Banners and guidance instructions
+
+* Added support for displaying road shields in the `WayNameView`.
+* Fixed a flickering road name issue when using custom road names provided through `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)`.
+
+### Other changes
+
+* Optimized `NavigationRoutes` initialization.
+* Fixed an issue where `DayStyle` and `NightStyle` colors were not being applied to `DistanceRemainingLabel`, `FeedbackViewController`, `CarPlayCompassView`, and `ArrivalTimeLabel`.
+* Fixed a potential data race issue in the audio player.
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` method that is called when the user arrives at the destination waypoint for a route leg.
+
 ## v3.0.0
 
 ### Packaging

@@ -3,20 +3,21 @@
 
 import PackageDescription
 
-let version = "3.0.0"
+let version = "3.0.1"
 
 let binaries = [
-    "MapboxCoreMaps": "2f514f7127673d21e6074b949f5ca224d3c847a82513ed247a4bb3d4e0c0c271",
-    "MapboxDirections": "fc246f668f167879d08f0de519d6884b1e9c01a77c641fd07fdce79fd316fe38",
-    "MapboxMaps": "3c8fee306569216b0cade7d27bb66e7138cca01eed34d738ebeb6f204e820be1",
-    "Turf": "595897f7f4117394c1b25f31c497feb539fc91b711099313c5cfc321b4bbfca8",
-    "MapboxNavigationCore": "d6b3dbdf80e2894b45a84898b4905b2ae6ec95b4cfb0812fa23f059fa3feaedb",
-    "_MapboxNavigationUXPrivate": "6dbb7a32a50464a2e4f5f0ab851ad03fbebf6c0fb8bcb9d660322529489f4806",
-    "MapboxNavigationUIKit": "06c550195001293b09e96a36fd4c42288cb97bd9f10ec1dfa9ad45eadff0b580",
+    "MapboxCoreMaps": "b50d9928a0c59ff9a4308dccb65bfffeb8a6e8a2fceeec7cc237cef015f4d951",
+    "MapboxDirections": "604f184672dbeae5f627eec05804743ab4e6fccabc8c46751239e441e7cadbba",
+    "MapboxMaps": "76c912983e0407ef93db1d56f3c6d065ec9d9d98812ef0e2bdd3395b974584a8",
+    "Turf": "444855c9f08ffa459835e5f37b037515ec5f0abe8a6bc698c6c899ed3679aa41",
+    "MapboxNavigationCore": "5b9f3f50f96e4c6827a48c3807e57c7a47fc3966760a4ec186b9e0f7ed72df7e",
+    "_MapboxNavigationUXPrivate": "fa6a3a88beb66dd5d37154b16835e9555ce0db90d9308818f62e7f4bddc13c23",
+    "MapboxNavigationUIKit": "1693f77fb0dcd72a4d919c4566190e8b41bab6aadfa75934eb384177687e28f4",
 ]
 
 let package = Package(
     name: "MapboxNavigation",
+    platforms: [.iOS(.v14)],
     products: [
         .library(
             name: "MapboxNavigationCore",
