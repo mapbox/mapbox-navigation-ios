@@ -17,6 +17,7 @@ let binaries = [
 
 let package = Package(
     name: "MapboxNavigation",
+    platforms: [.iOS(.v14)],
     products: [
         .library(
             name: "MapboxNavigationCore",
