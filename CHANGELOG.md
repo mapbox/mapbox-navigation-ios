@@ -6,6 +6,8 @@
 
 * Fixed double finger tap gesture zoom out position.
 * Added the support for automatically changing the map style to dark when entering tunnels.
+* Fixed `NavigationMapView` DocC.
+* Fixed a rare incorrect route line displaying after rerouting.
 
 ### Banners and guidance instructions
 
@@ -15,8 +17,6 @@
 ### Other changes
 
 * Optimized `NavigationRoutes` initialization.
-* Fixed `NavigationMapView` DocC.
-* Fixed rare incorrect route line displaying after rerouting.
 * Fixed not-applied colors from `DayStyle` and `NightStyle` to `DistanceRemainingLabel`, `FeedbackViewController`, `CarPlayCompassView`, and `ArrivalTimeLabel`.
 * Fixed a possible data race in the audio player.
 * Fixed `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` call when the user arrives at the destination waypoint for a route leg.
