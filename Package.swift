@@ -3,16 +3,16 @@
 
 import PackageDescription
 
-let version = "3.0.1"
+let version = "3.0.2"
 
 let binaries = [
-    "MapboxCoreMaps": "b50d9928a0c59ff9a4308dccb65bfffeb8a6e8a2fceeec7cc237cef015f4d951",
-    "MapboxDirections": "604f184672dbeae5f627eec05804743ab4e6fccabc8c46751239e441e7cadbba",
-    "MapboxMaps": "76c912983e0407ef93db1d56f3c6d065ec9d9d98812ef0e2bdd3395b974584a8",
-    "Turf": "444855c9f08ffa459835e5f37b037515ec5f0abe8a6bc698c6c899ed3679aa41",
-    "MapboxNavigationCore": "5b9f3f50f96e4c6827a48c3807e57c7a47fc3966760a4ec186b9e0f7ed72df7e",
-    "_MapboxNavigationUXPrivate": "fa6a3a88beb66dd5d37154b16835e9555ce0db90d9308818f62e7f4bddc13c23",
-    "MapboxNavigationUIKit": "1693f77fb0dcd72a4d919c4566190e8b41bab6aadfa75934eb384177687e28f4",
+    "MapboxCoreMaps": "a164dc57d0c3eaffe9a6fd493f5d2bef47cbf3fd9a0365679771e78df0421f37",
+    "MapboxDirections": "a2e19aa52a0aa78417f379fb60aef1772ae00da777e92c761febc6a6ea744554",
+    "MapboxMaps": "ffd302cd2d6fbadd37bff6d391a2c48fcb7aa2620a219103ce7a2a5e3c7b9fb0",
+    "Turf": "4eabc83d358f6962a80bec3a988723c5e7eda20d85333d019966c4ec12b5c066",
+    "MapboxNavigationCore": "ecfab910af2df3b430c3094501b904c54e12fb773a63f2eabaa8885fb75dec43",
+    "_MapboxNavigationUXPrivate": "9c3a30a473e28361c34d6dd8ab8c8c5f501094b2a1699a31fe898448cdebba25",
+    "MapboxNavigationUIKit": "203e840e647bb10799a6348ade7730cc2a5d59f058fc74ef8b69437e737a86a3",
 ]
 
 let package = Package(
