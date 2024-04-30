@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.0.2
+
+### Other changes
+
+* Fixed a memory leak issue in `NavigationViewController` that caused a crash upon arrival.
+* Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was called multiple times for a single arrival.
+
 ## v3.0.1
 
 ### Map
