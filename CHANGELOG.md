@@ -1,5 +1,22 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.1.0-beta.1
+
+### API deprecations:
+
+* `AlternativeRoutesDetectionConfig.refreshesAfterPassingDeviation`. This feature no longer has any effect.
+* `AlternativeRoutesDetectionConfig.refreshesWhenNoAvailableAlternatives`. This feature no longer has any effect other then 
+    setting the refresh interval. Use `AlternativeRoutesDetectionConfig.refreshIntervalSeconds` instead to configure the 
+    refresh interval directly.
+
+### Routing
+
+* Fixed the incorrect value in `RouteProgress.routeIsComplete` after the user drive past the destination further away.
+
+### Other changes
+
+* Updated the default alternative routes refresh interval to 5 minutes.
+
 ## v3.0.2
 
 ### Other changes
