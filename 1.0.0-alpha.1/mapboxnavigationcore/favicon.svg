@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg7829"
+   version="1.1"
+   inkscape:version="0.91+devel+osxmenu r12922"
+   width="32"
+   height="32"
+   sodipodi:docname="favicon.svg"
+   viewBox="0 0 32 32"
+   inkscape:export-filename="/Users/t/Desktop/favicon.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008">
+  <metadata
+     id="metadata7835">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs7833" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="850"
+     id="namedview7831"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="15.999999"
+     inkscape:cy="16.000001"
+     inkscape:window-x="-17"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg7829"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:document-units="px">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7868" />
+  </sodipodi:namedview>
+  <g
+     transform="matrix(0.17957492,0,0,0.17957492,-19.914984,-19.914984)"
+     id="g6534"
+     style="fill:#4264fb;fill-opacity:1">
+    <path
+       inkscape:connector-curvature="0"
+       d="M 200,110.9007 A 89.0993,89.0993 0 1 0 289.0993,200 89.0994,89.0994 0 0 0 200,110.9007 Z m 42.2681,110.934 c -30.5051,30.505 -84.8347,20.7321 -84.8347,20.7321 0,0 -9.7729,-54.33 20.7319,-84.8347 16.9119,-16.9118 44.9714,-16.2717 62.6729,1.43 17.7015,17.7017 18.3418,45.7607 1.4299,62.6725 z"
+       style="fill:#4264fb;fill-opacity:1"
+       id="path6536" />
+    <polygon
+       points="236.881,189.792 218.936,181.064 210.208,163.119 210.208,163.119 201.48,181.064 183.534,189.792 201.48,198.52 210.208,216.466 218.936,198.52 "
+       style="fill:#4264fb;fill-opacity:1"
+       id="polygon6538" />
+  </g>
+</svg>
