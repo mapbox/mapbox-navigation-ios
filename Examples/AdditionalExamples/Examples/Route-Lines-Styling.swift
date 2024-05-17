@@ -1,22 +1,22 @@
 /*
  This code example is part of the Mapbox Navigation SDK for iOS demo app,
- which you can build and run: https://github.com/mapbox/mapbox-navigation-ios-examples
+ which you can build and run: https://github.com/mapbox/mapbox-navigation-ios
  To learn more about each example in this app, including descriptions and links
- to documentation, see our docs: https://docs.mapbox.com/ios/navigation/examples/advanced
+ to documentation, see our docs: https://docs.mapbox.com/ios/navigation
  */
 
 import MapboxDirections
 import MapboxMaps
 import MapboxNavigationCore
 import MapboxNavigationUIKit
+import Turf
 import UIKit
 
-class AdvancedViewController: UIViewController, NavigationMapViewDelegate, NavigationViewControllerDelegate {
+class RouteLinesStylingViewController: UIViewController {
     let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
-            // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
             locationSource: simulationIsEnabled ? .simulation(
-                initialLocation: nil
+                initialLocation: .init(latitude: 37.773, longitude: -122.411)
             ) : .live
         )
     )
@@ -29,9 +29,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             }
 
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
-
             view.insertSubview(navigationMapView, at: 0)
-
             NSLayoutConstraint.activate([
                 navigationMapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 navigationMapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -69,8 +67,6 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         )
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.delegate = self
-        navigationMapView.mapView.mapboxMap.loadStyle(StyleURI.dark)
-        navigationMapView.puckType = .puck2D(.navigationDefault)
 
         view.addSubview(navigationMapView)
 
@@ -108,10 +104,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             mapboxNavigation: mapboxNavigation,
             voiceController: mapboxNavigationProvider.routeVoiceController,
             eventsManager: mapboxNavigationProvider.eventsManager(),
-            styles: [NightStyle()],
-            predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager,
-            // Replace default `NavigationMapView` instance with instance that is used in preview mode.
-            navigationMapView: navigationMapView
+            predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         let navigationViewController = NavigationViewController(
             navigationRoutes: navigationRoutes,
@@ -121,29 +114,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         navigationViewController.modalPresentationStyle = .fullScreen
 
         startButton.isHidden = true
-
-        // Hide top and bottom container views before animating their presentation.
-        navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
-        navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
-
-        // Hide `WayNameView`, `FloatingStackView` and `SpeedLimitView` to smoothly present them.
-        navigationViewController.navigationView.wayNameView.alpha = 0.0
-        navigationViewController.navigationView.floatingStackView.alpha = 0.0
-        navigationViewController.navigationView.speedLimitView.alpha = 0.0
-
-        present(navigationViewController, animated: false) {
-            // Animate top and bottom banner views presentation.
-            let duration = 1.0
-            navigationViewController.navigationView.bottomBannerContainerView.show(
-                duration: duration,
-                animations: {
-                    navigationViewController.navigationView.wayNameView.alpha = 1.0
-                    navigationViewController.navigationView.floatingStackView.alpha = 1.0
-                    navigationViewController.navigationView.speedLimitView.alpha = 1.0
-                }
-            )
-            navigationViewController.navigationView.topBannerContainerView.show(duration: duration)
-        }
+        present(navigationViewController, animated: true)
     }
 
     func requestRoute(destination: CLLocationCoordinate2D) {
@@ -153,14 +124,8 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             latitude: userLocation.coordinate.latitude,
             longitude: userLocation.coordinate.longitude
         )
-
-        let userWaypoint = Waypoint(
-            location: location,
-            name: "user"
-        )
-
+        let userWaypoint = Waypoint(location: location, name: "user")
         let destinationWaypoint = Waypoint(coordinate: destination)
-
         let navigationRouteOptions = NavigationRouteOptions(waypoints: [userWaypoint, destinationWaypoint])
 
         let task = mapboxNavigation.routingProvider().calculateRoutes(options: navigationRouteOptions)
@@ -182,48 +147,104 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         _ navigationViewController: NavigationViewController,
         byCanceling canceled: Bool
     ) {
-        let duration = 1.0
-        navigationViewController.navigationView.topBannerContainerView.hide(duration: duration)
-        navigationViewController.navigationView.bottomBannerContainerView.hide(
-            duration: duration,
-            animations: {
-                navigationViewController.navigationView.wayNameView.alpha = 0.0
-                navigationViewController.navigationView.floatingStackView.alpha = 0.0
-                navigationViewController.navigationView.speedLimitView.alpha = 0.0
-            },
-            completion: { [weak self] _ in
-                navigationViewController.dismiss(animated: false) {
-                    guard let self else { return }
-
-                    // Show previously hidden button that allows to start active navigation.
-                    self.startButton.isHidden = false
-
-                    // Since `NavigationViewController` assigns `NavigationMapView`'s delegate to itself,
-                    // delegate should be re-assigned back to `NavigationMapView` that is used in preview mode.
-                    self.navigationMapView.delegate = self
-
-                    // Replace `NavigationMapView` instance with instance that was used in active navigation.
-                    self.navigationMapView = navigationViewController.navigationMapView
-
-                    // Showcase originally requested routes.
-                    self.showCurrentRoute()
-                }
-            }
-        )
+        dismiss(animated: true, completion: nil)
     }
 
-    // MARK: NavigationMapViewDelegate implementation
+    // MARK: - Styling methods
 
+    func customRouteLineLayer(with identifier: String, sourceIdentifier: String) -> LineLayer {
+        var lineLayer = LineLayer(id: identifier, source: sourceIdentifier)
+
+        // `identifier` parameter contains unique identifier of the route layer or its casing.
+        // Such identifier consists of several parts: the framework prefix, whether route is
+        // main or alternative, and whether route is casing or not.
+        //
+        // For example: identifier for the main route line will look like this: `com.mapbox.navigation.route_line.main`,
+        // and for alternative route line casing will look like this:
+        // `com.mapbox.navigation.route_line.alternative_0.casing`.
+        lineLayer.lineColor = .constant(.init(identifier.contains("main") ? #colorLiteral(red: 0.01985955052, green: 0.6569676995, blue: 0.4195544124, alpha: 1) : #colorLiteral(red: 0.5445436835, green: 0.6098695397, blue: 0.5656256676, alpha: 1)))
+        lineLayer.lineWidth = .expression(lineWidthExpression(1))
+        lineLayer.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+
+        return lineLayer
+    }
+
+    func customRouteCasingLineLayer(with identifier: String, sourceIdentifier: String) -> LineLayer {
+        var lineLayer = LineLayer(id: identifier, source: sourceIdentifier)
+
+        // Based on information stored in `identifier` property (whether route line is main or not)
+        // route line will be colored differently.
+        lineLayer.lineColor = .constant(.init(identifier.contains("main") ? #colorLiteral(red: 0.01342471968, green: 0.3149059415, blue: 0.2209827304, alpha: 1) : #colorLiteral(red: 0.2922659814, green: 0.3427096307, blue: 0.3116717637, alpha: 1)))
+        lineLayer.lineWidth = .expression(lineWidthExpression(1.2))
+        lineLayer.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+
+        return lineLayer
+    }
+
+    func lineWidthExpression(_ multiplier: Double) -> Expression {
+        let lineWidthExpression = Exp(.interpolate) {
+            Exp(.linear)
+            Exp(.zoom)
+            // It's possible to change route line width depending on zoom level, by using expression
+            // instead of constant. Navigation SDK for iOS also exposes `RouteLineWidthByZoomLevel`
+            // public property, which contains default values for route lines on specific zoom levels.
+            RouteLineWidthByZoomLevel.multiplied(by: multiplier)
+        }
+
+        return lineWidthExpression
+    }
+}
+
+// MARK: Delegate methods
+
+extension RouteLinesStylingViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
         requestRoute(destination: mapPoint.coordinate)
     }
 
-    // Delegate method called when the user selects a route
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect alternativeRoute: AlternativeRoute) {
         Task {
             guard let selectedRoutes = await self.navigationRoutes?.selecting(alternativeRoute: alternativeRoute)
             else { return }
             self.navigationRoutes = selectedRoutes
         }
+    }
+
+    func navigationMapView(
+        _ navigationMapView: NavigationMapView,
+        routeLineLayerWithIdentifier identifier: String,
+        sourceIdentifier: String
+    ) -> LineLayer? {
+        customRouteLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
+    }
+
+    func navigationMapView(
+        _ navigationMapView: NavigationMapView,
+        routeCasingLineLayerWithIdentifier identifier: String,
+        sourceIdentifier: String
+    ) -> LineLayer? {
+        customRouteCasingLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
+    }
+}
+
+extension RouteLinesStylingViewController: NavigationViewControllerDelegate {
+    // Similarly to preview mode, when using `NavigationMapView`, it's possible to change
+    // route line styling during active guidance in `NavigationViewController`.
+    func navigationViewController(
+        _ navigationViewController: NavigationViewController,
+        routeLineLayerWithIdentifier identifier: String,
+        sourceIdentifier: String
+    ) -> LineLayer? {
+        customRouteLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
+    }
+
+    func navigationViewController(
+        _ navigationViewController: NavigationViewController,
+        routeCasingLineLayerWithIdentifier identifier: String,
+        sourceIdentifier: String
+    ) -> LineLayer? {
+        customRouteCasingLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
     }
 }

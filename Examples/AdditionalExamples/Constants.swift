@@ -5,8 +5,10 @@ typealias NamedController = (
     name: String,
     description: String,
     controller: UIViewController.Type,
-    storyboard: UIStoryboard?, // Is the example containined in a storyboard? If so, we assume the Initial View Controller of the storyboard.
-    pushExampleToViewController: Bool // If the example does not go directly into the example,(i.e. another map is shown) set this value to true
+    storyboard: UIStoryboard?,
+    // Is the example containined in a storyboard? If so, we assume the Initial View Controller of the storyboard.
+    pushExampleToViewController: Bool // If the example does not go directly into the example,(i.e. another map is
+    // shown) set this value to true
 )
 
 let listOfExamples: [NamedController] = [
@@ -31,6 +33,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: false
     ),
     (
+        name: "Custom Destination Marker",
+        description: "Use a custom image for styling the destination marker.",
+        controller: CustomDestinationMarkerController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
+    (
         name: "Embedded View Controller",
         description: "Demonstrates how to embed a NavigationViewController within a parent view controller.",
         controller: EmbeddedExampleViewController.self,
@@ -52,6 +61,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: true
     ),
     (
+        name: "Custom Waypoint Styling",
+        description: "Demonstrates how to customize waypoint styling.",
+        controller: CustomWaypointsViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
+    (
         name: "Custom Voice Controller",
         description: "Add custom audio recordings for your instructions.",
         controller: CustomVoiceControllerUI.self,
@@ -66,6 +82,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: false
     ),
     (
+        name: "Custom Route Lines Styling",
+        description: "Demonstrates how to provide custom styling for the route lines.",
+        controller: RouteLinesStylingViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
+    (
         name: "Offline Regions",
         description: "Demonstrates how to create a custom TileStore and handle offline regions.",
         controller: OfflineRegionsViewController.self,
@@ -78,5 +101,5 @@ let listOfExamples: [NamedController] = [
         controller: HistoryRecordingViewController.self,
         storyboard: nil,
         pushExampleToViewController: true
-    )
+    ),
 ]
