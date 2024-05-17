@@ -1,5 +1,28 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.1.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxCommon v24.4.0-rc.2](https://github.com/mapbox/mapbox-common-ios/releases/tag/v24.4.0-rc.2). ([#4656](https://github.com/mapbox/mapbox-navigation-ios/pull/4656))
+* MapboxNavigationCore now requires [MapboxNavigationNative v309.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/309.0.0). ([#4656](https://github.com/mapbox/mapbox-navigation-ios/pull/4656))
+
+### Map
+
+* Added the ability to configure routeline, route annotation, and maneuver arrow colors in `NavigationMapView`.
+* Added the ability to configure `circleLayer`, `symbolLayer`, and `shape` for intermediate waypoints in `NavigationMapView`, `NavigationViewController`, `CarPlayManager`, `CarPlayNavigationViewController`.
+* Added the ability to configure `routeLineLayer`, `routeCasingLineLayer`, and `routeRestrictedAreasLineLayer` in `NavigationMapView`, `NavigationViewController`, `CarPlayManager`, `CarPlayNavigationViewController`.
+* Support the ability to pass `heading` to `NavigationView`.
+* Support the ability to configure `heading` in `PreviewOptions`.
+
+### Other changes
+
+* Fixed the module name for `NavigationViewController` in the storyboard.
+* Added preserving voice instructions muted state between the navigation sessions and app launches.
+* Fixed `MapboxNavigator.routeProgress` publisher did not include alternative routes updates.
+* Fixed initial location simulation in Free Drive.
+* Creating `NavigationViewController` through `init?(coder:)` now does not create `MapboxNavigationProvider` instance. It should be provided through `NavigationOptions` using `prepareViewLoading(navigationRoutes:navigationOptions:)`
+
 ## v3.1.0-beta.1
 
 ### API deprecations:

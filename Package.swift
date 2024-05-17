@@ -3,16 +3,16 @@
 
 import PackageDescription
 
-let version = "3.1.0-beta.1"
+let version = "3.1.0-rc.1"
 
 let binaries = [
-    "MapboxCoreMaps": "392c84f53b47c56b331d886b9dd3495adf006a44a90b8ba7df2ce716994bc9c9",
-    "MapboxDirections": "3eb6235bc9a67aea527307a8e0108d54478e55d033548b0d485e3ea36e3c71a3",
-    "MapboxMaps": "6cbcf09b52c027d404826f8f9a73ea976f24fc6174b38d03a08a660a085b6542",
-    "Turf": "40308a5749eb8065164d015596d6c0b9075225a02cb44034b49a34b3a71f654c",
-    "MapboxNavigationCore": "50c0a8b784681065581eefdcf5ac76ee6f55384a66b156bc40bed8c6d600e3ff",
-    "_MapboxNavigationUXPrivate": "bfdb8b27166a8e20744de0af1ab6eb8c32ccd8dec5150812ba92d477975169ff",
-    "MapboxNavigationUIKit": "5050749aed456e2f670bc31c00aeba3a58e801cc54f1def7e83b438d8faa9e4a",
+"MapboxCoreMaps": "73cc825f796586a821583a8c8ad39f5ec1cefcc56b3aaf611a5197dbca32b967",
+"MapboxDirections": "adc51709e37c92e3e548189dcf53bb5c6472f9c9aee68150018cdd860611c26f",
+"MapboxMaps": "056c4e484f996ce6977dcf5e9dc785e029124b584f70e6678cac86348e9f60d5",
+"Turf": "8309276d8b47c17d6225c66f88f63571db76e03fb4f61cf22483b05046ee26d4",
+"MapboxNavigationCore": "499bf8fad13f4b8a9a1e44911405aecb2c7848d83cf5048c294e06f1550412a2",
+"_MapboxNavigationUXPrivate": "d67f4e9bd2a46c493fee22431eb6eaa7d432a5759b124f0ee62f346a19220000",
+"MapboxNavigationUIKit": "97bb238bdc313a67e5b858305304f9ecb34c54050e029afa86fbba7463b0820d",
 ]
 
 let package = Package(
@@ -29,8 +29,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.4.0-beta.3"),
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: "308.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.4.0-rc.2"),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: "309.0.0"),
     ],
     targets: [
         .target(
