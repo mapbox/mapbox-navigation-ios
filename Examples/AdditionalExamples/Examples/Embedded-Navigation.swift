@@ -6,10 +6,10 @@
  */
 
 import Foundation
-import MapboxNavigationCore
-import MapboxNavigationUIKit
 import MapboxDirections
 import MapboxMaps
+import MapboxNavigationCore
+import MapboxNavigationUIKit
 import UIKit
 
 class EmbeddedExampleViewController: UIViewController {
@@ -24,9 +24,9 @@ class EmbeddedExampleViewController: UIViewController {
         )
     )
     lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
-    
-    @IBOutlet weak var reroutedLabel: UILabel!
-    @IBOutlet weak var container: UIView!
+
+    @IBOutlet var reroutedLabel: UILabel!
+    @IBOutlet var container: UIView!
     var navigationRoutes: NavigationRoutes?
 
     lazy var routeOptions: NavigationRouteOptions = {
@@ -34,7 +34,7 @@ class EmbeddedExampleViewController: UIViewController {
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         return NavigationRouteOptions(coordinates: [origin, destination])
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,13 +48,13 @@ class EmbeddedExampleViewController: UIViewController {
             case .failure(let error):
                 print(error.localizedDescription)
             case .success(let response):
-                
+
                 self.navigationRoutes = response
                 self.startEmbeddedNavigation()
             }
         }
     }
-    
+
     func flashReroutedLabel() {
         reroutedLabel.isHidden = false
         reroutedLabel.alpha = 1.0
@@ -64,16 +64,20 @@ class EmbeddedExampleViewController: UIViewController {
             self.reroutedLabel.isHidden = true
         })
     }
-    
+
     func startEmbeddedNavigation() {
         // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
         guard let navigationRoutes else { return }
-        let navigationOptions = NavigationOptions(mapboxNavigation: mapboxNavigation,
-                                                  voiceController: mapboxNavigationProvider.routeVoiceController,
-                                                  eventsManager: mapboxNavigationProvider.eventsManager())
-        let navigationViewController = NavigationViewController(navigationRoutes: navigationRoutes,
-                                                                navigationOptions: navigationOptions)
-        
+        let navigationOptions = NavigationOptions(
+            mapboxNavigation: mapboxNavigation,
+            voiceController: mapboxNavigationProvider.routeVoiceController,
+            eventsManager: mapboxNavigationProvider.eventsManager()
+        )
+        let navigationViewController = NavigationViewController(
+            navigationRoutes: navigationRoutes,
+            navigationOptions: navigationOptions
+        )
+
         navigationViewController.delegate = self
         addChild(navigationViewController)
         container.addSubview(navigationViewController.view)
@@ -82,9 +86,9 @@ class EmbeddedExampleViewController: UIViewController {
             navigationViewController.view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 0),
             navigationViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: 0),
             navigationViewController.view.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
-            navigationViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0)
+            navigationViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0),
         ])
-        self.didMove(toParent: self)
+        didMove(toParent: self)
     }
 }
 
@@ -92,8 +96,11 @@ extension EmbeddedExampleViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
         flashReroutedLabel()
     }
-    
-    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+
+    func navigationViewControllerDidDismiss(
+        _ navigationViewController: NavigationViewController,
+        byCanceling canceled: Bool
+    ) {
         navigationController?.popViewController(animated: true)
     }
 }

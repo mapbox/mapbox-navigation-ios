@@ -5,14 +5,14 @@
  to documentation, see our docs: https://docs.mapbox.com/ios/navigation/examples/custom-voice-controller/
  */
 
+import AVFoundation
+import Combine
+import CoreLocation
 import Foundation
-import UIKit
+import MapboxDirections
 import MapboxNavigationCore
 import MapboxNavigationUIKit
-import MapboxDirections
-import AVFoundation
-import CoreLocation
-import Combine
+import UIKit
 
 class CustomVoiceControllerUI: UIViewController {
     let mapboxNavigationProvider: MapboxNavigationProvider = {
@@ -27,27 +27,27 @@ class CustomVoiceControllerUI: UIViewController {
         let provider = MapboxNavigationProvider(coreConfig: coreConfig)
         coreConfig.ttsConfig = .custom(
             speechSynthesizer:
-                // `MultiplexedSpeechSynthesizer` will provide "a backup" functionality to cover cases, which
-                // our custom implementation cannot handle.
-                MultiplexedSpeechSynthesizer(
-                    mapboxSpeechApiConfiguration: coreConfig.credentials.speech,
-                    skuTokenProvider: provider.skuTokenProvider.skuToken,
-                    customSpeechSynthesizers: [CustomVoiceController()]
-                )
+            // `MultiplexedSpeechSynthesizer` will provide "a backup" functionality to cover cases, which
+            // our custom implementation cannot handle.
+            MultiplexedSpeechSynthesizer(
+                mapboxSpeechApiConfiguration: coreConfig.credentials.speech,
+                skuTokenProvider: provider.skuTokenProvider.skuToken,
+                customSpeechSynthesizers: [CustomVoiceController()]
+            )
         )
         provider.apply(coreConfig: coreConfig)
         return provider
     }()
-    
+
     lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
-        
+
         Task {
             switch await mapboxNavigation.routingProvider().calculateRoutes(options: routeOptions).result {
             case .failure(let error):
@@ -59,11 +59,15 @@ class CustomVoiceControllerUI: UIViewController {
     }
 
     func presentNavigationWithCustomVoiceController(navigationRoutes: NavigationRoutes) {
-        let navigationOptions = NavigationOptions(mapboxNavigation: mapboxNavigation,
-                                                  voiceController: mapboxNavigationProvider.routeVoiceController,
-                                                  eventsManager: mapboxNavigationProvider.eventsManager())
-        let navigationViewController = NavigationViewController(navigationRoutes: navigationRoutes,
-                                                                navigationOptions: navigationOptions)
+        let navigationOptions = NavigationOptions(
+            mapboxNavigation: mapboxNavigation,
+            voiceController: mapboxNavigationProvider.routeVoiceController,
+            eventsManager: mapboxNavigationProvider.eventsManager()
+        )
+        let navigationViewController = NavigationViewController(
+            navigationRoutes: navigationRoutes,
+            navigationOptions: navigationOptions
+        )
         navigationViewController.modalPresentationStyle = .fullScreen
 
         present(navigationViewController, animated: true, completion: nil)
@@ -109,24 +113,25 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
             $0?.isPlaying ?? false
         }
     }
+
     var managesAudioSession: Bool = true
-    
+
     func prepareIncomingSpokenInstructions(_ instructions: [MapboxNavigationCore.SpokenInstruction], locale: Locale?) {
         // do nothing, we don't need to pre-load anything.
     }
-    
+
     func stopSpeaking() {
         players.forEach {
             $0?.stop()
         }
     }
-    
+
     func interruptSpeaking() {
         players.forEach {
             $0?.stop()
         }
     }
-    
+
     // You will need audio files for as many or few cases as you'd like to handle
     // This example just covers left and right. All other cases will fail the Custom Voice Controller and
     // force a backup Speech to kick in.
@@ -135,9 +140,9 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
     var players: [AVAudioPlayer?] {
         [turnLeftPlayer, turnRightPlayer]
     }
-    
+
     var currentInstruction: SpokenInstruction? = nil
-    
+
     override init() {
         super.init()
 
@@ -145,18 +150,21 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
             $0?.delegate = self
         }
     }
-    
+
     func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
         guard let nextStep = legProgress.upcomingStep,
-              let player = audio(for: nextStep) else {
+              let player = audio(for: nextStep)
+        else {
             // When `MultiplexedSpeechSynthesizer` receives an error from one of it's Speech Synthesizers,
             // it requests the next on the list
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(
                     error: SpeechError.noData(
                         instruction: instruction,
-                        options: .init(text: instruction.text,
-                                       locale: locale ?? self.locale ?? .current)
+                        options: .init(
+                            text: instruction.text,
+                            locale: locale ?? self.locale ?? .current
+                        )
                     )
                 )
             )
@@ -172,13 +180,14 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
             _voiceInstructions.send(
                 VoiceInstructionEvents.DidInterrupt(
                     interruptedInstruction: currentInstruction,
-                    interruptingInstruction: instruction)
+                    interruptingInstruction: instruction
+                )
             )
         }
         currentInstruction = instruction
         player.play()
     }
-    
+
     func audio(for step: RouteStep) -> AVAudioPlayer? {
         switch step.maneuverDirection {
         case .left:
@@ -189,8 +198,9 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
             return nil // this will force report that Custom Voice Controller is unable to handle this case
         }
     }
-    
+
     // MARK: AVAudioPlayerDelegate implementation
+
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if let currentInstruction {
             _voiceInstructions.send(

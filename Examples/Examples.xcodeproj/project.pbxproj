@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C5D23DE2BF7B3FF00194158 /* Custom-Destination-Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */; };
+		2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */; };
+		2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */; };
 		2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
 		2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CB2BC99C050097715C /* MapboxNavigationCore */; };
 		2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CD2BC99C090097715C /* MapboxNavigationCore */; };
@@ -91,6 +94,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Destination-Marker.swift"; sourceTree = "<group>"; };
+		2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Waypoints.swift"; sourceTree = "<group>"; };
+		2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route-Lines-Styling.swift"; sourceTree = "<group>"; };
 		2C6A3C792BA3AE780039BBC9 /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControlsView.swift; sourceTree = "<group>"; };
 		2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -219,16 +225,19 @@
 		2CA319FF2BC9878A0071176E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
-				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
-				2CA31A012BC9878A0071176E /* History-Recording.swift */,
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
-				2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */,
-				2CA31A042BC9878A0071176E /* Offline-Regions.swift */,
-				2CA31A052BC9878A0071176E /* Embedded-Navigation.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
-				2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */,
 				2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */,
+				2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */,
+				2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */,
+				2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */,
 				2CA31A092BC9878A0071176E /* CustomBars */,
+				2CA31A052BC9878A0071176E /* Embedded-Navigation.swift */,
+				2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */,
+				2CA31A012BC9878A0071176E /* History-Recording.swift */,
+				2CA31A042BC9878A0071176E /* Offline-Regions.swift */,
+				2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */,
+				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -529,11 +538,14 @@
 				2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */,
 				2CA31A1B2BC9878A0071176E /* Embedded-Navigation.swift in Sources */,
 				2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */,
+				2C5D23DE2BF7B3FF00194158 /* Custom-Destination-Marker.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
+				2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */,
+				2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */,
 				2CA31A1E2BC9878A0071176E /* Beta-Query-Parameters.swift in Sources */,
 				2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */,
 				2CA31A112BC9878A0071176E /* Constants.swift in Sources */,
