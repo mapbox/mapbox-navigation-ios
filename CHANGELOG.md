@@ -4,8 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.16.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.16.4). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v182._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/182.0.0). ([#4585](https://github.com/mapbox/mapbox-navigation-ios/pull/4585))
+* MapboxNavigation now requires [MapboxMaps v10.17.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.17.0). ([#4628](https://github.com/mapbox/mapbox-navigation-ios/pull/4628))
+* MapboxCoreNavigation now requires [MapboxDirections v2.12.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.12.0). ([#4605](https://github.com/mapbox/mapbox-navigation-ios/pull/4605))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v204._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/202.0.0). ([#4628](https://github.com/mapbox/mapbox-navigation-ios/pull/4628))
 * MapboxCoreNavigation is no longer dependent on MapboxMobileEvents. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Added a Polish localization. ([#4582](https://github.com/mapbox/mapbox-navigation-ios/pull/4582))
 
@@ -17,16 +18,27 @@
 ### Map
 
 * Fixed a possible crash that could happen when displaying the route with the same source, midpoint, and destination. ([#4576](https://github.com/mapbox/mapbox-navigation-ios/pull/4576))
+* Fixed an incorrect viewport padding in the overview route camera. ([#4593](https://github.com/mapbox/mapbox-navigation-ios/pull/4593))
 
 ### User interface
 
 * `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
+* `TopBannerViewController.delegate` and `TopBannerViewController.instructionsBannerView` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595)) 
+* `BottomBannerViewController.dateFormatter`, `BottomBannerViewController.dateComponentsFormatter`, `BottomBannerViewController.distanceFormatter` and `InstructionsBannerView.distanceFormatter` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595))
+
+### CarPlay
+
+* Added the ability to configure `CPMapTemplate.guidanceBackgroundColor` via delegate method. ([#4620](https://github.com/mapbox/mapbox-navigation-ios/pull/4620))
+* Added the ability to configure waypoints via `CarPlayManagerDelegate` object. ([#4606](https://github.com/mapbox/mapbox-navigation-ios/pull/4606))
 
 ### Other changes
 
 * Added PrivacyInfo.xcprivacy support. ([#4573](https://github.com/mapbox/mapbox-navigation-ios/pull/4573))
 * Removed `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)` in favor of `NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:)`. ([#4572](https://github.com/mapbox/mapbox-navigation-ios/pull/4572))
 * Fixed a rare issue that could lead to memory corruption under specific conditions. This was resolved by replacing the internal image downloader with brand new actor-based implementation. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
+* Fixed the possible situation when the upcoming route leg is rendered above the active route leg. ([#4588](https://github.com/mapbox/mapbox-navigation-ios/pull/4588))
+* Fixed a main thread hang on NavigationViewController creation. ([#4617](https://github.com/mapbox/mapbox-navigation-ios/pull/4617))
+* Fixed error reporting in `RouteController/reroute(from:along:)`. ([#4618](https://github.com/mapbox/mapbox-navigation-ios/pull/4618))
 
 ## v2.17.0
 

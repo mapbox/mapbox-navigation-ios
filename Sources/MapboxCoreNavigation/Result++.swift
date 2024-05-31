@@ -18,4 +18,13 @@ extension Result {
             preconditionFailure("Expected type is neither a value nor an error.")
         }
     }
+
+    var isSuccess: Bool {
+        switch self {
+        case .success:
+            return true
+        case .failure:
+            return false
+        }
+    }
 }

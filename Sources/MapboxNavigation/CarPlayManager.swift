@@ -1144,6 +1144,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
 // MARK: CarPlayNavigationViewControllerDelegate Methods
 
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                waypointCircleLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> MapboxMaps.CircleLayer? {
+        delegate?.carPlayManager(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                waypointSymbolLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.carPlayManager(self, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
     
     public func carPlayNavigationViewControllerWillDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                                            byCanceling canceled: Bool) {
@@ -1232,7 +1243,12 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 // MARK: CarPlayMapViewControllerDelegate Methods
 
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
-    
+
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, 
+                                                guidanceBackgroundColorFor style: UIUserInterfaceStyle) -> UIColor? {
+        delegate?.carPlayNavigationViewController(self, guidanceBackgroundColorFor: style)
+    }
+
     public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager) {

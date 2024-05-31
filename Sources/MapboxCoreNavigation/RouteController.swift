@@ -867,14 +867,18 @@ extension RouteController: Router {
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
                 guard case let .route(routeOptions) = response.options else {
-                    //TODO: Can a match hit this codepoint?
-                    self.isRerouting = false; return
+                    self.isRerouting = false
+                    self.announceReroutingError(with: ReroutingError.routeError)
+                    return
                 }
                 self.updateRoute(with: indexedResponse,
                                  routeOptions: routeOptions,
                                  isProactive: false,
-                                 isAlternative: false) { [weak self] success in
+                                 isAlternative: false) { [weak self] result in
                     self?.isRerouting = false
+                    if case let .failure(error) = result {
+                        self?.announceReroutingError(with: error)
+                    }
                 }
             case let .failure(error):
                 self.announceReroutingError(with: error)
@@ -890,15 +894,16 @@ extension RouteController: Router {
         updateRoute(with: indexedRouteResponse,
                     routeOptions: routeOptions,
                     isProactive: false,
-                    isAlternative: false,
-                    completion: completion)
+                    isAlternative: false) { result in
+            completion?(result.isSuccess)
+        }
     }
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      isAlternative: Bool,
-                     completion: ((Bool) -> Void)?) {
+                     completion: ((Result<Void, Error>) -> Void)?) {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
@@ -926,9 +931,9 @@ extension RouteController: Router {
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
                 self.didProactiveReroute = isProactive
-                completion?(true)
-            case .failure:
-                completion?(false)
+                completion?(.success(()))
+            case .failure(let error):
+                completion?(.failure(error))
             }
         }
     }
@@ -1014,11 +1019,11 @@ extension RouteController: ReroutingControllerDelegate {
                     routeOptions: options,
                     isProactive: false,
                     isAlternative: true,
-                    completion: { [weak self] success in
+                    completion: { [weak self] result in
             guard let self = self else { return }
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.locationKey] = self.location
-            if success {
+            if result.isSuccess {
                 NotificationCenter.default.post(name: .routeControllerDidTakeAlternativeRoute,
                                                 object: self,
                                                 userInfo: userInfo)

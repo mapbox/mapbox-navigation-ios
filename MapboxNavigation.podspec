@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "MapboxMaps", "~> 10.16.4"
+  s.dependency "MapboxMaps", "~> 10.17.0"
   s.dependency "Solar-dev", "~> 3.0"
   s.dependency "MapboxSpeech", "~> 2.0"
 
