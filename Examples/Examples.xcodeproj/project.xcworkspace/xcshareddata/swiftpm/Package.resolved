@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mapbox/mapbox-navigation-native-ios.git",
       "state" : {
-        "revision" : "62b0d3c745fa68bf5ef735fa62262534a73b0175",
-        "version" : "310.0.1"
+        "revision" : "738d5a7f8c06a1c6eb27d9304c902abf5bbe7514",
+        "version" : "311.0.0"
       }
     },
     {
