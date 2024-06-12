@@ -59,7 +59,7 @@
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
-		DF3D8C322C04B4FF00BB715C /* history-replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF3D8C312C04B4FF00BB715C /* history-replay.gz */; };
+		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -146,7 +146,7 @@
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
-		DF3D8C312C04B4FF00BB715C /* history-replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "history-replay.gz"; sourceTree = "<group>"; };
+		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
 		DF92974F2BBD4A910047329A /* mapbox-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-navigation-ios"; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -220,7 +220,7 @@
 				2CA319FF2BC9878A0071176E /* Examples */,
 				2CA31A0D2BC9878A0071176E /* ExampleTableViewController.swift */,
 				2CA31A0E2BC9878A0071176E /* AppDelegate.swift */,
-				DF3D8C312C04B4FF00BB715C /* history-replay.gz */,
+				DF592B6A2C19EA2C0047835E /* history_replay.gz */,
 				2CA31A0F2BC9878A0071176E /* Info.plist */,
 				2CA31A102BC9878A0071176E /* SceneDelegate.swift */,
 			);
@@ -448,7 +448,7 @@
 				2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */,
 				2CA31A1D2BC9878A0071176E /* EmbeddedExamples.storyboard in Resources */,
 				2CA31A152BC9878A0071176E /* Main.storyboard in Resources */,
-				DF3D8C322C04B4FF00BB715C /* history-replay.gz in Resources */,
+				DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
