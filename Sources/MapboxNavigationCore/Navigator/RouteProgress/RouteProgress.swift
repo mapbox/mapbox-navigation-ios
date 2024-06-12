@@ -23,7 +23,7 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
     public init(
         navigationRoutes: NavigationRoutes,
         waypoints: [Waypoint],
-        congestionConfiguration: CongestionRangesConfiguration
+        congestionConfiguration: CongestionRangesConfiguration = .default
     ) {
         self.navigationRoutes = navigationRoutes
         self.waypoints = waypoints

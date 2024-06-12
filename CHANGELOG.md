@@ -23,6 +23,7 @@
 * Added a new `ActiveNavigationFeedbackType` enum case `.arrival(rating:)`.
 * Added`HistoryReplayController` wrapped as a custom static `LocationClient.historyReplayingValue(with:)`, which allows replaying history files.
 * Added static method `Directions.url(forCalculating:credentials:httpMethod:)` for generating a request URL without creating the `Directions` instance.
+* Added default value `CongestionRangesConfiguration.default` for `RouteProgress.init(navigationRoutes:waypoints:congestionConfiguration:)` constructor.
 
 ## v3.1.0
 
