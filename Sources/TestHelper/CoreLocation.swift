@@ -1,5 +1,5 @@
-import Foundation
 import CoreLocation
+import Foundation
 import Turf
 
 /// Codable CLLocationCoordinate2D conforming to the GeoJSON standard rfc7946 ([longitude, latitude])
@@ -9,7 +9,7 @@ extension CLLocationCoordinate2D: Codable {
         try container.encode(longitude)
         try container.encode(latitude)
     }
-    
+
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         let longitude = try container.decode(CLLocationDegrees.self)
@@ -49,7 +49,7 @@ public struct Location: Codable {
         case speed
         case timestamp
     }
-    
+
     let coordinate: CLLocationCoordinate2D
     let altitude: CLLocationDistance
     let horizontalAccuracy: CLLocationAccuracy
@@ -57,7 +57,7 @@ public struct Location: Codable {
     let course: CLLocationDirection
     let speed: CLLocationSpeed
     let timestamp: Date
-    
+
     public init(_ location: CLLocation) {
         self.coordinate = location.coordinate
         self.altitude = location.altitude
@@ -67,10 +67,10 @@ public struct Location: Codable {
         self.speed = location.speed
         self.timestamp = location.timestamp
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         if let coordinate = try? container.decode(CLLocationCoordinate2D.self, forKey: .coordinate) {
             self.coordinate = coordinate
         } else {
@@ -79,20 +79,20 @@ public struct Location: Codable {
             let _longitude = try? container.decode(CLLocationDegrees.self, forKey: .longitude)
             let _lon = try? container.decode(CLLocationDegrees.self, forKey: .lon)
             let _lng = try? container.decode(CLLocationDegrees.self, forKey: .lng)
-            
+
             if let latitute = _latitude ?? _lat, let longitude = _longitude ?? _lon ?? _lng {
                 self.coordinate = CLLocationCoordinate2D(latitude: latitute, longitude: longitude)
             } else {
                 throw DecodingError.missingData
             }
         }
-        
+
         self.altitude = try container.decode(CLLocationDistance.self, forKey: .altitude)
         self.horizontalAccuracy = try container.decode(CLLocationAccuracy.self, forKey: .horizontalAccuracy)
         self.verticalAccuracy = try container.decode(CLLocationAccuracy.self, forKey: .verticalAccuracy)
         self.course = try container.decode(CLLocationDirection.self, forKey: .course)
         self.speed = try container.decode(CLLocationSpeed.self, forKey: .speed)
-        
+
         if let timestamp = try? container.decode(TimeInterval.self, forKey: .timestamp) {
             self.timestamp = Date(timeIntervalSince1970: timestamp)
         } else if let timestamp = try? container.decode(String.self, forKey: .timestamp) {
@@ -101,10 +101,10 @@ public struct Location: Codable {
             throw DecodingError.missingData
         }
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         try container.encode(coordinate.latitude, forKey: .lat)
         try container.encode(coordinate.longitude, forKey: .lng)
         try container.encode(altitude, forKey: .altitude)
@@ -118,7 +118,15 @@ public struct Location: Codable {
 
 extension CLLocation {
     public convenience init(_ location: Location) {
-        self.init(coordinate: location.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        self.init(
+            coordinate: location.coordinate,
+            altitude: location.altitude,
+            horizontalAccuracy: location.horizontalAccuracy,
+            verticalAccuracy: location.verticalAccuracy,
+            course: location.course,
+            speed: location.speed,
+            timestamp: location.timestamp
+        )
     }
 }
 
@@ -132,7 +140,7 @@ extension Date {
     var ISO8601: String {
         return Date.ISO8601Formatter.string(from: self)
     }
-    
+
     static let ISO8601Formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -142,38 +150,44 @@ extension Date {
     }()
 }
 
-extension Array where Element == CLLocation {
-    // Shifts the [CLLocation]’s first location to now and offsets the remaining locations by one second after the prior.
+extension [CLLocation] {
+    // Shifts the [CLLocation]’s first location to now and offsets the remaining locations by one second after the
+    // prior.
     public func shiftedToPresent() -> [CLLocation] {
         return shifted(to: Date())
     }
-    
-    // Shifts the [CLLocation]’s first location to the given timestamp and offsets the remaining locations by one second after the prior.
+
+    // Shifts the [CLLocation]’s first location to the given timestamp and offsets the remaining locations by one second
+    // after the prior.
     public func shifted(to timestamp: Date) -> [CLLocation] {
-        return enumerated().map { CLLocation(coordinate: $0.element.coordinate,
-                                             altitude: $0.element.altitude,
-                                             horizontalAccuracy: $0.element.horizontalAccuracy,
-                                             verticalAccuracy: $0.element.verticalAccuracy,
-                                             course: $0.element.course,
-                                             speed: $0.element.speed,
-                                             timestamp: timestamp + $0.offset) }
+        return enumerated().map { CLLocation(
+            coordinate: $0.element.coordinate,
+            altitude: $0.element.altitude,
+            horizontalAccuracy: $0.element.horizontalAccuracy,
+            verticalAccuracy: $0.element.verticalAccuracy,
+            course: $0.element.course,
+            speed: $0.element.speed,
+            timestamp: timestamp + Double($0.offset)
+        ) }
     }
-    
+
     // Returns a [CLLocation] with course and accuracies qualified for navigation native.
     public func qualified() -> [CLLocation] {
-        return enumerated().map { CLLocation(coordinate: $0.element.coordinate,
-                                             altitude: -1,
-                                             horizontalAccuracy: 10,
-                                             verticalAccuracy: -1,
-                                             course: -1,
-                                             speed: 10,
-                                             timestamp: $0.element.timestamp) }
+        return enumerated().map { CLLocation(
+            coordinate: $0.element.coordinate,
+            altitude: -1,
+            horizontalAccuracy: 10,
+            verticalAccuracy: -1,
+            course: -1,
+            speed: 10,
+            timestamp: $0.element.timestamp
+        ) }
     }
-    
+
     public static func locations(from filePath: String) -> [CLLocation] {
         let data = Fixture.JSONFromFileNamed(name: filePath)
         let locations = try! JSONDecoder().decode([Location].self, from: data)
-        
+
         return locations.map { CLLocation($0) }
     }
 }

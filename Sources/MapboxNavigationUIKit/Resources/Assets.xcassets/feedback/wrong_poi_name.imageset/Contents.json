@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "wrong_poi_name.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

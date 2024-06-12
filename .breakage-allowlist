@@ -1,8 +1,0 @@
-Constructor NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:) has been removed
-Import MapboxMobileEvents has been removed
-Func CarPlayManagerDelegate.carPlayManager(_:waypointCircleLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
-Func CarPlayManagerDelegate.carPlayManager(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
-Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:waypointCircleLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
-Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:) has been added as a protocol requirement
-Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColorFor:) has been added as a protocol requirement
-Func CarPlayManagerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColorFor:) has been added as a protocol requirement

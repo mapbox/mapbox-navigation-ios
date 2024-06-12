@@ -1,3 +1,0 @@
-binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" == 23.9.2
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 204.0.1
-github "mapbox/mapbox-directions-swift" ~> 2.12.0

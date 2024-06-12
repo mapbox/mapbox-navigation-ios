@@ -28,10 +28,16 @@
 
 - (void)pushTemplate:(__kindof CPTemplate *)templateToPush animated:(BOOL)animated completion:(nullable void (^)(BOOL, NSError * _Nullable))completion {
     [self.templateStack addObject:templateToPush];
+    if (completion != nil) {
+        completion(true, nil);
+    }
 }
 
 - (void)popTemplateAnimated:(BOOL)animated completion:(nullable void (^)(BOOL, NSError * _Nullable))completion {
     [self.templateStack removeLastObject];
+    if (completion != nil) {
+        completion(true, nil);
+    }
 }
 
 - (CPTemplate *)topTemplate {
@@ -43,17 +49,13 @@
 }
 
 - (__kindof CPTemplate *)rootTemplate {
-    if (@available(iOS 14.0, *)) {
-        return _fakeRootTemplate;
-    }
-    else {
-        return [super rootTemplate];
-    }
+    return _fakeRootTemplate;
 }
 
 - (void)setRootTemplate:(__kindof CPTemplate *)rootTemplate animated:(BOOL)animated completion:(void (^)(BOOL, NSError * _Nullable))completion {
-    if (@available(iOS 14.0, *)) {
-        _fakeRootTemplate = rootTemplate;
+    _fakeRootTemplate = rootTemplate;
+    if (completion != nil) {
+        completion(true, nil);
     }
 }
 

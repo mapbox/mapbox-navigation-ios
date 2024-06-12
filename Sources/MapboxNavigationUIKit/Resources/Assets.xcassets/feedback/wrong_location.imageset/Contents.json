@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "wrong_location.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

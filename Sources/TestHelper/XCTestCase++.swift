@@ -8,7 +8,7 @@ extension XCTestCase {
             predicate()
         }
         let addedExpectation = expectation(for: predicate, evaluatedWith: nil, handler: nil)
-        if let description = description {
+        if let description {
             addedExpectation.expectationDescription = description
         }
         return addedExpectation

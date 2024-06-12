@@ -1,9 +1,0 @@
-source 'https://cdn.cocoapods.org/'
-platform :ios, '12.0'
-use_frameworks!
-
-target 'PodInstall' do
-  # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
-  pod 'MapboxNavigation', :path => '../../../'
-  pod 'MapboxCoreNavigation', :path => '../../../'
-end

@@ -1,6 +1,6 @@
 import Foundation
+@testable import MapboxNavigationCore
 import XCTest
-@testable import MapboxCoreNavigation
 
 public final class BillingServiceMock: BillingService {
     public enum Event: Equatable, CustomStringConvertible {
@@ -31,14 +31,18 @@ public final class BillingServiceMock: BillingService {
     private var _events: [Event] = []
 
     public var accessToken: String = .mockedAccessToken
-    public var onBeginBillingSession: ((_ sessionType: BillingHandler.SessionType,
-                                        _ callback: @escaping (BillingServiceError) -> Void) -> Void)?
+    public var onBeginBillingSession: ((
+        _ sessionType: BillingHandler.SessionType,
+        _ callback: @escaping (BillingServiceError) -> Void
+    ) -> Void)?
     public var onGetSKUTokenIfValid: ((_ sessionType: BillingHandler.SessionType) -> String)?
     public var onStopBillingSession: ((_ sessionType: BillingHandler.SessionType) -> Void)?
     public var onTriggerBillingEvent: ((_ onError: @escaping (BillingServiceError) -> Void) -> Void)?
     public var onPauseBillingSession: ((_ sessionType: BillingHandler.SessionType) -> Void)?
-    public var onResumeBillingSession: ((_ sessionType: BillingHandler.SessionType,
-                                         _ onError: @escaping (BillingServiceError) -> Void) -> Void)?
+    public var onResumeBillingSession: ((
+        _ sessionType: BillingHandler.SessionType,
+        _ onError: @escaping (BillingServiceError) -> Void
+    ) -> Void)?
     public var onGetSessionStatus: ((_ sessionType: BillingHandler.SessionType) -> BillingHandler.SessionState)?
 
     public init() {}
@@ -57,8 +61,10 @@ public final class BillingServiceMock: BillingService {
         generateEvent(.mau)
     }
 
-    public func beginBillingSession(for sessionType: BillingHandler.SessionType,
-                                    onError: @escaping (BillingServiceError) -> Void) {
+    public func beginBillingSession(
+        for sessionType: BillingHandler.SessionType,
+        onError: @escaping (BillingServiceError) -> Void
+    ) {
         generateEvent(.beginBillingSession(sessionType))
         onBeginBillingSession?(sessionType, { [unowned self] error in
             lock.lock(); _sessionStates[sessionType] = .stopped; lock.unlock()
@@ -71,8 +77,10 @@ public final class BillingServiceMock: BillingService {
         onPauseBillingSession?(sessionType)
     }
 
-    public func resumeBillingSession(for sessionType: BillingHandler.SessionType,
-                                     onError: @escaping (BillingServiceError) -> Void) {
+    public func resumeBillingSession(
+        for sessionType: BillingHandler.SessionType,
+        onError: @escaping (BillingServiceError) -> Void
+    ) {
         generateEvent(.resumeBillingSession(sessionType))
         onResumeBillingSession?(sessionType, { [unowned self] error in
             lock.lock(); _sessionStates[sessionType] = .stopped; lock.unlock()

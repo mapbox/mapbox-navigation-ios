@@ -1,74 +1,104 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("311.0.0-SNAPSHOT.0605T1418Z.f91d390", "565bf85772a28c08bf8e574250303fea91a1cb963c5fc26b7fc6e225f9f8838b", "404ae1e2651657f6082465de44b59e413c522359")
+let mapsVersion: Version = "11.4.0"
+
+let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
+
 let package = Package(
     name: "MapboxNavigation",
     defaultLocalization: "en",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS(.v14)],
     products: [
         .library(
-            name: "MapboxCoreNavigation",
-            targets: [
-                "MapboxCoreNavigation",
-            ]
+            name: "MapboxNavigationUIKit",
+            targets: ["MapboxNavigationUIKit"]
         ),
         .library(
-            name: "MapboxNavigation",
-            targets: [
-                "MapboxNavigation",
-            ]
-        )
+            name: "MapboxNavigationCore",
+            targets: ["MapboxNavigationCore"]
+        ),
+        .library(
+            name: "_MapboxNavigationTestKit",
+            targets: ["_MapboxNavigationTestKit"]
+        ),
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", from: "2.12.0"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "204.0.1"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.17.0"),
-        .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "3.0.0"),
-        .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
-        .package(name: "CwlPreconditionTesting", url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
-        .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", .exact("1.9.0")),
-        .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
+        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
+        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.12.0"),
     ],
     targets: [
         .target(
-            name: "MapboxCoreNavigation",
+            name: "MapboxNavigationUIKit",
             dependencies: [
-                "MapboxDirections",
-                "MapboxNavigationNative",
-            ],
-            exclude: ["Info.plist"],
-            resources: [
-                .copy("Resources/MBXInfo.plist"),
-                .copy("Resources/PrivacyInfo.xcprivacy"),
-            ]),
-        .target(
-            name: "MapboxNavigation",
-            dependencies: [
-                "MapboxCoreNavigation",
-                "MapboxDirections",
-                "MapboxMaps",
-                "MapboxSpeech",
-                "Solar",
+                "MapboxNavigationCore",
             ],
             exclude: ["Info.plist"],
             resources: [
                 .copy("Resources/MBXInfo.plist"),
                 .copy("Resources/PrivacyInfo.xcprivacy")
-            ]),
+            ]
+        ),
+        .target(name: "_MapboxNavigationHelpers"),
+        .target(
+            name: "MapboxNavigationCore",
+            dependencies: [
+                "_MapboxNavigationHelpers",
+                .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
+                "MapboxDirections",
+                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
+            ],
+            resources: [
+                .process("Resources")
+            ]
+        ),
+        .target(
+            name: "MapboxDirections",
+            dependencies: [
+                .product(name: "Turf", package: "turf-swift"),
+            ]
+        ),
+
+        // Test targets
+        .testTarget(
+            name: "MapboxNavigationCoreTests",
+            dependencies: [
+                "MapboxNavigationCore",
+                "_MapboxNavigationTestHelpers",
+            ],
+            resources: [
+                .copy("Fixtures"),
+            ]
+        ),
+        .target(
+            name: "_MapboxNavigationTestHelpers",
+            dependencies: [
+                "MapboxNavigationCore"
+            ]
+        ),
+        .testTarget(
+            name: "MapboxDirectionsTests",
+            dependencies: [
+                "MapboxDirections",
+                .product(name:  "OHHTTPStubsSwift", package: "OHHTTPStubs"),
+            ],
+            resources: [.process("Fixtures")]
+        ),
         .target(
             name: "TestHelper",
             dependencies: [
-                "CwlPreconditionTesting",
-                "MapboxCoreNavigation",
-                "MapboxNavigation",
-                "MapboxMaps",
+                "MapboxNavigationCore",
+                "MapboxNavigationUIKit",
             ],
             exclude: ["Info.plist"],
             resources: [
                 .process("Fixtures"),
-                .process("tiles"),
             ]
         ),
         .target(
@@ -79,26 +109,26 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "MapboxCoreNavigationTests",
-            dependencies: ["TestHelper"],
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Fixtures"),
-            ]
-        ),
-        .testTarget(
-            name: "MapboxNavigationTests",
+            name: "MapboxNavigationPackageTests",
             dependencies: [
-                "MapboxNavigation",
+                "MapboxNavigationUIKit",
                 "TestHelper",
-                "OHHTTPStubs",
                 "CarPlayTestHelper",
-                "SnapshotTesting",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+                .product(name:  "OHHTTPStubsSwift", package: "OHHTTPStubs"),
             ],
             exclude: [
                 "Info.plist",
                 "__Snapshots__", // Ignore snapshots folder
             ]
         ),
+        .target(
+            name: "_MapboxNavigationTestKit",
+            dependencies: [
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+                "_MapboxNavigationTestHelpers",
+            ],
+            path: "Sources/.empty/_MapboxNavigationTestKit"
+        )
     ]
 )

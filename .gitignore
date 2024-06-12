@@ -1,5 +1,3 @@
-MapboxNavigation.xcworkspace
-
 .DS_Store
 .idea
 
@@ -18,10 +16,7 @@ Carthage/Checkouts
 /build
 .build
 
-
-Examples/Swift/Navigation_Example.mobileprovision
-
-*-pre.podspec
-
 vendor/bundle/ruby/
 .vscode
+.swiftpm
+Package.resolved
