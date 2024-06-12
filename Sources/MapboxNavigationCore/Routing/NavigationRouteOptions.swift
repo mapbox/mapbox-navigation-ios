@@ -3,15 +3,19 @@ import CoreLocation
 import Foundation
 import MapboxDirections
 
-/**
- A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.
-
- `NavigationRouteOptions` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
-
- This class implements the `NSCopying` protocol by round-tripping the object through `JSONEncoder` and `JSONDecoder`. If you subclass `NavigationRouteOptions`, make sure any properties you add are accounted for in `Decodable(from:)` and `Encodable.encode(to:)`. If your subclass contains any customizations that cannot be represented in JSON, make sure the subclass overrides `NSCopying.copy(with:)` to persist those customizations.
-
- `NavigationRouteOptions` is designed to be used with the `Directions` and `NavigationDirections` classes for specifying routing criteria. To customize the user experience in a `NavigationViewController`, use the `NavigationOptions` class.
- */
+/// A ``NavigationRouteOptions`` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox
+/// Directions API.
+///
+/// ``NavigationRouteOptions`` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance
+/// of this class into the ``RoutingProvider/calculateRoutes(options:)-3d0sf`` method.
+///
+/// This class implements the `NSCopying` protocol by round-tripping the object through `JSONEncoder` and `JSONDecoder`.
+/// If you subclass ``NavigationRouteOptions``, make sure any properties you add are accounted for in `Decodable(from:)`
+/// and `Encodable.encode(to:)`. If your subclass contains any customizations that cannot be represented in JSON, make
+/// sure the subclass overrides `NSCopying.copy(with:)` to persist those customizations.
+///
+/// ``NavigationRouteOptions`` is designed to be used with the ``MapboxRoutingProvider`` class for specifying routing
+/// criteria.
 open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
     /// Specifies the preferred distance measurement unit.
     ///
@@ -35,11 +39,10 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
         self.distanceUnit = distanceUnit
     }
 
-    /**
-     Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
-
-     - seealso: `RouteOptions`
-     */
+    /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
+    /// identifier optimized for navigation.
+    ///
+    /// - Seealso: `RouteOptions`.
     public required init(
         waypoints: [Waypoint],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -70,20 +73,17 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
         optimizeForNavigation()
     }
 
-    /**
-     Initializes an equivalent `RouteOptions` object from a `NavigationMapOptions`
-
-     - seealso: `NavigationMatchOptions`
-     */
+    /// Initializes an equivalent `RouteOptions` object from a ``NavigationMatchOptions``.
+    ///
+    /// - seealso: `NavigationMatchOptions`.
     public convenience init(navigationMatchOptions options: NavigationMatchOptions) {
         self.init(waypoints: options.waypoints, profileIdentifier: options.profileIdentifier)
     }
 
-    /**
-     Initializes a navigation route options object for routes between the given locations and an optional profile identifier optimized for navigation.
-
-     - seealso: `RouteOptions`
-     */
+    /// Initializes a navigation route options object for routes between the given locations and an optional profile
+    /// identifier optimized for navigation.
+    ///
+    /// - Seealso: `RouteOptions`.
     public convenience init(
         locations: [CLLocation],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -96,11 +96,10 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
         )
     }
 
-    /**
-     Initializes a route options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
-
-     - seealso: `RouteOptions`
-     */
+    /// Initializes a route options object for routes between the given geographic coordinates and an optional profile
+    /// identifier optimized for navigation.
+    ///
+    /// - Seealso: `RouteOptions`.
     public convenience init(
         coordinates: [CLLocationCoordinate2D],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -118,13 +117,15 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
     }
 }
 
-/**
- A `NavigationMatchOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Map Matching API.
-
- `NavigationMatchOptions` is a subclass of `MatchOptions` that has been optimized for navigation. Pass an instance of this class into the `Directions.calculateRoutes(matching:completionHandler:).` method.
-
- Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered waypoints.
- */
+/// A ``NavigationMatchOptions`` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Map
+/// Matching API.
+///
+/// `NavigationMatchOptions`` is a subclass of `MatchOptions` that has been optimized for navigation. Pass an instance
+/// of this class into the `Directions.calculateRoutes(matching:completionHandler:).` method.
+///
+/// - Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this
+/// `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered
+/// waypoints.
 open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
     /// Specifies the preferred distance measurement unit.
     ///
@@ -146,11 +147,10 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
         self.distanceUnit = distanceUnit
     }
 
-    /**
-     Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
-
-     - seealso: `RouteOptions`
-     */
+    /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
+    /// identifier optimized for navigation.
+    ///
+    /// - Seealso: `RouteOptions`.
     public required init(
         waypoints: [Waypoint],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -173,11 +173,10 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
         optimizeForNavigation()
     }
 
-    /**
-     Initializes a navigation match options object for routes between the given locations and an optional profile identifier optimized for navigation.
-
-     - seealso: `MatchOptions`
-     */
+    /// Initializes a navigation match options object for routes between the given locations and an optional profile
+    /// identifier optimized for navigation.
+    ///
+    /// - Seealso: `MatchOptions`.
     public convenience init(
         locations: [CLLocation],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -190,11 +189,10 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
         )
     }
 
-    /**
-     Initializes a navigation match options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
-
-     - seealso: `MatchOptions`
-     */
+    /// Initializes a navigation match options object for routes between the given geographic coordinates and an
+    /// optional profile identifier optimized for navigation.
+    ///
+    /// - Seealso: `MatchOptions`.
     public convenience init(
         coordinates: [CLLocationCoordinate2D],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,

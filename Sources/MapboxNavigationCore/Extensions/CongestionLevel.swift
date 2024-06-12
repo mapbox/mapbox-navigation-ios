@@ -2,12 +2,10 @@ import CarPlay
 import Foundation
 import MapboxDirections
 
-/**
- Range of numeric values determining congestion level.
-
- Congestion ranges work with `NumericCongestionLevel` values that can be requested by specifying
- `AttributeOptions.numericCongestionLevel` in `DirectionOptions.attributes` when making Directions request.
- */
+/// Range of numeric values determining congestion level.
+///
+/// Congestion ranges work with `NumericCongestionLevel` values that can be requested by specifying
+/// `AttributeOptions.numericCongestionLevel` in `DirectionOptions.attributes` when making Directions request.
 public typealias CongestionRange = Range<NumericCongestionLevel>
 
 /// Configuration for connecting numeric congestion values to range categories.
@@ -94,17 +92,16 @@ extension CongestionLevel {
 }
 
 extension RouteLeg {
-    /**
-     An array containing the traffic congestion level along each road segment in the route leg geometry.
-
-     The array is formed either by converting values of `segmentNumericCongestionLevels` to `CongestionLevel` type (see `CongestionRange`)
-     or by taking `segmentCongestionLevels`, depending whether `AttributeOptions.numericCongestionLevel` or `AttributeOptions.congestionLevel`
-     was specified in `DirectionsOptions.attributes` during Directions request.
-
-     If both are present, `segmentNumericCongestionLevels` is preferred.
-
-     If none are present, returns `nil`.
-     */
+    /// An array containing the traffic congestion level along each road segment in the route leg geometry.
+    ///
+    /// The array is formed either by converting values of `segmentNumericCongestionLevels` to `CongestionLevel` type
+    /// (see `CongestionRange`) or by taking `segmentCongestionLevels`, depending whether
+    /// `AttributeOptions.numericCongestionLevel` or `AttributeOptions.congestionLevel` was specified in
+    /// `DirectionsOptions.attributes` during Directions request.
+    ///
+    /// If both are present, `segmentNumericCongestionLevels` is preferred.
+    ///
+    /// If none are present, returns `nil`.
     public func resolveCongestionLevels(using configuration: CongestionRangesConfiguration) -> [CongestionLevel]? {
         let congestionLevels: [CongestionLevel]? = if let numeric = segmentNumericCongestionLevels {
             numeric.map { numericValue in

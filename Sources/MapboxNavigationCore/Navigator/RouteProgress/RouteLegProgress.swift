@@ -3,9 +3,7 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
-/**
- `RouteLegProgress` stores the user’s progress along a route leg.
- */
+/// ``RouteLegProgress`` stores the user’s progress along a route leg.
 public struct RouteLegProgress: Equatable {
     // MARK: Details About the Leg
 
@@ -53,50 +51,34 @@ public struct RouteLegProgress: Equatable {
         }
     }
 
-    /**
-     Returns the current `RouteLeg`.
-     */
+    /// Returns the current ``RouteLeg``.
     public private(set) var leg: RouteLeg
 
-    /**
-     Total distance traveled in meters along current leg.
-     */
+    /// Total distance traveled in meters along current leg.
     public private(set) var distanceTraveled: CLLocationDistance = 0
 
-    /**
-     Duration remaining in seconds on current leg.
-     */
+    /// Duration remaining in seconds on current leg.
     public private(set) var durationRemaining: TimeInterval = 0
 
-    /**
-     Distance remaining on the current leg.
-     */
+    /// Distance remaining on the current leg.
     public private(set) var distanceRemaining: CLLocationDistance = 0
 
-    /**
-     Number between 0 and 1 representing how far along the current leg the user has traveled.
-     */
+    /// Number between 0 and 1 representing how far along the current leg the user has traveled.
     public private(set) var fractionTraveled: Double = 0
 
     public var userHasArrivedAtWaypoint = false
 
     // MARK: Details About the Leg’s Steps
 
-    /**
-     Index representing the current step.
-     */
+    /// Index representing the current step.
     public private(set) var stepIndex: Int = 0
 
-    /**
-     The remaining steps for user to complete.
-     */
+    /// The remaining steps for user to complete.
     public var remainingSteps: [RouteStep] {
         return Array(leg.steps.suffix(from: stepIndex + 1))
     }
 
-    /**
-     Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
-     */
+    /// Returns the ``RouteStep`` before a given step. Returns `nil` if there is no step prior.
     public func stepBefore(_ step: RouteStep) -> RouteStep? {
         guard let index = leg.steps.firstIndex(of: step) else {
             return nil
@@ -107,9 +89,7 @@ public struct RouteLegProgress: Equatable {
         return nil
     }
 
-    /**
-     Returns the `RouteStep` after a given step. Returns `nil` if there is not a step after.
-     */
+    /// Returns the ``RouteStep`` after a given step. Returns `nil` if there is not a step after.
     public func stepAfter(_ step: RouteStep) -> RouteStep? {
         guard let index = leg.steps.firstIndex(of: step) else {
             return nil
@@ -120,11 +100,9 @@ public struct RouteLegProgress: Equatable {
         return nil
     }
 
-    /**
-     Returns the `RouteStep` before the current step.
-
-     If there is no `priorStep`, nil is returned.
-     */
+    /// Returns the ``RouteStep`` before the current step.
+    ///
+    /// If there is no ``priorStep``, `nil` is returned.
     public var priorStep: RouteStep? {
         guard stepIndex - 1 >= 0 else {
             return nil
@@ -132,13 +110,14 @@ public struct RouteLegProgress: Equatable {
         return leg.steps[stepIndex - 1]
     }
 
-    /**
-     Returns the current `RouteStep` for the leg the user is on.
-     */
+    /// Returns the current ``RouteStep`` for the leg the user is on.
     public var currentStep: RouteStep {
         return leg.steps[stepIndex]
     }
 
+    /// Returns the ``RouteStep`` after the current step.
+    ///
+    /// If there is no ``upcomingStep``, `nil` is returned.
     public var upcomingStep: RouteStep? {
         guard stepIndex + 1 < leg.steps.endIndex else {
             return nil
@@ -146,11 +125,9 @@ public struct RouteLegProgress: Equatable {
         return leg.steps[stepIndex + 1]
     }
 
-    /**
-     Returns step 2 steps ahead.
-
-     If there is no `followOnStep`, nil is returned.
-     */
+    /// Returns step 2 steps ahead.
+    ///
+    /// If there is no ``followOnStep``, `nil` is returned.
     public var followOnStep: RouteStep? {
         guard stepIndex + 2 < leg.steps.endIndex else {
             return nil
@@ -158,39 +135,31 @@ public struct RouteLegProgress: Equatable {
         return leg.steps[stepIndex + 2]
     }
 
-    /**
-     Return bool whether step provided is the current `RouteStep` the user is on.
-     */
+    /// Return bool whether step provided is the current ``RouteStep`` the user is on.
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return step == currentStep
     }
 
-    /**
-     Returns the progress along the current `RouteStep`.
-     */
+    /// Returns the progress along the current ``RouteStep``.
     public internal(set) var currentStepProgress: RouteStepProgress
 
-    /**
-     Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
-
-     The maximum speed may be an advisory speed limit for segments where legal limits are not posted, such as highway entrance and exit ramps. If the speed limit along a particular segment is unknown, it is set to `nil`. If the speed is unregulated along the segment, such as on the German _Autobahn_ system, it is represented by a measurement whose value is `Double.infinity`.
-
-     Speed limit data is available in [a number of countries and territories worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
-     */
+    /// Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit
+    /// is unknown or missing.
+    ///
+    /// The maximum speed may be an advisory speed limit for segments where legal limits are not posted, such as highway
+    /// entrance and exit ramps. If the speed limit along a particular segment is unknown, it is set to `nil`. If the
+    /// speed is unregulated along the segment, such as on the German _Autobahn_ system, it is represented by a
+    /// measurement whose value is `Double.infinity`.
+    ///
+    /// Speed limit data is available in [a number of countries and territories
+    /// worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
     public private(set) var currentSpeedLimit: Measurement<UnitSpeed>? = nil
 
-    /**
-     Index relative to leg shape, representing the point the user is currently located at.
-     */
+    /// Index relative to leg shape, representing the point the user is currently located at.
     public private(set) var shapeIndex: Int = 0
 
-    /**
-     Intializes a new `RouteLegProgress`.
-
-     - parameter leg: Leg on a `Route`.
-     - parameter stepIndex: Current step the user is on.
-     - parameter shapeIndex: Index relative to leg shape, representing the point the user is currently located at.
-     */
+    /// Intializes a new ``RouteLegProgress``.
+    /// - Parameter leg: Leg on a ``NavigationRoute``.
     public init(leg: RouteLeg) {
         precondition(
             leg.steps.indices.contains(stepIndex),
@@ -238,9 +207,7 @@ public struct RouteLegProgress: Equatable {
         return currentClosest
     }
 
-    /**
-     The waypoints remaining on the current leg, not including the leg’s destination.
-     */
+    /// The waypoints remaining on the current leg, not including the leg’s destination.
     func remainingWaypoints(among waypoints: [MapboxDirections.Waypoint]) -> [MapboxDirections.Waypoint] {
         guard waypoints.count > 1 else {
             // The leg has only a source and no via points. Save ourselves a call to RouteLeg.coordinates, which can be

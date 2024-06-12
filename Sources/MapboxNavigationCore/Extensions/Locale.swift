@@ -1,9 +1,7 @@
 import Foundation
 
 extension Locale {
-    /**
-     Given the app's localized language setting, returns a string representing the user's localization.
-     */
+    /// Given the app's localized language setting, returns a string representing the user's localization.
     public static var preferredLocalLanguageCountryCode: String {
         let firstBundleLocale = Bundle.main.preferredLocalizations.first!
         let bundleLocale = firstBundleLocale.components(separatedBy: "-")
@@ -19,9 +17,7 @@ extension Locale {
         return firstBundleLocale
     }
 
-    /**
-     Returns a `Locale` from `preferredLocalLanguageCountryCode`.
-     */
+    /// Returns a `Locale` from ``Foundation/Locale/preferredLocalLanguageCountryCode``.
     public static var nationalizedCurrent: Locale {
         Locale(identifier: preferredLocalLanguageCountryCode)
     }

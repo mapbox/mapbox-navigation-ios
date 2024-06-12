@@ -17,27 +17,19 @@ public protocol RoutingProvider: Sendable {
     func calculateRoutes(options: MatchOptions) -> FetchTask
 }
 
-/**
- Defines source of routing engine to be used for requests.
- */
+/// Defines source of routing engine to be used for requests.
 public enum RoutingProviderSource: Equatable, Sendable {
-    /**
-     Fetch data online only
-
-     Such `MapboxRoutingProvider` is equivalent of using bare `Directions` wrapper.
-     */
+    /// Fetch data online only.
+    ///
+    /// Such ``MapboxRoutingProvider`` is equivalent of using bare `Directions` wrapper.
     case online
-    /**
-     Use offline data only
-
-     In order for such `MapboxRoutingProvider` to function properly, proper navigation data should be available offline. `.offline` routing provider will not be able to refresh routes.
-     */
+    /// Use offline data only.
+    ///
+    /// In order for such ``MapboxRoutingProvider`` to function properly, proper navigation data should be available
+    /// offline. `.offline` routing provider will not be able to refresh routes.
     case offline
-    /**
-     Attempts to use `online` with fallback to `offline`.
-
-     `.hybrid` routing provider will be able to refresh routes only using internet connection.
-     */
+    /// Attempts to use ``RoutingProviderSource/online`` with fallback to ``RoutingProviderSource/offline``.
+    /// `.hybrid` routing provider will be able to refresh routes only using internet connection.
     case hybrid
 
     var nativeSource: RouterType {

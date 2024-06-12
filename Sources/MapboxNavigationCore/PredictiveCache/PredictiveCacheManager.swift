@@ -3,13 +3,12 @@ import MapboxCommon
 import MapboxMaps
 import MapboxNavigationNative
 
-/**
- Proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation.
-
- Typically, you initialize an instance of this class and retain it as long as caching is required.
-
- - note: This object uses global tile store configuration from `NavigationSettings.tileStoreConfiguration`.
- */
+/// Proactively fetches tiles which may become necessary if the device loses its Internet connection at some point
+/// during passive or active turn-by-turn navigation.
+///
+/// Typically, you initialize an instance of this class and retain it as long as caching is required. Pass
+/// ``MapboxNavigationProvider/predictiveCacheManager`` to your ``NavigationMapView`` instance to use predictive cache.
+/// - Note: This object uses global tile store configuration from ``CoreConfig/predictiveCacheConfig``.
 public class PredictiveCacheManager {
     private let predictiveCacheOptions: PredictiveCacheConfig
     private let tileStore: TileStore

@@ -36,32 +36,28 @@ public final class NavigationEventsManager: Sendable {
 
     // MARK: Sending Feedback Events
 
-    /**
-     Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     - returns: Returns a feedback event.
-
-     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
-     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
-
-     - Postcondition:
-     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
-     */
+    /// Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
+    ///
+    /// You can pair this with a custom feedback UI in your app to flag problems during navigation such as road
+    /// closures, incorrect instructions, etc.
+    ///  If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show
+    /// the custom UI so the location and timestamp are more accurate. Alternatively, you can use
+    /// `FeedbackViewContoller` which handles feedback lifecycle internally.
+    /// - Parameter screenshotOption: The options to configure how the screenshot for the vent is provided.
+    /// - Returns: A ``FeedbackEvent``.
+    /// - Postcondition: Call ``sendActiveNavigationFeedback(_:type:description:)`` and
+    /// ``sendPassiveNavigationFeedback(_:type:description:)`` with the returned feedback to attach additional metadata
+    /// to the feedback and send it.
     public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) async -> FeedbackEvent? {
         await navNativeEventsManager?.createFeedback(screenshotOption: screenshotOption)
     }
 
-    /**
-     Send active navigation feedback to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
+    /// You can pair this with a custom feedback UI in your app to flag problems during navigation such as road
+    /// closures, incorrect instructions, etc.
+    /// - Parameters:
+    ///   - feedback: A ``FeedbackEvent`` created with ``createFeedback(screenshotOption:)`` method.
+    ///   - type: An ``ActiveNavigationFeedbackType`` used to specify the type of feedback.
+    ///   - description: A custom string used to describe the problem in detail.
     public func sendActiveNavigationFeedback(
         _ feedback: FeedbackEvent,
         type: ActiveNavigationFeedbackType,
@@ -77,15 +73,14 @@ public final class NavigationEventsManager: Sendable {
         }
     }
 
-    /**
-     Send passive navigation feedback to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
+    /// Send passive navigation feedback to the Mapbox data team.
+    ///
+    /// You can pair this with a custom feedback UI in your app to flag problems during navigation such as road
+    /// closures, incorrect instructions, etc.
+    /// - Parameters:
+    ///   - feedback: A ``FeedbackEvent`` created with ``createFeedback(screenshotOption:)`` method.
+    ///   - type: A ``PassiveNavigationFeedbackType`` used to specify the type of feedback.
+    ///   - description: A custom string used to describe the problem in detail.
     public func sendPassiveNavigationFeedback(
         _ feedback: FeedbackEvent,
         type: PassiveNavigationFeedbackType,
@@ -101,17 +96,16 @@ public final class NavigationEventsManager: Sendable {
         }
     }
 
-    /**
-     :nodoc:
-     Send active navigation feedback to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     - parameter source: A `FeedbackSource` used to specify feedback source.
-     */
+    /// Send active navigation feedback to the Mapbox data team.
+    ///
+    /// You can pair this with a custom feedback UI in your app to flag problems during navigation such as road
+    /// closures, incorrect instructions, etc.
+    /// - Parameters:
+    ///   - feedback: A ``FeedbackEvent`` created with ``createFeedback(screenshotOption:)`` method.
+    ///   - type: An ``ActiveNavigationFeedbackType`` used to specify the type of feedback.
+    ///   - description: A custom string used to describe the problem in detail.
+    ///   - source: A ``FeedbackSource`` used to specify feedback source.
+    /// - Returns: The sent ``UserFeedback``.
     public func sendActiveNavigationFeedback(
         _ feedback: FeedbackEvent,
         type: ActiveNavigationFeedbackType,
@@ -126,6 +120,13 @@ public final class NavigationEventsManager: Sendable {
         )
     }
 
+    ///  Send  navigation feedback to the Mapbox data team.
+    /// - Parameters:
+    ///   - feedback: A ``FeedbackEvent`` created with ``createFeedback(screenshotOption:)`` method.
+    ///   - type: An ``FeedbackType`` used to specify the type of feedback.
+    ///   - description: A custom string used to describe the problem in detail.
+    ///   - source: A ``FeedbackSource`` used to specify feedback source.
+    /// - Returns: The sent ``UserFeedback``.
     public func sendNavigationFeedback(
         _ feedback: FeedbackEvent,
         type: FeedbackType,
@@ -140,18 +141,16 @@ public final class NavigationEventsManager: Sendable {
         )
     }
 
-    /**
-     :nodoc:
-     Send passive navigation feedback to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     - parameter source: A `FeedbackSource` used to specify feedback source.
-     - parameter completionHandler: A `UserFeedbackCompletionHandler` which will be called when the user feedback is sent. Defaults to `nil`.
-     */
+    /// Send passive navigation feedback to the Mapbox data team.
+    ///
+    /// You can pair this with a custom feedback UI in your app to flag problems during navigation such as road
+    /// closures, incorrect instructions, etc.
+    /// - Parameters:
+    ///   - feedback: A ``FeedbackEvent`` created with ``createFeedback(screenshotOption:)`` method.
+    ///   - type: A ``PassiveNavigationFeedbackType`` used to specify the type of feedback.
+    ///   - description: A custom string used to describe the problem in detail.
+    ///   - source: A `FeedbackSource` used to specify feedback source.
+    /// - Returns: The sent ``UserFeedback``.
     public func sendPassiveNavigationFeedback(
         _ feedback: FeedbackEvent,
         type: PassiveNavigationFeedbackType,
@@ -166,16 +165,12 @@ public final class NavigationEventsManager: Sendable {
         )
     }
 
-    /**
-     Send event that Car Play was connected.
-     */
+    /// Send event that Car Play was connected.
     public func sendCarPlayConnectEvent() {
         navNativeEventsManager?.sendCarPlayConnectEvent()
     }
 
-    /**
-     Send event that Car Play was disconnected.
-     */
+    /// Send event that Car Play was disconnected.
     public func sendCarPlayDisconnectEvent() {
         navNativeEventsManager?.sendCarPlayDisconnectEvent()
     }

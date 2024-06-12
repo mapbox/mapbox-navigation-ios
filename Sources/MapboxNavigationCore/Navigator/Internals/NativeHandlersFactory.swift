@@ -229,15 +229,16 @@ final class NativeHandlersFactory: @unchecked Sendable {
 }
 
 extension TileEndpointConfiguration {
-    /**
-     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using the given credentials.
-
-           - parameter apiConfiguration: ApiConfiguration for accessing road network data.
-           - parameter tilesVersion: Routing tile version.
-           - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
-           - parameter targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes available
-           - parameter datasetProfileIdentifier: profile setting, used for selecting tiles type for navigation.
-     */
+    /// Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint,
+    /// using the given credentials.
+    /// - Parameters:
+    ///   - apiConfiguration: ApiConfiguration for accessing road network data.
+    ///   - tilesVersion: Routing tile version.
+    ///   - minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can
+    /// be requested from the tile endpoint.
+    ///   - targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes
+    /// available
+    ///   - datasetProfileIdentifier profile setting, used for selecting tiles type for navigation.
     convenience init(
         apiConfiguration: ApiConfiguration,
         tilesVersion: String,

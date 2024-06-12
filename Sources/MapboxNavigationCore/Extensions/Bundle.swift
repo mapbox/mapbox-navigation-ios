@@ -6,9 +6,7 @@ private final class BundleToken {}
 extension Bundle {
     // MARK: Accessing Mapbox-Specific Bundles
 
-    /**
-     Returns a set of strings containing supported background mode types.
-     */
+    /// Returns a set of strings containing supported background mode types.
     public var backgroundModes: Set<String> {
         if let modes = object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
             return Set<String>(modes)
@@ -28,15 +26,14 @@ extension Bundle {
     private static let module: Bundle = .init(for: BundleToken.self)
 #endif
 
+    /// The Mapbox Core Navigation framework bundle.
     public static let mapboxNavigationUXCore: Bundle = .module
 
-    /**
-     Provides `Bundle` instance, based on provided bundle name and class inside of it.
-
-     - parameter `bundleName`: Name of the bundle.
-     - parameter `class`: Class, which is located inside of the bundle.
-     - returns: Instance of the bundle if it was found, otherwise `nil`.
-     */
+    /// Provides `Bundle` instance, based on provided bundle name and class inside of it.
+    /// - Parameters:
+    ///   - bundleName: Name of the bundle.
+    ///   - class:  Class, which is located inside of the bundle.
+    /// - Returns: Instance of the bundle if it was found, otherwise `nil`.
     static func bundle(for bundleName: String, class: AnyClass) -> Bundle? {
         let candidates = [
             // Bundle should be present here when the package is linked into an App.

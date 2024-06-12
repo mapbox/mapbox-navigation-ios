@@ -2,43 +2,37 @@ import CoreLocation
 import Foundation
 import MapboxNavigationNative
 
-/**
- * Contains information about distance to the road object of a concrete
- * type/shape (gantry, polygon, line, point etc.).
- */
+/// Contains information about distance to the road object of a concrete type/shape (gantry, polygon, line, point etc.).
 public enum DistancedRoadObject: Sendable, Equatable {
-    /**
-     The information about distance to the road object represented as a point.
-     - parameter identifier: Road object identifier.
-     - parameter kind: Road object kind.
-     - parameter distance: Distance to the point object, measured in meters.
-     */
+    /// The information about distance to the road object represented as a point.
+    /// - Parameters:
+    ///   - identifier: Road object identifier.
+    ///   - kind: Road object kind.
+    ///   - distance: Distance to the point object, measured in meters.
     case point(
         identifier: RoadObject.Identifier,
         kind: RoadObject.Kind,
         distance: CLLocationDistance
     )
 
-    /**
-     The information about distance to the road object represented as a gantry.
-     - parameter identifier: Road object identifier.
-     - parameter kind: Road object kind.
-     - parameter distance: Distance to the gantry object.
-     */
+    /// The information about distance to the road object represented as a gantry.
+    /// - Parameters:
+    ///   - identifier: Road object identifier.
+    ///   - kind: Road object kind.
+    ///   - distance: Distance to the gantry object.
     case gantry(
         identifier: RoadObject.Identifier,
         kind: RoadObject.Kind,
         distance: CLLocationDistance
     )
 
-    /**
-     The information about distance to the road object represented as a polygon.
-     - parameter identifier: Road object identifier.
-     - parameter kind: Road object kind.
-     - parameter distanceToNearestEntry: Distance measured in meters to the nearest entry.
-     - parameter distanceToNearestExit: Distance measured in meters to nearest exit.
-     - parameter isInside: Boolean to indicate whether we're currently "inside" the object.
-     */
+    /// The information about distance to the road object represented as a polygon.
+    /// - Parameters:
+    ///   -  identifier: Road object identifier.
+    ///   - kind: Road object kind.
+    ///   - distanceToNearestEntry: Distance measured in meters to the nearest entry.
+    ///   - distanceToNearestExit: Distance measured in meters to nearest exit.
+    ///   - isInside: Boolean to indicate whether we're currently "inside" the object.
     case polygon(
         identifier: RoadObject.Identifier,
         kind: RoadObject.Kind,
@@ -47,14 +41,13 @@ public enum DistancedRoadObject: Sendable, Equatable {
         isInside: Bool
     )
 
-    /**
-     The information about distance to the road object represented as a subgraph.
-     - parameter identifier: Road object identifier.
-     - parameter kind: Road object kind.
-     - parameter distanceToNearestEntry: Distance measured in meters to the nearest entry.
-     - parameter distanceToNearestExit: Distance measured in meters to the nearest exit.
-     - parameter isInside: Boolean that indicates whether we're currently "inside" the object.
-     */
+    /// The information about distance to the road object represented as a subgraph.
+    /// - Parameters:
+    ///   - identifier: Road object identifier.
+    ///   -   kind: Road object kind.
+    ///   -   distanceToNearestEntry: Distance measured in meters to the nearest entry.
+    ///   -   distanceToNearestExit: Distance measured in meters to the nearest exit.
+    ///   -   isInside: Boolean that indicates whether we're currently "inside" the object.
     case subgraph(
         identifier: RoadObject.Identifier,
         kind: RoadObject.Kind,
@@ -63,16 +56,19 @@ public enum DistancedRoadObject: Sendable, Equatable {
         isInside: Bool
     )
 
-    /**
-     The information about distance to the road object represented as a line.
-     - parameter identifier: Road object identifier.
-     - parameter kind: Road object kind.
-     - parameter distanceToEntry: Distance from the current position to entry point measured in meters along the road graph. This value is 0 if already "within" the object.
-     - parameter distanceToExit" Distance from the current position to the most likely exit point measured in meters along the road graph.
-     - parameter distanceToEnd: Distance from the current position to the most distance exit point measured in meters along the road graph.
-     - parameter isEntryFromStart: Boolean that indicates whether we enter the road object from its start. This value is `false` if already "within" the object.
-     - parameter length: Length of the road object measured in meters.
-     */
+    /// The information about distance to the road object represented as a line.
+    /// - Parameters:
+    ///   - identifier: Road object identifier.
+    ///   -   kind: Road object kind.
+    ///   -   distanceToEntry: Distance from the current position to entry point measured in meters along the road
+    /// graph. This value is 0 if already "within" the object.
+    ///   -   distanceToExit: Distance from the current position to the most likely exit point measured in meters along
+    /// the road graph.
+    ///   -   distanceToEnd: Distance from the current position to the most distance exit point measured in meters along
+    /// the road graph.
+    ///   -   isEntryFromStart: Boolean that indicates whether we enter the road object from its start. This value is
+    /// `false` if already "within" the object.
+    ///   -   length: Length of the road object measured in meters.
     case line(
         identifier: RoadObject.Identifier,
         kind: RoadObject.Kind,
@@ -83,9 +79,7 @@ public enum DistancedRoadObject: Sendable, Equatable {
         length: CLLocationDistance
     )
 
-    /**
-     Road object identifier
-     */
+    /// Road object identifier.
     public var identifier: RoadObject.Identifier {
         switch self {
         case .point(let identifier, _, _),
@@ -97,9 +91,7 @@ public enum DistancedRoadObject: Sendable, Equatable {
         }
     }
 
-    /**
-     Road object kind
-     */
+    /// Road object kind.
     public var kind: RoadObject.Kind {
         switch self {
         case .point(_, let type, _),

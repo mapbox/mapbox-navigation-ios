@@ -48,7 +48,7 @@ public class StepsViewController: UIViewController, NavigationComponent {
         let currentLeg = routeProgress.currentLeg
 
         // Add remaining steps for current leg
-        var section = [RouteStep]()
+        var section: [RouteStep] = []
         for (index, step) in currentLeg.steps.enumerated() {
             guard index > stepIndex else { continue }
             // Don't include the last step, it includes nothing

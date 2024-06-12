@@ -12,12 +12,12 @@ protocol HandlerData {
 
 extension NativeHandlersFactory: HandlerData {}
 
-/**
- :nodoc:
- Creates new or returns existing entity of `HandlerType` constructed with `Arguments`.
-
- This factory is required since some of NavNative's handlers are used by multiple unrelated entities and is quite expensive to allocate. Since bindgen-generated `*Factory` classes are not an actual factory but just a wrapper around general init, `HandlerFactory` introduces basic caching of the latest allocated entity. In most of the cases there should never be multiple handlers with different attributes, so such solution is adequate at the moment.
- */
+/// Creates new or returns existing entity of `HandlerType` constructed with `Arguments`.
+///
+/// This factory is required since some of NavNative's handlers are used by multiple unrelated entities and is quite
+/// expensive to allocate. Since bindgen-generated `*Factory` classes are not an actual factory but just a wrapper
+/// around general init, `HandlerFactory` introduces basic caching of the latest allocated entity. In most of the cases
+/// there should never be multiple handlers with different attributes, so such solution is adequate at the moment.
 class HandlerFactory<HandlerType, Arguments> {
     private struct CacheKey: HandlerData {
         let tileStorePath: String

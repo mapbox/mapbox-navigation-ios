@@ -3,49 +3,41 @@ import MapboxNavigationNative
 import Turf
 
 extension RoadObject {
-    /**
-     The location of a road object in the road graph.
-     */
+    /// The location of a road object in the road graph.
     public enum Location: Equatable, Sendable {
-        /**
-         Location of an object represented as a gantry.
-         - parameter positions: Positions of gantry entries.
-         - parameter shape: Shape of a gantry.
-         */
+        /// Location of an object represented as a gantry.
+        /// - Parameters:
+        ///    - positions: Positions of gantry entries.
+        ///    - shape: Shape of a gantry.
         case gantry(positions: [RoadObject.Position], shape: Turf.Geometry)
 
-        /**
-         Location of an object represented as a point.
-         - parameter position: Position of the object on the road graph.
-         */
+        /// Location of an object represented as a point.
+        ///   - position: Position of the object on the road graph.
         case point(position: RoadObject.Position)
 
-        /**
-         Location of an object represented as a polygon.
-         - parameter entries: Positions of polygon entries.
-         - parameter exits: Positions of polygon exits.
-         - parameter shape: Shape of a polygon.
-         */
+        /// Location of an object represented as a polygon.
+        /// - Parameters:
+        ///   - entries: Positions of polygon entries.
+        ///   - exits: Positions of polygon exits.
+        ///   - shape: Shape of a polygon.
         case polygon(
             entries: [RoadObject.Position],
             exits: [RoadObject.Position],
             shape: Turf.Geometry
         )
 
-        /**
-         Location of an object represented as a polyline.
-         - parameter path: Position of a polyline on a road graph.
-         - parameter shape: Shape of a polyline.
-         */
+        /// Location of an object represented as a polyline.
+        /// - Parameters:
+        ///   - path: Position of a polyline on a road graph.
+        ///   - shape: Shape of a polyline.
         case polyline(path: RoadGraph.Path, shape: Turf.Geometry)
 
-        /**
-         Location of an object represented as a subgraph.
-         - parameter enters: Positions of the subgraph enters.
-         - parameter exits: Positions of the subgraph exits.
-         - parameter shape: Shape of a subgraph.
-         - parameter edges: Edges of the subgraph associated by id.
-         */
+        /// Location of an object represented as a subgraph.
+        /// - Parameters:
+        ///   - enters: Positions of the subgraph enters.
+        ///   - exits: Positions of the subgraph exits.
+        ///   - shape: Shape of a subgraph.
+        ///   - edges: Edges of the subgraph associated by id.
         case subgraph(
             enters: [RoadObject.Position],
             exits: [RoadObject.Position],
@@ -53,20 +45,18 @@ extension RoadObject {
             edges: [RoadGraph.SubgraphEdge.Identifier: RoadGraph.SubgraphEdge]
         )
 
-        /**
-         Location of an object represented as an OpenLR line.
-         - parameter path: Position of a line on a road graph.
-         - parameter shape: Shape of a line.
-         */
+        /// Location of an object represented as an OpenLR line.
+        /// - Parameters:
+        ///   - path: Position of a line on a road graph.
+        ///   - shape: Shape of a line.
         case openLRLine(path: RoadGraph.Path, shape: Turf.Geometry)
 
-        /**
-         Location of an object represented as an OpenLR point.
-         - parameter position: Position of the point on the graph.
-         - parameter sideOfRoad: Specifies on which side of road the point is located.
-         - parameter orientation: Specifies orientation of the object relative to referenced line.
-         - parameter coordinate: Map coordinate of the point.
-         */
+        /// Location of an object represented as an OpenLR point.
+        /// - Parameters:
+        ///   - position: Position of the point on the graph.
+        ///   - sideOfRoad: Specifies on which side of road the point is located.
+        ///   - orientation: Specifies orientation of the object relative to referenced line.
+        ///   - coordinate: Map coordinate of the point.
         case openLRPoint(
             position: RoadGraph.Position,
             sideOfRoad: OpenLRSideOfRoad,
@@ -74,10 +64,8 @@ extension RoadObject {
             coordinate: CLLocationCoordinate2D
         )
 
-        /**
-         Location of a route alert.
-         - parameter shape: Shape of an object.
-         */
+        /// Location of a route alert.
+        /// - Parameter shape: Shape of an object.
         case routeAlert(shape: Turf.Geometry)
 
         init(_ native: MapboxNavigationNative.MatchedRoadObjectLocation) {

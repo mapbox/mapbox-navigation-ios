@@ -9,7 +9,7 @@ public struct UserFeedback: @unchecked Sendable {
     public let location: CLLocation
 }
 
-/// The `NavigationTelemetryManager` is responsible for telemetry in Navigation.
+/// The ``NavigationTelemetryManager`` is responsible for telemetry in Navigation.
 protocol NavigationTelemetryManager: AnyObject, Sendable {
     var userInfo: [String: String?]? { get set }
 

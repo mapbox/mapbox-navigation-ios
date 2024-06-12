@@ -9,14 +9,12 @@ extension AdministrativeRegion {
     }
 }
 
-/**
- `BorderCrossing` encapsulates a border crossing, specifying crossing region codes.
- */
+/// ``BorderCrossing`` encapsulates a border crossing, specifying crossing region codes.
 public struct BorderCrossing: Equatable {
     public let from: AdministrativeRegion
     public let to: AdministrativeRegion
 
-    /// Initializes a new `BorderCrossing` object.
+    /// Initializes a new ``BorderCrossing`` object.
     /// - Parameters:
     ///   - from: origin administrative region
     ///   - to: destination administrative region

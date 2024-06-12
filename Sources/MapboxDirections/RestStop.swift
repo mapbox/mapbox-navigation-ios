@@ -1,40 +1,25 @@
 import Foundation
 import Turf
 
-/**
- A [rest stop](https://wiki.openstreetmap.org/wiki/Tag:highway%3Drest_area) along the route.
- */
+/// A [rest stop](https://wiki.openstreetmap.org/wiki/Tag:highway%3Drest_area) along the route.
 public struct RestStop: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var foreignMembers: JSONObject = [:]
 
-    /**
-     A kind of rest stop.
-     */
+    /// A kind of rest stop.
     public enum StopType: String, Codable, Sendable {
-        /**
-         A primitive rest stop that provides parking but no additional services.
-         */
+        /// A primitive rest stop that provides parking but no additional services.
         case serviceArea = "service_area"
-        /**
-         A major rest stop that provides amenities such as fuel and food.
-         */
+        /// A major rest stop that provides amenities such as fuel and food.
         case restArea = "rest_area"
     }
 
-    /**
-     The kind of the rest stop.
-     */
+    /// The kind of the rest stop.
     public let type: StopType
 
-    /**
-     The name of the rest stop, if available.
-     */
+    /// The name of the rest stop, if available.
     public let name: String?
 
-    /**
-     :nodoc:
-     Facilities associated with the rest stop, if available.
-     */
+    /// Facilities associated with the rest stop, if available.
     public let amenities: [Amenity]?
 
     private enum CodingKeys: String, CodingKey {
@@ -43,25 +28,20 @@ public struct RestStop: Codable, Equatable, ForeignMemberContainer, Sendable {
         case amenities
     }
 
-    /**
-     Initializes an unnamed rest stop of a certain kind.
-
-     - parameter type: The kind of rest stop.
-     */
+    /// Initializes an unnamed rest stop of a certain kind.
+    ///
+    /// - Parameter type: The kind of rest stop.
     public init(type: StopType) {
         self.type = type
         self.name = nil
         self.amenities = nil
     }
 
-    /**
-     :nodoc:
-     Initializes an optionally named rest stop of a certain kind.
-
-     - parameter type: The kind of rest stop.
-     - parameter name: The name of the rest stop.
-     - parameter amenities: Facilities associated with the rest stop.
-     */
+    /// Initializes an optionally named rest stop of a certain kind.
+    /// - Parameters:
+    ///   - type: The kind of rest stop.
+    ///   - name: The name of the rest stop.
+    ///   - amenities: Facilities associated with the rest stop.
     public init(type: StopType, name: String?, amenities: [Amenity]?) {
         self.type = type
         self.name = name

@@ -1,8 +1,7 @@
 import Foundation
 
-/**
- Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)`.
- */
+/// Feedback type is used to specify the type of feedback being recorded with
+/// ``NavigationEventsManager/sendPassiveNavigationFeedback(_:type:description:)``.
 public enum PassiveNavigationFeedbackType: FeedbackType {
     case poorGPS
     case incorrectMapData

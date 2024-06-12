@@ -17,9 +17,7 @@ struct EventFixLocation {
     let extras: [String: Any]
     let isMock: Bool
 
-    /**
-     Initializes an event location consistent with the given location object.
-     */
+    /// Initializes an event location consistent with the given location object.
     init(_ location: FixLocation) {
         self.coordinate = location.coordinate
         self.altitude = location.altitude?.doubleValue

@@ -14,7 +14,7 @@ public struct PredictiveCacheMapsConfig: Equatable, Sendable {
     /// Defaults to 0..16.
     public var zoomRange: ClosedRange<UInt8> = 0...16
 
-    /// Creates a new `PredictiveCacheMapsConfig` instance.
+    /// Creates a new ``PredictiveCacheMapsConfig`` instance.
     /// - Parameters:
     ///   - locationConfig: Location configuration for visual map predictive caching.
     ///   - maximumConcurrentRequests: Maxiumum amount of concurrent requests, which will be used for caching.

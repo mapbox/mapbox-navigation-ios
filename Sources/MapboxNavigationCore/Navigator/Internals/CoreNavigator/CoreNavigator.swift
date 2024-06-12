@@ -67,9 +67,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     private(set) var tileStore: TileStore
 
-    /**
-     Current Navigator status in terms of tile versioning.
-     */
+    // Current Navigator status in terms of tile versioning.
     var tileVersionState: NavigatorFallbackVersionsObserver.TileVersionState {
         navigatorFallbackVersionsObserver?.tileVersionState ?? .nominal
     }
@@ -160,12 +158,13 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         subscribeToNotifications()
     }
 
-    /**
-     Destroys and creates new instance of Navigator together with other related entities.
-
-     Typically, this method is used to restart a Navigator with a specific Version during switching to offline or online modes.
-     - parameter version: String representing a tile version name. `nil` value means "latest". Specifying exact version also enables `fallback` mode which will passively monitor newer version available and will notify `tileVersionState` if found.
-     */
+    /// Destroys and creates new instance of Navigator together with other related entities.
+    ///
+    /// Typically, this method is used to restart a Navigator with a specific Version during switching to offline or
+    /// online modes.
+    /// - Parameter version: String representing a tile version name. `nil` value means "latest". Specifying exact
+    /// version also enables `fallback` mode which will passively monitor newer version available and will notify
+    /// `tileVersionState` if found.
     @MainActor
     func restartNavigator(forcing version: String? = nil) {
         let previousNavigationSessionState = navigator.native.storeNavigationSession()

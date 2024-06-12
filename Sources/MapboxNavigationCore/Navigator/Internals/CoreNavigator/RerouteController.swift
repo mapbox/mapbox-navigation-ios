@@ -3,11 +3,10 @@ import MapboxCommon
 import MapboxDirections
 import MapboxNavigationNative_Private
 
-/**
- Adapter for `MapboxNavigationNative.RerouteControllerInterface` usage inside `Navigator`.
-
- This class handles correct setup for `RerouteControllerInterface`, monitoring native reroute events and configuring the process.
- */
+/// Adapter for `MapboxNavigationNative.RerouteControllerInterface` usage inside `Navigator`.
+///
+/// This class handles correct setup for `RerouteControllerInterface`, monitoring native reroute events and configuring
+/// the process.
 class RerouteController {
     // MARK: Configuration
 

@@ -143,15 +143,12 @@ private final class ProductionBillingService: BillingService {
     }
 }
 
-/**
- Receives events about navigation changes and triggers appropriate events in `BillingService`.
-
- Session can be paused (`BillingHandler.pauseBillingSession(with:)`),
- stopped (`BillingHandler.stopBillingSession(with:)`) or
- resumed (`BillingHandler.resumeBillingSession(with:)`).
-
- State of the billing sessions can be obtained using `BillingHandler.sessionState(uuid:)`.
- */
+/// Receives events about navigation changes and triggers appropriate events in `BillingService`.
+///
+/// Session can be paused (`BillingHandler.pauseBillingSession(with:)`), stopped
+/// (`BillingHandler.stopBillingSession(with:)`) or resumed (`BillingHandler.resumeBillingSession(with:)`).
+///
+/// State of the billing sessions can be obtained using `BillingHandler.sessionState(uuid:)`.
 final class BillingHandler: @unchecked Sendable {
     /// Parameters on an active session.
     private struct Session {
@@ -206,25 +203,19 @@ final class BillingHandler: @unchecked Sendable {
     /// The billing service which is used to send billing events.
     private let billingService: BillingService
 
-    /**
-     A lock which serializes access to variables with underscore: `_sessions` etc.
-     As a convention, all class-level identifiers that starts with `_` should be executed with locked `lock`.
-     */
+    /// A lock which serializes access to variables with underscore: `_sessions` etc.
+    /// As a convention, all class-level identifiers that starts with `_` should be executed with locked `lock`.
     private let lock: NSLock = .init()
 
-    /**
-     All currently active sessions. Running or paused. When session is stopped, it is removed from this variable.
-     These sessions are different from `NativeBillingService` sessions. `BillingHandler.Session`s are mapped to one
-     `NativeBillingService`'s session for each `BillingHandler.SessionType`.
-     */
+    /// All currently active sessions. Running or paused. When session is stopped, it is removed from this variable.
+    /// These sessions are different from `NativeBillingService` sessions. `BillingHandler.Session`s are mapped to one
+    /// `NativeBillingService`'s session for each `BillingHandler.SessionType`.
     private var _sessions: [UUID: Session] = [:]
 
-    /**
-     The state of the billing session.
-
-     - important: This variable is safe to use from any thread.
-     - parameter uuid: Session UUID which is provided in `BillingHandler.beginBillingSession(for:uuid:)`.
-     */
+    /// The state of the billing session.
+    ///
+    /// - Important: This variable is safe to use from any thread.
+    /// - Parameter uuid: Session UUID which is provided in `BillingHandler.beginBillingSession(for:uuid:)`.
     func sessionState(uuid: UUID) -> SessionState {
         lock.lock(); defer {
             lock.unlock()
@@ -272,19 +263,17 @@ final class BillingHandler: @unchecked Sendable {
         self.billingService = service
     }
 
-    /**
-     Starts a new billing session of the given `sessionType` identified by `uuid`.
-
-     The `uuid` that is used to create a billing session must be provided in the following methods to perform
-     relevant changes to the started billing session:
-     - `BillingHandler.stopBillingSession(with:)`
-     - `BillingHandler.pauseBillingSession(with:)`
-     - `BillingHandler.resumeBillingSession(with:)`
-
-     - Parameters:
-     - sessionType: The type of the billing session.
-     - uuid: The unique identifier of the billing session.
-     */
+    /// Starts a new billing session of the given `sessionType` identified by `uuid`.
+    ///
+    /// The `uuid` that is used to create a billing session must be provided in the following methods to perform
+    /// relevant changes to the started billing session:
+    /// - `BillingHandler.stopBillingSession(with:)`
+    /// - `BillingHandler.pauseBillingSession(with:)`
+    /// - `BillingHandler.resumeBillingSession(with:)`
+    ///
+    /// - Parameters:
+    ///   - sessionType: The type of the billing session.
+    ///   - uuid: The unique identifier of the billing session.
     func beginBillingSession(for sessionType: SessionType, uuid: UUID) {
         lock.lock()
 
@@ -328,11 +317,9 @@ final class BillingHandler: @unchecked Sendable {
         }
     }
 
-    /**
-     Starts a new billing session in `billingService` if a session with `uuid` exists.
-
-     Use this method to force `billingService` to start a new billing session.
-     */
+    /// Starts a new billing session in `billingService` if a session with `uuid` exists.
+    ///
+    /// Use this method to force `billingService` to start a new billing session.
     func beginNewBillingSessionIfExists(with uuid: UUID) {
         lock.lock()
 

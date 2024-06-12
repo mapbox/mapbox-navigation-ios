@@ -3,64 +3,41 @@ import MapboxDirections
 import MapboxNavigationNative
 
 extension RoadObject {
-    /**
-     Type of the road object.
-     */
+    /// Type of the road object.
     public enum Kind: Equatable, @unchecked Sendable {
-        /**
-         An alert providing information about incidents on a route. Incidents can include *congestion*,
-         *massTransit*, and more (see `Kind` for the full list of incident types).
-         */
+        /// An alert providing information about incidents on a route. Incidents can include *congestion*,
+        /// *massTransit*, and more (see `Kind` for the full list of incident types).
         case incident(Incident?)
 
-        /**
-         An alert describing a point along the route where a toll may be collected. Note that this does
-         not describe the entire toll road, rather it describes a booth or electronic gate where a toll
-         is typically charged. See `CollectionType`.
-         */
+        /// An alert describing a point along the route where a toll may be collected. Note that this does not describe
+        /// the entire toll road, rather it describes a booth or electronic gate where a toll is typically charged.
         case tollCollection(TollCollection?)
 
-        /**
-         An alert describing a country border crossing along the route. The alert triggers at the point
-         where the administrative boundary changes from one country to another. Two-letter and
-         three-letter ISO 3166-1 country codes are provided for the exiting country and the entering
-         country. See `BorderCrossingInfo`.
-         */
+        /// An alert describing a country border crossing along the route. The alert triggers at the point where the
+        /// administrative boundary changes from one country to another. Two-letter and three-letter ISO 3166-1 country
+        /// codes are provided for the exiting country and the entering country. See ``BorderCrossing``.
         case borderCrossing(BorderCrossing?)
 
-        /**
-         An alert describing a section of the route that continues through a tunnel. The alert begins at
-         the entrance of the tunnel and ends at the exit of the tunnel. For named tunnels, the tunnel name
-         is provided as part of `Tunnel.name`.
-         */
+        /// An alert describing a section of the route that continues through a tunnel. The alert begins at the entrance
+        /// of the tunnel and ends at the exit of the tunnel. For named tunnels, the tunnel name is provided as part of
+        /// ``Tunnel/name``.
         case tunnel(Tunnel?)
 
-        /**
-         An alert about a rest area or service area accessible from the route. The alert marks the point
-         along the route where a driver can choose to pull off to access a rest stop. See `StopType`.
-         */
+        /// An alert about a rest area or service area accessible from the route. The alert marks the point along the
+        /// route where a driver can choose to pull off to access a rest stop. See `MapboxDirections.StopType`.
         case serviceArea(RestStop?)
 
-        /**
-         An alert about a segment of a route that includes a restriction. Restricted roads can include
-         private access roads or gated areas that can be accessed but are not open to vehicles passing
-         through.
-         */
+        /// An alert about a segment of a route that includes a restriction. Restricted roads can include  private
+        /// access roads or gated areas that can be accessed but are not open to vehicles passing through.
         case restrictedArea
 
-        /**
-         An alert about a segment of a route that includes a bridge.
-         */
+        /// An alert about a segment of a route that includes a bridge.
         case bridge
 
-        /**
-         An alert about an railroad crossing at grade, also known as a level crossing.
-         */
+        /// An alert about an railroad crossing at grade, also known as a level crossing.
         case railroadCrossing
 
-        /**
-         Reserved for future use.
-         */
+        /// Reserved for future use.
         case userDefined
 
         /// Japan-specific Interchange info, refers to an expressway entrance and exit, e.g.  Wangannarashino IC.
@@ -69,7 +46,7 @@ extension RoadObject {
         /// Japan-specific Junction info, refers to a place where multiple expressways meet, e.g. Ariake JCT.
         case jct(Junction?)
 
-        /// Undefined
+        /// Undefined.
         case undefined
 
         init(_ native: MapboxNavigationNative.RoadObjectType) {

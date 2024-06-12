@@ -14,9 +14,6 @@ final class NavigationHistoryManager: ObservableObject, @unchecked Sendable {
         static let maxTimeIntervalToKeepHistory: TimeInterval = -24 * 60 * 60 // 1 day
     }
 
-    /** Local storage is responsible for sessions persistence
-     It can be `nil` in case local storage isn't available. See `NavigationHistoryLocalStorage.init?()`.
-     */
     private let localStorage: NavigationHistoryLocalStorageProtocol?
     private let uploader: NavigationHistoryUploaderProtocol
     private let log: MapboxCopilot.Log?

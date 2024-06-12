@@ -4,7 +4,7 @@ import MapboxDirections
 import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
-/// RouterInterface from MapboxNavigationNative
+/// RouterInterface from MapboxNavigationNative.
 typealias RouterInterfaceNative = MapboxNavigationNative_Private.RouterInterface
 
 struct RoutingProviderConfiguration: Sendable {
@@ -13,15 +13,14 @@ struct RoutingProviderConfiguration: Sendable {
     var credentials: Credentials
 }
 
-/**
- Provides alternative access to routing API.
-
- Use this class instead `Directions` requests wrapper to request new routes or refresh an existing one. Depending on `RouterSource`, `MapboxRoutingProvider` will use online and/or onboard routing engines. This may be used when designing purely online or offline apps, or when you need to provide best possible service regardless of internet collection.
- */
+/// Provides alternative access to routing API.
+///
+/// Use this class instead `Directions` requests wrapper to request new routes or refresh an existing one. Depending on
+/// ``RoutingProviderSource``, ``MapboxRoutingProvider`` will use online and/or onboard routing engines. This may be
+/// used when designing purely online or offline apps, or when you need to provide best possible service regardless of
+/// internet collection.
 public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
-    /**
-      Initializes new `MapboxRoutingProvider`.
-     */
+    /// Initializes a new ``MapboxRoutingProvider``.
     init(with configuration: RoutingProviderConfiguration) {
         self.configuration = configuration
     }
@@ -54,16 +53,15 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
     // MARK: Routes Calculation
 
-    /**
-     Begins asynchronously calculating routes using the given options and delivers the results to a closure.
-
-     Depending on configured `RouterSource`, this method may retrieve the routes asynchronously from the [Mapbox Directions API](https://www.mapbox.com/api-documentation/navigation/#directions) over a network connection or use onboard routing engine with available offline data.
-
-     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/).
-
-     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
-     - returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
-     */
+    /// Begins asynchronously calculating routes using the given options and delivers the results to a closure.
+    ///
+    /// Depending on configured ``RoutingProviderSource``, this method may retrieve the routes asynchronously from the
+    /// [Mapbox Directions API](https://www.mapbox.com/api-documentation/navigation/#directions) over a network
+    /// connection or use onboard routing engine with available offline data.
+    /// Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/).
+    /// - Parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
+    /// - Returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the
+    /// resulting routes, cancel corresponding task using this handle.
     public func calculateRoutes(options: RouteOptions) -> FetchTask {
         return Task { [
             sendableSelf = UncheckedSendable(self),
@@ -89,14 +87,14 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
         }
     }
 
-    /**
-     Begins asynchronously calculating matches using the given options and delivers the results to a closure.
-
-     Depending on configured `RouterSource`, this method may retrieve the matches asynchronously from the [Mapbox Map Matching API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection or use onboard routing engine with available offline data.
-
-     - parameter options: A `MatchOptions` object specifying the requirements for the resulting matches.
-     - returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle.
-     */
+    /// Begins asynchronously calculating matches using the given options and delivers the results to a closure.
+    ///
+    /// Depending on configured ``RoutingProviderSource``, this method may retrieve the matches asynchronously from the
+    /// [Mapbox Map Matching API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection or use
+    /// onboard routing engine with available offline data.
+    /// - Parameter options: A `MatchOptions` object specifying the requirements for the resulting matches.
+    /// - Returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the
+    /// resulting routes, cancel corresponding task using this handle.
     public func calculateRoutes(options: MatchOptions) -> FetchTask {
         return Task { [
             sendableSelf = UncheckedSendable(self),

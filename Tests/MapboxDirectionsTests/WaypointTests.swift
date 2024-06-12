@@ -84,6 +84,7 @@ class WaypointTests: XCTestCase {
         }
     }
 
+    @available(*, deprecated, message: "To test deprecated waypointIndices")
     func testSeparatesLegs() {
         let one = Waypoint(coordinate: LocationCoordinate2D(latitude: 1, longitude: 1))
         var two = Waypoint(coordinate: LocationCoordinate2D(latitude: 2, longitude: 2))

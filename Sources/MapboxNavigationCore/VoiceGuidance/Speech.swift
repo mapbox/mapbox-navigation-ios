@@ -1,11 +1,12 @@
 import _MapboxNavigationHelpers
 import Foundation
 
-/**
- A `SpeechSynthesizer` object converts text into spoken audio. Unlike `AVSpeechSynthesizer`, a `SpeechSynthesizer` object produces audio by sending an HTTP request to the Mapbox Voice API, which produces more natural-sounding audio in various languages. With a speech synthesizer object, you can asynchronously generate audio data based on the `SpeechOptions` object you provide, or you can get the URL used to make this request.
-
- Use `AVAudioPlayer` to play the audio that a speech synthesizer object produces.
- */
+/// A `SpeechSynthesizer` object converts text into spoken audio. Unlike `AVSpeechSynthesizer`, a `SpeechSynthesizer`
+/// object produces audio by sending an HTTP request to the Mapbox Voice API, which produces more natural-sounding audio
+/// in various languages. With a speech synthesizer object, you can asynchronously generate audio data based on the
+/// ``SpeechOptions`` object you provide, or you can get the URL used to make this request.
+///
+/// Use `AVAudioPlayer` to play the audio that a speech synthesizer object produces.
 struct SpeechSynthesizer: Sendable {
     private let apiConfiguration: ApiConfiguration
     private let skuTokenProvider: SkuTokenProvider
@@ -25,24 +26,19 @@ struct SpeechSynthesizer: Sendable {
 
     // MARK: Getting Speech
 
-    /**
-     Begins asynchronously fetching the audio file.
-
-     This method retrieves the audio asynchronously over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the audio file.
-
-     - parameter options: A `SpeechOptions` object specifying the requirements for the resulting audio file.
-     */
     @discardableResult
+    /// Asynchronously fetches the audio file.
+    /// This method retrieves the audio asynchronously over a network connection. If a connection error or server error
+    /// occurs, details about the error are passed into the given completion handler in lieu of the audio file.
+    /// - Parameter options: A ``SpeechOptions`` object specifying the requirements for the resulting audio file.
+    /// - Returns: The audio data.
     func audioData(with options: SpeechOptions) async throws -> Data {
         try await data(with: url(forSynthesizing: options))
     }
 
-    /**
-     Returns a URL session task for the given URL that will run the given closures on completion or error.
-
-     - parameter url: The URL to request.
-     - throws: ``SpeechErrorApiError``
-     */
+    /// Returns a URL session task for the given URL that will run the given closures on completion or error.
+    /// - Parameter url: The URL to request.
+    /// - Returns: ``SpeechErrorApiError``
     private func data(
         with url: URL
     ) async throws -> Data {

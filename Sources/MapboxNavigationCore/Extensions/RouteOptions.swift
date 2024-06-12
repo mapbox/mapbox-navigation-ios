@@ -11,11 +11,10 @@ extension RouteOptions {
         }
     }
 
-    /**
-     Returns a tuple containing the waypoints along the leg at the given index and the waypoints that separate subsequent legs.
-
-     The first element of the tuple includes the leg’s source but not its destination.
-     */
+    /// Returns a tuple containing the waypoints along the leg at the given index and the waypoints that separate
+    /// subsequent legs.
+    ///
+    /// The first element of the tuple includes the leg’s source but not its destination.
     func waypoints(fromLegAt legIndex: Int) -> ([Waypoint], [Waypoint]) {
         // The first and last waypoints always separate legs. Make exceptions for these waypoints instead of modifying
         // them by side effect.
@@ -31,11 +30,9 @@ extension RouteOptions {
 }
 
 extension RouteOptions {
-    /**
-     Returns a copy of the route options by roundtripping through JSON.
-
-     - throws: An `EncodingError` or `DecodingError` if the route options could not be roundtripped through JSON.
-     */
+    /// Returns a copy of the route options by roundtripping through JSON.
+    ///
+    /// - Throws: An `EncodingError` or `DecodingError` if the route options could not be roundtripped through JSON.
     func copy() throws -> Self {
         // TODO: remove this method when changed to value type.
         // Work around <https://github.com/mapbox/mapbox-directions-swift/issues/564>.
@@ -45,18 +42,14 @@ extension RouteOptions {
 }
 
 extension Array {
-    /**
-     - seealso: Array.filter(_:)
-     */
+    /// - seealso: `Array.filter(_:)`
     public func filterKeepingFirstAndLast(_ isIncluded: (Element) throws -> Bool) rethrows -> [Element] {
         return try enumerated().filter {
             try isIncluded($0.element) || $0.offset == 0 || $0.offset == indices.last
         }.map(\.element)
     }
 
-    /**
-     - seealso: Array.split(maxSplits:omittingEmptySubsequences:whereSeparator:)
-     */
+    /// - seealso: `Array.split(maxSplits:omittingEmptySubsequences:whereSeparator:)`
     public func splitExceptAtStartAndEnd(
         maxSplits: Int = .max,
         omittingEmptySubsequences: Bool = true,

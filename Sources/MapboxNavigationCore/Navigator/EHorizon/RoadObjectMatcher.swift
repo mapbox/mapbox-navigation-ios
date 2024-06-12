@@ -78,14 +78,12 @@ public final class RoadObjectMatcher: @unchecked Sendable {
         ))
     }
 
-    /**
-     Matches given gantry (i.e. polyline orthogonal to the road) to the graph.
-     "Matching" here means we try to find all intersections of the gantry with the road graph
-     and track distances to those intersections as distance to the gantry.
-
-     - parameter gantry: Gantry representing the object.
-     - parameter identifier: Unique identifier of the object.
-     */
+    /// Matches given gantry (i.e. polyline orthogonal to the road) to the graph.
+    /// "Matching" here means we try to find all intersections of the gantry with the road graph and track distances to
+    /// those intersections as distance to the gantry.
+    /// - Parameters:
+    ///   - gantry: Gantry representing the object.
+    ///   - identifier: Unique identifier of the object.
     public func match(gantry: MultiPoint, identifier: RoadObject.Identifier) {
         let gantry = MatchableGeometry(id: identifier, coordinates: gantry.coordinates.map(Coordinate2D.init))
         native.matchGantries(
@@ -98,13 +96,11 @@ public final class RoadObjectMatcher: @unchecked Sendable {
         )
     }
 
-    /**
-     Matches given point to road graph.
-
-     - parameter point: Point representing the object.
-     - parameter identifier: Unique identifier of the object.
-     - parameter heading: Heading of the provided point, which is going to be matched.
-     */
+    /// Matches given point to road graph.
+    /// - Parameters:
+    ///   - point: Point representing the object.
+    ///   - identifier: Unique identifier of the object.
+    ///   - heading: Heading of the provided point, which is going to be matched.
     public func match(point: CLLocationCoordinate2D, identifier: RoadObject.Identifier, heading: CLHeading? = nil) {
         var trueHeading: NSNumber?
         if let heading, heading.trueHeading >= 0.0 {

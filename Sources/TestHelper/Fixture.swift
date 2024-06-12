@@ -172,7 +172,7 @@ public class Fixture: NSObject {
         stepDistance: Turf.LocationDistance = 0.0,
         stepCount: Int = 1
     ) -> RouteLegProgress {
-        var steps = [RouteStep]()
+        var steps: [RouteStep] = []
         for i in 0..<stepCount {
             let maneuverType: ManeuverType = i == stepCount - 1 ? .arrive : i == 0 ? .depart : .turn
             steps.append(RouteStep(

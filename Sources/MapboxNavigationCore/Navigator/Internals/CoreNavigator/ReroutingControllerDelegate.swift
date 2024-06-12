@@ -13,9 +13,7 @@ protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
 }
 
-/**
- Error type, describing rerouting process malfunction.
- */
+/// Error type, describing rerouting process malfunction.
 public enum ReroutingError: Error {
     /// Could not correctly process the reroute.
     case routeError

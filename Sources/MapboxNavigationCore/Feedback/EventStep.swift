@@ -16,9 +16,7 @@ struct EventStep: Equatable, Codable {
     let previousModifier: String
     let previousInstruction: String
 
-    /**
-     Initializes an event location consistent with the given location object.
-     */
+    /// Initializes an event location consistent with the given location object.
     init(_ step: Step) {
         self.distance = step.distance
         self.distanceRemaining = step.distanceRemaining

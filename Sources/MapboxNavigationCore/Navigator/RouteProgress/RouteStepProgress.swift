@@ -4,15 +4,10 @@ import MapboxDirections
 import MapboxNavigationNative
 import Turf
 
-/**
- `RouteStepProgress` stores the user’s progress along a route step.
- */
+/// ``RouteStepProgress`` stores the user’s progress along a route step.
 public struct RouteStepProgress: Equatable {
-    /**
-     Intializes a new `RouteStepProgress`.
-
-     - parameter step: Step on a `RouteLeg`.
-     */
+    /// Intializes a new ``RouteStepProgress``.
+    /// - Parameter step: Step on a ``RouteLeg``.
     public init(step: RouteStep) {
         self.step = step
     }
@@ -44,29 +39,19 @@ public struct RouteStepProgress: Equatable {
         currentSpokenInstruction = status.voiceInstruction.map(SpokenInstruction.init)
     }
 
-    /**
-     Returns the current `RouteStep`.
-     */
+    /// Returns the current `RouteStep`.
     public private(set) var step: RouteStep
 
-    /**
-     Returns distance user has traveled along current step.
-     */
+    /// Returns distance user has traveled along current step.
     public private(set) var distanceTraveled: CLLocationDistance = 0
 
-    /**
-     Total distance in meters remaining on current step.
-     */
+    /// Total distance in meters remaining on current step.
     public private(set) var distanceRemaining: CLLocationDistance = 0
 
-    /**
-     Number between 0 and 1 representing fraction of current step traveled.
-     */
+    /// Number between 0 and 1 representing fraction of current step traveled.
     public private(set) var fractionTraveled: Double = 0
 
-    /**
-     Number of seconds remaining on current step.
-     */
+    /// Number of seconds remaining on current step.
     public private(set) var durationRemaining: TimeInterval = 0
 
     /// Returns remaining step shape coordinates.
@@ -84,18 +69,14 @@ public struct RouteStepProgress: Equatable {
 
     // MARK: Intersections
 
-    /**
-     All intersections on the current `RouteStep` and also the first intersection on the upcoming `RouteStep`.
-
-     The upcoming `RouteStep` first `Intersection` is added because it is omitted from the current step.
-     */
+    /// All intersections on the current ``RouteStep`` and also the first intersection on the upcoming ``RouteStep``.
+    ///
+    /// The upcoming RouteStep first Intersection is added because it is omitted from the current step.
     public var intersectionsIncludingUpcomingManeuverIntersection: [Intersection]? //
 
-    /**
-     The next intersection the user will travel through.
-
-     The step must contain `intersectionsIncludingUpcomingManeuverIntersection` otherwise this property will be `nil`.
-     */
+    /// The next intersection the user will travel through.
+    /// The step must contain ``intersectionsIncludingUpcomingManeuverIntersection`` otherwise this property will be
+    /// `nil`.
     public var upcomingIntersection: Intersection? {
         guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.count > 0,
               intersections.startIndex..<intersections.endIndex - 1 ~= intersectionIndex
@@ -106,16 +87,13 @@ public struct RouteStepProgress: Equatable {
         return intersections[intersections.index(after: intersectionIndex)]
     }
 
-    /**
-     Index representing the current intersection.
-     */
+    /// Index representing the current intersection.
     public private(set) var intersectionIndex: Int = 0
 
-    /**
-     The current intersection the user will travel through.
-
-     The step must contain `intersectionsIncludingUpcomingManeuverIntersection` otherwise this property will be `nil`.
-     */
+    /// The current intersection the user will travel through.
+    ///
+    /// The step must contain ``intersectionsIncludingUpcomingManeuverIntersection`` otherwise this property will be
+    /// `nil`.
     public var currentIntersection: Intersection? {
         guard let intersections = intersectionsIncludingUpcomingManeuverIntersection,
               intersections.indices.contains(intersectionIndex)
@@ -126,21 +104,15 @@ public struct RouteStepProgress: Equatable {
         return intersections[intersectionIndex]
     }
 
-    /**
-     The distance in meters the user is to the next intersection they will pass through.
-     */
+    /// The distance in meters the user is to the next intersection they will pass through.
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
 
     // MARK: Visual and Spoken Instructions
 
-    /**
-     Index into `step.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
-     */
+    /// Index into `RouteStep.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
     public private(set) var visualInstructionIndex: Int = 0
 
-    /**
-     An `Array` of remaining `VisualInstruction` for a step.
-     */
+    /// An `Array` of remaining `VisualInstruction` for a step.
     public var remainingVisualInstructions: [VisualInstructionBanner]? {
         guard let visualInstructions = step.instructionsDisplayedAlongStep,
               visualInstructions.indices.contains(visualInstructionIndex) else { return nil }
@@ -148,9 +120,7 @@ public struct RouteStepProgress: Equatable {
         return Array(visualInstructions.suffix(from: visualInstructionIndex))
     }
 
-    /**
-     Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
-     */
+    /// Index into `RouteStep.instructionsSpokenAlongStep` representing the current spoken instruction.
     public private(set) var spokenInstructionIndex: Int?
 
     /// An `Array` of remaining `SpokenInstruction` for a step.
@@ -164,14 +134,10 @@ public struct RouteStepProgress: Equatable {
         return Array(instructions.suffix(from: spokenInstructionIndex))
     }
 
-    /**
-     Current spoken instruction for the user's progress along a step.
-     */
+    /// Current spoken instruction for the user's progress along a step.
     public private(set) var currentSpokenInstruction: SpokenInstruction? = nil
 
-    /**
-     Current visual instruction for the user's progress along a step.
-     */
+    /// Current visual instruction for the user's progress along a step.
     public var currentVisualInstruction: VisualInstructionBanner? {
         guard let instructions = step.instructionsDisplayedAlongStep,
               instructions.indices.contains(visualInstructionIndex) else { return nil }

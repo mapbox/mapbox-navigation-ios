@@ -26,43 +26,36 @@ extension RoadGraph {
     /// require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level
     /// of use of the feature.
     public struct Edge: Equatable, Sendable {
-        /**
-         Unique identifier of a directed edge.
-
-         Use a `RoadGraph` object to get more information about the edge with a given identifier.
-         */
+        /// Unique identifier of a directed edge.
+        ///
+        /// Use a ``RoadGraph`` object to get more information about the edge with a given identifier.
         public typealias Identifier = UInt
 
-        /** Unique identifier of the directed edge. */
+        /// Unique identifier of the directed edge.
         public let identifier: Identifier
 
-        /**
-         The level of the edge.
-
-         A value of 0 indicates that the edge is part of the most probable path (MPP), a value of 1 indicates an edge that branches away from the MPP, and so on.
-         */
+        /// The level of the edge.
+        ///
+        /// A value of 0 indicates that the edge is part of the most probable path (MPP), a value of 1 indicates an edge
+        /// that branches away from the MPP, and so on.
         public let level: UInt
 
-        /**
-         The probability that the user will transition onto this edge, with 1 being certain and 0 being unlikely.
-         */
+        /// The probability that the user will transition onto this edge, with 1 being certain and 0 being unlikely.
         public let probability: Double
 
-        /**
-         The edges to which the user could transition from this edge.
-
-         The most probable path may be split at some point if some of edges have a low probability difference (±0.05). For example, `outletEdges` can contain more than one edge with `level` set to 0. Currently, there is a maximum limit of one split per electronic horizon.
-         */
+        /// The edges to which the user could transition from this edge.
+        ///
+        /// The most probable path may be split at some point if some of edges have a low probability difference
+        /// (±0.05). For example, ``RoadGraph/Edge/outletEdges`` can contain more than one edge with
+        /// ``RoadGraph/Edge/level`` set to 0. Currently, there is a maximum limit of one split per electronic horizon.
         public let outletEdges: [Edge]
 
-        /**
-         Initializes a new `Edge` object.
-
-         - parameter identifier: The unique identifier of a directed edge.
-         - parameter level: The level of the edge.
-         - parameter probability: The probability that the user will transition onto this edge.
-         - parameter outletEdges: The edges to which the user could transition from this edge.
-         */
+        /// Initializes a new ``RoadGraph/Edge`` object.
+        /// - Parameters:
+        ///   - identifier: The unique identifier of a directed edge.:
+        ///   - level: The level of the edge.:
+        ///   - probability: The probability that the user will transition onto this edge.:
+        ///   - outletEdges: The edges to which the user could transition from this edge.
         public init(identifier: Identifier, level: UInt, probability: Double, outletEdges: [Edge]) {
             self.identifier = identifier
             self.level = level
