@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.2.0-rc.1
+
+### Other changes
+
+* Supported the ability to notify about the navigation-related error by adding `NavigationController.errors`.
+
 ## v3.2.0-beta.1
 
 ### API deprecations:

@@ -54,4 +54,7 @@ public protocol NavigationController: Sendable {
     var fasterRoutes: AnyPublisher<FasterRoutesStatus, Never> { get }
     /// Posts updates about route refreshing process.
     var routeRefreshing: AnyPublisher<RefreshingStatus, Never> { get }
+
+    /// Posts updates about navigation-related errors happen.
+    var errors: AnyPublisher<NavigatorError, Never> { get }
 }
