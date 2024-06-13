@@ -22,9 +22,9 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", from: "2.12.0"),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", revision: "2c42eae74af55ac88c712c2a1cc4057d4aa8a3d7"),
         .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "204.0.1"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.17.0"),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.18.0"),
         .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "3.0.0"),
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0"),
         .package(name: "CwlPreconditionTesting", url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
