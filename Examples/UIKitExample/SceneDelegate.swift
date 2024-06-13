@@ -12,7 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let shouldAnimate = true
 
-    let animationDuration = 0.5
+    let animationDuration = 0.6
     let navigationProvider = MapboxNavigationProvider(coreConfig: CoreConfig())
 
     func scene(
