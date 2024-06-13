@@ -95,6 +95,7 @@ public enum TestNavigationStatusProvider {
             isFallback: false,
             inTunnel: false,
             inParkingAisle: false,
+            inRoundabout: false,
             predicted: 10,
             geometryIndex: geometryIndex,
             shapeIndex: shapeIndex,

@@ -2,6 +2,11 @@
 
 ## v3.2.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.5.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.0-beta.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v312.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/312.0.0).
+
 ### API deprecations:
 
 * `CarPlaySearchController` conformance to `CPListTemplateDelegate` is deprecated in favor of `CPListItem.handler`. 
