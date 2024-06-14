@@ -29,6 +29,7 @@
 * Added`HistoryReplayController` wrapped as a custom static `LocationClient.historyReplayingValue(with:)`, which allows replaying history files.
 * Added static method `Directions.url(forCalculating:credentials:httpMethod:)` for generating a request URL without creating the `Directions` instance.
 * Added default value `CongestionRangesConfiguration.default` for `RouteProgress.init(navigationRoutes:waypoints:congestionConfiguration:)` constructor.
+* Add support for building with Xcode 16 beta.
 
 ## v3.1.0
 

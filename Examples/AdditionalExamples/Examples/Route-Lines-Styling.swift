@@ -182,7 +182,7 @@ class RouteLinesStylingViewController: UIViewController {
         return lineLayer
     }
 
-    func lineWidthExpression(_ multiplier: Double) -> Expression {
+    func lineWidthExpression(_ multiplier: Double) -> MapboxMaps.Expression {
         let lineWidthExpression = Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
