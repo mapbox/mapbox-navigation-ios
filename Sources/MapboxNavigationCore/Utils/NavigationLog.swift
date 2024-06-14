@@ -2,9 +2,10 @@ import Foundation
 import MapboxCommon_Private.MBXLog_Internal
 import OSLog
 
+@_documentation(visibility: internal)
 public typealias Log = NavigationLog
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public enum NavigationLog {
     public typealias Category = NavigationLogCategory
     private typealias Logger = MapboxCommon_Private.Log
@@ -35,7 +36,7 @@ public enum NavigationLog {
     public static func trace(_ message: String) {}
 }
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public struct NavigationLogCategory: RawRepresentable, Sendable {
     public let rawValue: String
 

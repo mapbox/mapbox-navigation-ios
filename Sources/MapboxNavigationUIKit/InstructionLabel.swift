@@ -1,7 +1,7 @@
 import MapboxDirections
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     @objc dynamic var roadShieldBlackColor: UIColor = .roadShieldBlackColor
     @objc dynamic var roadShieldBlueColor: UIColor = .roadShieldBlueColor
@@ -87,10 +87,10 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     }
 }
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBPrimaryLabel)
 open class PrimaryLabel: InstructionLabel {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBSecondaryLabel)
 open class SecondaryLabel: InstructionLabel {}

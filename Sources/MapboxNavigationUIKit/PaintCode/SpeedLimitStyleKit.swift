@@ -11,6 +11,7 @@
 
 import UIKit
 
+@_documentation(visibility: internal)
 public class SpeedLimitStyleKit: NSObject {
     //// Drawing Methods
 

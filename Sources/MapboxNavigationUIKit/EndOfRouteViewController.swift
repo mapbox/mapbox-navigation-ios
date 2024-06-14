@@ -11,19 +11,19 @@ private enum ContainerHeight: CGFloat {
     case commentShowing = 260
 }
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class EndOfRouteContentView: UIView {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class EndOfRouteTitleLabel: StylableLabel {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class EndOfRouteStaticLabel: StylableLabel {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class EndOfRouteCommentView: StylableTextView {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class EndOfRouteButton: StylableButton {}
 
 class EndOfRouteViewController: UIViewController {

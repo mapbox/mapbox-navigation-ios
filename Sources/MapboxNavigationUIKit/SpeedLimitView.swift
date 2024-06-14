@@ -53,7 +53,6 @@ public class SpeedLimitView: UIView {
     }
 
     /**
-     :nodoc:
      The current speed to display.
      */
     public var currentSpeed: CLLocationSpeed?

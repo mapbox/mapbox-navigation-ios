@@ -8,6 +8,7 @@ enum ExitSide: String {
     }
 }
 
+@_documentation(visibility: internal)
 public class ExitView: StylableView {
     static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!
         .withRenderingMode(.alwaysTemplate)

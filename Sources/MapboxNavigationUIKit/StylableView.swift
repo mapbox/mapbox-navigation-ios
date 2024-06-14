@@ -1,6 +1,6 @@
 import UIKit
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBStylableView)
 open class StylableView: UIView {
     @objc public dynamic var borderWidth: CGFloat = 0.0 {

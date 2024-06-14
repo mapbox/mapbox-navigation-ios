@@ -1,6 +1,6 @@
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBDraggableView)
 open class StepListIndicatorView: UIView {
     // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR.

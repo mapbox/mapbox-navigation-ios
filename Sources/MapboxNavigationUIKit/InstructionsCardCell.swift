@@ -2,7 +2,7 @@ import CoreLocation
 import MapboxDirections
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public class InstructionsCardCell: UICollectionViewCell {
     public let container: InstructionsCardContainerView = .init()
 

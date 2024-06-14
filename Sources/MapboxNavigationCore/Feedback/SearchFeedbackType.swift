@@ -1,5 +1,6 @@
 import Foundation
 
+@_documentation(visibility: internal)
 public enum SearchFeedbackType: FeedbackType {
     case incorrectName
     case incorrectAddress

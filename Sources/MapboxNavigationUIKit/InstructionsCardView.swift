@@ -2,7 +2,7 @@ import CoreLocation
 import MapboxDirections
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public class InstructionsCardView: BaseInstructionsBannerView {
     var step: RouteStep!
     var distanceFromCurrentLocation: CLLocationDistance!

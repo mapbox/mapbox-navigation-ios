@@ -4,7 +4,7 @@ import MapboxMaps
 import MapboxNavigationCore
 import UIKit
 
-/// `PreviewViewController` is a user interface for the preview mode experience. It allows to present
+/// ``PreviewViewController`` is a user interface for the preview mode experience. It allows to present
 /// banners that contain information that is important for the user before actually starting turn-by-turn
 /// navigation session (e.g. final destination presentation, main and alternative routes preview etc).
 ///
@@ -21,7 +21,7 @@ import UIKit
 /// - `NavigationMapView` - wraps `MapView` and provides convenience functions for adding and removing
 /// route lines, route duration annotations, shows user location indicator etc
 /// - ``NavigationView`` - wraps `NavigationMapView` and provides the ability to show drop-in related UI
-/// components like ``SpeedLimitView``, ``WayNameView``, top and bottom ``BannerContainerView``s etc
+/// components like ``SpeedLimitView``, ``WayNameView``, top and bottom ``BannerContainerView``s etc.
 ///
 /// ``PreviewViewController`` works as an initial step before switching to the active navigation.
 /// Use ``NavigationViewController`` for turn-by-turn navigation experience.

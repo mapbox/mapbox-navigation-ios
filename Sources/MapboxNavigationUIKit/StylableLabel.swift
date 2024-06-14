@@ -1,6 +1,6 @@
 import UIKit
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBStylableLabel)
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR.
@@ -34,7 +34,6 @@ open class StylableLabel: UILabel {
     }
 }
 
-// :nodoc:
 @objc(MBTimeRemainingLabel)
 open class TimeRemainingLabel: StylableLabel {
     /**
@@ -67,13 +66,13 @@ open class TimeRemainingLabel: StylableLabel {
     @objc public dynamic var trafficSevereColor: UIColor = #colorLiteral(red: 0.54, green: 0.06, blue: 0.22, alpha: 1.0)
 }
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBDistanceRemainingLabel)
 open class DistanceRemainingLabel: StylableLabel {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBArrivalTimeLabel)
 open class ArrivalTimeLabel: StylableLabel {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 public class DestinationLabel: StylableLabel {}

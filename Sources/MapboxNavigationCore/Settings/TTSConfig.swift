@@ -1,5 +1,6 @@
 import Foundation
 
+/// Text-To-Speech configuration.
 public enum TTSConfig: Equatable, Sendable {
     public static func == (lhs: TTSConfig, rhs: TTSConfig) -> Bool {
         switch (lhs, rhs) {

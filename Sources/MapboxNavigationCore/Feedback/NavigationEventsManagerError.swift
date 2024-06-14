@@ -1,6 +1,5 @@
 import Foundation
 
-/// :nodoc:
 /// An error that occures during event sending.
 @_spi(MapboxInternal)
 public enum NavigationEventsManagerError: LocalizedError {

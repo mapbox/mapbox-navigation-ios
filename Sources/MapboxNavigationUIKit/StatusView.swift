@@ -1,10 +1,9 @@
 import UIKit
 
 /**
- :nodoc:
-
  A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
  */
+@_documentation(visibility: internal)
 @IBDesignable
 public class StatusView: UIControl {
     weak var activityIndicatorView: UIActivityIndicatorView!

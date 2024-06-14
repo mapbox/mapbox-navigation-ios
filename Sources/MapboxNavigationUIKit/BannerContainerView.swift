@@ -1,23 +1,20 @@
 import UIKit
 
-// :nodoc:
+@_documentation(visibility: internal)
 public enum BannerPosition {
     case topLeading
     case bottomLeading
 }
 
-// :nodoc:
 @objc(MBBannerContainerView)
 open class BannerContainerView: UIView {
     var position: BannerPosition
 
-    // :nodoc:
     public enum State {
         case expanded
         case collapsed
     }
 
-    // :nodoc:
     public var isExpandable: Bool = false {
         didSet {
             guard let superview else { return }
@@ -25,10 +22,8 @@ open class BannerContainerView: UIView {
         }
     }
 
-    // :nodoc:
     public var expansionOffset: CGFloat = 0.0
 
-    // :nodoc:
     public private(set) var state: State = .collapsed {
         didSet {
             delegate?.bannerContainerView(self, stateWillChangeTo: state)
@@ -58,14 +53,12 @@ open class BannerContainerView: UIView {
 
     var initialOffset: CGFloat = 0.0
 
-    // :nodoc:
     public weak var delegate: BannerContainerViewDelegate? {
         didSet {
             delegate?.bannerContainerView(self, stateDidChangeTo: state)
         }
     }
 
-    // :nodoc:
     public init(_ position: BannerPosition, frame: CGRect = .zero) {
         self.position = position
 
@@ -89,7 +82,7 @@ open class BannerContainerView: UIView {
         setupConstraints(superview)
     }
 
-    // :nodoc:
+    @_documentation(visibility: internal)
     public typealias CompletionHandler = (_ completed: Bool) -> Void
 
     func setupConstraints(_ superview: UIView) {
@@ -191,7 +184,6 @@ open class BannerContainerView: UIView {
         delegate?.bannerContainerView(self, didExpandTo: expansionFranction)
     }
 
-    // :nodoc:
     public func show(
         animated: Bool = true,
         duration: TimeInterval = 0.2,
@@ -255,7 +247,6 @@ open class BannerContainerView: UIView {
         }
     }
 
-    // :nodoc:
     public func hide(
         animated: Bool = true,
         duration: TimeInterval = 0.2,

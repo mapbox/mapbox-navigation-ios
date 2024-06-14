@@ -2,10 +2,10 @@ import MapboxDirections
 import MapboxNavigationCore
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class NextInstructionLabel: InstructionLabel {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @IBDesignable
 open class NextBannerView: UIView, NavigationComponent {
     weak var maneuverView: ManeuverView!

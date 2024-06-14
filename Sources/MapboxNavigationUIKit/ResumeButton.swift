@@ -1,6 +1,6 @@
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @IBDesignable
 @objc(MBResumeButton)
 public class ResumeButton: UIControl {

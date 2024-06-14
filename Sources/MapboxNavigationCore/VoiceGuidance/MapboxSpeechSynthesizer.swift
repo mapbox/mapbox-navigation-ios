@@ -4,8 +4,7 @@ import Combine
 import MapboxDirections
 
 @MainActor
-/// ``SpeechSynthesizing`` implementation, using `MapboxSpeech` framework. Uses pre-caching mechanism for upcoming
-/// instructions.
+/// ``SpeechSynthesizing`` implementation, using Mapbox Voice API. Uses pre-caching mechanism for upcoming instructions.
 public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     private var _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
     public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {

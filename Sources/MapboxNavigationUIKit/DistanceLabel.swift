@@ -1,6 +1,6 @@
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
     @objc public dynamic var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1) {

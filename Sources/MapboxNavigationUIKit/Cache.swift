@@ -2,6 +2,7 @@ import UIKit
 
 import MapboxNavigationCore
 
+@_documentation(visibility: internal)
 public typealias CompletionHandler = () -> Void
 
 /**

@@ -1,7 +1,7 @@
 import CoreGraphics
 import MapboxNavigationCore
 
-// :nodoc:
+@_documentation(visibility: internal)
 public protocol BannerContainerViewDelegate: AnyObject, UnimplementedLogging {
     func bannerContainerView(
         _ bannerContainerView: BannerContainerView,
@@ -19,7 +19,6 @@ public protocol BannerContainerViewDelegate: AnyObject, UnimplementedLogging {
     )
 }
 
-// :nodoc:
 extension BannerContainerViewDelegate {
     public func bannerContainerView(
         _ bannerContainerView: BannerContainerView,

@@ -1,6 +1,6 @@
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public class ManeuversStyleKit: NSObject {
     // MARK: Drawing Methods
 

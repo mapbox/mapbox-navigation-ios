@@ -1,6 +1,6 @@
 import UIKit
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
     // Sets the font on the button’s titleLabel
@@ -40,25 +40,25 @@ open class StylableButton: UIButton {
 }
 
 /**
- :nodoc:
  `Button` sets the tintColor according to the style.
  */
+@_documentation(visibility: internal)
 @objc(MBButton)
 open class Button: StylableButton {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBCancelButton)
 open class CancelButton: Button {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBDismissButton)
 open class DismissButton: Button {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 public class BackButton: Button {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 public class PreviewButton: Button {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 public class StartButton: Button {}

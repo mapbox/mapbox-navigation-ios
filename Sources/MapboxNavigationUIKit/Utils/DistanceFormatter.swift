@@ -213,35 +213,30 @@ extension Measurement where UnitType == UnitLength {
 }
 
 /**
- :nodoc:
  An object responsible for the rounding behavior of distances according to locale.
  */
+@_documentation(visibility: internal)
 public struct RoundingTable {
     /**
-     :nodoc:
      `Threshold` supplies rounding behavior for a given maximum distance.
      */
     public struct Threshold {
         /**
-         :nodoc:
          The maximum distance that the `Threshold` is applicable.
          */
         public let maximumDistance: Measurement<UnitLength>
 
         /**
-         :nodoc:
          The increment that a given distance with be rounded to.
          */
         public let roundingIncrement: Double
 
         /**
-         :nodoc:
          The maximum number of digits following the decimal point.
          */
         public let maximumFractionDigits: Int
 
         /**
-         :nodoc:
          Initializes a `Threshold` object with a given maximum distance, rounding increment, and maximum fraction of digits.
          */
         public init(maximumDistance: Measurement<UnitLength>, roundingIncrement: Double, maximumFractionDigits: Int) {
@@ -251,7 +246,6 @@ public struct RoundingTable {
         }
 
         /**
-         :nodoc:
          Returns a rounded `Measurement<UnitLength>` for a given distance.
          */
         public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
@@ -263,7 +257,6 @@ public struct RoundingTable {
     }
 
     /**
-     :nodoc:
      An array of `Threshold`s that detail the rounding behavior.
      */
     public let thresholds: [Threshold]
@@ -278,7 +271,6 @@ public struct RoundingTable {
     }
 
     /**
-     :nodoc:
      Initializes a `RoundingTable` with the given thresholds.
      - parameter thresholds: An array of `Threshold`s that dictate rounding behavior.
      */
@@ -287,7 +279,6 @@ public struct RoundingTable {
     }
 
     /**
-     :nodoc:
      The rounding behavior for locales where the metric system is used.
      */
     public static var metric: RoundingTable = .init(thresholds: [
@@ -309,7 +300,6 @@ public struct RoundingTable {
     ])
 
     /**
-     :nodoc:
      The rounding behavior used by the UK.
      */
     public static var uk: RoundingTable = .init(thresholds: [
@@ -329,7 +319,6 @@ public struct RoundingTable {
     ])
 
     /**
-     :nodoc:
      The rounding behavior for locales where the imperial system is used.
      */
     public static var us: RoundingTable = .init(thresholds: [

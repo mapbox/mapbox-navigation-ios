@@ -4,7 +4,7 @@ import MapboxNavigationCore
 import UIKit
 
 /// ``StandardNightStyle`` is the default night style for Mapbox Navigation SDK. Only will be applied when necessary and
-/// if `automaticallyAdjustStyleForSunPosition`.
+/// if ``StyleManager/automaticallyAdjustsStyleForTimeOfDay`` is `true` .
 open class StandardNightStyle: NightStyle {
     private var lifetimeSubscription: AnyCancellable?
 

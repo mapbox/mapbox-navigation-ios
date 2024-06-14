@@ -30,10 +30,10 @@ public struct MapMatchingResult: Equatable, @unchecked Sendable {
     /// When map matcher snaps to a road, this is the confidence in the chosen edge from all nearest edges.
     public var roadEdgeMatchProbability: Double
 
-    /// :nodoc:
     /// Creates a new `MapMatchingResult` with given parameters
     ///
     /// It is not intended for user to create his own `MapMatchingResult` except for testing purposes.
+    @_documentation(visibility: internal)
     public init(
         enhancedLocation: CLLocation,
         keyPoints: [CLLocation],

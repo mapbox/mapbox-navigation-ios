@@ -1,15 +1,15 @@
 import UIKit
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBTopBannerView)
 open class TopBannerView: UIView {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 open class TopPaddingView: TopBannerView {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView {}
 
-// :nodoc:
+@_documentation(visibility: internal)
 open class BottomPaddingView: BottomBannerView {}

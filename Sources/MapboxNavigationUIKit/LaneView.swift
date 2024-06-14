@@ -351,7 +351,7 @@ extension ManeuverDirection {
     }
 }
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class LaneView: UIView {
     /**
      The direction or directions of travel that the lane is reserved for.

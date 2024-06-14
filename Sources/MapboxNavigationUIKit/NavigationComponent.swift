@@ -2,6 +2,8 @@ import CoreLocation
 import MapboxDirections
 import MapboxNavigationCore
 
+/// A navigation component is a member of the navigation UI view hierarchy that responds as the user progresses along a
+/// route.
 public protocol NavigationComponent {
     func onWillReroute()
     func onDidReroute()

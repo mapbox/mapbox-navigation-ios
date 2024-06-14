@@ -1,7 +1,7 @@
 import MapboxDirections
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 @IBDesignable
 open class LanesView: UIView, NavigationComponent {
     // MARK: Displaying the Lanes

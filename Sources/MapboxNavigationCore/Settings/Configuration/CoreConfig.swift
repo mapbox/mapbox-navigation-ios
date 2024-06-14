@@ -151,7 +151,7 @@ public struct CoreConfig: Equatable {
         }
     }
 
-    /// Creates a new `CoreConfig` instance.
+    /// Creates a new ``CoreConfig`` instance.
     /// - Parameters:
     ///   - credentials: SDK Credentials.
     ///   - routeRequestConfig: Route requiest configuration

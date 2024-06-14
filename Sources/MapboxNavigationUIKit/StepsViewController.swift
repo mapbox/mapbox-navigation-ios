@@ -3,10 +3,10 @@ import MapboxNavigationCore
 import Turf
 import UIKit
 
-/// :nodoc:
+@_documentation(visibility: internal)
 open class StepsBackgroundView: UIView {}
 
-/// :nodoc:
+@_documentation(visibility: internal)
 public class StepsViewController: UIViewController, NavigationComponent {
     weak var tableView: UITableView!
     weak var backgroundView: StepsBackgroundView!

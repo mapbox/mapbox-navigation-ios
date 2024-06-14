@@ -2,9 +2,8 @@ import MapboxMaps
 @_spi(MapboxInternal) import MapboxNavigationCore
 import UIKit
 
-/**
- The dark style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
- */
+/// The dark style for Mapbox Navigation SDK. Only will be applied when necessary and if
+/// ``StyleManager/automaticallyAdjustsStyleForTimeOfDay`` is `true`.
 open class NightStyle: DayStyle {
     public required init() {
         super.init()
