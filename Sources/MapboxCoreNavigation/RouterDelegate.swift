@@ -285,6 +285,10 @@ public extension RouterDelegate {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
+    func routerDidFailToRefreshExpiredRoute(_ router: Router) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
+    }
+    
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
