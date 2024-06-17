@@ -1,11 +1,77 @@
-<!--
-  This source file is part of the Swift.org open source project
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
-  Copyright (c) 2021 Apple Inc. and the Swift project authors
-  Licensed under Apache License v2.0 with Runtime Library Exception
-
-  See https://swift.org/LICENSE.txt for license information
-  See https://swift.org/CONTRIBUTORS.txt for Swift project authors
--->
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25"><path d="M12.5.5a12,12,0,1,0,12,12A12,12,0,0,0,12.5.5ZM1.525,13H6.014a20.83,20.83,0,0,0,.469,4.031h-4A10.924,10.924,0,0,1,1.525,13ZM13,6.969V1.552c1.734.339,3.32,2.417,4.222,5.417Zm4.49,1a19.808,19.808,0,0,1,.5,4.031H13V7.969ZM12,1.552V6.969H7.778C8.68,3.969,10.266,1.891,12,1.552Zm0,6.417V12H7.013a19.808,19.808,0,0,1,.5-4.031ZM6.014,12H1.525a10.924,10.924,0,0,1,.96-4.031h4A20.83,20.83,0,0,0,6.014,12Zm1,1H12v4.031H7.51A19.808,19.808,0,0,1,7.013,13ZM12,18.031v5.417c-1.734-.339-3.32-2.417-4.222-5.417Zm1,5.417V18.031h4.222C16.32,21.031,14.734,23.109,13,23.448Zm0-6.417V13h4.987a19.808,19.808,0,0,1-.5,4.031ZM18.986,13h4.489a10.924,10.924,0,0,1-.96,4.031h-4A20.83,20.83,0,0,0,18.986,13Zm0-1a20.83,20.83,0,0,0-.469-4.031h4A10.924,10.924,0,0,1,23.475,12ZM22,6.969H18.265A11.6,11.6,0,0,0,15.6,1.951,11.007,11.007,0,0,1,22,6.969ZM9.4,1.951A11.6,11.6,0,0,0,6.735,6.969H3A11.007,11.007,0,0,1,9.4,1.951ZM3,18.031H6.735A11.6,11.6,0,0,0,9.4,23.049,11.007,11.007,0,0,1,3,18.031Zm12.6,5.018a11.6,11.6,0,0,0,2.665-5.018H22A11.007,11.007,0,0,1,15.6,23.049Z" fill-rule="evenodd"/></svg>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg7829"
+   version="1.1"
+   inkscape:version="0.91+devel+osxmenu r12922"
+   width="32"
+   height="32"
+   sodipodi:docname="favicon.svg"
+   viewBox="0 0 32 32"
+   inkscape:export-filename="/Users/t/Desktop/favicon.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008">
+  <metadata
+     id="metadata7835">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs7833" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="850"
+     id="namedview7831"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="15.999999"
+     inkscape:cy="16.000001"
+     inkscape:window-x="-17"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg7829"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:document-units="px">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7868" />
+  </sodipodi:namedview>
+  <g
+     transform="matrix(0.17957492,0,0,0.17957492,-19.914984,-19.914984)"
+     id="g6534"
+     style="fill:#4264fb;fill-opacity:1">
+    <path
+       inkscape:connector-curvature="0"
+       d="M 200,110.9007 A 89.0993,89.0993 0 1 0 289.0993,200 89.0994,89.0994 0 0 0 200,110.9007 Z m 42.2681,110.934 c -30.5051,30.505 -84.8347,20.7321 -84.8347,20.7321 0,0 -9.7729,-54.33 20.7319,-84.8347 16.9119,-16.9118 44.9714,-16.2717 62.6729,1.43 17.7015,17.7017 18.3418,45.7607 1.4299,62.6725 z"
+       style="fill:#4264fb;fill-opacity:1"
+       id="path6536" />
+    <polygon
+       points="236.881,189.792 218.936,181.064 210.208,163.119 210.208,163.119 201.48,181.064 183.534,189.792 201.48,198.52 210.208,216.466 218.936,198.52 "
+       style="fill:#4264fb;fill-opacity:1"
+       id="polygon6538" />
+  </g>
+</svg>
