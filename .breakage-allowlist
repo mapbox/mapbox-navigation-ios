@@ -8,3 +8,4 @@ Func CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:g
 Func CarPlayManagerDelegate.carPlayNavigationViewController(_:guidanceBackgroundColorFor:) has been added as a protocol requirement
 Func NavigationServiceDelegate.navigationServiceDidFailToRefreshExpiredRoute(_:) has been added as a protocol requirement
 Func RouterDelegate.routerDidFailToRefreshExpiredRoute(_:) has been added as a protocol requirement
+Func NavigationViewControllerDelegate.navigationViewControllerDidFailToRefreshExpiredRoute(_:) has been added as a protocol requirement
