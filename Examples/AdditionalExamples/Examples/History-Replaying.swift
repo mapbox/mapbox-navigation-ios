@@ -22,7 +22,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         var historyReplayController = HistoryReplayController(
             historyReader: HistoryReader(
                 fileUrl: Bundle.main.url(
-                    forResource: "history-replay",
+                    forResource: "history_replay",
                     withExtension: "gz"
                 )!
             )!
