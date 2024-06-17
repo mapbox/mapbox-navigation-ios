@@ -32,9 +32,9 @@ class ImageCache: BimodalImageCache {
 
     // MARK: Image cache
 
-    /**
-     Stores an image in the cache for the given key. If `toDisk` is set to `true`, the completion handler is called following writing the image to disk, otherwise it is called immediately upon storing the image in the memory cache.
-     */
+    /// Stores an image in the cache for the given key. If `toDisk` is set to `true`, the completion handler is called
+    /// following writing the image to disk, otherwise it is called immediately upon storing the image in the memory
+    /// cache.
     public func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeImageInMemoryCache(image, forKey: key)
 
@@ -46,9 +46,8 @@ class ImageCache: BimodalImageCache {
         fileCache.store(data, forKey: key, completion: completion)
     }
 
-    /**
-     Returns an image from the cache for the given key, if any. The memory cache is consulted first, followed by the disk cache. If an image is found on disk which isn't in memory, it is added to the memory cache.
-     */
+    /// Returns an image from the cache for the given key, if any. The memory cache is consulted first, followed by the
+    /// disk cache. If an image is found on disk which isn't in memory, it is added to the memory cache.
     public func image(forKey key: String?) -> UIImage? {
         guard let key else {
             return nil
@@ -66,16 +65,12 @@ class ImageCache: BimodalImageCache {
         return nil
     }
 
-    /**
-     Clears out the memory cache.
-     */
+    /// Clears out the memory cache.
     public func clearMemory() {
         memoryCache.removeAllObjects()
     }
 
-    /**
-     Clears the disk cache and calls the completion handler when finished.
-     */
+    /// Clears the disk cache and calls the completion handler when finished.
     public func clearDisk(completion: CompletionHandler?) {
         fileCache.clearDisk(completion: completion)
     }

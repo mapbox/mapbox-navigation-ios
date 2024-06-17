@@ -1,9 +1,7 @@
 import Foundation
 import UIKit
 
-/**
- `GenericRouteShield` is a class to render routes that do not have route-shields.
- */
+/// GenericRouteShield` is a class to render routes that do not have route-shields.
 public class GenericRouteShield: StylableView {
     static let labelFontSizeScaleFactor: CGFloat = 2.0 / 3.0
 
@@ -93,9 +91,8 @@ public class GenericRouteShield: StylableView {
         addConstraints(constraints)
     }
 
-    /**
-     This generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
-     */
+    /// This generates the cache key needed to hold the ``GenericRouteShield``'s `imageRepresentation` in the
+    /// ``ImageCache`` caching engine.
     static func criticalHash(
         styleID: String?,
         dataSource: DataSource,

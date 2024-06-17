@@ -2,9 +2,7 @@ import MapboxMaps
 @_spi(MapboxInternal) import MapboxNavigationCore
 import UIKit
 
-/**
- The light style for Mapbox Navigation SDK.
- */
+/// The light style for Mapbox Navigation SDK.
 open class DayStyle: Style {
     public required init() {
         super.init()
@@ -42,12 +40,10 @@ open class DayStyle: Style {
         }
     }
 
-    /**
-     Applies default style for `.phone` and `.pad` trait collections.
-
-     Beware that `ExitView` and `GenericRouteShield` directly access appearance values while caching
-     their styles.
-     */
+    /// Applies default style for `.phone` and `.pad` trait collections.
+    ///
+    /// Beware that ``ExitView`` and ``GenericRouteShield`` directly access appearance values while caching their
+    /// styles.
     func applyPhoneOrPadStyling(for traitCollection: UITraitCollection) {
         StepsBackgroundView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
 
@@ -474,13 +470,10 @@ open class DayStyle: Style {
             .secondaryColor = .defaultTurnArrowSecondary
     }
 
-    /**
-     Applies default style for CarPlay.
-
-     Since it's possible to apply different appearances on iOS and CarPlay and some views are
-     re-used on both platforms, style for iOS and CarPlay views that are common is applied
-     independently.
-     */
+    /// Applies default style for CarPlay.
+    ///
+    /// Since it's possible to apply different appearances on iOS and CarPlay and some views are  re-used on both
+    /// platforms, style for iOS and CarPlay views that are common is applied independently.
     func applyCarPlayStyling() {
         let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
 
@@ -581,10 +574,8 @@ open class DayStyle: Style {
         applyCarPlayManeuversStyling(for: carPlayDarkTraitCollection)
     }
 
-    /**
-     Applies default styling for lane views, exit views and shields on CarPlay versions that support
-     light and dark appearance changes.
-     */
+    /// Applies default styling for lane views, exit views and shields on CarPlay versions that support light and dark
+    /// appearance changes.
     func applyCarPlayManeuversStyling(for traitCollection: UITraitCollection) {
         // On CarPlay, `ExitView` and `GenericRouteShield` styling depends on `UIUserInterfaceStyle`,
         // which was set on CarPlay external screen.

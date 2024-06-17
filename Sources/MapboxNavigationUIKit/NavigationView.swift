@@ -4,40 +4,38 @@ import MapboxDirections
 import MapboxNavigationCore
 import UIKit
 
-/**
- A view that represents the root view of the MapboxNavigationUIKit drop-in UI.
-
- ## Components
-
- 1. InstructionsBannerView
- 2. InformationStackView
- 3. BottomBannerView
- 4. ResumeButton
- 5. WayNameLabel
- 6. FloatingStackView
- 7. NavigationMapView
- 8. SpeedLimitView
-
- ```
- +--------------------+
- |         1          |
- +--------------------+
- |         2          |
- +---+------------+---+
- | 8 |            |   |
- +---+            | 6 |
- |                |   |
- |         7      +---+
- |                    |
- |                    |
- |                    |
- +------------+       |
- |  4  ||  5  |       |
- +------------+-------+
- |         3          |
- +--------------------+
- ```
- */
+/// A view that represents the root view of the MapboxNavigationUIKit drop-in UI.
+///
+/// ## Components
+///
+/// 1. ``InstructionsBannerView``
+/// 2. `InformationStackView`
+/// 3. ``BottomBannerView``
+/// 4. ``ResumeButton``
+/// 5. ``WayNameLabel``
+/// 6. `FloatingStackView`
+/// 7. `NavigationMapView`
+/// 8. ``SpeedLimitView``
+///
+/// ```
+///  +--------------------+
+///  |         1          |
+///  +--------------------+
+///  |         2          |
+///  +---+------------+---+
+///  | 8 |            |   |
+///  +---+            | 6 |
+///  |                |   |
+///  |         7      +---+
+///  |                    |
+///  |                    |
+///  |                    |
+///  +------------+       |
+///  |  4  ||  5  |       |
+///  +------------+-------+
+///  |         3          |
+///  +--------------------+
+///  ```
 @IBDesignable
 open class NavigationView: UIView {
     enum Constants {
@@ -52,9 +50,7 @@ open class NavigationView: UIView {
 
     weak var delegate: NavigationViewDelegate?
 
-    /**
-     `NavigationMapView` that is displayed inside the `NavigationView`.
-     */
+    /// `NavigationMapView` that is displayed inside the ``NavigationView``.
     public var navigationMapView: NavigationMapView {
         didSet {
             oldValue.removeFromSuperview()
@@ -64,7 +60,7 @@ open class NavigationView: UIView {
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
             navigationMapView.pinTo(parentView: self)
 
-            // FIXME: Provide a reliable way of notifying dependants (e.g. `CameraController`,
+            // FIXME: Provide a reliable way of notifying dependants (e.g.
             // `ArrivalController` might need to re-subscribe to notifications that are sent from
             // injected `NavigationMapView` instance).
             if oldValue != navigationMapView {
@@ -106,9 +102,7 @@ open class NavigationView: UIView {
 
     // MARK: Overlay Views
 
-    /**
-     Stack view that contains floating buttons.
-     */
+    /// Stack view that contains floating buttons.
     public lazy var floatingStackView: UIStackView = {
         let stackView = UIStackView(orientation: .vertical, autoLayout: true)
         stackView.distribution = .equalSpacing
@@ -128,9 +122,7 @@ open class NavigationView: UIView {
         }
     }
 
-    /**
-     The buttons to show floating on the map inside `floatingStackView`.
-     */
+    /// The buttons to show floating on the map inside `floatingStackView`.
     public var floatingButtons: [UIButton]? {
         didSet {
             clearStackViews()
@@ -146,9 +138,7 @@ open class NavigationView: UIView {
         }
     }
 
-    /**
-     A host view for `WayNameLabel` that shows a road name and a shield icon.
-     */
+    /// A host view for `WayNameLabel` that shows a road name and a shield icon.
     public lazy var wayNameView: WayNameView = {
         let wayNameView: WayNameView = .forAutoLayout()
         wayNameView.containerView.isHidden = true
@@ -162,16 +152,11 @@ open class NavigationView: UIView {
         }
     }
 
-    /**
-     A view that displays a speed limit.
-     */
+    /// A view that displays a speed limit.
     public lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
 
-    /**
-     View that is used as a container for top banners. By default, for turn-by-turn navigation
-     `NavigationViewController` presents `TopBannerViewController` in this banner
-     container.
-     */
+    /// View that is used as a container for top banners. By default, for turn-by-turn navigation
+    /// ``NavigationViewController`` presents ``TopBannerViewController`` in this banner container.
     public lazy var topBannerContainerView: BannerContainerView = {
         let topBannerContainerView = BannerContainerView(.topLeading)
         topBannerContainerView.isHidden = true
@@ -179,11 +164,8 @@ open class NavigationView: UIView {
         return topBannerContainerView
     }()
 
-    /**
-     View that is used as a container for bottom banners. By default, for turn-by-turn navigation
-     `NavigationViewController` presents `BottomBannerViewController` in this banner
-     container.
-     */
+    /// View that is used as a container for bottom banners. By default, for turn-by-turn navigation
+    /// ``NavigationViewController`` presents ``BottomBannerViewController`` in this banner container.
     public lazy var bottomBannerContainerView: BannerContainerView = {
         let bottomBannerContainerView = BannerContainerView(.bottomLeading)
         bottomBannerContainerView.isHidden = true
@@ -218,9 +200,9 @@ open class NavigationView: UIView {
         case existing(NavigationMapView)
     }
 
-    /// Initializes a `NavigationView` instance with the specified parameters.
+    /// Initializes a ``NavigationView`` instance with the specified parameters.
     /// - Parameters:
-    ///   - frame: The frame rectangle for the `NavigationView`.
+    ///   - frame: The frame rectangle for the ``NavigationView``.
     ///   - mapViewConfiguration: Configuration of the map view.
     public init(
         frame: CGRect,

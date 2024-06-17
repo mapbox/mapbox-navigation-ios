@@ -4,16 +4,15 @@ import MapboxDirections
 import MapboxNavigationCore
 import UIKit
 
-/**
- A view controller that displays the current maneuver instruction as a “banner” flush with the edges of the containing view. The user swipes to one side to preview a subsequent maneuver.
-
- This class is the default top banner view controller used by `NavigationOptions` and `NavigationViewController`. `InstructionsCardViewController` provides an alternative, user notification–like interface.
- */
+/// A view controller that displays the current maneuver instruction as a “banner” flush with the edges of the
+/// containing view. The user swipes to one side to preview a subsequent maneuver.
+///
+/// This class is the default top banner view controller used by ``NavigationOptions`` and ``NavigationViewController``.
 open class TopBannerViewController: UIViewController {
     // MARK: Displaying Instructions
 
     /// The delegate for the view controller.
-    /// - seealso: TopBannerViewControllerDelegate
+    /// - SeeAlso: ``TopBannerViewControllerDelegate``.
     public weak var delegate: TopBannerViewControllerDelegate? = nil
 
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
@@ -38,24 +37,17 @@ open class TopBannerViewController: UIViewController {
         return banner
     }()
 
-    /**
-     A view that contains one or more images indicating which lanes of road the user should take to complete the maneuver.
-     */
+    /// A view that contains one or more images indicating which lanes of road the user should take to complete the
+    /// maneuver.
     public var lanesView: LanesView = .forAutoLayout(hidden: true)
 
-    /**
-     A view that indicates the instruction for next step.
-     */
+    /// A view that indicates the instruction for next step.
     public var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
 
-    /**
-     A translucent bar that indicates the navigation status.
-     */
+    /// A translucent bar that indicates the navigation status.
     public var statusView: StatusView = .forAutoLayout(hidden: true)
 
-    /**
-     A view that indicates the layout of a highway junction.
-     */
+    /// A view that indicates the layout of a highway junction.
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
 
     private let instructionsBannerHeight: CGFloat = 100.0

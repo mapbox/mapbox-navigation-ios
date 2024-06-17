@@ -168,10 +168,8 @@ class OrnamentsController: NavigationComponentDelegate {
         }
     }
 
-    /**
-     Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
-     reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
-     */
+    /// Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment reported in
+    /// https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
     private func updateMapViewOrnaments() {
         Task { @MainActor in
             guard let navigationView else { return }
@@ -232,11 +230,9 @@ class OrnamentsController: NavigationComponentDelegate {
         }
     }
 
-    /**
-     Update the sprite repository of current road label when map style changes.
-
-     - parameter styleURI: The `StyleURI` that the map is presenting.
-     */
+    /// Update the sprite repository of current road label when map style changes.
+    ///
+    /// - Parameter styleURI: The `StyleURI` that the map is presenting.
     func updateStyle(styleURI: StyleURI?) {
         navigationView?.wayNameView.label.updateStyle(styleURI: styleURI)
     }

@@ -1,35 +1,29 @@
 import MapboxDirections
 import UIKit
 
-@_documentation(visibility: internal)
+/// A view that is used to show a lanes' guidance info.
 @IBDesignable
 open class LanesView: UIView, NavigationComponent {
     // MARK: Displaying the Lanes
 
     public var isCurrentlyVisible: Bool = false
 
-    /**
-     A vertical separator for the trailing side of the view.
-     */
+    /// A vertical separator for the trailing side of the view.
     var trailingSeparatorView: SeparatorView!
 
-    /**
-     A closure that is called after either presenting or dismissing lanes view.
-
-     - parameter completed: Boolean value that indicates whether or not the animation actually
-     finished before the completion handler was called.
-     */
+    /// A closure that is called after either presenting or dismissing lanes view.
+    ///
+    /// - Parameter completed: Boolean value that indicates whether or not the animation actually finished before the
+    /// completion handler was called.
     public typealias CompletionHandler = (_ completed: Bool) -> Void
 
-    /**
-     Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
-
-     - parameter visualInstruction: Current instruction, which will be displayed in the lanes view.
-     - parameter animated: If `true`, lanes view presentation or dismissal is animated.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called once lanes view is either shown or hidden.
-     */
+    /// Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+    /// - Parameters:
+    ///   - visualInstruction:  Current instruction, which will be displayed in the lanes view.
+    ///   - animated: If `true`, lanes view presentation or dismissal is animated.
+    ///   - duration: Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called once lanes view is either shown or hidden.
     public func update(
         for visualInstruction: VisualInstructionBanner?,
         animated: Bool = true,
@@ -84,14 +78,12 @@ open class LanesView: UIView, NavigationComponent {
         }
     }
 
-    /**
-     Shows lanes view.
-
-     - parameter animated: If `true`, lanes view presentation is animated. Defaults to `true`.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called once lanes view is shown.
-     */
+    /// Shows lanes view.
+    /// - Parameters:
+    ///   - animated: If `true`, lanes view presentation is animated. Defaults to `true`.
+    ///   - duration:  Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called once lanes view is shown.
     public func show(
         animated: Bool = true,
         duration: TimeInterval = 0.5,
@@ -115,14 +107,12 @@ open class LanesView: UIView, NavigationComponent {
         }
     }
 
-    /**
-     Hides lanes view.
-
-     - parameter animated: If `true`, lanes view dismissal is animated. Defaults to `true`.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called after lanes view dismissal.
-     */
+    /// Hides lanes view.
+    /// - Parameters:
+    ///   - animated: If `true`, lanes view dismissal is animated. Defaults to `true`.
+    ///   - duration: Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called after lanes view dismissal.
     public func hide(
         animated: Bool = true,
         duration: TimeInterval = 0.5,

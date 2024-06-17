@@ -6,25 +6,23 @@ import Turf
 import UIKit
 
 /// ``CarPlayManagerDelegate`` is the main integration point for Mapbox CarPlay support.
-/// Implement this protocol and assign an instance to the `delegate` property of the shared instance of
-/// ``CarPlayManager``.
+/// Implement this protocol and assign an instance to the ``CarPlayManager/delegate`` property.
 public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     // MARK: Customizing the Bar Buttons
 
-    /**
-     Offers the delegate an opportunity to provide a customized list of leading bar buttons at the
-     root of the template stack for the given activity.
-
-     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to
-     ensure the hierarchy of templates is adequately navigable.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter carPlayTemplate: The template into which the returned bar buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter
-     to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
-     */
+    /// Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the
+    /// template stack for the given activity.
+    ///
+    /// These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the
+    /// hierarchy of templates is adequately navigable.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - traitCollection: The trait collection of the view controller being shown in the CarPlay window.
+    ///   - carPlayTemplate: The template into which the returned bar buttons will be inserted.
+    ///   - activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between
+    /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
+    /// - Returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is
+    /// visible.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
@@ -32,20 +30,19 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
         for activity: CarPlayActivity
     ) -> [CPBarButton]?
 
-    /**
-     Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the
-     root of the template stack for the given activity.
-
-     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to
-     ensure the hierarchy of templates is adequately navigable.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter carPlayTemplate: The template into which the returned bar buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter
-     to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
-     */
+    /// Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the
+    /// template stack for the given activity.
+    ///
+    /// These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the
+    /// hierarchy of templates is adequately navigable.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - traitCollection: The trait collection of the view controller being shown in the CarPlay window.
+    ///   - carPlayTemplate: The template into which the returned bar buttons will be inserted.
+    ///   - activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between
+    /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
+    /// - Returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is
+    /// visible.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
@@ -53,21 +50,21 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
         for activity: CarPlayActivity
     ) -> [CPBarButton]?
 
-    /**
-     Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
-
-     These buttons handle the gestures on the map view, so it is up to the developer to ensure the map
-     template is interactive.
-     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons
-     declared in the `CarPlayMapViewController` will be provided.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter carPlayTemplate: The template into which the returned map buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter
-     to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of map buttons to display on the map while `template` is visible.
-     */
+    /// Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
+    ///
+    /// These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is
+    /// interactive.
+    ///
+    /// If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons declared in the
+    /// `CarPlayMapViewController` will be provided.
+    ///
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   -  traitCollection: The trait collection of the view controller being shown in the CarPlay window.
+    ///   -  carPlayTemplate: The template into which the returned map buttons will be inserted.
+    ///   -  activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between
+    /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
+    /// - Returns: An array of map buttons to display on the map while `template` is visible.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         mapButtonsCompatibleWith traitCollection: UITraitCollection,
@@ -77,82 +74,72 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
 
     // MARK: Previewing a Route
 
-    /**
-     Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
-
-     To customize the destination’s title, which is displayed when a route is selected, set the
-     `MKMapItem.name` property of the `CPTrip.destination` property. To add a subtitle, create a new
-     `MKMapItem` whose `MKPlacemark` has the `Street` key in its address dictionary.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter trip: The trip that will be previewed.
-     - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
-     */
+    /// Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
+    ///
+    /// To customize the destination’s title, which is displayed when a route is selected, set the  `MKMapItem.name`
+    /// property of the `CPTrip.destination` property. To add a subtitle, create a new `MKMapItem` whose `MKPlacemark`
+    /// has the `Street` key in its address dictionary.
+    ///
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - trip: The trip that will be previewed.
+    /// - Returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         willPreview trip: CPTrip
     ) -> CPTrip
 
-    /**
-     Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter trip: The trip that will be previewed.
-     - parameter previewTextConfiguration: The trip preview text configuration that will be presented
-     alongside the trip.
-     - returns: The actual preview text configuration to be presented alongside the trip.
-     */
+    /// Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - trip: The trip that will be previewed.
+    ///   - previewTextConfiguration:  The trip preview text configuration that will be presented alongside the trip.
+    /// - Returns: The actual preview text configuration to be presented alongside the trip.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         willPreview trip: CPTrip,
         with previewTextConfiguration: CPTripPreviewTextConfiguration
     ) -> CPTripPreviewTextConfiguration
 
-    /**
-     Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter trip: The trip to begin navigating along.
-     - parameter routeChoice: The possible route for the chosen trip.
-     */
+    /// Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - trip: The trip to begin navigating along.
+    ///   - routeChoice: The possible route for the chosen trip.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     )
 
-    /**
-     Called when CarPlay will cancel routes preview.
-     This delegate method will be called before canceling the routes preview.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter configuration: The configuration of the cancel preview action.
-     */
+    /// Called when CarPlay will cancel routes preview.
+    /// This delegate method will be called before canceling the routes preview.
+    ///
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - configuration: The configuration of the cancel preview action.
     func carPlayManagerWillCancelPreview(
         _ carPlayManager: CarPlayManager,
         configuration: inout CarPlayManagerCancelPreviewConfiguration
     )
 
-    /**
-     Called when CarPlay canceled routes preview.
-     This delegate method will be called after canceled the routes preview.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     */
+    /// Called when CarPlay canceled routes preview.
+    /// This delegate method will be called after canceled the routes preview.
+    ///
+    /// - Parameter carPlayManager: The ``CarPlayManager`` instance.
     func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager)
 
     // MARK: Monitoring Route Progress and Updates
 
-    /**
-     Called when the CarPlay manager fails to fetch a route.
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter waypoints: the waypoints for which a route could not be retrieved.
-     - parameter options: The route options that were attached to the route request.
-     - parameter error: The error returned from the directions API.
-     - returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns
-     an alert, the CarPlay manager will transition back to the map template and display the alert.
-     If it returns `nil`, the CarPlay manager will do nothing.
-     */
+    /// Called when the CarPlay manager fails to fetch a route.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - waypoints: the waypoints for which a route could not be retrieved.
+    ///   - options: The route options that were attached to the route request.
+    ///   - error: The error returned from the directions API.
+    /// - Returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns an alert, the
+    /// CarPlay manager will transition back to the map template and display the alert.
+    /// If it returns `nil`, the CarPlay manager will do nothing.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         didFailToFetchRouteBetween waypoints: [Waypoint]?,
@@ -160,65 +147,54 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
         error: Error
     ) -> CPNavigationAlert?
 
-    /**
-     Called when navigation begins so that the containing app can update accordingly.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     */
+    /// Called when navigation begins so that the containing app can update accordingly.
+    ///
+    /// - Parameter carPlayManager: The ``CarPlayManager`` instance.
     func carPlayManagerDidBeginNavigation(_ carPlayManager: CarPlayManager)
 
-    /**
-     Called when navigation is about to be finished so that the containing app can update accordingly.
-     This delegate method will be called before dismissing `CarPlayNavigationViewController`.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
-     */
+    /// Called when navigation is about to be finished so that the containing app can update accordingly.
+    /// This delegate method will be called before dismissing ``CarPlayNavigationViewController``.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - canceled: A `Boolean` value indicating whether this method is being called because the user intends to
+    /// cancel the trip, as opposed to letting it run to completion.
     func carPlayManagerWillEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool)
 
-    /**
-     Called when navigation ends so that the containing app can update accordingly.
-     This delegate method will be called after dismissing `CarPlayNavigationViewController`.
-
-     If you need to know whether the navigation ended because the user arrived or canceled it, use the
-     `carPlayManagerDidEndNavigation(_:byCanceling:)` method.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     */
+    /// Called when navigation ends so that the containing app can update accordingly.
+    /// This delegate method will be called after dismissing ``CarPlayNavigationViewController``.
+    ///
+    /// If you need to know whether the navigation ended because the user arrived or canceled it, use the
+    /// ``CarPlayManagerDelegate/carPlayManagerDidEndNavigation(_:byCanceling:)`` method.
+    ///
+    /// - Parameter carPlayManager: The ``CarPlayManager`` instance.
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager)
 
-    /**
-     Called when navigation ends so that the containing app can update accordingly.
-     This delegate method will be called after dismissing `CarPlayNavigationViewController`.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter canceled: A Boolean value indicating whether this method is being called because
-     the user canceled the trip, as opposed to letting it run to completion/being canceled by the system.
-     */
+    /// Called when navigation ends so that the containing app can update accordingly.
+    /// This delegate method will be called after dismissing ``CarPlayNavigationViewController``.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - canceled: A `Boolean` value indicating whether this method is being called because the user canceled the
+    /// trip, as opposed to letting it run to completion/being canceled by the system.
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool)
 
-    /**
-     Called when the CarPlayManager detects the user arrives at the destination waypoint for a route leg.
-
-     - parameter carPlayManager: The CarPlay manager instance that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the user has arrived at.
-     - returns: A boolean value indicating whether to show an arrival UI.
-     */
+    /// Called when the ``CarPlayManager`` detects the user arrives at the destination waypoint for a route leg.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance that has arrived at a waypoint.
+    ///   - waypoint: The waypoint that the user has arrived at.
+    /// - Returns: A `Boolean` value indicating whether to show an arrival UI.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         shouldPresentArrivalUIFor waypoint: Waypoint
     ) -> Bool
 
-    /**
-     Called when the carplay manager will disable the idle timer.
-
-     Implementing this method will allow developers to change whether idle timer is disabled when
-     CarPlay is connected and the vice-versa when disconnected.
-
-     - parameter carPlayManager: The CarPlay manager instance.
-     - returns: A Boolean value indicating whether to disable idle timer when carplay is connected
-     and enable when disconnected.
-     */
+    /// Called when the carplay manager will disable the idle timer.
+    ///
+    /// Implementing this method will allow developers to change whether idle timer is disabled when CarPlay is
+    /// connected and the vice-versa when disconnected.
+    ///
+    /// - Parameter carPlayManager: The ``CarPlayManager`` instance.
+    /// - Returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when
+    /// disconnected.
     func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 
     /// Called when the ``CarPlayManager`` creates a new ``CarPlayNavigationViewController`` upon start of a navigation
@@ -425,56 +401,46 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
 
     // MARK: Map Panning
 
-    /**
-     Called when the system detects a user starting to pan a map template visible on the screen.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter template: The template on which the gesture was started.
-     */
+    /// Called when the system detects a user starting to pan a map template visible on the screen.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - template: The template on which the gesture was started.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         didBeginPanGesture template: CPMapTemplate
     )
 
-    /**
-     Called when the system detects a user stops panning a map template.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter template: The template on which the gesture was ended.
-     */
+    /// Called when the system detects a user stops panning a map template.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - template: The template on which the gesture was ended.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         didEndPanGesture template: CPMapTemplate
     )
 
-    /**
-     Called when the pan interface appears on the map template.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter template: The template on which the panning interface is shown.
-     */
+    /// Called when the pan interface appears on the map template.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - template: The template on which the panning interface is shown.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         didShowPanningInterface template: CPMapTemplate
     )
 
-    /**
-     Called when the panning interface will disappear on a map template.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter template: The template on which the panning interface will be dismissed.
-     */
+    /// Called when the panning interface will disappear on a map template.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - template: The template on which the panning interface will be dismissed.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         willDismissPanningInterface template: CPMapTemplate
     )
 
-    /**
-     Called when the panning interface disappeared on a map template.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter template: The template on which the panning interface was dismissed.
-     */
+    /// Called when the panning interface disappeared on a map template.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - template: The template on which the panning interface was dismissed.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         didDismissPanningInterface template: CPMapTemplate
@@ -482,48 +448,38 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
 
     // MARK: Notifications Management
 
-    /**
-     Determines if the maneuver should be presented as a notification when the app is in the
-     background.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter maneuver: Maneuver, for which notification will be shown.
-     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
-     - returns: A boolean value indicating whether maneuver should appear as a notification.
-     */
+    /// Determines if the maneuver should be presented as a notification when the app is in the background.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - maneuver: Maneuver, for which notification will be shown.
+    ///   - mapTemplate: The map template that is visible during either preview or navigation sessions.
+    /// - Returns: A `Boolean` value indicating whether maneuver should appear as a notification.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         shouldShowNotificationFor maneuver: CPManeuver,
         in mapTemplate: CPMapTemplate
     ) -> Bool
 
-    /**
-     Determines if the updated distance remaining for the maneuver should be presented as a
-     notification when the app is in the background.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter navigationAlert: Banner alert, for which notification will be shown.
-     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
-     - returns: A boolean value indicating whether alert should appear as a notification.
-     */
+    /// Determines if the updated distance remaining for the maneuver should be presented as a notification when the app
+    /// is in the background.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - navigationAlert: Banner alert, for which notification will be shown.
+    ///   - mapTemplate: The map template that is visible during either preview or navigation sessions.
+    /// - Returns: A boolean value indicating whether alert should appear as a notification.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         shouldShowNotificationFor navigationAlert: CPNavigationAlert,
         in mapTemplate: CPMapTemplate
     ) -> Bool
 
-    /**
-     Determines if the navigation alert should be presented as a notification when the app
-     is in the background.
-
-     - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter maneuver: Maneuver, for which notification will be shown.
-     - parameter travelEstimates: Object that describes the time and distance remaining for the
-     active navigation session.
-     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
-     - returns: A boolean value indicating whether updated estimates should appear in the
-     notification.
-     */
+    /// Determines if the navigation alert should be presented as a notification when the app is in the background.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - maneuver: Maneuver, for which notification will be shown.
+    ///   - travelEstimates: Object that describes the time and distance remaining for the active navigation session.
+    ///   - mapTemplate: The map template that is visible during either preview or navigation sessions.
+    /// - Returns: A `Boolean` value indicating whether updated estimates should appear in the otification.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         shouldUpdateNotificationFor maneuver: CPManeuver,
@@ -531,13 +487,14 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
         in mapTemplate: CPMapTemplate
     ) -> Bool
 
-    /**
-     Asks the receiver to adjust the default color of the main instruction background color for a specific user interface style.
-     According to `CPMapTemplate.guidanceBackgroundColor` Navigation SDK can't guarantee that a custom color returned in this function will be actually applied, it's up to CarPlay.
-     - parameter carPlayManager: The ``CarPlayManager`` object.
-     - parameter style: A default `UIUserInterfaceStyle` generated by the system.
-     - returns: A `UIColor` which will be used to update `CPMapTemplate.guidanceBackgroundColor`.
-     */
+    /// Asks the receiver to adjust the default color of the main instruction background color for a specific user
+    /// interface style.
+    /// According to `CPMapTemplate.guidanceBackgroundColor` Navigation SDK can't guarantee that a custom color returned
+    /// in this function will be actually applied, it's up to CarPlay.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` object.
+    ///   - style: A default `UIUserInterfaceStyle` generated by the system.
+    /// - Returns: A `UIColor` which will be used to update `CPMapTemplate.guidanceBackgroundColor`.
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         guidanceBackgroundColorFor style: UIUserInterfaceStyle

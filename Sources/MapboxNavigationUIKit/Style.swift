@@ -21,9 +21,8 @@ open class Style: NSObject {
     /// Sets the font family for all labels.
     @objc public var fontFamily: String?
 
-    /**
-     Describes the situations in which the style should be used. By default, the style will be used during the daytime.
-     */
+    /// Describes the situations in which the style should be used. By default, the style will be used during the
+    /// daytime.
     @objc public var styleType: StyleType = .day
 
     /// URL of the style to display on the map during turn-by-turn navigation.

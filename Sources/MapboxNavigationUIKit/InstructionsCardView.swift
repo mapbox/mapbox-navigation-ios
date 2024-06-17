@@ -2,7 +2,8 @@ import CoreLocation
 import MapboxDirections
 import UIKit
 
-@_documentation(visibility: internal)
+/// A view that displays the current maneuver instruction as a “card” resembling a user notification.
+/// A subsequent maneuver is always partially visible on one side of the view.
 public class InstructionsCardView: BaseInstructionsBannerView {
     var step: RouteStep!
     var distanceFromCurrentLocation: CLLocationDistance!

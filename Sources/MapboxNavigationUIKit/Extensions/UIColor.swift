@@ -29,11 +29,9 @@ extension UIColor {
     class var roadShieldYellowColor: UIColor { #colorLiteral(red: 1.0, green: 0.9, blue: 0.4, alpha: 1) }
     class var roadShieldOrangeColor: UIColor { #colorLiteral(red: 1, green: 0.65, blue: 0, alpha: 1) }
 
-    /**
-     Returns `UIImage` representation of a `UIColor`.
-
-     - parameter size: optional size of `UIImage`. If not provided empty image will be returned.
-     */
+    /// Returns `UIImage` representation of a `UIColor`.
+    ///
+    /// - Parameter size: optional size of `UIImage`. If not provided empty image will be returned.
     func image(_ size: CGSize = .zero) -> UIImage {
         return UIGraphicsImageRenderer(size: size).image { rendererContext in
             self.setFill()

@@ -1,13 +1,9 @@
 import UIKit
 
-/**
- A banner view that contains the current step instruction along a route and responds to tap and swipe gestures.
- */
+/// A banner view that contains the current step instruction along a route and responds to tap and swipe gestures.
 open class StepInstructionsView: BaseInstructionsBannerView {}
 
-/**
- `UITableViewCell` instance that provides the ability to show a current step instruction along a route.
- */
+/// `UITableViewCell` instance that provides the ability to show a current step instruction along a route.
 open class StepTableViewCell: UITableViewCell {
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!

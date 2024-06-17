@@ -1,9 +1,7 @@
 import MapboxDirections
 import UIKit
 
-/**
- A workaround for the fact that `LaneIndication` is an `OptionSet` and thus cannot be exhaustively switched on.
- */
+/// A workaround for the fact that `LaneIndication` is an `OptionSet` and thus cannot be exhaustively switched on.
 enum SingularLaneIndication: Equatable {
     case sharpRight
     case right
@@ -39,9 +37,7 @@ enum SingularLaneIndication: Equatable {
     }
 }
 
-/**
- The classification of a maneuver direction relative to a dominant side.
- */
+/// The classification of a maneuver direction relative to a dominant side.
 enum TurnClassification: Equatable {
     case oppositeUTurn
     case oppositeSharpTurn
@@ -53,9 +49,7 @@ enum TurnClassification: Equatable {
     case sharpTurn
     case uTurn
 
-    /**
-     Classifies the given lane indication relative to the dominant side.
-     */
+    /// Classifies the given lane indication relative to the dominant side.
     init(laneIndication: SingularLaneIndication, dominantSide: DrivingSide, drivingSide: DrivingSide) {
         switch (laneIndication, dominantSide, drivingSide) {
         case (.straightAhead, _, _):
@@ -117,11 +111,10 @@ extension LaneIndication {
 
 //
 extension LanesStyleKit {
-    /**
-     A generic classification of this class’s drawing methods by argument list.
-
-     Asymmetric methods have a Boolean parameter to control horizontal flipping. Mixed methods have an extra parameter for the secondary color.
-     */
+    /// A generic classification of this class’s drawing methods by argument list.
+    ///
+    /// Asymmetric methods have a Boolean parameter to control horizontal flipping. Mixed methods have an extra
+    /// parameter for the secondary color.
     enum Method {
         case symmetricOff((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize) -> Void)
         case symmetricOn((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize) -> Void)
@@ -130,14 +123,12 @@ extension LanesStyleKit {
         case asymmetricOn((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize, Bool) -> Void)
     }
 
-    /**
-     Returns the method that draws the given lane configuration.
-
-     - parameter lane: The lane configuration to draw.
-     - parameter maneuverDirection: The direction that the user is expected to maneuver toward when using this lane.
-     - parameter drivingSide: The side of the road that the user drives on.
-     - returns: A `LanesStyleKit` method that draws the lane configuration.
-     */
+    /// Returns the method that draws the given lane configuration.
+    /// - Parameters:
+    ///   - lane: The lane configuration to draw.
+    ///   - maneuverDirection: The direction that the user is expected to maneuver toward when using this lane.
+    ///   - drivingSide: The side of the road that the user drives on.
+    /// - Returns: A `LanesStyleKit` method that draws the lane configuration.
     static func styleKitMethod(
         lane: LaneIndication,
         maneuverDirection: ManeuverDirection?,
@@ -174,13 +165,12 @@ extension LanesStyleKit {
         return method
     }
 
-    /**
-     Returns the method that draws the given set of turn classifications, potentially highlighting the favored turn classification.
-
-     - parameter turnClassifications: The turn classifications to draw.
-     - parameter favoredTurnClassifications: The turn classification to highlight if possible.
-     - returns: A `LanesStyleKit` method that draws the turn classifications.
-     */
+    /// Returns the method that draws the given set of turn classifications, potentially highlighting the favored turn
+    /// classification.
+    /// - Parameters:
+    ///   - turnClassifications:  The turn classifications to draw.
+    ///   - favoredTurnClassification: The turn classification to highlight if possible.
+    /// - Returns: A `LanesStyleKit` method that draws the turn classifications.
     static func styleKitMethod(
         turnClassifications: Set<TurnClassification>,
         favoredTurnClassification: TurnClassification?
@@ -351,38 +341,30 @@ extension ManeuverDirection {
     }
 }
 
-@_documentation(visibility: internal)
+// A view that is used to show a lane's guidance info.
 open class LaneView: UIView {
-    /**
-     The direction or directions of travel that the lane is reserved for.
-     */
+    /// The direction or directions of travel that the lane is reserved for.
     var indications: LaneIndication {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Denotes which of the `indications` is applicable to the current route when there is more than one.
-     */
+    /// Denotes which of the `indications` is applicable to the current route when there is more than one.
     var maneuverDirection: ManeuverDirection? {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Denotes whether or not the user can use this lane to continue along the current route.
-     */
+    /// Denotes whether or not the user can use this lane to continue along the current route.
     var isUsable: Bool = false {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Indicates which side of the road cars and traffic flow.
-     */
+    /// Indicates which side of the road cars and traffic flow.
     var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
@@ -393,52 +375,41 @@ open class LaneView: UIView {
         return bounds.size
     }
 
-    /**
-     Color of the maneuver direction (applied only when `LaneView.isUsable` is set to `true`). In case if
-     `LaneView.showHighlightedColors` is set to `true` this value is not used, `LaneView.primaryColorHighlighted`
-     is used instead.
-     */
+    /// Color of the maneuver direction. In case if ``LaneView/showHighlightedColors`` is set to `true` this value is
+    /// not used, ``LaneView/primaryColorHighlighted`` is used instead.
     @objc public dynamic var primaryColor: UIColor = .defaultLaneArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Color of the directions that the lane is reserved for (except the one that is applicable to the
-     current route). In case if `LaneView.showHighlightedColors` is set to `true` this value is not used,
-     `LaneView.secondaryColorHighlighted` is used instead.
-     */
+    /// Color of the directions that the lane is reserved for (except the one that is applicable to the current route).
+    /// In case if ``LaneView/showHighlightedColors`` is set to `true` this value is not used,
+    /// ``LaneView/secondaryColorHighlighted`` is used instead.
     @objc public dynamic var secondaryColor: UIColor = .defaultLaneArrowSecondary {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Highlighted color of the directions that the lane is reserved for (except the one that is
-     applicable to the current route).
-     */
+    /// Highlighted color of the directions that the lane is reserved for (except the one that is applicable to the
+    /// current route).
     @objc public dynamic var primaryColorHighlighted: UIColor = .defaultLaneArrowPrimaryHighlighted {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Highlighted color of the directions that the lane is reserved for (except the one that is applicable
-     to the current route).
-     */
+    /// Highlighted color of the directions that the lane is reserved for (except the one that is applicable to the
+    /// current route).
     @objc public dynamic var secondaryColorHighlighted: UIColor = .defaultLaneArrowSecondaryHighlighted {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     Controls whether highighted colors (either `LaneView.primaryColorHighlighted` or
-     `LaneView.secondaryColorHighlighted`) should be used.
-     */
+    /// Controls whether highighted colors (either ``LaneView/primaryColorHighlighted`` or
+    /// '``LaneView/secondaryColorHighlighted``) should be used.
     public var showHighlightedColors: Bool = false {
         didSet {
             setNeedsDisplay()

@@ -1056,18 +1056,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
         return []
     }
 
-    /**
-     Updates buttons (map buttons, leading and trailing navigation bar buttons) for provided
-     `CPMapTemplate`.
-     In case if delegate methods for certain `CarPlayActivity` return nil value, default buttons
-     will be used:
-     - Default map buttons include user tracking button (allows to switch between overview and
-     following camera modes) and show feedback button.
-     - Default leading navigation bar buttons include only mute/unmute button.
-     - Default trailing navigation bar buttons include only exit active navigation button.
-
-     - parameter mapTemplate: `CPMapTemplate` instance, for which buttons update will be performed.
-     */
+    /// Updates buttons (map buttons, leading and trailing navigation bar buttons) for provided `CPMapTemplate`.
+    /// In case if delegate methods for certain ``CarPlayActivity`` return nil value, default buttons will be used:
+    /// - Default map buttons include user tracking button (allows to switch between overview and following camera
+    /// modes) and show feedback button.
+    /// - Default leading navigation bar buttons include only mute/unmute button.
+    /// - Default trailing navigation bar buttons include only exit active navigation button.
+    ///
+    /// - Parameter mapTemplate: `CPMapTemplate` instance, for which buttons update will be performed.
     private func updateNavigationButtons(for mapTemplate: CPMapTemplate) {
         Task { @MainActor in
             guard let currentActivity = mapTemplate.currentActivity else { return }

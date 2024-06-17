@@ -362,7 +362,7 @@ open class NavigationMapView: UIView {
     @objc public dynamic var routeRestrictedAreaColor: UIColor = .defaultRouteRestrictedAreaColor
     /// Configures the color for the traversed part of the main route. The traversed part is rendered only if the color
     /// is not `nil`.
-    ///  Defaults to `nil`.
+    /// Defaults to `nil`.
     @objc public dynamic var traversedRouteColor: UIColor? = nil
     /// Configures the color of the maneuver arrow.
     @objc public dynamic var maneuverArrowColor: UIColor = .defaultManeuverArrow

@@ -6,9 +6,7 @@ extension CPRouteChoice {
     struct RouteResponseUserInfo {
         static let key = "\(Bundle.mapboxNavigation.bundleIdentifier!).cpRouteChoice.indexedRouteResponse"
 
-        /**
-         Route response from the Mapbox Directions service with a selected route.
-         */
+        /// Route response from the Mapbox Directions service with a selected route.
         let navigationRoutes: NavigationRoutes?
     }
 

@@ -28,9 +28,7 @@ extension CLLocation {
         return 0...20 ~= horizontalAccuracy
     }
 
-    /**
-     Returns a Boolean value indicating whether the receiver is within a given distance of a route step.
-     */
+    /// Returns a Boolean value indicating whether the receiver is within a given distance of a route step.
     func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
         guard let shape = routeStep.shape, let closestCoordinate = shape.closestCoordinate(to: coordinate) else {
             return false

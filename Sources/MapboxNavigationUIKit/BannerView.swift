@@ -1,13 +1,13 @@
 import UIKit
 
-@_documentation(visibility: internal)
+/// The container for the top UI components.
 @objc(MBTopBannerView)
 open class TopBannerView: UIView {}
 
 @_documentation(visibility: internal)
 open class TopPaddingView: TopBannerView {}
 
-@_documentation(visibility: internal)
+/// The container for the bottom UI components.
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView {}
 

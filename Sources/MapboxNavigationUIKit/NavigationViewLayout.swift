@@ -395,9 +395,7 @@ extension NavigationView {
         }
     }
 
-    /**
-     Sets top banner container view height constraints.
-     */
+    /// Sets top banner container view height constraints.
     func setupTopBannerContainerViewHeightLayoutConstraints(_ height: CGFloat? = nil) {
         NSLayoutConstraint.deactivate(topBannerContainerViewLayoutConstraints)
 
@@ -416,10 +414,8 @@ extension NavigationView {
         NSLayoutConstraint.activate(topBannerContainerViewLayoutConstraints)
     }
 
-    /**
-     Sets bottom banner container height view constraints for portrait and landscape modes. In landscape mode
-     height of bottom banner container view is lower than in portrait.
-     */
+    /// Sets bottom banner container height view constraints for portrait and landscape modes. In landscape mode height
+    /// of bottom banner container view is lower than in portrait.
     func setupBottomBannerContainerViewHeightLayoutConstraints(_ height: CGFloat? = nil) {
         NSLayoutConstraint.deactivate(bottomBannerContainerViewLayoutConstraints)
 

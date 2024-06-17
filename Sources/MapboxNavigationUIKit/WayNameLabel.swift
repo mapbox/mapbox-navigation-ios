@@ -2,9 +2,7 @@ import MapboxDirections
 import MapboxMaps
 import UIKit
 
-/**
- A label that is used to show a road name and a shield icon.
- */
+/// A label that is used to show a road name and a shield icon.
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {
     var spriteRepository: SpriteRepository = .shared
@@ -44,15 +42,13 @@ open class WayNameLabel: StylableLabel {
         setup(with: roadName, idiom: idiom)
     }
 
-    /**
-     Set up the `WayNameLabel` with the road name. Try to use the Mapbox designed shield image first,
-     if failed, fall back to use the legacy road shield icon.
-
-     If there's no valid shield images, only road name is displayed.
-
-     - parameter roadName: Name of the road, that is going to be displayed inside `WayNameLabel`.
-     - parameter idiom: The `UIUserInterfaceIdiom` that the `WayNameLabel` is going to be displayed in.
-     */
+    /// Set up the ``WayNameLabel`` with the road name. Try to use the Mapbox designed shield image first, if failed,
+    /// fall back to use the legacy road shield icon.
+    /// If there's no valid shield images, only road name is displayed.
+    ///
+    /// - Parameters:
+    ///   - roadName: Name of the road, that is going to be displayed inside ``WayNameLabel``.
+    ///   - idiom: The `UIUserInterfaceIdiom` that the ``WayNameLabel`` is going to be displayed in.
     private func setup(with roadName: String, idiom: UIUserInterfaceIdiom) {
         let shieldRepresentation = representation?.shield
         let legacyRoadShieldImage = spriteRepository.getLegacyShield(with: representation)

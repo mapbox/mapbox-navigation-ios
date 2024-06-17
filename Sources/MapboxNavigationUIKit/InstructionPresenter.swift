@@ -12,16 +12,15 @@ protocol InstructionPresenterDataSource: AnyObject {
 typealias DataSource = InstructionPresenterDataSource
 
 extension NSAttributedString.Key {
-    /**
-     A string containing an abbreviation that can be substituted for the substring when there is not enough room to display the original substring.
-     */
+    /// A string containing an abbreviation that can be substituted for the substring when there is not enough room to
+    /// display the original substring.
     static let abbreviation = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviation")
 
-    /**
-     A number indicating the priority for which the substring should be substituted with the abbreviation specified by the `NSAttributedString.Key.abbreviation` key.
-
-     A substring with a lower abbreviation priority value should be abbreviated before a substring with a higher abbreviation priority value.
-     */
+    /// A number indicating the priority for which the substring should be substituted with the abbreviation specified
+    /// by the `NSAttributedString.Key.abbreviation` key.
+    ///
+    /// A substring with a lower abbreviation priority value should be abbreviated before a substring with a higher
+    /// abbreviation priority value.
     static let abbreviationPriority = NSAttributedString
         .Key(rawValue: "MBVisualInstructionComponentAbbreviationPriority")
 }

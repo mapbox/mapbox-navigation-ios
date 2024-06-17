@@ -2,9 +2,7 @@ import CoreLocation
 import MapboxDirections
 import UIKit
 
-/**
- A container view for the information currently displayed in `InstructionsCardViewController`.
- */
+/// A container view for the information currently displayed in `InstructionsCardViewController`.
 public class InstructionsCardContainerView: StylableView, InstructionsCardContainerViewDelegate {
     enum State {
         case unhighlighted
@@ -13,41 +11,28 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
 
     // MARK: Child Views Configuration
 
-    /**
-     Color of the background that will be used in case if distance to the next maneuver is higher
-     than threshold distance, defined in `InstructionCardHighlightDistance`.
-     */
+    /// Color of the background that will be used in case if distance to the next maneuver is higher than threshold
+    /// distance.
     @objc public dynamic var customBackgroundColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
 
-    /**
-     Color of the background that will be used when remaining distance to the next maneuver is below
-     threshold distance, defined in `InstructionCardHighlightDistance`.
-     */
+    /// Color of the background that will be used when remaining distance to the next maneuver is below threshold
+    /// distance.
     @objc public dynamic var highlightedBackgroundColor: UIColor = #colorLiteral(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
 
-    /**
-     Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView`.
-     */
+    /// Color of the separator between ``InstructionsCardView`` or ``LanesView``/``NextBannerView``.
     @objc public dynamic var separatorColor: UIColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
 
-    /**
-     Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView` that will
-     be used when remaining distance to the next maneuver is below threshold distance, defined in
-     `InstructionCardHighlightDistance`.
-     */
+    /// Color of the separator between ``InstructionsCardView`` or ``LanesView``/``NextBannerView`` that will be used
+    /// when remaining distance to the next maneuver is below threshold distance.
     @objc public dynamic var highlightedSeparatorColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
 
-    /**
-     Vertical stack view that contains `InstructionsCardView`, `LanesView` and `NextBannerView`.
-     */
+    /// Vertical stack view that contains ``InstructionsCardView``, ``LanesView``, and ``NextBannerView``.
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     lazy var instructionsCardView: InstructionsCardView = .forAutoLayout()
     lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
 
-    /**
-     State of the instructions card view.
-     */
+    /// State of the instructions card view.
     var state: InstructionsCardContainerView.State = .unhighlighted {
         didSet {
             updateInstructionsCardContainerView(for: state)
@@ -59,10 +44,8 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
 
     // MARK: Updating the Instructions
 
-    /**
-     Delegate, which provides methods that allow presented visual instructions customization
-     within the instructions container view.
-     */
+    //// Delegate, which provides methods that allow presented visual instructions customization within the instructions
+    /// container view.
     public weak var delegate: InstructionsCardContainerViewDelegate?
 
     public required init() {

@@ -42,12 +42,20 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation ``N
 
 ### UI Components
 
+- ``InstructionsBannerView``
+- ``TopBannerView``
+- ``BottomBannerView``
+- ``ResumeButton``
 - ``SpeedLimitView``
 - ``NavigationComponent``
 - ``FloatingButton``
 - ``WayNameView``
 - ``WayNameLabel``
 - ``BannerContainerView``
+- ``StatusView``
+- ``LanesView``
+- ``LaneView``
+- ``NextBannerView``
 
 ### Guidance Instruction UI
 
@@ -56,16 +64,18 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation ``N
 - ``BaseInstructionsBannerView``
 - ``BottomBannerViewController``
 - ``BottomBannerViewControllerDelegate``
-- ``InstructionsBannerView``
 - ``InstructionsCardContainerView``
 - ``InstructionsCardContainerViewDelegate``
 - ``InstructionsBannerViewDelegate``
+- ``InstructionLabel``
+- ``InstructionsCardView``
 - ``ManeuverView``
 - ``JunctionView``
 - ``GenericRouteShield``
 - ``StepsViewControllerDelegate``
 - ``StepInstructionsView``
 - ``StepTableViewCell``
+- ``StepsViewController``
 - ``TimeRemainingLabel``
 - ``VisualInstructionDelegate``
 - ``NavigationStatusPresenter``

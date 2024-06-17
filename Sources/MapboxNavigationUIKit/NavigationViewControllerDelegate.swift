@@ -12,7 +12,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
 
     /// Called when the navigation view controller is dismissed, such as when the user ends a trip.
     /// - Parameters:
-    ///   - navigationViewController:  The navigation view controller that was dismissed.
+    ///   - navigationViewController: The navigation view controller that was dismissed.
     ///   - canceled: canceled: True if the user dismissed the navigation view controller by tapping the Cancel button;
     /// false if the navigation view controller dismissed by some other means.
     func navigationViewControllerDidDismiss(
@@ -20,14 +20,12 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
         byCanceling canceled: Bool
     )
 
-    /**
-     Called when movement of the user updates the route progress model.
-
-     - parameter navigationViewController: The ViewController that received the new locations.
-     - parameter progress: the RouteProgress model that was updated.
-     - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
-     - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
-     */
+    /// Called when movement of the user updates the route progress model.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` that received the new locations.
+    ///   - progress: The `RouteProgress` model that was updated.
+    ///   - location: The guaranteed location, possibly snapped, associated with the progress update.
+    ///   - rawLocation: The raw location, from the location manager, associated with the progress update.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didUpdate progress: RouteProgress,
@@ -35,124 +33,101 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
         rawLocation: CLLocation
     )
 
-    /**
-     Called when the user arrives at the destination waypoint for a route leg.
-
-     This method is called when the navigation view controller arrives at the waypoint.
-
-     - parameter navigationViewController: The navigation view controller that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the user has arrived at.
-     */
+    /// Called when the user arrives at the destination waypoint for a route leg.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController``that has arrived at a waypoint.
+    ///   - waypoint: The waypoint that the user has arrived at.
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint)
 
     // MARK: Interaction With Waypoints
 
-    /**
-     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
-
-     - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
-     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
-     */
+    /// Tells the receiver that the final destination `PointAnnotation` was added to the ``NavigationViewController``.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - finalDestinationAnnotation: The point annotation that was added to the map view.
+    ///   - pointAnnotationManager: The object that manages the point annotation in the map view.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didAdd finalDestinationAnnotation: PointAnnotation,
         pointAnnotationManager: PointAnnotationManager
     )
 
-    /**
-     Tells the receiver that a waypoint was selected.
-
-     - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter waypoint: The waypoint that was selected.
-     */
+    /// Tells the receiver that a waypoint was selected.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - waypoint: The waypoint that was selected.
     func navigationViewController(_ navigationViewController: NavigationViewController, didSelect waypoint: Waypoint)
 
     // MARK: Rerouting and Refreshing the Route
 
-    /**
-     Called immediately before the navigation view controller calculates a new route.
-
-     This method also allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
-
-     - note: Multiple method calls will not interrupt the first ongoing request.
-
-     This method is called before `navigationViewController(_:willRerouteFrom:)` is called.
-
-     - parameter navigationViewController: The navigation view controller that will calculate a new route.
-     - parameter location: The user’s current location.
-     */
+    /// Called immediately before the navigation view controller calculates a new route.
+    ///
+    /// - Note: Multiple method calls will not interrupt the first ongoing request.
+    ///
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - location: The user’s current location.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         willRerouteFrom location: CLLocation?
     )
 
-    /**
-     Called immediately after the navigation view controller receives a new route.
-
-     This method is called after `navigationViewController(_:willRerouteFrom:)`.
-
-     - parameter navigationViewController: The navigation view controller that has calculated a new route.
-     - parameter route: The new route.
-     */
+    /// Called immediately after the navigation view controller receives a new route.
+    ///
+    /// This method is called after ``NavigationViewControllerDelegate/navigationViewController(_:willRerouteFrom:)``.
+    ///
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - route: The new route.
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
 
-    /**
-     Called when navigation view controller has detected a change in alternative routes list.
-
-     - parameter navigationViewController: The navigation view controller reporting an update.
-     - parameter updatedAlternatives: Array of actual alternative routes.
-     - parameter removedAlternatives: Array of alternative routes which are no longer actual.
-     */
+    /// Called when navigation view controller has detected a change in alternative routes list.
+    /// - Parameters:
+    ///   - navigationViewController: The navigation view controller reporting an update.
+    ///   - updatedAlternatives: Array of actual alternative routes.
+    ///   - removedAlternatives:  Array of alternative routes which are no longer actual.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didUpdateAlternatives updatedAlternatives: [AlternativeRoute],
         removedAlternatives: [AlternativeRoute]
     )
 
-    /**
-     Called when navigation view controller has automatically switched to the coincide online route.
-
-     - parameter navigationViewController: The navigation view controller reporting an update.
-     - parameter coincideRoute: A route taken.
-     */
+    /// Called when navigation view controller has automatically switched to the coincide online route.
+    /// - Parameters:
+    ///   - navigationViewController: The navigation view controller reporting an update.
+    ///   - coincideRoute: A route taken.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didSwitchToCoincidentOnlineRoute coincideRoute: Route
     )
 
-    /**
-     Tells the receiver that the user has selected a continuous alternative route by interacting with the map view.
-
-     Continuous alternatives are all non-primary routes, reported during the navigation session.
-
-     - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter alternative: The route that was selected.
-     */
+    /// Tells the receiver that the user has selected a continuous alternative route by interacting with the map view.
+    ///
+    /// Continuous alternatives are all non-primary routes, reported during the navigation session.
+    ///
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - alternative: The route that was selected.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didSelect alternative: AlternativeRoute
     )
 
-    /**
-     Called when the navigation view controller fails to receive a new route.
-
-     This method is called after `navigationViewController(_:willRerouteFrom:)`.
-
-     - parameter navigationViewController: The navigation view controller that has calculated a new route.
-     - parameter error: An error raised during the process of obtaining a new route.
-     */
+    /// Called when the navigation view controller fails to receive a new route.
+    ///
+    /// This method is called after ``NavigationViewControllerDelegate/navigationViewController(_:willRerouteFrom:)``.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - error: An error raised during the process of obtaining a new route.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didFailToRerouteWith error: Error
     )
 
-    /**
-     Called immediately after the navigation view controller refreshes the route.
-
-     - parameter navigationViewController: The navigation view controller that has refreshed the route.
-     - parameter routeProgress: The updated route progress with the refreshed route.
-     */
+    /// Called immediately after the navigation view controller refreshes the route.
+    /// - Parameters:
+    ///   - navigationViewController: The navigation view controller that has refreshed the route.
+    ///   - routeProgress: The updated route progress with the refreshed route.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didRefresh routeProgress: RouteProgress
@@ -279,12 +254,10 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
 
     // MARK: Filtering Location Updates
 
-    /**
-     Called to notify that the user submitted the end of route feedback.
-
-     - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter feedback: The `EndOfRouteFeedback` that was submitted by the user.
-     */
+    /// Called to notify that the user submitted the end of route feedback.
+    /// - Parameters:
+    ///   - navigationViewController: The ``NavigationViewController`` object.
+    ///   - isPositive: A `Boolean` value that indicates if the feedback submitted by the user was positive.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
         didSubmitArrivalFeedback isPositive: Bool

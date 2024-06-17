@@ -1,28 +1,18 @@
 import MapboxNavigationCore
 import UIKit
 
-/**
- A single feedback item displayed on an instance of `FeedbackViewController`.
- */
+/// A single feedback item displayed on an instance of ``FeedbackViewController`.
 public struct FeedbackItem {
-    /**
-     The title of feedback item. This will be rendered directly below the image.
-     */
+    /// The title of feedback item. This will be rendered directly below the image.
     public var title: String
 
-    /**
-     An image representation of the feedback.
-     */
+    /// An image representation of the feedback.
     public var image: UIImage
 
-    /**
-     The type of feedback that best describes the event.
-     */
+    /// The type of feedback that best describes the event.
     public var type: FeedbackItemType
 
-    /**
-     Creates a new `FeedbackItem` from navigation feedback.
-     */
+    /// Creates a new `FeedbackItem` from navigation feedback.
     public init(title: String, image: UIImage, feedbackType: FeedbackItemType) {
         self.title = title
         self.image = image

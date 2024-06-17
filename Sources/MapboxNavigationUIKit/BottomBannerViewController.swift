@@ -3,9 +3,8 @@ import MapboxDirections
 import MapboxNavigationCore
 import UIKit
 
-/**
- A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
- */
+/// A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as
+/// give the user a control the cancel the navigation session.
 @IBDesignable
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     var previousProgress: RouteProgress?
@@ -42,75 +41,51 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
 
     // MARK: Child Views Configuration
 
-    /**
-     A padded spacer view that covers the bottom safe area of the device, if any.
-     */
+    /// A padded spacer view that covers the bottom safe area of the device, if any.
     open lazy var bottomPaddingView: BottomPaddingView = .forAutoLayout()
 
-    /**
-     The main bottom banner view that all UI components are added to.
-     */
+    /// The main bottom banner view that all UI components are added to.
     open lazy var bottomBannerView: BottomBannerView = .forAutoLayout()
 
-    /**
-     The label that displays the estimated time until the user arrives at the final destination.
-     */
+    /// The label that displays the estimated time until the user arrives at the final destination.
     open var timeRemainingLabel: TimeRemainingLabel!
 
-    /**
-     The label that represents the user's remaining distance.
-     */
+    /// The label that represents the user's remaining distance.
     open var distanceRemainingLabel: DistanceRemainingLabel!
 
-    /**
-     The label that displays the user's estimate time of arrival.
-     */
+    /// The label that displays the user's estimate time of arrival.
     open var arrivalTimeLabel: ArrivalTimeLabel!
 
-    /**
-     The button that, by default, allows the user to cancel the navigation session.
-     */
+    /// The button that, by default, allows the user to cancel the navigation session.
     open var cancelButton: CancelButton!
 
-    /**
-     A vertical divider that seperates the cancel button and informative labels.
-     */
+    /// A vertical divider that seperates the cancel button and informative labels.
     open var verticalDividerView: SeparatorView!
 
-    /**
-     A horizontal divider that adds visual separation between the bottom banner and its superview.
-     */
+    /// A horizontal divider that adds visual separation between the bottom banner and its superview.
     open var horizontalDividerView: SeparatorView!
 
-    /**
-     A vertical separator for the trailing side of the view.
-     */
+    /// A vertical separator for the trailing side of the view.
     var trailingSeparatorView: SeparatorView!
 
     // MARK: Setup and Initialization
 
-    /**
-     The delegate for the view controller.
-     - seealso: BottomBannerViewControllerDelegate
-     */
+    /// The delegate for the view controller.
+    /// - SeeAlso: ``BottomBannerViewControllerDelegate``.
     open weak var delegate: BottomBannerViewControllerDelegate?
 
-    /**
-     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
-
-     - parameter nibNameOrNil: Ignored.
-     - parameter nibBundleOrNil: Ignored.
-     */
+    /// Initializes a ``BottomBannerViewController`` that provides ETA, Distance to arrival, and Time to arrival.
+    /// - Parameters:
+    ///   - nibNameOrNil: Ignored
+    ///   - nibBundleOrNil: Ignored
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         commonInit()
     }
 
-    /**
-     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
-
-     - parameter aDecoder: Ignored.
-     */
+    /// Initializes a ``BottomBannerViewController`` that provides ETA, Distance to arrival, and Time to arrival.
+    ///
+    /// - Parameter aDecoder: `NSCoder`.
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()

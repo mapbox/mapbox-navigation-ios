@@ -39,12 +39,9 @@ open class DistanceLabel: StylableLabel {
         }
     }
 
-    /**
-     An attributed string indicating the distance along with a unit.
-
-     - precondition: `NSAttributedStringKey.quantity` should be applied to the
-        numeric quantity.
-     */
+    /// An attributed string indicating the distance along with a unit.
+    ///
+    /// - Precondition: `NSAttributedStringKey.quantity` should be applied to the numeric quantity.
     var attributedDistanceString: NSAttributedString? {
         didSet {
             update()

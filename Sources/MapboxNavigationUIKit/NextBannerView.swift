@@ -5,7 +5,7 @@ import UIKit
 @_documentation(visibility: internal)
 open class NextInstructionLabel: InstructionLabel {}
 
-@_documentation(visibility: internal)
+// The view is used for displaying the next navigation instruction.
 @IBDesignable
 open class NextBannerView: UIView, NavigationComponent {
     weak var maneuverView: ManeuverView!
@@ -22,17 +22,13 @@ open class NextBannerView: UIView, NavigationComponent {
     private var shouldShow: Bool = false
     private var isAnimating: Bool = false
 
-    /**
-     A vertical separator for the trailing side of the view.
-     */
+    /// A vertical separator for the trailing side of the view.
     var trailingSeparatorView: SeparatorView!
 
-    /**
-     A closure that is called after either presenting or dismissing next banner view.
-
-     - parameter completed: Boolean value that indicates whether or not the animation actually
-     finished before the completion handler was called.
-     */
+    /// A closure that is called after either presenting or dismissing next banner view.
+    ///
+    /// - Parameter completed: `Boolean` value that indicates whether or not the animation actually finished before the
+    /// completion handler was called.
     public typealias CompletionHandler = (_ completed: Bool) -> Void
 
     override init(frame: CGRect) {
@@ -171,15 +167,13 @@ open class NextBannerView: UIView, NavigationComponent {
         return true
     }
 
-    /**
-     Updates the instructions banner info with a given `VisualInstructionBanner`.
-
-     - parameter visualInstruction: Current instruction, which will be displayed in the next banner view.
-     - parameter animated: If `true`, next banner view presentation or dismissal is animated.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called once next banner view is either shown or hidden.
-     */
+    /// Updates the instructions banner info with a given `VisualInstructionBanner`.
+    /// - Parameters:
+    ///   - visualInstruction: Current instruction, which will be displayed in the next banner view.
+    ///   - animated: If `true`, next banner view presentation or dismissal is animated.
+    ///   - duration: Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called once next banner view is either shown or hidden.
     public func update(
         for visualInstruction: VisualInstructionBanner?,
         animated: Bool = true,
@@ -210,14 +204,12 @@ open class NextBannerView: UIView, NavigationComponent {
         updateTrailingSeparatorView()
     }
 
-    /**
-     Shows next banner view.
-
-     - parameter animated: If `true`, next banner view presentation is animated. Defaults to `true`.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called once next banner is shown.
-     */
+    /// Shows next banner view.
+    /// - Parameters:
+    ///   - animated: If `true`, next banner view presentation is animated. Defaults to `true`.
+    ///   - duration: Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called once next banner is shown.
     public func show(
         animated: Bool = true,
         duration: TimeInterval = 0.5,
@@ -257,14 +249,12 @@ open class NextBannerView: UIView, NavigationComponent {
         }
     }
 
-    /**
-     Hides next banner view.
-
-     - parameter animated: If `true`, next banner view dismissal is animated. Defaults to `true`.
-     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
-     is set to `false` this value is ignored.
-     - parameter completion: A completion handler that will be called after next banner view dismissal.
-     */
+    /// Hides next banner view.
+    /// - Parameters:
+    ///   - animated: If `true`, next banner view dismissal is animated. Defaults to `true`.
+    ///   - duration: Duration of the animation (in seconds). In case if `animated` parameter is set to `false` this
+    /// value is ignored.
+    ///   - completion: A completion handler that will be called after next banner view dismissal.
     public func hide(
         animated: Bool = true,
         duration: TimeInterval = 0.5,

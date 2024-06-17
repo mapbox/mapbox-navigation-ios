@@ -18,18 +18,17 @@ public class DataCache: BimodalDataCache {
 
     // MARK: Data cache
 
-    /**
-     Stores data in the cache for the given key. If `toDisk` is set to `true`, the completion handler is called following writing the data to disk, otherwise it is called immediately upon storing the data in the memory cache.
-     */
+    /// Stores data in the cache for the given key. If `toDisk` is set to `true`, the completion handler is called
+    /// following writing the data to disk, otherwise it is called immediately upon storing the data in the memory
+    /// cache.
     public func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeDataInMemoryCache(data, forKey: key)
 
         toDisk == true ? fileCache.store(data, forKey: key, completion: completion) : completion?()
     }
 
-    /**
-     Returns data from the cache for the given key, if any. The memory cache is consulted first, followed by the disk cache. If data is found on disk which isn't in memory, it is added to the memory cache.
-     */
+    /// Returns data from the cache for the given key, if any. The memory cache is consulted first, followed by the disk
+    /// cache. If data is found on disk which isn't in memory, it is added to the memory cache.
     public func data(forKey key: String?) -> Data? {
         guard let key else {
             return nil
@@ -47,17 +46,13 @@ public class DataCache: BimodalDataCache {
         return nil
     }
 
-    /**
-     Clears out the memory cache.
-     */
+    /// Clears out the memory cache.
     @objc
     public func clearMemory() {
         memoryCache.removeAllObjects()
     }
 
-    /**
-     Clears the disk cache and calls the completion handler when finished.
-     */
+    /// Clears the disk cache and calls the completion handler when finished.
     public func clearDisk(completion: CompletionHandler?) {
         fileCache.clearDisk(completion: completion)
     }

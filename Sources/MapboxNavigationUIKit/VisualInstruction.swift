@@ -99,13 +99,11 @@ extension VisualInstruction {
         return newImage
     }
 
-    /**
-     Returns a `CPImageSet` representing the maneuver.
-
-     - parameter side: Driving side of the road cars and traffic flow.
-     - parameter visualInstruction: VisualInstruction of current road progress.
-     - returns: An image set with light and dark versions of an image.
-     */
+    /// Returns a `CPImageSet` representing the maneuver.
+    /// - Parameters:
+    ///   - side: Driving side of the road cars and traffic flow.
+    ///   - visualInstruction: VisualInstruction of current road progress.
+    /// - Returns: An image set with light and dark versions of an image.
     public func maneuverImageSet(side: DrivingSide, visualInstruction: VisualInstruction? = nil) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
         let maneuverIcons: [UIImage] = colors.compactMap { color in
@@ -123,14 +121,12 @@ extension VisualInstruction {
         return CPImageSet(lightContentImage: maneuverIcons[1], darkContentImage: maneuverIcons[0])
     }
 
-    /**
-     Returns a `UIImage` representing the maneuver.
-
-     - parameter side: Driving side of the road cars and traffic flow.
-     - parameter userInterfaceStyle: The `UIUserInterfaceStyle` that the maneuver will be displayed in.
-
-     - returns: A `UIImage` representing the maneuver.
-     */
+    /// Returns a `UIImage` representing the maneuver.
+    /// - Parameters:
+    ///   - side: Driving side of the road cars and traffic flow.
+    ///   - visualInstruction: VisualInstruction of current road progress.
+    ///   - styleType: The `UIUserInterfaceStyle` that the maneuver will be displayed in.
+    /// - Returns: A `UIImage` representing the maneuver.
     func maneuverImage(
         side: DrivingSide,
         visualInstruction: VisualInstruction? = nil,
@@ -165,20 +161,16 @@ extension VisualInstruction {
         }
     }
 
-    /**
-     Glanceable instruction given the available space, appearance styling, and attachments.
-
-     - parameter bounds: A closure that calculates the available bounds for the maneuver text.
-     - parameter shieldHeight: The height of the shield.
-     - parameter window: A `UIWindow` that holds the `UIAppearance` styling properties, preferably the CarPlay window.
-     - parameter traitCollection: Custom `UITraitCollection` that is used to control color of
-     the shield icons depending on various custom situations when actual trait collection is different
-     (e.g. when driving through the tunnel).
-     - parameter instructionLabelType: Type, which is inherited from `InstructionLabel` and will be
-     used for showing a visual instruction.
-
-     - returns: An `NSAttributedString` with maneuver instructions.
-     */
+    /// Glanceable instruction given the available space, appearance styling, and attachments.
+    /// - Parameters:
+    ///   - bounds: A closure that calculates the available bounds for the maneuver text.
+    ///   - shieldHeight: The height of the shield.
+    ///   - window: A `UIWindow` that holds the `UIAppearance` styling properties, preferably the CarPlay window.
+    ///   - traitCollection: Custom `UITraitCollection` that is used to control color of the shield icons depending on
+    /// various custom situations when actual trait collection is different (e.g. when driving through the tunnel).
+    ///   - instructionLabelType: ype, which is inherited from ``InstructionLabel`` and will be used for showing a
+    /// visual instruction.
+    /// - Returns:  An `NSAttributedString` with maneuver instructions.
     public func carPlayManeuverLabelAttributedText<T: InstructionLabel>(
         bounds: @escaping () -> (CGRect),
         shieldHeight: CGFloat,
@@ -204,15 +196,12 @@ extension VisualInstruction {
         return instructionLabel.attributedText
     }
 
-    /**
-     Returns a `CPImageSet` representing the maneuver lane configuration.
-
-     - parameter side: Indicates which side of the road cars and traffic flow.
-     - parameter direction: `ManeuverType` that contains directional information.
-     - parameter scale: The natural scale factor associated with the CarPlay screen.
-
-     - returns: Light and dark representations of an image that contains maneuver lane configuration.
-     */
+    /// Returns a `CPImageSet` representing the maneuver lane configuration.
+    /// - Parameters:
+    ///   - side: Indicates which side of the road cars and traffic flow.
+    ///   - direction: `ManeuverType` that contains directional information.
+    ///   - scale: The natural scale factor associated with the CarPlay screen.
+    /// - Returns: Light and dark representations of an image that contains maneuver lane configuration.
     public func lanesImageSet(
         side: DrivingSide,
         direction: ManeuverDirection?,

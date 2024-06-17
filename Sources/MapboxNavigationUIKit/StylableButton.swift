@@ -39,9 +39,7 @@ open class StylableButton: UIButton {
     }
 }
 
-/**
- `Button` sets the tintColor according to the style.
- */
+/// `Button` sets the tintColor according to the style.
 @_documentation(visibility: internal)
 @objc(MBButton)
 open class Button: StylableButton {}

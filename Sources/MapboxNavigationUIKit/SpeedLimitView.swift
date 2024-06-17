@@ -2,35 +2,27 @@ import CoreLocation
 import MapboxDirections
 import UIKit
 
-/**
- A view that displays a speed limit and resembles a real-world speed limit sign.
- */
+/// A view that displays a speed limit and resembles a real-world speed limit sign.
 public class SpeedLimitView: UIView {
     // MARK: Styling the Sign
 
-    /**
-     The sign’s background color.
-     */
+    /// The sign’s background color.
     @objc public dynamic var signBackColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
         didSet {
             update()
         }
     }
 
-    /**
-     The color of the text on the sign.
-
-     This color is also used for the border of an MUTCD-style sign.
-     */
+    /// The color of the text on the sign.
+    ///
+    /// This color is also used for the border of an MUTCD-style sign.
     @objc public dynamic var textColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
         didSet {
             update()
         }
     }
 
-    /**
-     The color of the border of a regulatory sign according to the Vienna Convention.
-     */
+    /// The color of the border of a regulatory sign according to the Vienna Convention.
     @objc public dynamic var regulatoryBorderColor: UIColor = #colorLiteral(red: 0.800, green: 0, blue: 0, alpha: 1) {
         didSet {
             update()
@@ -39,11 +31,9 @@ public class SpeedLimitView: UIView {
 
     // MARK: Populating the Sign
 
-    /**
-     The speed limit to display.
-
-     The view displays the value of this property as is without converting it to another unit.
-     */
+    /// The speed limit to display.
+    ///
+    /// The view displays the value of this property as is without converting it to another unit.
     public var speedLimit: Measurement<UnitSpeed>? {
         didSet {
             if speedLimit != oldValue {
@@ -52,14 +42,10 @@ public class SpeedLimitView: UIView {
         }
     }
 
-    /**
-     The current speed to display.
-     */
+    /// The current speed to display.
     public var currentSpeed: CLLocationSpeed?
 
-    /**
-     The sign standard that specifies the design that the view depicts.
-     */
+    /// The sign standard that specifies the design that the view depicts.
     public var signStandard: SignStandard? {
         didSet {
             if signStandard != oldValue {
@@ -68,19 +54,17 @@ public class SpeedLimitView: UIView {
         }
     }
 
-    /**
-     Allows to completely hide `SpeedLimitView`.
-     */
+    /// Allows to completely hide ``SpeedLimitView``.
     public var isAlwaysHidden: Bool = false {
         didSet {
             update()
         }
     }
 
-    /**
-     Defines the view behavior if the `speedLimit` property is `nil`.
-     Setting this property to `true` will cause the view to display `"--"` as a speed limit instead of the `SeedLimitView` being invisible.
-     */
+    /// Defines the view behavior if the ``SpeedLimitView/speedLimit`` property is `nil`.
+    ///
+    /// Setting this property to `true` will cause the view to display `"--"` as a speed limit instead of the
+    /// ``SpeedLimitView`` being invisible.
     public var shouldShowUnknownSpeedLimit: Bool = false {
         didSet {
             update()

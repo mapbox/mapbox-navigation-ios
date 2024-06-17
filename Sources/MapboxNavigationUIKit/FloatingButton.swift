@@ -1,13 +1,9 @@
 import UIKit
 
-/**
- A rounded button with an icon that is designed to float above `NavigationMapView`.
- */
+/// A rounded button with an icon that is designed to float above `NavigationMapView`.
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
-    /**
-     The default size of a floating button.
-     */
+    /// The default size of a floating button.
     public static let buttonSize = CGSize(width: 50, height: 50)
 
     // Don't fight with the stack view (superview) when it tries to hide buttons.
@@ -37,18 +33,15 @@ open class FloatingButton: Button {
         }
     }
 
-    /**
-     Return a `FloatingButton` with given images and size.
-
-     - parameter image: The `UIImage` of this button.
-     - parameter selectedImage: The `UIImage` of this button when selected.
-     - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
-     - parameter type: `UIButton` type. Defaults to `.custom`.
-     - parameter cornerRadius: Corner radius of the button.
-     - parameter imageEdgeInsets: Effective drawing rectangle for the button image.
-
-     - returns: `FloatingButton` instance.
-     */
+    /// Return a ``FloatingButton`` with given images and size.
+    /// - Parameters:
+    ///   - image: The `UIImage` of this button.
+    ///   - selectedImage: The `UIImage` of this button when selected.
+    ///   - size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
+    ///   - type: `UIButton` type. Defaults to `.custom`.
+    ///   - imageEdgeInsets: Effective drawing rectangle for the button image.
+    ///   - cornerRadius: Corner radius of the button.
+    /// - Returns:  A``FloatingButton`` instance.
     public class func rounded<T: FloatingButton>(
         image: UIImage? = nil,
         selectedImage: UIImage? = nil,

@@ -37,51 +37,43 @@ open class CarPlayNavigationViewController: UIViewController {
         }
     }
 
-    /**
-     Controls whether the main route style layer and its casing disappears
-     as the user location puck travels over it. Defaults to `false`.
-
-     If `true`, the part of the route that has been traversed will be
-     rendered with full transparency, to give the illusion of a
-     disappearing route. To customize the color that appears on the
-     traversed section of a route, override the `traversedRouteColor` property
-     for the `NavigationMapView.appearance()`.
-     */
+    /// Controls whether the main route style layer and its casing disappears as the user location puck travels over it.
+    /// Defaults to `false`.
+    ///
+    /// If `true`, the part of the route that has been traversed will be rendered with full transparency, to give the
+    /// illusion of a disappearing route. To customize the color that appears on the  traversed section of a route,
+    /// override the `traversedRouteColor` property for the `NavigationMapView.appearance()`.
     public var routeLineTracksTraversal: Bool = false {
         didSet {
             navigationMapView?.routeLineTracksTraversal = routeLineTracksTraversal
         }
     }
 
-    /**
-     Toggles displaying alternative routes.
-
-     If enabled, view will draw actual alternative route lines on the map.
-     Default value is `true`.
-     */
+    /// Toggles displaying alternative routes.
+    ///
+    /// If enabled, view will draw actual alternative route lines on the map.
+    /// Default value is `true`.
     public var showsContinuousAlternatives: Bool {
         get { navigationMapView?.showsAlternatives ?? true }
         set { navigationMapView?.showsAlternatives = newValue }
     }
 
-    /**
-     A Boolean value that determines whether the map annotates the intersections on current step during active navigation.
-
-     If `true`, the map would display an icon of a traffic control device on the intersection,
-     such as traffic signal, stop sign, yield sign, or railroad crossing.
-     Defaults to `true`.
-     */
+    /// A Boolean value that determines whether the map annotates the intersections on current step during active
+    /// navigation.
+    ///
+    /// If `true`, the map would display an icon of a traffic control device on the intersection, such as traffic
+    /// signal, stop sign, yield sign, or railroad crossing.
+    /// Defaults to `true`.
     public var annotatesIntersectionsAlongRoute: Bool = true {
         didSet {
             navigationMapView?.showsIntersectionAnnotations = annotatesIntersectionsAlongRoute
         }
     }
 
-    /**
-     `AlternativeRoute`s user might take during this trip to reach the destination using another road.
-
-     Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
-     */
+    /// `AlternativeRoute`s user might take during this trip to reach the destination using another road.
+    ///
+    /// Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the
+    /// main route.
     public var continuousAlternatives: [AlternativeRoute] {
         navigationRoutes.alternativeRoutes
     }
@@ -223,16 +215,12 @@ open class CarPlayNavigationViewController: UIViewController {
         return template
     }
 
-    /**
-     Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
-     */
+    /// Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
     public var usesNightStyleWhileInTunnel: Bool = true
 
-    /**
-     Controls the styling of CarPlayNavigationViewController and its components.
-
-     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
-     */
+    /// Controls the styling of CarPlayNavigationViewController and its components.
+    ///
+    /// The style can be modified programmatically by using ``StyleManager/applyStyle(type:)``.
     public private(set) var styleManager: StyleManager?
 
     /// This property is not used.
@@ -308,9 +296,7 @@ open class CarPlayNavigationViewController: UIViewController {
         styleManager?.styles = styles
     }
 
-    /**
-     Updates `CPMapTemplate.tripEstimateStyle` and `CPMapTemplate.guidanceBackgroundColor`.
-     */
+    /// Updates `CPMapTemplate.tripEstimateStyle` and `CPMapTemplate.guidanceBackgroundColor`.
     func updateMapTemplateStyle() {
         var currentUserInterfaceStyle = traitCollection.userInterfaceStyle
 //         Regardless of the user interface style that was set in CarPlay settings style that is
@@ -344,18 +330,14 @@ open class CarPlayNavigationViewController: UIViewController {
 
     // MARK: Collecting User Feedback
 
-    /**
-     Provides methods for creating and sending user feedback.
-     */
+    /// Provides methods for creating and sending user feedback.
     public var eventsManager: NavigationEventsManager {
         core.eventsManager()
     }
 
     var carFeedbackTemplate: CPGridTemplate!
 
-    /**
-     Shows the interface for providing feedback about the route.
-     */
+    /// Shows the interface for providing feedback about the route.
     public func showFeedback() {
         carInterfaceController.pushTemplate(carFeedbackTemplate, animated: true, completion: nil)
     }
@@ -528,40 +510,31 @@ open class CarPlayNavigationViewController: UIViewController {
 
     // MARK: Navigating the Route
 
-    /**
-     The view controller’s delegate, that is used by the `CarPlayManager`.
-
-     Do not overwrite this property and use `CarPlayManagerDelegate` methods directly.
-     */
+    /// The view controller’s delegate, that is used by the ``CarPlayManager``.
+    ///
+    /// Do not overwrite this property and use ``CarPlayManagerDelegate`` methods directly.
     public weak var delegate: CarPlayNavigationViewControllerDelegate?
 
-    /**
-     `CarPlayManager` instance, which contains main `UIWindow` content and is used by
-     `CarPlayNavigationViewController` for presentation.
-     */
+    /// ``CarPlayManager`` instance, which contains main `UIWindow` content and is used by
+    /// ``CarPlayNavigationViewController`` for presentation.
     public var carPlayManager: CarPlayManager
 
-    /**
-     The map view showing the route and the user’s location.
-     */
+    /// The map view showing the route and the user’s location.
     public fileprivate(set) var navigationMapView: NavigationMapView?
 
     var carSession: CPNavigationSession!
 
-    /**
-     Begins a navigation session along the given trip.
-
-     - parameter trip: The trip to begin navigating along.
-     */
+    /// Begins a navigation session along the given trip.
+    ///
+    /// - Parameter trip: The trip to begin navigating along.
     public func startNavigationSession(for trip: CPTrip) {
         carSession = mapTemplate.startNavigationSession(for: trip)
     }
 
-    /**
-     Ends the current navigation session.
-
-     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
-     */
+    /// Ends the current navigation session.
+    ///
+    /// - Parameter canceled: A Boolean value indicating whether this method is being called because the user intends to
+    /// cancel the trip, as opposed to letting it run to completion.
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
 
@@ -577,19 +550,17 @@ open class CarPlayNavigationViewController: UIViewController {
     private var navigationRoutes: NavigationRoutes
     private let accessToken: String
 
-    /**
-     Creates a new CarPlay navigation view controller for the given route controller and user interface.
-
-     - parameter accessToken: Holds information about your access token which used to initialize Mapbox Navigation SDK.
-     - parameter core: An entry point for interacting with the Mapbox Navigation SDK.
-     - parameter mapTemplate: The map template visible during the navigation session.
-     - parameter interfaceController: The interface controller for CarPlay.
-     - parameter manager: The manager for CarPlay.
-     - parameter styles: The interface styles that the view controller’s internal `StyleManager` object can select from for display.
-     - parameter navigationRoutes: The object, containing all information of routes that will show.
-
-     - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
-     */
+    /// Creates a new CarPlay navigation view controller for the given route controller and user interface.
+    /// - Parameters:
+    ///   - accessToken: Holds information about your access token which used to initialize Mapbox Navigation SDK.
+    ///   - core: An entry point for interacting with the Mapbox Navigation SDK.
+    ///   - mapTemplate: The map template visible during the navigation session.
+    ///   - interfaceController: The interface controller for CarPlay.
+    ///   - manager: The manager for CarPlay.
+    ///   - styles: The interface styles that the view controller’s internal ``StyleManager`` object can select from for
+    /// display.
+    ///   - navigationRoutes: The object, containing all information of routes that will show.
+    /// - Postcondition: Call ``startNavigationSession(for:)`` after initializing this object to begin navigation.
     public required init(
         accessToken: String,
         core: MapboxNavigation,
@@ -1011,12 +982,11 @@ open class CarPlayNavigationViewController: UIViewController {
         carSession.upcomingManeuvers = maneuvers
     }
 
-    /**
-     Returns guidance view image representation if it's present in the current visual instruction.
-     Since CarPlay doesn't support asynchronous maneuvers update, in case if guidance view image is
-     not present in cache - download guidance image first and after that trigger maneuvers update.
-     In case if image is present in cache - update primary maneuver right away.
-     */
+    /// Returns guidance view image representation if it's present in the current visual instruction.
+    /// Since CarPlay doesn't support asynchronous maneuvers update, in case if guidance view image is not present in
+    /// cache - download guidance image first and after that trigger maneuvers update.
+    ///
+    /// In case if image is present in cache - update primary maneuver right away.
     func guidanceViewManeuverRepresentation(for visualInstruction: VisualInstructionBanner?) -> UIImage? {
         guard let quaternaryInstruction = visualInstruction?.quaternaryInstruction,
               let guidanceView = quaternaryInstruction.components.first,

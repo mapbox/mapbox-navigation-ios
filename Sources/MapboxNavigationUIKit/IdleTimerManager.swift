@@ -47,12 +47,10 @@ final class IdleTimerManager {
         self.idleTimer = idleTimer
     }
 
-    /**
-     Disables idle timer `UIApplication.shared.isIdleTimerDisabled`
-     while there is at least one non-cancelled `IdleTimerManager.Cancellable` instance.
-
-     - Returns: An instance of cancellable that you should retain until you want the idle timer to be disabled.
-     */
+    /// Disables idle timer `UIApplication.shared.isIdleTimerDisabled` while there is at least one non-cancelled
+    /// `IdleTimerManager.Cancellable` instance.
+    ///
+    /// - Returns: An instance of cancellable that you should retain until you want the idle timer to be disabled.
     func disableIdleTimer() -> IdleTimerManager.Cancellable {
         let cancellable = Cancellable {
             self.changeCancellablesCount(delta: -1)

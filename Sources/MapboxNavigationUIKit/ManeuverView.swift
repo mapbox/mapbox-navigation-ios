@@ -58,18 +58,14 @@ open class ManeuverView: UIView {
         }
     }
 
-    /**
-     The current instruction displayed in the maneuver view.
-     */
+    /// The current instruction displayed in the maneuver view.
     public var visualInstruction: VisualInstruction? {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    /**
-     This indicates the side of the road currently driven on.
-     */
+    /// This indicates the side of the road currently driven on.
     public var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()

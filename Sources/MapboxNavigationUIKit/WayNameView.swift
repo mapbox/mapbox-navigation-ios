@@ -4,21 +4,17 @@ import MapboxMaps
 import Turf
 import UIKit
 
-/**
- A host view for `WayNameLabel` that shows a road name and a shield icon.
-
- `WayNameView` is hidden or shown depending on the road name information availability. In case if
- such information is not present, `WayNameView` is automatically hidden. If you'd like to completely
- hide `WayNameView` set `WayNameView.isHidden` property to `true`.
- */
+/// A host view for ``WayNameLabel`` that shows a road name and a shield icon.
+///
+/// ``WayNameView`` is hidden or shown depending on the road name information availability. In case if such information
+/// is not present, ``WayNameView`` is automatically hidden. If you'd like to completely hide ``WayNameView`` set
+/// `WayNameView.isHidden` property to `true`.
 @objc(MBWayNameView)
 open class WayNameView: UIView {
     lazy var label: WayNameLabel = .forAutoLayout()
 
-    /**
-     A host view for the `WayNameLabel` instance that is used internally to show or hide
-     `WayNameLabel` depending on the road name data availability.
-     */
+    /// A host view for the ``WayNameLabel`` instance that is used internally to show or hide ``WayNameLabel`` depending
+    /// on the road name data availability.
     lazy var containerView: UIView = .forAutoLayout()
 
     var text: String? {
@@ -43,9 +39,7 @@ open class WayNameView: UIView {
         containerView.layer
     }
 
-    /**
-     The background color of the `WayNameView`.
-     */
+    /// The background color of the ``WayNameView``.
     @objc override public dynamic var backgroundColor: UIColor? {
         get {
             containerView.backgroundColor
@@ -56,9 +50,7 @@ open class WayNameView: UIView {
         }
     }
 
-    /**
-     The color of the `WayNameView`'s border.
-     */
+    /// The color of the ``WayNameView``'s border.
     @objc public dynamic var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }
@@ -70,9 +62,7 @@ open class WayNameView: UIView {
         }
     }
 
-    /**
-     The width of the `WayNameView`'s border.
-     */
+    /// The width of the ``WayNameView``'s border.
     @objc public dynamic var borderWidth: CGFloat {
         get {
             layer.borderWidth
@@ -85,10 +75,7 @@ open class WayNameView: UIView {
 
     var _cornerRadius: CGFloat?
 
-    /**
-     The radius of the `WayNameView`'s corner. By default corner radius is set to half of
-     `WayNameView`'s height.
-     */
+    /// The radius of the ``WayNameView``'s corner. By default corner radius is set to half of ``WayNameView``'s height.
     @objc public dynamic var cornerRadius: CGFloat {
         get {
             layer.cornerRadius

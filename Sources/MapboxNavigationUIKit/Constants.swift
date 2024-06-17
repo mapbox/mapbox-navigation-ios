@@ -27,22 +27,18 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
     public static let styleKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "style")
 
     /// A key in the user info dictionary of ``Foundation/NSNotification/Name/styleManagerDidApplyStyle`` notification.
-    /// The corresponding value is an `StyleManager` instance that applied the style.
+    /// The corresponding value is an ``StyleManager`` instance that applied the style.
     public static let styleManagerKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "styleManager")
 }
 
-/**
- Dictionary, which contains any custom user info related data on CarPlay (for example it's used by `CPTrip`,
- while filling it with `CPRouteChoice` objects or for storing user information in `CPListItem`).
-
- In case if `CPRouteChoice`, `CPListItem` or other `CarPlayUserInfo` dependant object uses different
- type in `userInfo` it may lead to undefined behavior.
- */
+//// Dictionary, which contains any custom user info related data on CarPlay (for example it's used by `CPTrip`, while
+/// filling it with `CPRouteChoice` objects or for storing user information in `CPListItem`).
+///
+/// In case if `CPRouteChoice`, `CPListItem` or other ``CarPlayUserInfo`` dependant object uses different type in
+/// `userInfo` it may lead to undefined behavior.
 public typealias CarPlayUserInfo = [String: Any?]
 
-/**
- In case if distance to the next maneuver on the route is lower than the value defined in
- `InstructionCardHighlightDistance`, `InstructionsCardView`'s background color will be highlighted
- to a color defined in `InstructionsCardContainerView.highlightedBackgroundColor`.
- */
+/// In case if distance to the next maneuver on the route is lower than the value defined in
+/// ``InstructionCardHighlightDistance``, ``InstructionsCardView``'s background color will be highlighted to a color
+/// defined in ``InstructionsCardContainerView/highlightedBackgroundColor``.
 let InstructionCardHighlightDistance: CLLocationDistance = 152.4 // 500 ft

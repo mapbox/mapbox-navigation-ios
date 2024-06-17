@@ -5,9 +5,8 @@ extension CodingUserInfoKey {
     static let drivingSide = CodingUserInfoKey(rawValue: "drivingSide")!
 }
 
-/**
- A visual instruction banner contains all the information necessary for creating a visual cue about a given `RouteStep`.
- */
+/// A visual instruction banner contains all the information necessary for creating a visual cue about a given
+/// ``RouteStep``.
 public struct VisualInstructionBanner: Codable, ForeignMemberContainer, Equatable, Sendable {
     public var foreignMembers: JSONObject = [:]
 

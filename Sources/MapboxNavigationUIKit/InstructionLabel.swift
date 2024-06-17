@@ -1,7 +1,7 @@
 import MapboxDirections
 import UIKit
 
-@_documentation(visibility: internal)
+/// The label to display navigation instructions.
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     @objc dynamic var roadShieldBlackColor: UIColor = .roadShieldBlackColor
     @objc dynamic var roadShieldBlueColor: UIColor = .roadShieldBlueColor

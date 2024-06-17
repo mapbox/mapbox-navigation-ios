@@ -1,9 +1,7 @@
 import UIKit
 
-/**
- A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
- */
-@_documentation(visibility: internal)
+/// A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and
+/// collapses to maximize screen real estate.
 @IBDesignable
 public class StatusView: UIControl {
     weak var activityIndicatorView: UIActivityIndicatorView!
@@ -19,49 +17,31 @@ public class StatusView: UIControl {
 
     var statuses: [Status] = []
 
-    /**
-     `Status` is a struct which stores information to be displayed by the `StatusView`
-      */
+    /// ``StatusView/Status`` is a struct which stores information to be displayed by the ``StatusView``
     public struct Status {
-        /**
-         A string that uniquely identifies the `Status`
-          */
+        /// A string that uniquely identifies the ``StatusView/Status``.
         public var identifier: String
-        /**
-         The text that will appear on the `Status`
-          */
+        /// The text that will appear on the ``StatusView/Status``.
         public let title: String
-        /**
-         A boolean that indicates whether a `spinner` should be shown during animations
-         set to `false` by default
-         */
+        /// A boolean that indicates whether a ``spinner`` should be shown during animations.
+        /// Set to `false` by default.
         public var spinner: Bool = false
-        /**
-         A TimeInterval that designates the length of time the `Status` will be displayed in seconds
-         To display the `Status` indefinitely, set `duration` to `.infinity`
-         */
+        /// A TimeInterval that designates the length of time the `Status` will be displayed in seconds
+        /// To display the ``StatusView/Status`` indefinitely, set ``duration`` to `.infinity`
         public let duration: TimeInterval
-        /**
-         A boolean that indicates whether showing and hiding of the `Status` should be animated
-         set to `true` by default
-         */
+        /// A boolean that indicates whether showing and hiding of the ``StatusView/Status`` should be animated.
+        /// Set to `true` by default.
         public var animated: Bool = true
-        /**
-         A boolean that indicates whether the `Status` should respond to touch events
-         set to `false` by default
-         */
+        /// A boolean that indicates whether the ``StatusView/Status`` should respond to touch events.
+        /// Set to `false` by default.
         public var interactive: Bool = false
-        /**
-         A typealias which is used to rank a `Status` by importance
-         A lower `priority` value corresponds to a higher priority
-         */
+        /// A typealias which is used to rank a ``StatusView/Status`` by importance.
+        /// A lower ``priority`` value corresponds to a higher priority.
         public var priority: Priority
     }
 
-    /**
-     `Priority` is used to display `Status`es by importance
-     Lower values correspond to higher priority.
-     */
+    /// ``StatusView/Priority`` is used to display ``StatusView/Status``es by importance.
+    /// Lower values correspond to higher priority.
     public typealias Priority = Int
 //        — Highest Priority —
 //            rerouting (value = 0)
@@ -141,9 +121,7 @@ public class StatusView: UIControl {
         }
     }
 
-    /**
-     Adds a new status to statuses array.
-     */
+    /// Adds a new status to statuses array.
     func show(_ status: Status) {
         if let row = statuses.firstIndex(where: { $0.identifier.contains(status.identifier) }) {
             statuses[row] = status
@@ -153,9 +131,7 @@ public class StatusView: UIControl {
         manageStatuses()
     }
 
-    /**
-     Manages showing and hiding Statuses and the status view itself.
-     */
+    /// Manages showing and hiding Statuses and the status view itself.
     func manageStatuses(status: Status? = nil) {
         if statuses.isEmpty {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
@@ -168,9 +144,7 @@ public class StatusView: UIControl {
         }
     }
 
-    /**
-     Hides a given Status without hiding the status view.
-     */
+    /// Hides a given Status without hiding the status view.
     func hide(_ status: Status?) {
         guard let row = statuses.firstIndex(where: { $0.identifier == status?.identifier }) else { return }
         let removedStatus = statuses.remove(at: row)
@@ -198,9 +172,7 @@ public class StatusView: UIControl {
         show(simulationStatus)
     }
 
-    /**
-     Shows the status view with an optional spinner.
-     */
+    /// Shows the status view with an optional spinner.
     public func show(status: Status) {
         isEnabled = status.interactive
         textLabel.text = status.title
@@ -223,9 +195,7 @@ public class StatusView: UIControl {
         })
     }
 
-    /**
-     Hides the status view.
-     */
+    /// Hides the status view.
     public func hide(with status: Status? = nil, delay: TimeInterval = 0, animated: Bool = true) {
         let hide = {
             if status == nil {

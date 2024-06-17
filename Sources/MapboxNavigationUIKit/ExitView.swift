@@ -163,9 +163,8 @@ public class ExitView: StylableView {
         return [imageLeading, imageLabelSpacing, labelTrailing]
     }
 
-    /**
-     This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
-     */
+    /// This generates the cache key needed to hold the ``ExitView``'s `imageRepresentation` in the ``ImageCache``
+    /// caching engine.
     static func criticalHash(
         side: ExitSide,
         styleID: String?,

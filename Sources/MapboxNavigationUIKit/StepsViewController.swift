@@ -6,7 +6,7 @@ import UIKit
 @_documentation(visibility: internal)
 open class StepsBackgroundView: UIView {}
 
-@_documentation(visibility: internal)
+/// The UI component for displaying a whole list of the step instructions.
 public class StepsViewController: UIViewController, NavigationComponent {
     weak var tableView: UITableView!
     weak var backgroundView: StepsBackgroundView!
@@ -24,12 +24,8 @@ public class StepsViewController: UIViewController, NavigationComponent {
     var previousLegIndex: Int = NSNotFound
     var previousStepIndex: Int = NSNotFound
 
-    /**
-     Initializes StepsViewController with a RouteProgress object.
-
-     - parameter routeProgress: The user's current route progress.
-     - seealso: RouteProgress
-     */
+    /// Initializes ``StepsViewController`` with a `RouteProgress` object.
+    /// - Parameter routeProgress: The user's current route progress.
     public convenience init(routeProgress: RouteProgress) {
         self.init()
         self.routeProgress = routeProgress
@@ -161,9 +157,7 @@ public class StepsViewController: UIViewController, NavigationComponent {
         delegate?.didDismissStepsViewController(self)
     }
 
-    /**
-     Dismisses the `StepsViewController`.
-     */
+    /// Dismisses the ``StepsViewController``.
     public func dismiss(completion: CompletionHandler? = nil) {
         willMove(toParent: nil)
         view.removeFromSuperview()

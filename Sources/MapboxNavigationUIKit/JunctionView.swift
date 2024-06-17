@@ -1,17 +1,14 @@
 import MapboxDirections
 import UIKit
 
-/**
- A junction view shows an image depicting the layout of a highway junction.
-
- As the user approaches certain junctions, an enlarged illustration of the junction appears in this view to help the user understand a complex maneuver. A junction view only appears when the relevant data is available.
- */
+/// A junction view shows an image depicting the layout of a highway junction.
+///
+/// As the user approaches certain junctions, an enlarged illustration of the junction appears in this view to help the
+/// user understand a complex maneuver. A junction view only appears when the relevant data is available.
 public class JunctionView: UIImageView {
     // MARK: Displaying the Junction
 
-    /**
-     Shows the junction view, optionally with a fade animation.
-     */
+    /// Shows the junction view, optionally with a fade animation.
     public func show(animated: Bool = false) {
         guard !isCurrentlyVisible, isHidden else { return }
 
@@ -41,9 +38,7 @@ public class JunctionView: UIImageView {
         }
     }
 
-    /**
-     Updates the quaternary guidance view  banner image with a given `VisualInstructionBanner`.
-     */
+    /// Updates the quaternary guidance view  banner image with a given `VisualInstructionBanner`.
     public func update(for visualInstruction: VisualInstructionBanner?, accessToken: String?) {
         let quaternaryInstruction = visualInstruction?.quaternaryInstruction
 
@@ -80,9 +75,7 @@ public class JunctionView: UIImageView {
         }
     }
 
-    /**
-     Hides the junction view.
-     */
+    /// Hides the junction view.
     public func hide(delay: TimeInterval = 0, animated: Bool = true) {
         guard !isHidden, isCurrentlyVisible else { return }
 

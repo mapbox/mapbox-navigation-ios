@@ -2,9 +2,7 @@ import CoreLocation
 import MapboxMaps
 import UIKit
 
-/**
- A control indicating the direction that the vehicle is traveling towards.
- */
+/// A control indicating the direction that the vehicle is traveling towards.
 open class CarPlayCompassView: StylableView {
     weak var label: StylableLabel!
 
@@ -18,9 +16,7 @@ open class CarPlayCompassView: StylableView {
         return formatter
     }()
 
-    /**
-     Sets the course, rounds it to closest 45°, and draws the cardinal direction on the label.
-     */
+    /// Sets the course, rounds it to closest 45°, and draws the cardinal direction on the label.
     open var course: CLLocationDirection = 0 {
         didSet {
             if course >= 0 {

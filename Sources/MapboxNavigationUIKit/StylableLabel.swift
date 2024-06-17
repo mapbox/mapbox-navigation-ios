@@ -36,33 +36,23 @@ open class StylableLabel: UILabel {
 
 @objc(MBTimeRemainingLabel)
 open class TimeRemainingLabel: StylableLabel {
-    /**
-     Sets the text color for no or unknown traffic.
-     */
+    /// Sets the text color for no or unknown traffic.
     @objc public dynamic var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
         didSet {
             textColor = trafficUnknownColor
         }
     }
 
-    /**
-     Sets the text color for low traffic.
-     */
+    /// Sets the text color for low traffic.
     @objc public dynamic var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
 
-    /**
-     Sets the text color for moderate traffic.
-     */
+    /// Sets the text color for moderate traffic.
     @objc public dynamic var trafficModerateColor: UIColor = #colorLiteral(red: 0.95, green: 0.65, blue: 0.31, alpha: 1.0)
 
-    /**
-     Sets the text color for heavy traffic.
-     */
+    /// Sets the text color for heavy traffic.
     @objc public dynamic var trafficHeavyColor: UIColor = #colorLiteral(red: 0.91, green: 0.20, blue: 0.25, alpha: 1.0)
 
-    /**
-     Sets the text color for severe traffic.
-     */
+    /// Sets the text color for severe traffic.
     @objc public dynamic var trafficSevereColor: UIColor = #colorLiteral(red: 0.54, green: 0.06, blue: 0.22, alpha: 1.0)
 }
 

@@ -5,26 +5,20 @@ import MapboxNavigationCore
 @_documentation(visibility: internal)
 public typealias CompletionHandler = () -> Void
 
-/**
- A cache consists of both in-memory and on-disk components, both of which can be reset.
- */
+/// A cache consists of both in-memory and on-disk components, both of which can be reset.
 @objc(MBBimodalCache)
 public protocol BimodalCache {
     func clearMemory()
     func clearDisk(completion: CompletionHandler?)
 }
 
-/**
- A cache which supports storing images
- */
+/// A cache which supports storing images.
 public protocol BimodalImageCache: BimodalCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func image(forKey: String?) -> UIImage?
 }
 
-/**
- A cache which supports storing data
- */
+/// A cache which supports storing data.
 public protocol BimodalDataCache: BimodalCache {
     func store(_ data: Data, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func data(forKey: String?) -> Data?
@@ -37,9 +31,7 @@ protocol URLCaching {
     func removeCache(for url: URL)
 }
 
-/**
- A general purpose URLCache used by `SpriteRepository` implementations.
- */
+/// A general purpose ``URLCache`` used by the SDK.
 class URLDataCache: URLCaching {
     let defaultDiskCacheURL: URL = {
         let fileManager = FileManager.default
@@ -75,9 +67,7 @@ class URLDataCache: URLCaching {
     }
 }
 
-/**
- A general purpose on-disk cache used by both the ImageCache and DataCache implementations
- */
+/// A general purpose on-disk cache used by both the ``ImageCache`` and ``DataCache`` implementations.
 class FileCache {
     let diskCacheURL: URL = {
         let fileManager = FileManager.default
@@ -95,9 +85,7 @@ class FileCache {
         }
     }
 
-    /**
-     Stores data in the file cache for the given key, and calls the completion handler when finished.
-     */
+    /// Stores data in the file cache for the given key, and calls the completion handler when finished.
     public func store(_ data: Data, forKey key: String, completion: CompletionHandler?) {
         guard let fileManager else {
             completion?()
@@ -117,9 +105,7 @@ class FileCache {
         }
     }
 
-    /**
-     Returns data from the file cache for the given key, if any.
-     */
+    /// Returns data from the file cache for the given key, if any.
     public func dataFromFileCache(forKey key: String?) -> Data? {
         guard let key else {
             return nil
@@ -132,9 +118,8 @@ class FileCache {
         }
     }
 
-    /**
-     Clears the disk cache by removing and recreating the cache directory, and calls the completion handler when finished.
-     */
+    /// Clears the disk cache by removing and recreating the cache directory, and calls the completion handler when
+    /// finished.
     public func clearDisk(completion: CompletionHandler?) {
         guard let fileManager else {
             return
