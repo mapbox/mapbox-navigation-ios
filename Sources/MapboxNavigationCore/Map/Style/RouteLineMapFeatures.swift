@@ -87,7 +87,7 @@ extension Route {
                 .map { routeLineRestrictionsGradient($0, config: config) }
                 .map {
                     .expression(
-                        Expression.routeLineGradientExpression(
+                        MapboxMaps.Expression.routeLineGradientExpression(
                             $0,
                             lineBaseColor: config.routeRestrictedAreaColor
                         )

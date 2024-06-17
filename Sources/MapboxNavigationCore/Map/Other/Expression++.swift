@@ -1,8 +1,8 @@
 import MapboxMaps
 import UIKit
 
-extension Expression {
-    static func routeLineWidthExpression(_ multiplier: Double = 1.0) -> Expression {
+extension MapboxMaps.Expression {
+    static func routeLineWidthExpression(_ multiplier: Double = 1.0) -> MapboxMaps.Expression {
         return Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
@@ -14,7 +14,7 @@ extension Expression {
         _ gradientStops: [Double: UIColor],
         lineBaseColor: UIColor,
         isSoft: Bool = false
-    ) -> Expression {
+    ) -> MapboxMaps.Expression {
         if isSoft {
             return Exp(.interpolate) {
                 Exp(.linear)
@@ -30,7 +30,7 @@ extension Expression {
         }
     }
 
-    static func buildingExtrusionHeightExpression(_ hightProperty: String) -> Expression {
+    static func buildingExtrusionHeightExpression(_ hightProperty: String) -> MapboxMaps.Expression {
         return Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
