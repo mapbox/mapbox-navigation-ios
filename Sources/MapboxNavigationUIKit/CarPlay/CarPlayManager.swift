@@ -587,12 +587,15 @@ extension CarPlayManager {
     /// Allows to cancel routes preview on CarPlay .
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
-        var configuration = CarPlayManagerCancelPreviewConfiguration()
-        delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
-        routes = nil
-        mainMapTemplate?.hideTripPreviews()
-        if configuration.popToRoot {
-            try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
+        Task { @MainActor in
+            var configuration = CarPlayManagerCancelPreviewConfiguration()
+            delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
+            routes = nil
+            mainMapTemplate?.hideTripPreviews()
+            if configuration.popToRoot {
+                try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
+            }
+            delegate?.carPlayManagerDidCancelPreview(self)
         }
         delegate?.carPlayManagerDidCancelPreview(self)
     }
@@ -816,7 +819,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             navigationRoutes,
             routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever]
         )
-
+        routes = navigationRoutes
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }
 
