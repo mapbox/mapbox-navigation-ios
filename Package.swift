@@ -25,6 +25,16 @@ let package = Package(
             name: "_MapboxNavigationTestKit",
             targets: ["_MapboxNavigationTestKit"]
         ),
+        .library(
+            name: "_MapboxNavigationUIKit-Dynamic",
+            type: .dynamic,
+            targets: ["MapboxNavigationUIKit"]
+        ),
+        .library(
+            name: "_MapboxNavigationCore-Dynamic",
+            type: .dynamic,
+            targets: ["MapboxNavigationCore"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
