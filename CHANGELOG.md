@@ -2,6 +2,11 @@
 
 ## v3.2.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v313.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/313.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.0-rc.1).
+
 ### Other changes
 
 * Supported the ability to notify about the navigation-related error by adding `NavigationController.errors`.
