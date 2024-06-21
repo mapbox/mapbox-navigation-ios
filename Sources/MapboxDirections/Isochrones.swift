@@ -7,6 +7,7 @@ import Turf
 /**
  Computes areas that are reachable within a specified amount of time or distance from a location, and returns the reachable regions as contours of polygons or lines that you can display on a map.
  */
+@_documentation(visibility: internal)
 open class Isochrones: @unchecked Sendable {
     /**
      A tuple type representing the isochrone session that was generated from the request.
