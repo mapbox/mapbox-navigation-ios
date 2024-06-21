@@ -37,8 +37,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
         super.init(
             config: factory.configHandle(),
             cache: factory.cacheHandle,
-            historyRecorder: nil,
-            router: nil
+            historyRecorder: nil
         )
     }
 

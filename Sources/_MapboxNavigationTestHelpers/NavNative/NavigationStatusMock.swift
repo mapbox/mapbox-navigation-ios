@@ -40,7 +40,7 @@ extension NavigationStatus {
         layer: NSNumber? = nil,
         isSyntheticLocation: Bool = false,
         correctedLocationData: CorrectedLocationData? = nil,
-        laneMatchingResult: LaneMatchingResult? = nil,
+        hdMatchingResult: HdMatchingResult? = nil,
         mapMatchedSystemTime: Date = NavigationStatus.date
     ) -> Self {
         let fixLocation = FixLocation(location)
@@ -76,7 +76,7 @@ extension NavigationStatus {
             layer: layer,
             isSyntheticLocation: isSyntheticLocation,
             correctedLocationData: correctedLocationData,
-            laneMatchingResult: laneMatchingResult,
+            hdMatchingResult: hdMatchingResult,
             mapMatchedSystemTime: mapMatchedSystemTime
         )
     }

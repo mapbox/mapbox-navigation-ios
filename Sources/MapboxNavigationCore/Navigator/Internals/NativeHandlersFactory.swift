@@ -91,23 +91,22 @@ final class NativeHandlersFactory: @unchecked Sendable {
         // Make sure that Navigator pick ups Main Thread RunLoop.
         let historyRecorder = historyRecorderHandle
         let configHandle = configHandle(by: configFactoryType)
-
-        let router = routingProviderSource.map {
-            MapboxNavigationNative.RouterFactory.build(
-                for: $0,
-                cache: cacheHandle,
-                config: configHandle,
-                historyRecorder: historyRecorder
-            )
-        }
-        return .init(
-            navigator: MapboxNavigationNative.Navigator(
+        let navigator = if let routingProviderSource {
+            MapboxNavigationNative.Navigator(
                 config: configHandle,
                 cache: cacheHandle,
                 historyRecorder: historyRecorder,
-                router: router
+                routerTypeRestriction: routingProviderSource
             )
-        )
+        } else {
+            MapboxNavigationNative.Navigator(
+                config: configHandle,
+                cache: cacheHandle,
+                historyRecorder: historyRecorder
+            )
+        }
+
+        return .init(navigator: navigator)
     }
 
     lazy var cacheHandle: CacheHandle = cacheHandlerFactory.getHandler(

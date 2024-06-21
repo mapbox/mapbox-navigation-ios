@@ -115,7 +115,7 @@ public enum TestNavigationStatusProvider {
             layer: nil,
             isSyntheticLocation: false,
             correctedLocationData: nil,
-            laneMatchingResult: nil,
+            hdMatchingResult: nil,
             mapMatchedSystemTime: date
         )
     }
