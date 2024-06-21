@@ -1,11 +1,16 @@
 import Foundation
 import Turf
 
-/**
- A `Route` object defines a single route that the user can follow to visit a series of waypoints in order. The route object includes information about the route, such as its distance and expected travel time. Depending on the criteria used to calculate the route, the route object may also include detailed turn-by-turn instructions.
-
- Typically, you do not create instances of this class directly. Instead, you receive route objects when you request directions using the `Directions.calculate(_:completionHandler:)` or `Directions.calculateRoutes(matching:completionHandler:)` method. However, if you use the `Directions.url(forCalculating:)` method instead, you can use `JSONDecoder` to convert the HTTP response into a `RouteResponse` or `MapMatchingResponse` object and access the `RouteResponse.routes` or `MapMatchingResponse.routes` property.
- */
+/// A ``Route`` object defines a single route that the user can follow to visit a series of waypoints in order. The
+/// route object includes information about the route, such as its distance and expected travel time. Depending on the
+/// criteria used to calculate the route, the route object may also include detailed turn-by-turn instructions.
+///
+/// Typically, you do not create instances of this class directly. Instead, you receive route objects when you request
+/// directions using the `Directions.calculate(_:completionHandler:)` or
+/// `Directions.calculateRoutes(matching:completionHandler:)` method. However, if you use the
+/// `Directions.url(forCalculating:)` method instead, you can use `JSONDecoder` to convert the HTTP response into a
+/// ``RouteResponse`` or ``MapMatchingResponse`` object and access the ``RouteResponse/routes`` or
+/// ``MapMatchingResponse/matches`` property.
 public struct Route: DirectionsResult {
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case tollPrices = "toll_costs"
@@ -31,15 +36,13 @@ public struct Route: DirectionsResult {
 
     public var foreignMembers: Turf.JSONObject = [:]
 
-    /**
-     Initializes a route.
-
-     - parameter legs: The legs that are traversed in order.
-     - parameter shape: The roads or paths taken as a contiguous polyline.
-     - parameter distance: The route’s distance, measured in meters.
-     - parameter expectedTravelTime: The route’s expected travel time, measured in seconds.
-     - parameter typicalTravelTime: The route’s typical travel time, measured in seconds.
-     */
+    /// Initializes a route.
+    /// - Parameters:
+    ///   - legs: The legs that are traversed in order.
+    ///   - shape: The roads or paths taken as a contiguous polyline.
+    ///   - distance: The route’s distance, measured in meters.
+    ///   - expectedTravelTime: The route’s expected travel time, measured in seconds.
+    ///   - typicalTravelTime: The route’s typical travel time, measured in seconds.
     public init(
         legs: [RouteLeg],
         shape: LineString?,
@@ -55,12 +58,12 @@ public struct Route: DirectionsResult {
         self.responseContainsSpeechLocale = false
     }
 
-    /**
-     Initializes a route from a decoder.
-
-     - precondition: If the decoder is decoding JSON data from an API response, the `Decoder.userInfo` dictionary must contain a `RouteOptions` or `MatchOptions` object in the `CodingUserInfoKey.options` key. If it does not, a `DirectionsCodingError.missingOptions` error is thrown.
-     - parameter decoder: The decoder of JSON-formatted API response data or a previously encoded `Route` object.
-     */
+    /// Initializes a route from a decoder.
+    ///
+    /// - Precondition: If the decoder is decoding JSON data from an API response, the `Decoder.userInfo` dictionary
+    /// must contain a ``RouteOptions`` or ``MatchOptions`` object in the ``Swift/CodingUserInfoKey/options`` key. If it
+    /// does not, a ``DirectionsCodingError/missingOptions`` error is thrown.
+    /// - Parameter decoder: The decoder of JSON-formatted API response data or a previously encoded ``Route`` object.
     public init(from decoder: Decoder) throws {
         guard let options = decoder.userInfo[.options] as? DirectionsOptions else {
             throw DirectionsCodingError.missingOptions
@@ -94,13 +97,9 @@ public struct Route: DirectionsResult {
         try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
     }
 
-    /**
-     :nodoc:
-     List of calculated toll costs for this route.
-
-     This property is set to `nil` unless request `RouteOptions.includesTollPrices` is set to `true`.
-     See `TollPrice`.
-     */
+    /// List of calculated toll costs for this route.
+    ///
+    /// This property is set to `nil` unless request ``RouteOptions/includesTollPrices`` is set to `true`.
     public var tollPrices: [TollPrice]?
 }
 

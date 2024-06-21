@@ -21,9 +21,7 @@ public struct VisualInstructionBanner: Codable, ForeignMemberContainer, Equatabl
 
     // MARK: Creating a Visual Instruction Banner
 
-    /**
-     Initializes a visual instruction banner with the given instructions.
-     */
+    /// Initializes a visual instruction banner with the given instructions.
     public init(
         distanceAlongStep: LocationDistance,
         primary: VisualInstruction,
@@ -73,41 +71,32 @@ public struct VisualInstructionBanner: Codable, ForeignMemberContainer, Equatabl
 
     // MARK: Timing When to Display the Banner
 
-    /**
-     The distance at which the visual instruction should be shown, measured in meters from the beginning of the step.
-     */
+    /// The distance at which the visual instruction should be shown, measured in meters from the beginning of the step.
     public let distanceAlongStep: LocationDistance
 
     // MARK: Getting the Instructions to Display
 
-    /**
-     The most important information to convey to the user about the `RouteStep`.
-     */
+    /// The most important information to convey to the user about the ``RouteStep``.
     public let primaryInstruction: VisualInstruction
 
-    /**
-     Less important details about the `RouteStep`.
-     */
+    /// Less important details about the ``RouteStep``.
     public let secondaryInstruction: VisualInstruction?
 
-    /**
-     A visual instruction that is presented simultaneously to provide information about an additional maneuver that occurs in rapid succession.
-
-     This instruction could either contain the visual layout information or the lane information about the upcoming maneuver.
-     */
+    /// A visual instruction that is presented simultaneously to provide information about an additional maneuver that
+    /// occurs in rapid succession.
+    ///
+    /// This instruction could either contain the visual layout information or the lane information about the upcoming
+    /// maneuver.
     public let tertiaryInstruction: VisualInstruction?
 
-    /**
-     A visual instruction that is presented to provide information about the incoming junction.
-     This instruction displays a zoomed image of incoming junction.
-     */
+    /// A visual instruction that is presented to provide information about the incoming junction.
+    ///
+    /// This instruction displays a zoomed image of incoming junction.
     public let quaternaryInstruction: VisualInstruction?
 
     // MARK: Respecting Regional Driving Rules
 
-    /**
-     Which side of a bidirectional road the driver should drive on, also known as the rule of the road.
-     */
+    /// Which side of a bidirectional road the driver should drive on, also known as the rule of the road.
     public var drivingSide: DrivingSide
 }
 

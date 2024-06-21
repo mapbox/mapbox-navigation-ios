@@ -1,7 +1,7 @@
 
 import Foundation
 
-/// Defines a lane affected by the `Incident`
+/// Defines a lane affected by the ``Incident``
 public struct BlockedLanes: OptionSet, CustomStringConvertible, Equatable, Sendable {
     public var rawValue: Int
     var stringKey: String?
@@ -88,11 +88,10 @@ public struct BlockedLanes: OptionSet, CustomStringConvertible, Equatable, Senda
         ]
     }
 
-    /**
-     Creates a `BlockedLanes` given an array of strings.
-
-     Resulting options set will only contain known values. If string description does not match any known `Blocked Lane` identifier - it will be ignored.
-     */
+    /// Creates a ``BlockedLanes`` given an array of strings.
+    ///
+    /// Resulting options set will only contain known values. If string description does not match any known `Blocked
+    /// Lane` identifier - it will be ignored.
     public init?(descriptions: [String]) {
         var blockedLanes: BlockedLanes = []
         Self.allLanes.forEach {
@@ -103,11 +102,9 @@ public struct BlockedLanes: OptionSet, CustomStringConvertible, Equatable, Senda
         self.init(rawValue: blockedLanes.rawValue)
     }
 
-    /**
-      String representation of `BlockedLanes` options set.
-
-      Resulting description contains only texts for known options. Custom options will be ignored if any.
-     */
+    /// String representation of ``BlockedLanes`` options set.
+    ///
+    /// Resulting description contains only texts for known options. Custom options will be ignored if any.
     public var description: String {
         var descriptions: [String] = []
         Self.allLanes.forEach {

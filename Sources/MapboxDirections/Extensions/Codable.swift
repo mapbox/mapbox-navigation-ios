@@ -2,9 +2,8 @@ import Foundation
 import Turf
 
 extension LineString {
-    /**
-     Returns a string representation of the line string in [Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm).
-     */
+    /// Returns a string representation of the line string in [Polyline Algorithm
+    /// Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm).
     func polylineEncodedString(precision: Double = 1e5) -> String {
 #if canImport(CoreLocation)
         let coordinates = coordinates

@@ -1,9 +1,7 @@
 import Foundation
 import Turf
 
-/**
- `TollCollection` describes corresponding object on the route.
- */
+/// `TollCollection` describes corresponding object on the route.
 public struct TollCollection: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var foreignMembers: JSONObject = [:]
 
@@ -12,14 +10,10 @@ public struct TollCollection: Codable, Equatable, ForeignMemberContainer, Sendab
         case gantry = "toll_gantry"
     }
 
-    /**
-     The type of the toll collection point.
-     */
+    /// The type of the toll collection point.
     public let type: CollectionType
 
-    /**
-     The name of the toll collection point.
-     */
+    /// The name of the toll collection point.
     public var name: String?
 
     private enum CodingKeys: String, CodingKey {

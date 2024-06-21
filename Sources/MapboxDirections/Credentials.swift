@@ -8,19 +8,13 @@ let defaultAccessToken: String? =
 let defaultApiEndPointURLString = Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAPIBaseURL") as? String
 
 public struct Credentials: Equatable, Sendable {
-    /**
-     The mapbox access token. You can find this in your Mapbox account dashboard.
-      */
+    /// The mapbox access token. You can find this in your Mapbox account dashboard.
     public let accessToken: String?
 
-    /**
-     The host to reach. defaults to `api.mapbox.com`.
-     */
+    /// The host to reach. defaults to `api.mapbox.com`.
     public let host: URL
 
-    /**
-     The SKU Token associated with the request. Used for billing.
-     */
+    /// The SKU Token associated with the request. Used for billing.
     public var skuToken: String? {
 #if !os(Linux)
         guard let mbx: AnyClass = NSClassFromString("MBXAccounts"),
@@ -42,12 +36,12 @@ public struct Credentials: Equatable, Sendable {
 #endif
     }
 
-    /**
-     Intialize a new credential.
-
-     - parameter accessToken: Optional. An access token to provide. If this value is nil, the SDK will attempt to find a token from your app's `info.plist`.
-     - parameter host: Optional. A parameter to pass a custom host. If `nil` is provided, the SDK will attempt to find a host from your app's `info.plist`, and barring that will default to  `https://api.mapbox.com`.
-     */
+    /// Intialize a new credential.
+    /// - Parameters:
+    ///   - token: An access token to provide. If this value is nil, the SDK will attempt to find a token from your
+    /// app's `info.plist`.
+    ///   - host: An optional parameter to pass a custom host. If `nil` is provided, the SDK will attempt to find a host
+    /// from your app's `info.plist`, and barring that will default to  `https://api.mapbox.com`.
     public init(accessToken token: String? = nil, host: URL? = nil) {
         let accessToken = token ?? defaultAccessToken
 
@@ -67,12 +61,9 @@ public struct Credentials: Equatable, Sendable {
         }
     }
 
-    /**
-     :nodoc:
-     Attempts to get `host` and `accessToken` from provided URL to create `Credentials` instance.
-
-     If it is impossible to extract parameter(s) - default values will be used.
-     */
+    /// Attempts to get ``host`` and ``accessToken`` from provided URL to create ``Credentials`` instance.
+    ///
+    /// If it is impossible to extract parameter(s) - default values will be used.
     public init(requestURL url: URL) {
         var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let accessToken = components?

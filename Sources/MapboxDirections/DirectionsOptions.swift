@@ -1,89 +1,73 @@
 import Foundation
 import Turf
 
-/**
- Maximum length of an HTTP request URL for the purposes of switching from GET to
- POST.
-
- https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-general
- */
+/// Maximum length of an HTTP request URL for the purposes of switching from GET to POST.
+///
+/// https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-general
 let MaximumURLLength = 1024 * 8
 
-/**
- A `RouteShapeFormat` indicates the format of a route or match shape in the raw HTTP response.
- */
+/// A ``RouteShapeFormat`` indicates the format of a route or match shape in the raw HTTP response.
 public enum RouteShapeFormat: String, Codable, Equatable, Sendable {
-    /**
-     The route’s shape is delivered in [GeoJSON](http://geojson.org/) format.
-
-     This standard format is human-readable and can be parsed straightforwardly, but it is far more verbose than `polyline`.
-     */
+    /// The route’s shape is delivered in [GeoJSON](http://geojson.org/) format.
+    ///
+    /// This standard format is human-readable and can be parsed straightforwardly, but it is far more verbose than
+    /// ``RouteShapeFormat/polyline``.
     case geoJSON = "geojson"
-    /**
-     The route’s shape is delivered in [encoded polyline algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) format with 1×10<sup>−5</sup> precision.
-
-     This machine-readable format is considerably more compact than `geoJSON` but less precise than `polyline6`.
-     */
+    /// The route’s shape is delivered in [encoded polyline
+    /// algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) format with
+    /// 1×10<sup>−5</sup> precision.
+    ///
+    /// This machine-readable format is considerably more compact than ``RouteShapeFormat/geoJSON`` but less precise
+    /// than ``RouteShapeFormat/polyline6``.
     case polyline
-    /**
-     The route’s shape is delivered in [encoded polyline algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) format with 1×10<sup>−6</sup> precision.
-
-     This format is an order of magnitude more precise than `polyline`.
-     */
+    /// The route’s shape is delivered in [encoded polyline
+    /// algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) format with
+    /// 1×10<sup>−6</sup> precision.
+    ///
+    /// This format is an order of magnitude more precise than ``RouteShapeFormat/polyline``.
     case polyline6
 
     static let `default` = RouteShapeFormat.polyline
 }
 
-/**
- A `RouteShapeResolution` indicates the level of detail in a route’s shape, or whether the shape is present at all.
- */
+/// A ``RouteShapeResolution`` indicates the level of detail in a route’s shape, or whether the shape is present at all.
 public enum RouteShapeResolution: String, Codable, Equatable, Sendable {
-    /**
-     The route’s shape is omitted.
-
-     Specify this resolution if you do not intend to show the route line to the user or analyze the route line in any way.
-     */
+    /// The route’s shape is omitted.
+    ///
+    /// Specify this resolution if you do not intend to show the route line to the user or analyze the route line in any
+    /// way.
     case none = "false"
-    /**
-     The route’s shape is simplified.
-
-     This resolution considerably reduces the size of the response. The resulting shape is suitable for display at a low zoom level, but it lacks the detail necessary for focusing on individual segments of the route.
-     */
+    /// The route’s shape is simplified.
+    ///
+    /// This resolution considerably reduces the size of the response. The resulting shape is suitable for display at a
+    /// low zoom level, but it lacks the detail necessary for focusing on individual segments of the route.
     case low = "simplified"
-    /**
-     The route’s shape is as detailed as possible.
-
-     The resulting shape is equivalent to concatenating the shapes of all the route’s consitituent steps. You can focus on individual segments of this route while faithfully representing the path of the route. If you only intend to show a route overview and do not need to analyze the route line in any way, consider specifying `low` instead to considerably reduce the size of the response.
-     */
+    /// The route’s shape is as detailed as possible.
+    ///
+    /// The resulting shape is equivalent to concatenating the shapes of all the route’s consitituent steps. You can
+    /// focus on individual segments of this route while faithfully representing the path of the route. If you only
+    /// intend to show a route overview and do not need to analyze the route line in any way, consider specifying
+    /// ``RouteShapeResolution/low`` instead to considerably reduce the size of the response.
     case full
 }
 
-/**
- A system of units of measuring distances and other quantities.
- */
+/// A system of units of measuring distances and other quantities.
 public enum MeasurementSystem: String, Codable, Equatable, Sendable {
-    /**
-     U.S. customary and British imperial units.
-
-     Distances are measured in miles and feet.
-     */
+    /// U.S. customary and British imperial units.
+    ///
+    /// Distances are measured in miles and feet.
     case imperial
 
-    /**
-     The metric system.
-
-     Distances are measured in kilometers and meters.
-     */
+    /// The metric system.
+    ///
+    /// Distances are measured in kilometers and meters.
     case metric
 }
 
 @available(*, deprecated, renamed: "DirectionsPriority")
 public typealias MBDirectionsPriority = DirectionsPriority
 
-/**
- A number that influences whether a route should prefer or avoid roadways or pathways of a given type.
- */
+/// A number that influences whether a route should prefer or avoid roadways or pathways of a given type.
 public struct DirectionsPriority: Hashable, RawRepresentable, Codable, Equatable, Sendable {
     public init(rawValue: Double) {
         self.rawValue = rawValue
@@ -91,39 +75,36 @@ public struct DirectionsPriority: Hashable, RawRepresentable, Codable, Equatable
 
     public var rawValue: Double
 
-    /**
-     The priority level with which a route avoids a particular type of roadway or pathway.
-     */
-    static let low = DirectionsPriority(rawValue: -1.0)
+    /// The priority level with which a route avoids a particular type of roadway or pathway.
+    public static let low = DirectionsPriority(rawValue: -1.0)
 
-    /**
-     The priority level with which a route neither avoids nor prefers a particular type of roadway or pathway.
-     */
-    static let medium = DirectionsPriority(rawValue: 0.0)
+    /// The priority level with which a route neither avoids nor prefers a particular type of roadway or pathway.
+    public static let medium = DirectionsPriority(rawValue: 0.0)
 
-    /**
-     The priority level with which a route prefers a particular type of roadway or pathway.
-     */
-    static let high = DirectionsPriority(rawValue: 1.0)
+    /// The priority level with which a route prefers a particular type of roadway or pathway.
+    public static let high = DirectionsPriority(rawValue: 1.0)
 }
 
-/**
- Options for calculating results from the Mapbox Directions service.
-
- You do not create instances of this class directly. Instead, create instances of `MatchOptions` or `RouteOptions`.
- */
+/// Options for calculating results from the Mapbox Directions service.
+///
+/// You do not create instances of this class directly. Instead, create instances of ``MatchOptions`` or
+/// ``RouteOptions``.
 open class DirectionsOptions: Codable, @unchecked Sendable {
     // MARK: Creating a Directions Options Object
 
-    /**
-     Initializes an options object for routes between the given waypoints and an optional profile identifier.
-
-     Do not call `DirectionsOptions(waypoints:profileIdentifier:)` directly; instead call the corresponding initializer of `RouteOptions` or `MatchOptions`.
-
-     - parameter waypoints: An array of `Waypoint` objects representing locations that the route should visit in chronological order. The array should contain at least two waypoints (the source and destination) and at most 25 waypoints. (Some profiles, such as `ProfileIdentifier.automobileAvoidingTraffic`, [may have lower limits](https://docs.mapbox.com/api/navigation/#directions).)
-     - parameter profileIdentifier: A string specifying the primary mode of transportation for the routes. `ProfileIdentifier.automobile` is used by default.
-     - parameter queryItems: URL query items to be parsed and applied as configuration to the resulting options.
-     */
+    /// Initializes an options object for routes between the given waypoints and an optional profile identifier.
+    ///
+    /// Do not call ``DirectionsOptions/init(waypoints:profileIdentifier:queryItems:)`` directly; instead call the
+    /// corresponding
+    /// initializer of ``RouteOptions`` or ``MatchOptions``.
+    /// - Parameters:
+    ///   - waypoints: An array of ``Waypoint`` objects representing locations that the route should visit in
+    /// chronological order. The array should contain at least two waypoints (the source and destination) and at most 25
+    /// waypoints. (Some profiles, such as ``ProfileIdentifier/automobileAvoidingTraffic``, [may have lower
+    /// limits](https://docs.mapbox.com/api/navigation/#directions).)
+    ///   - profileIdentifier: A string specifying the primary mode of transportation for the routes.
+    /// ``ProfileIdentifier/automobile`` is used by default.
+    ///   - queryItems: URL query items to be parsed and applied as configuration to the resulting options.
     public required init(
         waypoints: [Waypoint],
         profileIdentifier: ProfileIdentifier? = nil,
@@ -240,13 +221,11 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         self.waypoints = waypoints
     }
 
-    /**
-     Creates new options object by deserializing given `url`
-
-     Initialization fails if it is unable to extract `waypoints` list and `profileIdentifier`. If other properties are failed to decode - it will just skip them.
-
-     - parameter url: An URL, used to make a route request.
-     */
+    /// Creates new options object by deserializing given `url`
+    ///
+    /// Initialization fails if it is unable to extract ``waypoints`` list and ``profileIdentifier``. If other
+    /// properties are failed to decode - it will just skip them.
+    /// - Parameter url: An URL, used to make a route request.
     public convenience init?(url: URL) {
         guard url.pathComponents.count >= 3 else {
             return nil
@@ -337,18 +316,14 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
 
     // MARK: Specifying the Path of the Route
 
-    /**
-     An array of `Waypoint` objects representing locations that the route should visit in chronological order.
-
-     A waypoint object indicates a location to visit, as well as an optional heading from which to approach the location.
-
-     The array should contain at least two waypoints (the source and destination) and at most 25 waypoints.
-     */
+    /// An array of ``Waypoint`` objects representing locations that the route should visit in chronological order.
+    ///
+    /// A waypoint object indicates a location to visit, as well as an optional heading from which to approach the
+    /// location.
+    /// The array should contain at least two waypoints(the source and destination) and at most 25 waypoints.
     public var waypoints: [Waypoint]
 
-    /**
-     The waypoints that separate legs.
-     */
+    /// The waypoints that separate legs.
     var legSeparators: [Waypoint] {
         var waypoints = waypoints
         guard waypoints.count > 1 else { return [] }
@@ -360,113 +335,109 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
 
     // MARK: Specifying the Mode of Transportation
 
-    /**
-     A string specifying the primary mode of transportation for the routes.
-
-     The default value of this property is `ProfileIdentifier.automobile`, which specifies driving directions.
-     */
+    /// A string specifying the primary mode of transportation for the routes.
+    ///
+    /// The default value of this property is ``ProfileIdentifier/automobile``, which specifies driving directions.
     public var profileIdentifier: ProfileIdentifier
 
     // MARK: Specifying the Response Format
 
-    /**
-     A Boolean value indicating whether `RouteStep` objects should be included in the response.
-
-     If the value of this property is `true`, the returned route contains turn-by-turn instructions. Each returned `Route` object contains one or more `RouteLeg` object that in turn contains one or more `RouteStep` objects. On the other hand, if the value of this property is `false`, the `RouteLeg` objects contain no `RouteStep` objects.
-
-     If you only want to know the distance or estimated travel time to a destination, set this property to `false` to minimize the size of the response and the time it takes to calculate the response. If you need to display turn-by-turn instructions, set this property to `true`.
-
-     The default value of this property is `false`.
-     */
+    /// A Boolean value indicating whether ``RouteStep`` objects should be included in the response.
+    ///
+    /// If the value of this property is `true`, the returned route contains turn-by-turn instructions. Each returned
+    /// ``Route`` object contains one or more ``RouteLeg`` object that in turn contains one or more ``RouteStep``
+    /// objects. On the other hand, if the value of this property is `false`, the ``RouteLeg`` objects contain no
+    /// ``RouteStep`` objects.
+    ///
+    /// If you only want to know the distance or estimated travel time to a destination, set this property to `false` to
+    /// minimize the size of the response and the time it takes to calculate the response. If you need to display
+    /// turn-by-turn instructions, set this property to `true`.
+    ///
+    /// The default value of this property is `false`.
     public var includesSteps = false
 
-    /**
-     Format of the data from which the shapes of the returned route and its steps are derived.
-
-     This property has no effect on the returned shape objects, although the choice of format can significantly affect the size of the underlying HTTP response.
-
-     The default value of this property is `polyline`.
-     */
+    /// Format of the data from which the shapes of the returned route and its steps are derived.
+    ///
+    /// This property has no effect on the returned shape objects, although the choice of format can significantly
+    /// affect the size of the underlying HTTP response.
+    ///
+    /// The default value of this property is ``RouteShapeFormat/polyline``.
     public var shapeFormat = RouteShapeFormat.polyline
 
-    /**
-     Resolution of the shape of the returned route.
-
-     This property has no effect on the shape of the returned route’s steps.
-
-     The default value of this property is `low`, specifying a low-resolution route shape.
-     */
+    /// Resolution of the shape of the returned route.
+    ///
+    /// This property has no effect on the shape of the returned route’s steps.
+    ///
+    /// The default value of this property is ``RouteShapeResolution/low``, specifying a low-resolution route shape.
     public var routeShapeResolution = RouteShapeResolution.low
 
-    /**
-     AttributeOptions for the route. Any combination of `AttributeOptions` can be specified.
-
-     By default, no attribute options are specified. It is recommended that `routeShapeResolution` be set to `.full`.
-     */
+    /// AttributeOptions for the route. Any combination of ``AttributeOptions`` can be specified.
+    ///
+    /// By default, no attribute options are specified. It is recommended that ``routeShapeResolution`` be set to
+    /// ``RouteShapeResolution/full``.
     public var attributeOptions: AttributeOptions = []
 
-    /**
-     The locale in which the route’s instructions are written.
-
-     If you use the MapboxDirections framework with the Mapbox Directions API or Map Matching API, this property affects the sentence contained within the `RouteStep.instructions` property, but it does not affect any road names contained in that property or other properties such as `RouteStep.name`.
-
-     The Directions API can provide instructions in [a number of languages](https://docs.mapbox.com/api/navigation/#instructions-languages). Set this property to `Bundle.main.preferredLocalizations.first` or `Locale.autoupdatingCurrent` to match the application’s language or the system language, respectively.
-
-     By default, this property is set to the current system locale.
-     */
+    /// The locale in which the route’s instructions are written.
+    ///
+    /// If you use the MapboxDirections framework with the Mapbox Directions API or Map Matching API, this property
+    /// affects the sentence contained within the ``RouteStep/instructions`` property, but it does not affect any road
+    /// names contained in that property or other properties such as ``RouteStep/names``.
+    ///
+    /// The Directions API can provide instructions in [a number of
+    /// languages](https://docs.mapbox.com/api/navigation/#instructions-languages). Set this property to
+    /// `Bundle.main.preferredLocalizations.first` or `Locale.autoupdatingCurrent` to match the application’s language
+    /// or the system language, respectively.
+    ///
+    /// By default, this property is set to the current system locale.
     public var locale = Locale.current {
         didSet {
             distanceMeasurementSystem = locale.usesMetricSystem ? .metric : .imperial
         }
     }
 
-    /**
-     A Boolean value indicating whether each route step includes an array of `SpokenInstructions`.
-
-     If this option is set to true, the `RouteStep.instructionsSpokenAlongStep` property is set to an array of `SpokenInstructions`.
-     */
+    /// A Boolean value indicating whether each route step includes an array of ``SpokenInstruction``.
+    ///
+    /// If this option is set to true, the ``RouteStep/instructionsSpokenAlongStep`` property is set to an array of
+    /// ``SpokenInstruction``.
     public var includesSpokenInstructions = false
 
-    /**
-     The measurement system used in spoken instructions included in route steps.
-
-     If the `includesSpokenInstructions` property is set to `true`, this property determines the units used for measuring the distance remaining until an upcoming maneuver. If the `includesSpokenInstructions` property is set to `false`, this property has no effect.
-
-     You should choose a measurement system appropriate for the current region. You can also allow the user to indicate their preferred measurement system via a setting.
-     */
+    /// The measurement system used in spoken instructions included in route steps.
+    ///
+    /// If the ``includesSpokenInstructions`` property is set to `true`, this property determines the units used for
+    /// measuring the distance remaining until an upcoming maneuver. If the ``includesSpokenInstructions`` property is
+    /// set to `false`, this property has no effect.
+    ///
+    /// You should choose a measurement system appropriate for the current region. You can also allow the user to
+    /// indicate their preferred measurement system via a setting.
     public var distanceMeasurementSystem: MeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
 
-    /**
-     If true, each `RouteStep` will contain the property `visualInstructionsAlongStep`.
-
-     `visualInstructionsAlongStep` contains an array of `VisualInstruction` objects used for visually conveying information about a given `RouteStep`.
-     */
+    /// If true, each ``RouteStep`` will contain the property ``RouteStep/instructionsDisplayedAlongStep``.
+    ///
+    /// ``RouteStep/instructionsDisplayedAlongStep`` contains an array of ``VisualInstruction`` objects used for
+    /// visually conveying
+    /// information about a given ``RouteStep``.
     public var includesVisualInstructions = false
 
-    /**
-     The time immediately before a `Directions` object fetched this result.
-
-     If you manually start fetching a task returned by `Directions.url(forCalculating:)`, this property is set to `nil`; use the `URLSessionTaskTransactionMetrics.fetchStartDate` property instead. This property may also be set to `nil` if you create this result from a JSON object or encoded object.
-
-     This property does not persist after encoding and decoding.
-     */
+    /// The time immediately before a `Directions` object fetched this result.
+    ///
+    /// If you manually start fetching a task returned by `Directions.url(forCalculating:)`, this property is set to
+    /// `nil`; use the `URLSessionTaskTransactionMetrics.fetchStartDate` property instead. This property may also be set
+    /// to `nil` if you create this result from a JSON object or encoded object.
+    ///
+    /// This property does not persist after encoding and decoding.
     public var fetchStartDate: Date?
 
     // MARK: Getting the Request URL
 
-    /**
-     The path of the request URL, specifying service name, version and profile.
-
-     The query items are included in the URL of a GET request or the body of a POST request.
-     */
+    /// The path of the request URL, specifying service name, version and profile.
+    ///
+    /// The query items are included in the URL of a GET request or the body of a POST request.
     var abridgedPath: String {
         assertionFailure("abridgedPath should be overriden by subclass")
         return ""
     }
 
-    /**
-     The path of the request URL, not including the hostname or any parameters.
-     */
+    /// The path of the request URL, not including the hostname or any parameters.
     var path: String {
         guard let coordinates else {
             assertionFailure("No query")
@@ -480,11 +451,9 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         return "\(abridgedPath)/\(coordinates)"
     }
 
-    /**
-     An array of URL query items (parameters) to include in an HTTP request.
-
-     The query items are included in the URL of a GET request or the body of a POST request.
-     */
+    /// An array of URL query items (parameters) to include in an HTTP request.
+    ///
+    /// The query items are included in the URL of a GET request or the body of a POST request.
     public var urlQueryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "geometries", value: shapeFormat.rawValue),

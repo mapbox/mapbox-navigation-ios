@@ -1,9 +1,7 @@
 import Foundation
 import Turf
 
-/**
- A coding key as an extensible enumeration.
- */
+/// A coding key as an extensible enumeration.
 struct AnyCodingKey: CodingKey {
     var stringValue: String
     var intValue: Int?
@@ -20,9 +18,7 @@ struct AnyCodingKey: CodingKey {
 }
 
 extension ForeignMemberContainer {
-    /**
-     Decodes any foreign members using the given decoder.
-     */
+    /// Decodes any foreign members using the given decoder.
     mutating func decodeForeignMembers<WellKnownCodingKeys>(
         notKeyedBy _: WellKnownCodingKeys.Type,
         with decoder: Decoder
@@ -37,9 +33,7 @@ extension ForeignMemberContainer {
         }
     }
 
-    /**
-     Encodes any foreign members using the given encoder.
-     */
+    /// Encodes any foreign members using the given encoder.
     func encodeForeignMembers<WellKnownCodingKeys>(notKeyedBy _: WellKnownCodingKeys.Type, to encoder: Encoder) throws
     where WellKnownCodingKeys: CodingKey {
         guard (encoder.userInfo[.includesForeignMembers] as? Bool) == true else { return }
@@ -55,41 +49,38 @@ extension ForeignMemberContainer {
     }
 }
 
-/**
- A class that can contain foreign members in arbitrary keys.
-
- When subclassing `ForeignMemberContainerClass` type, you should call `decodeForeignMembers(notKeyedBy:with:)` during your `Decodable.init(from:)` initializer if your subclass has added any new properties.
-
- Structures should conform to the `ForeignMemberContainer` protocol instead of this protocol.
- */
+/// A class that can contain foreign members in arbitrary keys.
+///
+/// When subclassing ``ForeignMemberContainerClass`` type, you should call
+/// ``ForeignMemberContainerClass/decodeForeignMembers(notKeyedBy:with:)`` during your `Decodable.init(from:)`
+/// initializer if your subclass has added any new properties.
+///
+/// Structures should conform to the `ForeignMemberContainer` protocol instead of this protocol.
 public protocol ForeignMemberContainerClass: AnyObject {
-    /**
-     Foreign members to round-trip to JSON.
-
-     Foreign members are unrecognized properties, similar to [foreign members](https://datatracker.ietf.org/doc/html/rfc7946#section-6.1) in GeoJSON. This library does not officially support any property that is documented as a “beta” property in the Mapbox Directions API response format, but you can get and set it as an element of this `JSONObject`.
-
-     Members are coded only if used `JSONEncoder` or `JSONDecoder` has `userInfo[.includesForeignMembers] = true`.
-     */
+    /// Foreign members to round-trip to JSON.
+    ///
+    /// Foreign members are unrecognized properties, similar to [foreign
+    /// members](https://datatracker.ietf.org/doc/html/rfc7946#section-6.1) in GeoJSON. This library does not officially
+    /// support any property that is documented as a “beta” property in the Mapbox Directions API response format, but
+    /// you can get and set it as an element of this `JSONObject`.
+    ///
+    /// Members are coded only if used `JSONEncoder` or `JSONDecoder` has `userInfo[.includesForeignMembers] = true`.
     var foreignMembers: JSONObject { get set }
 
-    /**
-     Decodes any foreign members using the given decoder.
-
-     - parameter codingKeys: `CodingKeys` type which describes all properties declared  in current subclass.
-     - parameter decoder: `Decoder` instance, which performs the decoding process.
-     */
+    /// Decodes any foreign members using the given decoder.
+    /// - Parameters:
+    ///   - codingKeys: `CodingKeys` type which describes all properties declared  in current subclass.
+    ///   - decoder: `Decoder` instance, which performs the decoding process.
     func decodeForeignMembers<WellKnownCodingKeys>(
         notKeyedBy codingKeys: WellKnownCodingKeys.Type,
         with decoder: Decoder
     ) throws where WellKnownCodingKeys: CodingKey & CaseIterable
 
-    /**
-     Encodes any foreign members using the given encoder.
-
-     This method should be called in your `Encodable.encode(to:)` implementation only in the **base class**. Otherwise it will not encode  `foreignMembers` or way overwrite it.
-
-     - parameter encoder: `Encoder` instance, performing the encoding process.
-     */
+    /// Encodes any foreign members using the given encoder.
+    ///
+    /// This method should be called in your `Encodable.encode(to:)` implementation only in the **base class**.
+    /// Otherwise it will not encode  ``foreignMembers`` or way overwrite it.
+    /// - Parameter encoder: `Encoder` instance, performing the encoding process.
     func encodeForeignMembers(to encoder: Encoder) throws
 }
 

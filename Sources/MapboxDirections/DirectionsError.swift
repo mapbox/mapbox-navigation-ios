@@ -3,9 +3,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/**
- An error that occurs when calculating directions.
- */
+/// An error that occurs when calculating directions.
 public enum DirectionsError: LocalizedError {
     public init(code: String?, message: String?, response: URLResponse?, underlyingError error: Error?) {
         if let response = response as? HTTPURLResponse {
@@ -39,79 +37,58 @@ public enum DirectionsError: LocalizedError {
         }
     }
 
-    /**
-     There is no network connection available to perform the network request.
-     */
+    /// There is no network connection available to perform the network request.
     case network(_: URLError)
 
-    /**
-     The server returned an empty response.
-     */
+    /// The server returned an empty response.
     case noData
 
-    /**
-     The API recieved input that it didn't understand.
-      */
+    /// The API recieved input that it didn't understand.
     case invalidInput(message: String?)
 
-    /**
-     The server returned a response that isn’t correctly formatted.
-     */
+    /// The server returned a response that isn’t correctly formatted.
     case invalidResponse(_: URLResponse?)
 
-    /**
-     No route could be found between the specified locations.
-
-     Make sure it is possible to travel between the locations with the mode of transportation implied by the profileIdentifier option. For example, it is impossible to travel by car from one continent to another without either a land bridge or a ferry connection.
-     */
+    /// No route could be found between the specified locations.
+    ///
+    /// Make sure it is possible to travel between the locations with the mode of transportation implied by the
+    /// profileIdentifier option. For example, it is impossible to travel by car from one continent to another without
+    /// either a land bridge or a ferry connection.
     case unableToRoute
 
-    /**
-     The specified coordinates could not be matched to the road network.
-
-     Try again making sure that your tracepoints lie in close proximity to a road or path.
-     */
+    /// The specified coordinates could not be matched to the road network.
+    ///
+    /// Try again making sure that your tracepoints lie in close proximity to a road or path.
     case noMatches
 
-    /**
-     The request specifies too many coordinates.
-
-     Try again with fewer coordinates.
-     */
+    /// The request specifies too many coordinates.
+    ///
+    /// Try again with fewer coordinates.
     case tooManyCoordinates
 
-    /**
-     A specified location could not be associated with a roadway or pathway.
-
-     Make sure the locations are close enough to a roadway or pathway. Try setting the `Waypoint.coordinateAccuracy` property of all the waypoints to `nil`.
-     */
+    /// A specified location could not be associated with a roadway or pathway.
+    ///
+    /// Make sure the locations are close enough to a roadway or pathway. Try setting the
+    /// ``Waypoint/coordinateAccuracy`` property of all the waypoints to `nil`.
     case unableToLocate
 
-    /**
-     Unrecognized profile identifier.
-
-     Make sure the `DirectionsOptions.profileIdentifier` option is set to one of the predefined values, such as `ProfileIdentifier.automobile`.
-     */
+    /// Unrecognized profile identifier.
+    ///
+    /// Make sure the ``DirectionsOptions/profileIdentifier`` option is set to one of the predefined values, such as
+    /// ``ProfileIdentifier/automobile``.
     case profileNotFound
 
-    /**
-     The request is too large.
-
-     Try specifying fewer waypoints or giving the waypoints shorter names.
-     */
+    /// The request is too large.
+    ///
+    /// Try specifying fewer waypoints or giving the waypoints shorter names.
     case requestTooLarge
 
-    /**
-     Too many requests have been made with the same access token within a certain period of time.
-
-     Wait before retrying.
-     */
+    /// Too many requests have been made with the same access token within a certain period of time.
+    ///
+    /// Wait before retrying.
     case rateLimited(rateLimitInterval: TimeInterval?, rateLimit: UInt?, resetTime: Date?)
 
-    /**
-     Unknown error case. Look at associated values for more details.
-     */
-
+    /// Unknown error case. Look at associated values for more details.
     case unknown(response: URLResponse?, underlying: Error?, code: String?, message: String?)
 
     public var failureReason: String? {
@@ -227,17 +204,13 @@ extension DirectionsError: Equatable {
     }
 }
 
-/**
- An error that occurs when encoding or decoding a type defined by the MapboxDirections framework.
- */
+/// An error that occurs when encoding or decoding a type defined by the MapboxDirections framework.
 public enum DirectionsCodingError: Error {
-    /**
-     Decoding this type requires the `Decoder.userInfo` dictionary to contain the `CodingUserInfoKey.options` key.
-     */
+    /// Decoding this type requires the `Decoder.userInfo` dictionary to contain the ``Swift/CodingUserInfoKey/options``
+    /// key.
     case missingOptions
 
-    /**
-     Decoding this type requires the `Decoder.userInfo` dictionary to contain the `CodingUserInfoKey.credentials` key.
-     */
+    /// Decoding this type requires the `Decoder.userInfo` dictionary to contain the
+    /// ``Swift/CodingUserInfoKey/credentials`` key.
     case missingCredentials
 }

@@ -1,8 +1,9 @@
 import Foundation
 
-/// Describes how `customOptionsByRawValue` component is compared during logical operations in `CustomValueOptionSet`.
+/// Describes how ``CustomValueOptionSet/customOptionsByRawValue`` component is compared during logical operations in
+/// ``CustomValueOptionSet``.
 public enum CustomOptionComparisonPolicy: Equatable, Sendable {
-    /// Custom options are equal if `customOptions` key-value pairs are strictly equal
+    /// Custom options are equal if ``CustomValueOptionSet/customOptionsByRawValue``  key-value pairs are strictly equal
     ///
     /// Example:
     /// [1: "value1"] == [1: "value1"]
@@ -10,7 +11,7 @@ public enum CustomOptionComparisonPolicy: Equatable, Sendable {
     /// [1: "value1"] != [:]
     /// [:] == [:]
     case equal
-    /// Custom options are equal if `customOptions` by the given key is equal or `nil`
+    /// Custom options are equal if ``CustomValueOptionSet/customOptionsByRawValue``  by the given key is equal or `nil`
     ///
     /// Example:
     /// [1: "value1"] == [1: "value1"]
@@ -18,7 +19,7 @@ public enum CustomOptionComparisonPolicy: Equatable, Sendable {
     /// [1: "value1"] == [:]
     /// [:] == [:]
     case equalOrNull
-    /// Custom options are not compared. Only `rawValue` is taken into account when comparing `CustomStringOptionSet`s.
+    /// Custom options are not compared. Only `rawValue` is taken into account when comparing ``CustomValueOptionSet``s.
     ///
     /// Example:
     /// [1: "value1"] == [1: "value1"]
@@ -37,8 +38,8 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     /// Provides a text value description for user-provided options.
     ///
     /// The option set will recognize a custom option if it's unique `rawValue` flag is set and
-    /// `customOptionsByRawValue` contains a description for that flag.
-    /// Use the `update(customOption:comparisonPolicy:)` method to append a custom option.
+    /// ``customOptionsByRawValue`` contains a description for that flag.
+    /// Use the ``update(customOption:comparisonPolicy:)`` method to append a custom option.
     var customOptionsByRawValue: [RawValue: CustomValue] { get set }
 
     init(rawValue: Self.RawValue)
@@ -59,7 +60,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "5 is prime!"
     ///
     /// - Parameter member: An element to look for in the set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if `member` exists in the set; otherwise, `false`.
     func contains(_ member: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool
     /// Returns a new set with the elements of both this and the given set.
@@ -82,7 +83,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "[2, 4, 6, 7, 0, 1, 3]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: A new set with the unique elements of this set and `other`.
     ///
     /// - Note: if this set and `other` contain elements that are equal but
@@ -109,7 +110,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "[2, 4, 6, 7, 0, 1, 3]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     mutating func formUnion(_ other: Self, comparisonPolicy: CustomOptionComparisonPolicy)
     /// Returns a new set with the elements that are common to both this set and
     /// the given set.
@@ -126,7 +127,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Bethany", "Eric"]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: A new set.
     ///
     /// - Note: if this set and `other` contain elements that are equal but
@@ -146,7 +147,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Bethany", "Eric"]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     mutating func formIntersection(_ other: Self, comparisonPolicy: CustomOptionComparisonPolicy)
     /// Returns a new set with the elements that are either in this set or in the
     /// given set, but not in both.
@@ -163,7 +164,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Diana", "Forlani", "Alicia"]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: A new set.
     func symmetricDifference(_ other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Self.Element
     /// Removes the elements of the set that are also in the given set and adds
@@ -182,7 +183,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Diana", "Forlani", "Alicia"]"
     ///
     /// - Parameter other: A set of the same type.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     mutating func formSymmetricDifference(_ other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy)
     /// Returns a new set containing the elements of this set that do not occur
     /// in the given set.
@@ -197,7 +198,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Diana", "Chris", "Alicia"]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: A new set.
     func subtracting(_ other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Self.Element
     /// Removes the elements of the given set from this set.
@@ -213,14 +214,13 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "["Diana", "Chris", "Alicia"]"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     mutating func subtract(_ other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy)
     /// Inserts the given element in the set if it is not already present.
     ///
-    /// If an element equal to `newMember` is already contained in the set, this
-    /// method has no effect. In this example, a new element is inserted into
-    /// `classDays`, a set of days of the week. When an existing element is
-    /// inserted, the `classDays` set does not change.
+    /// If an element equal to `newMember` is already contained in the set, this method has no effect. In this example,
+    /// a new element is inserted into `classDays`, a set of days of the week. When an existing element is inserted, the
+    /// `classDays` set does not change.
     ///
     ///     enum DayOfTheWeek: Int {
     ///         case sunday, monday, tuesday, wednesday, thursday,
@@ -239,23 +239,20 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "[.friday, .wednesday, .monday]"
     ///
     /// - Parameter newMember: An element to insert into the set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
-    /// - Returns: `(true, newMember)` if `newMember` was not contained in the
-    ///   set. If an element equal to `newMember` was already contained in the
-    ///   set, the method returns `(false, oldMember)`, where `oldMember` is the
-    ///   element that was equal to `newMember`. In some cases, `oldMember` may
-    ///   be distinguishable from `newMember` by identity comparison or some
-    ///   other means.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
+    /// - Returns: `(true, newMember)` if `newMember` was not contained in the set. If an element equal to `newMember`
+    /// was already contained in the set, the method returns `(false, oldMember)`, where `oldMember` is the element that
+    /// was equal to `newMember`. In some cases, `oldMember` may be distinguishable from `newMember` by identity
+    /// comparison or some other means.
     mutating func insert(_ newMember: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy)
         -> (inserted: Bool, memberAfterInsert: Self.Element)
     /// Removes the given element and any elements subsumed by the given element.
     ///
     /// - Parameter member: The element of the set to remove.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
-    /// - Returns: For ordinary sets, an element equal to `member` if `member` is
-    ///   contained in the set; otherwise, `nil`. In some cases, a returned
-    ///   element may be distinguishable from `member` by identity comparison
-    ///   or some other means.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
+    /// - Returns: For ordinary sets, an element equal to `member` if `member` is contained in the set; otherwise,
+    /// `nil`. In some cases, a returned element may be distinguishable from `member` by identity comparison or some
+    /// other means.
     ///
     ///   For sets where the set type and element type are the same, like
     ///   `OptionSet` types, this method returns any intersection between the set
@@ -277,7 +274,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "Optional(.monday)"
     ///
     /// - Parameter newMember: An element to insert into the set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: For ordinary sets, an element equal to `newMember` if the set
     ///   already contained such a member; otherwise, `nil`. In some cases, the
     ///   returned element may be distinguishable from `newMember` by identity
@@ -289,16 +286,14 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     mutating func update(with newMember: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Self.Element?
     /// Inserts the given element into the set unconditionally.
     ///
-    /// If an element equal to `customOption` is already contained in the set,
-    /// `customOption` replaces the existing element. Otherwise - updates the set contents and fills
-    /// `customOptionsByRawValue` accordingly.
+    /// If an element equal to `customOption` is already contained in the set, `customOption` replaces the existing
+    /// element. Otherwise - updates the set contents and fills ``customOptionsByRawValue`` accordingly.
     ///
     /// - Parameter customOption: An element to insert into the set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
-    /// - Returns: For ordinary sets, an element equal to `customOption` if the set
-    ///   already contained such a member; otherwise, `nil`. In some cases, the
-    ///   returned element may be distinguishable from `customOption` by identity
-    ///   comparison or some other means.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
+    /// - Returns: For ordinary sets, an element equal to `customOption` if the set already contained such a member;
+    /// otherwise, `nil`. In some cases, the returned element may be distinguishable from `customOption` by identity
+    /// comparison or some other means.
     ///
     ///   For sets where the set type and element type are the same, like
     ///   `OptionSet` types, this method returns any intersection between the
@@ -317,7 +312,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "true"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if the set is a subset of `other`; otherwise, `false`.
     func isSubset(of other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool
     /// Returns a Boolean value that indicates whether the set is a superset of
@@ -332,7 +327,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "true"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if the set is a superset of `possibleSubset`;
     ///   otherwise, `false`.
     func isSuperset(of other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool
@@ -353,7 +348,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "false"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if the set is a strict subset of `other`; otherwise,
     ///   `false`.
     func isStrictSubset(of other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool
@@ -374,7 +369,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "false"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if the set is a strict superset of `other`; otherwise,
     ///   `false`.
     func isStrictSuperset(of other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool
@@ -390,7 +385,7 @@ public protocol CustomValueOptionSet: OptionSet where RawValue: FixedWidthIntege
     ///     // Prints "true"
     ///
     /// - Parameter other: A set of the same type as the current set.
-    /// - Parameter comparisonPolicy: comparison method to be used for `customOptionsByRawValue`.
+    /// - Parameter comparisonPolicy: comparison method to be used for ``customOptionsByRawValue``.
     /// - Returns: `true` if the set has no elements in common with `other`;
     ///   otherwise, `false`.
     func isDisjoint(with other: Self.Element, comparisonPolicy: CustomOptionComparisonPolicy) -> Bool

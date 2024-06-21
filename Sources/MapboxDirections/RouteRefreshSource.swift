@@ -1,15 +1,11 @@
 import Foundation
 
-/**
- A skeletal route containing infromation to refresh `Route` object attributes.
- */
+/// A skeletal route containing infromation to refresh ``Route`` object attributes.
 public protocol RouteRefreshSource {
     var refreshedLegs: [RouteLegRefreshSource] { get }
 }
 
-/**
- A skeletal route leg containing infromation to refresh `RouteLeg` object attributes.
- */
+/// A skeletal route leg containing infromation to refresh ``RouteLeg`` object attributes.
 public protocol RouteLegRefreshSource {
     var refreshedAttributes: RouteLeg.Attributes { get }
     var refreshedIncidents: [Incident]? { get }

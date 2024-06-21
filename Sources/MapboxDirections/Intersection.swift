@@ -1,9 +1,7 @@
 import Foundation
 import Turf
 
-/**
- A single cross street along a step.
- */
+/// A single cross street along a step.
 public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
     public var foreignMembers: JSONObject = [:]
     public var lanesForeignMembers: [JSONObject] = []
@@ -60,94 +58,82 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
 
     // MARK: Getting the Location of the Intersection
 
-    /**
-     The geographic coordinates at the center of the intersection.
-     */
+    /// The geographic coordinates at the center of the intersection.
     public let location: LocationCoordinate2D
 
     // MARK: Getting the Roads that Meet at the Intersection
 
-    /**
-     An array of `LocationDirection`s indicating the absolute headings of the roads that meet at the intersection.
-
-     A road is represented in this array by a heading indicating the direction from which the road meets the intersection. To get the direction of travel when leaving the intersection along the road, rotate the heading 180 degrees.
-
-     A single road that passes through this intersection is represented by two items in this array: one for the segment that enters the intersection and one for the segment that exits it.
-     */
+    /// An array of `LocationDirection`s indicating the absolute headings of the roads that meet at the intersection.
+    ///
+    /// A road is represented in this array by a heading indicating the direction from which the road meets the
+    /// intersection. To get the direction of travel when leaving the intersection along the road, rotate the heading
+    /// 180 degrees.
+    ///
+    /// A single road that passes through this intersection is represented by two items in this array: one for the
+    /// segment that enters the intersection and one for the segment that exits it.
     public let headings: [LocationDirection]
 
-    /**
-     The indices of the items in the `headings` array that correspond to the roads that may be used to leave the intersection.
-
-     This index set effectively excludes any one-way road that leads toward the intersection.
-     */
+    /// The indices of the items in the ``headings`` array that correspond to the roads that may be used to leave the
+    /// intersection.
+    ///
+    /// This index set effectively excludes any one-way road that leads toward the intersection.
     public let outletIndexes: IndexSet
 
     // MARK: Getting the Roads That Take the Route Through the Intersection
 
-    /**
-     The index of the item in the `headings` array that corresponds to the road that the containing route step uses to approach the intersection.
-
-     This property is set to `nil` for a departure maneuver.
-     */
+    /// The index of the item in the ``headings`` array that corresponds to the road that the containing route step uses
+    /// to approach the intersection.
+    ///
+    /// This property is set to `nil` for a departure maneuver.
     public let approachIndex: Int?
 
-    /**
-     The index of the item in the `headings` array that corresponds to the road that the containing route step uses to leave the intersection.
-
-     This property is set to `nil` for an arrival maneuver.
-     */
+    /// The index of the item in the ``headings`` array that corresponds to the road that the containing route step uses
+    /// to leave the intersection.
+    ///
+    /// This property is set to `nil` for an arrival maneuver.
     public let outletIndex: Int?
 
-    /**
-     The road classes of the road that the containing step uses to leave the intersection.
-
-     If road class information is unavailable, this property is set to `nil`.
-     */
+    /// The road classes of the road that the containing step uses to leave the intersection.
+    ///
+    /// If road class information is unavailable, this property is set to `nil`.
     public let outletRoadClasses: RoadClasses?
 
-    /**
-     The road classes of the road that the containing step uses to leave the intersection, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road) , version 8.
-
-     If detailed road class information is unavailable, this property is set to `nil`. This property only indicates the road classification; for other aspects of the road, use the `outletRoadClasses` property.
-     */
+    /// The road classes of the road that the containing step uses to leave the intersection, according to the [Mapbox
+    /// Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road) , version 8.
+    ///
+    /// If detailed road class information is unavailable, this property is set to `nil`. This property only indicates
+    /// the road classification; for other aspects of the road, use the ``outletRoadClasses`` property.
     public let outletMapboxStreetsRoadClass: MapboxStreetsRoadClass?
 
-    /**
-     The name of the tunnel that this intersection is a part of.
-
-     If this Intersection is not a tunnel entrance or exit, or if information is unavailable then this property is set to `nil`.
-     */
+    /// The name of the tunnel that this intersection is a part of.
+    ///
+    /// If this Intersection is not a tunnel entrance or exit, or if information is unavailable then this property is
+    /// set to `nil`.
     public let tunnelName: String?
 
-    /**
-     A toll collection point.
-
-     If this Intersection is not a toll collection intersection, or if this information is unavailable then this property is set to `nil`.
-     */
+    /// A toll collection point.
+    ///
+    /// If this Intersection is not a toll collection intersection, or if this information is unavailable then this
+    /// property is set to `nil`.
     public let tollCollection: TollCollection?
 
-    /**
-     Corresponding rest stop.
-
-     If this Intersection is not a rest stop, or if this information is unavailable then this property is set to `nil`.
-     */
+    /// Corresponding rest stop.
+    ///
+    /// If this Intersection is not a rest stop, or if this information is unavailable then this property is set to
+    /// `nil`.
     public let restStop: RestStop?
 
-    /**
-     Whether the intersection lays within the bounds of an urban zone.
-
-     If this information is unavailable, then this property is set to `nil`.
-     */
+    /// Whether the intersection lays within the bounds of an urban zone.
+    ///
+    /// If this information is unavailable, then this property is set to `nil`.
     public let isUrban: Bool?
 
-    /**
-     A 2-letter region code to identify corresponding country that this intersection lies in.
-
-     Automatically populated during decoding a `RouteLeg` object, since this is the source of all `AdministrativeRegion`s. Value is `nil` if such information is unavailable.
-
-     - seealso: `RouteStep.regionCode(atStepIndex:, intersectionIndex:)`
-     */
+    /// A 2-letter region code to identify corresponding country that this intersection lies in.
+    ///
+    /// Automatically populated during decoding a ``RouteLeg`` object, since this is the source of all
+    /// ``AdministrativeRegion``s. Value is `nil` if such information is unavailable.
+    ///
+    /// - SeeAlso: ``RouteLeg/regionCode(atStepIndex:intersectionIndex:)``
     public private(set) var regionCode: String?
 
     mutating func updateRegionCode(_ regionCode: String?) {
@@ -156,60 +142,50 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
 
     // MARK: Telling the User Which Lanes to Use
 
-    /**
-     All the lanes of the road that the containing route step uses to approach the intersection. Each item in the array represents a lane, which is represented by one or more `LaneIndication`s.
-
-     If no lane information is available for the intersection, this property’s value is `nil`. The first item corresponds to the leftmost lane, the second item corresponds to the second lane from the left, and so on, regardless of whether the surrounding country drives on the left or on the right.
-     */
+    /// All the lanes of the road that the containing route step uses to approach the intersection. Each item in the
+    /// array represents a lane, which is represented by one or more ``LaneIndication``s.
+    ///
+    /// If no lane information is available for the intersection, this property’s value is `nil`. The first item
+    /// corresponds to the leftmost lane, the second item corresponds to the second lane from the left, and so on,
+    /// regardless of whether the surrounding country drives on the left or on the right.
     public let approachLanes: [LaneIndication]?
 
-    /**
-     The indices of the items in the `approachLanes` array that correspond to the lanes that may be used to execute the maneuver.
-
-     If no lane information is available for an intersection, this property’s value is `nil`.
-     */
+    /// The indices of the items in the ``approachLanes`` array that correspond to the lanes that may be used to execute
+    /// the maneuver.
+    ///
+    /// If no lane information is available for an intersection, this property’s value is `nil`.
     public let usableApproachLanes: IndexSet?
 
-    /**
-     The indices of the items in the `approachLanes` array that correspond to the lanes that are preferred to execute the maneuver.
-
-     If no lane information is available for an intersection, this property’s value is `nil`.
-     */
+    /// The indices of the items in the ``approachLanes`` array that correspond to the lanes that are preferred to
+    /// execute
+    /// the maneuver.
+    ///
+    /// If no lane information is available for an intersection, this property’s value is `nil`.
     public let preferredApproachLanes: IndexSet?
 
-    /**
-     Which of the `LaneIndication`s is applicable to the current route when there is more than one.
-
-     If no lane information is available for the intersection, this property’s value is `nil`
-     */
+    /// Which of the ``LaneIndication``s is applicable to the current route when there is more than one.
+    ///
+    /// If no lane information is available for the intersection, this property’s value is `nil`
     public let usableLaneIndication: ManeuverDirection?
 
-    /**
-     Indicates whether there is a railroad crossing at the intersection.
-
-     If such information is not available for an intersection, this property’s value is `nil`.
-     */
+    /// Indicates whether there is a railroad crossing at the intersection.
+    ///
+    /// If such information is not available for an intersection, this property’s value is `nil`.
     public let railroadCrossing: Bool?
 
-    /**
-     Indicates whether there is a traffic signal at the intersection.
-
-     If such information is not available for an intersection, this property’s value is `nil`.
-     */
+    /// Indicates whether there is a traffic signal at the intersection.
+    ///
+    /// If such information is not available for an intersection, this property’s value is `nil`.
     public let trafficSignal: Bool?
 
-    /**
-     Indicates whether there is a stop sign at the intersection.
-
-     If such information is not available for an intersection, this property’s value is `nil`.
-     */
+    /// Indicates whether there is a stop sign at the intersection.
+    ///
+    /// If such information is not available for an intersection, this property’s value is `nil`.
     public let stopSign: Bool?
 
-    /**
-     Indicates whether there is a yield sign at the intersection.
+    /// Indicates whether there is a yield sign at the intersection.
 
-     If such information is not available for an intersection, this property’s value is `nil`.
-     */
+    /// If such information is not available for an intersection, this property’s value is `nil`.
     public let yieldSign: Bool?
 
     /// An object containing information about routing and passing interchange along the route.

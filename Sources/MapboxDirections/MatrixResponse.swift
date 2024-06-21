@@ -13,31 +13,29 @@ public struct MatrixResponse: Sendable {
     public let destinations: [Waypoint]?
     public let sources: [Waypoint]?
 
-    /**
-     Array of arrays that represent the distances matrix in row-major order.
-
-     `distances[i][j]` gives the route distance from the `i`'th `source` to the `j`'th `destination`. The distance between the same coordinate is always `0`. Distance from `i` to `j` is not always the same as from `j` to `i`. If a route cannot be found, the result is `null`.
-
-     - seealso: `distance(from:to:)`
-     */
+    /// Array of arrays that represent the distances matrix in row-major order.
+    ///
+    /// `distances[i][j]` gives the route distance from the `i`'th `source` to the `j`'th `destination`. The distance
+    /// between the same coordinate is always `0`. Distance from `i` to `j` is not always the same as from `j` to `i`.
+    /// If a route cannot be found, the result is `nil`.
+    ///
+    /// - SeeAlso: ``distance(from:to:)``
     public let distances: DistanceMatrix?
 
-    /**
-     Array of arrays that represent the travel times matrix in row-major order.
-
-     `travelTimes[i][j]` gives the travel time from the `i`'th `source` to the `j`'th `destination`. The duration between the same coordinate is always `0`. Travel time from `i` to `j` is not always the same as from `j` to `i`. If a duration cannot be found, the result is `null`.
-
-     - seealso: `travelTime(from:to:)`
-     */
+    /// Array of arrays that represent the travel times matrix in row-major order.
+    ///
+    /// `travelTimes[i][j]` gives the travel time from the `i`'th `source` to the `j`'th `destination`. The duration
+    /// between the same coordinate is always `0`. Travel time from `i` to `j` is not always the same as from `j` to
+    /// `i`. If a duration cannot be found, the result is `nil`.
+    ///
+    /// - seealso: ``travelTime(from:to:)``
     public let travelTimes: DurationMatrix?
 
-    /**
-     Returns route distance between specified source and destination.
-
-     - parameter sourceIndex: Index of a waypoint in `sources` array.
-     - parameter destinationIndex: Index of a waypoint in `destinations` array.
-     - returns Calculated route distance between the points or `null` if it is not available.
-     */
+    /// Returns route distance between specified source and destination.
+    /// - Parameters:
+    ///   - sourceIndex: Index of a waypoint in the ``sources`` array.
+    ///   - destinationIndex: Index of a waypoint in the ``destinations`` array.
+    /// - Returns: Calculated route distance between the points or `nil` if it is not available.
     public func distance(from sourceIndex: Int, to destinationIndex: Int) -> LocationDistance? {
         guard sources?.indices.contains(sourceIndex) ?? false,
               destinations?.indices.contains(destinationIndex) ?? false
@@ -47,13 +45,11 @@ public struct MatrixResponse: Sendable {
         return distances?[sourceIndex][destinationIndex]
     }
 
-    /**
-     Returns expected travel time between specified source and destination.
-
-     - parameter sourceIndex: Index of a waypoint in `sources` array.
-     - parameter destinationIndex: Index of a waypoint in `destinations` array.
-     - returns Calculated expected travel time between the points or `null` if it is not available.
-     */
+    /// Returns expected travel time between specified source and destination.
+    /// - Parameters:
+    ///   - sourceIndex: Index of a waypoint in the ``sources`` array.
+    ///   - destinationIndex: Index of a waypoint in the ``destinations`` array.
+    /// - Returns: Calculated expected travel time between the points or `nil` if it is not available.
     public func travelTime(from sourceIndex: Int, to destinationIndex: Int) -> TimeInterval? {
         guard sources?.indices.contains(sourceIndex) ?? false,
               destinations?.indices.contains(destinationIndex) ?? false

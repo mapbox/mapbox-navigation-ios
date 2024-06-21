@@ -1,11 +1,9 @@
 import Foundation
 import Turf
 
-/**
- Represents a silent waypoint along the `RouteLeg`.
-
- See `RouteLeg.viaWaypoints` for more details.
- */
+/// Represents a silent waypoint along the ``RouteLeg``.
+///
+/// See ``RouteLeg/viaWaypoints`` for more details.
 public struct SilentWaypoint: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var foreignMembers: JSONObject = [:]
 
@@ -21,7 +19,7 @@ public struct SilentWaypoint: Codable, Equatable, ForeignMemberContainer, Sendab
     /// The calculated distance, in meters, from the leg origin.
     public var distanceFromStart: Double
 
-    /// The associated `Route` shape index of the silent waypoint location.
+    /// The associated ``Route`` shape index of the silent waypoint location.
     public var shapeCoordinateIndex: Int
 
     public init(waypointIndex: Int, distanceFromStart: Double, shapeCoordinateIndex: Int) {

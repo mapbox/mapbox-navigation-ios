@@ -1,19 +1,15 @@
 import Foundation
 import Turf
 
-/**
- A type with a customized Quick Look representation in the Xcode debugger.
- */
+/// A type with a customized Quick Look representation in the Xcode debugger.
 protocol CustomQuickLookConvertible {
-    /**
-     Returns a [Quick Look–compatible](https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/CustomClassDisplay_in_QuickLook/CH02-std_objects_support/CH02-std_objects_support.html#//apple_ref/doc/uid/TP40014001-CH3-SW19) representation for display in the Xcode debugger.
-     */
+    /// Returns a [Quick Look–compatible](https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/CustomClassDisplay_in_QuickLook/CH02-std_objects_support/CH02-std_objects_support.html#//apple_ref/doc/uid/TP40014001-CH3-SW19)
+    /// representation for display in the Xcode debugger.
     func debugQuickLookObject() -> Any?
 }
 
-/**
- Returns a URL to an image representation of the given coordinates via the [Mapbox Static Images API](https://docs.mapbox.com/api/maps/#static-images).
- */
+/// Returns a URL to an image representation of the given coordinates via the [Mapbox Static Images
+/// API](https://docs.mapbox.com/api/maps/#static-images).
 func debugQuickLookURL(
     illustrating shape: LineString,
     profileIdentifier: ProfileIdentifier = .automobile,

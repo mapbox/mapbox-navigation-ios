@@ -1,95 +1,60 @@
 import Foundation
 import Turf
 
-/**
- :nodoc:
- Information about toll payment method.
- */
+/// Information about toll payment method.
 public struct TollPaymentMethod: Hashable, Equatable, Sendable {
-    /**
-     Method identifier.
-     */
+    /// Method identifier.
     public let identifier: String
 
-    /**
-     Payment is done by electronic toll collection.
-     */
+    /// Payment is done by electronic toll collection.
     public static let electronicTollCollection = TollPaymentMethod(identifier: "etc")
-    /**
-     Payment is done by cash.
-     */
+    /// Payment is done by cash.
     public static let cash = TollPaymentMethod(identifier: "cash")
 }
 
-/**
- :nodoc:
- Categories by which toll fees are divided.
- */
+/// Categories by which toll fees are divided.
 public struct TollCategory: Hashable, Equatable, Sendable {
-    /**
-     Category name.
-     */
+    /// Category name.
     public let name: String
 
-    /**
-     A small sized vehicle.
-
-     In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
-     */
+    /// A small sized vehicle.
+    ///
+    /// In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
     public static let small = TollCategory(name: "small")
-    /**
-     A standard sized vehicle.
-
-     In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
-     */
+    /// A standard sized vehicle.
+    ///
+    /// In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
     public static let standard = TollCategory(name: "standard")
-    /**
-     A middle sized vehicle.
-
-     In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
-     */
+    /// A middle sized vehicle.
+    ///
+    /// In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
     public static let middle = TollCategory(name: "middle")
-    /**
-     A large sized vehicle.
-
-     In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
-     */
+    /// A large sized vehicle.
+    ///
+    /// In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
     public static let large = TollCategory(name: "large")
-    /**
-     A jumbo sized vehicle.
-
-     In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
-     */
+    /// A jumbo sized vehicle.
+    ///
+    /// In Japan, this is a [standard vehicle size](https://en.wikipedia.org/wiki/Expressways_of_Japan#Tolls).
     public static let jumbo = TollCategory(name: "jumbo")
 }
 
-/**
- :nodoc:
- Toll cost information for the `Route`.
- */
+/// Toll cost information for the ``Route``.
 public struct TollPrice: Equatable, Hashable, ForeignMemberContainer, Sendable {
     public var foreignMembers: Turf.JSONObject = [:]
 
-    /**
-     Related currency code string.
-
-     Uses ISO 4217 format. Refers to `amount` value.
-     This value is compatible with `NumberFormatter().currencyCode`.
-     */
+    /// Related currency code string.
+    ///
+    /// Uses ISO 4217 format. Refers to ``amount`` value.
+    /// This value is compatible with `NumberFormatter().currencyCode`.
     public let currencyCode: String
-    /**
-     Information about toll payment.
-     */
+    /// Information about toll payment.
     public let paymentMethod: TollPaymentMethod
-    /**
-     Toll category information.
-     */
+    /// Toll category information.
     public let category: TollCategory
-    /**
-     The actual toll price in `currencyCode` currency.
-
-     A toll cost of `0` is valid and simply means that no toll costs are incurred for this route.
-     */
+    /// The actual toll price in ``currencyCode`` currency.
+    ///
+    /// A toll cost of `0` is valid and simply means that no toll costs are incurred for this route.
     public let amount: Decimal
 
     init(currencyCode: String, paymentMethod: TollPaymentMethod, category: TollCategory, amount: Decimal) {

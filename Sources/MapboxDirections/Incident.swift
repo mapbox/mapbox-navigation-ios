@@ -1,9 +1,7 @@
 import Foundation
 import Turf
 
-/**
- `Incident` describes any corresponding event, used for annotating the route.
- */
+/// `Incident` describes any corresponding event, used for annotating the route.
 public struct Incident: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var foreignMembers: JSONObject = [:]
     public var congestionForeignMembers: JSONObject = [:]
@@ -117,7 +115,7 @@ public struct Incident: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var identifier: String
     /// The kind of an incident
     ///
-    /// This value is set to `nil` if `kind` value is not supported.
+    /// This value is set to `nil` if ``kind`` value is not supported.
     public var kind: Kind? {
         return Kind(rawValue: rawKind)
     }
@@ -135,8 +133,8 @@ public struct Incident: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var impact: Impact?
     /// Provides additional classification of an incident. May be not available for all incident types.
     public var subtype: String?
-    /// Breif description of the subtype. May be not available for all incident types and is not available if `subtype`
-    /// is `nil`
+    /// Breif description of the subtype. May be not available for all incident types and is not available if
+    /// ``subtype`` is `nil`.
     public var subtypeDescription: String?
     /// The three-letter ISO 3166-1 alpha-3 code for the country the incident is located in. Example: "USA".
     public var countryCodeAlpha3: String?
@@ -146,7 +144,7 @@ public struct Incident: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var roadIsClosed: Bool?
     /// A long description of the incident in a human-readable format.
     public var longDescription: String?
-    /// The number of items in the `lanesBlocked`.
+    /// The number of items in the ``lanesBlocked``.
     public var numberOfBlockedLanes: Int?
     /// Information about the amount of congestion on the road around the incident.
     ///

@@ -12,111 +12,88 @@ import UIKit
 #endif
 
 #if canImport(CoreGraphics)
-/**
- An image scale factor.
- */
+/// An image scale factor.
 public typealias Scale = CGFloat
 #else
-/**
- An image scale factor.
- */
+/// An image scale factor.
 public typealias Scale = Double
 #endif
 
 extension VisualInstruction {
-    /**
-     A unit of information displayed to the user as part of a `VisualInstruction`.
-     */
+    /// A unit of information displayed to the user as part of a ``VisualInstruction``.
     public enum Component: Equatable, Sendable {
-        /**
-         The component separates two other destination components.
-
-         If the two adjacent components are both displayed as images, you can hide this delimiter component.
-         */
+        /// The component separates two other destination components.
+        ///
+        /// If the two adjacent components are both displayed as images, you can hide this delimiter component.
         case delimiter(text: TextRepresentation)
 
-        /**
-         The component bears the name of a place or street.
-         */
+        /// The component bears the name of a place or street.
         case text(text: TextRepresentation)
 
-        /**
-         The component is an image, such as a [route marker](https://en.wikipedia.org/wiki/Highway_shield), with a fallback text representation.
-
-         - parameter image: The component’s preferred image representation.
-         - parameter alternativeText: The component’s alternative text representation. Use this representation if the image representation is unavailable or unusable, but consider formatting the text in a special way to distinguish it from an ordinary `.text` component.
-         */
+        /// The component is an image, such as a [route marker](https://en.wikipedia.org/wiki/Highway_shield), with a
+        /// fallback text representation.
+        ///
+        /// - Parameter image: The component’s preferred image representation.
+        /// - Parameter alternativeText: The component’s alternative text representation. Use this representation if the
+        /// image representation is unavailable or unusable, but consider formatting the text in a special way to
+        /// distinguish it from an ordinary ``VisualInstruction/Component/text(text:)`` component.
         case image(image: ImageRepresentation, alternativeText: TextRepresentation)
 
-        /**
-         The component is an image of a zoomed junction, with a fallback text representation.
-         */
+        /// The component is an image of a zoomed junction, with a fallback text representation.
         case guidanceView(image: GuidanceViewImageRepresentation, alternativeText: TextRepresentation)
 
-        /**
-         The component contains the localized word for “Exit”.
-
-         This component may appear before or after an `.exitCode` component, depending on the language. You can hide this component if the adjacent `.exitCode` component has an obvious exit-number appearance, for example with an accompanying [motorway exit icon](https://commons.wikimedia.org/wiki/File:Sinnbild_Autobahnausfahrt.svg).
-         */
+        /// The component contains the localized word for “Exit”.
+        ///
+        /// This component may appear before or after an ``VisualInstruction/Component/exitCode(text:)`` component,
+        /// depending on the language. You can hide this component if the adjacent
+        /// ``VisualInstruction/Component/exitCode(text:)`` component has an obvious exit-number appearance, for example
+        /// with an accompanying [motorway exit
+        /// icon](https://commons.wikimedia.org/wiki/File:Sinnbild_Autobahnausfahrt.svg).
         case exit(text: TextRepresentation)
 
-        /**
-         The component contains an exit number.
-
-         You can hide the adjacent `.exit` component in favor of giving this component an obvious exit-number appearance, for example by pairing it with a [motorway exit icon](https://commons.wikimedia.org/wiki/File:Sinnbild_Autobahnausfahrt.svg).
-         */
+        /// The component contains an exit number.
+        ///
+        /// You can hide the adjacent ``VisualInstruction/Component/exit(text:)`` component in favor of giving this
+        /// component an obvious exit-number appearance, for example by pairing it with a [motorway exit
+        /// icon](https://commons.wikimedia.org/wiki/File:Sinnbild_Autobahnausfahrt.svg).
         case exitCode(text: TextRepresentation)
 
-        /**
-         A component that represents a turn lane or through lane at the approach to an intersection.
-
-         - parameter indications: The direction or directions of travel that the lane is reserved for.
-         - parameter isUsable: Whether the user can use this lane to continue along the current route.
-         - parameter preferredDirection: Which of the `indications` is applicable to the current route when there is more than one
-         */
+        /// A component that represents a turn lane or through lane at the approach to an intersection.
+        ///
+        /// - parameter indications: The direction or directions of travel that the lane is reserved for.
+        /// - parameter isUsable: Whether the user can use this lane to continue along the current route.
+        /// - parameter preferredDirection: Which of the `indications` is applicable to the current route when there is
+        /// more than one
         case lane(indications: LaneIndication, isUsable: Bool, preferredDirection: ManeuverDirection?)
     }
 }
 
 extension VisualInstruction.Component {
-    /**
-     A textual representation of a visual instruction component.
-     */
+    /// A textual representation of a visual instruction component.
     public struct TextRepresentation: Equatable, Sendable {
-        /**
-         Initializes a text representation bearing the given abbreviatable text.
-         */
+        /// Initializes a text representation bearing the given abbreviatable text.
         public init(text: String, abbreviation: String?, abbreviationPriority: Int?) {
             self.text = text
             self.abbreviation = abbreviation
             self.abbreviationPriority = abbreviationPriority
         }
 
-        /**
-         The plain text representation of this component.
-         */
+        /// The plain text representation of this component.
         public let text: String
 
-        /**
-         An abbreviated representation of the `text` property.
-         */
+        /// An abbreviated representation of the `text` property.
         public let abbreviation: String?
 
-        /**
-         The priority for which the component should be abbreviated.
-
-         A component with a lower abbreviation priority value should be abbreviated before a component with a higher abbreviation priority value.
-         */
+        /// The priority for which the component should be abbreviated.
+        ///
+        /// A component with a lower abbreviation priority value should be abbreviated before a component with a higher
+        /// abbreviation priority value.
         public let abbreviationPriority: Int?
     }
 
-    /**
-     An image representation of a visual instruction component.
-     */
+    /// An image representation of a visual instruction component.
     public struct ImageRepresentation: Equatable, Sendable {
-        /**
-         File formats of visual instruction component images.
-         */
+        /// File formats of visual instruction component images.
         public enum Format: String, Sendable {
             /// Portable Network Graphics (PNG)
             case png
@@ -124,31 +101,25 @@ extension VisualInstruction.Component {
             case svg
         }
 
-        /**
-         Initializes an image representation bearing the image at the given base URL.
-         */
+        /// Initializes an image representation bearing the image at the given base URL.
         public init(imageBaseURL: URL?, shield: ShieldRepresentation? = nil) {
             self.imageBaseURL = imageBaseURL
             self.shield = shield
         }
 
-        /**
-         The URL whose path is the prefix of all the possible URLs returned by `imageURL(scale:format:)`.
-         */
+        /// The URL whose path is the prefix of all the possible URLs returned by `imageURL(scale:format:)`.
         public let imageBaseURL: URL?
 
-        /**
-         Optionally, a structured image representation for displaying a [highway shield](https://en.wikipedia.org/wiki/Highway_shield).
-         */
+        /// Optionally, a structured image representation for displaying a [highway
+        /// shield](https://en.wikipedia.org/wiki/Highway_shield).
         public let shield: ShieldRepresentation?
 
-        /**
-         Returns a remote URL to the image file that represents the component.
-
-         - parameter scale: The image’s scale factor. If this argument is unspecified, the current screen’s native scale factor is used. Only the values 1, 2, and 3 are currently supported.
-         - parameter format: The file format of the image. If this argument is unspecified, PNG is used.
-         - returns: A remote URL to the image.
-         */
+        /// Returns a remote URL to the image file that represents the component.
+        /// - Parameters:
+        ///   - scale: The image’s scale factor. If this argument is unspecified, the current screen’s native scale
+        /// factor is used. Only the values 1, 2, and 3 are currently supported.
+        ///   - format: The file format of the image. If this argument is unspecified, PNG is used.
+        /// - Returns: A remote URL to the image.
         public func imageURL(scale: Scale, format: Format = .png) -> URL? {
             guard let imageBaseURL,
                   var imageURLComponents = URLComponents(url: imageBaseURL, resolvingAgainstBaseURL: false)
@@ -160,13 +131,9 @@ extension VisualInstruction.Component {
         }
     }
 
-    /**
-     A mapbox shield representation of a visual instruction component.
-     */
+    /// A mapbox shield representation of a visual instruction component.
     public struct ShieldRepresentation: Equatable, Codable, Sendable {
-        /**
-         Initializes a mapbox shield with the given name, text color, and display ref.
-         */
+        /// Initializes a mapbox shield with the given name, text color, and display ref.
         public init(baseURL: URL, name: String, textColor: String, text: String) {
             self.baseURL = baseURL
             self.name = name
@@ -174,24 +141,16 @@ extension VisualInstruction.Component {
             self.text = text
         }
 
-        /**
-         Base URL to query the styles endpoint.
-         */
+        /// Base URL to query the styles endpoint.
         public let baseURL: URL
 
-        /**
-         String indicating the name of the route shield.
-         */
+        /// String indicating the name of the route shield.
         public let name: String
 
-        /**
-         String indicating the color of the text to be rendered on the route shield.
-         */
+        /// String indicating the color of the text to be rendered on the route shield.
         public let textColor: String
 
-        /**
-         String indicating the route reference code that will be displayed on the shield.
-         */
+        /// String indicating the route reference code that will be displayed on the shield.
         public let text: String
 
         private enum CodingKeys: String, CodingKey {
@@ -221,16 +180,12 @@ extension VisualInstruction.Component {
 
 /// A guidance view image representation of a visual instruction component.
 public struct GuidanceViewImageRepresentation: Equatable, Sendable {
-    /**
-     Initializes an image representation bearing the image at the given URL.
-     */
+    /// Initializes an image representation bearing the image at the given URL.
     public init(imageURL: URL?) {
         self.imageURL = imageURL
     }
 
-    /**
-     Returns a remote URL to the image file that represents the component.
-     */
+    /// Returns a remote URL to the image file that represents the component.
     public let imageURL: URL?
 }
 

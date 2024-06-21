@@ -1,26 +1,14 @@
 import Foundation
 
-/**
- :nodoc:
- Provides information about amenity that is available at a given `RestStop`.
- */
+/// Provides information about amenity that is available at a given ``RestStop``.
 public struct Amenity: Codable, Equatable, Sendable {
-    /**
-     :nodoc:
-     Name of the amenity, if available.
-     */
+    /// Name of the amenity, if available.
     public let name: String?
 
-    /**
-     :nodoc:
-     Brand of the amenity, if available.
-     */
+    /// Brand of the amenity, if available.
     public let brand: String?
 
-    /**
-     :nodoc:
-     Type of the amenity.
-     */
+    /// Type of the amenity.
     public let type: AmenityType
 
     private enum CodingKeys: String, CodingKey {
@@ -29,14 +17,11 @@ public struct Amenity: Codable, Equatable, Sendable {
         case brand
     }
 
-    /**
-     :nodoc:
-     Initializes an `Amenity`.
-
-     - parameter type: Type of the amenity.
-     - parameter name: Name of the amenity.
-     - parameter brand: Brand of the amenity.
-     */
+    /// Initializes an ``Amenity``.
+    /// - Parameters:
+    ///   - type: Type of the amenity.
+    ///   - name: Name of the amenity.
+    ///   - brand: Brand of the amenity.
     public init(type: AmenityType, name: String? = nil, brand: String? = nil) {
         self.type = type
         self.name = name

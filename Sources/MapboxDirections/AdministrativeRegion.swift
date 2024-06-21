@@ -1,13 +1,10 @@
 import Foundation
 import Turf
 
-/**
- `AdministrativeRegion` describes corresponding object on the route.
-
- You can also use `Intersection.regionCode` or `RouteStep.regionCode(atStepIndex:, intersectionIndex:)` to retrieve ISO 3166-1 country code
-
- - seealso: `Intersection.regionCode`, `RouteStep.regionCode(atStepIndex:, intersectionIndex:)`
- */
+/// ``AdministrativeRegion`` describes corresponding object on the route.
+///
+/// You can also use ``Intersection/regionCode`` or ``RouteLeg/regionCode(atStepIndex:intersectionIndex:)`` to
+/// retrieve ISO 3166-1 country code.
 public struct AdministrativeRegion: Codable, Equatable, ForeignMemberContainer, Sendable {
     public var foreignMembers: JSONObject = [:]
 

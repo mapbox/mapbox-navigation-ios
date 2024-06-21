@@ -8,43 +8,40 @@ typealias JSONDictionary = [String: Any]
 /// Indicates that an error occurred in MapboxDirections.
 public let MBDirectionsErrorDomain = "com.mapbox.directions.ErrorDomain"
 
-/**
- A `Directions` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to the [Mapbox Directions API](https://docs.mapbox.com/api/navigation/#directions) and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned.
-
- Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
- */
+/// A `Directions` object provides you with optimal directions between different locations, or waypoints. The directions
+/// object passes your request to the [Mapbox Directions API](https://docs.mapbox.com/api/navigation/#directions) and
+/// returns the requested information to a closure (block) that you provide. A directions object can handle multiple
+/// simultaneous requests. A ``RouteOptions`` object specifies criteria for the results, such as intermediate waypoints,
+/// a mode of transportation, or the level of detail to be returned.
+///
+/// Each result produced by the directions object is stored in a ``Route`` object. Depending on the ``RouteOptions``
+/// object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may
+/// include only high-level information such as the distance, estimated travel time, and name of each leg of the trip.
+/// The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints
+/// are provided to the closure.
 @_documentation(visibility: internal)
 open class Directions: @unchecked Sendable {
-    /**
-     A closure (block) to be called when a directions request is complete.
-
-     - parameter session: A `Directions.Session` object containing session information
-
-     - parameter result: A `Result` enum that represents the `RouteResponse` if the request returned successfully, or the error if it did not.
-     */
+    /// A closure (block) to be called when a directions request is complete.
+    ///
+    /// - Parameter result: A `Result` enum that represents the ``RouteResponse`` if the request returned successfully,
+    /// or the error if it did not.
     public typealias RouteCompletionHandler = @Sendable (
         _ result: Result<RouteResponse, DirectionsError>
     ) -> Void
 
-    /**
-     A closure (block) to be called when a map matching request is complete.
-
-     - parameter session: A `Directions.Session` object containing session information
-
-     - parameter result: A `Result` enum that represents the `MapMatchingResponse` if the request returned successfully, or the error if it did not.
-     */
+    /// A closure (block) to be called when a map matching request is complete.
+    ///
+    /// - Parameter result: A `Result` enum that represents the ``MapMatchingResponse`` if the request returned
+    /// successfully, or the error if it did not.
     public typealias MatchCompletionHandler = @Sendable (
         _ result: Result<MapMatchingResponse, DirectionsError>
     ) -> Void
 
-    /**
-     A closure (block) to be called when a directions refresh request is complete.
-
-     - parameter credentials: An object containing the credentials used to make the request.
-     - parameter result: A `Result` enum that represents the `RouteRefreshResponse` if the request returned successfully, or the error if it did not.
-
-     - postcondition: To update the original route, pass `RouteRefreshResponse.route` into the `Route.refreshLegAttributes(from:)`, `Route.refreshLegIncidents(from:)`, `Route.refreshLegClosures(from:legIndex:legShapeIndex:)` or `Route.refresh(from:refreshParameters:)` methods.
-     */
+    /// A closure (block) to be called when a directions refresh request is complete.
+    ///
+    ///  - parameter credentials: An object containing the credentials used to make the request.
+    ///  - parameter result: A `Result` enum that represents the ``RouteRefreshResponse`` if the request returned
+    /// successfully, or the error if it did not.
     public typealias RouteRefreshCompletionHandler = @Sendable (
         _ credentials: Credentials,
         _ result: Result<RouteRefreshResponse, DirectionsError>
@@ -52,30 +49,25 @@ open class Directions: @unchecked Sendable {
 
     // MARK: Creating a Directions Object
 
-    /**
-     The shared directions object.
-
-     To use this object, a Mapbox [access token](https://docs.mapbox.com/help/glossary/access-token/) should be specified in the `MBXAccessToken` key in the main application bundle’s Info.plist.
-     */
+    /// The shared directions object.
+    ///
+    /// To use this object, a Mapbox [access token](https://docs.mapbox.com/help/glossary/access-token/) should be
+    /// specified in the `MBXAccessToken` key in the main application bundle’s Info.plist.
     public static let shared: Directions = .init()
 
-    /**
-     The Authorization & Authentication credentials that are used for this service.
-
-     If nothing is provided, the default behavior is to read credential values from the developer's Info.plist.
-     */
+    /// The Authorization & Authentication credentials that are used for this service.
+    ///
+    /// If nothing is provided, the default behavior is to read credential values from the developer's Info.plist.
     public let credentials: Credentials
 
     private let urlSession: URLSession
     private let processingQueue: DispatchQueue
 
-    /**
-     Creates a new instance of Directions object.
-     - Parameters:
-       - credentials: Credentials that will be used to make API requests to Mapbox Directions API.
-       - urlSession: URLSession that will be used to submit API requests to Mapbox Directions API.
-       - processingQueue: A DispatchQueue that will be used for CPU intensive work.
-     */
+    /// Creates a new instance of Directions object.
+    /// - Parameters:
+    ///    - credentials: Credentials that will be used to make API requests to Mapbox Directions API.
+    ///    - urlSession: URLSession that will be used to submit API requests to Mapbox Directions API.
+    ///    - processingQueue: A DispatchQueue that will be used for CPU intensive work.
     public init(
         credentials: Credentials = .init(),
         urlSession: URLSession = .shared,
@@ -88,17 +80,20 @@ open class Directions: @unchecked Sendable {
 
     // MARK: Getting Directions
 
-    /**
-     Begins asynchronously calculating routes using the given options and delivers the results to a closure.
-
-     This method retrieves the routes asynchronously from the [Mapbox Directions API](https://www.mapbox.com/api-documentation/navigation/#directions) over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-
-     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/).
-
-     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
-     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
-     - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
-     */
+    /// Begins asynchronously calculating routes using the given options and delivers the results to a closure.
+    ///
+    /// This method retrieves the routes asynchronously from the [Mapbox Directions
+    /// API](https://www.mapbox.com/api-documentation/navigation/#directions) over a network connection. If a connection
+    /// error or server error occurs, details about the error are passed into the given completion handler in lieu of
+    /// the routes.
+    ///
+    /// Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/).
+    /// - Parameters:
+    ///   - options: A ``RouteOptions`` object specifying the requirements for the resulting routes.
+    ///   - completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the
+    /// application’s main thread.
+    /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
+    /// execute, you no longer want the resulting routes, cancel this task.
     @discardableResult
     open func calculate(
         _ options: RouteOptions,
@@ -172,17 +167,19 @@ open class Directions: @unchecked Sendable {
         return requestTask
     }
 
-    /**
-     Begins asynchronously calculating matches using the given options and delivers the results to a closure.
-
-     This method retrieves the matches asynchronously from the [Mapbox Map Matching API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-
-     To get `Route`s based on these matches, use the `calculateRoutes(matching:completionHandler:)` method instead.
-
-     - parameter options: A `MatchOptions` object specifying the requirements for the resulting matches.
-     - parameter completionHandler: The closure (block) to call with the resulting matches. This closure is executed on the application’s main thread.
-     - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting matches, cancel this task.
-     */
+    /// Begins asynchronously calculating matches using the given options and delivers the results to a closure.This
+    /// method retrieves the matches asynchronously from the [Mapbox Map Matching
+    /// API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection. If a connection error or
+    /// server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
+    ///
+    ///  To get ``Route``s based on these matches, use the `calculateRoutes(matching:completionHandler:)` method
+    /// instead.
+    /// - Parameters:
+    ///   - options: A ``MatchOptions`` object specifying the requirements for the resulting matches.
+    ///   - completionHandler: The closure (block) to call with the resulting matches. This closure is executed on the
+    /// application’s main thread.
+    /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
+    /// execute, you no longer want the resulting matches, cancel this task.
     @discardableResult
     open func calculate(
         _ options: MatchOptions,
@@ -260,17 +257,19 @@ open class Directions: @unchecked Sendable {
         return requestTask
     }
 
-    /**
-     Begins asynchronously calculating routes that match the given options and delivers the results to a closure.
-
-     This method retrieves the routes asynchronously from the [Mapbox Map Matching API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-
-     To get the `Match`es that these routes are based on, use the `calculate(_:completionHandler:)` method instead.
-
-     - parameter options: A `MatchOptions` object specifying the requirements for the resulting match.
-     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
-     - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
-     */
+    /// Begins asynchronously calculating routes that match the given options and delivers the results to a closure.
+    ///
+    /// This method retrieves the routes asynchronously from the [Mapbox Map Matching
+    /// API](https://docs.mapbox.com/api/navigation/#map-matching) over a network connection. If a connection error or
+    /// server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
+    ///
+    /// To get the ``Match``es that these routes are based on, use the `calculate(_:completionHandler:)` method instead.
+    /// - Parameters:
+    ///   - options: A ``MatchOptions`` object specifying the requirements for the resulting match.
+    ///   - completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the
+    /// application’s main thread.
+    /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
+    /// execute, you no longer want the resulting routes, cancel this task.
     @discardableResult
     open func calculateRoutes(
         matching options: MatchOptions,
@@ -349,19 +348,25 @@ open class Directions: @unchecked Sendable {
         return requestTask
     }
 
-    /**
-     Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg along the route.
-
-     This method retrieves skeleton route data asynchronously from the Mapbox Directions Refresh API over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-
-     - precondition: Set `RouteOptions.refreshingEnabled` to `true` when calculating the original route.
-
-     - parameter responseIdentifier: The `RouteResponse.identifier` value of the `RouteResponse` that contains the route to refresh.
-     - parameter routeIndex: The index of the route to refresh in the original `RouteResponse.routes` array.
-     - parameter startLegIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted, the entire route is refreshed.
-     - parameter completionHandler: The closure (block) to call with the resulting skeleton route data. This closure is executed on the application’s main thread.
-     - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting skeleton routes, cancel this task.
-     */
+    /// Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg
+    /// along the route.
+    ///
+    /// This method retrieves skeleton route data asynchronously from the Mapbox Directions Refresh API over a network
+    /// connection. If a connection error or server error occurs, details about the error are passed into the given
+    /// completion handler in lieu of the routes.
+    ///
+    /// - Precondition: Set ``RouteOptions/refreshingEnabled`` to `true` when calculating the original route.
+    /// - Parameters:
+    ///   - responseIdentifier: The ``RouteResponse/identifier`` value of the ``RouteResponse`` that contains the route
+    /// to refresh.
+    ///   - routeIndex: The index of the route to refresh in the original ``RouteResponse/routes`` array.
+    ///   - startLegIndex: The index of the leg in the route at which to begin refreshing. The response will omit any
+    /// leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted,
+    /// the entire route is refreshed.
+    ///   - completionHandler: The closure (block) to call with the resulting skeleton route data. This closure is
+    /// executed on the application’s main thread.
+    /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
+    /// execute, you no longer want the resulting skeleton routes, cancel this task.
     @discardableResult
     open func refreshRoute(
         responseIdentifier: String,
@@ -378,20 +383,27 @@ open class Directions: @unchecked Sendable {
         )
     }
 
-    /**
-     Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg and point along the route.
-
-     This method retrieves skeleton route data asynchronously from the Mapbox Directions Refresh API over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-
-     - precondition: Set `RouteOptions.refreshingEnabled` to `true` when calculating the original route.
-
-     - parameter responseIdentifier: The `RouteResponse.identifier` value of the `RouteResponse` that contains the route to refresh.
-     - parameter routeIndex: The index of the route to refresh in the original `RouteResponse.routes` array.
-     - parameter startLegIndex: The index of the leg in the route at which to begin refreshing. The response will omit any leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted, the entire route is refreshed.
-     - parameter currentRouteShapeIndex: The index of the route geometry at which to begin refreshing. Indexed geometry must be contained by the leg at `startLegIndex`.
-     - parameter completionHandler: The closure (block) to call with the resulting skeleton route data. This closure is executed on the application’s main thread.
-     - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting skeleton routes, cancel this task.
-     */
+    /// Begins asynchronously refreshing the route with the given identifier, optionally starting from an arbitrary leg
+    /// and point along the route.
+    ///
+    /// This method retrieves skeleton route data asynchronously from the Mapbox Directions Refresh API over a network
+    /// connection. If a connection error or server error occurs, details about the error are passed into the given
+    /// completion handler in lieu of the routes.
+    ///
+    /// - Precondition: Set ``RouteOptions/refreshingEnabled`` to `true` when calculating the original route.
+    /// - Parameters:
+    ///   - responseIdentifier: The ``RouteResponse/identifier`` value of the ``RouteResponse`` that contains the route
+    /// to refresh.
+    ///   - routeIndex: The index of the route to refresh in the original ``RouteResponse/routes`` array.
+    ///   - startLegIndex: The index of the leg in the route at which to begin refreshing. The response will omit any
+    /// leg before this index and refresh any leg from this index to the end of the route. If this argument is omitted,
+    /// the entire route is refreshed.
+    ///   - currentRouteShapeIndex: The index of the route geometry at which to begin refreshing. Indexed geometry must
+    /// be contained by the leg at `startLegIndex`.
+    ///   - completionHandler: The closure (block) to call with the resulting skeleton route data. This closure is
+    /// executed on the application’s main thread.
+    /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
+    /// execute, you no longer want the resulting skeleton routes, cancel this task.
     @discardableResult
     open func refreshRoute(
         responseIdentifier: String,
@@ -567,14 +579,13 @@ open class Directions: @unchecked Sendable {
         return request
     }
 
-    /**
-     The GET HTTP URL used to fetch the routes from the API.
-
-     After requesting the URL returned by this method, you can parse the JSON data in the response and pass it into the ``Route/init(from:)`` initializer. Alternatively, you can use the ``calculate(_:completionHandler:)-8je4q`` method, which automatically sends the request and parses the response.
-
-     - parameter options: A `DirectionsOptions` object specifying the requirements for the resulting routes.
-     - returns: The URL to send the request to.
-     */
+    /// The GET HTTP URL used to fetch the routes from the API.
+    ///
+    /// After requesting the URL returned by this method, you can parse the JSON data in the response and pass it into
+    /// the ``Route/init(from:)`` initializer. Alternatively, you can use the ``calculate(_:completionHandler:)-8je4q``
+    /// method, which automatically sends the request and parses the response.
+    /// - Parameter options: A ``DirectionsOptions`` object specifying the requirements for the resulting routes.
+    /// - Returns: The URL to send the request to.
     open func url(forCalculating options: DirectionsOptions) -> URL {
         return url(forCalculating: options, httpMethod: "GET")
     }
@@ -642,16 +653,16 @@ open class Directions: @unchecked Sendable {
         return components.url!
     }
 
-    /**
-     The HTTP request used to fetch the routes from the API.
-
-     The returned request is a GET or POST request as necessary to accommodate URL length limits.
-
-     After sending the request returned by this method, you can parse the JSON data in the response and pass it into the `Route.init(json:waypoints:profileIdentifier:)` initializer. Alternatively, you can use the `calculate(_:options:)` method, which automatically sends the request and parses the response.
-
-     - parameter options: A `DirectionsOptions` object specifying the requirements for the resulting routes.
-     - returns: A GET or POST HTTP request to calculate the specified options.
-     */
+    /// The HTTP request used to fetch the routes from the API.
+    ///
+    /// The returned request is a GET or POST request as necessary to accommodate URL length limits.
+    ///
+    /// After sending the request returned by this method, you can parse the JSON data in the response and pass it into
+    /// the ``Route.init(json:waypoints:profileIdentifier:)`` initializer. Alternatively, you can use the
+    /// `calculate(_:options:)` method, which automatically sends the request and parses the response.
+    ///
+    /// - Parameter options: A ``DirectionsOptions`` object specifying the requirements for the resulting routes.
+    /// - Returns: A GET or POST HTTP request to calculate the specified options.
     open func urlRequest(forCalculating options: DirectionsOptions) -> URLRequest {
         if options.waypoints.count < 2 { assertionFailure("waypoints array requires at least 2 waypoints") }
         let getURL = Self.url(forCalculating: options, credentials: credentials, httpMethod: "GET")
@@ -672,9 +683,8 @@ open class Directions: @unchecked Sendable {
 @available(*, unavailable)
 extension Directions: @unchecked Sendable {}
 
-/**
-    Keys to pass to populate a `userInfo` dictionary, which is passed to the `JSONDecoder` upon trying to decode a `RouteResponse`, `MapMatchingResponse`or `RouteRefreshResponse`.
- */
+/// Keys to pass to populate a `userInfo` dictionary, which is passed to the `JSONDecoder` upon trying to decode a
+/// ``RouteResponse``, ``MapMatchingResponse`` or ``RouteRefreshResponse``.
 extension CodingUserInfoKey {
     public static let options = CodingUserInfoKey(rawValue: "com.mapbox.directions.coding.routeOptions")!
     public static let httpResponse = CodingUserInfoKey(rawValue: "com.mapbox.directions.coding.httpResponse")!

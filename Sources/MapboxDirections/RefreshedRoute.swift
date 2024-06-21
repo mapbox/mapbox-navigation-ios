@@ -1,15 +1,11 @@
 import Foundation
 import Turf
 
-/**
- A skeletal route containing only the information about the route that has been refreshed.
- */
+/// A skeletal route containing only the information about the route that has been refreshed.
 public struct RefreshedRoute: ForeignMemberContainer, Equatable {
     public var foreignMembers: JSONObject = [:]
 
-    /**
-     The legs along the route, starting at the first refreshed leg index.
-     */
+    /// The legs along the route, starting at the first refreshed leg index.
     public var legs: [RefreshedRouteLeg]
 }
 
@@ -33,9 +29,7 @@ extension RefreshedRoute: Codable {
     }
 }
 
-/**
- A skeletal route leg containing only the information about the route leg that has been refreshed.
- */
+/// A skeletal route leg containing only the information about the route leg that has been refreshed.
 public struct RefreshedRouteLeg: ForeignMemberContainer, Equatable {
     public var foreignMembers: JSONObject = [:]
 

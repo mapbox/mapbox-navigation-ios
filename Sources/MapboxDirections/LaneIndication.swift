@@ -1,11 +1,10 @@
 import Foundation
 
-/**
- Each of these options specifies a maneuver direction for which a given lane can
- be used.
-
- A Lane object has zero or more indications that usually correspond to arrows on signs or pavement markings. If no options are specified, it may be the case that no maneuvers are indicated on signage or pavement markings for the lane.
- */
+/// Each of these options specifies a maneuver direction for which a given lane can be used.
+///
+/// A Lane object has zero or more indications that usually correspond to arrows on signs or pavement markings. If no
+/// options are specified, it may be the case that no maneuvers are indicated on signage or pavement markings for the
+/// lane.
 public struct LaneIndication: OptionSet, CustomStringConvertible, Sendable {
     public var rawValue: Int
 
@@ -37,9 +36,7 @@ public struct LaneIndication: OptionSet, CustomStringConvertible, Sendable {
     /// Indicates a U-turn.
     public static let uTurn = LaneIndication(rawValue: 1 << 8)
 
-    /**
-     Creates a lane indication from the given description strings.
-     */
+    /// Creates a lane indication from the given description strings.
     public init?(descriptions: [String]) {
         var laneIndication: LaneIndication = []
         for description in descriptions {

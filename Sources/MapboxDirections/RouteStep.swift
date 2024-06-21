@@ -1,68 +1,55 @@
 import Foundation
 import Turf
 
-/**
- A ``TransportType`` specifies the mode of transportation used for part of a route.
- */
+/// A ``TransportType`` specifies the mode of transportation used for part of a route.
 public enum TransportType: String, Codable, Equatable, Sendable {
-    // Possible transport types when the `profileIdentifier` is `ProfileIdentifier.automobile` or
-    // `ProfileIdentifier.automobileAvoidingTraffic`
+    /// Possible transport types when the `profileIdentifier` is ``ProfileIdentifier/automobile`` or
+    /// ``ProfileIdentifier/automobileAvoidingTraffic``
 
-    /**
-     The route requires the user to drive or ride a car, truck, or motorcycle.
-
-     This is the usual transport type when the `profileIdentifier` is `ProfileIdentifier.automobile` or `ProfileIdentifier.automobileAvoidingTraffic`.
-     */
+    /// The route requires the user to drive or ride a car, truck, or motorcycle.
+    /// This is the usual transport type when the `profileIdentifier` is ``ProfileIdentifier/automobile`` or
+    /// ``ProfileIdentifier/automobileAvoidingTraffic``.
     case automobile = "driving" // automobile
 
-    /**
-     The route requires the user to board a ferry.
-
-     The user should verify that the ferry is in operation. For driving and cycling directions, the user should also verify that their vehicle is permitted onboard the ferry.
-     */
+    /// The route requires the user to board a ferry.
+    ///
+    /// The user should verify that the ferry is in operation. For driving and cycling directions, the user should also
+    /// verify that their vehicle is permitted onboard the ferry.
     case ferry // automobile, walking, cycling
 
-    /**
-     The route requires the user to cross a movable bridge.
-
-     The user may need to wait for the movable bridge to become passable before continuing.
-     */
+    /// The route requires the user to cross a movable bridge.
+    ///
+    /// The user may need to wait for the movable bridge to become passable before continuing.
     case movableBridge = "movable bridge" // automobile, cycling
 
-    /**
-     The route becomes impassable at this point.
-
-     You should not encounter this transport type under normal circumstances.
-     */
+    /// The route becomes impassable at this point.
+    ///
+    /// You should not encounter this transport type under normal circumstances.
     case inaccessible = "unaccessible" // automobile, walking, cycling
 
-    // Possible transport types when the `profileIdentifier` is `ProfileIdentifier.walking`
+    /// Possible transport types when the `profileIdentifier` is ``ProfileIdentifier/walking``
 
-    /**
-     The route requires the user to walk.
-
-     This is the usual transport type when the `profileIdentifier` is `ProfileIdentifier.walking`. For cycling directions, this value indicates that the user is expected to dismount.
-     */
+    /// The route requires the user to walk.
+    ///
+    /// This is the usual transport type when the `profileIdentifier` is ``ProfileIdentifier/walking``. For cycling
+    /// directions, this value indicates that the user is expected to dismount.
     case walking // walking, cycling
 
-    // Possible transport types when the `profileIdentifier` is `ProfileIdentifier.cycling`
+    /// Possible transport types when the `profileIdentifier` is ``ProfileIdentifier/cycling``
 
-    /**
-     The route requires the user to ride a bicycle.
-
-     This is the usual transport type when the `profileIdentifier` is `ProfileIdentifier.cycling`.
-     */
+    /// The route requires the user to ride a bicycle.
+    ///
+    /// This is the usual transport type when the `profileIdentifier` is ``ProfileIdentifier/cycling``.
     case cycling // cycling
 
-    /**
-     The route requires the user to board a train.
-
-     The user should consult the train’s timetable. For cycling directions, the user should also verify that bicycles are permitted onboard the train.
-     */
+    /// The route requires the user to board a train.
+    ///
+    /// The user should consult the train’s timetable. For cycling directions, the user should also verify that bicycles
+    /// are permitted onboard the train.
     case train // cycling
 
-    // Custom implementation of decoding is needed to circumvent issue reported in
-    // https://github.com/mapbox/mapbox-directions-swift/issues/413
+    /// Custom implementation of decoding is needed to circumvent issue reported in
+    /// https://github.com/mapbox/mapbox-directions-swift/issues/413
     public init(from decoder: Decoder) throws {
         let valueContainer = try decoder.singleValueContainer()
         let rawValue = try valueContainer.decode(String.self)
@@ -84,133 +71,130 @@ public enum TransportType: String, Codable, Equatable, Sendable {
     }
 }
 
-/**
- A `ManeuverType` specifies the type of maneuver required to complete the route step. You can pair a maneuver type with a `ManeuverDirection` to choose an appropriate visual or voice prompt to present the user.
-
- To avoid a complex series of if-else-if statements or switch statements, use pattern matching with a single switch statement on a tuple that consists of the maneuver type and maneuver direction.
- */
+/// A ``ManeuverType`` specifies the type of maneuver required to complete the route step. You can pair a maneuver type
+/// with a ``ManeuverDirection`` to choose an appropriate visual or voice prompt to present the user.
+///
+/// To avoid a complex series of if-else-if statements or switch statements, use pattern matching with a single switch
+/// statement on a tuple that consists of the maneuver type and maneuver direction.
 public enum ManeuverType: String, Codable, Equatable, Sendable {
-    /**
-     The step requires the user to depart from a waypoint.
-
-     If the waypoint is some distance away from the nearest road, the maneuver direction indicates the direction the user must turn upon reaching the road.
-     */
+    /// The step requires the user to depart from a waypoint.
+    ///
+    /// If the waypoint is some distance away from the nearest road, the maneuver direction indicates the direction the
+    /// user must turn upon reaching the road.
     case depart
 
-    /**
-     The step requires the user to turn.
-
-     The maneuver direction indicates the direction in which the user must turn relative to the current direction of travel. The exit index indicates the number of intersections, large or small, from the previous maneuver up to and including the intersection at which the user must turn.
-     */
+    /// The step requires the user to turn.
+    ///
+    /// The maneuver direction indicates the direction in which the user must turn relative to the current direction of
+    /// travel. The exit index indicates the number of intersections, large or small, from the previous maneuver up to
+    /// and including the intersection at which the user must turn.
     case turn
 
-    /**
-     The step requires the user to continue after a turn.
-     */
+    /// The step requires the user to continue after a turn.
     case `continue`
 
-    /**
-     The step requires the user to continue on the current road as it changes names.
-
-     The step’s name contains the road’s new name. To get the road’s old name, use the previous step’s name.
-     */
+    /// The step requires the user to continue on the current road as it changes names.
+    ///
+    /// The step’s name contains the road’s new name. To get the road’s old name, use the previous step’s name.
     case passNameChange = "new name"
 
-    /**
-     The step requires the user to merge onto another road.
-
-     The maneuver direction indicates the side from which the other road approaches the intersection relative to the user.
-     */
+    /// The step requires the user to merge onto another road.
+    ///
+    /// The maneuver direction indicates the side from which the other road approaches the intersection relative to the
+    /// user.
     case merge
 
-    /**
-     The step requires the user to take a entrance ramp (slip road) onto a highway.
-     */
+    /// The step requires the user to take a entrance ramp (slip road) onto a highway.
     case takeOnRamp = "on ramp"
 
-    /**
-     The step requires the user to take an exit ramp (slip road) off a highway.
-
-     The maneuver direction indicates the side of the highway from which the user must exit. The exit index indicates the number of highway exits from the previous maneuver up to and including the exit that the user must take.
-     */
+    /// The step requires the user to take an exit ramp (slip road) off a highway.
+    ///
+    /// The maneuver direction indicates the side of the highway from which the user must exit. The exit index indicates
+    /// the number of highway exits from the previous maneuver up to and including the exit that the user must take.
     case takeOffRamp = "off ramp"
 
-    /**
-     The step requires the user to choose a fork at a Y-shaped fork in the road.
-
-     The maneuver direction indicates which fork to take.
-     */
+    /// The step requires the user to choose a fork at a Y-shaped fork in the road.
+    ///
+    /// The maneuver direction indicates which fork to take.
     case reachFork = "fork"
 
-    /**
-     The step requires the user to turn at either a T-shaped three-way intersection or a sharp bend in the road where the road also changes names.
-
-     This maneuver type is called out separately so that the user may be able to proceed more confidently, without fear of having overshot the turn. If this distinction is unimportant to you, you may treat the maneuver as an ordinary `turn`.
-     */
+    /// The step requires the user to turn at either a T-shaped three-way intersection or a sharp bend in the road where
+    /// the road also changes names.
+    ///
+    /// This maneuver type is called out separately so that the user may be able to proceed more confidently, without
+    /// fear of having overshot the turn. If this distinction is unimportant to you, you may treat the maneuver as an
+    /// ordinary ``ManeuverType/turn``.
     case reachEnd = "end of road"
 
-    /**
-     The step requires the user to get into a specific lane in order to continue along the current road.
-
-     The maneuver direction is set to `straightAhead`. Each of the first intersection’s usable approach lanes also has an indication of `straightAhead`. A maneuver in a different direction would instead have a maneuver type of `turn`.
-
-     This maneuver type is called out separately so that the application can present the user with lane guidance based on the first element in the `intersections` property. If lane guidance is unimportant to you, you may treat the maneuver as an ordinary `continue` or ignore it.
-     */
+    /// The step requires the user to get into a specific lane in order to continue along the current road.
+    ///
+    /// The maneuver direction is set to ``ManeuverDirection/straightAhead``. Each of the first intersection’s usable
+    /// approach lanes also has an indication of ``LaneIndication/straightAhead``. A maneuver in a different direction
+    /// would instead have a maneuver type of ``ManeuverType/turn``.
+    ///
+    /// This maneuver type is called out separately so that the application can present the user with lane guidance
+    /// based on the first element in the ``RouteStep/intersections`` property. If lane guidance is unimportant to you,
+    /// you may
+    /// treat the maneuver as an ordinary ``ManeuverType/continue`` or ignore it.
     case useLane = "use lane"
 
-    /**
-     The step requires the user to enter and traverse a roundabout (traffic circle or rotary).
-
-     The step has no name, but the exit name is the name of the road to take to exit the roundabout. The exit index indicates the number of roundabout exits up to and including the exit to take.
-
-     If `RouteOptions.includesExitRoundaboutManeuver` is set to `true`, this step is followed by an `.exitRoundabout` maneuver. Otherwise, this step represents the entire roundabout maneuver, from the entrance to the exit.
-     */
+    /// The step requires the user to enter and traverse a roundabout (traffic circle or rotary).
+    ///
+    /// The step has no name, but the exit name is the name of the road to take to exit the roundabout. The exit index
+    /// indicates the number of roundabout exits up to and including the exit to take.
+    ///
+    /// If ``RouteOptions/includesExitRoundaboutManeuver`` is set to `true`, this step is followed by an
+    /// ``ManeuverType/exitRoundabout`` maneuver. Otherwise, this step represents the entire roundabout maneuver, from
+    /// the entrance to the exit.
     case takeRoundabout = "roundabout"
 
-    /**
-     The step requires the user to enter and traverse a large, named roundabout (traffic circle or rotary).
-
-     The step’s name is the name of the roundabout. The exit name is the name of the road to take to exit the roundabout. The exit index indicates the number of rotary exits up to and including the exit that the user must take.
-
-     If `RouteOptions.includesExitRoundaboutManeuver` is set to `true`, this step is followed by an `.exitRotary` maneuver. Otherwise, this step represents the entire roundabout maneuver, from the entrance to the exit.
-     */
+    /// The step requires the user to enter and traverse a large, named roundabout (traffic circle or rotary).
+    ///
+    /// The step’s name is the name of the roundabout. The exit name is the name of the road to take to exit the
+    /// roundabout. The exit index indicates the number of rotary exits up to and including the exit that the user must
+    /// take.
+    ///
+    /// If ``RouteOptions/includesExitRoundaboutManeuver`` is set to `true`, this step is followed by an
+    /// ``ManeuverType/exitRotary`` maneuver. Otherwise, this step represents the entire roundabout maneuver, from the
+    /// entrance to the exit.
     case takeRotary = "rotary"
 
-    /**
-     The step requires the user to enter and exit a roundabout (traffic circle or rotary) that is compact enough to constitute a single intersection.
-
-     The step’s name is the name of the road to take after exiting the roundabout. This maneuver type is called out separately because the user may perceive the roundabout as an ordinary intersection with an island in the middle. If this distinction is unimportant to you, you may treat the maneuver as either an ordinary `turn` or as a `takeRoundabout`.
-     */
+    /// The step requires the user to enter and exit a roundabout (traffic circle or rotary) that is compact enough to
+    /// constitute a single intersection.
+    ///
+    /// The step’s name is the name of the road to take after exiting the roundabout. This maneuver type is called out
+    /// separately because the user may perceive the roundabout as an ordinary intersection with an island in the
+    /// middle. If this distinction is unimportant to you, you may treat the maneuver as either an ordinary
+    /// ``ManeuverType/turn`` or as a ``ManeuverType/takeRoundabout``.
     case turnAtRoundabout = "roundabout turn"
 
-    /**
-     The step requires the user to exit a roundabout (traffic circle or rotary).
-
-     This maneuver type follows a `.takeRoundabout` maneuver. It is only used when `RouteOptions.includesExitRoundaboutManeuver` is set to true.
-     */
+    /// The step requires the user to exit a roundabout (traffic circle or rotary).
+    ///
+    /// This maneuver type follows a ``ManeuverType/takeRoundabout`` maneuver. It is only used when
+    /// ``RouteOptions/includesExitRoundaboutManeuver`` is set to true.
     case exitRoundabout = "exit roundabout"
 
-    /**
-     The step requires the user to exit a large, named roundabout (traffic circle or rotary).
-
-     This maneuver type follows a `.takeRotary` maneuver. It is only used when `RouteOptions.includesExitRoundaboutManeuver` is set to true.
-     */
+    /// The step requires the user to exit a large, named roundabout (traffic circle or rotary).
+    ///
+    /// This maneuver type follows a ``ManeuverType/takeRotary`` maneuver. It is only used when
+    /// ``RouteOptions/includesExitRoundaboutManeuver`` is set to true.
     case exitRotary = "exit rotary"
 
-    /**
-     The step requires the user to respond to a change in travel conditions.
-
-     This maneuver type may occur for example when driving directions require the user to board a ferry, or when cycling directions require the user to dismount. The step’s transport type and instructions contains important contextual details that should be presented to the user at the maneuver location.
-
-     Similar changes can occur simultaneously with other maneuvers, such as when the road changes its name at the site of a movable bridge. In such cases, `heedWarning` is suppressed in favor of another maneuver type.
-     */
+    /// The step requires the user to respond to a change in travel conditions.
+    ///
+    /// This maneuver type may occur for example when driving directions require the user to board a ferry, or when
+    /// cycling directions require the user to dismount. The step’s transport type and instructions contains important
+    /// contextual details that should be presented to the user at the maneuver location.
+    ///
+    /// Similar changes can occur simultaneously with other maneuvers, such as when the road changes its name at the
+    /// site of a movable bridge. In such cases, ``heedWarning`` is suppressed in favor of another maneuver type.
     case heedWarning = "notification"
 
-    /**
-     The step requires the user to arrive at a waypoint.
-
-     The distance and expected travel time for this step are set to zero, indicating that the route or route leg is complete. The maneuver direction indicates the side of the road on which the waypoint can be found (or whether it is straight ahead).
-     */
+    /// The step requires the user to arrive at a waypoint.
+    ///
+    /// The distance and expected travel time for this step are set to zero, indicating that the route or route leg is
+    /// complete. The maneuver direction indicates the side of the road on which the waypoint can be found (or whether
+    /// it is straight ahead).
     case arrive
 
     // Unrecognized maneuver types are interpreted as turns.
@@ -218,50 +202,38 @@ public enum ManeuverType: String, Codable, Equatable, Sendable {
     static let `default` = ManeuverType.turn
 }
 
-/**
- A `ManeuverDirection` clarifies a `ManeuverType` with directional information. The exact meaning of the maneuver direction for a given step depends on the step’s maneuver type; see the `ManeuverType` documentation for details.
- */
+/// A ``ManeuverDirection`` clarifies a ``ManeuverType`` with directional information. The exact meaning of the maneuver
+/// direction for a given step depends on the step’s maneuver type; see the ``ManeuverType`` documentation for details.
 public enum ManeuverDirection: String, Codable, Equatable, Sendable {
-    /**
-     The maneuver requires a sharp turn to the right.
-     */
+    /// The maneuver requires a sharp turn to the right.
     case sharpRight = "sharp right"
 
-    /**
-     The maneuver requires a turn to the right, a merge to the right, or an exit on the right, or the destination is on the right.
-     */
+    /// The maneuver requires a turn to the right, a merge to the right, or an exit on the right, or the destination is
+    /// on the right.
     case right
 
-    /**
-     The maneuver requires a slight turn to the right.
-     */
+    /// The maneuver requires a slight turn to the right.
     case slightRight = "slight right"
 
-    /**
-     The maneuver requires no notable change in direction, or the destination is straight ahead.
-     */
+    /// The maneuver requires no notable change in direction, or the destination is straight ahead.
     case straightAhead = "straight"
 
-    /**
-     The maneuver requires a slight turn to the left.
-     */
+    /// The maneuver requires a slight turn to the left.
     case slightLeft = "slight left"
 
-    /**
-     The maneuver requires a turn to the left, a merge to the left, or an exit on the left, or the destination is on the right.
-     */
+    /// The maneuver requires a turn to the left, a merge to the left, or an exit on the left, or the destination is on
+    /// the right.
     case left
 
-    /**
-     The maneuver requires a sharp turn to the left.
-     */
+    /// The maneuver requires a sharp turn to the left.
     case sharpLeft = "sharp left"
 
-    /**
-     The maneuver requires a U-turn when possible.
-
-     Use the difference between the step’s initial and final headings to distinguish between a U-turn to the left (typical in countries that drive on the right) and a U-turn on the right (typical in countries that drive on the left). If the difference in headings is greater than 180 degrees, the maneuver requires a U-turn to the left. If the difference in headings is less than 180 degrees, the maneuver requires a U-turn to the right.
-     */
+    /// The maneuver requires a U-turn when possible.
+    ///
+    /// Use the difference between the step’s initial and final headings to distinguish between a U-turn to the left
+    /// (typical in countries that drive on the right) and a U-turn on the right (typical in countries that drive on the
+    /// left). If the difference in headings is greater than 180 degrees, the maneuver requires a U-turn to the left. If
+    /// the difference in headings is less than 180 degrees, the maneuver requires a U-turn to the right.
     case uTurn = "uturn"
 
     case undefined
@@ -276,24 +248,24 @@ public enum ManeuverDirection: String, Codable, Equatable, Sendable {
     }
 }
 
-/**
- A road sign design standard.
-
- A sign standard can affect how a user interface should display information related to the road. For example, a speed limit from the `RouteLeg.segmentMaximumSpeedLimits` property may appear in a different-looking view depending on the `RouteStep.speedLimitSign` property.
- */
+/// A road sign design standard.
+///
+/// A sign standard can affect how a user interface should display information related to the road. For example, a speed
+/// limit from the ``RouteLeg/segmentMaximumSpeedLimits`` property may appear in a different-looking view depending on
+/// the ``RouteStep/speedLimitSign` property.
 public enum SignStandard: String, Codable, Equatable, Sendable {
-    /**
-     The [Manual on Uniform Traffic Control Devices](https://en.wikipedia.org/wiki/Manual_on_Uniform_Traffic_Control_Devices).
-
-     This standard has been adopted by the United States and Canada, and several other countries have adopted parts of the standard as well.
-     */
+    /// The [Manual on Uniform Traffic Control
+    /// Devices](https://en.wikipedia.org/wiki/Manual_on_Uniform_Traffic_Control_Devices).
+    ///
+    /// This standard has been adopted by the United States and Canada, and several other countries have adopted parts
+    /// of the standard as well.
     case mutcd
 
-    /**
-     The [Vienna Convention on Road Signs and Signals](https://en.wikipedia.org/wiki/Vienna_Convention_on_Road_Signs_and_Signals).
-
-     This standard is prevalent in Europe and parts of Asia and Latin America. Countries in southern Africa and Central America have adopted similar regional standards.
-     */
+    /// The [Vienna Convention on Road Signs and
+    /// Signals](https://en.wikipedia.org/wiki/Vienna_Convention_on_Road_Signs_and_Signals).
+    ///
+    /// This standard is prevalent in Europe and parts of Asia and Latin America. Countries in southern Africa and
+    /// Central America have adopted similar regional standards.
     case viennaConvention = "vienna"
 }
 
@@ -309,9 +281,7 @@ extension [String] {
     }
 }
 
-/**
- Encapsulates all the information about a road.
- */
+/// Encapsulates all the information about a road.
 struct Road: Equatable, Sendable {
     let names: [String]?
     let codes: [String]?
@@ -412,11 +382,13 @@ extension Road: Codable {
     }
 }
 
-/**
- A `RouteStep` object represents a single distinct maneuver along a route and the approach to the next maneuver. The route step object corresponds to a single instruction the user must follow to complete a portion of the route. For example, a step might require the user to turn then follow a road.
-
- You do not create instances of this class directly. Instead, you receive route step objects as part of route objects when you request directions using the `Directions.calculate(_:completionHandler:)` method, setting the `includesSteps` option to `true` in the `RouteOptions` object that you pass into that method.
- */
+/// A ``RouteStep`` object represents a single distinct maneuver along a route and the approach to the next maneuver.
+/// The route step object corresponds to a single instruction the user must follow to complete a portion of the route.
+/// For example, a step might require the user to turn then follow a road.
+///
+/// You do not create instances of this class directly. Instead, you receive route step objects as part of route objects
+/// when you request directions using the `Directions.calculate(_:completionHandler:)` method, setting the
+/// ``DirectionsOptions/includesSteps`` option to `true` in the ``RouteOptions`` object that you pass into that method.
 public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
     public var foreignMembers: JSONObject = [:]
     public var maneuverForeignMembers: JSONObject = [:]
@@ -517,34 +489,43 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
 
     // MARK: Creating a Step
 
-    /**
-     Initializes a step.
-
-     - parameter transportType: The mode of transportation used for the step.
-     - parameter maneuverLocation: The location of the maneuver at the beginning of this step.
-     - parameter maneuverType: The type of maneuver required for beginning this step.
-     - parameter maneuverDirection: Additional directional information to clarify the maneuver type.
-     - parameter instructions: A string with instructions explaining how to perform the step’s maneuver.
-     - parameter initialHeading: The user’s heading immediately before performing the maneuver.
-     - parameter finalHeading: The user’s heading immediately after performing the maneuver.
-     - parameter drivingSide: Indicates what side of a bidirectional road the driver must be driving on. Also referred to as the rule of the road.
-     - parameter exitCodes: Any [exit numbers](https://en.wikipedia.org/wiki/Exit_number) assigned to the highway exit at the maneuver.
-     - parameter exitNames: The names of the roundabout exit.
-     - parameter phoneticExitNames: A phonetic or phonemic transcription indicating how to pronounce the names in the `exitNames` property.
-     - parameter distance: The step’s distance, measured in meters.
-     - parameter expectedTravelTime: The step's expected travel time, measured in seconds.
-     - parameter typicalTravelTime: The step's typical travel time, measured in seconds.
-     - parameter names: The names of the road or path leading from this step’s maneuver to the next step’s maneuver.
-     - parameter phoneticNames: A phonetic or phonemic transcription indicating how to pronounce the names in the `names` property.
-     - parameter codes: Any route reference codes assigned to the road or path leading from this step’s maneuver to the next step’s maneuver.
-     - parameter destinationCodes: Any route reference codes that appear on guide signage for the road leading from this step’s maneuver to the next step’s maneuver.
-     - parameter destinations: Destinations, such as [control cities](https://en.wikipedia.org/wiki/Control_city), that appear on guide signage for the road leading from this step’s maneuver to the next step’s maneuver.
-     - parameter intersections: An array of intersections along the step.
-     - parameter speedLimitSignStandard: The sign design standard used for speed limit signs along the step.
-     - parameter speedLimitUnit: The unit of speed limits on speed limit signs along the step.
-     - parameter instructionsSpokenAlongStep: Instructions about the next step’s maneuver, optimized for speech synthesis.
-     - parameter instructionsDisplayedAlongStep: Instructions about the next step’s maneuver, optimized for display in real time.
-     */
+    /// Initializes a step.
+    /// - Parameters:
+    ///   - transportType: The mode of transportation used for the step.
+    ///   - maneuverLocation: The location of the maneuver at the beginning of this step.
+    ///   - maneuverType: The type of maneuver required for beginning this step.
+    ///   - maneuverDirection: Additional directional information to clarify the maneuver type.
+    ///   - instructions: A string with instructions explaining how to perform the step’s maneuver.
+    ///   - initialHeading: The user’s heading immediately before performing the maneuver.
+    ///   - finalHeading: The user’s heading immediately after performing the maneuver.
+    ///   - drivingSide: Indicates what side of a bidirectional road the driver must be driving on. Also referred to as
+    /// the rule of the road.
+    ///   - exitCodes: Any [exit numbers](https://en.wikipedia.org/wiki/Exit_number) assigned to the highway exit at the
+    /// maneuver.
+    ///   - exitNames: The names of the roundabout exit.
+    ///   - phoneticExitNames: A phonetic or phonemic transcription indicating how to pronounce the names in the
+    /// ``exitNames`` property.
+    ///   - distance: The step’s distance, measured in meters.
+    ///   - expectedTravelTime: The step's expected travel time, measured in seconds.
+    ///   - typicalTravelTime: The step's typical travel time, measured in seconds.
+    ///   - names: The names of the road or path leading from this step’s maneuver to the next step’s maneuver.
+    ///   - phoneticNames: A phonetic or phonemic transcription indicating how to pronounce the names in the ``names``
+    /// property.
+    ///   - codes: Any route reference codes assigned to the road or path leading from this step’s maneuver to the next
+    /// step’s maneuver.
+    ///   - destinationCodes: Any route reference codes that appear on guide signage for the road leading from this
+    /// step’s maneuver to the next step’s maneuver.
+    ///   - destinations: Destinations, such as [control cities](https://en.wikipedia.org/wiki/Control_city), that
+    /// appear on guide signage for the road leading from this step’s maneuver to the next step’s maneuver.
+    ///   - intersections: An array of intersections along the step.
+    ///   - speedLimitSignStandard: The sign design standard used for speed limit signs along the step.
+    ///   - speedLimitUnit: The unit of speed limits on speed limit signs along the step.
+    ///   - instructionsSpokenAlongStep: Instructions about the next step’s maneuver, optimized for speech synthesis.
+    ///   - instructionsDisplayedAlongStep: Instructions about the next step’s maneuver, optimized for display in real
+    /// time.
+    ///   - administrativeAreaContainerByIntersection: administrative region indices for each ``Intersection`` along the
+    /// step.
+    ///   - segmentIndicesByIntersection: Segments indices for each ``Intersection`` along the step.
     public init(
         transportType: TransportType,
         maneuverLocation: Turf.LocationCoordinate2D,
@@ -829,228 +810,248 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
 
     // MARK: Getting the Shape of the Step
 
-    /**
-     The path of the route step from the location of the maneuver to the location of the next step’s maneuver.
-
-     The value of this property may be `nil`, for example when the maneuver type is `arrive`.
-
-     Using the [Mapbox Maps SDK for iOS](https://www.mapbox.com/ios-sdk/) or [Mapbox Maps SDK for macOS](https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/), you can create an `MGLPolyline` object using the `LineString.coordinates` property to display a portion of a route on an `MGLMapView`.
-     */
+    /// The path of the route step from the location of the maneuver to the location of the next step’s maneuver.
+    ///
+    /// The value of this property may be `nil`, for example when the maneuver type is ``ManeuverType/arrive``.
+    ///
+    /// Using the [Mapbox Maps SDK for iOS](https://www.mapbox.com/ios-sdk/) or [Mapbox Maps SDK for
+    /// macOS](https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/), you can create an `MGLPolyline`
+    /// object using the `LineString.coordinates` property to display a portion of a route on an `MGLMapView`.
     public var shape: LineString?
 
     // MARK: Getting the Mode of Transportation
 
-    /**
-     The mode of transportation used for the step.
-
-     This step may use a different mode of transportation than the overall route.
-     */
+    /// The mode of transportation used for the step.
+    ///
+    /// This step may use a different mode of transportation than the overall route.
     public let transportType: TransportType
 
     // MARK: Getting Details About the Maneuver
 
-    /**
-     The location of the maneuver at the beginning of this step.
-     */
+    /// The location of the maneuver at the beginning of this step.
     public let maneuverLocation: Turf.LocationCoordinate2D
 
-    /**
-     The type of maneuver required for beginning this step.
-     */
+    /// The type of maneuver required for beginning this step.
     public let maneuverType: ManeuverType
 
-    /**
-     Additional directional information to clarify the maneuver type.
-     */
+    /// Additional directional information to clarify the maneuver type.
     public let maneuverDirection: ManeuverDirection?
 
-    /**
-     A string with instructions explaining how to perform the step’s maneuver.
-
-     You can display this string or read it aloud to the user. The string does not include the distance to or from the maneuver. For instructions optimized for real-time delivery during turn-by-turn navigation, set the `RouteOptions.includesSpokenInstructions` option and use the `instructionsSpokenAlongStep` property. If you need customized instructions, you can construct them yourself from the step’s other properties or use [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions.swift/).
-
-     - note: If you use the MapboxDirections framework with the Mapbox Directions API, this property is formatted and localized for display to the user. If you use OSRM directly, this property contains a basic string that only includes the maneuver type and direction. Use [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions.swift/) to construct a complete, localized instruction string for display.
-     */
+    /// A string with instructions explaining how to perform the step’s maneuver.
+    ///
+    /// You can display this string or read it aloud to the user. The string does not include the distance to or from
+    /// the maneuver. For instructions optimized for real-time delivery during turn-by-turn navigation, set the
+    /// ``DirectionsOptions/includesSpokenInstructions`` option and use the ``instructionsSpokenAlongStep`` property. If
+    /// you need customized instructions, you can construct them yourself from the step’s other properties or use [OSRM
+    /// Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions.swift/).
+    ///
+    /// - Note: If you use the MapboxDirections framework with the Mapbox Directions API, this property is formatted and
+    /// localized for display to the user. If you use OSRM directly, this property contains a basic string that only
+    /// includes the maneuver type and direction. Use [OSRM Text
+    /// Instructions](https://github.com/Project-OSRM/osrm-text-instructions.swift/) to construct a complete, localized
+    /// instruction string for display.
     public let instructions: String
 
-    /**
-     The user’s heading immediately before performing the maneuver.
-     */
+    /// The user’s heading immediately before performing the maneuver.
     public let initialHeading: Turf.LocationDirection?
 
-    /**
-     The user’s heading immediately after performing the maneuver.
-
-     The value of this property may differ from the user’s heading after traveling along the road past the maneuver.
-     */
+    /// The user’s heading immediately after performing the maneuver.
+    ///
+    /// The value of this property may differ from the user’s heading after traveling along the road past the maneuver.
     public let finalHeading: Turf.LocationDirection?
 
-    /**
-     Indicates what side of a bidirectional road the driver must be driving on. Also referred to as the rule of the road.
-     */
+    /// Indicates what side of a bidirectional road the driver must be driving on. Also referred to as the rule of the
+    /// road.
     public let drivingSide: DrivingSide
 
-    /**
-     The number of exits from the previous maneuver up to and including this step’s maneuver.
-
-     If the maneuver takes place on a surface street, this property counts intersections. The number of intersections does not necessarily correspond to the number of blocks. If the maneuver takes place on a grade-separated highway (freeway or motorway), this property counts highway exits but not highway entrances. If the maneuver is a roundabout maneuver, the exit index is the number of exits from the approach to the recommended outlet. For the signposted exit numbers associated with a highway exit, use the `exitCodes` property.
-
-     In some cases, the number of exits leading to a maneuver may be more useful to the user than the distance to the maneuver.
-     */
+    /// The number of exits from the previous maneuver up to and including this step’s maneuver.
+    ///
+    /// If the maneuver takes place on a surface street, this property counts intersections. The number of intersections
+    /// does not necessarily correspond to the number of blocks. If the maneuver takes place on a grade-separated
+    /// highway (freeway or motorway), this property counts highway exits but not highway entrances. If the maneuver is
+    /// a roundabout maneuver, the exit index is the number of exits from the approach to the recommended outlet. For
+    /// the signposted exit numbers associated with a highway exit, use the ``exitCodes`` property.
+    ///
+    /// In some cases, the number of exits leading to a maneuver may be more useful to the user than the distance to the
+    /// maneuver.
     public var exitIndex: Int?
 
-    /**
-     Any [exit numbers](https://en.wikipedia.org/wiki/Exit_number) assigned to the highway exit at the maneuver.
-
-     This property is only set when the `maneuverType` is `ManeuverType.takeOffRamp`. For the number of exits from the previous maneuver, regardless of the highway’s exit numbering scheme, use the `exitIndex` property. For the route reference codes associated with the connecting road, use the `destinationCodes` property. For the names associated with a roundabout exit, use the `exitNames` property.
-
-     An exit number is an alphanumeric identifier posted at or ahead of a highway off-ramp. Exit numbers may increase or decrease sequentially along a road, or they may correspond to distances from either end of the road. An alphabetic suffix may appear when multiple exits are located in the same interchange. If multiple exits are [combined into a single exit](https://en.wikipedia.org/wiki/Local-express_lanes#Example_of_cloverleaf_interchanges), the step may have multiple exit codes.
-     */
+    /// Any [exit numbers](https://en.wikipedia.org/wiki/Exit_number) assigned to the highway exit at the maneuver.
+    ///
+    /// This property is only set when the ``maneuverType`` is ``ManeuverType/takeOffRamp``. For the number of exits
+    /// from the previous maneuver, regardless of the highway’s exit numbering scheme, use the ``exitIndex`` property.
+    /// For the route reference codes associated with the connecting road, use the ``destinationCodes`` property. For
+    /// the names associated with a roundabout exit, use the ``exitNames`` property.
+    ///
+    /// An exit number is an alphanumeric identifier posted at or ahead of a highway off-ramp. Exit numbers may increase
+    /// or decrease sequentially along a road, or they may correspond to distances from either end of the road. An
+    /// alphabetic suffix may appear when multiple exits are located in the same interchange. If multiple exits are
+    /// [combined into a single
+    /// exit](https://en.wikipedia.org/wiki/Local-express_lanes#Example_of_cloverleaf_interchanges), the step may have
+    /// multiple exit codes.
     public let exitCodes: [String]?
 
-    /**
-     The names of the roundabout exit.
-
-     This property is only set for roundabout (traffic circle or rotary) maneuvers. For the signposted names associated with a highway exit, use the `destinations` property. For the signposted exit numbers, use the `exitCodes` property.
-
-     If you display a name to the user, you may need to abbreviate common words like “East” or “Boulevard” to ensure that it fits in the allotted space.
-     */
+    /// The names of the roundabout exit.
+    ///
+    /// This property is only set for roundabout (traffic circle or rotary) maneuvers. For the signposted names
+    /// associated with a highway exit, use the ``destinations`` property. For the signposted exit numbers, use the
+    /// ``exitCodes`` property.
+    ///
+    /// If you display a name to the user, you may need to abbreviate common words like “East” or “Boulevard” to ensure
+    /// that it fits in the allotted space.
     public let exitNames: [String]?
 
-    /**
-     A phonetic or phonemic transcription indicating how to pronounce the names in the `exitNames` property.
-
-     This property is only set for roundabout (traffic circle or rotary) maneuvers.
-
-     The transcription is written in the [International Phonetic Alphabet](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet).
-     */
+    /// A phonetic or phonemic transcription indicating how to pronounce the names in the ``exitNames`` property.
+    ///
+    /// This property is only set for roundabout (traffic circle or rotary) maneuvers.
+    ///
+    /// The transcription is written in the [International Phonetic
+    /// Alphabet](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet).
     public let phoneticExitNames: [String]?
 
     // MARK: Getting Details About the Approach to the Next Maneuver
 
-    /**
-     The step’s distance, measured in meters.
-
-     The value of this property accounts for the distance that the user must travel to go from this step’s maneuver location to the next step’s maneuver location. It is not the sum of the direct distances between the route’s waypoints, nor should you assume that the user would travel along this distance at a fixed speed.
-     */
+    /// The step’s distance, measured in meters.
+    ///
+    /// The value of this property accounts for the distance that the user must travel to go from this step’s maneuver
+    /// location to the next step’s maneuver location. It is not the sum of the direct distances between the route’s
+    /// waypoints, nor should you assume that the user would travel along this distance at a fixed speed.
     public let distance: Turf.LocationDistance
 
-    /**
-     The step’s expected travel time, measured in seconds.
-
-     The value of this property reflects the time it takes to go from this step’s maneuver location to the next step’s maneuver location. If the route was calculated using the `ProfileIdentifier.automobileAvoidingTraffic` profile, this property reflects current traffic conditions at the time of the request, not necessarily the traffic conditions at the time the user would begin this step. For other profiles, this property reflects travel time under ideal conditions and does not account for traffic congestion. If the step makes use of a ferry or train, the actual travel time may additionally be subject to the schedules of those services.
-
-     Do not assume that the user would travel along the step at a fixed speed. For the expected travel time on each individual segment along the leg, specify the `AttributeOptions.expectedTravelTime` option and use the `RouteLeg.expectedSegmentTravelTimes` property.
-     */
+    /// The step’s expected travel time, measured in seconds.
+    ///
+    /// The value of this property reflects the time it takes to go from this step’s maneuver location to the next
+    /// step’s maneuver location. If the route was calculated using the ``ProfileIdentifier/automobileAvoidingTraffic``
+    /// profile, this property reflects current traffic conditions at the time of the request, not necessarily the
+    /// traffic conditions at the time the user would begin this step. For other profiles, this property reflects travel
+    /// time under ideal conditions and does not account for traffic congestion. If the step makes use of a ferry or
+    /// train, the actual travel time may additionally be subject to the schedules of those services.
+    ///
+    /// Do not assume that the user would travel along the step at a fixed speed. For the expected travel time on each
+    /// individual segment along the leg, specify the ``AttributeOptions/expectedTravelTime`` option and use the
+    /// ``RouteLeg/expectedSegmentTravelTimes`` property.
     public var expectedTravelTime: TimeInterval
 
-    /**
-     The step’s typical travel time, measured in seconds.
-
-     The value of this property reflects the typical time it takes to go from this step’s maneuver location to the next step’s maneuver location. This property is available when using the `ProfileIdentifier.automobileAvoidingTraffic` profile. This property reflects typical traffic conditions at the time of the request, not necessarily the typical traffic conditions at the time the user would begin this step. If the step makes use of a ferry, the typical travel time may additionally be subject to the schedule of this service.
-
-     Do not assume that the user would travel along the step at a fixed speed.
-     */
+    /// The step’s typical travel time, measured in seconds.
+    ///
+    /// The value of this property reflects the typical time it takes to go from this step’s maneuver location to the
+    /// next step’s maneuver location. This property is available when using the
+    /// ``ProfileIdentifier/automobileAvoidingTraffic`` profile. This property reflects typical traffic conditions at
+    /// the time of the request, not necessarily the typical traffic conditions at the time the user would begin this
+    /// step. If the step makes use of a ferry, the typical travel time may additionally be subject to the schedule of
+    /// this service.
+    ///
+    /// Do not assume that the user would travel along the step at a fixed speed.
     public var typicalTravelTime: TimeInterval?
 
-    /**
-     The names of the road or path leading from this step’s maneuver to the next step’s maneuver.
-
-     If the maneuver is a turning maneuver, the step’s names are the name of the road or path onto which the user turns. If you display a name to the user, you may need to abbreviate common words like “East” or “Boulevard” to ensure that it fits in the allotted space.
-
-     If the maneuver is a roundabout maneuver, the outlet to take is named in the `exitNames` property; the `names` property is only set for large roundabouts that have their own names.
-     */
+    /// The names of the road or path leading from this step’s maneuver to the next step’s maneuver.
+    ///
+    /// If the maneuver is a turning maneuver, the step’s names are the name of the road or path onto which the user
+    /// turns. If you display a name to the user, you may need to abbreviate common words like “East” or “Boulevard” to
+    /// ensure that it fits in the allotted space.
+    ///
+    /// If the maneuver is a roundabout maneuver, the outlet to take is named in the ``exitNames`` property; the
+    /// ``names`` property is only set for large roundabouts that have their own names.
     public let names: [String]?
 
-    /**
-     A phonetic or phonemic transcription indicating how to pronounce the names in the `names` property.
-
-     The transcription is written in the [International Phonetic Alphabet](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet).
-
-     If the maneuver traverses a large, named roundabout, the `exitPronunciationHints` property contains a hint about how to pronounce the names of the outlet to take.
-     */
+    /// A phonetic or phonemic transcription indicating how to pronounce the names in the `names` property.
+    ///
+    /// The transcription is written in the [International Phonetic
+    /// Alphabet](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet).
+    ///
+    /// If the maneuver traverses a large, named roundabout, this property contains a hint about how to pronounce the
+    /// names of the outlet to take.
     public let phoneticNames: [String]?
 
-    /**
-     Any route reference codes assigned to the road or path leading from this step’s maneuver to the next step’s maneuver.
-
-     A route reference code commonly consists of an alphabetic network code, a space or hyphen, and a route number. You should not assume that the network code is globally unique: for example, a network code of “NH” may indicate a “National Highway” or “New Hampshire”. Moreover, a route number may not even uniquely identify a route within a given network.
-
-     If a highway ramp is part of a numbered route, its reference code is contained in this property. On the other hand, guide signage for a highway ramp usually indicates route reference codes of the adjoining road; use the `destinationCodes` property for those route reference codes.
-     */
+    /// Any route reference codes assigned to the road or path leading from this step’s maneuver to the next step’s
+    /// maneuver.
+    ///
+    /// A route reference code commonly consists of an alphabetic network code, a space or hyphen, and a route number.
+    /// You should not assume that the network code is globally unique: for example, a network code of “NH” may indicate
+    /// a “National Highway” or “New Hampshire”. Moreover, a route number may not even uniquely identify a route within
+    /// a given network.
+    ///
+    /// If a highway ramp is part of a numbered route, its reference code is contained in this property. On the other
+    /// hand, guide signage for a highway ramp usually indicates route reference codes of the adjoining road; use the
+    /// ``destinationCodes`` property for those route reference codes.
     public let codes: [String]?
 
-    /**
-     Any route reference codes that appear on guide signage for the road leading from this step’s maneuver to the next step’s maneuver.
-
-     This property is typically available in steps leading to or from a freeway or expressway. This property contains route reference codes associated with a road later in the route. If a highway ramp is itself part of a numbered route, its reference code is contained in the `codes` property. For the signposted exit numbers associated with a highway exit, use the `exitCodes` property.
-
-     A route reference code commonly consists of an alphabetic network code, a space or hyphen, and a route number. You should not assume that the network code is globally unique: for example, a network code of “NH” may indicate a “National Highway” or “New Hampshire”. Moreover, a route number may not even uniquely identify a route within a given network. A destination code for a divided road is often suffixed with the cardinal direction of travel, for example “I 80 East”.
-     */
+    /// Any route reference codes that appear on guide signage for the road leading from this step’s maneuver to the
+    /// next step’s maneuver.
+    ///
+    /// This property is typically available in steps leading to or from a freeway or expressway. This property contains
+    /// route reference codes associated with a road later in the route. If a highway ramp is itself part of a numbered
+    /// route, its reference code is contained in the `codes` property. For the signposted exit numbers associated with
+    /// a highway exit, use the `exitCodes` property.
+    ///
+    /// A route reference code commonly consists of an alphabetic network code, a space or hyphen, and a route number.
+    /// You should not assume that the network code is globally unique: for example, a network code of “NH” may indicate
+    /// a “National Highway” or “New Hampshire”. Moreover, a route number may not even uniquely identify a route within
+    /// a given network. A destination code for a divided road is often suffixed with the cardinal direction of travel,
+    /// for example “I 80 East”.
     public let destinationCodes: [String]?
 
-    /**
-     Destinations, such as [control cities](https://en.wikipedia.org/wiki/Control_city), that appear on guide signage for the road leading from this step’s maneuver to the next step’s maneuver.
-
-     This property is typically available in steps leading to or from a freeway or expressway.
-     */
+    /// Destinations, such as [control cities](https://en.wikipedia.org/wiki/Control_city), that appear on guide signage
+    /// for the road leading from this step’s maneuver to the next step’s maneuver.
+    ///
+    /// This property is typically available in steps leading to or from a freeway or expressway.
     public let destinations: [String]?
 
-    /**
-      An array of intersections along the step.
-
-      Each item in the array corresponds to a cross street, starting with the intersection at the maneuver location indicated by the coordinates property and continuing with each cross street along the step.
-     */
+    /// An array of intersections along the step.
+    ///
+    /// Each item in the array corresponds to a cross street, starting with the intersection at the maneuver location
+    /// indicated by the coordinates property and continuing with each cross street along the step.
     public let intersections: [Intersection]?
 
-    /**
-      Each intersection’s administrative region index.
-
-      This property is set to `nil` if the `intersections` property is `nil`. An individual array element may be `nil` if the corresponding `Intersection` instance has no administrative region assigned.
-
-     - seealso: `Intersection.regionCode`, `RouteStep.regionCode(atStepIndex:, intersectionIndex:)`
-     */
+    /// Each intersection’s administrative region index.
+    ///
+    /// This property is set to `nil` if the ``intersections`` property is `nil`. An individual array element may be
+    /// `nil` if the corresponding ``Intersection`` instance has no administrative region assigned.
+    /// - SeeAlso: ``Intersection/regionCode``, ``RouteLeg/regionCode(atStepIndex:intersectionIndex:)``
     public let administrativeAreaContainerByIntersection: [Int?]?
 
-    /**
-     Segments indices for each `Intersection` along the step.
-
-     The indices are arranged in the same order as the items of `intersections`. This property is `nil` if `intersections` is `nil`. An individual item may be `nil` if the corresponding JSON-formatted intersection object has no `geometry_index` property.
-     */
+    /// Segments indices for each ``Intersection`` along the step.
+    ///
+    /// The indices are arranged in the same order as the items of ``intersections``. This property is `nil` if
+    /// ``intersections`` is `nil`. An individual item may be `nil` if the corresponding JSON-formatted intersection
+    /// object has no `geometry_index` property.
     public let segmentIndicesByIntersection: [Int?]?
 
-    /**
-     The sign design standard used for speed limit signs along the step.
-
-     This standard affects how corresponding speed limits in the `RouteLeg.segmentMaximumSpeedLimits` property should be displayed.
-     */
+    /// The sign design standard used for speed limit signs along the step.
+    ///
+    /// This standard affects how corresponding speed limits in the ``RouteLeg/segmentMaximumSpeedLimits`` property
+    /// should be displayed.
     public let speedLimitSignStandard: SignStandard?
 
-    /**
-     The unit of speed limits on speed limit signs along the step.
-
-     This standard affects how corresponding speed limits in the `RouteLeg.segmentMaximumSpeedLimits` property should be displayed.
-     */
+    /// The unit of speed limits on speed limit signs along the step.
+    ///
+    /// This standard affects how corresponding speed limits in the ``RouteLeg/segmentMaximumSpeedLimits`` property
+    /// should be displayed.
     public let speedLimitUnit: UnitSpeed?
 
     // MARK: Getting Details About the Next Maneuver
 
-    /**
-     Instructions about the next step’s maneuver, optimized for speech synthesis.
-
-     As the user traverses this step, you can give them advance notice of the upcoming maneuver by reading aloud each item in this array in order as the user reaches the specified distances along this step. The text of the spoken instructions refers to the details in the next step, but the distances are measured from the beginning of this step.
-
-     This property is non-`nil` if the `RouteOptions.includesSpokenInstructions` option is set to `true`. For instructions designed for display, use the `instructions` property.
-     */
+    /// Instructions about the next step’s maneuver, optimized for speech synthesis.
+    ///
+    /// As the user traverses this step, you can give them advance notice of the upcoming maneuver by reading aloud each
+    /// item in this array in order as the user reaches the specified distances along this step. The text of the spoken
+    /// instructions refers to the details in the next step, but the distances are measured from the beginning of this
+    /// step.
+    ///
+    /// This property is non-`nil` if the ``DirectionsOptions/includesSpokenInstructions`` option is set to `true`. For
+    /// instructions designed for display, use the ``instructions`` property.
     public let instructionsSpokenAlongStep: [SpokenInstruction]?
 
-    /**
-     Instructions about the next step’s maneuver, optimized for display in real time.
-
-     As the user traverses this step, you can give them advance notice of the upcoming maneuver by displaying each item in this array in order as the user reaches the specified distances along this step. The text and images of the visual instructions refer to the details in the next step, but the distances are measured from the beginning of this step.
-
-     This property is non-`nil` if the `RouteOptions.includesVisualInstructions` option is set to `true`. For instructions designed for speech synthesis, use the `instructionsSpokenAlongStep` property. For instructions designed for display in a static list, use the `instructions` property.
-     */
+    /// Instructions about the next step’s maneuver, optimized for display in real time.
+    ///
+    /// As the user traverses this step, you can give them advance notice of the upcoming maneuver by displaying each
+    /// item in this array in order as the user reaches the specified distances along this step. The text and images of
+    /// the visual instructions refer to the details in the next step, but the distances are measured from the beginning
+    /// of this step.
+    ///
+    /// This property is non-`nil` if the ``DirectionsOptions/includesVisualInstructions`` option is set to `true`. For
+    /// instructions designed for speech synthesis, use the ``instructionsSpokenAlongStep`` property. For instructions
+    /// designed for display in a static list, use the ``instructions`` property.
     public let instructionsDisplayedAlongStep: [VisualInstructionBanner]?
 }
 

@@ -4,48 +4,36 @@ import FoundationNetworking
 #endif
 import Turf
 
-/**
- A Directions Refresh API response.
- */
+/// A Directions Refresh API response.
 public struct RouteRefreshResponse: ForeignMemberContainer, Equatable {
     public var foreignMembers: JSONObject = [:]
 
-    /**
-     The raw HTTP response from the Directions Refresh API.
-     */
+    /// The raw HTTP response from the Directions Refresh API.
     public let httpResponse: HTTPURLResponse?
 
-    /**
-     The response identifier used to request the refreshed route.
-     */
+    /// The response identifier used to request the refreshed route.
     public let identifier: String
 
-    /**
-     The route index used to request the refreshed route.
-     */
+    /// The route index used to request the refreshed route.
     public var routeIndex: Int
 
     public var startLegIndex: Int
 
-    /**
-     A skeleton route that contains only the time-sensitive information that has been updated.
-
-     Use the `Route.refreshLegAttributes(from:)`, `Route.refreshLegAttributes(from:legIndex:legShapeIndex:)`, `Route.refreshLegIncidents(from:)`, `Route.refreshLegIncidents(from:legIndex:legShapeIndex:)`, `Route.refreshLegClosures(from:legIndex:legShapeIndex:)` or `Route.refresh(from:refreshParameters:)` methods to merge this object with the original route to continue using the original route with updated information.
-     */
+    /// A skeleton route that contains only the time-sensitive information that has been updated.
     public var route: RefreshedRoute
 
-    /**
-     The credentials used to make the request.
-     */
+    /// The credentials used to make the request.
     public let credentials: Credentials
 
-    /**
-     The time when this `RouteRefreshResponse` object was created, which is immediately upon recieving the raw URL response.
-
-     If you manually start fetching a task returned by `Directions.urlRequest(forRefreshing:routeIndex:currentLegIndex:)`, this property is set to `nil`; use the `URLSessionTaskTransactionMetrics.responseEndDate` property instead. This property may also be set to `nil` if you create this result from a JSON object or encoded object.
-
-     This property does not persist after encoding and decoding.
-     */
+    /// The time when this ``RouteRefreshResponse`` object was created, which is immediately upon recieving the raw URL
+    /// response.
+    ///
+    /// If you manually start fetching a task returned by
+    /// `Directions.urlRequest(forRefreshing:routeIndex:currentLegIndex:)`, this property is set to `nil`; use the
+    /// `URLSessionTaskTransactionMetrics.responseEndDate` property instead. This property may also be set to `nil` if
+    /// you create this result from a JSON object or encoded object.
+    ///
+    /// This property does not persist after encoding and decoding.
     public var created = Date()
 }
 

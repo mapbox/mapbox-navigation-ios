@@ -12,8 +12,8 @@ public enum ResponseOptions: Sendable {
 @available(*, unavailable)
 extension ResponseOptions: @unchecked Sendable {}
 
-/// A `RouteResponse` object is a structure that corresponds to a directions response returned by the Mapbox Directions
-/// API.
+/// A ``RouteResponse`` object is a structure that corresponds to a directions response returned by the Mapbox
+/// Directions API.
 public struct RouteResponse: ForeignMemberContainer {
     public var foreignMembers: JSONObject = [:]
 
@@ -23,20 +23,21 @@ public struct RouteResponse: ForeignMemberContainer {
     /// The unique identifier that the Mapbox Directions API has assigned to this response.
     public let identifier: String?
 
-    /// An array of `Route` objects sorted from most recommended to least recommended. A route may be highly recommended
+    /// An array of ``Route`` objects sorted from most recommended to least recommended. A route may be highly
+    /// recommended
     /// based on characteristics such as expected travel time or distance.
-    /// This property contains a maximum of two `Route`s.
+    /// This property contains a maximum of two ``Route``s.
     public var routes: [Route]? {
         didSet {
             updateRoadClassExclusionViolations()
         }
     }
 
-    /// An array of `Waypoint` objects in the order of the input coordinates. Each `Waypoint` is an input coordinate
+    /// An array of ``Waypoint`` objects in the order of the input coordinates. Each ``Waypoint`` is an input coordinate
     /// snapped to the road and path network.
     ///
-    /// This property omits the waypoint corresponding to any waypoint in `RouteOptions.waypoints` that has
-    /// `Waypoint.separatesLegs` set to `true`.
+    /// This property omits the waypoint corresponding to any waypoint in ``DirectionsOptions/waypoints`` that has
+    /// ``Waypoint/separatesLegs`` set to `true`.
     public let waypoints: [Waypoint]?
 
     /// The criteria for the directions response.
@@ -45,7 +46,8 @@ public struct RouteResponse: ForeignMemberContainer {
     /// The credentials used to make the request.
     public let credentials: Credentials
 
-    /// The time when this `RouteResponse` object was created, which is immediately upon recieving the raw URL response.
+    /// The time when this ``RouteResponse`` object was created, which is immediately upon recieving the raw URL
+    /// response.
     ///
     /// If you manually start fetching a task returned by `Directions.url(forCalculating:)`, this property is set to
     /// `nil`; use the `URLSessionTaskTransactionMetrics.responseEndDate` property instead. This property may also be
@@ -66,14 +68,16 @@ public struct RouteResponse: ForeignMemberContainer {
         refreshTTL.map { created.addingTimeInterval($0) }
     }
 
-    /// Managed array of `RoadClasses` restrictions specified to `RouteOptions.roadClassesToAvoid` which were violated
+    /// Managed array of ``RoadClasses`` restrictions specified to ``RouteOptions/roadClassesToAvoid`` which were
+    /// violated
     /// during route calculation.
     ///
-    /// Routing engine may still utilize `RoadClasses` meant to be avoided in cases when routing is impossible
+    /// Routing engine may still utilize ``RoadClasses`` meant to be avoided in cases when routing is impossible
     /// otherwise.
     ///
-    /// Violations are ordered by routes from the `routes` array, then by a leg, step, and intersection, where
-    /// `RoadClasses` restrictions were ignored. `nil` and empty return arrays correspond to `nil` and empty `routes`
+    /// Violations are ordered by routes from the ``routes`` array, then by a leg, step, and intersection, where
+    /// ``RoadClasses`` restrictions were ignored. `nil` and empty return arrays correspond to `nil` and empty
+    /// ``routes``
     /// array respectively.
     public private(set) var roadClassExclusionViolations: [RoadClassExclusionViolation]?
 }
@@ -284,11 +288,11 @@ extension RouteResponse {
         roadClassExclusionViolations = violations
     }
 
-    /// Filters `roadClassExclusionViolations` lazily to search for specific leg and step.
+    /// Filters ``roadClassExclusionViolations`` lazily to search for specific leg and step.
     ///
-    /// - parameter routeIndex: Index of a route inside current `RouteResponse` to search in.
-    /// - parameter legIndex: Index of a leg inside related `Route`to search in.
-    /// - returns: Lazy filtered array of `RoadClassExclusionViolation` under given indicies.
+    /// - parameter routeIndex: Index of a route inside current ``RouteResponse`` to search in.
+    /// - parameter legIndex: Index of a leg inside related ``Route``to search in.
+    /// - returns: Lazy filtered array of ``RoadClassExclusionViolation`` under given indicies.
     ///
     /// Passing `nil` as `legIndex` will result in searching for all legs.
     public func exclusionViolations(
@@ -303,12 +307,12 @@ extension RouteResponse {
         )
     }
 
-    /// Filters `roadClassExclusionViolations` lazily to search for specific leg and step.
+    /// Filters ``roadClassExclusionViolations`` lazily to search for specific leg and step.
     ///
-    /// - parameter routeIndex: Index of a route inside current `RouteResponse` to search in.
-    /// - parameter legIndex: Index of a leg inside related `Route`to search in.
-    /// - parameter stepIndex: Index of a step inside given `Route`'s leg.
-    /// - returns: Lazy filtered array of `RoadClassExclusionViolation` under given indicies.
+    /// - parameter routeIndex: Index of a route inside current ``RouteResponse`` to search in.
+    /// - parameter legIndex: Index of a leg inside related ``Route``to search in.
+    /// - parameter stepIndex: Index of a step inside given ``Route``'s leg.
+    /// - returns: Lazy filtered array of ``RoadClassExclusionViolation`` under given indicies.
     ///
     /// Passing `nil` as `stepIndex` will result in searching for all steps.
     public func exclusionViolations(
@@ -324,13 +328,13 @@ extension RouteResponse {
         )
     }
 
-    /// Filters `roadClassExclusionViolations` lazily to search for specific leg, step and intersection.
+    /// Filters ``roadClassExclusionViolations`` lazily to search for specific leg, step and intersection.
     ///
-    /// - parameter routeIndex: Index of a route inside current `RouteResponse` to search in.
-    /// - parameter legIndex: Index of a leg inside related `Route`to search in.
-    /// - parameter stepIndex: Index of a step inside given `Route`'s leg.
-    /// - parameter intersectionIndex: Index of an intersection inside given `Route`'s leg and step.
-    /// - returns: Lazy filtered array of `RoadClassExclusionViolation` under given indicies.
+    /// - parameter routeIndex: Index of a route inside current ``RouteResponse`` to search in.
+    /// - parameter legIndex: Index of a leg inside related ``Route``to search in.
+    /// - parameter stepIndex: Index of a step inside given ``Route``'s leg.
+    /// - parameter intersectionIndex: Index of an intersection inside given ``Route``'s leg and step.
+    /// - returns: Lazy filtered array of ``RoadClassExclusionViolation`` under given indicies.
     ///
     /// Passing `nil` as `intersectionIndex` will result in searching for all intersections of given step.
     public func exclusionViolations(

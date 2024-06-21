@@ -1,20 +1,19 @@
 import Foundation
 import Turf
 
-/**
- Options for calculating matrices from the Mapbox Matrix service.
- */
+/// Options for calculating matrices from the Mapbox Matrix service.
 public class MatrixOptions: Codable {
     // MARK: Creating a Matrix Options Object
 
-    /**
-     Initializes a matrix options object for matrices and a given profile identifier.
-
-     `sources` and `destinations` should not be empty, otherwise matrix would not make sense. Total number of waypoints may differ depending on the `profileIdentifier`. [See documentation for details](https://docs.mapbox.com/api/navigation/matrix/#matrix-api-restrictions-and-limits).
-     - parameter sources: An array of `Waypoints` objects representing sources.
-     - parameter destinations: An array of `Waypoints` objects representing destinations.
-     - parameter profileIdentifier: A string specifying the primary mode of transportation for the routes.
-     */
+    /// Initializes a matrix options object for matrices and a given profile identifier.
+    /// - Parameters:
+    ///   - sources: An array of ``Waypoint`` objects representing sources.
+    ///   - destinations: An array of ``Waypoint`` objects representing destinations.
+    ///   - profileIdentifier: A string specifying the primary mode of transportation for the routes.
+    ///
+    /// - Note: `sources` and `destinations` should not be empty, otherwise matrix would not make sense. Total number of
+    /// waypoints may differ depending on the `profileIdentifier`. [See documentation for
+    /// details](https://docs.mapbox.com/api/navigation/matrix/#matrix-api-restrictions-and-limits).
     public init(sources: [Waypoint], destinations: [Waypoint], profileIdentifier: ProfileIdentifier) {
         self.profileIdentifier = profileIdentifier
         self.waypointsData = .init(
@@ -25,30 +24,24 @@ public class MatrixOptions: Codable {
 
     private let waypointsData: WaypointsData
 
-    /**
-      A string specifying the primary mode of transportation for the contours.
-     */
+    ///  A string specifying the primary mode of transportation for the contours.
     public var profileIdentifier: ProfileIdentifier
 
-    /**
-     An array of `Waypoints` objects representing locations that will be in the matrix.
-     */
+    /// An array of ``Waypoint`` objects representing locations that will be in the matrix.
     public var waypoints: [Waypoint] {
         return waypointsData.waypoints
     }
 
-    /**
-     Attribute options for the matrix.
-
-     Only `distance` and `expectedTravelTime` are supported. Empty `attributeOptions` will result in default values assumed.
-     */
+    /// Attribute options for the matrix.
+    ///
+    /// Only ``AttributeOptions/distance`` and ``AttributeOptions/expectedTravelTime`` are supported. Empty
+    /// `attributeOptions` will result in default
+    /// values assumed.
     public var attributeOptions: AttributeOptions = []
 
-    /**
-     The `waypoints` array that should be used as destinations.
-
-     Must not be empty.
-     */
+    /// The ``Waypoint`` array that should be used as destinations.
+    ///
+    /// Must not be empty.
     public var destinations: [Waypoint] {
         get {
             waypointsData.destinations
@@ -58,11 +51,9 @@ public class MatrixOptions: Codable {
         }
     }
 
-    /**
-     The `waypoints` array that should be used as sources.
-
-     Must not be empty.
-     */
+    /// The ``Waypoint`` array that should be used as sources.
+    ///
+    /// Must not be empty.
     public var sources: [Waypoint] {
         get {
             waypointsData.sources
@@ -105,16 +96,12 @@ public class MatrixOptions: Codable {
         waypoints.map(\.coordinate.requestDescription).joined(separator: ";")
     }
 
-    /**
-         An array of URL query items to include in an HTTP request.
-     */
+    ///     An array of URL query items to include in an HTTP request.
     var abridgedPath: String {
         return "directions-matrix/v1/\(profileIdentifier.rawValue)"
     }
 
-    /**
-     The path of the request URL, not including the hostname or any parameters.
-     */
+    /// The path of the request URL, not including the hostname or any parameters.
     var path: String {
         guard let coordinates,
               !coordinates.isEmpty
@@ -125,9 +112,7 @@ public class MatrixOptions: Codable {
         return "\(abridgedPath)/\(coordinates)"
     }
 
-    /**
-     An array of URL query items (parameters) to include in an HTTP request.
-     */
+    /// An array of URL query items (parameters) to include in an HTTP request.
     public var urlQueryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
 

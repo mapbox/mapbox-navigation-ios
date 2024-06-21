@@ -1,31 +1,22 @@
 import Foundation
 import Turf
 
-/**
- A lane on the road approaching an intersection.
- */
+/// A lane on the road approaching an intersection.
 struct Lane: Equatable, ForeignMemberContainer {
     var foreignMembers: JSONObject = [:]
 
-    /**
-     The lane indications specifying the maneuvers that may be executed from the lane.
-     */
+    /// The lane indications specifying the maneuvers that may be executed from the lane.
     let indications: LaneIndication
 
-    /**
-     Whether the lane can be taken to complete the maneuver (`true`) or not (`false`)
-     */
+    /// Whether the lane can be taken to complete the maneuver (`true`) or not (`false`)
     var isValid: Bool
 
-    /**
-     Whether the lane is a preferred lane (`true`) or not (`false`)
-     A preferred lane is a lane that is recommended if there are multiple lanes available
-     */
+    /// Whether the lane is a preferred lane (`true`) or not (`false`)
+    ///
+    /// A preferred lane is a lane that is recommended if there are multiple lanes available
     var isActive: Bool?
 
-    /**
-     Which of the `indications` is applicable to the current route, when there is more than one
-     */
+    /// Which of the ``indications`` is applicable to the current route, when there is more than one
     var validIndication: ManeuverDirection?
 
     init(indications: LaneIndication, valid: Bool = false, active: Bool? = false, preferred: ManeuverDirection? = nil) {

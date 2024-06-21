@@ -1,9 +1,8 @@
 import Foundation
 import Turf
 
-/**
- A `Weight` enum represents the weight given to a specific `Match` by the Directions API. The default metric is a compound index called "routability", which is duration-based with additional penalties for less desirable maneuvers.
- */
+/// A ``Weight`` enum represents the weight given to a specific ``Match`` by the Directions API. The default metric is a
+/// compound index called "routability", which is duration-based with additional penalties for less desirable maneuvers.
 public enum Weight: Equatable, Sendable {
     case routability(value: Float)
     case other(value: Float, metric: String)
@@ -36,11 +35,11 @@ public enum Weight: Equatable, Sendable {
     }
 }
 
-/**
- A `Match` object defines a single route that was created from a series of points that were matched against a road network.
-
- Typically, you do not create instances of this class directly. Instead, you receive match objects when you pass a `MatchOptions` object into the `Directions.calculate(_:completionHandler:)` method.
- */
+/// A ``Match`` object defines a single route that was created from a series of points that were matched against a road
+/// network.
+///
+/// Typically, you do not create instances of this class directly. Instead, you receive match objects when you pass a
+/// ``MatchOptions`` object into the `Directions.calculate(_:completionHandler:)` method.
 public struct Match: DirectionsResult {
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case confidence
@@ -68,18 +67,18 @@ public struct Match: DirectionsResult {
 
     public var foreignMembers: Turf.JSONObject = [:]
 
-    /**
-     Initializes a match.
-
-     Typically, you do not create instances of this class directly. Instead, you receive match objects when you request matches using the `Directions.calculate(_:completionHandler:)` method.
-
-     - parameter legs: The legs that are traversed in order.
-     - parameter shape: The matching roads or paths as a contiguous polyline.
-     - parameter distance: The matched path’s cumulative distance, measured in meters.
-     - parameter expectedTravelTime: The route’s expected travel time, measured in seconds.
-     - parameter confidence: A number between 0 and 1 that indicates the Map Matching API’s confidence that the match is accurate. A higher confidence means the match is more likely to be accurate.
-     - parameter weight: A `Weight` enum, which represents the weight given to a specific `Match`.
-     */
+    /// Initializes a match.
+    /// Typically, you do not create instances of this class directly. Instead, you receive match objects when you
+    /// request matches using the `Directions.calculate(_:completionHandler:)` method.
+    ///
+    /// - Parameters:
+    ///   - legs: The legs that are traversed in order.
+    ///   - shape: The matching roads or paths as a contiguous polyline.
+    ///   - distance: The matched path’s cumulative distance, measured in meters.
+    ///   - expectedTravelTime: The route’s expected travel time, measured in seconds.
+    ///   - confidence: A number between 0 and 1 that indicates the Map Matching API’s confidence that the match is
+    /// accurate. A higher confidence means the match is more likely to be accurate.
+    ///   - weight: A ``Weight`` enum, which represents the weight given to a specific ``Match``.
     public init(
         legs: [RouteLeg],
         shape: LineString?,
@@ -97,12 +96,13 @@ public struct Match: DirectionsResult {
         self.responseContainsSpeechLocale = false
     }
 
-    /**
-     Creates a match from a decoder.
-
-     - precondition: If the decoder is decoding JSON data from an API response, the `Decoder.userInfo` dictionary must contain a `MatchOptions` object in the `CodingUserInfoKey.options` key. If it does not, a `DirectionsCodingError.missingOptions` error is thrown.
-     - parameter decoder: The decoder of JSON-formatted API response data or a previously encoded `Match` object.
-     */
+    /// Creates a match from a decoder.
+    ///
+    /// - Precondition: If the decoder is decoding JSON data from an API response, the `Decoder.userInfo` dictionary
+    /// must contain a ``MatchOptions`` object in the ``Swift/CodingUserInfoKey/options`` key. If it does not, a
+    /// ``DirectionsCodingError/missingOptions`` error is thrown.
+    ///
+    /// - Parameter decoder: The decoder of JSON-formatted API response data or a previously encoded ``Match`` object.
     public init(from decoder: Decoder) throws {
         guard let options = decoder.userInfo[.options] as? DirectionsOptions else {
             throw DirectionsCodingError.missingOptions
@@ -142,14 +142,11 @@ public struct Match: DirectionsResult {
         try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
     }
 
-    /**
-     A `Weight` enum, which represents the weight given to a specific `Match`.
-     */
+    /// A ``Weight`` enum, which represents the weight given to a specific ``Match``.
     public var weight: Weight
 
-    /**
-     A number between 0 and 1 that indicates the Map Matching API’s confidence that the match is accurate. A higher confidence means the match is more likely to be accurate.
-     */
+    /// A number between 0 and 1 that indicates the Map Matching API’s confidence that the match is accurate. A higher
+    /// confidence means the match is more likely to be accurate.
     public var confidence: Float
 }
 
