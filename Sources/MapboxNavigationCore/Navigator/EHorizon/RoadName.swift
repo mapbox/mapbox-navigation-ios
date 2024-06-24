@@ -15,17 +15,17 @@ public struct RoadName: Equatable, Sendable {
     /// that it fits in the allotted space.
     public let text: String
 
-    /// 2 letters language code or "Unspecified" or empty string
+    /// IETF BCP 47 language tag or "Unspecified" or empty string.
     public let language: String
 
-    /// Shield information of the road
+    /// Shield information of the road.
     public let shield: RoadShield?
 
     /// Creates a new `RoadName` instance.
     /// - Parameters:
     ///   - text: The name of the road.
-    ///   - language: 2 letters language code or "Unspecified" or empty string
-    ///   - shield: Shield information of the road
+    ///   - language: IETF BCP 47 language tag or "Unspecified" or empty string.
+    ///   - shield: Shield information of the road.
     public init(text: String, language: String, shield: RoadShield? = nil) {
         self.text = text
         self.language = language
