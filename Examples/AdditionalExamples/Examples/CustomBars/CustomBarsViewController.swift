@@ -46,8 +46,7 @@ class CustomBarsViewController: UIViewController {
                 let bottomBanner = CustomBottomBarViewController()
                 let navigationOptions = NavigationOptions(
                     mapboxNavigation: mapboxNavigation,
-                    voiceController: mapboxNavigationProvider
-                        .routeVoiceController,
+                    voiceController: mapboxNavigationProvider.routeVoiceController,
                     eventsManager: mapboxNavigationProvider.eventsManager(),
                     topBanner: topBanner,
                     bottomBanner: bottomBanner

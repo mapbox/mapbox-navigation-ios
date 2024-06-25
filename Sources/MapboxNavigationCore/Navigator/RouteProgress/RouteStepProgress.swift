@@ -112,7 +112,7 @@ public struct RouteStepProgress: Equatable {
     /// Index into `RouteStep.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
     public private(set) var visualInstructionIndex: Int = 0
 
-    /// An `Array` of remaining `VisualInstruction` for a step.
+    /// An `Array` of remaining ``VisualInstructionBanner`` for a step.
     public var remainingVisualInstructions: [VisualInstructionBanner]? {
         guard let visualInstructions = step.instructionsDisplayedAlongStep,
               visualInstructions.indices.contains(visualInstructionIndex) else { return nil }
@@ -123,7 +123,7 @@ public struct RouteStepProgress: Equatable {
     /// Index into `RouteStep.instructionsSpokenAlongStep` representing the current spoken instruction.
     public private(set) var spokenInstructionIndex: Int?
 
-    /// An `Array` of remaining `SpokenInstruction` for a step.
+    /// An `Array` of remaining ``SpokenInstruction`` for a step.
     ///
     /// Valid only when ``spokenInstructionIndex`` is known.
     public var remainingSpokenInstructions: [SpokenInstruction]? {

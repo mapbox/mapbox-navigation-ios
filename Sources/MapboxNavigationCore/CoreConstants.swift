@@ -182,7 +182,7 @@ extension RoadGraph {
         /// A key in the user info dictionary of a
         /// ``Foundation/NSNotification/Name/electronicHorizonDidEnterRoadObject`` or
         /// ``Foundation/NSNotification/Name/electronicHorizonDidExitRoadObject`` notification. The corresponding value
-        /// is an NSNumber` containing a Boolean value set to `true` if the user entered at the beginning or exited at
+        /// is an `NSNumber` containing a Boolean value set to `true` if the user entered at the beginning or exited at
         /// the end of the road object, or `false` if they entered or exited somewhere along the road object.
         public static let didTransitionAtEndpointKey: NotificationUserInfoKey =
             .init(rawValue: "didTransitionAtEndpoint")

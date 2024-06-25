@@ -42,7 +42,6 @@ class BasicViewController: UIViewController {
                 let navigationOptions = NavigationOptions(
                     mapboxNavigation: mapboxNavigation,
                     voiceController: mapboxNavigationProvider.routeVoiceController,
-
                     eventsManager: mapboxNavigationProvider.eventsManager()
                 )
                 let navigationViewController = NavigationViewController(

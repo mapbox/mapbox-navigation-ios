@@ -182,7 +182,7 @@ public struct FallbackToTilesState: Equatable, Sendable {
 
 /// Voice instructions update event details.
 public struct SpokenInstructionState: Equatable, Sendable {
-    /// Actual `SpokenInstruction` to be pronounced.
+    /// Actual ``SpokenInstruction`` to be pronounced.
     public let spokenInstruction: SpokenInstruction
 }
 

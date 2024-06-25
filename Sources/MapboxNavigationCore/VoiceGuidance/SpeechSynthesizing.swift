@@ -23,9 +23,9 @@ public protocol SpeechSynthesizing: AnyObject, Sendable {
     var managesAudioSession: Bool { get set }
 
     /// Used to notify speech synthesizer about future spoken instructions in order to give extra time for preparations.
-    /// - parameter instructions: An array of `SpokenInstruction`s that will be encountered further.
+    /// - parameter instructions: An array of ``SpokenInstruction``s that will be encountered further.
     /// - parameter locale: A locale to be used for preparing instructions. If `nil` is passed -
-    /// `SpeechSynthesizing.locale` will be used as 'default'.
+    /// ``SpeechSynthesizing/locale`` will be used as 'default'.
     ///
     /// It is not guaranteed that all these instructions will be spoken. For example navigation may be re-routed.
     /// This method may be (and most likely will be) called multiple times along the route progress
@@ -35,16 +35,15 @@ public protocol SpeechSynthesizing: AnyObject, Sendable {
     /// - parameter instruction: an instruction to be vocalized
     /// - parameter legProgress: current leg progress, corresponding to the instruction
     /// - parameter locale: A locale to be used for vocalizing the instruction. If `nil` is passed -
-    /// `SpeechSynthesizing.locale` will be used as 'default'.
+    /// ``SpeechSynthesizing/locale`` will be used as 'default'.
     ///
-    /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished, `voiceController(_
-    /// voiceController: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?)` should
-    /// be called.
+    /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished,
+    /// ``VoiceInstructionEvents/DidSpeak`` should be published by ``voiceInstructions``.
     func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?)
 
-    /// Tells synthesizer to stop current vocalization in a graceful manner
+    /// Tells synthesizer to stop current vocalization in a graceful manner.
     func stopSpeaking()
-    /// Tells synthesizer to stop current vocalization immediately
+    /// Tells synthesizer to stop current vocalization immediately.
     func interruptSpeaking()
 }
 

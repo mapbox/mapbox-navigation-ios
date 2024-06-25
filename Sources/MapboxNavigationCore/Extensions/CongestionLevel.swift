@@ -94,10 +94,10 @@ extension CongestionLevel {
 extension RouteLeg {
     /// An array containing the traffic congestion level along each road segment in the route leg geometry.
     ///
-    /// The array is formed either by converting values of `segmentNumericCongestionLevels` to `CongestionLevel` type
-    /// (see `CongestionRange`) or by taking `segmentCongestionLevels`, depending whether
+    /// The array is formed either by converting values of `segmentNumericCongestionLevels` to ``CongestionLevel`` type
+    /// (see ``CongestionRange``) or by taking `segmentCongestionLevels`, depending whether
     /// `AttributeOptions.numericCongestionLevel` or `AttributeOptions.congestionLevel` was specified in
-    /// `DirectionsOptions.attributes` during Directions request.
+    /// `DirectionsOptions.attributes` during route request.
     ///
     /// If both are present, `segmentNumericCongestionLevels` is preferred.
     ///

@@ -5,7 +5,7 @@ import MapboxDirections
 
 /// ``SpeechSynthesizing``implementation, aggregating other implementations, to allow 'fallback' mechanism.
 /// Can be initialized with array of synthesizers which will be called in order of appearance, until one of them is
-/// capable to vocalize current `SpokenInstruction`
+/// capable to vocalize current ``SpokenInstruction``
 public final class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     private static let mutedDefaultKey = "com.mapbox.navigation.MultiplexedSpeechSynthesizer.isMuted"
     private var _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
