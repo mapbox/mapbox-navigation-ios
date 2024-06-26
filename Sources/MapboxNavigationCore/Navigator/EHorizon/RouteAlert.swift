@@ -17,6 +17,6 @@ public struct RouteAlert: Equatable {
 
     init(_ native: UpcomingRouteAlert, distanceToStart: CLLocationDistance) {
         self.roadObject = RoadObject(native.roadObject)
-        self.distanceToStart = native.distanceToStart
+        self.distanceToStart = distanceToStart
     }
 }

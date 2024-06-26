@@ -81,10 +81,7 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
 
         upcomingRouteAlerts = status.upcomingRouteAlertUpdates.compactMap { routeAlert in
             routeAlerts[routeAlert.id].map {
-                RouteAlert(
-                    $0,
-                    distanceToStart: routeAlert.distanceToStart
-                )
+                RouteAlert($0, distanceToStart: routeAlert.distanceToStart)
             }
         }
         shapeIndex = Int(status.geometryIndex)

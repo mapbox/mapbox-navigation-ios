@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.2.0
+
+### Other changes
+
+* Fixed the incorrect `RouteAlert.distanceToStart` when active guidance is in progress.
+
 ## v3.2.0-rc.1
 
 ### Other changes
