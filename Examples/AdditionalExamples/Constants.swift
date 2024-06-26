@@ -109,4 +109,11 @@ let listOfExamples: [NamedController] = [
         storyboard: nil,
         pushExampleToViewController: true
     ),
+    (
+        name: "Route Alerts",
+        description: "Demonstrates how to display route alerts.",
+        controller: RouteAlertsViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
 ]

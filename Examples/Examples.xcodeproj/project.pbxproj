@@ -56,6 +56,7 @@
 		2CA31A9B2BC992DB0071176E /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9A2BC992DB0071176E /* MapboxNavigationCore */; };
 		2CA31A9D2BC992DB0071176E /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9C2BC992DB0071176E /* MapboxNavigationUIKit */; };
 		2CA31AA02BC994060071176E /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9F2BC994060071176E /* MapboxGeocoder */; };
+		2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
@@ -138,6 +139,7 @@
 		2CA31A882BC9927D0071176E /* PresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
 		2CA31A892BC9927D0071176E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CA31A8A2BC9927D0071176E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route-Alerts.swift"; sourceTree = "<group>"; };
 		2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSDKExampleApp.swift; sourceTree = "<group>"; };
 		2CE469132BA31C1F0075A32B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				2CA31A042BC9878A0071176E /* Offline-Regions.swift */,
 				2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */,
 				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
+				2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -550,6 +553,7 @@
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
+				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
 				2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */,
