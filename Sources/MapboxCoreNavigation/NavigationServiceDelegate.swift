@@ -166,7 +166,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress)
     
     /**
-     Called immeidately after the navigation service has attempted to refresh the route, but failed due to expired route TTL.
+     Called immediately after the navigation service attempted to refresh the route, but failed due to expired route TTL.
      
      - parameter service: The navigation service that attempted the route refresh.
      */

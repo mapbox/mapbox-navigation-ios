@@ -171,7 +171,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didRefresh routeProgress: RouteProgress)
     
     /**
-     Called immeidately after the router has attempted to refresh the route, but failed due to expired route TTL.
+     Called immediately after the router attempted to refresh the route, but failed due to expired route TTL.
      
      - parameter router: The router that attempted the route refresh.
      */

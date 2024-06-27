@@ -237,7 +237,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress)
     
     /**
-     Called immeidately after the navigation view controller has attempted to refresh the route, but failed due to expired route TTL.
+     Called immediately after the navigation view controller attempted to refresh the route, but failed due to expired route TTL.
      
      - parameter navigationViewController: The navigation view controller that attempted the route refresh.
      */
@@ -516,6 +516,9 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationViewControllerDidFailToRefreshExpiredRoute(_ navigationViewController: NavigationViewController) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }

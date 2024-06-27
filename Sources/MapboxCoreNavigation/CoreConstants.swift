@@ -177,7 +177,7 @@ public extension Notification.Name {
     static let routeControllerDidRefreshRoute: Notification.Name = .init(rawValue: "RouteControllerDidRefreshRoute")
 
     /**
-     Posted when `RouteController` was not able to refresh a route due to it's expiration.
+     Posted when `RouteController` was not able to refresh a route due to its expiration.
      
      The user info dictionary is `nil`.
      */
