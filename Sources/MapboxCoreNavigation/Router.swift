@@ -344,8 +344,10 @@ extension InternalRouter where Self: Router {
             completion()
             return
         }
-        
-        guard location.timestamp.timeIntervalSince(lastRouteRefresh) >= RouteControllerProactiveReroutingInterval else {
+
+        let response = indexedRouteResponse.routeResponse
+        guard location.timestamp.timeIntervalSince(lastRouteRefresh) >= RouteControllerProactiveReroutingInterval &&
+                response.refreshTTL.map({ response.created.addingTimeInterval($0) > Date() }) ?? true else {
             completion()
             return
         }
@@ -367,7 +369,15 @@ extension InternalRouter where Self: Router {
                 completion()
             }
             
-            guard case let .success(response) = result, let self = self else {
+            guard let self = self else {
+                return
+            }
+            guard case let .success(response) = result else {
+                if case let .failure(error) = result,
+                   case .refreshExpired = error {
+                    NotificationCenter.default.post(name: .routeControllerDidRefreshRoute, object: self, userInfo: nil)
+                    self.delegate?.routerDidFailToRefreshExpiredRoute(self)
+                }
                 return
             }
             guard response.identifier == self.indexedRouteResponse.routeResponse.identifier else {

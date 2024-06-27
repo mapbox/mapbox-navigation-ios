@@ -751,6 +751,10 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, didRefresh: routeProgress)
     }
     
+    public func routerDidFailToRefreshExpiredRoute(_ router: any Router) {
+        delegate?.navigationServiceDidFailToRefreshExpiredRoute(self)
+    }
+    
     public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         //notify the events manager of the progress update
         eventsManager.update(progress: progress)

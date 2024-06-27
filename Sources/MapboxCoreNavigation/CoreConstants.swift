@@ -175,6 +175,13 @@ public extension Notification.Name {
      The user info dictionary contains the key `RouteController.NotificationUserInfoKey.routeProgressKey`.
      */
     static let routeControllerDidRefreshRoute: Notification.Name = .init(rawValue: "RouteControllerDidRefreshRoute")
+
+    /**
+     Posted when `RouteController` was not able to refresh a route due to its expiration.
+     
+     The user info dictionary is `nil`.
+     */
+    static let routeControllerDidFailToRefreshExpiredRoute: Notification.Name = .init(rawValue: "RouteControllerDidFailToRefreshExpiredRoute")
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.

@@ -171,6 +171,12 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didRefresh routeProgress: RouteProgress)
     
     /**
+     Called immediately after the router attempted to refresh the route, but failed due to expired route TTL.
+     
+     - parameter router: The router that attempted the route refresh.
+     */
+    func routerDidFailToRefreshExpiredRoute(_ router: Router)
+    /**
      Called when the router updates the route progress model.
      
      - parameter router: The router that received the new locations.
@@ -277,6 +283,10 @@ public extension RouterDelegate {
     
     func router(_ router: Router, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+    
+    func routerDidFailToRefreshExpiredRoute(_ router: Router) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
     
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {

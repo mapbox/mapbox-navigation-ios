@@ -179,8 +179,14 @@ public class MapboxRoutingProvider: RoutingProvider {
     ) {
         let json = result.value as String?
         guard let data = json?.data(using: .utf8) else {
+            let error: DirectionsError
+            if result.error?.refreshTtl == 0 {
+                error = .refreshExpired
+            } else {
+                error = .noData
+            }
             self.complete(requestId: requestId) {
-                completion(.failure(.noData))
+                completion(.failure(error))
             }
             return
         }
