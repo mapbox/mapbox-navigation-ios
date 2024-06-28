@@ -81,12 +81,7 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
     }
 
     func screenshot(forCallback callback: @escaping ScreenshotCallback) {
-        DispatchQueue.main.async { [sendableCallback = UncheckedSendable(callback)] in
-            let screenshot = captureScreen(scaledToFit: 250)
-                .flatMap { $0.jpegData(compressionQuality: 0.2) }
-                .map { ScreenshotFormat(jpeg: .init(data: $0), base64: nil) }
-            sendableCallback.value(screenshot)
-        }
+        callback(nil)
     }
 }
 
