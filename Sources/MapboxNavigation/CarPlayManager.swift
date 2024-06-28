@@ -673,7 +673,7 @@ extension CarPlayManager {
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
         
         if currentActivity == .previewing {
-            interfaceController.popTemplate(animated: false)
+            interfaceController.safePopTemplate(animated: false)
             interfaceController.pushTemplate(previewMapTemplate, animated: false)
         } else {
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
