@@ -72,7 +72,7 @@ public struct FollowingCameraOptions: Equatable, Sendable {
     /// If `true`, ``ViewportDataSource`` will continuously modify `CameraOptions.bearing` property
     /// when producing camera frame in ``NavigationCameraState/following`` state.
     ///
-    /// If `false`, `ViewportDataSource` will not modify `CameraOptions.bearing` property.
+    /// If `false`, ``ViewportDataSource`` will not modify `CameraOptions.bearing` property.
     ///
     /// Defaults to `true`.
     public var bearingUpdatesAllowed: Bool = true
@@ -81,7 +81,7 @@ public struct FollowingCameraOptions: Equatable, Sendable {
     /// If `true`, ``ViewportDataSource`` will continuously modify `CameraOptions.pitch` property
     /// when producing camera frame in ``NavigationCameraState/following`` state.
     ///
-    /// If `false`, `ViewportDataSource` will not modify `CameraOptions.pitch` property.
+    /// If `false`, ``ViewportDataSource`` will not modify `CameraOptions.pitch` property.
     ///
     /// Defaults to `true`.
     public var pitchUpdatesAllowed: Bool = true
@@ -115,8 +115,7 @@ public struct FollowingCameraOptions: Equatable, Sendable {
 
     /// If `true`, ``ViewportDataSource`` will follow course of the location.
     ///
-    /// If `false`, ``ViewportDataSource`` will not follow course of the location and use
-    /// `0.0` value instead.
+    /// If `false`, ``ViewportDataSource`` will not follow course of the location and use `0.0` value instead.
     public var followsLocationCourse = true
 
     /// Initializes ``FollowingCameraOptions`` instance.

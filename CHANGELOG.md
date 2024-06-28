@@ -2,6 +2,10 @@
 
 ## v3.2.0
 
+### Map
+
+* Fixed an extra large bottom margin of the following navigation camera. 
+
 ### Other changes
 
 * Fixed the incorrect `RouteAlert.distanceToStart` when active guidance is in progress.
