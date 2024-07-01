@@ -1,0 +1,23 @@
+/* Alert action */
+"ALERT_OK" = "ОК";
+
+/* CPAlertTemplate OK button title */
+"CARPLAY_OK" = "ОК";
+
+/* Title of action for dismissing waypoint removal confirmation sheet */
+"REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Скасувати";
+
+/* Message of alert confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_MSG" = "Ви хочете видалити цю точку маршруту?";
+
+/* Title of alert action for removing a waypoint */
+"REMOVE_WAYPOINT_CONFIRM_REMOVE" = "Видалити цю точку маршруту";
+
+/* Title of alert confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_TITLE" = "Видалити точку маршруту?";
+
+/* CPBarButton title, which allows to disable location simulation */
+"CARPLAY_DISABLE_SIMULATION" = "Увімкнути симуляцію";
+
+/* CPListTemplate title, which shows list of favorite destinations */
+"CARPLAY_FAVORITES_LIST" = "Список улюблених";

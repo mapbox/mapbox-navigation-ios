@@ -1,0 +1,15 @@
+
+/* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
+"1vl-kS-fBt.normalTitle" = "繼續到下一個目的地";
+
+/* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
+"dEY-t6-Ect.text" = "長按選取目的地";
+
+/* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
+"iiq-Gf-SKY.normalTitle" = "模擬位置";
+
+/* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
+"nMe-Tl-a1N.normalTitle" = "開始導航";
+
+/* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
+"zxr-0T-HBr.title" = "Mapbox 導航";
