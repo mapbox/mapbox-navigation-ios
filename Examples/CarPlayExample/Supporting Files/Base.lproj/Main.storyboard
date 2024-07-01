@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,13 +12,13 @@
         <!--Mapbox Navigation-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="mainMap" id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainMap" id="BYZ-38-t0r" customClass="ViewController" customModule="LegacyExCP" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecA-xF-EKz">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="816"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tfo-Ic-OqD">
@@ -74,14 +74,14 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ecA-xF-EKz" firstAttribute="leading" secondItem="eNZ-Hz-1oT" secondAttribute="leading" id="CSR-dP-F4t"/>
-                            <constraint firstItem="eNZ-Hz-1oT" firstAttribute="trailing" secondItem="tgD-cs-dAn" secondAttribute="trailing" id="Fgp-Hc-0OK"/>
-                            <constraint firstItem="eNZ-Hz-1oT" firstAttribute="trailing" secondItem="ecA-xF-EKz" secondAttribute="trailing" id="WUQ-12-EKD"/>
-                            <constraint firstItem="ecA-xF-EKz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="abx-Td-Lwo"/>
+                            <constraint firstItem="ecA-xF-EKz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="2QZ-Ly-bbE"/>
+                            <constraint firstItem="tgD-cs-dAn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="6q3-8H-LJ4"/>
+                            <constraint firstAttribute="bottom" secondItem="ecA-xF-EKz" secondAttribute="bottom" id="7Bq-rz-bhf"/>
+                            <constraint firstAttribute="trailing" secondItem="ecA-xF-EKz" secondAttribute="trailing" id="B9n-mr-Jha"/>
+                            <constraint firstItem="ecA-xF-EKz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="K14-id-9Q7"/>
                             <constraint firstAttribute="bottom" secondItem="tgD-cs-dAn" secondAttribute="bottom" id="dZs-zT-gb0"/>
                             <constraint firstItem="Tfo-Ic-OqD" firstAttribute="leading" secondItem="eNZ-Hz-1oT" secondAttribute="leading" constant="16" id="eEd-cM-pFc"/>
-                            <constraint firstItem="tgD-cs-dAn" firstAttribute="leading" secondItem="eNZ-Hz-1oT" secondAttribute="leading" id="fio-xr-zWS"/>
-                            <constraint firstItem="tgD-cs-dAn" firstAttribute="top" secondItem="ecA-xF-EKz" secondAttribute="bottom" id="g9d-92-Ua7"/>
+                            <constraint firstAttribute="trailing" secondItem="tgD-cs-dAn" secondAttribute="trailing" id="nJW-ZA-cff"/>
                             <constraint firstItem="tgD-cs-dAn" firstAttribute="top" secondItem="Tfo-Ic-OqD" secondAttribute="bottom" constant="15" id="sdu-md-ykj"/>
                             <constraint firstItem="eNZ-Hz-1oT" firstAttribute="trailing" secondItem="Tfo-Ic-OqD" secondAttribute="trailing" constant="16" id="veQ-GA-9Zk"/>
                         </constraints>
@@ -109,7 +109,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu"/>
             </objects>
-            <point key="canvasLocation" x="8.8000000000000007" y="33.990147783251231"/>
+            <point key="canvasLocation" x="8.6956521739130448" y="33.482142857142854"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Ctm-Jp-i2T">
