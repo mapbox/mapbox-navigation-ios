@@ -1,6 +1,7 @@
 import CoreLocation
 import Foundation
 
+/// Options to configure fetching, detecting, and accepting a faster route during active guidance.
 public struct FasterRouteDetectionConfig: Equatable {
     public static func == (lhs: FasterRouteDetectionConfig, rhs: FasterRouteDetectionConfig) -> Bool {
         guard lhs.fasterRouteApproval == rhs.fasterRouteApproval,

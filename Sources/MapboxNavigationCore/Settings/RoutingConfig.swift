@@ -1,9 +1,15 @@
 import Foundation
 
+/// Routing Configuration.
 public struct RoutingConfig: Equatable {
-    // ... Use `nil` value to disable the mechanism
+    /// Options to configure fetching, detecting, and accepting ``AlternativeRoute``s during navigation.
+    ///
+    /// Use `nil` value to disable the mechanism
     public var alternativeRoutesDetectionConfig: AlternativeRoutesDetectionConfig?
-    // ... Use `nil` value to disable the mechanism
+
+    /// Options to configure fetching, detecting, and accepting a faster route during active guidance.
+    ///
+    /// Use `nil` value to disable the mechanism.
     public var fasterRouteDetectionConfig: FasterRouteDetectionConfig?
 
     /// Configures the rerouting behavior.
@@ -11,9 +17,10 @@ public struct RoutingConfig: Equatable {
 
     /// A radius around the current user position in which the API will avoid returning any significant maneuvers when
     /// rerouting or suggesting alternative routes.
-    /// Provided `TimeInterval` value will be converted to meters using current speed. Default value is `8 seconds`.
+    /// Provided `TimeInterval` value will be converted to meters using current speed. Default value is `8` seconds.
     public var initialManeuverAvoidanceRadius: TimeInterval
-    /// A time interval in which time-dependent properties of the `RouteLeg`s of the resulting `Route`s will be
+
+    /// A time interval in which time-dependent properties of the ``RouteLeg``s of the resulting `Route`s will be
     /// refreshed.
     ///
     /// This property is ignored unless `profileIdentifier` is `ProfileIdentifier.automobileAvoidingTraffic`. Use `nil`

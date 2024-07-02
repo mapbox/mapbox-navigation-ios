@@ -28,7 +28,7 @@ public struct MatrixResponse: Sendable {
     /// between the same coordinate is always `0`. Travel time from `i` to `j` is not always the same as from `j` to
     /// `i`. If a duration cannot be found, the result is `nil`.
     ///
-    /// - seealso: ``travelTime(from:to:)``
+    /// - SeeAlso: ``travelTime(from:to:)``
     public let travelTimes: DurationMatrix?
 
     /// Returns route distance between specified source and destination.

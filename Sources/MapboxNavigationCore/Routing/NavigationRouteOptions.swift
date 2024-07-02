@@ -41,8 +41,6 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
     /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
     /// identifier optimized for navigation.
-    ///
-    /// - Seealso: `RouteOptions`.
     public required init(
         waypoints: [Waypoint],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -75,15 +73,13 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
     /// Initializes an equivalent `RouteOptions` object from a ``NavigationMatchOptions``.
     ///
-    /// - seealso: `NavigationMatchOptions`.
+    /// - SeeAlso: ``NavigationMatchOptions``.
     public convenience init(navigationMatchOptions options: NavigationMatchOptions) {
         self.init(waypoints: options.waypoints, profileIdentifier: options.profileIdentifier)
     }
 
     /// Initializes a navigation route options object for routes between the given locations and an optional profile
     /// identifier optimized for navigation.
-    ///
-    /// - Seealso: `RouteOptions`.
     public convenience init(
         locations: [CLLocation],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -98,8 +94,6 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
     /// Initializes a route options object for routes between the given geographic coordinates and an optional profile
     /// identifier optimized for navigation.
-    ///
-    /// - Seealso: `RouteOptions`.
     public convenience init(
         coordinates: [CLLocationCoordinate2D],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -175,8 +169,6 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
 
     /// Initializes a navigation match options object for routes between the given locations and an optional profile
     /// identifier optimized for navigation.
-    ///
-    /// - Seealso: `MatchOptions`.
     public convenience init(
         locations: [CLLocation],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
@@ -191,8 +183,6 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
 
     /// Initializes a navigation match options object for routes between the given geographic coordinates and an
     /// optional profile identifier optimized for navigation.
-    ///
-    /// - Seealso: `MatchOptions`.
     public convenience init(
         coordinates: [CLLocationCoordinate2D],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,

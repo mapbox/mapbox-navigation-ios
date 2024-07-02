@@ -3,8 +3,11 @@ import MapboxDirections
 @preconcurrency import MapboxNavigationNative
 import Turf
 
+/// Additional reasonable routes besides the main roure that visit waypoints.
 public struct AlternativeRoute: @unchecked Sendable {
     let nativeRoute: RouteInterface
+
+    /// A `Route` object that the current alternative route represents.
     public let route: Route
 
     /// Alternative route identifier type
@@ -36,6 +39,7 @@ public struct AlternativeRoute: @unchecked Sendable {
     ///
     /// It is unique within the same navigation session.
     public let id: ID
+    /// Unique route id.
     public let routeId: RouteId
     /// Intersection on the main route, where alternative route branches.
     public let mainRouteIntersection: Intersection

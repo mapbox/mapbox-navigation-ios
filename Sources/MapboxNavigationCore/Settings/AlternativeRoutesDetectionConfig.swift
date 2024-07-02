@@ -1,6 +1,6 @@
 import Foundation
 
-/// Options to configure fetching, detecting and accepting `AlternativeRoute`s during navigation.
+/// Options to configure fetching, detecting, and accepting ``AlternativeRoute``s during navigation.
 public struct AlternativeRoutesDetectionConfig: Equatable, Sendable {
     public struct AcceptionPolicy: OptionSet, Sendable {
         public typealias RawValue = UInt
@@ -21,7 +21,7 @@ public struct AlternativeRoutesDetectionConfig: Equatable, Sendable {
     public var refreshesAfterPassingDeviation = true
 
     /// Enables periodic requests when there are no known alternative routes yet. The default value is
-    /// `noPeriodicRefresh`.
+    /// ``AlternativeRoutesDetectionConfig/RefreshOnEmpty/noPeriodicRefresh``.
     @available(
         *,
         deprecated,
@@ -35,7 +35,7 @@ public struct AlternativeRoutesDetectionConfig: Equatable, Sendable {
         }
     }
 
-    /// Describes how periodic requests for `AlternativeRoute`s should be made.
+    /// Describes how periodic requests for ``AlternativeRoute``s should be made.
     @available(*, deprecated, message: "This feature no longer has any effect.")
     public enum RefreshOnEmpty: Equatable, Sendable {
         /// Will not do periodic requests for alternatives.
@@ -58,7 +58,7 @@ public struct AlternativeRoutesDetectionConfig: Equatable, Sendable {
     /// (intersection) where another alternative route branches.
     ///     The default value is `true`.
     ///   - refreshesWhenNoAvailableAlternatives: Enables periodic requests when there are no known alternative routes
-    /// yet. The default value is `noPeriodicRefresh`.
+    /// yet. The default value is ``AlternativeRoutesDetectionConfig/RefreshOnEmpty/noPeriodicRefresh``.
     ///   - acceptionPolicy: The acceptance policy.
     @available(*, deprecated, message: "Use 'init(acceptionPolicy:refreshIntervalSeconds:)' instead.")
     public init(

@@ -229,8 +229,11 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     }
 }
 
+/// Wraps a route object used across the Navigation SDK.
 public struct NavigationRoute: Sendable {
+    /// // A `Route` object that the current navigation route represents.
     public let route: Route
+    /// Unique route id.
     public let routeId: RouteId
 
     public let nativeRoute: RouteInterface
