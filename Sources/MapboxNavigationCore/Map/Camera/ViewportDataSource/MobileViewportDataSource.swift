@@ -193,9 +193,13 @@ public class MobileViewportDataSource: ViewportDataSource {
                             distance: lookaheadDistance
                         )
                 )
+                var fullCoordinates = coordinatesForIntersections
+                if geometryFramingAfterManeuver.enabled {
+                    fullCoordinates += coordinatesForManeuverFraming
+                }
 
                 let followingMobileCameraZoom = zoom(
-                    coordinatesForIntersections,
+                    fullCoordinates,
                     mapView: mapView,
                     pitch: pitch,
                     maxPitch: followingCameraOptions.defaultPitch,

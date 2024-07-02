@@ -183,8 +183,13 @@ public class CarPlayViewportDataSource: ViewportDataSource {
                         )
                 )
 
+                var fullCoordinates = coordinatesForIntersections
+                if geometryFramingAfterManeuver.enabled {
+                    fullCoordinates += coordinatesForManeuverFraming
+                }
+
                 let followingCarPlayCameraZoom = zoom(
-                    coordinatesForIntersections,
+                    fullCoordinates,
                     mapView: mapView,
                     pitch: pitch,
                     maxPitch: followingCameraOptions.defaultPitch,
