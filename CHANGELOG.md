@@ -11,6 +11,7 @@
 ### Other changes
 
 * Fixed the incorrect `RouteAlert.distanceToStart` when active guidance is in progress.
+* Fixed a bug when not faster routes detection was not started even if it was enabled by `FasterRouteDetectionConfig`.
 
 ## v3.2.0-rc.1
 
