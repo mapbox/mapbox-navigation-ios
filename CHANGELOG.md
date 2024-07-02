@@ -4,7 +4,8 @@
 
 ### Map
 
-* Fixed an extra large bottom margin of the following navigation camera. 
+* Fixed an extra large bottom margin of the following navigation camera.
+* Fixed a bug when the custom camera viewport was not applied. 
 
 ### Other changes
 

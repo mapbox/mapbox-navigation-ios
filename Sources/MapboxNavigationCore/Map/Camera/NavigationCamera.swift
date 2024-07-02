@@ -79,10 +79,10 @@ public class NavigationCamera {
             }
         }()
         self.cameraStateTransition = cameraStateTransition ?? NavigationCameraStateTransition(mapView)
-        postInit()
         observe(location: location)
         observe(routeProgress: routeProgress)
         observe(heading: heading)
+        observe(viewportDataSource: self.viewportDataSource)
 
         _states
             .debounce(for: 0.2, scheduler: DispatchQueue.main)
@@ -130,15 +130,6 @@ public class NavigationCamera {
         mapView.addSubview(debugView)
     }
 
-    private func postInit() {
-        viewportDataSource.navigationCameraOptions
-            .removeDuplicates()
-            .sink { [weak self] navigationCameraOptions in
-                guard let self else { return }
-                update(using: navigationCameraOptions)
-            }.store(in: &lifetimeSubscriptions)
-    }
-
     private func observe(location: AnyPublisher<CLLocation, Never>) {
         location.sink { [weak self] in
             self?.state.location = $0
@@ -156,6 +147,29 @@ public class NavigationCamera {
         heading.sink { [weak self] in
             self?.state.heading = $0
         }.store(in: &lifetimeSubscriptions)
+    }
+
+    private var viewportSubscription: [AnyCancellable] = []
+
+    private func observe(viewportDataSource: ViewportDataSource) {
+        viewportSubscription = []
+
+        viewportDataSource.navigationCameraOptions
+            .removeDuplicates()
+            .sink { [weak self] navigationCameraOptions in
+                guard let self else { return }
+                update(using: navigationCameraOptions)
+            }.store(in: &viewportSubscription)
+
+        // To prevent the lengthy animation from the Null Island to the current location use the camera to transition to
+        // the following state.
+        // The following camera options zoom should be calculated before at the moment.
+        viewportDataSource.navigationCameraOptions
+            .filter { $0.followingCamera.zoom != nil }
+            .first()
+            .sink { [weak self] _ in
+                self?.update(cameraState: .following)
+            }.store(in: &viewportSubscription)
     }
 
     private func update(using cameraState: NavigationCameraState) {
@@ -194,7 +208,11 @@ public class NavigationCamera {
     /// A type, which is used to provide location related data to continuously perform camera-related updates.
     /// By default ``NavigationMapView`` uses ``MobileViewportDataSource`` or ``CarPlayViewportDataSource`` depending on
     /// the current ``NavigationCameraType``.
-    public var viewportDataSource: ViewportDataSource
+    public var viewportDataSource: ViewportDataSource {
+        didSet {
+            observe(viewportDataSource: viewportDataSource)
+        }
+    }
 
     /// The current state of ``NavigationCamera``. Defaults to ``NavigationCameraState/idle``.
     ///

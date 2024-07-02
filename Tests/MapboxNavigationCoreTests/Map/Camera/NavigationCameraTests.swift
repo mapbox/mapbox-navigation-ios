@@ -34,21 +34,22 @@ class ViewportDataSourceMock: ViewportDataSource {
 
 class CameraStateTransitionMock: CameraStateTransition {
     weak var mapView: MapView?
-    public var expectation: XCTestExpectation?
+    public var transitionExpectation: XCTestExpectation?
+    public var updateExpectation: XCTestExpectation?
 
-    var passedCameraOptions: CameraOptions?
+    var passedUpdateCameraOptions: CameraOptions?
 
     required init(_ mapView: MapView) {
         self.mapView = mapView
     }
 
     func transitionTo(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        passedCameraOptions = cameraOptions
-        expectation?.fulfill()
+        transitionExpectation?.fulfill()
     }
 
     func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
-        // No-op
+        passedUpdateCameraOptions = cameraOptions
+        updateExpectation?.fulfill()
     }
 
     func cancelPendingTransition() {
@@ -100,7 +101,7 @@ class NavigationCameraTests: BaseTestCase {
         XCTAssertEqual(navigationCamera.currentCameraState, .following)
 
         let overviewExpectation = expectation(description: "Overview camera expectation.")
-        mock.expectation = overviewExpectation
+        mock.transitionExpectation = overviewExpectation
 
         navigationMapView.navigationCamera.update(cameraState: .overview)
         XCTAssertEqual(navigationCamera.currentCameraState, .overview)
@@ -112,12 +113,27 @@ class NavigationCameraTests: BaseTestCase {
 
         let overviewNotChangedExpectation = expectation(description: "Overview camera expectation.")
         overviewNotChangedExpectation.isInverted = true
-        mock.expectation = overviewNotChangedExpectation
+        mock.transitionExpectation = overviewNotChangedExpectation
 
         navigationMapView.navigationCamera.update(cameraState: .overview)
 
         await fulfillment(of: [overviewNotChangedExpectation], timeout: 1.0)
         XCTAssertEqual(navigationCamera.currentCameraState, .overview)
+    }
+
+    @MainActor
+    func testCustomTransition() async {
+        let cameraStateTransitionMock = CameraStateTransitionMock(navigationMapView.mapView)
+        navigationCamera.cameraStateTransition = cameraStateTransitionMock
+        XCTAssertTrue(
+            navigationMapView.navigationCamera.cameraStateTransition is CameraStateTransitionMock,
+            "cameraStateTransition should have correct type."
+        )
+
+        navigationCamera.update(cameraState: .following)
+        let expectation = XCTestExpectation(description: "Custom transition expectation.")
+        cameraStateTransitionMock.transitionExpectation = expectation
+        await fulfillment(of: [expectation], timeout: 1)
     }
 
     @MainActor
@@ -129,7 +145,7 @@ class NavigationCameraTests: BaseTestCase {
         navigationCamera.cameraStateTransition = cameraStateTransitionMock
         XCTAssertTrue(
             navigationMapView.navigationCamera.viewportDataSource is ViewportDataSourceMock,
-            "ViewportDataSource should have correct type."
+            "viewportDataSource should have correct type."
         )
 
         navigationCamera.update(cameraState: .following)
@@ -142,13 +158,13 @@ class NavigationCameraTests: BaseTestCase {
             bearing: 0.0,
             pitch: 45.0
         )
-        let expectation = XCTestExpectation(description: "Camera options expectation.")
-        cameraStateTransitionMock.expectation = expectation
+        let expectation = XCTestExpectation(description: "Custom viewport expectation.")
+        cameraStateTransitionMock.updateExpectation = expectation
         let navigationCameraOptions = NavigationCameraOptions(followingCamera: cameraOptions)
         viewportDataSourceMock._navigationCameraOptions.send(navigationCameraOptions)
         await fulfillment(of: [expectation], timeout: 1)
 
-        XCTAssertEqual(cameraStateTransitionMock.passedCameraOptions, cameraOptions)
+        XCTAssertEqual(cameraStateTransitionMock.passedUpdateCameraOptions, cameraOptions)
     }
 
     @MainActor

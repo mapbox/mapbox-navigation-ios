@@ -199,16 +199,6 @@ open class NavigationMapView: UIView {
                 guard let self else { return }
                 delegate?.navigationMapView(self, didChangeCameraState: cameraState)
             }.store(in: &lifetimeSubscriptions)
-
-        // To prevent the lengthy animation from the Null Island to the current location use
-        // camera transition to the following state.
-        // The following camera options zoom should be calculated before at the moment.
-        navigationCamera.viewportDataSource.navigationCameraOptions
-            .filter { $0.followingCamera.zoom != nil }
-            .first()
-            .sink { [weak self] _ in
-                self?.update(navigationCameraState: .following)
-            }.store(in: &lifetimeSubscriptions)
     }
 
     @available(*, unavailable)
