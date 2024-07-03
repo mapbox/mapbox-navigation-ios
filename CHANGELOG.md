@@ -6,6 +6,7 @@
 
 * Fixed an extra large bottom margin of the following navigation camera.
 * Fixed a bug when the custom camera viewport was not applied.
+* Fixed a bug with an incorrect camera center when custom `GeometryFramingAfterManeuver.distanceToFrameAfterManeuver` is set.
 
 ### Other changes
 
