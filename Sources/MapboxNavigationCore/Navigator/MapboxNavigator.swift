@@ -825,9 +825,9 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
             }
             .store(in: &subscriptions)
 
-        currentNavigationRoutes.publisher
+        navigationRoutes
             .sink { navigationRoutes in
-                fasterRouteController.navigationRoute = navigationRoutes.mainRoute
+                fasterRouteController.navigationRoute = navigationRoutes?.mainRoute
             }
             .store(in: &subscriptions)
 
