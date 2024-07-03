@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.2.0
+
+### Map
+
+* Fixed an extra large bottom margin of the following navigation camera. 
+
 ## v3.2.0-rc.1
 
 ### Packaging

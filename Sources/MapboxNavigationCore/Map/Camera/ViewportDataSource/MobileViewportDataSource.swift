@@ -256,7 +256,13 @@ public class MobileViewportDataSource: ViewportDataSource {
             }
 
             if options.followingCameraOptions.paddingUpdatesAllowed || followingCamera.padding == nil {
-                newOptions.padding = viewportPadding
+                newOptions.padding = UIEdgeInsets(
+                    top: followingMobileCameraAnchor.y,
+                    left: viewportPadding.left,
+                    bottom: mapView.bounds.height - followingMobileCameraAnchor
+                        .y + 1.0,
+                    right: viewportPadding.right
+                )
             }
         }
         return newOptions
