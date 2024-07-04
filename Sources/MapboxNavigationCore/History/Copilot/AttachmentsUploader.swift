@@ -82,19 +82,20 @@ final class AttachmentsUploaderImpl: AttachmentsUploader {
             "created": dateFormatter.string(from: archive.createdAt),
             "type": archive.fileType.type,
         ]
+        let filePath = try prepareFileUpload(of: archive)
         let jsonData = (try? JSONEncoder().encode([metadata])) ?? Data()
         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
         let log = options.log
         return try await withCheckedThrowingContinuation { continuation in
             do {
                 try HttpServiceFactory.getInstance().upload(for: .init(
-                    filePath: archive.fileUrl.path,
+                    filePath: filePath,
                     url: uploadURL(accessToken),
                     headers: [:],
                     metadata: jsonString,
                     mediaType: Constants.mediaTypeZip,
                     sdkInformation: sdkInformation
-                )) { status in
+                )) { [weak self] status in
                     switch status.state {
                     case .failed:
                         let errorMessage = status.error?.message ?? "Unknown upload error"
@@ -103,8 +104,10 @@ final class AttachmentsUploaderImpl: AttachmentsUploader {
                             userInfo: ["errorMessage": errorMessage]
                         )
                         log?("Failed to upload session to attachements. \(errorMessage)")
+                        try? self?.cleanupFileUpload(of: archive, from: filePath)
                         continuation.resume(throwing: error)
                     case .finished:
+                        try? self?.cleanupFileUpload(of: archive, from: filePath)
                         continuation.resume()
                     case .pending, .inProgress:
                         break
@@ -116,6 +119,31 @@ final class AttachmentsUploaderImpl: AttachmentsUploader {
                 continuation.resume(throwing: error)
             }
         }
+    }
+
+    private func prepareFileUpload(of archive: AttachmentArchive) throws -> String {
+        guard archive.fileUrl.lastPathComponent != archive.fileName else {
+            return archive.fileUrl.path
+        }
+        let fileManager = FileManager.default
+        let tmpPath = filesDir.appendingPathComponent(archive.fileName).path
+
+        if fileManager.fileExists(atPath: tmpPath) {
+            try fileManager.removeItem(atPath: tmpPath)
+        }
+
+        try fileManager.copyItem(
+            atPath: archive.fileUrl.path,
+            toPath: tmpPath
+        )
+        return tmpPath
+    }
+
+    private func cleanupFileUpload(of archive: AttachmentArchive, from temporaryPath: String) throws {
+        guard archive.fileUrl.path != temporaryPath else {
+            return
+        }
+        try FileManager.default.removeItem(atPath: temporaryPath)
     }
 
     private func uploadURL(_ accessToken: String) throws -> String {
