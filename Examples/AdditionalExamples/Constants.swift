@@ -116,4 +116,11 @@ let listOfExamples: [NamedController] = [
         storyboard: nil,
         pushExampleToViewController: false
     ),
+    (
+        name: "Custom Navigation Camera",
+        description: "Demonstrates how to add custom data source and transitions to navigation camera.",
+        controller: CustomNavigationCameraViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
 ]

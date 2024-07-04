@@ -103,6 +103,9 @@
 		2CC3473E2C2B1B92005BD000 /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC3473D2C2B1B92005BD000 /* MapboxNavigationCore */; };
 		2CC347402C2B1B92005BD000 /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC3473F2C2B1B92005BD000 /* MapboxNavigationUIKit */; };
 		2CC347422C2B1BAA005BD000 /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC347412C2B1BAA005BD000 /* MapboxGeocoder */; };
+		2CC92CEC2C33164D00A94834 /* CustomCameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CE92C33164D00A94834 /* CustomCameraStateTransition.swift */; };
+		2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CEA2C33164D00A94834 /* CustomViewportDataSource.swift */; };
+		2CC92CF62C33171000A94834 /* Custom-Navigation-Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
@@ -232,6 +235,9 @@
 		2CC3470A2C2B1B08005BD000 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
 		2CC3470C2C2B1B08005BD000 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Main.strings; sourceTree = "<group>"; };
 		2CC3470F2C2B1B08005BD000 /* ViewController+StyleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+StyleManager.swift"; sourceTree = "<group>"; };
+		2CC92CE92C33164D00A94834 /* CustomCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCameraStateTransition.swift; sourceTree = "<group>"; };
+		2CC92CEA2C33164D00A94834 /* CustomViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewportDataSource.swift; sourceTree = "<group>"; };
+		2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Navigation-Camera.swift"; sourceTree = "<group>"; };
 		2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSDKExampleApp.swift; sourceTree = "<group>"; };
 		2CE469132BA31C1F0075A32B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -334,6 +340,7 @@
 		2CA319FF2BC9878A0071176E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */,
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
 				2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */,
@@ -345,10 +352,11 @@
 				2CA31A072BC9878A0071176E /* EmbeddedExamples.storyboard */,
 				2CA31A012BC9878A0071176E /* History-Recording.swift */,
 				DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */,
+				2CC92CEB2C33164D00A94834 /* NavigationCamera */,
 				2CA31A042BC9878A0071176E /* Offline-Regions.swift */,
+				2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */,
 				2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */,
 				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
-				2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -457,6 +465,15 @@
 				2CC3470D2C2B1B08005BD000 /* Main.strings */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2CC92CEB2C33164D00A94834 /* NavigationCamera */ = {
+			isa = PBXGroup;
+			children = (
+				2CC92CE92C33164D00A94834 /* CustomCameraStateTransition.swift */,
+				2CC92CEA2C33164D00A94834 /* CustomViewportDataSource.swift */,
+			);
+			path = NavigationCamera;
 			sourceTree = "<group>";
 		};
 		2CE469052BA31C1F0075A32B = {
@@ -836,6 +853,7 @@
 				DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
+				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
@@ -848,7 +866,9 @@
 				2CA31A182BC9878A0071176E /* Advanced.swift in Sources */,
 				2CA31A232BC9878A0071176E /* AppDelegate.swift in Sources */,
 				2CA31A1A2BC9878A0071176E /* Offline-Regions.swift in Sources */,
+				2CC92CF62C33171000A94834 /* Custom-Navigation-Camera.swift in Sources */,
 				2CA31A202BC9878A0071176E /* CustomBarsViewController.swift in Sources */,
+				2CC92CEC2C33164D00A94834 /* CustomCameraStateTransition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
