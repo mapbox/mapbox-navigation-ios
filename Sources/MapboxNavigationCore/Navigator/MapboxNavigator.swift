@@ -232,13 +232,8 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
                             return
                         }
                         self?.billingHandler.beginNewBillingSessionIfExists(with: sessionUUID)
-                        await self?
-                            .send(
-                                WaypointArrivalStatus(
-                                    event: WaypointArrivalStatus.Events
-                                        .NextLegStarted(newLegIndex: newLegIndex)
-                                )
-                            )
+                        let event = WaypointArrivalStatus.Events.NextLegStarted(newLegIndex: newLegIndex)
+                        await self?.send(WaypointArrivalStatus(event: event))
                     } else {
                         Log.warning("Route leg switching failed.", category: .navigation)
                         await self?.send(NavigatorErrors.FailedToSelectRouteLeg())
@@ -259,10 +254,7 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
             }
 
             guard currentSession.state != .idle else {
-                Log.warning(
-                    "Duplicate setting to idle state attempted",
-                    category: .navigation
-                )
+                Log.warning("Duplicate setting to idle state attempted", category: .navigation)
                 send(NavigatorErrors.FailedToSetToIdle())
                 return
             }
@@ -581,6 +573,7 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
         if let privateRouteProgress, !Task.isCancelled {
             await send(RouteProgressState(routeProgress: privateRouteProgress))
         }
+        await handleRouteProgressUpdates(status: status)
     }
 
     func updateMapMatching(status: NavigationStatus) async {
@@ -652,15 +645,8 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
 
     private var previousArrivalWaypoint: MapboxDirections.Waypoint?
 
-    func updateIndices(status: NavigationStatus) async {
-        if let currentNavigationRoutes {
-            privateRouteProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
-        }
-        privateRouteProgress?.update(using: status)
-
-        guard let privateRouteProgress else {
-            return
-        }
+    func handleRouteProgressUpdates(status: NavigationStatus) async {
+        guard let privateRouteProgress else { return }
 
         if let newSpokenInstruction = privateRouteProgress.currentLegProgress.currentStepProgress
             .currentSpokenInstruction
@@ -684,25 +670,15 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
                 }
                 if let destination = legProgress.leg.destination {
                     previousArrivalWaypoint = destination
-                    if privateRouteProgress.isFinalLeg {
-                        await send(
-                            WaypointArrivalStatus(
-                                event:
-                                WaypointArrivalStatus.Events
-                                    .ToFinalDestination(destination: destination)
-                            )
-                        )
+                    let event: any WaypointArrivalEvent = if privateRouteProgress.isFinalLeg {
+                        WaypointArrivalStatus.Events.ToFinalDestination(destination: destination)
                     } else {
-                        await send(
-                            WaypointArrivalStatus(
-                                event:
-                                WaypointArrivalStatus.Events.ToWaypoint(
-                                    waypoint: destination,
-                                    legIndex: privateRouteProgress.legIndex
-                                )
-                            )
+                        WaypointArrivalStatus.Events.ToWaypoint(
+                            waypoint: destination,
+                            legIndex: privateRouteProgress.legIndex
                         )
                     }
+                    await send(WaypointArrivalStatus(event: event))
                 }
                 let advancesToNextLeg = switch configuration.multilegAdvancing {
                 case .automatically:
@@ -716,6 +692,13 @@ final class MapboxNavigator: Navigator, @unchecked Sendable {
                 switchLeg(newLegIndex: Int(status.legIndex) + 1)
             }
         }
+    }
+
+    func updateIndices(status: NavigationStatus) async {
+        if let currentNavigationRoutes {
+            privateRouteProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
+        }
+        privateRouteProgress?.update(using: status)
     }
 
     // MARK: - Notifications handling

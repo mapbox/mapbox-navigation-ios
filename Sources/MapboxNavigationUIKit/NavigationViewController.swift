@@ -897,12 +897,11 @@ extension NavigationViewController {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
 
-        guard sendsNotifications else { return }
-        guard UIApplication.shared.applicationState == .background else { return }
+        guard sendsNotifications, UIApplication.shared.applicationState == .background else { return }
+
         let currentLegProgress = routeProgress.currentLegProgress
-        if currentLegProgress.currentStepProgress.currentSpokenInstruction !=
-            currentLegProgress.currentStep.instructionsSpokenAlongStep?.last
-        {
+        let spokenInstructionsCount = currentLegProgress.currentStep.instructionsSpokenAlongStep?.count ?? 0
+        if currentLegProgress.currentStepProgress.spokenInstructionIndex != spokenInstructionsCount - 1 {
             return
         }
         guard let instruction = currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }

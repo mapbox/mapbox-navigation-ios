@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.3.0-beta.1
+
+### Banners and guidance instructions
+
+* Fixed a bug when a published event about a banner or spoken instruction was sent before `RouteProgress` was updated.
+* Fixed default local notification scheduling.
+
 ## v3.2.0
 
 ### Map

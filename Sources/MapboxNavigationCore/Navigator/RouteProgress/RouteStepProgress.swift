@@ -39,7 +39,7 @@ public struct RouteStepProgress: Equatable {
         currentSpokenInstruction = status.voiceInstruction.map(SpokenInstruction.init)
     }
 
-    /// Returns the current `RouteStep`.
+    /// Returns the current ``RouteStep``.
     public private(set) var step: RouteStep
 
     /// Returns distance user has traveled along current step.

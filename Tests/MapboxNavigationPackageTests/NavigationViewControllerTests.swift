@@ -251,6 +251,7 @@ class NavigationViewControllerTests: TestCase {
             stepIndex: UInt32(route.legs.last!.steps.count - 1)
         )
         await navigationProvider.navigator().updateIndices(status: finalStatus)
+        await navigationProvider.navigator().handleRouteProgressUpdates(status: finalStatus)
 
         await fulfillment(of: [delegate.didArriveExpectation], timeout: 1)
         XCTAssertTrue(delegate.didArriveAtCalled)
