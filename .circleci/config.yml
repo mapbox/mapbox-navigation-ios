@@ -35,12 +35,12 @@ commands:
                   channel: mobile-bots
                   event: pass
                   template: basic_success_1
-                  branch_pattern: main
+                  branch_pattern: lts/v2
         - slack/notify:
             channel: mobile-bots
             event: fail
             template: basic_fail_1
-            branch_pattern: main
+            branch_pattern: lts/v2
             mentions: '@here'
   install-gh-cli:
       steps:
@@ -842,7 +842,7 @@ workflows:
            filters:
              branches:
                only:
-                 - main
+                 - lts/v2
   api-diff-workflow:
     jobs:
       - get-api-log-job:
@@ -857,15 +857,6 @@ workflows:
           requires:
             - "Get old API logs"
             - "Get new API logs"
-  # FIXME: Temporarily disabled, failing tests that are executed with MapboxNavigationTestHost should be fixed.
-  # test-host-workflow:
-  #   jobs:
-  #     - spm-test-host-job:
-  #         name: "swift test; Xcode 13.4.1; iOS 15.5"
-  #         xcode: "13.4.1"
-  #         iOS: "15.5"
-  #         device: "iPhone 13"
-  #         context: Slack Orb
   main-workflow:
       jobs:
         - build-job:
@@ -959,7 +950,7 @@ workflows:
         - ios-trigger-metrics:
             filters:
               branches:
-                only: main
+                only: lts/v2
   update-version-workflow:
     jobs:
       - update-version-job:
@@ -972,29 +963,3 @@ workflows:
           filters:
             branches:
               only: /^trigger-distribute-version-.*/
-#  weekly-snapshot-workflow:
-#    # Run workflow every Friday at 23:59 UTC
-#    triggers:
-#      - schedule:
-#          cron: "59 23 * * 5"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - release-weekly-snapshot
-  weekly-snapshot-manual-workflow:
-    when: << pipeline.parameters.weekly_snapshot >>
-    jobs:
-      - release-weekly-snapshot
-#  pre-snapshot-workflow:
-#    # Run workflow every Thursday at 23:59 UTC
-#    triggers:
-#      - schedule:
-#          cron: "59 23 * * 4"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - pre-snapshot-check
