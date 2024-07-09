@@ -142,10 +142,10 @@ public final class MapboxNavigationProvider {
 
     // MARK: - Internal members
 
-    private weak var _sharedNavigator: (any Navigator)?
+    private weak var _sharedNavigator: MapboxNavigator?
     @MainActor
     func navigator() -> MapboxNavigator {
-        if let sharedNavigator = _sharedNavigator as? MapboxNavigator {
+        if let sharedNavigator = _sharedNavigator {
             return sharedNavigator
         } else {
             let coreNavigator: CoreNavigator = NativeNavigator(

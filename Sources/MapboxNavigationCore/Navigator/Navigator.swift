@@ -3,61 +3,6 @@ import CoreLocation
 import MapboxDirections
 import MapboxNavigationNative
 
-protocol Navigator: AnyObject {
-    var session: AnyPublisher<Session, Never> { get }
-    @MainActor
-    var currentSession: Session { get }
-
-    var routeProgress: AnyPublisher<RouteProgressState?, Never> { get }
-    var currentRouteProgress: RouteProgressState? { get }
-
-    var mapMatching: AnyPublisher<MapMatchingState?, Never> { get }
-    @MainActor
-    var currentMapMatching: MapMatchingState? { get }
-
-    var offlineFallbacks: AnyPublisher<FallbackToTilesState, Never> { get }
-
-    var voiceInstructions: AnyPublisher<SpokenInstructionState, Never> { get }
-
-    var bannerInstructions: AnyPublisher<VisualInstructionState, Never> { get }
-
-    var waypointsArrival: AnyPublisher<WaypointArrivalStatus, Never> { get }
-
-    var rerouting: AnyPublisher<ReroutingStatus, Never> { get }
-
-    var continuousAlternatives: AnyPublisher<AlternativesStatus, Never> { get }
-
-    var fasterRoutes: AnyPublisher<FasterRoutesStatus, Never> { get }
-
-    var routeRefreshing: AnyPublisher<RefreshingStatus, Never> { get }
-
-    var heading: AnyPublisher<CLHeading, Never> { get }
-
-    var eHorizonEvents: AnyPublisher<EHorizonStatus, Never> { get }
-
-    var errors: AnyPublisher<NavigatorError, Never> { get }
-
-    var navigationRoutes: AnyPublisher<NavigationRoutes?, Never> { get }
-    var currentNavigationRoutes: NavigationRoutes? { get }
-
-    @MainActor
-    func startActiveGuidance(with navigationRoutes: NavigationRoutes, startLegIndex: Int)
-    func selectAlternativeRoute(at index: Int)
-    func switchLeg(newLegIndex: Int)
-    @MainActor
-    func setToIdle()
-
-    @MainActor
-    func startFreeDrive()
-    @MainActor
-    func pauseFreeDrive()
-
-    func startUpdatingEHorizon()
-    func stopUpdatingEHorizon()
-
-    var roadMatching: RoadMatching { get }
-}
-
 // MARK: - NavigationEvent
 
 /// The base for all ``MapboxNavigation`` events.

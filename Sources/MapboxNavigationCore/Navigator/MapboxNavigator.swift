@@ -4,7 +4,7 @@ import Foundation
 import MapboxDirections
 @preconcurrency import MapboxNavigationNative
 
-final class MapboxNavigator: Navigator, @unchecked Sendable {
+final class MapboxNavigator: @unchecked Sendable {
     struct Configuration: @unchecked Sendable {
         let navigator: CoreNavigator
         let routeParserType: RouteParser.Type
