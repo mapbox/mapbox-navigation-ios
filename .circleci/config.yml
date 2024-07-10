@@ -378,6 +378,7 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
@@ -396,7 +397,6 @@ jobs:
           condition:
             not: << parameters.spm >>
           steps:
-            - macos/install-rosetta
             - *update-carthage-version
             - restore-carthage-cache:
                 xcode: << parameters.xcode >>
@@ -532,6 +532,7 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *add-github-to-known-hosts
       - run:
           name: Build test host application and execute tests
