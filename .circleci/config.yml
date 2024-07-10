@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.4.2
   macos: circleci/macos@2.4.1
+  gh: circleci/github-cli@2.0
 
 parameters:
   weekly_snapshot:
@@ -43,12 +44,6 @@ commands:
             template: basic_fail_1
             branch_pattern: lts/v2
             mentions: '@here'
-  install-gh-cli:
-      steps:
-        - run:
-            name: Install GitHub CLI
-            command: |
-              brew install gh
   install-xcodegen:
       steps:
         - run:
@@ -641,7 +636,6 @@ jobs:
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - install-mbx-ci
-      - install-gh-cli
       - restore-api-diff-cache:
           key: .Environment.CIRCLE_SHA1
           is_template: true
