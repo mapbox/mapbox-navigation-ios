@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.4.2
+  macos: circleci/macos@2.4.1
 
 parameters:
   weekly_snapshot:
@@ -305,7 +306,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -316,6 +317,7 @@ jobs:
       - *install-gems
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *update-carthage-version
       - when:
           condition: << parameters.update >>
@@ -374,7 +376,7 @@ jobs:
         default: "MapboxCoreNavigation"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -399,6 +401,7 @@ jobs:
           condition:
             not: << parameters.spm >>
           steps:
+            - macos/install-rosetta
             - *update-carthage-version
             - restore-carthage-cache:
                 xcode: << parameters.xcode >>
@@ -450,7 +453,7 @@ jobs:
         default: true
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -470,7 +473,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -492,7 +495,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -527,7 +530,7 @@ jobs:
         default: true
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -572,7 +575,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - when:
@@ -599,6 +602,7 @@ jobs:
       - *add-github-to-known-hosts
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *update-carthage-version
       - when:
           condition: << parameters.is_base_api >>
@@ -630,7 +634,7 @@ jobs:
       xcode: 14.2.0
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *add-github-to-known-hosts
@@ -662,7 +666,7 @@ jobs:
   spm-core-integration-test-job:
     macos:
       xcode: "14.3.1"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *prepare-netrc-file
@@ -674,7 +678,7 @@ jobs:
   spm-ui-integration-test-job:
     macos:
       xcode: "14.1.0"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-bash5
@@ -695,7 +699,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -743,7 +747,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -772,7 +776,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -795,7 +799,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-mbx-ci
@@ -808,7 +812,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-mbx-ci
