@@ -949,7 +949,7 @@ workflows:
         - ios-trigger-metrics:
             filters:
               branches:
-                only: kried/fix-v2-metrics
+                only: lts/v2
   update-version-workflow:
     jobs:
       - update-version-job:
