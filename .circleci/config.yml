@@ -2,6 +2,8 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.4.2
+  macos: circleci/macos@2.4.1
+  gh: circleci/github-cli@2.0
 
 parameters:
   weekly_snapshot:
@@ -35,19 +37,13 @@ commands:
                   channel: mobile-bots
                   event: pass
                   template: basic_success_1
-                  branch_pattern: main
+                  branch_pattern: lts/v2
         - slack/notify:
             channel: mobile-bots
             event: fail
             template: basic_fail_1
-            branch_pattern: main
+            branch_pattern: lts/v2
             mentions: '@here'
-  install-gh-cli:
-      steps:
-        - run:
-            name: Install GitHub CLI
-            command: |
-              brew install gh
   install-xcodegen:
       steps:
         - run:
@@ -305,7 +301,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -316,6 +312,7 @@ jobs:
       - *install-gems
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *update-carthage-version
       - when:
           condition: << parameters.update >>
@@ -374,13 +371,14 @@ jobs:
         default: "MapboxCoreNavigation"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
@@ -450,7 +448,7 @@ jobs:
         default: true
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -470,7 +468,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -492,7 +490,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -527,13 +525,14 @@ jobs:
         default: true
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *add-github-to-known-hosts
       - run:
           name: Build test host application and execute tests
@@ -572,7 +571,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - when:
@@ -599,6 +598,7 @@ jobs:
       - *add-github-to-known-hosts
       - *prepare-mapbox-file
       - *prepare-netrc-file
+      - macos/install-rosetta
       - *update-carthage-version
       - when:
           condition: << parameters.is_base_api >>
@@ -630,14 +630,13 @@ jobs:
       xcode: 14.2.0
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *add-github-to-known-hosts
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - install-mbx-ci
-      - install-gh-cli
       - restore-api-diff-cache:
           key: .Environment.CIRCLE_SHA1
           is_template: true
@@ -662,7 +661,7 @@ jobs:
   spm-core-integration-test-job:
     macos:
       xcode: "14.3.1"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *prepare-netrc-file
@@ -674,7 +673,7 @@ jobs:
   spm-ui-integration-test-job:
     macos:
       xcode: "14.1.0"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-bash5
@@ -695,7 +694,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -743,7 +742,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -772,7 +771,7 @@ jobs:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - *restore-cache-gems
@@ -795,7 +794,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-mbx-ci
@@ -808,7 +807,7 @@ jobs:
         default: "14.1.0"
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     steps:
       - checkout
       - install-mbx-ci
@@ -842,7 +841,7 @@ workflows:
            filters:
              branches:
                only:
-                 - main
+                 - lts/v2
   api-diff-workflow:
     jobs:
       - get-api-log-job:
@@ -857,15 +856,6 @@ workflows:
           requires:
             - "Get old API logs"
             - "Get new API logs"
-  # FIXME: Temporarily disabled, failing tests that are executed with MapboxNavigationTestHost should be fixed.
-  # test-host-workflow:
-  #   jobs:
-  #     - spm-test-host-job:
-  #         name: "swift test; Xcode 13.4.1; iOS 15.5"
-  #         xcode: "13.4.1"
-  #         iOS: "15.5"
-  #         device: "iPhone 13"
-  #         context: Slack Orb
   main-workflow:
       jobs:
         - build-job:
@@ -959,7 +949,7 @@ workflows:
         - ios-trigger-metrics:
             filters:
               branches:
-                only: main
+                only: lts/v2
   update-version-workflow:
     jobs:
       - update-version-job:
@@ -972,29 +962,3 @@ workflows:
           filters:
             branches:
               only: /^trigger-distribute-version-.*/
-#  weekly-snapshot-workflow:
-#    # Run workflow every Friday at 23:59 UTC
-#    triggers:
-#      - schedule:
-#          cron: "59 23 * * 5"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - release-weekly-snapshot
-  weekly-snapshot-manual-workflow:
-    when: << pipeline.parameters.weekly_snapshot >>
-    jobs:
-      - release-weekly-snapshot
-#  pre-snapshot-workflow:
-#    # Run workflow every Thursday at 23:59 UTC
-#    triggers:
-#      - schedule:
-#          cron: "59 23 * * 4"
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - pre-snapshot-check
