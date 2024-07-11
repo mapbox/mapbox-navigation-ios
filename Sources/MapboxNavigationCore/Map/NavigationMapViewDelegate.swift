@@ -237,6 +237,7 @@ extension NavigationMapViewDelegate {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
 
+    /// ``UnimplementedLogging`` prints a warning to standard output the first time this method is called.
     public func navigationMapView(
         _ navigationMapView: NavigationMapView,
         didAddRedrawActiveGuidanceRoutes navigationRoutes: NavigationRoutes
