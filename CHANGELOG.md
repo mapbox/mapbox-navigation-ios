@@ -2,29 +2,10 @@
 
 ## v3.2.0
 
-### Map
-
-* Fixed an extra large bottom margin of the following navigation camera.
-* Fixed a bug when the custom camera viewport was not applied.
-* Fixed a bug with an incorrect camera center when custom `GeometryFramingAfterManeuver.distanceToFrameAfterManeuver` is set.
-
-### Other changes
-
-* Fixed the incorrect `RouteAlert.distanceToStart` when active guidance is in progress.
-* Fixed a bug when not faster routes detection was not started even if it was enabled by `FasterRouteDetectionConfig`.
-
-## v3.2.0-rc.1
-
 ### Packaging
 
-* MapboxNavigationCore now requires [MapboxNavigationNative v313.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/313.0.0).
-* MapboxNavigationCore now requires [MapboxMaps v11.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.0-rc.1).
-
-### Other changes
-
-* Supported the ability to notify about the navigation-related error by adding `NavigationController.errors`.
-
-## v3.2.0-beta.1
+* MapboxNavigationCore now requires [MapboxNavigationNative v314.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/314.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.5.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.1).
 
 ### API deprecations:
 
@@ -36,6 +17,9 @@
 * Added `NavigationMapViewDelegate.navigationMapView(_:willAdd:)`, `NavigationViewControllerDelegate.navigationViewController(_:willAdd:)`, and `CarPlayManagerDelegate.carPlayManager(_:willAdd:for:)` to modify the properties of the default layer which will be added to the map view during navigation.
 * Added `NavigationMapView.showsRelativeDurationsOnAlternativeManuever` flag to toggle ETA callouts displaying during Active Guidance.
 * Added `NavigationMapViewDelegate.navigationMapView(_:,didAddRedrawActiveGuidanceRoutes:)` method to monitor when view has refreshed the routes in Active Guidance.
+* Fixed an extra large bottom margin of the following navigation camera.
+* Fixed a bug when the custom camera viewport was not applied.
+* Fixed a bug with an incorrect camera center when custom `GeometryFramingAfterManeuver.distanceToFrameAfterManeuver` is set.
 
 ### Routing
 
@@ -48,7 +32,10 @@
 * Added`HistoryReplayController` wrapped as a custom static `LocationClient.historyReplayingValue(with:)`, which allows replaying history files.
 * Added static method `Directions.url(forCalculating:credentials:httpMethod:)` for generating a request URL without creating the `Directions` instance.
 * Added default value `CongestionRangesConfiguration.default` for `RouteProgress.init(navigationRoutes:waypoints:congestionConfiguration:)` constructor.
-* `CarPlayManager` fix problem with dismiss preview mode. 
+* `CarPlayManager` fix problem with dismiss preview mode.
+* Supported the ability to notify about the navigation-related error by adding `NavigationController.errors`.
+* Fixed the incorrect `RouteAlert.distanceToStart` when active guidance is in progress.
+* Fixed a bug when not faster routes detection was not started even if it was enabled by `FasterRouteDetectionConfig`.
 
 ## v3.1.0
 

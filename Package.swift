@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let mapsVersion: Version = "11.5.0-rc.1"
+let mapsVersion: Version = "11.5.1"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
 
@@ -26,7 +26,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: "313.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: "314.0.0"),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
