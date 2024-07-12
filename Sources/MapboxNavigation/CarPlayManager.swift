@@ -673,8 +673,13 @@ extension CarPlayManager {
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
         
         if currentActivity == .previewing {
-            interfaceController.safePopTemplate(animated: false)
-            interfaceController.pushTemplate(previewMapTemplate, animated: false)
+            if #available(iOS 14.0, *) {
+                interfaceController.popTemplate(animated: false) { _, _ in
+                    interfaceController.pushTemplate(previewMapTemplate, animated: false)
+                }
+            } else {
+                interfaceController.safePopTemplate(animated: false)
+            }
         } else {
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
