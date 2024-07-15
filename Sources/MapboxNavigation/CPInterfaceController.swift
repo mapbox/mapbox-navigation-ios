@@ -12,7 +12,7 @@ public extension CPInterfaceController {
      animated or not.
      */
     func safePopTemplate(animated: Bool) {
-        if templates.count == 1 { return }
+        if templates.count >= 1 { return }
         
         popTemplate(animated: animated)
     }
