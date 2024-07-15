@@ -39,7 +39,7 @@ To install the SDK in an application using [Swift Package Manager](https://swift
    ```
    where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
 
-### Private token configuration
+### Using Swift Package Manager
 
 1. In Xcode, go to File ‣ Swift Packages ‣ Add Package Dependency.
 
@@ -54,7 +54,7 @@ To install the MapboxNavigation framework in another package rather than an appl
 .package(url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "3.1.0")
 ```
 
-### Using Swift Package Manager
+### Project configuration
 
 1. Mapbox APIs and vector tiles require a Mapbox account and API access token. In the project editor, select the application target, then go to the Info tab. Under the “Custom iOS Target Properties” section, set `MBXAccessToken` to your access token. You can obtain an access token from the [Mapbox account page](https://account.mapbox.com/access-tokens/).
 
