@@ -679,6 +679,7 @@ extension CarPlayManager {
                 }
             } else {
                 interfaceController.safePopTemplate(animated: false)
+                interfaceController.pushTemplate(previewMapTemplate, animated: false)
             }
         } else {
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
