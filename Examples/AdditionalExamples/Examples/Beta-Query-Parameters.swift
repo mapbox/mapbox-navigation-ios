@@ -43,8 +43,12 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
         super.viewDidLoad()
 
         navigationMapView = .init(
-            location: mapboxNavigation.navigation().locationMatching.map(\.location).eraseToAnyPublisher(),
-            routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+            location: mapboxNavigation.navigation()
+                .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                .eraseToAnyPublisher(),
+            routeProgress: mapboxNavigation.navigation()
+                .routeProgress.map(\.?.routeProgress)
+                .eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false

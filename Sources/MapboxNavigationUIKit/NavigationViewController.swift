@@ -299,8 +299,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         let mapViewConfiguration: NavigationView.MapViewConfiguration = switch navigationOptions?.navigationMapView {
         case .none:
             .createNew(
-                location: mapboxNavigation.navigation().locationMatching.map(\.location).eraseToAnyPublisher(),
-                routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress)
+                location: mapboxNavigation.navigation()
+                    .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                    .eraseToAnyPublisher(),
+                routeProgress: mapboxNavigation.navigation()
+                    .routeProgress.map(\.?.routeProgress)
                     .eraseToAnyPublisher(),
                 heading: isWalkingProfile ? mapboxNavigation.navigation().heading.eraseToAnyPublisher() : nil,
                 predictiveCacheManager: navigationOptions?.predictiveCacheManager

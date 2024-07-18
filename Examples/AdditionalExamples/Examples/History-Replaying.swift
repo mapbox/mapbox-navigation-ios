@@ -56,8 +56,12 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
     func loadNavigationViewIfNeeded() {
         if navigationMapView == nil {
             navigationMapView = .init(
-                location: mapboxNavigation.navigation().locationMatching.map(\.location).eraseToAnyPublisher(),
-                routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+                location: mapboxNavigation.navigation()
+                    .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                    .eraseToAnyPublisher(),
+                routeProgress: mapboxNavigation.navigation()
+                    .routeProgress.map(\.?.routeProgress)
+                    .eraseToAnyPublisher(),
                 predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
             )
         }

@@ -60,8 +60,12 @@ class CustomWaypointsViewController: UIViewController {
         super.viewDidLoad()
 
         navigationMapView = .init(
-            location: mapboxNavigation.navigation().locationMatching.map(\.location).eraseToAnyPublisher(),
-            routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+            location: mapboxNavigation.navigation()
+                .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                .eraseToAnyPublisher(),
+            routeProgress: mapboxNavigation.navigation()
+                .routeProgress.map(\.?.routeProgress)
+                .eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

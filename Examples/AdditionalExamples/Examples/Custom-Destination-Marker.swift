@@ -47,8 +47,12 @@ class CustomDestinationMarkerController: UIViewController {
 
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(
-            location: mapboxNavigation.navigation().locationMatching.map(\.location).eraseToAnyPublisher(),
-            routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+            location: mapboxNavigation.navigation()
+                .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                .eraseToAnyPublisher(),
+            routeProgress: mapboxNavigation.navigation()
+                .routeProgress.map(\.?.routeProgress)
+                .eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         navigationMapView.puckType = .puck2D(.navigationDefault)
