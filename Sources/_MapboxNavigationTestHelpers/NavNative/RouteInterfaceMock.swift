@@ -15,6 +15,7 @@ public final class RouteInterfaceMock: RouteInterface {
     public var expirationTimeMs: NSNumber?
     public var lastRefreshTimestamp: Date?
     public var routeGeometry: [Coordinate2D]
+    public var mapboxApi: MapboxAPI
 
     public init(
         routeId: String = UUID().uuidString,
@@ -27,7 +28,8 @@ public final class RouteInterfaceMock: RouteInterface {
         waypoints: [Waypoint] = [],
         expirationTimeMs: NSNumber? = nil,
         lastRefreshTimestamp: Date? = nil,
-        routeGeometry: [Coordinate2D] = []
+        routeGeometry: [Coordinate2D] = [],
+        mapboxApi: MapboxAPI = .directions
     ) {
         self.routeId = routeId
         self.responseUuid = responseUuid
@@ -40,6 +42,7 @@ public final class RouteInterfaceMock: RouteInterface {
         self.expirationTimeMs = expirationTimeMs
         self.lastRefreshTimestamp = lastRefreshTimestamp
         self.routeGeometry = routeGeometry
+        self.mapboxApi = mapboxApi
     }
 
     public func getRouteId() -> String { routeId }
@@ -63,4 +66,6 @@ public final class RouteInterfaceMock: RouteInterface {
     public func getLastRefreshTimestamp() -> Date? { lastRefreshTimestamp }
 
     public func getRouteGeometry() -> [Coordinate2D] { routeGeometry }
+
+    public func getMapboxAPI() -> MapboxAPI { mapboxApi }
 }
