@@ -10,6 +10,8 @@
 ### Other changes
 
 * The shared instance of `RouteVoiceController` is now strongly stored after the first instantiation to avoid creating multiple instances.
+* Fixed a bug with a map matching response parsing for silent waypoints.
+* `Tracepoint.waypointIndex` is now an optional property.
 
 ## v3.2.0
 

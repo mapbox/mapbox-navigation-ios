@@ -15,9 +15,6 @@ extension Match {
         /// The geographic coordinate of the waypoint, snapped to the road network.
         public var coordinate: LocationCoordinate2D
 
-        /// The straight-line distance from this waypoint to the corresponding waypoint in the ``RouteOptions`` or
-        /// ``MatchOptions`` object.
-
         /// Number of probable alternative matchings for this tracepoint. A value of zero indicates that this point was
         /// matched unambiguously.
         public var countOfAlternatives: Int
@@ -29,7 +26,10 @@ extension Match {
         public var matchingIndex: Int
 
         /// The index of the waypoint inside the matched route.
-        public var waypointIndex: Int
+        ///
+        /// This value is set to`nil` for the silent waypoint when the corresponding waypoint has
+        /// ``Waypoint/separatesLegs`` set to `false`.
+        public var waypointIndex: Int?
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -40,7 +40,7 @@ extension Match {
             self.countOfAlternatives = try container.decode(Int.self, forKey: .countOfAlternatives)
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
             self.matchingIndex = try container.decode(Int.self, forKey: .matchingIndex)
-            self.waypointIndex = try container.decode(Int.self, forKey: .waypointIndex)
+            self.waypointIndex = try container.decodeIfPresent(Int.self, forKey: .waypointIndex)
         }
 
         public func encode(to encoder: Encoder) throws {
