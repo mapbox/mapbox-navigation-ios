@@ -21,7 +21,7 @@ public final class MapboxNavigationProvider {
         }
     }
 
-    private weak var _sharedRouteVoiceController: RouteVoiceController?
+    private var _sharedRouteVoiceController: RouteVoiceController?
     @MainActor
     public var routeVoiceController: RouteVoiceController {
         if let _sharedRouteVoiceController {

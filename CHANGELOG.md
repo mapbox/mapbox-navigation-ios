@@ -7,6 +7,10 @@
 * Fixed a bug when a published event about a banner or spoken instruction was sent before `RouteProgress` was updated.
 * Fixed default local notification scheduling.
 
+### Other changes
+
+* The shared instance of `RouteVoiceController` is now strongly stored after the first instantiation to avoid creating multiple instances.
+
 ## v3.2.0
 
 ### Map
