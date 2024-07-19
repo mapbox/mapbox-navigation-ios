@@ -2,7 +2,7 @@ import MapboxCommon_Private
 
 public struct SdkInfo: Sendable {
     public static let navigationUX: Self = .init(
-        name: Bundle.navigationUXName,
+        name: Bundle.resolvedNavigationSDKName,
         version: Bundle.mapboxNavigationVersion,
         packageName: "com.mapbox.navigationUX"
     )

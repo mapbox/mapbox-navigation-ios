@@ -45,12 +45,26 @@ extension String {
     }()
 
     public static let navigationUXUserAgentFragment: String =
-        "\(Bundle.navigationUXName)/\(Bundle.mapboxNavigationVersion)"
+        "\(Bundle.resolvedNavigationSDKName)/\(Bundle.mapboxNavigationVersion)"
 }
 
 extension Bundle {
     public static let navigationUXName: String = "mapbox-navigationUX-ios"
+    public static let navigationUIKitName: String = "mapbox-navigationUIKit-ios"
     public static let navigationCoreName: String = "mapbox-navigationCore-ios"
+    /// Deduced SDK name.
+    ///
+    /// Equals ``navigationCoreName``, ``navigationUIKitName`` or ``navigationUXName``, based on the detected project
+    /// dependencies structure.
+    public static var resolvedNavigationSDKName: String {
+        if NSClassFromString("NavigationUX") != nil {
+            navigationUXName
+        } else if NSClassFromString("NavigationViewController") != nil {
+            navigationUIKitName
+        } else {
+            navigationCoreName
+        }
+    }
 
     var version: String? {
         infoDictionary?["CFBundleShortVersionString"] as? String

@@ -69,7 +69,7 @@ public actor CopilotService {
                     userId: UIDevice.current.identifierForVendor?.uuidString ?? "-",
                     navNativeVersion: navNativeVersion,
                     sdkVersion: Bundle.mapboxNavigationVersion,
-                    sdkName: Bundle.navigationUXName,
+                    sdkName: Bundle.resolvedNavigationSDKName,
                     packageName: Bundle.mapboxNavigationUXBundleIdentifier,
                     log: log
                 ),
