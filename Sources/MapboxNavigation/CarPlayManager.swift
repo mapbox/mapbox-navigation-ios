@@ -102,7 +102,8 @@ public class CarPlayManager: NSObject {
     private weak var navigationService: NavigationService?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
     private var indexedRouteResponse: IndexedRouteResponse?
-    
+    private let semaphore = DispatchSemaphore(value: 1)
+
     /**
      Programatically begins a CarPlay turn-by-turn navigation session.
      
@@ -653,6 +654,9 @@ extension CarPlayManager {
     }
     
     func previewRoutes(for trip: CPTrip) {
+        semaphore.wait()
+        defer { semaphore.signal() }
+
         guard let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
               let interfaceController = interfaceController else {
                   return
