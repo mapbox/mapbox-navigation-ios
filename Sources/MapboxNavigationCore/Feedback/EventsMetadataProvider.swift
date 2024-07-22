@@ -79,10 +79,6 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
             )
         }
     }
-
-    func screenshot(forCallback callback: @escaping ScreenshotCallback) {
-        callback(nil)
-    }
 }
 
 extension AVAudioSession: AudioSessionInfoProvider {
