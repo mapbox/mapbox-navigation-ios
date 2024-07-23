@@ -237,6 +237,12 @@ class ViewController: UIViewController {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else { return }
         if let indexedRouteResponse = indexedRouteResponse {
             delegate.carPlayManager.previewRoutes(for: indexedRouteResponse)
+
+                        // debug
+                        // By enabling following lines, it makes easy to reproduce the same crash.
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            delegate.carPlayManager.previewRoutes(for: indexedRouteResponse)
+                        }
         } else {
             delegate.carPlayManager.cancelRoutesPreview()
         }
@@ -251,7 +257,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func simulateButtonPressed(_ sender: Any) {
-        simulationButton.isSelected = !simulationButton.isSelected
+//        simulationButton.isSelected = !simulationButton.isSelected
+
+        let destinationCoordinate = CLLocationCoordinate2D(latitude: 37.957453, longitude: -122.523200)
+        let waypoint = Waypoint(coordinate: destinationCoordinate, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+
+        waypoint.targetCoordinate = destinationCoordinate
+        waypoints = [waypoint]
+
+        requestRoute()
     }
 
     @IBAction func clearMapPressed(_ sender: Any) {

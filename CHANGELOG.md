@@ -1,10 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.18.2
+
+### CarPlay
+
+* Fixed CarPlay crash when calling `CarPlayManager.routePreview()` function for iOS 14+.
+
 ## v2.18.1
 
 ### CarPlay
 
-* Fixed CarPlay crash when calling `CarPlayManager.routePreview()` function.
+* Partially fixed CarPlay crash when calling `CarPlayManager.routePreview()` function.
 
 ## v2.18.0
 
