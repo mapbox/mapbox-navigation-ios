@@ -102,7 +102,7 @@ public class CarPlayManager: NSObject {
     private weak var navigationService: NavigationService?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
     private var indexedRouteResponse: IndexedRouteResponse?
-    
+
     /**
      Programatically begins a CarPlay turn-by-turn navigation session.
      
@@ -653,6 +653,7 @@ extension CarPlayManager {
     }
     
     func previewRoutes(for trip: CPTrip) {
+
         guard let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
               let interfaceController = interfaceController else {
                   return
@@ -673,8 +674,14 @@ extension CarPlayManager {
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
         
         if currentActivity == .previewing {
-            interfaceController.safePopTemplate(animated: false)
-            interfaceController.pushTemplate(previewMapTemplate, animated: false)
+            if #available(iOS 14.0, *) {
+                interfaceController.popTemplate(animated: false) { _, _ in
+                    interfaceController.pushTemplate(previewMapTemplate, animated: false)
+                }
+            } else {
+                interfaceController.safePopTemplate(animated: false)
+                interfaceController.pushTemplate(previewMapTemplate, animated: false)
+            }
         } else {
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
