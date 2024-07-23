@@ -64,6 +64,8 @@ class NativeUserFeedbackHandleSpy: NativeUserFeedbackHandle, @unchecked Sendable
 }
 
 final class EventsMetadataInterfaceSpy: EventsMetadataInterface {
+    var returnedScreenshot: ScreenshotFormat?
+
     func provideEventsMetadata() -> EventsMetadata {
         .init(
             volumeLevel: nil,
@@ -76,5 +78,9 @@ final class EventsMetadataInterfaceSpy: EventsMetadataInterface {
             connectivity: "",
             appMetadata: nil
         )
+    }
+
+    func screenshot(forCallback callback: @escaping ScreenshotCallback) {
+        callback(returnedScreenshot)
     }
 }
