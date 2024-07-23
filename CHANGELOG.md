@@ -2,6 +2,10 @@
 
 ## v3.3.0-beta.1
 
+### CarPlay
+
+* Fixed CarPlay crash when calling `CarPlayManager.routePreview()` method.
+
 ### Banners and guidance instructions
 
 * Fixed a bug when a published event about a banner or spoken instruction was sent before `RouteProgress` was updated.

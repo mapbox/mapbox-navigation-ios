@@ -630,8 +630,11 @@ extension CarPlayManager {
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
 
         if currentActivity == .previewing {
-            interfaceController.popTemplate(animated: false, completion: nil)
-            try await interfaceController.pushTemplate(previewMapTemplate, animated: false)
+            interfaceController.popTemplate(animated: false) { _, _ in
+                Task { @MainActor in
+                    try await interfaceController.pushTemplate(previewMapTemplate, animated: false)
+                }
+            }
         } else {
             try await interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
