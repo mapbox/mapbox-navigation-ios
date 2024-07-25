@@ -37,7 +37,15 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
     // MARK: Overrides
 
     override func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        realLocation = locations.last
+        let lastLocation = locations.last
+        if #available(iOS 15.0, *) {
+            if let sourceInformation = lastLocation?.sourceInformation, sourceInformation.isSimulatedBySoftware {
+                // The location is simulated, we need to update timestamp
+                simulatedLocation = lastLocation
+            }
+        } else {
+            realLocation = lastLocation
+        }
     }
 
     // MARK: Specifying Simulation
@@ -65,7 +73,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
 
     override var location: CLLocation? {
         get {
-            return simulatedLocation ?? realLocation
+            simulatedLocation ?? realLocation
         }
         set {
             simulatedLocation = newValue

@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.3.0-rc.1
+
+### Other changes
+
+* Fixed unwanted road movement simulation when using static GPX files to simulate location.
+
 ## v3.3.0-beta.1
 
 ### CarPlay
