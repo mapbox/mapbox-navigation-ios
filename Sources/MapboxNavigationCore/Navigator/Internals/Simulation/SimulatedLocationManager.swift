@@ -37,15 +37,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
     // MARK: Overrides
 
     override func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let lastLocation = locations.last
-        if #available(iOS 15.0, *) {
-            if let sourceInformation = lastLocation?.sourceInformation, sourceInformation.isSimulatedBySoftware {
-                // The location is simulated, we need to update timestamp
-                simulatedLocation = lastLocation
-            }
-        } else {
-            realLocation = lastLocation
-        }
+        realLocation = locations.last
     }
 
     // MARK: Specifying Simulation
@@ -163,14 +155,17 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
         else {
             // report last known coordinate or real one
             if let simulatedLocation {
-                self.simulatedLocation = CLLocation(
-                    coordinate: simulatedLocation.coordinate,
-                    altitude: simulatedLocation.altitude,
-                    horizontalAccuracy: simulatedLocation.horizontalAccuracy,
-                    verticalAccuracy: simulatedLocation.verticalAccuracy,
-                    course: simulatedLocation.course,
-                    speed: simulatedLocation.speed,
-                    timestamp: getNextDate()
+                self.simulatedLocation = .init(simulatedLocation: simulatedLocation, timestamp: getNextDate())
+            } else if #available(iOS 15.0, *),
+                      let realLocation,
+                      let sourceInformation = realLocation.sourceInformation,
+                      sourceInformation.isSimulatedBySoftware
+            {
+                // The location is simulated, we need to update timestamp
+                self.realLocation = .init(
+                    simulatedLocation: realLocation,
+                    timestamp: getNextDate(),
+                    sourceInformation: sourceInformation
                 )
             }
             if let location {
@@ -314,6 +309,41 @@ extension Double {
 extension CLLocation {
     fileprivate convenience init(_ coordinate: CLLocationCoordinate2D) {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+
+    fileprivate convenience init(
+        simulatedLocation: CLLocation,
+        timestamp: Date
+    ) {
+        self.init(
+            coordinate: simulatedLocation.coordinate,
+            altitude: simulatedLocation.altitude,
+            horizontalAccuracy: simulatedLocation.horizontalAccuracy,
+            verticalAccuracy: simulatedLocation.verticalAccuracy,
+            course: simulatedLocation.course,
+            speed: simulatedLocation.speed,
+            timestamp: timestamp
+        )
+    }
+
+    @available(iOS 15.0, *)
+    fileprivate convenience init(
+        simulatedLocation: CLLocation,
+        timestamp: Date,
+        sourceInformation: CLLocationSourceInformation
+    ) {
+        self.init(
+            coordinate: simulatedLocation.coordinate,
+            altitude: simulatedLocation.altitude,
+            horizontalAccuracy: simulatedLocation.horizontalAccuracy,
+            verticalAccuracy: simulatedLocation.verticalAccuracy,
+            course: simulatedLocation.course,
+            courseAccuracy: simulatedLocation.courseAccuracy,
+            speed: simulatedLocation.speed,
+            speedAccuracy: simulatedLocation.speedAccuracy,
+            timestamp: timestamp,
+            sourceInfo: sourceInformation
+        )
     }
 }
 
