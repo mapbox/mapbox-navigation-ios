@@ -19,6 +19,7 @@ parameters:
 commands:
   install-mbx-ci:
     steps:
+      - macos/install-rosetta
       - run:
           name: "Install MBX CI"
           command: |
