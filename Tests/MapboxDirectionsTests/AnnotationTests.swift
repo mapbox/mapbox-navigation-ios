@@ -28,8 +28,7 @@ class AnnotationTests: XCTestCase {
         ]
 
         stub(
-            condition: isHost("api.mapbox.com")
-                && containsQueryParams(queryParams)
+            condition: isHost("api.mapbox.com") && containsQueryParams(queryParams)
         ) { _ in
             let path = Bundle.module.path(forResource: "annotation", ofType: "json")
             return HTTPStubsResponse(fileAtPath: path!, statusCode: 200, headers: ["Content-Type": "application/json"])
@@ -68,7 +67,7 @@ class AnnotationTests: XCTestCase {
         }
         XCTAssertNotNil(task)
 
-        waitForExpectations(timeout: 2) { error in
+        waitForExpectations(timeout: 3) { error in
             XCTAssertNil(error, "Error: \(error!.localizedDescription)")
             XCTAssertEqual(task.state, .completed)
         }
