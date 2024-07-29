@@ -673,7 +673,7 @@ jobs:
 
   spm-ui-integration-test-job:
     macos:
-      xcode: "14.1.0"
+      xcode: "15.2.0"
     resource_class: macos.m1.medium.gen1
     steps:
       - checkout
@@ -684,7 +684,7 @@ jobs:
       - install-swift-sh
       - run:
           name: Validate released Navigation SDK versions
-          command: /usr/local/bin/bash ./scripts/validate_releases.sh # Use Bash 5 that is installed via Homebrew.
+          command: ./scripts/validate_releases.sh
 
   generate-docs-job:
     parameters:
@@ -835,7 +835,7 @@ workflows:
           context: Slack Orb
           notify_success: true
       - spm-ui-integration-test-job:
-          name: "Xcode 14.1.0; SPM UI test"
+          name: "Xcode 15.2.0; SPM UI test"
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00
