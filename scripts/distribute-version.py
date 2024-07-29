@@ -4,7 +4,7 @@ import time
 
 def push_pod(name, max_attempts):
     for attempt in range(0, max_attempts):
-        status = subprocess.run('pod repo update && pod trunk push ' + name + '.podspec', shell=True)
+        status = subprocess.run('pod repo update && pod trunk push ' + name + '.podspec --allow-warnings', shell=True)
         if status.returncode == 0:
             return
         time.sleep(60 * pow(2, attempt))
