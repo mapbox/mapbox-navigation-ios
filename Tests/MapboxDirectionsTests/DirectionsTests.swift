@@ -72,10 +72,9 @@ class DirectionsTests: XCTestCase {
         XCTAssertTrue(queryItems.contains(where: { $0.name == "sku" && $0.value == BogusCredentials.skuToken }))
     }
 
-    let maximumCoordinateCount = 10000
+    let maximumCoordinateCount = 991
 
-    // TODO: Restore test, something isn't right in max calculation
-    func disabled_testGETRequest() {
+    func testGETRequest() {
         // Bumps right up against MaximumURLLength
         let coordinates = Array(
             repeating: LocationCoordinate2D(latitude: 0, longitude: 0),
