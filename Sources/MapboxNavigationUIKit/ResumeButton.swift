@@ -1,3 +1,4 @@
+import MapboxNavigationCore
 import UIKit
 
 /// The button to return to the following navigation camera.
@@ -56,9 +57,7 @@ public class ResumeButton: UIControl {
     }
 
     func commonInit() {
-        titleLabel.text = NSLocalizedString(
-            "RESUME",
-            bundle: .mapboxNavigation,
+        titleLabel.text = "RESUME".localizedString(
             value: "Resume",
             comment: "Button title for resume tracking"
         )

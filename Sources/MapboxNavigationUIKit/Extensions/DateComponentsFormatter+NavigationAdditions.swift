@@ -1,4 +1,5 @@
 import Foundation
+import MapboxNavigationCore
 
 extension DateComponentsFormatter {
     public static let fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -37,9 +38,7 @@ extension DateComponentsFormatter {
 
         if signed, interval >= 0 {
             return String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "EXPLICITLY_POSITIVE_NUMBER",
-                    bundle: .mapboxNavigation,
+                "EXPLICITLY_POSITIVE_NUMBER".localizedString(
                     value: "+%@",
                     comment: "Number string with an explicit '+' sign."
                 ),

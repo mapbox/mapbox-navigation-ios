@@ -1,4 +1,5 @@
 import CoreGraphics
+import MapboxNavigationCore
 import UIKit
 
 typealias RatingClosure = (Int) -> Void // rating
@@ -73,9 +74,7 @@ class RatingControl: UIStackView {
             addButtonSizeConstraints(to: button)
 
             let setRatingNumber = index + 1
-            let localizedString = NSLocalizedString(
-                "RATING_ACCESSIBILITY_SET",
-                bundle: .mapboxNavigation,
+            let localizedString = "RATING_ACCESSIBILITY_SET".localizedString(
                 value: "Set %ld-star rating",
                 comment: "Format for accessibility label of button for setting a rating; 1 = number of stars"
             )
@@ -112,16 +111,12 @@ class RatingControl: UIStackView {
 
         let value: String
         if rating == 0 {
-            value = NSLocalizedString(
-                "NO_RATING",
-                bundle: .mapboxNavigation,
+            value = "NO_RATING".localizedString(
                 value: "No rating set.",
                 comment: "Accessibility value of label indicating the absence of a rating"
             )
         } else {
-            let localizedString = NSLocalizedString(
-                "RATING_STARS_FORMAT",
-                bundle: .mapboxNavigation,
+            let localizedString = "RATING_STARS_FORMAT".localizedString(
                 value: "%ld star(s) set.",
                 comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"
             )
@@ -134,9 +129,7 @@ class RatingControl: UIStackView {
     private func setAccessibilityHint(for button: UIButton, at index: Int) {
         guard rating == (index + 1) else { return } // This applies only to the zero-resettable button.
 
-        button.accessibilityHint = NSLocalizedString(
-            "RATING_ACCESSIBILITY_RESET",
-            bundle: .mapboxNavigation,
+        button.accessibilityHint = "RATING_ACCESSIBILITY_RESET".localizedString(
             value: "Tap to reset the rating to zero.",
             comment: "Rating Reset To Zero Accessability Hint"
         )

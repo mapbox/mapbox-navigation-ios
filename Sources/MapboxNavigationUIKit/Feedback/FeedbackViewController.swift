@@ -49,9 +49,7 @@ extension FeedbackViewControllerDelegate {
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     // MARK: UI Configuration
 
-    static let sceneTitle = NSLocalizedString(
-        "FEEDBACK_TITLE",
-        bundle: .mapboxNavigation,
+    static let sceneTitle = "FEEDBACK_TITLE".localizedString(
         value: "Report Problem",
         comment: "Title of view controller for sending feedback"
     )

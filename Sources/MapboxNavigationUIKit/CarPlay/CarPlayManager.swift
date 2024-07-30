@@ -188,12 +188,7 @@ public class CarPlayManager: NSObject {
 
     /// The bar button that exits the navigation session.
     public lazy var exitButton: CPBarButton = {
-        let title = NSLocalizedString(
-            "CARPLAY_END",
-            bundle: .mapboxNavigation,
-            value: "End",
-            comment: "Title for end navigation button"
-        )
+        let title = "CARPLAY_END".localizedString(value: "End", comment: "Title for end navigation button")
 
         let exitButton = CPBarButton(title: title) { [weak self] (_: CPBarButton) in
             self?.carPlayNavigationViewController?.exitNavigation(byCanceling: true)
@@ -205,19 +200,8 @@ public class CarPlayManager: NSObject {
     /// The bar button that mutes the voice turn-by-turn instruction announcements during navigation.
     @MainActor
     public lazy var muteButton: CPBarButton = {
-        let muteTitle = NSLocalizedString(
-            "CARPLAY_MUTE",
-            bundle: .mapboxNavigation,
-            value: "Mute",
-            comment: "Title for mute button"
-        )
-
-        let unmuteTitle = NSLocalizedString(
-            "CARPLAY_UNMUTE",
-            bundle: .mapboxNavigation,
-            value: "Unmute",
-            comment: "Title for unmute button"
-        )
+        let muteTitle = "CARPLAY_MUTE".localizedString(value: "Mute", comment: "Title for mute button")
+        let unmuteTitle = "CARPLAY_UNMUTE".localizedString(value: "Unmute", comment: "Title for unmute button")
 
         let title = isVoiceMuted ? unmuteTitle : muteTitle
         let muteButton = CPBarButton(title: title) { [weak self] (button: CPBarButton) in
@@ -238,9 +222,7 @@ public class CarPlayManager: NSObject {
 
     /// The bar button that brings alternative routes selection during navigation.
     public lazy var alternativeRoutesButton: CPBarButton = {
-        let title = NSLocalizedString(
-            "CARPLAY_ALTERNATIVES",
-            bundle: .mapboxNavigation,
+        let title = "CARPLAY_ALTERNATIVES".localizedString(
             value: "Alternatives",
             comment: "Title for alternatives selection list button"
         )
@@ -536,9 +518,7 @@ extension CarPlayManager {
                 return
             }
 
-            let name = NSLocalizedString(
-                "CARPLAY_CURRENT_LOCATION",
-                bundle: .mapboxNavigation,
+            let name = "CARPLAY_CURRENT_LOCATION".localizedString(
                 value: "Current Location",
                 comment: "Name of the waypoint associated with the current location"
             )
@@ -682,23 +662,17 @@ extension CarPlayManager {
     }
 
     private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
-        let goTitle = NSLocalizedString(
-            "CARPLAY_GO",
-            bundle: .mapboxNavigation,
+        let goTitle = "CARPLAY_GO".localizedString(
             value: "Go",
             comment: "Title for start button in CPTripPreviewTextConfiguration"
         )
 
-        let alternativeRoutesTitle = NSLocalizedString(
-            "CARPLAY_MORE_ROUTES",
-            bundle: .mapboxNavigation,
+        let alternativeRoutesTitle = "CARPLAY_MORE_ROUTES".localizedString(
             value: "More Routes",
             comment: "Title for alternative routes in CPTripPreviewTextConfiguration"
         )
 
-        let overviewTitle = NSLocalizedString(
-            "CARPLAY_OVERVIEW",
-            bundle: .mapboxNavigation,
+        let overviewTitle = "CARPLAY_OVERVIEW".localizedString(
             value: "Overview",
             comment: "Title for overview button in CPTripPreviewTextConfiguration"
         )
@@ -712,9 +686,7 @@ extension CarPlayManager {
     }
 
     private func defaultTripPreviewBackButton() -> CPBarButton {
-        let title = NSLocalizedString(
-            "CARPLAY_PREVIEW_BACK",
-            bundle: .mapboxNavigation,
+        let title = "CARPLAY_PREVIEW_BACK".localizedString(
             value: "Back",
             comment: "Title for trip preview back button"
         )

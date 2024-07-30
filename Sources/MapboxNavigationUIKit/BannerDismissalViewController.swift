@@ -1,3 +1,4 @@
+import MapboxNavigationCore
 import UIKit
 
 /// Banner that is shown at the top of the screen and allows to dismiss already presented banners
@@ -73,9 +74,7 @@ public class BannerDismissalViewController: UIViewController, Banner {
         let backButton = BackButton(type: .system)
         backButton.translatesAutoresizingMaskIntoConstraints = false
 
-        let backButtonTitle = NSLocalizedString(
-            "BACK",
-            bundle: .mapboxNavigation,
+        let backButtonTitle = "BACK".localizedString(
             value: "Back",
             comment: "Title of the back button."
         )

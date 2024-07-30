@@ -413,9 +413,7 @@ extension TopBannerViewController: NavigationComponent {
     }
 
     public func onWillReroute() {
-        let title = NSLocalizedString(
-            "REROUTING",
-            bundle: .mapboxNavigation,
+        let title = "REROUTING".localizedString(
             value: "Rerouting…",
             comment: "Indicates that rerouting is in progress"
         )
@@ -445,9 +443,7 @@ extension TopBannerViewController: NavigationComponent {
         statusView.hide(delay: 2, animated: true)
 
         if proactive {
-            let title = NSLocalizedString(
-                "FASTER_ROUTE_FOUND",
-                bundle: .mapboxNavigation,
+            let title = "FASTER_ROUTE_FOUND".localizedString(
                 value: "Faster Route Found",
                 comment: "Indicates a faster route was found"
             )

@@ -103,26 +103,20 @@ open class CarPlayNavigationViewController: UIViewController {
                 value: alternative.distanceDelta,
                 labels: (
                     decreasing: String.localizedStringWithFormat(
-                        NSLocalizedString(
-                            "SHORTER_ALTERNATIVE",
-                            bundle: .mapboxNavigation,
+                        "SHORTER_ALTERNATIVE".localizedString(
                             value: "%@ shorter",
                             comment: "Alternatives selection note about a shorter route distance in any unit."
                         ),
                         distanceDeltaText
                     ),
                     increasing: String.localizedStringWithFormat(
-                        NSLocalizedString(
-                            "LONGER_ALTERNATIVE",
-                            bundle: .mapboxNavigation,
+                        "LONGER_ALTERNATIVE".localizedString(
                             value: "%@ longer",
                             comment: "Alternatives selection note about a longer route distance in any unit."
                         ),
                         distanceDeltaText
                     ),
-                    equal: NSLocalizedString(
-                        "SAME_DISTANCE",
-                        bundle: .mapboxNavigation,
+                    equal: "SAME_DISTANCE".localizedString(
                         value: "Same distance",
                         comment: "Alternatives selection note about equal travel distance."
                     )
@@ -137,26 +131,20 @@ open class CarPlayNavigationViewController: UIViewController {
                 value: alternative.expectedTravelTimeDelta,
                 labels: (
                     decreasing: String.localizedStringWithFormat(
-                        NSLocalizedString(
-                            "FASTER_ALTERNATIVE",
-                            bundle: .mapboxNavigation,
+                        "FASTER_ALTERNATIVE".localizedString(
                             value: "%@ faster",
                             comment: "Alternatives selection note about a faster route time interval in any unit."
                         ),
                         timeDeltaText
                     ),
                     increasing: String.localizedStringWithFormat(
-                        NSLocalizedString(
-                            "SLOWER_ALTERNATIVE",
-                            bundle: .mapboxNavigation,
+                        "SLOWER_ALTERNATIVE".localizedString(
                             value: "%@ slower",
                             comment: "Alternatives selection note about a slower route time interval in any unit."
                         ),
                         timeDeltaText
                     ),
-                    equal: NSLocalizedString(
-                        "SAME_TIME",
-                        bundle: .mapboxNavigation,
+                    equal: "SAME_TIME".localizedString(
                         value: "Same time",
                         comment: "Alternatives selection note about equal travel time."
                     )
@@ -165,9 +153,7 @@ open class CarPlayNavigationViewController: UIViewController {
 
             let items: [CPListItem] = [CPListItem(
                 text: String.localizedStringWithFormat(
-                    NSLocalizedString(
-                        "ALTERNATIVE_NOTES",
-                        bundle: .mapboxNavigation,
+                    "ALTERNATIVE_NOTES".localizedString(
                         value: "%1$@ / %2$@",
                         comment: "Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta."
                     ),
@@ -191,9 +177,7 @@ open class CarPlayNavigationViewController: UIViewController {
             variants.append(section)
         }
 
-        let alternativesTitle = NSLocalizedString(
-            "CARPLAY_ALTERNATIVES",
-            bundle: .mapboxNavigation,
+        let alternativesTitle = "CARPLAY_ALTERNATIVES".localizedString(
             value: "Alternatives",
             comment: "Title for alternatives selection list button"
         )
@@ -203,9 +187,7 @@ open class CarPlayNavigationViewController: UIViewController {
             sections: variants
         )
 
-        let alternativesEmptyVariantsSubtitle = NSLocalizedString(
-            "CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE",
-            bundle: .mapboxNavigation,
+        let alternativesEmptyVariantsSubtitle = "CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE".localizedString(
             value: "No alternative routes found.",
             comment: "Subtitle for the alternative list template empty variants"
         )
@@ -364,16 +346,12 @@ open class CarPlayNavigationViewController: UIViewController {
                 guard let feedbackItem = foundItem.first else { return }
                 self.eventsManager.sendFeedback(feedback, type: feedbackItem.type)
 
-                let dismissTitle = NSLocalizedString(
-                    "CARPLAY_DISMISS",
-                    bundle: .mapboxNavigation,
+                let dismissTitle = "CARPLAY_DISMISS".localizedString(
                     value: "Dismiss",
                     comment: "Title for dismiss button"
                 )
 
-                let submittedTitle = NSLocalizedString(
-                    "CARPLAY_SUBMITTED_FEEDBACK",
-                    bundle: .mapboxNavigation,
+                let submittedTitle = "CARPLAY_SUBMITTED_FEEDBACK".localizedString(
                     value: "Submitted",
                     comment: "Alert title that shows when feedback has been submitted"
                 )
@@ -405,9 +383,7 @@ open class CarPlayNavigationViewController: UIViewController {
             )
         }
 
-        let gridTitle = NSLocalizedString(
-            "CARPLAY_FEEDBACK",
-            bundle: .mapboxNavigation,
+        let gridTitle = "CARPLAY_FEEDBACK".localizedString(
             value: "Feedback",
             comment: "Title for feedback template in CarPlay"
         )
@@ -434,14 +410,12 @@ open class CarPlayNavigationViewController: UIViewController {
             compatibleWith: nil
         )!
 
+        let ratingTitle = "RATING_STARS_FORMAT".localizedString(
+            value: "%ld star(s) set.",
+            comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"
+        )
         for rating in 1...5 {
-            let title = NSLocalizedString(
-                "RATING_STARS_FORMAT",
-                bundle: .mapboxNavigation,
-                value: "%ld star(s) set.",
-                comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"
-            )
-            let titleVariant = String.localizedStringWithFormat(title, rating)
+            let titleVariant = String.localizedStringWithFormat(ratingTitle, rating)
             let button = CPGridButton(
                 titleVariants: [titleVariant],
                 image: starImage,
@@ -450,9 +424,7 @@ open class CarPlayNavigationViewController: UIViewController {
             buttons.append(button)
         }
 
-        let gridTitle = NSLocalizedString(
-            "CARPLAY_RATE_RIDE",
-            bundle: .mapboxNavigation,
+        let gridTitle = "CARPLAY_RATE_RIDE".localizedString(
             value: "Rate your ride",
             comment: "Title for rating template in CarPlay"
         )
@@ -461,23 +433,17 @@ open class CarPlayNavigationViewController: UIViewController {
     }
 
     func presentArrivalUI() {
-        let arrivalTitle = NSLocalizedString(
-            "CARPLAY_ARRIVED",
-            bundle: .mapboxNavigation,
+        let arrivalTitle = "CARPLAY_ARRIVED".localizedString(
             value: "You have arrived",
             comment: "Title on arrival action sheet"
         )
 
-        let arrivalMessage = NSLocalizedString(
-            "CARPLAY_ARRIVED_MESSAGE",
-            bundle: .mapboxNavigation,
+        let arrivalMessage = "CARPLAY_ARRIVED_MESSAGE".localizedString(
             value: "What would you like to do?",
             comment: "Message on arrival action sheet"
         )
 
-        let exitTitle = NSLocalizedString(
-            "CARPLAY_EXIT_NAVIGATION",
-            bundle: .mapboxNavigation,
+        let exitTitle = "CARPLAY_EXIT_NAVIGATION".localizedString(
             value: "Exit navigation",
             comment: "Title on the exit button in the arrival form"
         )
@@ -487,9 +453,7 @@ open class CarPlayNavigationViewController: UIViewController {
             self.dismiss(animated: true)
         }
 
-        let rateTitle = NSLocalizedString(
-            "CARPLAY_RATE_TRIP",
-            bundle: .mapboxNavigation,
+        let rateTitle = "CARPLAY_RATE_TRIP".localizedString(
             value: "Rate your trip",
             comment: "Title on rate button in CarPlay"
         )
@@ -1023,9 +987,7 @@ open class CarPlayNavigationViewController: UIViewController {
     }
 
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
-        var title = NSLocalizedString(
-            "CARPLAY_ARRIVED",
-            bundle: .mapboxNavigation,
+        var title = "CARPLAY_ARRIVED".localizedString(
             value: "You have arrived",
             comment: "Title on arrival action sheet"
         )
@@ -1034,9 +996,7 @@ open class CarPlayNavigationViewController: UIViewController {
             title = name
         }
 
-        let continueTitle = NSLocalizedString(
-            "CARPLAY_CONTINUE",
-            bundle: .mapboxNavigation,
+        let continueTitle = "CARPLAY_CONTINUE".localizedString(
             value: "Continue",
             comment: "Title on continue button in CarPlay"
         )

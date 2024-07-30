@@ -74,6 +74,7 @@ let package = Package(
             ],
             resources: [
                 .copy("Fixtures"),
+                .process("Resources"),
             ]
         ),
         .target(

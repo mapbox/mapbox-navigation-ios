@@ -108,9 +108,7 @@ public class StepsViewController: UIViewController, NavigationComponent {
 
         let dismissButton = DismissButton(type: .custom)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
-        let title = NSLocalizedString(
-            "DISMISS_STEPS_TITLE",
-            bundle: .mapboxNavigation,
+        let title = "DISMISS_STEPS_TITLE".localizedString(
             value: "Close",
             comment: "Dismiss button title on the steps view"
         )
@@ -245,9 +243,7 @@ extension StepsViewController: UITableViewDataSource {
 
         if let destinationName = destinationName?.nonEmptyString, majorWays.count > 1 {
             let summary = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "LEG_MAJOR_WAYS_FORMAT",
-                    bundle: .mapboxNavigation,
+                "LEG_MAJOR_WAYS_FORMAT".localizedString(
                     value: "%@ and %@",
                     comment: "Format for displaying the first two major ways"
                 ),
@@ -255,9 +251,7 @@ extension StepsViewController: UITableViewDataSource {
                 majorWays[1]
             )
             return String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT",
-                    bundle: .mapboxNavigation,
+                "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT".localizedString(
                     value: "%@, via %@",
                     comment: "Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations"
                 ),
@@ -266,9 +260,7 @@ extension StepsViewController: UITableViewDataSource {
             )
         } else if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
             return String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "WAYPOINT_SOURCE_DESTINATION_FORMAT",
-                    bundle: .mapboxNavigation,
+                "WAYPOINT_SOURCE_DESTINATION_FORMAT".localizedString(
                     value: "%@ and %@",
                     comment: "Format for displaying start and endpoint for leg; 1 = source ; 2 = destination"
                 ),

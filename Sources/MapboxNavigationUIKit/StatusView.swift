@@ -1,3 +1,4 @@
+import MapboxNavigationCore
 import UIKit
 
 /// A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and
@@ -152,9 +153,7 @@ public class StatusView: UIControl {
     }
 
     func showSimulationStatus(speed: Int) {
-        let format = NSLocalizedString(
-            "USER_IN_SIMULATION_MODE",
-            bundle: .mapboxNavigation,
+        let format = "USER_IN_SIMULATION_MODE".localizedString(
             value: "Simulating Navigation at %@×",
             comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."
         )

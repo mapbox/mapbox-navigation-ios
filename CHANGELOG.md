@@ -5,6 +5,7 @@
 ### Other changes
 
 * Fixed unwanted road movement simulation when using static GPX files to simulate location.
+* Added `LocalizationManager` to support the ability to provide custom localization for specific strings in the SDK when `LocalizationManager.customLocalizationBundle` is set.
 
 ## v3.3.0-beta.1
 

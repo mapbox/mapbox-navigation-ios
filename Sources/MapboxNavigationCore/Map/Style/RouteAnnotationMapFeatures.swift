@@ -321,9 +321,7 @@ extension NavigationRoutes {
                 signed: true
             )
         } else {
-            NSLocalizedString(
-                "SAME_TIME",
-                bundle: .mapboxNavigationUXCore,
+            "SAME_TIME".localizedString(
                 value: "Similar ETA",
                 comment: "Alternatives selection note about equal travel time."
             )

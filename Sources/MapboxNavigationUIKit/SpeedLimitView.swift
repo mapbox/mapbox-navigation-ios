@@ -1,5 +1,6 @@
 import CoreLocation
 import MapboxDirections
+import MapboxNavigationCore
 import UIKit
 
 /// A view that displays a speed limit and resembles a real-world speed limit sign.
@@ -125,9 +126,7 @@ public class SpeedLimitView: UIView {
 
         switch signStandard {
         case .mutcd:
-            let legend = NSLocalizedString(
-                "SPEED_LIMIT_LEGEND",
-                bundle: .mapboxNavigation,
+            let legend = "SPEED_LIMIT_LEGEND".localizedString(
                 value: "Max",
                 comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible."
             ).uppercased()

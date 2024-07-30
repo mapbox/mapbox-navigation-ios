@@ -1,4 +1,5 @@
 import MapboxDirections
+import MapboxNavigationCore
 import UIKit
 
 private enum ConstraintSpacing: CGFloat {
@@ -42,9 +43,7 @@ class EndOfRouteViewController: UIViewController {
 
     // MARK: Properties
 
-    lazy var placeholder: String = NSLocalizedString(
-        "END_OF_ROUTE_TITLE",
-        bundle: .mapboxNavigation,
+    lazy var placeholder: String = "END_OF_ROUTE_TITLE".localizedString(
         value: "How can we improve?",
         comment: "Comment Placeholder Text"
     )
@@ -74,9 +73,7 @@ class EndOfRouteViewController: UIViewController {
         setPlaceholderText()
         styleCommentView()
         commentViewContainer.alpha = 0.0 // setting initial hidden state
-        staticYouHaveArrived.text = NSLocalizedString(
-            "END_OF_ROUTE_ARRIVED",
-            bundle: .mapboxNavigation,
+        staticYouHaveArrived.text = "END_OF_ROUTE_ARRIVED".localizedString(
             value: "You have arrived",
             comment: "Title used for arrival"
         )
@@ -171,9 +168,7 @@ class EndOfRouteViewController: UIViewController {
 
     private func styleForUnnamedDestination() {
         staticYouHaveArrived.isHidden = true
-        primary.text = NSLocalizedString(
-            "END_OF_ROUTE_ARRIVED",
-            bundle: .mapboxNavigation,
+        primary.text = "END_OF_ROUTE_ARRIVED".localizedString(
             value: "You have arrived",
             comment: "Title used for arrival"
         )

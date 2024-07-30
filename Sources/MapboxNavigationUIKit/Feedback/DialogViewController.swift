@@ -1,3 +1,4 @@
+import MapboxNavigationCore
 import UIKit
 
 class DialogViewController: UIViewController {
@@ -9,9 +10,7 @@ class DialogViewController: UIViewController {
         static let stackSpacing = CGFloat(20.0)
         static let checkmark = UIImage(named: "report_checkmark", in: .mapboxNavigation, compatibleWith: nil)?
             .withRenderingMode(.alwaysTemplate)
-        static let labelText = NSLocalizedString(
-            "FEEDBACK_THANK_YOU",
-            bundle: .mapboxNavigation,
+        static let labelText = "FEEDBACK_THANK_YOU".localizedString(
             value: "Thank you for your report!",
             comment: "Message confirming that the user has successfully sent feedback"
         )

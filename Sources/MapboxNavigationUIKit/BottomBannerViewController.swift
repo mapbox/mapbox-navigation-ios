@@ -205,9 +205,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
 
         if let hardcodedTime = dateComponentsFormatter.string(from: 61), routeProgress.durationRemaining < 60 {
             timeRemainingLabel.text = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "LESS_THAN",
-                    bundle: .mapboxNavigation,
+                "LESS_THAN".localizedString(
                     value: "<%@",
                     comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"
                 ),
