@@ -170,7 +170,9 @@ extension NavigationMapView {
                 return nil
             }
 
-            guard let alternativeRoute = routes.alternativeRoutes[safe: Int(routeIndex)] else {
+            // routeIndex is the index in allRouts, so we need to decrease it by 1 to exclude the main route.
+            let alternativeIndex = Int(routeIndex - 1)
+            guard let alternativeRoute = routes.alternativeRoutes[safe: alternativeIndex] else {
                 Log.warning("Unable to access an alternative route at index", category: .navigation)
                 return nil
             }
