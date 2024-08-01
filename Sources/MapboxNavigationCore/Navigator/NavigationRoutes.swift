@@ -33,7 +33,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         try self.init(routesData: routesData, routeResponse: routeResponse)
     }
 
-    init(routesData: RoutesData, routeResponse: RouteResponse) throws {
+    private init(routesData: RoutesData, routeResponse: RouteResponse) throws {
         guard let routes = routeResponse.routes else {
             Log.error("Unable to get routes", category: .navigation)
             throw NavigationRoutesError.emptyRoutes
@@ -167,16 +167,40 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         }
         var alternativeRoutes = alternativeRoutes
 
-        // find and remove from list
         let alternativeRoute = alternativeRoutes.remove(at: index)
 
         let routesData = RouteParser.createRoutesData(
             forPrimaryRoute: alternativeRoute.nativeRoute,
-            alternativeRoutes: alternativeRoutes
-                .map(\.nativeRoute) + [mainRoute.nativeRoute]
+            alternativeRoutes: alternativeRoutes.map(\.nativeRoute) + [mainRoute.nativeRoute]
         )
 
-        return try? await .init(routesData: routesData)
+        let newMainRoute = NavigationRoute(route: alternativeRoute.route, nativeRoute: alternativeRoute.nativeRoute)
+
+        var newAlternativeRoutes = alternativeRoutes.compactMap { oldAlternative -> AlternativeRoute? in
+            guard let nativeRouteAlternative = routesData.alternativeRoutes()
+                .first(where: { $0.route.getRouteId() == oldAlternative.routeId.rawValue })
+            else {
+                return nil
+            }
+            return AlternativeRoute(
+                mainRoute: newMainRoute.route,
+                alternativeRoute: oldAlternative.route,
+                nativeRouteAlternative: nativeRouteAlternative
+            )
+        }
+
+        guard let nativeRouteAlternative = routesData.alternativeRoutes()
+            .first(where: { $0.route.getRouteId() == mainRoute.routeId.rawValue }),
+            let newAlternativeRoute = AlternativeRoute(
+                mainRoute: newMainRoute.route,
+                alternativeRoute: mainRoute.route,
+                nativeRouteAlternative: nativeRouteAlternative
+            )
+        else {
+            return nil
+        }
+        newAlternativeRoutes.append(newAlternativeRoute)
+        return await .init(mainRoute: newMainRoute, alternativeRoutes: newAlternativeRoutes)
     }
 
     /// Returns a new ``NavigationRoutes`` instance, wich has corresponding ``AlternativeRoute`` set as the main one.
@@ -307,10 +331,7 @@ extension RouteInterface {
 
         do {
             let ref = getResponseJsonRef()
-            return try decoder.decode(
-                RouteResponse.self,
-                from: ref.data
-            )
+            return try decoder.decode(RouteResponse.self, from: ref.data)
         } catch {
             Log.error(
                 "Couldn't parse `RouteInterface` into `RouteResponse` with error: \(error)",
@@ -323,15 +344,12 @@ extension RouteInterface {
     func convertToDirectionsRoute() async throws -> Route {
         do {
             guard let routes = try await convertToDirectionsRouteResponse().routes else {
-                Log.error(
-                    "Converting to directions route yeilded no routes.",
-                    category: .navigation
-                )
+                Log.error("Converting to directions route yielded no routes.", category: .navigation)
                 throw NavigationRoutesError.emptyRoutes
             }
             guard routes.count > getRouteIndex() else {
                 Log.error(
-                    "Converting to directions route yeilded incorrect number of routes (expected at least \(getRouteIndex() + 1) but have \(routes.count).",
+                    "Converting to directions route yielded incorrect number of routes (expected at least \(getRouteIndex() + 1) but have \(routes.count).",
                     category: .navigation
                 )
                 throw NavigationRoutesError.incorrectRoutesNumber

@@ -1106,20 +1106,15 @@ final class MapboxNavigator: @unchecked Sendable {
             }
 
             var newMainRoute = currentNavigationRoutes.mainRoute
-            let isMainRouteUpdate = refreshRouteResult.updatedRoute.getRouteId() == currentNavigationRoutes.mainRoute
-                .routeId
-                .rawValue
+            let isMainRouteUpdate = refreshRouteResult.updatedRoute.getRouteId() ==
+                currentNavigationRoutes.mainRoute.routeId.rawValue
             if isMainRouteUpdate {
                 guard let updatedMainRoute = await NavigationRoute(nativeRoute: refreshRouteResult.updatedRoute)
                 else { return }
                 newMainRoute = updatedMainRoute
             }
-            await send(
-                RefreshingStatus(
-                    event:
-                    RefreshingStatus.Events.Refreshing()
-                )
-            )
+            let event = RefreshingStatus.Events.Refreshing()
+            await send(RefreshingStatus(event: event))
 
             let refreshedNavigationRoutes = await NavigationRoutes(
                 mainRoute: newMainRoute,
@@ -1139,12 +1134,8 @@ final class MapboxNavigator: @unchecked Sendable {
             if let privateRouteProgress {
                 await send(RouteProgressState(routeProgress: privateRouteProgress))
             }
-            await send(
-                RefreshingStatus(
-                    event:
-                    RefreshingStatus.Events.Refreshed()
-                )
-            )
+            let endEvent = RefreshingStatus.Events.Refreshed()
+            await send(RefreshingStatus(event: endEvent))
         }
     }
 

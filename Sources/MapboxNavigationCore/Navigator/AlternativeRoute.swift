@@ -82,7 +82,7 @@ public struct AlternativeRoute: @unchecked Sendable {
             routeGeometryIndex: Int(nativeRouteAlternative.mainRouteFork.geometryIndex)
         )
 
-        guard let mainIntersection = alternativeRoute.findIntersection(on: legIndex, by: segmentIndex) else {
+        guard let mainIntersection = mainRoute.findIntersection(on: legIndex, by: segmentIndex) else {
             return nil
         }
         self.mainRouteIntersection = mainIntersection
@@ -117,10 +117,8 @@ public struct AlternativeRoute: @unchecked Sendable {
         alternativeRoutes: [RouteAlternative],
         relateveTo mainRoute: NavigationRoute
     ) async -> [AlternativeRoute] {
-        let unsortedRoutes = await withTaskGroup(
-            of: (Int, AlternativeRoute?).self,
-            returning: [AlternativeRoute?].self
-        ) { group -> [AlternativeRoute?] in
+        var converted = [AlternativeRoute?](repeating: nil, count: alternativeRoutes.count)
+        await withTaskGroup(of: (Int, AlternativeRoute?).self) { group in
             for (index, alternativeRoute) in alternativeRoutes.enumerated() {
                 group.addTask {
                     let alternativeRoute = await AlternativeRoute(
@@ -131,26 +129,19 @@ public struct AlternativeRoute: @unchecked Sendable {
                 }
             }
 
-            var converted = [AlternativeRoute?](repeating: nil, count: alternativeRoutes.count)
-
-            for await result in group {
-                guard let alternativeRoute = result.1 else { continue }
-                converted[result.0] = alternativeRoute
-            }
-
-            return converted
-        }
-
-        var resultingRoutes = [AlternativeRoute]()
-
-        for (i, route) in alternativeRoutes.enumerated() {
-            if let nextRoute = unsortedRoutes[i] {
-                resultingRoutes.append(nextRoute)
-            } else {
-                Log.error("Alternative routes parsing lost route with id: \(route.id)", category: .navigation)
+            for await (index, alternativeRoute) in group {
+                guard let alternativeRoute else {
+                    Log.error(
+                        "Alternative routes parsing lost route with id: \(alternativeRoutes[index].route.getRouteId())",
+                        category: .navigation
+                    )
+                    continue
+                }
+                converted[index] = alternativeRoute
             }
         }
-        return resultingRoutes
+
+        return converted.compactMap { $0 }
     }
 }
 

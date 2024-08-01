@@ -2,6 +2,10 @@
 
 ## v3.3.0-rc.1
 
+### Routing
+
+* Fixed an issue when the main route was incorrectly parsed as an alternative after switching to an alternative.
+
 ### Other changes
 
 * Fixed unwanted road movement simulation when using static GPX files to simulate location.
