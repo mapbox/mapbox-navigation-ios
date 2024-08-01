@@ -72,7 +72,9 @@ final class MapboxNavigator: @unchecked Sendable {
     @MainActor
     func startActiveGuidance(with navigationRoutes: NavigationRoutes, startLegIndex: Int) {
         send(navigationRoutes)
-        updateRouteProgress(with: navigationRoutes)
+        Task {
+            await updateRouteProgress(with: navigationRoutes)
+        }
         taskManager.withBarrier {
             setRoutes(
                 navigationRoutes: navigationRoutes,
@@ -132,8 +134,8 @@ final class MapboxNavigator: @unchecked Sendable {
 
                     guard !Task.isCancelled else { return }
                     navigationRoutes.alternativeRoutes = alternativeRoutes
+                    await self.updateRouteProgress(with: navigationRoutes)
                     await self.send(navigationRoutes)
-                    self.updateRouteProgress(with: navigationRoutes)
                     switch reason {
                     case .newRoute:
                         // Do nothing, routes updates are already sent
@@ -511,7 +513,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     // MARK: - NavigationStatus processing
 
-    private func updateRouteProgress(with routes: NavigationRoutes?) {
+    private func updateRouteProgress(with routes: NavigationRoutes?) async {
         if let routes {
             let waypoints = routes.mainRoute.route.legs.enumerated()
                 .reduce(into: [MapboxDirections.Waypoint]()) { partialResult, element in
@@ -526,16 +528,10 @@ final class MapboxNavigator: @unchecked Sendable {
                 congestionConfiguration: configuration.congestionConfig
             )
             privateRouteProgress = routeProgress
-
-            Task { @MainActor in
-                send(RouteProgressState(routeProgress: routeProgress))
-            }
+            await send(RouteProgressState(routeProgress: routeProgress))
         } else {
             privateRouteProgress = nil
-
-            Task { @MainActor in
-                send(RouteProgressState?.none)
-            }
+            await send(RouteProgressState?.none)
         }
     }
 

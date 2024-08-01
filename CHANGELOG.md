@@ -11,6 +11,7 @@
 * Fixed unwanted road movement simulation when using static GPX files to simulate location.
 * Added `LocalizationManager` to support the ability to provide custom localization for specific strings in the SDK when `LocalizationManager.customLocalizationBundle` is set.
 * Fixed an issue when an alternative route was not selected when clicking on the route annotations on the map.
+* Fixed the route progress simulation resetting when selecting an alternative route during active guidance.
 
 ## v3.3.0-beta.1
 

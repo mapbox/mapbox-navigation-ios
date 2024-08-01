@@ -168,12 +168,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
                     sourceInformation: sourceInformation
                 )
             }
-            if let location {
-                locationDelegate?.navigationLocationManager(
-                    self,
-                    didReceiveNewLocation: location
-                )
-            }
+            location.map { locationDelegate?.navigationLocationManager(self, didReceiveNewLocation: $0) }
             return
         }
         if remainingShape.distance() == 0,
@@ -194,10 +189,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             )
             onMainQueueSync { [weak self] in
                 guard let self else { return }
-                locationDelegate?.navigationLocationManager(
-                    self,
-                    didReceiveNewLocation: location
-                )
+                locationDelegate?.navigationLocationManager(self, didReceiveNewLocation: location)
             }
 
             return
@@ -252,28 +244,41 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             )
         }
         currentDistance += remainingShape.distance(to: newCoordinate) ?? 0
-
         remainingRouteShape = remainingShape.sliced(from: newCoordinate)
     }
 
     func progressDidChange(_ progress: RouteProgress?) {
+        guard let progress else {
+            cleanUp()
+            return
+        }
         onMainQueueSync {
             self.routeProgress = progress
-            if progress?.route.distance != self.route?.distance {
-                update(route: progress?.route)
+            if progress.route.distance != self.route?.distance {
+                update(route: progress.route)
             }
         }
     }
 
-    func didReroute(progress: RouteProgress?) {
-        update(route: progress?.route)
+    func cleanUp() {
+        route = nil
+        routeProgress = nil
+        remainingRouteShape = nil
+        locations = []
+    }
 
-        let shape = progress?.route.shape
+    func didReroute(progress: RouteProgress?) {
+        guard let progress else { return }
+
+        update(route: progress.route)
+
+        let shape = progress.route.shape
         let currentSpeed = currentSpeed
 
         queue.async { [weak self] in
             guard let self,
-                  let progress else { return }
+                  let routeProgress else { return }
+
             var newClosestCoordinate: LocationCoordinate2D!
             if let location,
                let shape,
@@ -283,7 +288,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
                 currentDistance = closestCoordinate.distance
                 newClosestCoordinate = closestCoordinate.coordinate
             } else {
-                currentDistance = calculateCurrentDistance(progress.distanceTraveled, speed: currentSpeed)
+                currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled, speed: currentSpeed)
                 newClosestCoordinate = shape?.coordinateFromStart(distance: currentDistance)
             }
 
