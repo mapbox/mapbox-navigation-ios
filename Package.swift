@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let mapsVersion: Version = "11.5.1"
+let mapsVersion: Version = "11.5.2"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
 
