@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("316.0.0-SNAPSHOT.0801T2146Z.9fef38a", "b757078bae16171c9f347f790275004c80f69f870600d1b0a37bbdf6b9cefa13", "d21a79f4391b1a682fee248f9382fa255704250c")
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("316.0.0-SNAPSHOT.0802T1058Z.165eb42", "e57ddd3b6371b365b5855afc25b2740e0b2c7ec6481bff54ad44dca399988a23", "cf3b60725fa985986c6b7d192c6cf141725fcc7b")
 let mapsVersion: Version = "11.6.0-rc.1"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
