@@ -48,7 +48,7 @@ public protocol NavigationController: Sendable {
     var waypointsArrival: AnyPublisher<WaypointArrivalStatus, Never> { get }
     /// Posts updates about rerouting events and progress.
     var rerouting: AnyPublisher<ReroutingStatus, Never> { get }
-    /// Posts updates about continuos alternatives changes during the trip.
+    /// Posts updates about continuous alternatives changes during the trip.
     var continuousAlternatives: AnyPublisher<AlternativesStatus, Never> { get }
     /// Posts updates about faster routes applied during the trip.
     var fasterRoutes: AnyPublisher<FasterRoutesStatus, Never> { get }
