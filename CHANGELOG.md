@@ -38,6 +38,11 @@
 
 ## v3.2.0
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v314.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/314.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.5.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.1).
+
 ### Map
 
 * Fixed an extra large bottom margin of the following navigation camera.
