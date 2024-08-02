@@ -2,6 +2,11 @@
 
 ## v3.3.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v316.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/316.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.6.0-rc.1).
+
 ### Map
 
 * Fixed an issue when an alternative route was not selected when clicking on the route annotations on the map.
