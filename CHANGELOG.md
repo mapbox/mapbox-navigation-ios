@@ -6,6 +6,10 @@
 
 * Fixed an issue when the main route was incorrectly parsed as an alternative after switching to an alternative.
 
+### CarPlay
+
+* The `CarPlayViewportDataSource.currentNavigationCameraOptions` property is now read-write to provide a way to change navigation camera options in CarPlay. 
+
 ### Other changes
 
 * Fixed unwanted road movement simulation when using static GPX files to simulate location.
