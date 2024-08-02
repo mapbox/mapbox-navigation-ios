@@ -78,17 +78,17 @@ extension NavigationMapView {
         let tapPoint = gesture.location(in: mapView)
 
         Task {
-            if let alternativeRoute = try await alternativeRouteFromMapQuery(at: tapPoint) {
-                delegate?.navigationMapView(self, didSelect: alternativeRoute)
-                return
-            }
-
             if let allRoutes = routes?.allRoutes() {
                 let waypointTest = legSeparatingWaypoints(on: allRoutes, closeTo: tapPoint)
                 if let selected = waypointTest?.first {
                     delegate?.navigationMapView(self, didSelect: selected)
                     return
                 }
+            }
+
+            if let alternativeRoute = try await alternativeRouteFromMapQuery(at: tapPoint) {
+                delegate?.navigationMapView(self, didSelect: alternativeRoute)
+                return
             }
 
             let point = await mapPoint(at: tapPoint)
