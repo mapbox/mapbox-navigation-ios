@@ -232,6 +232,12 @@ public struct AlternativesStatus: Equatable, Sendable {
             /// Currently actual list of alternative routes.
             public let actualAlternativeRoutes: [AlternativeRoute]
         }
+
+        /// The navigator switched to the alternative route. The previous main route is an alternative now.
+        public struct SwitchedToAlternative: AlternativesEvent, Sendable {
+            /// The current navigation routes after switching to the alternative route.
+            public let navigationRoutes: NavigationRoutes
+        }
     }
 }
 

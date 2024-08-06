@@ -33,7 +33,13 @@ public class CarPlayViewportDataSource: ViewportDataSource {
 
     /// The last calculated ``NavigationCameraOptions``.
     public var currentNavigationCameraOptions: NavigationCameraOptions {
-        commonDataSource.currentNavigationCameraOptions
+        get {
+            commonDataSource.currentNavigationCameraOptions
+        }
+
+        set {
+            commonDataSource.currentNavigationCameraOptions = newValue
+        }
     }
 
     /// Updates ``NavigationCameraOptions`` accoridng to the navigation state.

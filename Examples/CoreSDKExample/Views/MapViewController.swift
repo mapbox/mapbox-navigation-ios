@@ -105,10 +105,8 @@ final class MapViewController: UIViewController {
 
 extension MapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect alternativeRoute: AlternativeRoute) {
-        guard let index = navigation.currentPreviewRoutes?.alternativeRoutes.firstIndex(of: alternativeRoute)
-        else { return }
         Task {
-            await navigation.selectAlternativeRoute(at: index)
+            await navigation.selectAlternativeRoute(alternativeRoute)
         }
     }
 

@@ -1,5 +1,6 @@
 import Combine
 import CoreLocation
+import MapboxDirections
 import MapboxNavigationCore
 
 @MainActor
@@ -77,11 +78,11 @@ final class Navigation: ObservableObject {
         cameraState = .following
     }
 
-    func selectAlternativeRoute(at index: Int) async {
+    func selectAlternativeRoute(_ alternativeRoute: AlternativeRoute) async {
         if let previewRoutes = currentPreviewRoutes {
-            currentPreviewRoutes = await previewRoutes.selectingAlternativeRoute(at: index)
+            currentPreviewRoutes = await previewRoutes.selecting(alternativeRoute: alternativeRoute)
         } else {
-            core.navigation().selectAlternativeRoute(at: index)
+            core.navigation().selectAlternativeRoute(with: alternativeRoute.routeId)
         }
     }
 

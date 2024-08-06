@@ -20,12 +20,12 @@ open class NavigationLocationManager: CLLocationManager {
     }
 
     /// Indicates whether the location manager is providing simulated locations.
-    public var simulatesLocation: Bool = false
+    open var simulatesLocation: Bool = false
 
-    weak var locationDelegate: NavigationLocationManagerDelegate? = nil
+    public weak var locationDelegate: NavigationLocationManagerDelegate? = nil
 }
 
-protocol NavigationLocationManagerDelegate: AnyObject {
+public protocol NavigationLocationManagerDelegate: AnyObject {
     func navigationLocationManager(
         _ locationManager: NavigationLocationManager,
         didReceiveNewLocation location: CLLocation
@@ -33,7 +33,7 @@ protocol NavigationLocationManagerDelegate: AnyObject {
 }
 
 extension NavigationLocationManager: CLLocationManagerDelegate {
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             locationDelegate?.navigationLocationManager(
                 self,

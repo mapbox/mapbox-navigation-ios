@@ -2,16 +2,27 @@
 
 ## v3.3.0-rc.1
 
+### Map
+
+* Fixed an issue when an alternative route was not selected when clicking on the route annotations on the map.
+* Fixed an issue when the tap on the overlapping part of the main and alternative route was considered as an alternative route tap.
+* Fixed an issue when a leg separating waypoint was not selected after it was clicked on the map.
+
 ### Routing
 
 * Fixed an issue when the main route was incorrectly parsed as an alternative after switching to an alternative.
+
+### CarPlay
+
+* The `CarPlayViewportDataSource.currentNavigationCameraOptions` property is now read-write to provide a way to change navigation camera options in CarPlay. 
 
 ### Other changes
 
 * Fixed unwanted road movement simulation when using static GPX files to simulate location.
 * Added `LocalizationManager` to support the ability to provide custom localization for specific strings in the SDK when `LocalizationManager.customLocalizationBundle` is set.
-* Fixed an issue when an alternative route was not selected when clicking on the route annotations on the map.
+* Extended `NavigationLocationManager` subclassing posibilities by opening the some members to public visibility or overriding.
 * Fixed the route progress simulation resetting when selecting an alternative route during active guidance.
+* Added `AlternativesStatus.Events.SwitchedToAlternative` event to track when the navigator switched to the alternative route.
 
 ## v3.3.0-beta.1
 
@@ -31,6 +42,11 @@
 * `Tracepoint.waypointIndex` is now an optional property.
 
 ## v3.2.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v314.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/314.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.5.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.5.1).
 
 ### Map
 

@@ -142,31 +142,19 @@ final class MapboxNavigator: @unchecked Sendable {
                         break
                     case .reroute:
                         await self.send(
-                            ReroutingStatus(
-                                event: ReroutingStatus.Events.Fetched()
-                            )
+                            ReroutingStatus(event: ReroutingStatus.Events.Fetched())
                         )
                     case .alternatives:
-                        await self.send(
-                            AlternativesStatus(
-                                event: AlternativesStatus.Events
-                                    .Updated(actualAlternativeRoutes: navigationRoutes.alternativeRoutes)
-                            )
-                        )
+                        let event = AlternativesStatus.Events.SwitchedToAlternative(navigationRoutes: navigationRoutes)
+                        await self.send(AlternativesStatus(event: event))
                     case .fasterRoute:
-                        await self.send(
-                            FasterRoutesStatus(
-                                event: FasterRoutesStatus.Events.Applied()
-                            )
-                        )
+                        await self.send(FasterRoutesStatus(event: FasterRoutesStatus.Events.Applied()))
                     case .fallbackToOffline:
                         await self.send(
                             FallbackToTilesState(usingLatestTiles: false)
                         )
                     case .restoreToOnline:
-                        await self.send(
-                            FallbackToTilesState(usingLatestTiles: true)
-                        )
+                        await self.send(FallbackToTilesState(usingLatestTiles: true))
                     }
                     await self.send(Session(state: .activeGuidance(.uncertain)))
                 case .failure(let error):
@@ -917,8 +905,7 @@ final class MapboxNavigator: @unchecked Sendable {
         Task { @MainActor in
             navigator
                 .setAlternativeRoutes(
-                    with: alternatives
-                        .map(\.route)
+                    with: alternatives.map(\.route)
                 ) { [weak self] result /* Result<[RouteAlternative], Error> */ in
                     guard let self else { return }
 
@@ -962,14 +949,10 @@ final class MapboxNavigator: @unchecked Sendable {
                                 "Failed to update alternative routes, error: \(updateError)",
                                 category: .navigation
                             )
-                            await self
-                                .send(
-                                    NavigatorErrors
-                                        .FailedToUpdateAlternativeRoutes(
-                                            localizedDescription: updateError
-                                                .localizedDescription
-                                        )
-                                )
+                            let error = NavigatorErrors.FailedToUpdateAlternativeRoutes(
+                                localizedDescription: updateError.localizedDescription
+                            )
+                            await self.send(error)
                         }
                     }
                 }
