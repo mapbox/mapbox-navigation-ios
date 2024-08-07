@@ -17,6 +17,7 @@ final class MapboxNavigator: @unchecked Sendable {
         let fasterRouteController: FasterRouteProvider?
         let electronicHorizonConfig: ElectronicHorizonConfig?
         let congestionConfig: CongestionRangesConfiguration
+        let movementMonitor: NavigationMovementMonitor
     }
 
     // MARK: - Navigator Implementation
@@ -82,6 +83,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 reason: .newRoute
             )
         }
+        let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
+        configuration.movementMonitor.currentProfile = profile
     }
 
     private let statusUpdateEvents: AsyncStreamBridge<NavigationStatus>
@@ -282,6 +285,7 @@ final class MapboxNavigator: @unchecked Sendable {
             billingHandler.stopBillingSession(with: sessionUUID)
             self.sessionUUID = nil
         }
+        configuration.movementMonitor.currentProfile = nil
     }
 
     @MainActor
