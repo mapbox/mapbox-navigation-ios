@@ -23,6 +23,8 @@
 * Extended `NavigationLocationManager` subclassing posibilities by opening the some members to public visibility or overriding.
 * Fixed the route progress simulation resetting when selecting an alternative route during active guidance.
 * Added `AlternativesStatus.Events.SwitchedToAlternative` event to track when the navigator switched to the alternative route.
+* Fixed incorrect playback ducking while voice instructions are muted.
+* Fixed too low voice instructions volume when device volume was not maxed out.
 
 ## v3.3.0-beta.1
 
