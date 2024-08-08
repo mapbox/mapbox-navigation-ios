@@ -156,7 +156,7 @@ class ViewController: UIViewController {
 
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(
-                location: navigation.locationMatching.map(\.location).eraseToAnyPublisher(),
+                location: navigation.locationMatching.map(\.enhancedLocation).eraseToAnyPublisher(),
                 routeProgress: navigation.routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
                 heading: navigation.heading.eraseToAnyPublisher(),
                 predictiveCacheManager: navigationProvider.predictiveCacheManager

@@ -193,7 +193,7 @@ open class CarPlayMapViewController: UIViewController {
     private var lifetimeSubscriptions: Set<AnyCancellable> = []
 
     func setupNavigationMapView() {
-        let location = core.navigation().locationMatching.map(\.location).eraseToAnyPublisher()
+        let location = core.navigation().locationMatching.map(\.enhancedLocation).eraseToAnyPublisher()
         let routeProgress = core.navigation().routeProgress.map { $0?.routeProgress }.eraseToAnyPublisher()
         let navigationMapView = NavigationMapView(
             location: location,

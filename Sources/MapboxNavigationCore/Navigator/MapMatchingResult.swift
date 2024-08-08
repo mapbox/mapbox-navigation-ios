@@ -70,6 +70,7 @@ extension CLLocation {
             verticalAccuracy: location.verticalAccuracy?.doubleValue ?? -1,
             course: location.bearing?.doubleValue ?? -1,
             courseAccuracy: location.bearingAccuracy?.doubleValue ?? -1,
+            // TODO: investigate why we need 0 when in v2 we used to have -1
             speed: location.speed?.doubleValue ?? 0,
             speedAccuracy: location.speedAccuracy?.doubleValue ?? -1,
             timestamp: timestamp

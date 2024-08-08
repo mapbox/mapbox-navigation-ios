@@ -64,7 +64,7 @@ class ElectronicHorizonEventsViewController: UIViewController {
     func setupNavigationMapView() {
         navigationMapView = .init(
             location: mapboxNavigation.navigation()
-                .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                .locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
             routeProgress: mapboxNavigation.navigation()
                 .routeProgress.map(\.?.routeProgress)

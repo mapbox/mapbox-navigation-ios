@@ -75,7 +75,7 @@ public class PreviewViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         self.cancellable = previewOptions.locationMatching.sink { [weak self] state in
-            self?.latestLocation = state.snappedLocation
+            self?.latestLocation = state.enhancedLocation
             self?.handleLocationMatching(state)
         }
 
@@ -130,7 +130,7 @@ public class PreviewViewController: UIViewController {
             frame: frame,
             mapViewConfiguration: .createNew(
                 location: previewOptions.locationMatching
-                    .map(\.snappedLocation)
+                    .map(\.enhancedLocation)
                     .eraseToAnyPublisher(),
                 routeProgress: previewOptions.routeProgress,
                 heading: previewOptions.heading,
@@ -359,11 +359,5 @@ extension PreviewViewController: BannerPresentationDelegate {
         banner: Banner
     ) {
         delegate?.previewViewController(self, didDismiss: banner)
-    }
-}
-
-extension MapMatchingState {
-    var snappedLocation: CLLocation {
-        mapMatchingResult.enhancedLocation
     }
 }

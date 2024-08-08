@@ -48,7 +48,7 @@ class CustomDestinationMarkerController: UIViewController {
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(
             location: mapboxNavigation.navigation()
-                .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                .locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
             routeProgress: mapboxNavigation.navigation()
                 .routeProgress.map(\.?.routeProgress)

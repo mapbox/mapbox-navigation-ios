@@ -113,6 +113,11 @@ public struct MapMatchingState: Equatable, @unchecked Sendable {
     public let currentSpeed: Measurement<UnitSpeed>
     /// Current road name, if available.
     public let roadName: RoadName?
+
+    /// The best possible location update, snapped to the route or map matched to the road if possible
+    public var enhancedLocation: CLLocation {
+        mapMatchingResult.enhancedLocation
+    }
 }
 
 // MARK: - FallbackToTilesState
@@ -377,7 +382,7 @@ public enum NavigatorErrors {
     /// Failed to pause the free drive session.
     public struct FailedToPause: NavigatorError {}
     /// Unexpectedly received NN status when in `idle` state.
-    struct UnexpectedNavigationStatus: NavigatorError {}
+    public struct UnexpectedNavigationStatus: NavigatorError {}
     /// Rerouting process was not completed successfully.
     public struct InterruptedReroute: NavigatorError {
         /// Underlying error description.

@@ -1,5 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.4.0-beta.1
+
+### Location
+
+* Fixed the issue that a map-matched location was sent instead of a raw location in `MapMatchingState.location`. Switch to `MapMatchingState.enhancedLocation` if you need a map-matched location.
+
+### Other changes
+
+* `NavigatorErrors.UnexpectedNavigationStatus` is now public.
+
 ## v3.3.0-rc.1
 
 ### Map

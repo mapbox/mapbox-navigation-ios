@@ -77,7 +77,7 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
         if navigationMapView == nil {
             navigationMapView = .init(
                 location: mapboxNavigation.navigation()
-                    .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                    .locationMatching.map(\.enhancedLocation)
                     .eraseToAnyPublisher(),
                 routeProgress: mapboxNavigation.navigation()
                     .routeProgress.map(\.?.routeProgress)

@@ -81,7 +81,7 @@ class CustomNavigationCameraViewController: UIViewController {
 
     func setupNavigationMapView() {
         navigationMapView = .init(
-            location: mapboxNavigation.navigation().locationMatching.map(\.mapMatchingResult.enhancedLocation)
+            location: mapboxNavigation.navigation().locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
             routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager

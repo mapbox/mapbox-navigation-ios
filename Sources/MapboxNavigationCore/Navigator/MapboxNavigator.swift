@@ -68,7 +68,7 @@ final class MapboxNavigator: @unchecked Sendable {
         _navigationRoutes.value
     }
 
-    private(set) var roadMatching: RoadMatching
+    let roadMatching: RoadMatching
 
     @MainActor
     func startActiveGuidance(with navigationRoutes: NavigationRoutes, startLegIndex: Int) {
@@ -617,7 +617,7 @@ final class MapboxNavigator: @unchecked Sendable {
         }()
 
         await send(MapMatchingState(
-            location: snappedLocation,
+            location: navigator.rawLocation ?? snappedLocation,
             mapMatchingResult: MapMatchingResult(status: status),
             speedLimit: SpeedLimit(
                 value: speedLimit,
@@ -805,7 +805,7 @@ final class MapboxNavigator: @unchecked Sendable {
         mapMatching
             .compactMap { $0 }
             .sink { mapMatch in
-                fasterRouteController.currentLocation = mapMatch.location
+                fasterRouteController.currentLocation = mapMatch.enhancedLocation
             }
             .store(in: &subscriptions)
 

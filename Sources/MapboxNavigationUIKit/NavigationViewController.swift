@@ -300,7 +300,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         case .none:
             .createNew(
                 location: mapboxNavigation.navigation()
-                    .locationMatching.map(\.mapMatchingResult.enhancedLocation)
+                    .locationMatching.map(\.enhancedLocation)
                     .eraseToAnyPublisher(),
                 routeProgress: mapboxNavigation.navigation()
                     .routeProgress.map(\.?.routeProgress)
@@ -738,7 +738,7 @@ extension NavigationViewController {
         mapboxNavigation.navigation().locationMatching
             .sink { [weak self] status in
                 var statusRoadName = status.roadName
-                if let text = self?.roadName(at: status.snappedLocation), !text.isEmpty {
+                if let text = self?.roadName(at: status.enhancedLocation), !text.isEmpty {
                     statusRoadName = RoadName(
                         text: text,
                         language: statusRoadName?.language ?? "",
@@ -755,7 +755,7 @@ extension NavigationViewController {
                       let status,
                       let locationMatching = mapboxNavigation.navigation().currentLocationMatching else { return }
 
-                let location = locationMatching.mapMatchingResult.enhancedLocation
+                let location = locationMatching.enhancedLocation
                 navigationComponents.forEach {
                     $0.onRouteProgressUpdated(status.routeProgress)
                 }
