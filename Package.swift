@@ -11,7 +11,8 @@ let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
 let package = Package(
     name: "MapboxNavigation",
     defaultLocalization: "en",
-    platforms: [.iOS(.v14)],
+    // The Nav SDK doesn't support macOS but declared the minimum macOS requirement with downstream deps to enable `swift run` cli tools
+    platforms: [.iOS(.v14), .macOS(.v10_15)],
     products: [
         .library(
             name: "MapboxNavigationUIKit",
@@ -25,6 +26,9 @@ let package = Package(
             name: "_MapboxNavigationTestKit",
             targets: ["_MapboxNavigationTestKit"]
         ),
+        .executable(
+            name: "mapbox-directions-swift",
+            targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
@@ -32,6 +36,7 @@ let package = Package(
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.12.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -130,6 +135,12 @@ let package = Package(
                 "_MapboxNavigationTestHelpers",
             ],
             path: "Sources/.empty/_MapboxNavigationTestKit"
-        )
+        ),
+        .executableTarget(
+            name: "MapboxDirectionsCLI",
+            dependencies: [
+                "MapboxDirections",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]),
     ]
 )
