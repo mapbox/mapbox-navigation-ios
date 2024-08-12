@@ -3,6 +3,8 @@ import MapboxDirections
 import MapboxNavigationNative
 
 extension NavigationStatus {
+    private static let nameSeparator = " / "
+
     func localizedRoadName(locale: Locale = .nationalizedCurrent) -> RoadName {
         let roadNames = localizedRoadNames(locale: locale)
 
@@ -15,7 +17,7 @@ extension NavigationStatus {
         let text = roads
             .filter { $0.shield == nil }
             .map(\.text)
-            .joined(separator: " ")
+            .joined(separator: NavigationStatus.nameSeparator)
         return .init(text: text, language: "", imageBaseUrl: nil, shield: nil)
     }
 
