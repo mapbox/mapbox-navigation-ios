@@ -9,6 +9,7 @@
 ### Other changes
 
 * `NavigatorErrors.UnexpectedNavigationStatus` is now public.
+* Improved Telemetry UI-related data collection from the main thread.
 
 ## v3.3.0-rc.1
 

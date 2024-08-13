@@ -1,8 +1,7 @@
 import _MapboxNavigationHelpers
 import UIKit
 
-@MainActor
-final class EventAppState {
+final class EventAppState: Sendable {
     struct Environment {
         let date: @Sendable () -> Date
         let applicationState: @Sendable () -> UIApplication.State
@@ -32,20 +31,23 @@ final class EventAppState {
     }
 
     private let environment: Environment
+    private let innerState: UnfairLocked<State>
+    private let sessionStarted: Date
 
-    private(set) var timeSpentInPortrait: TimeInterval = 0
-    private(set) var lastOrientation: UIDeviceOrientation
-    private(set) var lastTimeOrientationChanged: Date
+    private struct State {
+        var timeSpentInPortrait: TimeInterval = 0
+        var lastOrientation: UIDeviceOrientation
+        var lastTimeOrientationChanged: Date
 
-    private(set) var timeInBackground: TimeInterval = 0
-    private(set) var lastTimeEnteredBackground: Date?
-
-    private(set) var sessionStarted: Date
+        var timeInBackground: TimeInterval = 0
+        var lastTimeEnteredBackground: Date?
+    }
 
     var percentTimeInForeground: Int {
+        let state = innerState.read()
         let currentDate = environment.date()
-        var totalTimeInBackground = timeInBackground
-        if let lastTimeEnteredBackground {
+        var totalTimeInBackground = state.timeInBackground
+        if let lastTimeEnteredBackground = state.lastTimeEnteredBackground {
             totalTimeInBackground += currentDate.timeIntervalSince(lastTimeEnteredBackground)
         }
 
@@ -54,10 +56,11 @@ final class EventAppState {
     }
 
     var percentTimeInPortrait: Int {
+        let state = innerState.read()
         let currentDate = environment.date()
-        var totalTimeInPortrait = timeSpentInPortrait
-        if lastOrientation.isPortrait {
-            totalTimeInPortrait += currentDate.timeIntervalSince(lastTimeOrientationChanged)
+        var totalTimeInPortrait = state.timeSpentInPortrait
+        if state.lastOrientation.isPortrait {
+            totalTimeInPortrait += currentDate.timeIntervalSince(state.lastTimeOrientationChanged)
         }
 
         let totalTime = currentDate.timeIntervalSince(sessionStarted)
@@ -67,15 +70,18 @@ final class EventAppState {
     @MainActor
     init(environment: Environment = .live) {
         self.environment = environment
-        self.lastOrientation = environment.screenOrientation()
 
         let date = environment.date()
-        self.lastTimeOrientationChanged = date
         self.sessionStarted = date
-
-        if environment.applicationState() == .background {
-            self.lastTimeEnteredBackground = date
-        }
+        let lastOrientation = environment.screenOrientation()
+        let lastTimeOrientationChanged = date
+        let lastTimeEnteredBackground: Date? = environment.applicationState() == .background ? date : nil
+        let innerState = State(
+            lastOrientation: lastOrientation,
+            lastTimeOrientationChanged: lastTimeOrientationChanged,
+            lastTimeEnteredBackground: lastTimeEnteredBackground
+        )
+        self.innerState = .init(innerState)
 
         subscribeNotifications()
     }
@@ -110,28 +116,38 @@ final class EventAppState {
 
     @objc
     private func didEnterBackgroundState() {
-        lastTimeEnteredBackground = environment.date()
+        let date = environment.date()
+        innerState.mutate {
+            $0.lastTimeEnteredBackground = date
+        }
     }
 
     @objc
     private func willEnterForegroundState() {
-        guard let dateEnteredBackground = lastTimeEnteredBackground else { return }
+        let state = innerState.read()
+        guard let dateEnteredBackground = state.lastTimeEnteredBackground else { return }
 
-        timeInBackground += environment.date().timeIntervalSince(dateEnteredBackground)
-        lastTimeEnteredBackground = nil
+        let timeDelta = environment.date().timeIntervalSince(dateEnteredBackground)
+        innerState.mutate {
+            $0.timeInBackground += timeDelta
+            $0.lastTimeEnteredBackground = nil
+        }
     }
 
     private func handleOrientationChange() {
+        let state = innerState.read()
         let orientation = environment.deviceOrientation()
         guard orientation.isValidInterfaceOrientation else { return }
-        guard lastOrientation.isPortrait != orientation.isPortrait ||
-            lastOrientation.isLandscape != orientation.isLandscape else { return }
+        guard state.lastOrientation.isPortrait != orientation.isPortrait ||
+            state.lastOrientation.isLandscape != orientation.isLandscape else { return }
 
         let currentDate = environment.date()
-        if orientation.isLandscape {
-            timeSpentInPortrait += currentDate.timeIntervalSince(lastTimeOrientationChanged)
+        let timePortraitDelta = orientation.isLandscape ? currentDate
+            .timeIntervalSince(state.lastTimeOrientationChanged) : 0
+        innerState.mutate {
+            $0.timeSpentInPortrait += timePortraitDelta
+            $0.lastTimeOrientationChanged = currentDate
+            $0.lastOrientation = orientation
         }
-        lastTimeOrientationChanged = currentDate
-        lastOrientation = orientation
     }
 }

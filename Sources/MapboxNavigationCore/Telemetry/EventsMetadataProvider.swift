@@ -23,8 +23,9 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
     private let audioSessionInfoProvider: UnfairLocked<AudioSessionInfoProvider>
     private let device: UIDevice
     private let connectivityTypeProvider: UnfairLocked<ConnectivityTypeProvider>
-    private let appState: UnfairLocked<EventAppState>
+    private let appState: EventAppState
 
+    @MainActor
     init(
         appState: EventAppState,
         screen: UIScreen,
@@ -32,12 +33,38 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
         device: UIDevice,
         connectivityTypeProvider: ConnectivityTypeProvider = MonitorConnectivityTypeProvider()
     ) {
-        self.appState = .init(appState)
+        self.appState = appState
         self.screen = screen
         self.audioSessionInfoProvider = .init(audioSessionInfoProvider)
         self.device = device
         self.connectivityTypeProvider = .init(connectivityTypeProvider)
         self._userInfo = .init(nil)
+
+        device.isBatteryMonitoringEnabled = true
+
+        self.batteryLevel = .init(Self.currentBatteryLevel(with: device))
+        self.batteryPluggedIn = .init(Self.currentBatteryPluggedIn(with: device))
+        self.screenBrightness = .init(Int(screen.brightness * 100))
+
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(batteryLevelDidChange),
+            name: UIDevice.batteryLevelDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(batteryStateDidChange),
+            name: UIDevice.batteryStateDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(brightnessDidChange),
+            name: UIScreen.brightnessDidChangeNotification,
+            object: nil
+        )
     }
 
     private var appMetadata: AppMetadata? {
@@ -53,31 +80,53 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
         )
     }
 
-    @MainActor
-    private var screenBrightness: Int { Int(screen.brightness * 100) }
+    private let screenBrightness: UnfairLocked<Int>
     private var volumeLevel: Int { Int(audioSessionInfoProvider.read().outputVolume * 100) }
     private var audioType: AudioType { audioSessionInfoProvider.read().telemetryAudioType }
-    @MainActor
-    private var batteryPluggedIn: Bool { [.charging, .full].contains(device.batteryState) }
-    @MainActor
-    private var batteryLevel: Int? { device.batteryLevel >= 0 ? Int(device.batteryLevel * 100) : nil }
+
+    private let batteryPluggedIn: UnfairLocked<Bool>
+    private let batteryLevel: UnfairLocked<Int?>
     private var connectivity: String { connectivityTypeProvider.read().connectivityType }
 
     func provideEventsMetadata() -> EventsMetadata {
-        let appState = appState.read()
-        return onMainQueueSync {
-            return EventsMetadata(
-                volumeLevel: volumeLevel as NSNumber,
-                audioType: audioType.rawValue as NSNumber,
-                screenBrightness: screenBrightness as NSNumber,
-                percentTimeInForeground: appState.percentTimeInForeground as NSNumber,
-                percentTimeInPortrait: appState.percentTimeInPortrait as NSNumber,
-                batteryPluggedIn: batteryPluggedIn as NSNumber,
-                batteryLevel: batteryLevel as NSNumber?,
-                connectivity: connectivity,
-                appMetadata: appMetadata
-            )
-        }
+        return EventsMetadata(
+            volumeLevel: volumeLevel as NSNumber,
+            audioType: audioType.rawValue as NSNumber,
+            screenBrightness: screenBrightness.read() as NSNumber,
+            percentTimeInForeground: appState.percentTimeInForeground as NSNumber,
+            percentTimeInPortrait: appState.percentTimeInPortrait as NSNumber,
+            batteryPluggedIn: batteryPluggedIn.read() as NSNumber,
+            batteryLevel: batteryLevel.read() as NSNumber?,
+            connectivity: connectivity,
+            appMetadata: appMetadata
+        )
+    }
+
+    @objc
+    private func batteryLevelDidChange() {
+        let newValue = Self.currentBatteryLevel(with: device)
+        batteryLevel.update(newValue)
+    }
+
+    private static func currentBatteryLevel(with device: UIDevice) -> Int? {
+        device.batteryLevel >= 0 ? Int(device.batteryLevel * 100) : nil
+    }
+
+    @objc
+    private func batteryStateDidChange() {
+        let newValue = Self.currentBatteryPluggedIn(with: device)
+        batteryPluggedIn.update(newValue)
+    }
+
+    private static let chargingStates: [UIDevice.BatteryState] = [.charging, .full]
+
+    private static func currentBatteryPluggedIn(with device: UIDevice) -> Bool {
+        chargingStates.contains(device.batteryState)
+    }
+
+    @objc
+    private func brightnessDidChange() {
+        screenBrightness.update(Int(screen.brightness * 100))
     }
 }
 
