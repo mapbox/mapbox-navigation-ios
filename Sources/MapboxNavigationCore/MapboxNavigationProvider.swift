@@ -222,7 +222,8 @@ public final class MapboxNavigationProvider {
         navigatorPredictionInterval: coreConfig.navigatorPredictionInterval,
         statusUpdatingSettings: nil,
         utilizeSensorData: coreConfig.utilizeSensorData,
-        historyDirectoryURL: coreConfig.historyRecordingConfig?.historyDirectoryURL
+        historyDirectoryURL: coreConfig.historyRecordingConfig?.historyDirectoryURL,
+        initialManeuverAvoidanceRadius: coreConfig.routingConfig.initialManeuverAvoidanceRadius
     )
 
     private lazy var _historyRecorder: HistoryRecording? = {
