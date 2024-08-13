@@ -35,7 +35,6 @@ public final class CoreNavigatorMock: CoreNavigator {
                 polling: nil,
                 incidentsOptions: nil,
                 noSignalSimulationEnabled: nil,
-                avoidManeuverSeconds: nil,
                 useSensors: nil
             ),
             customConfig: ""

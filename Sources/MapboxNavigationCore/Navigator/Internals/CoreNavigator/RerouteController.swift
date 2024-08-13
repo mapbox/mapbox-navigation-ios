@@ -14,23 +14,22 @@ class RerouteController {
         let credentials: ApiConfiguration
         let navigator: NavigationNativeNavigator
         let configHandle: ConfigHandle
-        let rerouteSettings: RerouteConfig
+        let rerouteConfig: RerouteConfig
         let initialManeuverAvoidanceRadius: TimeInterval
     }
 
-    static let DefaultManeuverAvoidanceRadius: TimeInterval = 8.0
-
     var initialManeuverAvoidanceRadius: TimeInterval {
         get {
-            config.avoidManeuverSeconds()?.doubleValue ?? Self.DefaultManeuverAvoidanceRadius
+            config.mutableSettings().avoidManeuverSeconds()?.doubleValue ?? defaultInitialManeuverAvoidanceRadius
         }
         set {
-            config.setAvoidManeuverSecondsForSeconds(NSNumber(value: newValue))
+            config.mutableSettings().setAvoidManeuverSecondsForSeconds(NSNumber(value: newValue))
         }
     }
 
     private var config: ConfigHandle
-    private let rerouteSettings: RerouteConfig
+    private let rerouteConfig: RerouteConfig
+    private let defaultInitialManeuverAvoidanceRadius: TimeInterval
     var abortReroutePipeline: Bool = false
 
     // MARK: Reporting Data
@@ -50,9 +49,10 @@ class RerouteController {
 
     @MainActor
     required init(configuration: Configuration) {
-        self.rerouteSettings = configuration.rerouteSettings
+        self.rerouteConfig = configuration.rerouteConfig
         self.navigator = configuration.navigator
         self.config = configuration.configHandle
+        self.defaultInitialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
         self.defaultRerouteController = DefaultRerouteControllerInterface(
             nativeInterface: configuration.navigator.native.getRerouteController()
         ) {
@@ -64,7 +64,7 @@ class RerouteController {
 
             return Directions
                 .url(
-                    forCalculating: configuration.rerouteSettings.optionsCustomization?(options) ?? options,
+                    forCalculating: configuration.rerouteConfig.optionsCustomization?(options) ?? options,
                     credentials: .init(configuration.credentials)
                 )
                 .absoluteString
@@ -92,13 +92,13 @@ extension RerouteController: RerouteObserver {
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
-        guard rerouteSettings.detectsReroute else { return false }
+        guard rerouteConfig.detectsReroute else { return false }
         delegate?.rerouteControllerDidDetectReroute(self)
         return !abortReroutePipeline
     }
 
     func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
-        guard rerouteSettings.detectsReroute else {
+        guard rerouteConfig.detectsReroute else {
             Log.warning(
                 "Reroute attempt fetched a route during 'rerouteSettings.detectsReroute' is disabled.",
                 category: .navigation
@@ -129,12 +129,12 @@ extension RerouteController: RerouteObserver {
     }
 
     func onRerouteCancelled() {
-        guard rerouteSettings.detectsReroute else { return }
+        guard rerouteConfig.detectsReroute else { return }
         delegate?.rerouteControllerDidCancelReroute(self)
     }
 
     func onRerouteFailed(forError error: RerouteError) {
-        guard rerouteSettings.detectsReroute else {
+        guard rerouteConfig.detectsReroute else {
             Log.warning(
                 "Reroute attempt failed with an error during 'rerouteSettings.detectsReroute' is disabled. Error: \(error.message)",
                 category: .navigation

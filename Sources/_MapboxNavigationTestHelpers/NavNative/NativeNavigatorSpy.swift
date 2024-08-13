@@ -31,7 +31,8 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
             liveIncidentsOptions: nil,
             navigatorPredictionInterval: nil,
             utilizeSensorData: true,
-            historyDirectoryURL: nil
+            historyDirectoryURL: nil,
+            initialManeuverAvoidanceRadius: 8
         )
 
         super.init(

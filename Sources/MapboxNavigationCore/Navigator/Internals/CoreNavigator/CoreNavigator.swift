@@ -151,7 +151,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
                 credentials: configuration.credentials,
                 navigator: navigator,
                 configHandle: factory.configHandle(),
-                rerouteSettings: configuration.routingConfig.rerouteConfig,
+                rerouteConfig: configuration.routingConfig.rerouteConfig,
                 initialManeuverAvoidanceRadius: configuration.routingConfig.initialManeuverAvoidanceRadius
             )
         )
@@ -192,7 +192,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
                 credentials: configuration.credentials,
                 navigator: navigator,
                 configHandle: factory.configHandle(),
-                rerouteSettings: configuration.routingConfig.rerouteConfig,
+                rerouteConfig: configuration.routingConfig.rerouteConfig,
                 initialManeuverAvoidanceRadius: configuration.routingConfig.initialManeuverAvoidanceRadius
             )
         )
@@ -228,10 +228,8 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
             return
         }
 
-        guard let initialManeuverAvoidanceRadius = Float(
-            exactly: configuration.routingConfig
-                .initialManeuverAvoidanceRadius
-        ) else {
+        let configManeuverAvoidanceRadius = configuration.routingConfig.initialManeuverAvoidanceRadius
+        guard let initialManeuverAvoidanceRadius = Float(exactly: configManeuverAvoidanceRadius) else {
             assertionFailure("'initialManeuverAvoidanceRadius' has an unexpected value.")
             return
         }

@@ -29,6 +29,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let statusUpdatingSettings: StatusUpdatingSettings?
     let utilizeSensorData: Bool
     let historyDirectoryURL: URL?
+    let initialManeuverAvoidanceRadius: TimeInterval
 
     init(
         tileStorePath: String,
@@ -42,7 +43,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         navigatorPredictionInterval: TimeInterval?,
         statusUpdatingSettings: StatusUpdatingSettings? = nil,
         utilizeSensorData: Bool,
-        historyDirectoryURL: URL?
+        historyDirectoryURL: URL?,
+        initialManeuverAvoidanceRadius: TimeInterval
     ) {
         self.tileStorePath = tileStorePath
         self.apiConfiguration = apiConfiguration
@@ -57,6 +59,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.statusUpdatingSettings = statusUpdatingSettings
         self.utilizeSensorData = utilizeSensorData
         self.historyDirectoryURL = historyDirectoryURL
+        self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
     }
 
     func targeting(version: String?) -> NativeHandlersFactory {
@@ -72,7 +75,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
             navigatorPredictionInterval: navigatorPredictionInterval,
             statusUpdatingSettings: statusUpdatingSettings,
             utilizeSensorData: utilizeSensorData,
-            historyDirectoryURL: historyDirectoryURL
+            historyDirectoryURL: historyDirectoryURL,
+            initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius
         )
     }
 
@@ -188,7 +192,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
             polling: pollingConfig,
             incidentsOptions: nativeIncidentsOptions,
             noSignalSimulationEnabled: nil,
-            avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
             useSensors: NSNumber(booleanLiteral: utilizeSensorData)
         )
     }
@@ -214,11 +217,14 @@ final class NativeHandlersFactory: @unchecked Sendable {
             customConfigJSON = ""
         }
 
-        return configFactoryType.build(
+        let configHandle = configFactoryType.build(
             for: Self.settingsProfile,
             config: navigatorConfig,
             customConfig: customConfigJSON
         )
+        let avoidManeuverSeconds = NSNumber(value: initialManeuverAvoidanceRadius)
+        configHandle.mutableSettings().setAvoidManeuverSecondsForSeconds(avoidManeuverSeconds)
+        return configHandle
     }
 
     @MainActor
