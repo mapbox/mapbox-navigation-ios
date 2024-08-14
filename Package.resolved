@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "696503304fe8807bd5af3abb23ef20c051dd8b12",
-          "version": "23.9.2"
+          "revision": "c2aa7022afdcf5a070ace4e3b608562101a04690",
+          "version": "23.10.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "255a3d159c710d33ab8a85d15a2842012462f581",
-          "version": "10.17.0"
+          "revision": "51f776b11bcff34ced88fcf14e4ed9c568257232",
+          "version": "10.18.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "dffb8fd7c8316ae8d9b79b694be933deba6f544e",
-          "version": "2.12.0"
+          "revision": "6512320ee7f0091a4c55abe2bc6414f078da88c8",
+          "version": "2.14.0"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "52bb5df80e4a6dd84d61bf9f4fc63a68b30c03e4",
-          "version": "10.17.0"
+          "revision": "8ef49bb140bbd5d51917f1e69d4c3949a176c009",
+          "version": "10.18.2"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "c8ed701b513cf5177118a175d85fbbbcd707ab41",
-          "version": "1.3.0"
+          "revision": "41982a3656a71c768319979febd796c6fd111d5c",
+          "version": "1.5.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "f0afe204b4266337066a436becab62fdd2b32378",
-          "version": "2.7.0"
+          "revision": "213050191cfcb3d5aa76e1fa90c6ff1e182a42ca",
+          "version": "2.8.0"
         }
       }
     ]
