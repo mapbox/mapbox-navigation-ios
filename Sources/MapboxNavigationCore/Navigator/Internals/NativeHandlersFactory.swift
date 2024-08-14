@@ -30,6 +30,11 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let utilizeSensorData: Bool
     let historyDirectoryURL: URL?
     let initialManeuverAvoidanceRadius: TimeInterval
+    var locale: Locale {
+        didSet {
+            _navigator?.locale = locale
+        }
+    }
 
     init(
         tileStorePath: String,
@@ -44,7 +49,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         statusUpdatingSettings: StatusUpdatingSettings? = nil,
         utilizeSensorData: Bool,
         historyDirectoryURL: URL?,
-        initialManeuverAvoidanceRadius: TimeInterval
+        initialManeuverAvoidanceRadius: TimeInterval,
+        locale: Locale
     ) {
         self.tileStorePath = tileStorePath
         self.apiConfiguration = apiConfiguration
@@ -60,6 +66,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.utilizeSensorData = utilizeSensorData
         self.historyDirectoryURL = historyDirectoryURL
         self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
+        self.locale = locale
     }
 
     func targeting(version: String?) -> NativeHandlersFactory {
@@ -76,7 +83,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
             statusUpdatingSettings: statusUpdatingSettings,
             utilizeSensorData: utilizeSensorData,
             historyDirectoryURL: historyDirectoryURL,
-            initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius
+            initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
+            locale: locale
         )
     }
 
@@ -91,26 +99,34 @@ final class NativeHandlersFactory: @unchecked Sendable {
         }
     }
 
-    lazy var navigator: NavigationNativeNavigator = onMainQueueSync {
-        // Make sure that Navigator pick ups Main Thread RunLoop.
-        let historyRecorder = historyRecorderHandle
-        let configHandle = configHandle(by: configFactoryType)
-        let navigator = if let routingProviderSource {
-            MapboxNavigationNative.Navigator(
-                config: configHandle,
-                cache: cacheHandle,
-                historyRecorder: historyRecorder,
-                routerTypeRestriction: routingProviderSource
-            )
-        } else {
-            MapboxNavigationNative.Navigator(
-                config: configHandle,
-                cache: cacheHandle,
-                historyRecorder: historyRecorder
-            )
+    private var _navigator: NavigationNativeNavigator?
+    var navigator: NavigationNativeNavigator {
+        if let _navigator {
+            return _navigator
         }
+        return onMainQueueSync {
+            // Make sure that Navigator pick ups Main Thread RunLoop.
+            let historyRecorder = historyRecorderHandle
+            let configHandle = configHandle(by: configFactoryType)
+            let navigator = if let routingProviderSource {
+                MapboxNavigationNative.Navigator(
+                    config: configHandle,
+                    cache: cacheHandle,
+                    historyRecorder: historyRecorder,
+                    routerTypeRestriction: routingProviderSource
+                )
+            } else {
+                MapboxNavigationNative.Navigator(
+                    config: configHandle,
+                    cache: cacheHandle,
+                    historyRecorder: historyRecorder
+                )
+            }
 
-        return .init(navigator: navigator)
+            let nativeNavigator = NavigationNativeNavigator(navigator: navigator, locale: locale)
+            self._navigator = nativeNavigator
+            return nativeNavigator
+        }
     }
 
     lazy var cacheHandle: CacheHandle = cacheHandlerFactory.getHandler(
@@ -224,6 +240,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         )
         let avoidManeuverSeconds = NSNumber(value: initialManeuverAvoidanceRadius)
         configHandle.mutableSettings().setAvoidManeuverSecondsForSeconds(avoidManeuverSeconds)
+
+        configHandle.mutableSettings().setUserLanguagesForLanguages(locale.preferredBCP47Codes)
         return configHandle
     }
 

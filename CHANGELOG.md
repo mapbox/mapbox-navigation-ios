@@ -10,6 +10,7 @@
 
 * `NavigatorErrors.UnexpectedNavigationStatus` is now public.
 * Improved Telemetry UI-related data collection from the main thread.
+* Reported road names will now also respect user languages preferences.
 
 ## v3.3.0-rc.1
 

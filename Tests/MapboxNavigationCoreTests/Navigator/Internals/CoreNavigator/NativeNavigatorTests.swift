@@ -22,7 +22,8 @@ final class NativeNavigatorTests: XCTestCase {
             navigatorPredictionInterval: nil,
             utilizeSensorData: true,
             historyDirectoryURL: nil,
-            initialManeuverAvoidanceRadius: 8
+            initialManeuverAvoidanceRadius: 8,
+            locale: .current
         )
         navigator = .init(with: .init(
             credentials: .mock(),

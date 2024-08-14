@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import MapboxCommon
 @preconcurrency import MapboxNavigationNative
@@ -7,6 +8,13 @@ final class NavigationNativeNavigator: @unchecked Sendable {
     typealias Completion = @Sendable () -> Void
     @MainActor
     let native: MapboxNavigationNative.Navigator
+    var locale: Locale {
+        didSet {
+            updateLocale()
+        }
+    }
+
+    private var subscriptions: Set<AnyCancellable> = []
 
     private func withNavigator(_ callback: @escaping @Sendable (MapboxNavigationNative.Navigator) -> Void) {
         Task { @MainActor in
@@ -15,8 +23,23 @@ final class NavigationNativeNavigator: @unchecked Sendable {
     }
 
     @MainActor
-    init(navigator: MapboxNavigationNative.Navigator) {
+    init(
+        navigator: MapboxNavigationNative.Navigator,
+        locale: Locale
+    ) {
         self.native = navigator
+        self.locale = locale
+
+        NotificationCenter.default
+            .publisher(for: NSLocale.currentLocaleDidChangeNotification)
+            .sink { [weak self] _ in
+                self?.updateLocale()
+            }
+            .store(in: &subscriptions)
+    }
+
+    private func updateLocale() {
+        native.config().mutableSettings().setUserLanguagesForLanguages(locale.preferredBCP47Codes)
     }
 
     func removeRouteAlternativesObserver(

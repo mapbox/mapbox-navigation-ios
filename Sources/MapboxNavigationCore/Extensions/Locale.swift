@@ -21,4 +21,27 @@ extension Locale {
     public static var nationalizedCurrent: Locale {
         Locale(identifier: preferredLocalLanguageCountryCode)
     }
+
+    var BCP47Code: String {
+        if #available(iOS 16, *) {
+            language.maximalIdentifier
+        } else {
+            languageCode ?? identifier
+        }
+    }
+
+    var preferredBCP47Codes: [String] {
+        let currentCode = BCP47Code
+        var codes = [currentCode]
+        for code in Self.preferredLanguages {
+            let newCode: String = if #available(iOS 16, *) {
+                Locale(languageCode: Locale.LanguageCode(stringLiteral: code)).BCP47Code
+            } else {
+                Locale(identifier: code).BCP47Code
+            }
+            guard newCode != currentCode else { continue }
+            codes.append(newCode)
+        }
+        return codes
+    }
 }

@@ -88,6 +88,8 @@ public final class MapboxNavigationProvider {
         let locale = coreConfig.locale
         let speechApiConfiguration = coreConfig.credentials.speech
         let skuTokenProvider = skuTokenProvider
+
+        nativeHandlersFactory.locale = coreConfig.locale
         Task { @MainActor [_copilot, _sharedRouteVoiceController] in
             await _copilot?.setActive(copilotEnabled)
             if locationClient.isInitialized {
@@ -225,7 +227,8 @@ public final class MapboxNavigationProvider {
         statusUpdatingSettings: nil,
         utilizeSensorData: coreConfig.utilizeSensorData,
         historyDirectoryURL: coreConfig.historyRecordingConfig?.historyDirectoryURL,
-        initialManeuverAvoidanceRadius: coreConfig.routingConfig.initialManeuverAvoidanceRadius
+        initialManeuverAvoidanceRadius: coreConfig.routingConfig.initialManeuverAvoidanceRadius,
+        locale: coreConfig.locale
     )
 
     private lazy var _historyRecorder: HistoryRecording? = {
