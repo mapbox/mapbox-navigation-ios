@@ -1,5 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.18.3
+
+### Packaging
+
+* Fixed MapboxMaps version compatibility in CocoaPods to match SPM. MapboxNavigation in CocoaPods is now compatible with MapboxMaps starting from v10.17.0 to v11.0.0 not including.
+* Fixed MapboxDirections version compatibility in CocoaPods to match SPM. MapboxDirections in CocoaPods is now compatible with MapboxDirections starting from v2.12.0 to v3.0.0 not including.
+* Fixed MapboxNavigationNative version compatibility in CocoaPods to match SPM. MapboxNavigationNative in CocoaPods is now compatible with MapboxNavigationNative starting from v204.0.1 to v205.0.0 not including.
+
 ## v2.18.2
 
 ### CarPlay
