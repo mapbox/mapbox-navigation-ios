@@ -6,6 +6,32 @@
 
 * Added handling `RouteResponse.refreshTTL` into account when refreshing a route. Now it will no longer be possible to attmept to refresh and outdated route, and `Router` will inform that current route has expired using `RouterDelegate.routerDidFailToRefreshExpiredRoute(:_)` method. ([#4672](https://github.com/mapbox/mapbox-navigation-ios/pull/4672))
 
+## v2.18.4
+
+### Packaging
+
+* Add support for building with Xcode 16 beta.
+
+## v2.18.3
+
+### Packaging
+
+* Fixed MapboxMaps version compatibility in CocoaPods to match SPM. MapboxNavigation in CocoaPods is now compatible with MapboxMaps starting from v10.17.0 to v11.0.0 not including.
+* Fixed MapboxDirections version compatibility in CocoaPods to match SPM. MapboxDirections in CocoaPods is now compatible with MapboxDirections starting from v2.12.0 to v3.0.0 not including.
+* Fixed MapboxNavigationNative version compatibility in CocoaPods to match SPM. MapboxNavigationNative in CocoaPods is now compatible with MapboxNavigationNative starting from v204.0.1 to v205.0.0 not including.
+
+## v2.18.2
+
+### CarPlay
+
+* Fixed CarPlay crash when calling `CarPlayManager.routePreview()` function for iOS 14+.
+
+## v2.18.1
+
+### CarPlay
+
+* Partially fixed CarPlay crash when calling `CarPlayManager.routePreview()` function.
+
 ## v2.18.0
 
 ### Packaging

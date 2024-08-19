@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {
           "branch": null,
-          "revision": "3b123999de19bf04905bc1dfdb76f817b0f2cc00",
-          "version": "2.1.2"
+          "revision": "3ef6999c73b6938cc0da422f2c912d0158abb0a0",
+          "version": "2.2.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
         "state": {
           "branch": null,
-          "revision": "a23ded2c91df9156628a6996ab4f347526f17b6b",
-          "version": "2.1.2"
+          "revision": "2ef56b2caf25f55fa7eef8784c30d5a767550f54",
+          "version": "2.2.1"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "8f4d2753f0e4778c76d5f05ad16c74f707390531",
-          "version": "1.2.3"
+          "revision": "41982a3656a71c768319979febd796c6fd111d5c",
+          "version": "1.5.0"
         }
       },
       {
