@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "F90E3D86-34A5-403E-B872-2B0EDB8EE2B6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "language" : "en",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MapboxNavigation-SPM.xcodeproj",
+      "identifier" : "C53F2EDE20EBC95600D9798F",
+      "name" : "Example-CarPlay"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxNavigationTests",
+        "name" : "MapboxNavigationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxCoreNavigationTests",
+        "name" : "MapboxCoreNavigationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
