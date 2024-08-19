@@ -232,7 +232,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
            let nextCoordinateOnRoute = originalShape.coordinates.after(index: closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
             let distance = originalShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
-            currentSpeed = min(max(distance / time, minimumSpeed), maximumSpeed)
+            currentSpeed = min(max(distance / max(time, 1.0), minimumSpeed), maximumSpeed)
             slicedIndex = max(closestCoordinateOnRouteIndex - 1, 0)
         } else {
             let closestLocation = locations[closestCoordinateOnRouteIndex]
