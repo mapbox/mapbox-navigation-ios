@@ -79,6 +79,7 @@ public class StepsViewController: UIViewController, NavigationComponent {
     }
 
     public func onRouteProgressUpdated(_ progress: RouteProgress) {
+        routeProgress = progress
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
         }

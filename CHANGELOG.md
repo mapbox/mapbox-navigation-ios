@@ -11,6 +11,7 @@
 * `NavigatorErrors.UnexpectedNavigationStatus` is now public.
 * Improved Telemetry UI-related data collection from the main thread.
 * Reported road names will now also respect user languages preferences.
+* Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 
 ## v3.3.0-rc.1
 
