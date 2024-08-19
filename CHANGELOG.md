@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.18.4
+
+### Packaging
+
+* Add support for building with Xcode 16 beta.
+
 ## v2.18.3
 
 ### Packaging
