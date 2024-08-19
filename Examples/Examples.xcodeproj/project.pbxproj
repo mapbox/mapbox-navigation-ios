@@ -3,19 +3,32 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C1010272C73E4B000902559 /* MapboxMaps.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C10101E2C73E4B000902559 /* MapboxMaps.xcframework */; };
+		2C1010282C73E4B000902559 /* MapboxMaps.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C10101E2C73E4B000902559 /* MapboxMaps.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1010292C73E4B000902559 /* _MapboxNavigationHelpers.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C10101F2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework */; };
+		2C10102A2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C10101F2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C10102B2C73E4B000902559 /* MapboxCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010202C73E4B000902559 /* MapboxCommon.xcframework */; };
+		2C10102C2C73E4B000902559 /* MapboxCommon.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010202C73E4B000902559 /* MapboxCommon.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C10102D2C73E4B000902559 /* MapboxNavigationCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010212C73E4B000902559 /* MapboxNavigationCore.xcframework */; };
+		2C10102E2C73E4B000902559 /* MapboxNavigationCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010212C73E4B000902559 /* MapboxNavigationCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C10102F2C73E4B000902559 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010222C73E4B000902559 /* Turf.xcframework */; };
+		2C1010302C73E4B000902559 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010222C73E4B000902559 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1010312C73E4B000902559 /* MapboxNavigationUIKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010232C73E4B000902559 /* MapboxNavigationUIKit.xcframework */; };
+		2C1010322C73E4B000902559 /* MapboxNavigationUIKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010232C73E4B000902559 /* MapboxNavigationUIKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1010332C73E4B000902559 /* MapboxCoreMaps.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010242C73E4B000902559 /* MapboxCoreMaps.xcframework */; };
+		2C1010342C73E4B000902559 /* MapboxCoreMaps.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010242C73E4B000902559 /* MapboxCoreMaps.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1010352C73E4B000902559 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010252C73E4B000902559 /* MapboxDirections.xcframework */; };
+		2C1010362C73E4B000902559 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010252C73E4B000902559 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1010372C73E4B000902559 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010262C73E4B000902559 /* MapboxNavigationNative.xcframework */; };
+		2C1010382C73E4B000902559 /* MapboxNavigationNative.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1010262C73E4B000902559 /* MapboxNavigationNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C305FB32C385111000710D7 /* Upcoming-Intersection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */; };
 		2C5D23DE2BF7B3FF00194158 /* Custom-Destination-Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */; };
 		2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */; };
 		2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */; };
-		2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
-		2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CB2BC99C050097715C /* MapboxNavigationCore */; };
-		2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CD2BC99C090097715C /* MapboxNavigationCore */; };
-		2C72A2D02BC99C090097715C /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */; };
-		2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		2CA31A112BC9878A0071176E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F82BC9878A0071176E /* Constants.swift */; };
 		2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */; };
 		2CA31A132BC9878A0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA319FA2BC9878A0071176E /* Assets.xcassets */; };
@@ -36,79 +49,10 @@
 		2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0D2BC9878A0071176E /* ExampleTableViewController.swift */; };
 		2CA31A232BC9878A0071176E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A0E2BC9878A0071176E /* AppDelegate.swift */; };
 		2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A102BC9878A0071176E /* SceneDelegate.swift */; };
-		2CA31A742BC9925B0071176E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */; };
-		2CA31A752BC9925B0071176E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469282BA31FF00075A32B /* MapViewController.swift */; };
-		2CA31A762BC9925B0071176E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469132BA31C1F0075A32B /* ContentView.swift */; };
-		2CA31A772BC9925B0071176E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469262BA31FE30075A32B /* MapView.swift */; };
-		2CA31A782BC9925B0071176E /* NavigationControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */; };
-		2CA31A8C2BC9927D0071176E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA31A7B2BC9927D0071176E /* LaunchScreen.storyboard */; };
-		2CA31A8D2BC9927D0071176E /* NavigationView+CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A7E2BC9927D0071176E /* NavigationView+CameraOptions.swift */; };
-		2CA31A8E2BC9927D0071176E /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A7F2BC9927D0071176E /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
-		2CA31A8F2BC9927D0071176E /* SceneDelegate+BannerDismissalViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A802BC9927D0071176E /* SceneDelegate+BannerDismissalViewControllerDelegate.swift */; };
-		2CA31A902BC9927D0071176E /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A812BC9927D0071176E /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift */; };
-		2CA31A912BC9927D0071176E /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A822BC9927D0071176E /* SceneDelegate+NavigationViewControllerDelegate.swift */; };
-		2CA31A922BC9927D0071176E /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A832BC9927D0071176E /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift */; };
-		2CA31A932BC9927D0071176E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A842BC9927D0071176E /* AppDelegate.swift */; };
-		2CA31A942BC9927D0071176E /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A862BC9927D0071176E /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */; };
-		2CA31A952BC9927D0071176E /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A872BC9927D0071176E /* DismissalAnimator.swift */; };
-		2CA31A962BC9927D0071176E /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A882BC9927D0071176E /* PresentationAnimator.swift */; };
-		2CA31A982BC9927D0071176E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA31A8A2BC9927D0071176E /* SceneDelegate.swift */; };
-		2CA31A992BC9929A0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
-		2CA31A9B2BC992DB0071176E /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9A2BC992DB0071176E /* MapboxNavigationCore */; };
-		2CA31A9D2BC992DB0071176E /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9C2BC992DB0071176E /* MapboxNavigationUIKit */; };
-		2CA31AA02BC994060071176E /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA31A9F2BC994060071176E /* MapboxGeocoder */; };
 		2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */; };
-		2CC347102C2B1B08005BD000 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC346C02C2B1B07005BD000 /* FavoritesList.swift */; };
-		2CC347112C2B1B08005BD000 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC346C12C2B1B07005BD000 /* ViewController.swift */; };
-		2CC347122C2B1B08005BD000 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC346C22C2B1B07005BD000 /* CustomStyles.swift */; };
-		2CC347132C2B1B08005BD000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC346C32C2B1B08005BD000 /* AppDelegate.swift */; };
-		2CC347142C2B1B08005BD000 /* AppDelegate+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC346C42C2B1B08005BD000 /* AppDelegate+CarPlay.swift */; };
-		2CC347152C2B1B08005BD000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346C52C2B1B08005BD000 /* Assets.xcassets */; };
-		2CC347162C2B1B08005BD000 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346C62C2B1B08005BD000 /* Entitlements.plist */; };
-		2CC347182C2B1B08005BD000 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346C92C2B1B08005BD000 /* LaunchScreen.storyboard */; };
-		2CC347192C2B1B08005BD000 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346CB2C2B1B08005BD000 /* Localizable.strings */; };
-		2CC3471A2C2B1B08005BD000 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346CD2C2B1B08005BD000 /* Localizable.strings */; };
-		2CC3471B2C2B1B08005BD000 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346CF2C2B1B08005BD000 /* Localizable.strings */; };
-		2CC3471C2C2B1B08005BD000 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346D12C2B1B08005BD000 /* Main.storyboard */; };
-		2CC3471D2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346D32C2B1B08005BD000 /* Main.strings */; };
-		2CC3471E2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346D52C2B1B08005BD000 /* Main.strings */; };
-		2CC3471F2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346D72C2B1B08005BD000 /* Main.strings */; };
-		2CC347202C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346D92C2B1B08005BD000 /* Main.strings */; };
-		2CC347212C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346DB2C2B1B08005BD000 /* Main.strings */; };
-		2CC347222C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346DD2C2B1B08005BD000 /* Main.strings */; };
-		2CC347232C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346DF2C2B1B08005BD000 /* Main.strings */; };
-		2CC347242C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346E12C2B1B08005BD000 /* Main.strings */; };
-		2CC347252C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346E32C2B1B08005BD000 /* Main.strings */; };
-		2CC347262C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346E52C2B1B08005BD000 /* Main.strings */; };
-		2CC347272C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346E72C2B1B08005BD000 /* Main.strings */; };
-		2CC347282C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346E92C2B1B08005BD000 /* Main.strings */; };
-		2CC347292C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346EB2C2B1B08005BD000 /* Main.strings */; };
-		2CC3472A2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346ED2C2B1B08005BD000 /* Main.strings */; };
-		2CC3472B2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346EF2C2B1B08005BD000 /* Main.strings */; };
-		2CC3472C2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346F12C2B1B08005BD000 /* Main.strings */; };
-		2CC3472D2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346F32C2B1B08005BD000 /* Main.strings */; };
-		2CC3472E2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346F52C2B1B08005BD000 /* Main.strings */; };
-		2CC3472F2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346F72C2B1B08005BD000 /* Main.strings */; };
-		2CC347302C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346F92C2B1B08005BD000 /* Main.strings */; };
-		2CC347312C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346FB2C2B1B08005BD000 /* Main.strings */; };
-		2CC347322C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346FD2C2B1B08005BD000 /* Main.strings */; };
-		2CC347332C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC346FF2C2B1B08005BD000 /* Main.strings */; };
-		2CC347342C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC347012C2B1B08005BD000 /* Main.strings */; };
-		2CC347352C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC347032C2B1B08005BD000 /* Main.strings */; };
-		2CC347362C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC347052C2B1B08005BD000 /* Main.strings */; };
-		2CC347372C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC347072C2B1B08005BD000 /* Main.strings */; };
-		2CC347382C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC347092C2B1B08005BD000 /* Main.strings */; };
-		2CC347392C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC3470B2C2B1B08005BD000 /* Main.strings */; };
-		2CC3473A2C2B1B08005BD000 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CC3470D2C2B1B08005BD000 /* Main.strings */; };
-		2CC3473B2C2B1B08005BD000 /* ViewController+StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3470F2C2B1B08005BD000 /* ViewController+StyleManager.swift */; };
-		2CC3473E2C2B1B92005BD000 /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC3473D2C2B1B92005BD000 /* MapboxNavigationCore */; };
-		2CC347402C2B1B92005BD000 /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC3473F2C2B1B92005BD000 /* MapboxNavigationUIKit */; };
-		2CC347422C2B1BAA005BD000 /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC347412C2B1BAA005BD000 /* MapboxGeocoder */; };
 		2CC92CEC2C33164D00A94834 /* CustomCameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CE92C33164D00A94834 /* CustomCameraStateTransition.swift */; };
 		2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CEA2C33164D00A94834 /* CustomViewportDataSource.swift */; };
 		2CC92CF62C33171000A94834 /* Custom-Navigation-Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */; };
-		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
-		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
 /* End PBXBuildFile section */
@@ -120,26 +64,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CA31A6D2BC991C80071176E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF4660812BBC75C400A0B2E4 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
+				2C10102A2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework in Embed Frameworks */,
+				2C10102C2C73E4B000902559 /* MapboxCommon.xcframework in Embed Frameworks */,
+				2C1010382C73E4B000902559 /* MapboxNavigationNative.xcframework in Embed Frameworks */,
+				2C10102E2C73E4B000902559 /* MapboxNavigationCore.xcframework in Embed Frameworks */,
+				2C1010342C73E4B000902559 /* MapboxCoreMaps.xcframework in Embed Frameworks */,
+				2C1010302C73E4B000902559 /* Turf.xcframework in Embed Frameworks */,
+				2C1010282C73E4B000902559 /* MapboxMaps.xcframework in Embed Frameworks */,
+				2C1010362C73E4B000902559 /* MapboxDirections.xcframework in Embed Frameworks */,
+				2C1010322C73E4B000902559 /* MapboxNavigationUIKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,13 +80,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C10101E2C73E4B000902559 /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = ../XCFrameworks/MapboxMaps.xcframework; sourceTree = "<group>"; };
+		2C10101F2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = _MapboxNavigationHelpers.xcframework; path = ../XCFrameworks/_MapboxNavigationHelpers.xcframework; sourceTree = "<group>"; };
+		2C1010202C73E4B000902559 /* MapboxCommon.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:GJZR2MEM28:Mapbox, Inc."; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = ../XCFrameworks/MapboxCommon.xcframework; sourceTree = "<group>"; };
+		2C1010212C73E4B000902559 /* MapboxNavigationCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationCore.xcframework; path = ../XCFrameworks/MapboxNavigationCore.xcframework; sourceTree = "<group>"; };
+		2C1010222C73E4B000902559 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = ../XCFrameworks/Turf.xcframework; sourceTree = "<group>"; };
+		2C1010232C73E4B000902559 /* MapboxNavigationUIKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationUIKit.xcframework; path = ../XCFrameworks/MapboxNavigationUIKit.xcframework; sourceTree = "<group>"; };
+		2C1010242C73E4B000902559 /* MapboxCoreMaps.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:GJZR2MEM28:Mapbox, Inc."; lastKnownFileType = wrapper.xcframework; name = MapboxCoreMaps.xcframework; path = ../XCFrameworks/MapboxCoreMaps.xcframework; sourceTree = "<group>"; };
+		2C1010252C73E4B000902559 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = ../XCFrameworks/MapboxDirections.xcframework; sourceTree = "<group>"; };
+		2C1010262C73E4B000902559 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = ../XCFrameworks/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
 		2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Upcoming-Intersection.swift"; sourceTree = "<group>"; };
 		2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Destination-Marker.swift"; sourceTree = "<group>"; };
 		2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Waypoints.swift"; sourceTree = "<group>"; };
 		2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route-Lines-Styling.swift"; sourceTree = "<group>"; };
-		2C6A3C792BA3AE780039BBC9 /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
-		2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControlsView.swift; sourceTree = "<group>"; };
-		2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2CA319F52BC986EA0071176E /* AdditionalExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdditionalExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA319F82BC9878A0071176E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleContainerViewController.swift; sourceTree = "<group>"; };
@@ -176,80 +115,12 @@
 		2CA31A0E2BC9878A0071176E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CA31A0F2BC9878A0071176E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CA31A102BC9878A0071176E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2CA31A722BC991C80071176E /* UIKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CA31A7C2BC9927D0071176E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2CA31A7E2BC9927D0071176E /* NavigationView+CameraOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationView+CameraOptions.swift"; sourceTree = "<group>"; };
-		2CA31A7F2BC9927D0071176E /* SceneDelegate+PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+PreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A802BC9927D0071176E /* SceneDelegate+BannerDismissalViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+BannerDismissalViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A812BC9927D0071176E /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+DestinationPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A822BC9927D0071176E /* SceneDelegate+NavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+NavigationViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A832BC9927D0071176E /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+RoutesPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A842BC9927D0071176E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2CA31A862BC9927D0071176E /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+UIViewControllerTransitioningDelegate.swift"; sourceTree = "<group>"; };
-		2CA31A872BC9927D0071176E /* DismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
-		2CA31A882BC9927D0071176E /* PresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
-		2CA31A892BC9927D0071176E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CA31A8A2BC9927D0071176E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2CC3469A2C2AD8ED005BD000 /* Route-Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route-Alerts.swift"; sourceTree = "<group>"; };
-		2CC346AE2C2B18AA005BD000 /* CarPlayExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarPlayExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CC346BC2C2B19C1005BD000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2CC346BD2C2B19CB005BD000 /* CarPlayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CarPlayExample.entitlements; sourceTree = "<group>"; };
-		2CC346C02C2B1B07005BD000 /* FavoritesList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesList.swift; sourceTree = "<group>"; };
-		2CC346C12C2B1B07005BD000 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		2CC346C22C2B1B07005BD000 /* CustomStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStyles.swift; sourceTree = "<group>"; };
-		2CC346C32C2B1B08005BD000 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2CC346C42C2B1B08005BD000 /* AppDelegate+CarPlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppDelegate+CarPlay.swift"; sourceTree = "<group>"; };
-		2CC346C52C2B1B08005BD000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2CC346C62C2B1B08005BD000 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
-		2CC346C82C2B1B08005BD000 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2CC346CA2C2B1B08005BD000 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		2CC346CC2C2B1B08005BD000 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		2CC346CE2C2B1B08005BD000 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		2CC346D02C2B1B08005BD000 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		2CC346D22C2B1B08005BD000 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346D42C2B1B08005BD000 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346D62C2B1B08005BD000 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346D82C2B1B08005BD000 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346DA2C2B1B08005BD000 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
-		2CC346DC2C2B1B08005BD000 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346DE2C2B1B08005BD000 /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346E02C2B1B08005BD000 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346E22C2B1B08005BD000 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346E42C2B1B08005BD000 /* yo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = yo; path = yo.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346E62C2B1B08005BD000 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346E82C2B1B08005BD000 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346EA2C2B1B08005BD000 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346EC2C2B1B08005BD000 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346EE2C2B1B08005BD000 /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346F02C2B1B08005BD000 /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Main.strings"; sourceTree = "<group>"; };
-		2CC346F22C2B1B08005BD000 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346F42C2B1B08005BD000 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346F62C2B1B08005BD000 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
-		2CC346F82C2B1B08005BD000 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346FA2C2B1B08005BD000 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346FC2C2B1B08005BD000 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC346FE2C2B1B08005BD000 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
-		2CC347002C2B1B08005BD000 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC347022C2B1B08005BD000 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC347042C2B1B08005BD000 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC347062C2B1B08005BD000 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC347082C2B1B08005BD000 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC3470A2C2B1B08005BD000 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
-		2CC3470C2C2B1B08005BD000 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Main.strings; sourceTree = "<group>"; };
-		2CC3470F2C2B1B08005BD000 /* ViewController+StyleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+StyleManager.swift"; sourceTree = "<group>"; };
 		2CC92CE92C33164D00A94834 /* CustomCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCameraStateTransition.swift; sourceTree = "<group>"; };
 		2CC92CEA2C33164D00A94834 /* CustomViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewportDataSource.swift; sourceTree = "<group>"; };
 		2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Navigation-Camera.swift"; sourceTree = "<group>"; };
-		2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSDKExampleApp.swift; sourceTree = "<group>"; };
-		2CE469132BA31C1F0075A32B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2CE469152BA31C200075A32B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2CE469202BA31CF20075A32B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
-		DF92974F2BBD4A910047329A /* mapbox-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-navigation-ios"; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,36 +128,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C72A2D02BC99C090097715C /* MapboxNavigationUIKit in Frameworks */,
-				2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CA31A6A2BC991C80071176E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CA31A9D2BC992DB0071176E /* MapboxNavigationUIKit in Frameworks */,
-				2CA31AA02BC994060071176E /* MapboxGeocoder in Frameworks */,
-				2CA31A9B2BC992DB0071176E /* MapboxNavigationCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CC346AB2C2B18AA005BD000 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CC347402C2B1B92005BD000 /* MapboxNavigationUIKit in Frameworks */,
-				2CC347422C2B1BAA005BD000 /* MapboxGeocoder in Frameworks */,
-				2CC3473E2C2B1B92005BD000 /* MapboxNavigationCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CE4690B2BA31C1F0075A32B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */,
+				2C1010292C73E4B000902559 /* _MapboxNavigationHelpers.xcframework in Frameworks */,
+				2C10102B2C73E4B000902559 /* MapboxCommon.xcframework in Frameworks */,
+				2C1010372C73E4B000902559 /* MapboxNavigationNative.xcframework in Frameworks */,
+				2C10102D2C73E4B000902559 /* MapboxNavigationCore.xcframework in Frameworks */,
+				2C1010332C73E4B000902559 /* MapboxCoreMaps.xcframework in Frameworks */,
+				2C10102F2C73E4B000902559 /* Turf.xcframework in Frameworks */,
+				2C1010272C73E4B000902559 /* MapboxMaps.xcframework in Frameworks */,
+				2C1010352C73E4B000902559 /* MapboxDirections.xcframework in Frameworks */,
+				2C1010312C73E4B000902559 /* MapboxNavigationUIKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,29 +146,17 @@
 		2C6A3C762BA389D90039BBC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C10101F2C73E4B000902559 /* _MapboxNavigationHelpers.xcframework */,
+				2C1010202C73E4B000902559 /* MapboxCommon.xcframework */,
+				2C1010242C73E4B000902559 /* MapboxCoreMaps.xcframework */,
+				2C1010252C73E4B000902559 /* MapboxDirections.xcframework */,
+				2C10101E2C73E4B000902559 /* MapboxMaps.xcframework */,
+				2C1010212C73E4B000902559 /* MapboxNavigationCore.xcframework */,
+				2C1010262C73E4B000902559 /* MapboxNavigationNative.xcframework */,
+				2C1010232C73E4B000902559 /* MapboxNavigationUIKit.xcframework */,
+				2C1010222C73E4B000902559 /* Turf.xcframework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		2C6A3C7D2BA478EC0039BBC9 /* SupportingFiles */ = {
-			isa = PBXGroup;
-			children = (
-				2CE469152BA31C200075A32B /* Assets.xcassets */,
-				2CE469202BA31CF20075A32B /* Info.plist */,
-			);
-			path = SupportingFiles;
-			sourceTree = "<group>";
-		};
-		2C6A3C7E2BA478FC0039BBC9 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				2CE469262BA31FE30075A32B /* MapView.swift */,
-				2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */,
-				2CE469282BA31FF00075A32B /* MapViewController.swift */,
-				2CE469132BA31C1F0075A32B /* ContentView.swift */,
-				2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		2CA319F72BC9878A0071176E /* AdditionalExamples */ = {
@@ -374,102 +212,6 @@
 			path = CustomBars;
 			sourceTree = "<group>";
 		};
-		2CA31A792BC9927D0071176E /* UIKitExample */ = {
-			isa = PBXGroup;
-			children = (
-				2CA31A7B2BC9927D0071176E /* LaunchScreen.storyboard */,
-				2CA31A7D2BC9927D0071176E /* Extensions */,
-				2CA31A842BC9927D0071176E /* AppDelegate.swift */,
-				2CA31A852BC9927D0071176E /* Transitions */,
-				2CA31A892BC9927D0071176E /* Info.plist */,
-				2CA31A8A2BC9927D0071176E /* SceneDelegate.swift */,
-			);
-			path = UIKitExample;
-			sourceTree = "<group>";
-		};
-		2CA31A7D2BC9927D0071176E /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				2CA31A7E2BC9927D0071176E /* NavigationView+CameraOptions.swift */,
-				2CA31A7F2BC9927D0071176E /* SceneDelegate+PreviewViewControllerDelegate.swift */,
-				2CA31A802BC9927D0071176E /* SceneDelegate+BannerDismissalViewControllerDelegate.swift */,
-				2CA31A812BC9927D0071176E /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift */,
-				2CA31A822BC9927D0071176E /* SceneDelegate+NavigationViewControllerDelegate.swift */,
-				2CA31A832BC9927D0071176E /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		2CA31A852BC9927D0071176E /* Transitions */ = {
-			isa = PBXGroup;
-			children = (
-				2CA31A862BC9927D0071176E /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */,
-				2CA31A872BC9927D0071176E /* DismissalAnimator.swift */,
-				2CA31A882BC9927D0071176E /* PresentationAnimator.swift */,
-			);
-			path = Transitions;
-			sourceTree = "<group>";
-		};
-		2CC346AF2C2B18AA005BD000 /* CarPlayExample */ = {
-			isa = PBXGroup;
-			children = (
-				2CC346C22C2B1B07005BD000 /* CustomStyles.swift */,
-				2CC346C02C2B1B07005BD000 /* FavoritesList.swift */,
-				2CC346C32C2B1B08005BD000 /* AppDelegate.swift */,
-				2CC346C42C2B1B08005BD000 /* AppDelegate+CarPlay.swift */,
-				2CC3470E2C2B1B08005BD000 /* Supporting Files */,
-				2CC346C12C2B1B07005BD000 /* ViewController.swift */,
-				2CC3470F2C2B1B08005BD000 /* ViewController+StyleManager.swift */,
-				2CC346BD2C2B19CB005BD000 /* CarPlayExample.entitlements */,
-				2CC346BC2C2B19C1005BD000 /* Info.plist */,
-			);
-			path = CarPlayExample;
-			sourceTree = "<group>";
-		};
-		2CC3470E2C2B1B08005BD000 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				2CC346C52C2B1B08005BD000 /* Assets.xcassets */,
-				2CC346C62C2B1B08005BD000 /* Entitlements.plist */,
-				2CC346C92C2B1B08005BD000 /* LaunchScreen.storyboard */,
-				2CC346CB2C2B1B08005BD000 /* Localizable.strings */,
-				2CC346CD2C2B1B08005BD000 /* Localizable.strings */,
-				2CC346CF2C2B1B08005BD000 /* Localizable.strings */,
-				2CC346D12C2B1B08005BD000 /* Main.storyboard */,
-				2CC346D32C2B1B08005BD000 /* Main.strings */,
-				2CC346D52C2B1B08005BD000 /* Main.strings */,
-				2CC346D72C2B1B08005BD000 /* Main.strings */,
-				2CC346D92C2B1B08005BD000 /* Main.strings */,
-				2CC346DB2C2B1B08005BD000 /* Main.strings */,
-				2CC346DD2C2B1B08005BD000 /* Main.strings */,
-				2CC346DF2C2B1B08005BD000 /* Main.strings */,
-				2CC346E12C2B1B08005BD000 /* Main.strings */,
-				2CC346E32C2B1B08005BD000 /* Main.strings */,
-				2CC346E52C2B1B08005BD000 /* Main.strings */,
-				2CC346E72C2B1B08005BD000 /* Main.strings */,
-				2CC346E92C2B1B08005BD000 /* Main.strings */,
-				2CC346EB2C2B1B08005BD000 /* Main.strings */,
-				2CC346ED2C2B1B08005BD000 /* Main.strings */,
-				2CC346EF2C2B1B08005BD000 /* Main.strings */,
-				2CC346F12C2B1B08005BD000 /* Main.strings */,
-				2CC346F32C2B1B08005BD000 /* Main.strings */,
-				2CC346F52C2B1B08005BD000 /* Main.strings */,
-				2CC346F72C2B1B08005BD000 /* Main.strings */,
-				2CC346F92C2B1B08005BD000 /* Main.strings */,
-				2CC346FB2C2B1B08005BD000 /* Main.strings */,
-				2CC346FD2C2B1B08005BD000 /* Main.strings */,
-				2CC346FF2C2B1B08005BD000 /* Main.strings */,
-				2CC347012C2B1B08005BD000 /* Main.strings */,
-				2CC347032C2B1B08005BD000 /* Main.strings */,
-				2CC347052C2B1B08005BD000 /* Main.strings */,
-				2CC347072C2B1B08005BD000 /* Main.strings */,
-				2CC347092C2B1B08005BD000 /* Main.strings */,
-				2CC3470B2C2B1B08005BD000 /* Main.strings */,
-				2CC3470D2C2B1B08005BD000 /* Main.strings */,
-			);
-			path = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		2CC92CEB2C33164D00A94834 /* NavigationCamera */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,11 +224,7 @@
 		2CE469052BA31C1F0075A32B = {
 			isa = PBXGroup;
 			children = (
-				DF92974F2BBD4A910047329A /* mapbox-navigation-ios */,
-				2CA31A792BC9927D0071176E /* UIKitExample */,
 				2CA319F72BC9878A0071176E /* AdditionalExamples */,
-				2CE469102BA31C1F0075A32B /* CoreSDKExample */,
-				2CC346AF2C2B18AA005BD000 /* CarPlayExample */,
 				2CE4690F2BA31C1F0075A32B /* Products */,
 				2C6A3C762BA389D90039BBC9 /* Frameworks */,
 			);
@@ -495,23 +233,9 @@
 		2CE4690F2BA31C1F0075A32B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */,
 				2CA319F52BC986EA0071176E /* AdditionalExamples.app */,
-				2CA31A722BC991C80071176E /* UIKitExample.app */,
-				2CC346AE2C2B18AA005BD000 /* CarPlayExample.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		2CE469102BA31C1F0075A32B /* CoreSDKExample */ = {
-			isa = PBXGroup;
-			children = (
-				2C6A3C7E2BA478FC0039BBC9 /* Views */,
-				2C6A3C7D2BA478EC0039BBC9 /* SupportingFiles */,
-				2C6A3C792BA3AE780039BBC9 /* Navigation.swift */,
-				2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */,
-			);
-			path = CoreSDKExample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -533,80 +257,9 @@
 			);
 			name = AdditionalExamples;
 			packageProductDependencies = (
-				2C72A2CD2BC99C090097715C /* MapboxNavigationCore */,
-				2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */,
 			);
 			productName = CoreSDKExample;
 			productReference = 2CA319F52BC986EA0071176E /* AdditionalExamples.app */;
-			productType = "com.apple.product-type.application";
-		};
-		2CA31A612BC991C80071176E /* UIKitExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2CA31A6F2BC991C80071176E /* Build configuration list for PBXNativeTarget "UIKitExample" */;
-			buildPhases = (
-				2CA31A622BC991C80071176E /* Sources */,
-				2CA31A6A2BC991C80071176E /* Frameworks */,
-				2CA31A6B2BC991C80071176E /* Resources */,
-				2CA31A6D2BC991C80071176E /* Embed Frameworks */,
-				2CA31A6E2BC991C80071176E /* Apply Mapbox Tokens */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = UIKitExample;
-			packageProductDependencies = (
-				2CA31A9A2BC992DB0071176E /* MapboxNavigationCore */,
-				2CA31A9C2BC992DB0071176E /* MapboxNavigationUIKit */,
-				2CA31A9F2BC994060071176E /* MapboxGeocoder */,
-			);
-			productName = CoreSDKExample;
-			productReference = 2CA31A722BC991C80071176E /* UIKitExample.app */;
-			productType = "com.apple.product-type.application";
-		};
-		2CC346AD2C2B18AA005BD000 /* CarPlayExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2CC346BB2C2B18AB005BD000 /* Build configuration list for PBXNativeTarget "CarPlayExample" */;
-			buildPhases = (
-				2CC346AA2C2B18AA005BD000 /* Sources */,
-				2CC346AB2C2B18AA005BD000 /* Frameworks */,
-				2CC346AC2C2B18AA005BD000 /* Resources */,
-				2CC3473C2C2B1B43005BD000 /* Apply Mapbox Tokens */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CarPlayExample;
-			packageProductDependencies = (
-				2CC3473D2C2B1B92005BD000 /* MapboxNavigationCore */,
-				2CC3473F2C2B1B92005BD000 /* MapboxNavigationUIKit */,
-				2CC347412C2B1BAA005BD000 /* MapboxGeocoder */,
-			);
-			productName = CarPlayExample;
-			productReference = 2CC346AE2C2B18AA005BD000 /* CarPlayExample.app */;
-			productType = "com.apple.product-type.application";
-		};
-		2CE4690D2BA31C1F0075A32B /* CoreSDKExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2CE4691C2BA31C200075A32B /* Build configuration list for PBXNativeTarget "CoreSDKExample" */;
-			buildPhases = (
-				2CE4690A2BA31C1F0075A32B /* Sources */,
-				2CE4690B2BA31C1F0075A32B /* Frameworks */,
-				2CE4690C2BA31C1F0075A32B /* Resources */,
-				DF4660812BBC75C400A0B2E4 /* Embed Frameworks */,
-				2CE4691F2BA31C8F0075A32B /* Apply Mapbox Tokens */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CoreSDKExample;
-			packageProductDependencies = (
-				2C72A2CB2BC99C050097715C /* MapboxNavigationCore */,
-			);
-			productName = CoreSDKExample;
-			productReference = 2CE4690E2BA31C1F0075A32B /* CoreSDKExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -618,15 +271,6 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1530;
-				TargetAttributes = {
-					2CC346AD2C2B18AA005BD000 = {
-						CreatedOnToolsVersion = 15.3;
-						LastSwiftMigration = 1530;
-					};
-					2CE4690D2BA31C1F0075A32B = {
-						CreatedOnToolsVersion = 15.3;
-					};
-				};
 			};
 			buildConfigurationList = 2CE469092BA31C1F0075A32B /* Build configuration list for PBXProject "Examples" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -673,10 +317,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2CE4690D2BA31C1F0075A32B /* CoreSDKExample */,
 				2CA319E22BC986EA0071176E /* AdditionalExamples */,
-				2CA31A612BC991C80071176E /* UIKitExample */,
-				2CC346AD2C2B18AA005BD000 /* CarPlayExample */,
 			);
 		};
 /* End PBXProject section */
@@ -689,71 +330,9 @@
 				2CA31A142BC9878A0071176E /* LaunchScreen.storyboard in Resources */,
 				2CA31A132BC9878A0071176E /* Assets.xcassets in Resources */,
 				2CA31A1F2BC9878A0071176E /* CustomBottomBannerView.xib in Resources */,
-				2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */,
 				2CA31A1D2BC9878A0071176E /* EmbeddedExamples.storyboard in Resources */,
 				2CA31A152BC9878A0071176E /* Main.storyboard in Resources */,
 				DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CA31A6B2BC991C80071176E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CA31A8C2BC9927D0071176E /* LaunchScreen.storyboard in Resources */,
-				2CA31A992BC9929A0071176E /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CC346AC2C2B18AA005BD000 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CC347302C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347292C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3471E2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347362C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347192C2B1B08005BD000 /* Localizable.strings in Resources */,
-				2CC3472C2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347162C2B1B08005BD000 /* Entitlements.plist in Resources */,
-				2CC3471A2C2B1B08005BD000 /* Localizable.strings in Resources */,
-				2CC347372C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347152C2B1B08005BD000 /* Assets.xcassets in Resources */,
-				2CC347332C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347322C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347352C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347312C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347342C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3471B2C2B1B08005BD000 /* Localizable.strings in Resources */,
-				2CC3471C2C2B1B08005BD000 /* Main.storyboard in Resources */,
-				2CC3472B2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347382C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347182C2B1B08005BD000 /* LaunchScreen.storyboard in Resources */,
-				2CC347272C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347252C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347232C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347222C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347242C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3471F2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3472E2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347202C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347212C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3472A2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347282C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3472D2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3472F2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3471D2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC3473A2C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347262C2B1B08005BD000 /* Main.strings in Resources */,
-				2CC347392C2B1B08005BD000 /* Main.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CE4690C2BA31C1F0075A32B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CE469162BA31C200075A32B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,67 +340,6 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 		2CA319F12BC986EA0071176E /* Apply Mapbox Tokens */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Apply Mapbox Tokens";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
-			showEnvVarsInLog = 0;
-		};
-		2CA31A6E2BC991C80071176E /* Apply Mapbox Tokens */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Apply Mapbox Tokens";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
-			showEnvVarsInLog = 0;
-		};
-		2CC3473C2C2B1B43005BD000 /* Apply Mapbox Tokens */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Apply Mapbox Tokens";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
-		};
-		2CE4691F2BA31C8F0075A32B /* Apply Mapbox Tokens */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -876,51 +394,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2CA31A622BC991C80071176E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CA31A912BC9927D0071176E /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
-				2CA31A952BC9927D0071176E /* DismissalAnimator.swift in Sources */,
-				2CA31A962BC9927D0071176E /* PresentationAnimator.swift in Sources */,
-				2CA31A942BC9927D0071176E /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
-				2CA31A8F2BC9927D0071176E /* SceneDelegate+BannerDismissalViewControllerDelegate.swift in Sources */,
-				2CA31A902BC9927D0071176E /* SceneDelegate+DestinationPreviewViewControllerDelegate.swift in Sources */,
-				2CA31A8E2BC9927D0071176E /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
-				2CA31A982BC9927D0071176E /* SceneDelegate.swift in Sources */,
-				2CA31A932BC9927D0071176E /* AppDelegate.swift in Sources */,
-				2CA31A922BC9927D0071176E /* SceneDelegate+RoutesPreviewViewControllerDelegate.swift in Sources */,
-				2CA31A8D2BC9927D0071176E /* NavigationView+CameraOptions.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CC346AA2C2B18AA005BD000 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CC3473B2C2B1B08005BD000 /* ViewController+StyleManager.swift in Sources */,
-				2CC347132C2B1B08005BD000 /* AppDelegate.swift in Sources */,
-				2CC347112C2B1B08005BD000 /* ViewController.swift in Sources */,
-				2CC347142C2B1B08005BD000 /* AppDelegate+CarPlay.swift in Sources */,
-				2CC347122C2B1B08005BD000 /* CustomStyles.swift in Sources */,
-				2CC347102C2B1B08005BD000 /* FavoritesList.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2CE4690A2BA31C1F0075A32B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CA31A742BC9925B0071176E /* SettingsView.swift in Sources */,
-				2CA31A772BC9925B0071176E /* MapView.swift in Sources */,
-				2CA31A762BC9925B0071176E /* ContentView.swift in Sources */,
-				2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */,
-				2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */,
-				2CA31A782BC9925B0071176E /* NavigationControlsView.swift in Sources */,
-				2CA31A752BC9925B0071176E /* MapViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
@@ -940,294 +413,6 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		2CA31A7B2BC9927D0071176E /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CA31A7C2BC9927D0071176E /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		2CC346C92C2B1B08005BD000 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346C82C2B1B08005BD000 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		2CC346CB2C2B1B08005BD000 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346CA2C2B1B08005BD000 /* en */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		2CC346CD2C2B1B08005BD000 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346CC2C2B1B08005BD000 /* uk */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		2CC346CF2C2B1B08005BD000 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346CE2C2B1B08005BD000 /* ru */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		2CC346D12C2B1B08005BD000 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346D02C2B1B08005BD000 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		2CC346D32C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346D22C2B1B08005BD000 /* de */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346D52C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346D42C2B1B08005BD000 /* he */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346D72C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346D62C2B1B08005BD000 /* ar */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346D92C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346D82C2B1B08005BD000 /* el */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346DB2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346DA2C2B1B08005BD000 /* zh-Hans */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346DD2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346DC2C2B1B08005BD000 /* ja */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346DF2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346DE2C2B1B08005BD000 /* fa */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346E12C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346E02C2B1B08005BD000 /* en */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346E32C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346E22C2B1B08005BD000 /* uk */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346E52C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346E42C2B1B08005BD000 /* yo */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346E72C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346E62C2B1B08005BD000 /* es */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346E92C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346E82C2B1B08005BD000 /* sl */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346EB2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346EA2C2B1B08005BD000 /* da */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346ED2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346EC2C2B1B08005BD000 /* it */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346EF2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346EE2C2B1B08005BD000 /* bg */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346F12C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346F02C2B1B08005BD000 /* es-ES */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346F32C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346F22C2B1B08005BD000 /* sv */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346F52C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346F42C2B1B08005BD000 /* ko */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346F72C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346F62C2B1B08005BD000 /* zh-Hant */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346F92C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346F82C2B1B08005BD000 /* hu */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346FB2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346FA2C2B1B08005BD000 /* tr */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346FD2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346FC2C2B1B08005BD000 /* pl */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC346FF2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC346FE2C2B1B08005BD000 /* pt-BR */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC347012C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC347002C2B1B08005BD000 /* vi */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC347032C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC347022C2B1B08005BD000 /* lt */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC347052C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC347042C2B1B08005BD000 /* ru */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC347072C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC347062C2B1B08005BD000 /* fr */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC347092C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC347082C2B1B08005BD000 /* nl */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC3470B2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC3470A2C2B1B08005BD000 /* pt-PT */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		2CC3470D2C2B1B08005BD000 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CC3470C2C2B1B08005BD000 /* ca */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1240,6 +425,7 @@
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR/../XCFrameworks;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AdditionalExamples/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
@@ -1272,6 +458,7 @@
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR/../XCFrameworks;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AdditionalExamples/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
@@ -1290,153 +477,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation.AdditionalExamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		2CA31A702BC991C80071176E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = UIKitExample/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation.UIKitExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2CA31A712BC991C80071176E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = UIKitExample/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation.UIKitExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		2CC346B92C2B18AB005BD000 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CarPlayExample/CarPlayExample.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CarPlayExample/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Mapbox.CarPlay-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2CC346BA2C2B18AB005BD000 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CarPlayExample/CarPlayExample.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CarPlayExample/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Mapbox.CarPlay-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1563,70 +603,6 @@
 			};
 			name = Release;
 		};
-		2CE4691D2BA31C200075A32B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CoreSDKExample/SupportingFiles/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation.CoreSDKExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2CE4691E2BA31C200075A32B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CoreSDKExample/SupportingFiles/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation.CoreSDKExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1639,38 +615,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2CA31A6F2BC991C80071176E /* Build configuration list for PBXNativeTarget "UIKitExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2CA31A702BC991C80071176E /* Debug */,
-				2CA31A712BC991C80071176E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2CC346BB2C2B18AB005BD000 /* Build configuration list for PBXNativeTarget "CarPlayExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2CC346B92C2B18AB005BD000 /* Debug */,
-				2CC346BA2C2B18AB005BD000 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2CE469092BA31C1F0075A32B /* Build configuration list for PBXProject "Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CE4691A2BA31C200075A32B /* Debug */,
 				2CE4691B2BA31C200075A32B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2CE4691C2BA31C200075A32B /* Build configuration list for PBXNativeTarget "CoreSDKExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2CE4691D2BA31C200075A32B /* Debug */,
-				2CE4691E2BA31C200075A32B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1687,47 +636,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2C72A2CB2BC99C050097715C /* MapboxNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationCore;
-		};
-		2C72A2CD2BC99C090097715C /* MapboxNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationCore;
-		};
-		2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationUIKit;
-		};
-		2CA31A9A2BC992DB0071176E /* MapboxNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationCore;
-		};
-		2CA31A9C2BC992DB0071176E /* MapboxNavigationUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationUIKit;
-		};
-		2CA31A9F2BC994060071176E /* MapboxGeocoder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2CA31A9E2BC994060071176E /* XCRemoteSwiftPackageReference "mapboxgeocoder" */;
-			productName = MapboxGeocoder;
-		};
-		2CC3473D2C2B1B92005BD000 /* MapboxNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationCore;
-		};
-		2CC3473F2C2B1B92005BD000 /* MapboxNavigationUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationUIKit;
-		};
-		2CC347412C2B1BAA005BD000 /* MapboxGeocoder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2CA31A9E2BC994060071176E /* XCRemoteSwiftPackageReference "mapboxgeocoder" */;
-			productName = MapboxGeocoder;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2CE469062BA31C1F0075A32B /* Project object */;
 }

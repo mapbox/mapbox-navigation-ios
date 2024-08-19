@@ -150,7 +150,7 @@ class TopAlertsBarViewController: ContainerViewController {
 
 // MARK: - RouteAlert to String implementation
 
-extension MapboxDirections.Incident: CustomStringConvertible {
+extension MapboxDirections.Incident: @retroactive CustomStringConvertible {
     var alertDescription: String {
         guard let kind else { return description }
 
@@ -189,6 +189,8 @@ extension MapboxNavigationCore.RouteAlert {
                 return "Rest area in \(distance)m."
             case .serviceArea:
                 return "Service area in \(distance)m."
+            @unknown default:
+                return "-"
             }
         case .tollCollection(let alert?):
             switch alert.type {
@@ -196,6 +198,8 @@ extension MapboxNavigationCore.RouteAlert {
                 return "Toll booth in \(distance)m."
             case .gantry:
                 return "Toll gantry in \(distance)m."
+            @unknown default:
+                return "-"
             }
         default:
             return nil

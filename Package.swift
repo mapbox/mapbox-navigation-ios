@@ -3,16 +3,17 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("317.0.0-SNAPSHOT.0816T0948Z.fa1a923", "2e9645c5cce893673457837e6050a5c0f4a411bb16223084d4d550d623a9341f", "8e3657259224579766fd08aa04a65817b97af803")
+let (navNativeVersion, navNativeChecksum) = ("317.0.0", "42af932c7d97a5c8a5c3836dda80cbc6524f410ef5f81b925300f7e70764ca6b")
+
 let mapsVersion: Version = "11.6.0"
+let commonVersion: Version = "24.6.0"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
 
 let package = Package(
     name: "MapboxNavigation",
     defaultLocalization: "en",
-    // The Nav SDK doesn't support macOS but declared the minimum macOS requirement with downstream deps to enable `swift run` cli tools
-    platforms: [.iOS(.v14), .macOS(.v10_15)],
+    platforms: [.iOS(.v14)],
     products: [
         .library(
             name: "MapboxNavigationUIKit",
@@ -21,22 +22,12 @@ let package = Package(
         .library(
             name: "MapboxNavigationCore",
             targets: ["MapboxNavigationCore"]
-        ),
-        .library(
-            name: "_MapboxNavigationTestKit",
-            targets: ["_MapboxNavigationTestKit"]
-        ),
-        .executable(
-            name: "mapbox-directions-swift",
-            targets: ["MapboxDirectionsCLI"]),
+        )
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.12.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: commonVersion),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0")
     ],
     targets: [
         .target(
@@ -54,9 +45,10 @@ let package = Package(
         .target(
             name: "MapboxNavigationCore",
             dependencies: [
-                "_MapboxNavigationHelpers",
-                .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                "MapboxNavigationNative",
                 "MapboxDirections",
+                "_MapboxNavigationHelpers",
                 .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
             ],
             resources: [
@@ -69,78 +61,15 @@ let package = Package(
                 .product(name: "Turf", package: "turf-swift"),
             ]
         ),
-
-        // Test targets
-        .testTarget(
-            name: "MapboxNavigationCoreTests",
-            dependencies: [
-                "MapboxNavigationCore",
-                "_MapboxNavigationTestHelpers",
-            ],
-            resources: [
-                .copy("Fixtures"),
-                .process("Resources"),
-            ]
+        navNativeBinaryTarget(
+            name: "MapboxNavigationNative",
+            version: navNativeVersion,
+            checksum: navNativeChecksum
         ),
-        .target(
-            name: "_MapboxNavigationTestHelpers",
-            dependencies: [
-                "MapboxNavigationCore"
-            ]
-        ),
-        .testTarget(
-            name: "MapboxDirectionsTests",
-            dependencies: [
-                "MapboxDirections",
-                .product(name:  "OHHTTPStubsSwift", package: "OHHTTPStubs"),
-            ],
-            resources: [.process("Fixtures")]
-        ),
-        .target(
-            name: "TestHelper",
-            dependencies: [
-                "MapboxNavigationCore",
-                "MapboxNavigationUIKit",
-            ],
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Fixtures"),
-            ]
-        ),
-        .target(
-            name: "CarPlayTestHelper",
-            exclude: [
-                "Info.plist",
-                "CarPlayTestHelper.h",
-            ]
-        ),
-        .testTarget(
-            name: "MapboxNavigationPackageTests",
-            dependencies: [
-                "MapboxNavigationUIKit",
-                "TestHelper",
-                "CarPlayTestHelper",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-                .product(name:  "OHHTTPStubsSwift", package: "OHHTTPStubs"),
-            ],
-            exclude: [
-                "Info.plist",
-                "__Snapshots__", // Ignore snapshots folder
-            ]
-        ),
-        .target(
-            name: "_MapboxNavigationTestKit",
-            dependencies: [
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-                "_MapboxNavigationTestHelpers",
-            ],
-            path: "Sources/.empty/_MapboxNavigationTestKit"
-        ),
-        .executableTarget(
-            name: "MapboxDirectionsCLI",
-            dependencies: [
-                "MapboxDirections",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ]),
     ]
 )
+
+private func navNativeBinaryTarget(name: String, version: String, checksum: String) -> Target {
+    let url = "\(mapboxApiDownloads)/dash-native/releases/ios/packages/\(version)/MapboxNavigationNative.xcframework.zip"
+    return .binaryTarget(name: name, url: url, checksum: checksum)
+}
