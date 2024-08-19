@@ -6,6 +6,12 @@
 
 * Added handling `RouteResponse.refreshTTL` into account when refreshing a route. Now it will no longer be possible to attmept to refresh and outdated route, and `Router` will inform that current route has expired using `RouterDelegate.routerDidFailToRefreshExpiredRoute(:_)` method. ([#4672](https://github.com/mapbox/mapbox-navigation-ios/pull/4672))
 
+## v2.18.4
+
+### Packaging
+
+* Add support for building with Xcode 16 beta.
+
 ## v2.18.3
 
 ### Packaging
