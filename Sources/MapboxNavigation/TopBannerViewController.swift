@@ -59,10 +59,10 @@ open class TopBannerViewController: UIViewController {
     private let instructionsBannerHeight: CGFloat = 100.0
     
     private var informationChildren: [UIView] {
-        return [instructionsBannerView] + secondaryChildren + [lanesView]
+        return [instructionsBannerView] + secondaryChildren + [lanesView, nextBannerView]
     }
     private var secondaryChildren: [UIView] {
-        return [nextBannerView, statusView, junctionView]
+        return [statusView, junctionView]
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -112,7 +112,7 @@ open class TopBannerViewController: UIViewController {
     
     private func setupInformationStackView() {
         addInstructionsBanner()
-        let subviews = [lanesView] + secondaryChildren
+        let subviews = [lanesView, nextBannerView] + secondaryChildren
         informationStackView.addArrangedSubviews(subviews)
         for child in informationChildren {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
