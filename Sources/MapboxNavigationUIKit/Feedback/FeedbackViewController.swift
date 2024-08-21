@@ -264,7 +264,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.row]
 
         cell.titleLabel.text = item.title
-        cell.imageView.image = item.image
+        cell.imageView.image = item.image.withRenderingMode(.alwaysTemplate)
 
         cell.titleLabel.textColor = self.collectionView.cellColor
         cell.circleColor = self.collectionView.cellColor

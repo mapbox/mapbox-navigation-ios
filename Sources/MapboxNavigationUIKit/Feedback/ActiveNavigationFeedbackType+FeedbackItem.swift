@@ -23,6 +23,14 @@ extension ActiveNavigationFeedbackType {
             return "Other"
         case .arrival:
             return "Arrival"
+        case .falsePositiveTraffic:
+            return "FP Traffic"
+        case .falseNegativeTraffic:
+            return "FN Traffic"
+        case .missingConstruction:
+            return "Missing Construction"
+        case .missingSpeedLimit:
+            return "Missing speed limit"
         }
     }
 
@@ -30,23 +38,31 @@ extension ActiveNavigationFeedbackType {
     var image: UIImage {
         switch self {
         case .closure:
-            .feedbackImage(named: "closed_road")
+            .feedbackImage(named: "feedback_closure")
         case .poorRoute:
-            .feedbackImage(named: "bad_route")
+            .feedbackImage(named: "feedback_poor_route")
         case .wrongSpeedLimit:
-            .feedbackImage(named: "incorrect_speedlimit")
+            .feedbackImage(named: "feedback_speed_limit")
         case .badRoute:
-            .feedbackImage(named: "bad_route")
+            .feedbackImage(named: "feedback_poor_route")
         case .illegalTurn:
-            .feedbackImage(named: "illegal_turn")
+            .feedbackImage(named: "feedback_illegal_turn")
         case .roadClosed:
-            .feedbackImage(named: "closed_road")
+            .feedbackImage(named: "feedback_closure")
         case .incorrectLaneGuidance:
-            .feedbackImage(named: "wrong_lane_guidance")
+            .feedbackImage(named: "feedback_lane_quidance")
         case .other:
-            .feedbackImage(named: "wrong_address")
+            .feedbackImage(named: "feedback_other")
         case .arrival:
-            .feedbackImage(named: "bad_route")
+            .feedbackImage(named: "feedback_arrival")
+        case .falsePositiveTraffic:
+            .feedbackImage(named: "feedback_traffic")
+        case .falseNegativeTraffic:
+            .feedbackImage(named: "feedback_traffic")
+        case .missingConstruction:
+            .feedbackImage(named: "feedback_construction")
+        case .missingSpeedLimit:
+            .feedbackImage(named: "feedback_speed_limit")
         }
     }
 

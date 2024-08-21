@@ -14,6 +14,11 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
     case other
     case arrival(rating: Int)
 
+    case falsePositiveTraffic
+    case falseNegativeTraffic
+    case missingConstruction
+    case missingSpeedLimit
+
     /// Description of the category for this type of feedback
     public var typeKey: String {
         switch self {
@@ -35,6 +40,14 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
             return "other_navigation"
         case .arrival:
             return "arrival"
+        case .falsePositiveTraffic:
+            return "ag_fp_traffic"
+        case .falseNegativeTraffic:
+            return "ag_fn_traffic"
+        case .missingConstruction:
+            return "ag_missing_construction"
+        case .missingSpeedLimit:
+            return "ag_missing_speed_limit"
         }
     }
 

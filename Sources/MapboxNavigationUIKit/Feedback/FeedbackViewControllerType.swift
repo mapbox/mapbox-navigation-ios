@@ -9,15 +9,22 @@ public enum FeedbackViewControllerType {
         switch self {
         case .activeNavigation:
             return [
-                ActiveNavigationFeedbackType.badRoute,
-                .illegalTurn,
-                .roadClosed,
-                .wrongSpeedLimit,
-                .incorrectLaneGuidance,
-                .other,
+                ActiveNavigationFeedbackType.falsePositiveTraffic,
+                ActiveNavigationFeedbackType.falseNegativeTraffic,
+                ActiveNavigationFeedbackType.missingConstruction,
+                ActiveNavigationFeedbackType.closure,
+                ActiveNavigationFeedbackType.wrongSpeedLimit,
+                ActiveNavigationFeedbackType.missingSpeedLimit,
             ].map { $0.generateFeedbackItem() }
         case .passiveNavigation:
-            return [PassiveNavigationFeedbackType.wrongSpeedLimit, .other].map { $0.generateFeedbackItem() }
+            return [
+                PassiveNavigationFeedbackType.poorGPS,
+                PassiveNavigationFeedbackType.incorrectMapData,
+                PassiveNavigationFeedbackType.accident,
+                PassiveNavigationFeedbackType.camera,
+                PassiveNavigationFeedbackType.traffic,
+                PassiveNavigationFeedbackType.wrongSpeedLimit,
+            ].map { $0.generateFeedbackItem() }
         case .custom(let items):
             return items
         }

@@ -22,7 +22,23 @@ extension PassiveNavigationFeedbackType {
     }
 
     var image: UIImage {
-        return .feedbackImage(named: "feedback_icon")
+        let imageName = switch self {
+        case .poorGPS:
+            "feedback_poor_gps"
+        case .incorrectMapData:
+            "feedback_map_data"
+        case .accident:
+            "feedback_accident"
+        case .camera:
+            "feedback_camera"
+        case .traffic:
+            "feedback_traffic"
+        case .wrongSpeedLimit:
+            "feedback_speed_limit"
+        case .other:
+            "feedback_other"
+        }
+        return .feedbackImage(named: imageName)
     }
 
     /// Generates a `FeedbackItem` for a given `PassiveNavigationFeedbackType`

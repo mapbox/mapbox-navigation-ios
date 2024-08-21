@@ -5,6 +5,8 @@ public enum SearchFeedbackType: FeedbackType {
     case incorrectName
     case incorrectAddress
     case incorrectLocation
+    case phoneNumber
+    case resultRank
     case missingResult
     case other
 
@@ -20,6 +22,10 @@ public enum SearchFeedbackType: FeedbackType {
             return "incorrect_location"
         case .other:
             return "other_result_issue"
+        case .phoneNumber:
+            return "incorrect_phone_number"
+        case .resultRank:
+            return "incorrect_result_rank"
         }
     }
 
