@@ -511,27 +511,37 @@ extension CarPlayManager {
     ///   - completionHandler: A closure to be executed when the calculation completes.
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         Task { @MainActor in
-            guard let carPlayMapViewController,
-                  let userLocation = carPlayMapViewController.navigationMapView.mapView.location.latestLocation
-            else {
-                completionHandler()
-                return
-            }
-
-            let name = "CARPLAY_CURRENT_LOCATION".localizedString(
-                value: "Current Location",
-                comment: "Name of the waypoint associated with the current location"
-            )
-
-            let location = CLLocation(
-                latitude: userLocation.coordinate.latitude,
-                longitude: userLocation.coordinate.longitude
-            )
-
-            let origin = Waypoint(location: location, name: name)
-
-            previewRoutes(between: [origin, destination], completionHandler: completionHandler)
+            await previewRoutes(to: destination)
+            completionHandler()
         }
+    }
+
+    /// Calculates routes to the given destination using the [Mapbox Directions
+    /// API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
+    ///
+    /// Upon successful calculation a new template will be pushed onto the template navigation hierarchy.
+    /// - Parameters:
+    ///   - destination: A final destination `Waypoint`.
+    public func previewRoutes(to destination: Waypoint) async {
+        guard let carPlayMapViewController = await carPlayMapViewController,
+              let userLocation = await carPlayMapViewController.navigationMapView.mapView.location.latestLocation
+        else {
+            return
+        }
+
+        let name = "CARPLAY_CURRENT_LOCATION".localizedString(
+            value: "Current Location",
+            comment: "Name of the waypoint associated with the current location"
+        )
+
+        let location = CLLocation(
+            latitude: userLocation.coordinate.latitude,
+            longitude: userLocation.coordinate.longitude
+        )
+
+        let origin = Waypoint(location: location, name: name)
+
+        await previewRoutes(between: [origin, destination])
     }
 
     /// Allows to preview routes for a list of `Waypoint` objects.
@@ -543,6 +553,14 @@ extension CarPlayManager {
         previewRoutes(for: options, completionHandler: completionHandler)
     }
 
+    /// Allows to preview routes for a list of `Waypoint` objects.
+    /// - Parameters:
+    ///   - waypoints: A list of `Waypoint` objects.
+    public func previewRoutes(between waypoints: [Waypoint]) async {
+        let options = NavigationRouteOptions(waypoints: waypoints)
+        await previewRoutes(for: options)
+    }
+
     /// Calculates routes satisfying the given options using the [Mapbox Directions
     /// API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
     /// - Parameters:
@@ -552,8 +570,19 @@ extension CarPlayManager {
     public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
         Task {
             let task = await core.routingProvider().calculateRoutes(options: options)
-            didCalculate(task, for: options, completionHandler: completionHandler)
+            await didCalculate(task, for: options)
+            completionHandler()
         }
+    }
+
+    // Calculates routes satisfying the given options using the [Mapbox Directions
+    /// API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
+    /// - Parameters:
+    ///   - options: A `RouteOptions` object, which specifies the criteria for results returned by the Mapbox Directions
+    /// API.
+    public func previewRoutes(for options: RouteOptions) async {
+        let task = await core.routingProvider().calculateRoutes(options: options)
+        await didCalculate(task, for: options)
     }
 
     /// Allows to preview routes for a specific `NavigationRoutes` object.
@@ -567,15 +596,12 @@ extension CarPlayManager {
     /// Allows to cancel routes preview on CarPlay .
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
-        Task { @MainActor in
-            var configuration = CarPlayManagerCancelPreviewConfiguration()
-            delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
-            routes = nil
-            mainMapTemplate?.hideTripPreviews()
-            if configuration.popToRoot {
-                try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
-            }
-            delegate?.carPlayManagerDidCancelPreview(self)
+        var configuration = CarPlayManagerCancelPreviewConfiguration()
+        delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
+        routes = nil
+        mainMapTemplate?.hideTripPreviews()
+        if configuration.popToRoot {
+            _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
         }
         delegate?.carPlayManagerDidCancelPreview(self)
     }
@@ -610,11 +636,8 @@ extension CarPlayManager {
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
 
         if currentActivity == .previewing {
-            interfaceController.popTemplate(animated: false) { _, _ in
-                Task { @MainActor in
-                    try await interfaceController.pushTemplate(previewMapTemplate, animated: false)
-                }
-            }
+            try await interfaceController.popTemplate(animated: false)
+            try await interfaceController.pushTemplate(previewMapTemplate, animated: false)
         } else {
             try await interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
@@ -628,36 +651,23 @@ extension CarPlayManager {
         }
     }
 
-    func didCalculate(
-        _ task: Task<NavigationRoutes, Error>,
-        for routeOptions: RouteOptions,
-        completionHandler: @escaping CompletionHandler
-    ) {
-        Task {
-            defer {
-                completionHandler()
+    func didCalculate(_ task: Task<NavigationRoutes, Error>, for routeOptions: RouteOptions) async {
+        do {
+            let routes = try await task.value
+            await previewRoutes(for: routes)
+        } catch {
+            guard let delegate, let alert = delegate.carPlayManager(
+                self,
+                didFailToFetchRouteBetween: routeOptions.waypoints,
+                options: routeOptions,
+                error: error
+            ) else {
+                return
             }
 
-            do {
-                let routes = try await task.value
-                await previewRoutes(for: routes)
-            } catch {
-                guard let delegate,
-                      let alert = delegate.carPlayManager(
-                          self,
-                          didFailToFetchRouteBetween: routeOptions.waypoints,
-                          options: routeOptions,
-                          error: error
-                      )
-                else {
-                    return
-                }
-
-                let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
-                popToRootTemplate(interfaceController: interfaceController, animated: true) { _, _ in
-                    mapTemplate?.present(navigationAlert: alert, animated: true)
-                }
-            }
+            let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
+            _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
+            mapTemplate?.present(navigationAlert: alert, animated: true)
         }
     }
 
@@ -963,17 +973,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
     }
 
-    private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            popToRootTemplate(interfaceController: interfaceController, animated: animated) { _, error in
-                if let error {
-                    return continuation.resume(throwing: error)
-                }
-                continuation.resume()
-            }
-        }
-    }
-
     private func setRootTemplate(
         interfaceController: CPInterfaceController?,
         rootTemplate: CPTemplate,
@@ -991,6 +990,16 @@ extension CarPlayManager: CPMapTemplateDelegate {
                 continuation.resume()
             }
         }
+    }
+
+    func popToRootTemplate(
+        interfaceController: CPInterfaceController?,
+        animated: Bool
+    ) async throws -> Bool {
+        guard let interfaceController, interfaceController.templates.count > 1 else {
+            return false
+        }
+        return try await interfaceController.popToRootTemplate(animated: animated)
     }
 
     private func popToRootTemplate(

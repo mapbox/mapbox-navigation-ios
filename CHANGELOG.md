@@ -2,6 +2,11 @@
 
 ## v3.4.0-beta.1
 
+### CarPlay
+* Added new method `previewRoutes(to destination: Waypoint) async` in CarPlayManager.
+* Added new method `previewRoutes(between waypoints: [Waypoint]) async` in CarPlayManager.
+* Added new method `previewRoutes(for options: RouteOptions) async` in CarPlayManager.
+
 ### Location
 
 * Fixed the issue that a map-matched location was sent instead of a raw location in `MapMatchingState.location`. Switch to `MapMatchingState.enhancedLocation` if you need a map-matched location.

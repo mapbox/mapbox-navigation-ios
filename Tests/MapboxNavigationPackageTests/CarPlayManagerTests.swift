@@ -223,11 +223,7 @@ class CarPlayManagerTests: TestCase {
         let task: Task<NavigationRoutes, Error> = Task {
             throw testError
         }
-        let expectation = XCTestExpectation(description: "completion expectation")
-        carPlayManager.didCalculate(task, for: routeOptions, completionHandler: {
-            expectation.fulfill()
-        })
-        await fulfillment(of: [expectation])
+        await carPlayManager.didCalculate(task, for: routeOptions)
         XCTAssertTrue(delegate.didFailToFetchRouteCalled)
         XCTAssertEqual(delegate.passedError, testError, "Delegate should have receieved error.")
     }
@@ -254,7 +250,27 @@ class CarPlayManagerTests: TestCase {
     }
 
     func testPreviewRouteWithDefault() async {
-        await previewRoutes()
+        let navigationRouteOptions = await previewRoutesOptions()
+        let previewExpectation = XCTestExpectation(description: "preview expectation")
+        carPlayManager.previewRoutes(for: navigationRouteOptions) {
+            previewExpectation.fulfill()
+        }
+        await fulfillment(of: [previewExpectation], timeout: 1)
+
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, 1)
+
+        let expectedStartButtonTitle = NSLocalizedString(
+            "CARPLAY_GO",
+            bundle: .mapboxNavigation,
+            value: "Go",
+            comment: "Title for start button in CPTripPreviewTextConfiguration"
+        )
+        XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, expectedStartButtonTitle)
+    }
+
+    func testPreviewRouteWithDefaultAsync() async {
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
 
         XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, 1)
 
@@ -271,8 +287,22 @@ class CarPlayManagerTests: TestCase {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
 
-        await previewRoutes()
+        let navigationRouteOptions = await previewRoutesOptions()
+        let previewExpectation = XCTestExpectation(description: "preview expectation")
+        carPlayManager.previewRoutes(for: navigationRouteOptions) {
+            previewExpectation.fulfill()
+        }
+        await fulfillment(of: [previewExpectation], timeout: 1)
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.first, customTrip)
+        XCTAssertNotNil(mapTemplateSpy.passedPreviewTextConfiguration)
+    }
 
+    func testPreviewRouteWithCustomTripAsync() async {
+        let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
+        delegate.returnedTrip = customTrip
+
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
         XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.first, customTrip)
         XCTAssertNotNil(mapTemplateSpy.passedPreviewTextConfiguration)
     }
@@ -287,7 +317,30 @@ class CarPlayManagerTests: TestCase {
             overviewButtonTitle: nil
         )
         delegate.returnedTripPreviewTextConfiguration = tripPreviewTextConfiguration
-        await previewRoutes()
+        let previewExpectation = XCTestExpectation(description: "preview expectation")
+
+        let navigationRouteOptions = await previewRoutesOptions()
+        carPlayManager.previewRoutes(for: navigationRouteOptions) {
+            previewExpectation.fulfill()
+        }
+        await fulfillment(of: [previewExpectation], timeout: 1)
+
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.first, customTrip)
+        XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, startButtonTitle)
+    }
+
+    func testPreviewRouteWithCustomPreviewTextAsync() async {
+        let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
+        delegate.returnedTrip = customTrip
+        let startButtonTitle = "Let's roll"
+        let tripPreviewTextConfiguration = CPTripPreviewTextConfiguration(
+            startButtonTitle: startButtonTitle,
+            additionalRoutesButtonTitle: nil,
+            overviewButtonTitle: nil
+        )
+        delegate.returnedTripPreviewTextConfiguration = tripPreviewTextConfiguration
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
 
         XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.first, customTrip)
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, startButtonTitle)
@@ -375,7 +428,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(carPlayMapViewController?.userInfo, eventsManagerSpy.userInfo)
     }
 
-    private func previewRoutes() async {
+    private func previewRoutesOptions() async -> NavigationRouteOptions {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
@@ -383,11 +436,7 @@ class CarPlayManagerTests: TestCase {
         let routes = await Fixture.navigationRoutes(from: "route-with-banner-instructions", options: routeOptions)
         routingProvider.returnedRoutes = routes
 
-        let previewExpectation = XCTestExpectation(description: "preview expectation")
-        carPlayManager.previewRoutes(for: navigationRouteOptions) {
-            previewExpectation.fulfill()
-        }
-        await fulfillment(of: [previewExpectation], timeout: 1)
+        return navigationRouteOptions
     }
 
     @MainActor
