@@ -1,5 +1,5 @@
 import Foundation
-@preconcurrency import MapboxNavigationNative
+import MapboxNavigationNative
 
 class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
     public func onPositionUpdated(

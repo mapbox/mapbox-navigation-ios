@@ -5,7 +5,7 @@ import XCTest
 
 /// A hypothetical set of options optimized for golf carts.
 /// This class uses options that may or may not be supported by the actual Mapbox Directions API.
-class GolfCartRouteOptions: NavigationRouteOptions {
+final class GolfCartRouteOptions: NavigationRouteOptions, @unchecked Sendable {
     override var urlQueryItems: [URLQueryItem] {
         let maximumSpeed = Measurement(value: 20, unit: UnitSpeed.milesPerHour) // maximum legal speed in Ohio
         let hourFromNow = Date().addingTimeInterval(60 * 60) // an hour from now

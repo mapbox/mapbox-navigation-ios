@@ -192,7 +192,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
     }
 }
 
-class MopedRouteOptions: NavigationRouteOptions {
+final class MopedRouteOptions: NavigationRouteOptions, @unchecked Sendable {
     var departureTime: String!
 
     // add departureTime to URLQueryItems

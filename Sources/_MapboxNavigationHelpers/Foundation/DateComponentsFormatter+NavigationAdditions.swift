@@ -1,6 +1,6 @@
 import Foundation
 
-private final class NoCommaShortDateComponentsFormatter: DateComponentsFormatter {
+private final class NoCommaShortDateComponentsFormatter: DateComponentsFormatter, @unchecked Sendable {
     override func string(from components: DateComponents) -> String? {
         let formattedString = super.string(from: components)
         return formattedString?.replacingOccurrences(of: ",", with: "")

@@ -2,7 +2,7 @@ import Foundation
 import MapboxMaps
 @testable import MapboxNavigationCore
 
-public class PredictiveCacheManagerSpy: PredictiveCacheManager {
+public class PredictiveCacheManagerSpy: PredictiveCacheManager, @unchecked Sendable {
     public var passedMapView: MapView?
 
     public init() {

@@ -10,7 +10,9 @@ final class NavigationNativeNavigator: @unchecked Sendable {
     let native: MapboxNavigationNative.Navigator
     var locale: Locale {
         didSet {
-            updateLocale()
+            Task { @MainActor in
+                updateLocale()
+            }
         }
     }
 
@@ -38,6 +40,7 @@ final class NavigationNativeNavigator: @unchecked Sendable {
             .store(in: &subscriptions)
     }
 
+    @MainActor
     private func updateLocale() {
         native.config().mutableSettings().setUserLanguagesForLanguages(locale.preferredBCP47Codes)
     }

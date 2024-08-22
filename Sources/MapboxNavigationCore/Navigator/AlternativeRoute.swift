@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-@preconcurrency import MapboxNavigationNative
+import MapboxNavigationNative
 import Turf
 
 /// Additional reasonable routes besides the main roure that visit waypoints.

@@ -16,7 +16,7 @@ private let minimumTurnPenalty: CLLocationDirection = 0
 // Go maximum speed if distance to nearest coordinate is >= `safeDistance`
 private let safeDistance: CLLocationDistance = 50
 
-private class SimulatedLocation: CLLocation {
+private class SimulatedLocation: CLLocation, @unchecked Sendable {
     var turnPenalty: Double = 0
 
     override var description: String {

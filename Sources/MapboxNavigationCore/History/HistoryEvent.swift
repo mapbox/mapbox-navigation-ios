@@ -50,7 +50,7 @@ public class UnknownHistoryEvent: HistoryEvent, @unchecked Sendable {
     }
 }
 
-class StatusUpdateHistoryEvent: UnknownHistoryEvent, Sendable {
+final class StatusUpdateHistoryEvent: UnknownHistoryEvent, @unchecked Sendable {
     let monotonicTimestamp: TimeInterval
     let status: NavigationStatus
 

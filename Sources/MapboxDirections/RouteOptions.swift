@@ -8,7 +8,7 @@ import Turf
 /// API.
 ///
 /// Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
-open class RouteOptions: DirectionsOptions {
+open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     // MARK: Creating a Route Options Object
 
     /// Initializes a route options object for routes between the given waypoints and an optional profile identifier.

@@ -7,7 +7,7 @@ import TestHelper
 import XCTest
 
 class CarPlayNavigationViewControllerTests: TestCase {
-    class MapTemplateMock: CPMapTemplate {
+    class MapTemplateMock: CPMapTemplate, @unchecked Sendable {
         var travelEstimates: CPTravelEstimates?
         var navigationSession: CPNavigationSession!
 

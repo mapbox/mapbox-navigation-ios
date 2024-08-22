@@ -319,7 +319,7 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
     }
 }
 
-class MapTemplateSpy: CPMapTemplate {
+final class MapTemplateSpy: CPMapTemplate, @unchecked Sendable {
     private(set) var passedTripPreviews: [CPTrip]?
     private(set) var passedPreviewTextConfiguration: CPTripPreviewTextConfiguration?
 
