@@ -57,7 +57,6 @@ let package = Package(
                 "_MapboxNavigationHelpers",
                 .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
                 "MapboxDirections",
-                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
             ],
             resources: [
                 .process("Resources")
