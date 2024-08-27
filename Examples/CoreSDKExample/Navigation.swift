@@ -28,6 +28,9 @@ final class Navigation: ObservableObject {
         self.core = navigationProvider.mapboxNavigation
         self.predictiveCacheManager = navigationProvider.predictiveCacheManager
         observeNavigation()
+
+        // Provide custom localization.
+        LocalizationManager.customLocalizationBundle = .main
     }
 
     private func observeNavigation() {
