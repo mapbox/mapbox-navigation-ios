@@ -37,7 +37,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     private var currentVolume: Float {
         switch volume {
         case .system:
-            return AVAudioSession.sharedInstance().outputVolume
+            return 1.0
         case .override(let volume):
             return volume
         }
@@ -137,6 +137,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
+        guard !muted else { return }
         guard let locale = locale ?? self.locale else {
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(

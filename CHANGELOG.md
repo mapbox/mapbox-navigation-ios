@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.3.1
+
+### Other changes
+
+* Fixed incorrect playback ducking while voice instructions are muted.
+* Fixed too low voice instructions volume when device volume was not maxed out.
+
 ## v3.3.0
 
 ### Packaging
