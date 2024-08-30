@@ -19,6 +19,24 @@
 * Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 * Added more feedback categories for Active Guidance.
 
+## v3.3.1
+
+### Routing
+
+* Ignore an alternative route and return non-nil `NavigationRoutes` when switching to an alternative and an invalid fork point was found.
+
+### Other changes
+
+* Fixed incorrect playback ducking while voice instructions are muted.
+* Fixed too low voice instructions volume when device volume was not maxed out.
+
+## v3.3.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v317.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/317.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.6.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.6.0).
+
 ## v3.3.0-rc.1
 
 ### Map
@@ -42,8 +60,6 @@
 * Extended `NavigationLocationManager` subclassing posibilities by opening the some members to public visibility or overriding.
 * Fixed the route progress simulation resetting when selecting an alternative route during active guidance.
 * Added `AlternativesStatus.Events.SwitchedToAlternative` event to track when the navigator switched to the alternative route.
-* Fixed incorrect playback ducking while voice instructions are muted.
-* Fixed too low voice instructions volume when device volume was not maxed out.
 
 ## v3.3.0-beta.1
 
