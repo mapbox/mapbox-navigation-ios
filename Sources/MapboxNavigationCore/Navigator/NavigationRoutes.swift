@@ -180,6 +180,10 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             guard let nativeRouteAlternative = routesData.alternativeRoutes()
                 .first(where: { $0.route.getRouteId() == oldAlternative.routeId.rawValue })
             else {
+                Log.warning(
+                    "Unable to create an alternative route for \(oldAlternative.routeId.rawValue)",
+                    category: .navigation
+                )
                 return nil
             }
             return AlternativeRoute(
@@ -189,17 +193,22 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             )
         }
 
-        guard let nativeRouteAlternative = routesData.alternativeRoutes()
+        if let nativeRouteAlternative = routesData.alternativeRoutes()
             .first(where: { $0.route.getRouteId() == mainRoute.routeId.rawValue }),
             let newAlternativeRoute = AlternativeRoute(
                 mainRoute: newMainRoute.route,
                 alternativeRoute: mainRoute.route,
                 nativeRouteAlternative: nativeRouteAlternative
             )
-        else {
-            return nil
+        {
+            newAlternativeRoutes.append(newAlternativeRoute)
+        } else {
+            Log.warning(
+                "Unable to create an alternative route: \(mainRoute.routeId.rawValue) for a new main route: \(alternativeRoute.routeId.rawValue)",
+                category: .navigation
+            )
         }
-        newAlternativeRoutes.append(newAlternativeRoute)
+
         return await .init(mainRoute: newMainRoute, alternativeRoutes: newAlternativeRoutes)
     }
 

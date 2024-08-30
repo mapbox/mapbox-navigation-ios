@@ -2,6 +2,10 @@
 
 ## v3.3.1
 
+### Routing
+
+* Ignore an alternative route and return non-nil `NavigationRoutes` when switching to an alternative and an invalid fork point was found.
+
 ### Other changes
 
 * Fixed incorrect playback ducking while voice instructions are muted.
