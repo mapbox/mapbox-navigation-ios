@@ -2,6 +2,10 @@
 
 ## v3.3.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v317.0.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/317.0.1).
+
 ### Routing
 
 * Ignore an alternative route and return non-nil `NavigationRoutes` when switching to an alternative and an invalid fork point was found.
