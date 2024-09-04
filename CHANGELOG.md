@@ -18,6 +18,7 @@
 * Reported road names will now also respect user languages preferences.
 * Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 * Added more feedback categories for Active Guidance.
+* Added missing languages for the `SAME_TIME` label localization.
 
 ## v3.3.1
 

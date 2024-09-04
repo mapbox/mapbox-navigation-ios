@@ -1,2 +1,8 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Miễn phí";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Thu phí";
+
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "Cùng Thời gian";
