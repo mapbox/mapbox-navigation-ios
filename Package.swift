@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("317.0.0-SNAPSHOT.0830T1355Z.e18414a", "717da65c121e315e86cb4c36d312c2377746d60696ce6e591fbd0fda5a1ab00b", "49f638577f898f01358d600a0a0275fea8b959a1")
-let mapsVersion: Version = "11.6.0"
+let navNativeVersion: Version = "318.0.0"
+let mapsVersion: Version = "11.7.0-beta.1"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
 
@@ -31,9 +31,9 @@ let package = Package(
             targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: navNativeVersion),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.8.0"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "3.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.12.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),

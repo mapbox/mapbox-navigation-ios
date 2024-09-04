@@ -2,6 +2,12 @@
 
 ## v3.4.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxNavigationNative v318.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/318.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.7.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.7.0-beta.1).
+* MapboxNavigationCore now requires [Turf-swift v3.0.0](https://github.com/mapbox/turf-swift/releases/tag/v3.0.0).
+
 ### CarPlay
 * Added new method `previewRoutes(to destination: Waypoint) async` in CarPlayManager.
 * Added new method `previewRoutes(between waypoints: [Waypoint]) async` in CarPlayManager.
