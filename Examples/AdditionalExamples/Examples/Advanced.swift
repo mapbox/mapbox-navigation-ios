@@ -61,6 +61,9 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Provide custom localization.
+        LocalizationManager.customLocalizationBundle = .main
+
         navigationMapView = .init(
             location: mapboxNavigation.navigation()
                 .locationMatching.map(\.enhancedLocation)

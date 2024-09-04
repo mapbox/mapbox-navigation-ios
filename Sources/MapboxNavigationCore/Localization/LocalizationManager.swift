@@ -12,7 +12,7 @@ public struct LocalizationManager {
     }
 
     private static let _customLocalizationBundle: NSLocked<Bundle?> = .init(nil)
-    private static let nonExistentKeyValue = "_nonexistent_key_value_"
+    private static let nonExistentKeyValue = "_nonexistent_key_value_".uppercased()
 
     /// Retrieves the localized string for a given key.
     /// - Parameters:

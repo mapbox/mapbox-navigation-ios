@@ -19,6 +19,7 @@
 * Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 * Added more feedback categories for Active Guidance.
 * Added missing languages for the `SAME_TIME` label localization.
+* Fixed possible issue when the "_NONEXISTENT_KEY_VALUE_" value could have been displayed when the custom localization bundle was used and the debug option “Show non-localized strings” was enabled in Xcode.
 
 ## v3.3.1
 

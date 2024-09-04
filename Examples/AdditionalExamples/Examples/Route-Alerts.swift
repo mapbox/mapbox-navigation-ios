@@ -150,7 +150,7 @@ class TopAlertsBarViewController: ContainerViewController {
 
 // MARK: - RouteAlert to String implementation
 
-extension MapboxDirections.Incident: CustomStringConvertible {
+extension MapboxDirections.Incident {
     var alertDescription: String {
         guard let kind else { return description }
 
