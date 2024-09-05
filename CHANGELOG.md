@@ -7,8 +7,9 @@
 * Added handling `RouteResponse.refreshTTL` into account when refreshing a route. Now it will no longer be possible to attmept to refresh and outdated route, and `Router` will inform that current route has expired using `RouterDelegate.routerDidFailToRefreshExpiredRoute(:_)` method. ([#4672](https://github.com/mapbox/mapbox-navigation-ios/pull/4672))
 
 ### Other changes
-* Fixed next banner view correctly appearing when steps list view is exapnded. ([#4708](https://github.com/mapbox/mapbox-navigation-ios/pull/4708))
+* Fixed next banner view correctly appearing when steps list view is expanded. ([#4708](https://github.com/mapbox/mapbox-navigation-ios/pull/4708))
 * Fixed rare route simulation issue where user's speed was calculated and NaN and the puck did not move. ([#4708](https://github.com/mapbox/mapbox-navigation-ios/pull/4708))
+* Fixed a possibly not-updating `StepsViewController` after reroutes when using a custom top bar.
 
 ## v2.18.4
 

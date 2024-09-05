@@ -89,6 +89,14 @@ public class StepsViewController: UIViewController {
     }
 
     @objc func progressDidChange(_ notification: Notification) {
+        let key = RouteController.NotificationUserInfoKey.routeProgressKey
+        if let newProgress = notification.userInfo?[key] as? RouteProgress,
+           routeProgress.route != newProgress.route {
+            routeProgress = newProgress
+            previousLegIndex = NSNotFound
+            previousStepIndex = NSNotFound
+
+        }
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
         }
