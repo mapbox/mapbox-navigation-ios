@@ -2,7 +2,12 @@
 
 ## v3.4.0-beta.1
 
+### Map
+
+* Updated appearance and placement mechanism of the route line callouts. 
+
 ### CarPlay
+
 * Added new method `previewRoutes(to destination: Waypoint) async` in CarPlayManager.
 * Added new method `previewRoutes(between waypoints: [Waypoint]) async` in CarPlayManager.
 * Added new method `previewRoutes(for options: RouteOptions) async` in CarPlayManager.

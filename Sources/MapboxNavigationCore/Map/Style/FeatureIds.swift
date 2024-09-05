@@ -130,30 +130,6 @@ enum FeatureIds {
         }
     }
 
-    struct RouteAnnotations {
-        private static let prefix: String = "\(globalPrefix).route.annotations"
-
-        let featureId: String
-        let routeDuration: String
-        let relativeDurationOnAlternative: String
-        let relativeDurationOnAlternativeManuever: String
-        let routeAnnotationLeftHandedImage: String
-        let routeAnnotationRightHandedImage: String
-
-        init() {
-            self.featureId = Self.prefix
-            self.routeDuration = "\(Self.prefix).absolute"
-            self.relativeDurationOnAlternative = "\(Self.prefix).relative"
-            self.relativeDurationOnAlternativeManuever = "\(Self.prefix).relative_manuever"
-            self.routeAnnotationLeftHandedImage = "\(Self.prefix).duration_image.left"
-            self.routeAnnotationRightHandedImage = "\(Self.prefix).duration_image.right"
-        }
-
-        static var `default`: Self {
-            .init()
-        }
-    }
-
     struct RouteWaypoints {
         private static let prefix: String = "\(globalPrefix)_waypoint"
 
@@ -173,6 +149,23 @@ enum FeatureIds {
 
         static var `default`: Self {
             .init()
+        }
+    }
+
+    struct RouteAnnotation: Hashable, Sendable {
+        private static let prefix: String = "\(globalPrefix).route_line.annotation"
+        let layerId: String
+
+        static var main: Self {
+            .init(annotationId: "\(prefix).main")
+        }
+
+        static func alternative(index: Int) -> Self {
+            .init(annotationId: "\(prefix).alternative_\(index)")
+        }
+
+        init(annotationId: String) {
+            self.layerId = annotationId
         }
     }
 }

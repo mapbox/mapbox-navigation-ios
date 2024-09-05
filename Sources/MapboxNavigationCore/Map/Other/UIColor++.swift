@@ -27,8 +27,11 @@ extension UIColor {
     public class var defaultRouteRestrictedAreaColor: UIColor { #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) }
 
     public class var defaultRouteAnnotationColor: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
-    public class var defaultSelectedRouteAnnotationColor: UIColor { #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) }
+    public class var defaultSelectedRouteAnnotationColor: UIColor { #colorLiteral(red: 0.1882352941, green: 0.4470588235, blue: 0.9607843137, alpha: 1) }
 
-    public class var defaultRouteAnnotationTextColor: UIColor { #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) }
+    public class var defaultRouteAnnotationTextColor: UIColor { #colorLiteral(red: 0.01960784314, green: 0.02745098039, blue: 0.03921568627, alpha: 1) }
     public class var defaultSelectedRouteAnnotationTextColor: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
+
+    public class var defaultRouteAnnotationMoreTimeTextColor: UIColor { #colorLiteral(red: 0.9215686275, green: 0.1450980392, blue: 0.1647058824, alpha: 1) }
+    public class var defaultRouteAnnotationLessTimeTextColor: UIColor { #colorLiteral(red: 0.03529411765, green: 0.6666666667, blue: 0.4549019608, alpha: 1) }
 }

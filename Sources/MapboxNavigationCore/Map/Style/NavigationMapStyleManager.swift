@@ -20,6 +20,9 @@ struct MapStyleConfig: Equatable {
     var routeAnnotationColor: UIColor
     var routeAnnotationSelectedTextColor: UIColor
     var routeAnnotationTextColor: UIColor
+    var routeAnnotationMoreTimeTextColor: UIColor
+    var routeAnnotationLessTimeTextColor: UIColor
+    var routeAnnotationTextFont: UIFont
 
     var routeLineTracksTraversal: Bool
     var isRestrictedAreaEnabled: Bool
@@ -162,22 +165,10 @@ final class NavigationMapStyleManager {
         annotationKinds: Set<RouteAnnotationKind>,
         config: MapStyleConfig
     ) {
-        let coordinateBounds = mapView.mapboxMap.coordinateBounds(for: mapView.frame)
-        let visibleBoundingBox = BoundingBox(
-            southWest: coordinateBounds.southwest,
-            northEast: coordinateBounds.northeast
-        )
         routeAnnotationsFeaturesStore.update(
             using: routes.routeDurationMapFeatures(
-                ids: .default,
                 annotationKinds: annotationKinds,
-                visibleBoundingBox: visibleBoundingBox,
-                pointForCoordinate: { coordinate in
-                    mapView.mapboxMap.point(for: coordinate)
-                },
-                mapBounds: mapView.bounds,
-                config: config,
-                customizedLayerProvider: customizedLayerProvider
+                config: config
             ),
             order: &layersOrder
         )
@@ -303,7 +294,6 @@ final class NavigationMapStyleManager {
         let waypointIds = FeatureIds.RouteWaypoints.default
         let voiceInstructionIds = FeatureIds.VoiceInstruction.currentRoute
         let intersectionIds = FeatureIds.IntersectionAnnotation.currentRoute
-        let annotationIds = FeatureIds.RouteAnnotations.default
         let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
         typealias R = MapLayersOrder.Rule
         typealias SlottedRules = MapLayersOrder.SlottedRules
@@ -351,9 +341,6 @@ final class NavigationMapStyleManager {
                     waypointIds.markerIcon,
                     NavigationMapView.LayerIdentifier.puck2DLayer,
                     NavigationMapView.LayerIdentifier.puck3DLayer,
-                    annotationIds.routeDuration,
-                    annotationIds.relativeDurationOnAlternative,
-                    annotationIds.relativeDurationOnAlternativeManuever,
                 ])
             }
         })

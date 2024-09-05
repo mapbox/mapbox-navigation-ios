@@ -67,7 +67,11 @@ final class MapViewController: UIViewController {
             .sink { [weak self] previewRoutes, routes in
                 guard let self else { return }
                 if let previewRoutes {
-                    navigationMapView.showcase(previewRoutes, animated: true)
+                    navigationMapView.showcase(
+                        previewRoutes,
+                        routeAnnotationKinds: [.routeDurations],
+                        animated: true
+                    )
                 } else if let routes {
                     navigationMapView.show(routes, routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever])
                 } else {

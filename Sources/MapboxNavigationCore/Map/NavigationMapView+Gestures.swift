@@ -86,7 +86,7 @@ extension NavigationMapView {
                 }
             }
 
-            if let alternativeRoute = try await alternativeRouteFromMapQuery(at: tapPoint) {
+            if let alternativeRoute = continuousAlternativeRoutes(closeTo: tapPoint)?.first {
                 delegate?.navigationMapView(self, didSelect: alternativeRoute)
                 return
             }
@@ -141,46 +141,6 @@ extension NavigationMapView {
             let coordinate = mapView.mapboxMap.coordinate(for: point)
             return MapPoint(name: nil, coordinate: coordinate)
         }
-    }
-
-    @MainActor
-    private func alternativeRouteFromMapQuery(
-        at point: CGPoint
-    ) async throws -> AlternativeRoute? {
-        let map = mapView.mapboxMap!
-
-        let queryOptions = RenderedQueryOptions(layerIds: [
-            FeatureIds.RouteAnnotations.default.routeDuration,
-            FeatureIds.RouteAnnotations.default.relativeDurationOnAlternative,
-            FeatureIds.RouteAnnotations.default.relativeDurationOnAlternativeManuever,
-        ], filter: nil)
-
-        let queriedRenderedFeatures = try await map.queryRenderedFeatures(with: point, options: queryOptions)
-        for queriedRenderedFeature in queriedRenderedFeatures {
-            let queriedFeature = queriedRenderedFeature.queriedFeature
-            guard let indexValue = queriedFeature.feature.properties?["routeIndex"] as? JSONValue,
-                  case .number(let routeIndex) = indexValue,
-                  routeIndex != 0
-            else {
-                continue
-            }
-
-            guard let routes else {
-                Log.warning("Unable to access routes", category: .navigation)
-                return nil
-            }
-
-            // routeIndex is the index in allRouts, so we need to decrease it by 1 to exclude the main route.
-            let alternativeIndex = Int(routeIndex - 1)
-            guard let alternativeRoute = routes.alternativeRoutes[safe: alternativeIndex] else {
-                Log.warning("Unable to access an alternative route at index", category: .navigation)
-                return nil
-            }
-
-            return alternativeRoute
-        }
-
-        return continuousAlternativeRoutes(closeTo: point)?.first
     }
 }
 

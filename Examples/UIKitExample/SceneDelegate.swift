@@ -132,7 +132,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         previewViewController.navigationMapView.showcase(
             navigationRoutes,
             routesPresentationStyle: .all(shouldFit: true),
-            routeAnnotationKinds: [.relativeDurationsOnAlternative],
+            routeAnnotationKinds: [.routeDurations],
             animated: animated,
             duration: duration
         )

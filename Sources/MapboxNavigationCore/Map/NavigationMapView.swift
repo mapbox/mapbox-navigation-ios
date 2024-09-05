@@ -367,10 +367,17 @@ open class NavigationMapView: UIView {
     /// Configures the color of the route annotation for alternative routes.
     @objc public dynamic var routeAnnotationColor: UIColor = .defaultRouteAnnotationColor
     /// Configures the text color of the route annotation for the main route.
-    @objc public dynamic var routeAnnotationSelectedTextColor: UIColor =
-        .defaultSelectedRouteAnnotationTextColor
+    @objc public dynamic var routeAnnotationSelectedTextColor: UIColor = .defaultSelectedRouteAnnotationTextColor
     /// Configures the text color of the route annotation for alternative routes.
     @objc public dynamic var routeAnnotationTextColor: UIColor = .defaultRouteAnnotationTextColor
+    /// Configures the text color of the route annotation for alternative routes when relative duration is greater then
+    /// the main route.
+    @objc public dynamic var routeAnnotationMoreTimeTextColor: UIColor = .defaultRouteAnnotationMoreTimeTextColor
+    /// Configures the text color of the route annotation for alternative routes when relative duration is lesser then
+    /// the main route.
+    @objc public dynamic var routeAnnotationLessTimeTextColor: UIColor = .defaultRouteAnnotationLessTimeTextColor
+    /// Configures the text font of the route annotations.
+    @objc public dynamic var routeAnnotationTextFont: UIFont = .defaultRouteAnnotationTextFont
 
     // MARK: - Public methods
 
@@ -726,6 +733,9 @@ open class NavigationMapView: UIView {
             routeAnnotationColor: routeAnnotationColor,
             routeAnnotationSelectedTextColor: routeAnnotationSelectedTextColor,
             routeAnnotationTextColor: routeAnnotationTextColor,
+            routeAnnotationMoreTimeTextColor: routeAnnotationMoreTimeTextColor,
+            routeAnnotationLessTimeTextColor: routeAnnotationLessTimeTextColor,
+            routeAnnotationTextFont: routeAnnotationTextFont,
             routeLineTracksTraversal: routeLineTracksTraversal,
             isRestrictedAreaEnabled: showsRestrictedAreasOnRoute,
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,

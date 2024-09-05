@@ -153,6 +153,10 @@ open class DayStyle: Style {
                 .routeAnnotationTextColor = .defaultRouteAnnotationTextColor
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationSelectedTextColor = .defaultSelectedRouteAnnotationTextColor
+            NavigationMapView.appearance(for: traitCollection)
+                .routeAnnotationMoreTimeTextColor = .defaultRouteAnnotationMoreTimeTextColor
+            NavigationMapView.appearance(for: traitCollection)
+                .routeAnnotationLessTimeTextColor = .defaultRouteAnnotationLessTimeTextColor
         }
 
         DistanceLabel.appearance(for: traitCollection).unitFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
