@@ -197,7 +197,6 @@ extension LanesStyleKit {
             return .asymmetricOn(drawLaneUturnUsingUturn)
         case ([.uTurn], _):
             return .asymmetricOff(drawLaneUturn)
-
         // Dual use allowing straight ahead
         case ([.straightAhead, .slightTurn], .straightAhead):
             return .asymmetricMixed(drawLaneStraightOrSlightTurnUsingStraight)
@@ -223,7 +222,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneStraightOrUturnUsingUturn)
         case ([.straightAhead, .uTurn], _):
             return .asymmetricOff(drawLaneStraightOrUturn)
-
         // Dual use allowing slight turn
         case ([.slightTurn, .turn], .slightTurn):
             return .asymmetricMixed(drawLaneSlightTurnOrTurnUsingSlightTurn)
@@ -243,7 +241,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneSlightTurnOrUturnUsingUturn)
         case ([.slightTurn, .uTurn], _):
             return .asymmetricOff(drawLaneSlightTurnOrUturn)
-
         // Dual use allowing turn
         case ([.turn, .sharpTurn], .turn):
             return .asymmetricMixed(drawLaneTurnOrSharpTurnUsingTurn)
@@ -257,7 +254,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneTurnOrUturnUsingUturn)
         case ([.turn, .uTurn], _):
             return .asymmetricOff(drawLaneTurnOrUturn)
-
         // Dual use bilateral, asymmetric
         case ([.oppositeTurn, .slightTurn], .slightTurn):
             return .asymmetricMixed(drawLaneOppositeTurnOrSlightTurnUsingSlightTurn)
@@ -267,7 +263,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneOppositeSlightTurnOrTurnUsingTurn)
         case ([.oppositeSlightTurn, .turn], _):
             return .asymmetricOff(drawLaneOppositeSlightTurnOrTurn)
-
         // Dual use bilateral, symmetric
         case ([.oppositeSlightTurn, .slightTurn], .slightTurn):
             return .asymmetricMixed(drawLaneOppositeSlightTurnOrSlightTurnUsingSlightTurn)
@@ -277,7 +272,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneOppositeTurnOrTurnUsingTurn)
         case ([.oppositeTurn, .turn], _):
             return .asymmetricOff(drawLaneOppositeTurnOrTurn)
-
         // Triple use unilateral
         case ([.straightAhead, .slightTurn, .turn], .straightAhead):
             return .asymmetricMixed(drawLaneStraightOrSlightTurnOrTurnUsingStraight)
@@ -295,7 +289,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneStraightOrTurnOrUturnUsingUturn)
         case ([.straightAhead, .turn, .uTurn], _):
             return .asymmetricOff(drawLaneStraightOrTurnOrUturn)
-
         // Triple use bilateral, asymmetric
         case ([.oppositeTurn, .straightAhead, .slightTurn], .straightAhead):
             return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrSlightTurnUsingStraight)
@@ -309,7 +302,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrTurnUsingTurn)
         case ([.oppositeSlightTurn, .straightAhead, .turn], _):
             return .asymmetricOff(drawLaneOppositeSlightTurnOrStraightOrTurn)
-
         // Triple use bilateral, symmetric
         case ([.oppositeSlightTurn, .straightAhead, .slightTurn], .straightAhead):
             return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrSlightTurnUsingStraight)
@@ -323,7 +315,6 @@ extension LanesStyleKit {
             return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrTurnUsingTurn)
         case ([.oppositeTurn, .straightAhead, .turn], _):
             return .asymmetricOff(drawLaneOppositeTurnOrStraightOrTurn)
-
         case (_, _):
             return nil
         }

@@ -141,7 +141,6 @@ open class ManeuverView: UIView {
                 roundabout_angle: angle
             )
             flip = drivingSide == .left
-
         case .arrive:
             switch direction {
             case .right:

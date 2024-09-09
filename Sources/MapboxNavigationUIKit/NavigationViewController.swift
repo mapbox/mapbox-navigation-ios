@@ -1039,6 +1039,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             if banner.isDisplayingPreviewInstructions {
                 navigationMapView?.navigationCamera.update(cameraState: .following)
             }
+
         default:
             break
         }

@@ -41,6 +41,7 @@ class CodingOperation<ResponseType: Codable & DirectionsResultsProvider, Options
         switch options.outputFormat {
         case .text:
             outputText = String(data: data, encoding: .utf8)!
+
         case .json:
             if let object = try? JSONSerialization.jsonObject(with: data, options: []),
                let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted])

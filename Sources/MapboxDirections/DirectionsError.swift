@@ -18,7 +18,6 @@ public enum DirectionsError: LocalizedError {
                 self = .tooManyCoordinates
             case (404, "ProfileNotFound"):
                 self = .profileNotFound
-
             case (413, _):
                 self = .requestTooLarge
             case (422, "InvalidInput"):
