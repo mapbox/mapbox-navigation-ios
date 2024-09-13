@@ -2,6 +2,11 @@
 
 ## v2.19.0
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v206._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/206.0.1). ([#4718](https://github.com/mapbox/mapbox-navigation-ios/pull/4718))
+* MapboxNavigation now requires [MapboxMaps v10.18.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.18.2). ([#4718](https://github.com/mapbox/mapbox-navigation-ios/pull/4718))
+
 ### Routing
 
 * Added handling `RouteResponse.refreshTTL` into account when refreshing a route. Now it will no longer be possible to attmept to refresh and outdated route, and `Router` will inform that current route has expired using `RouterDelegate.routerDidFailToRefreshExpiredRoute(:_)` method. ([#4672](https://github.com/mapbox/mapbox-navigation-ios/pull/4672))
@@ -9,7 +14,8 @@
 ### Other changes
 * Fixed next banner view correctly appearing when steps list view is expanded. ([#4708](https://github.com/mapbox/mapbox-navigation-ios/pull/4708))
 * Fixed rare route simulation issue where user's speed was calculated and NaN and the puck did not move. ([#4708](https://github.com/mapbox/mapbox-navigation-ios/pull/4708))
-* Fixed a possibly not-updating `StepsViewController` after reroutes when using a custom top bar.
+* Fixed a possibly not-updating `StepsViewController` after reroutes when using a custom top bar. ([#4716](https://github.com/mapbox/mapbox-navigation-ios/pull/4716))
+* Improved completion detection via locating matched point near leg end if a point was not located on the current leg. ([#4718](https://github.com/mapbox/mapbox-navigation-ios/pull/4718))
 
 ## v2.18.4
 
