@@ -45,7 +45,8 @@ public final class CoreNavigatorMock: CoreNavigator {
                 tileStore: nil,
                 inMemoryTileCache: nil,
                 onDiskTileCache: nil,
-                endpointConfig: nil
+                endpointConfig: nil,
+                hdEndpointConfig: nil
             ),
             config: configHandle,
             historyRecorder: nil,

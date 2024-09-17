@@ -164,7 +164,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         tileStore: tileStore,
         inMemoryTileCache: nil,
         onDiskTileCache: nil,
-        endpointConfig: endpointConfig
+        endpointConfig: endpointConfig,
+        hdEndpointConfig: nil
     )
 
     var navigatorConfig: NavigatorConfig {

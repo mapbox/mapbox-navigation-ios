@@ -16,7 +16,7 @@ final class NativeNavigatorTests: XCTestCase {
         let nativeHandlersFactory = NativeHandlersFactory(
             tileStorePath: "tile",
             apiConfiguration: .mock(),
-            tilesVersion: "1.0",
+            tilesVersion: "",
             datasetProfileIdentifier: .automobile,
             liveIncidentsOptions: nil,
             navigatorPredictionInterval: nil,

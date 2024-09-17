@@ -478,6 +478,7 @@ class RouteLineLayerPositionTests: TestCase {
         XCTAssertFalse(allLayerIds.contains(alternative_1_ids.casing))
     }
 
+    @MainActor
     func addCircleLayerInRuntime(
         circleLabelId: String,
         isPersistent: Bool,
@@ -485,7 +486,7 @@ class RouteLineLayerPositionTests: TestCase {
         layerPosition: MapboxMaps.LayerPosition? = nil
     ) async {
         do {
-            await navigationMapView.mapStyleManager.onStyleLoaded()
+            navigationMapView.mapStyleManager.onStyleLoaded()
             if !mapboxMap.sourceExists(withId: circleLabelId) {
                 var feature = Feature(geometry: .point(Point(.init(latitude: 30, longitude: 120))))
                 feature.properties = ["name": .string(circleLabelId)]
