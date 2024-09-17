@@ -92,7 +92,7 @@ git commit -m "Update version ${SEM_VERSION}"
 git push origin $BRANCH_NAME
 
 if [[ $SEM_VERSION =~ "alpha" || $SEM_VERSION =~ "beta" ]]; then
-    BASE_BRANCH_NAME="main"
+    BASE_BRANCH_NAME="lts/v2"
   else
     MAJOR=${SEM_VERSION%%.*}
     MINOR_TMP=${SEM_VERSION#*.}
