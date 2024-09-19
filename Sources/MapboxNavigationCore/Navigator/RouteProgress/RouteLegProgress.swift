@@ -4,7 +4,7 @@ import MapboxDirections
 import MapboxNavigationNative
 
 /// ``RouteLegProgress`` stores the user’s progress along a route leg.
-public struct RouteLegProgress: Equatable {
+public struct RouteLegProgress: Equatable, Sendable {
     // MARK: Details About the Leg
 
     mutating func update(using status: NavigationStatus) {

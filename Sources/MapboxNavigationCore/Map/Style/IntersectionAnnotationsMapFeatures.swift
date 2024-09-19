@@ -16,9 +16,10 @@ extension RouteProgress {
 
         let stepProgress = currentLegProgress.currentStepProgress
         let intersectionIndex = stepProgress.intersectionIndex
-        let stepIntersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection
+        let intersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection ?? []
+        let stepIntersections = Array(intersections.dropFirst(intersectionIndex))
 
-        for intersection in stepIntersections?.dropFirst(intersectionIndex) ?? [] {
+        for intersection in stepIntersections {
             if let feature = intersectionFeature(from: intersection, ids: ids) {
                 featureCollection.features.append(feature)
             }

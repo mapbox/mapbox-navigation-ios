@@ -6,7 +6,7 @@ import MapboxNavigationNative
 /// ``RouteAlert`` encapsulates information about various incoming events. Common attributes like location, distance to
 /// the event, length and other is provided for each POI, while specific meta data is supplied via ``roadObject``
 /// property.
-public struct RouteAlert: Equatable {
+public struct RouteAlert: Equatable, Sendable {
     /// Road object which describes upcoming route alert.
     public let roadObject: RoadObject
 

@@ -5,7 +5,7 @@ import MapboxNavigationNative
 import Turf
 
 /// ``RouteStepProgress`` stores the user’s progress along a route step.
-public struct RouteStepProgress: Equatable {
+public struct RouteStepProgress: Equatable, Sendable {
     /// Intializes a new ``RouteStepProgress``.
     /// - Parameter step: Step on a ``RouteLeg``.
     public init(step: RouteStep) {
@@ -72,7 +72,11 @@ public struct RouteStepProgress: Equatable {
     /// All intersections on the current ``RouteStep`` and also the first intersection on the upcoming ``RouteStep``.
     ///
     /// The upcoming RouteStep first Intersection is added because it is omitted from the current step.
-    public var intersectionsIncludingUpcomingManeuverIntersection: [Intersection]? //
+    public var intersectionsIncludingUpcomingManeuverIntersection: [Intersection]?
+
+    mutating func update(intersectionsIncludingUpcomingManeuverIntersection newValue: [Intersection]?) {
+        intersectionsIncludingUpcomingManeuverIntersection = newValue
+    }
 
     /// The next intersection the user will travel through.
     /// The step must contain ``intersectionsIncludingUpcomingManeuverIntersection`` otherwise this property will be

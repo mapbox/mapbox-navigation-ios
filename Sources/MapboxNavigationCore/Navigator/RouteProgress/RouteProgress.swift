@@ -6,7 +6,7 @@ import class MapboxNavigationNative.UpcomingRouteAlert
 import Turf
 
 /// ``RouteProgress`` stores the user’s progress along a route.
-public struct RouteProgress: Equatable, @unchecked Sendable {
+public struct RouteProgress: Equatable, Sendable {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
 
     /// Initializes a new ``RouteProgress``.
@@ -87,12 +87,12 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
         shapeIndex = Int(status.geometryIndex)
         legIndex = Int(status.legIndex)
 
+        updateDistanceToIntersection()
+
         distanceTraveled = activeGuidanceInfo.routeProgress.distanceTraveled
         durationRemaining = activeGuidanceInfo.routeProgress.remainingDuration
         fractionTraveled = activeGuidanceInfo.routeProgress.fractionTraveled
         distanceRemaining = activeGuidanceInfo.routeProgress.remainingDistance
-
-        updateDistanceToIntersection()
     }
 
     mutating func updateAlternativeRoutes(using navigationRoutes: NavigationRoutes) {
@@ -218,7 +218,7 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
         if let upcomingIntersection = currentLegProgress.upcomingStep?.intersections?.first {
             intersections += [upcomingIntersection]
         }
-        currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
+        currentLegProgress.currentStepProgress.update(intersectionsIncludingUpcomingManeuverIntersection: intersections)
 
         if let shape = currentLegProgress.currentStep.shape,
            let upcomingIntersection = currentLegProgress.currentStepProgress.upcomingIntersection,
@@ -296,7 +296,7 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
 
     /// The struc containing a ``CongestionLevel`` and a corresponding `TimeInterval` representing the expected travel
     /// time for this segment.
-    public struct TimedCongestionLevel: Equatable {
+    public struct TimedCongestionLevel: Equatable, Sendable {
         public var level: CongestionLevel
         public var timeInterval: TimeInterval
     }
@@ -415,3 +415,5 @@ public struct RouteProgress: Equatable, @unchecked Sendable {
             .userHasArrivedAtWaypoint && currentLegProgress.distanceRemaining <= 3
     }
 }
+
+extension UpcomingRouteAlert: @unchecked Sendable {}
