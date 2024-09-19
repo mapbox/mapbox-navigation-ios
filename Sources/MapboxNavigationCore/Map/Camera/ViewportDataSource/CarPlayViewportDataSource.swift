@@ -158,10 +158,20 @@ public class CarPlayViewportDataSource: ViewportDataSource {
             }
 
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
+            var coordinatesToFrame = coordinatesToManeuver.sliced(
+                from: nil,
+                to: LineString(coordinatesToManeuver).coordinateFromStart(distance: lookaheadDistance)
+            )
+            let pitchNearManeuver = followingCameraOptions.pitchNearManeuver
+            if pitchNearManeuver.enabled,
+               activeState.distanceRemainingOnStep <= pitchNearManeuver.triggerDistanceToManeuver
+            {
+                coordinatesToFrame += coordinatesForManeuverFraming
+            }
 
             if options.followingCameraOptions.centerUpdatesAllowed || followingCamera.center == nil {
                 var center = location.coordinate
-                if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
+                if let boundingBox = BoundingBox(from: coordinatesToFrame) {
                     let coordinates = [
                         center,
                         [boundingBox.northEast, boundingBox.southWest].centerCoordinate,
@@ -180,22 +190,8 @@ public class CarPlayViewportDataSource: ViewportDataSource {
 
             if options.followingCameraOptions.zoomUpdatesAllowed || followingCamera.zoom == nil {
                 let defaultZoomLevel = 12.0
-
-                let coordinatesForIntersections = coordinatesToManeuver.sliced(
-                    from: nil,
-                    to: LineString(coordinatesToManeuver)
-                        .coordinateFromStart(
-                            distance: lookaheadDistance
-                        )
-                )
-
-                var fullCoordinates = coordinatesForIntersections
-                if geometryFramingAfterManeuver.enabled {
-                    fullCoordinates += coordinatesForManeuverFraming
-                }
-
                 let followingCarPlayCameraZoom = zoom(
-                    fullCoordinates,
+                    coordinatesToFrame,
                     mapView: mapView,
                     pitch: pitch,
                     maxPitch: followingCameraOptions.defaultPitch,

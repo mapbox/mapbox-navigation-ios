@@ -1,10 +1,21 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.4.0-rc.1
+
+### Map
+
+* Fixed a case when a far maneuver was framed by the navigation camera calculation with `PitchNearManeuver.enabled`. The distance to maneuver can be configured correctly by `PitchNearManeuver.triggerDistanceToManeuver`.
+
+### Other changes
+
+* Fixed possible issue when the "_NONEXISTENT_KEY_VALUE_" value could have been displayed when the custom localization bundle was used and the debug option “Show non-localized strings” was enabled in Xcode.
+
 ## v3.4.0-beta.1
 
 ### Map
 
-* Updated appearance and placement mechanism of the route line callouts. 
+* Updated appearance and placement mechanism of the route line callouts.
+* Fixed extra coordinates outside `lookaheadDistance` for the maneuver added for the following navigation camera calculation. The camera frame can now be configured correctly by `IntersectionDensity`.
 
 ### CarPlay
 
@@ -24,7 +35,6 @@
 * Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 * Added more feedback categories for Active Guidance.
 * Added missing languages for the `SAME_TIME` label localization.
-* Fixed possible issue when the "_NONEXISTENT_KEY_VALUE_" value could have been displayed when the custom localization bundle was used and the debug option “Show non-localized strings” was enabled in Xcode.
 
 ## v3.3.1
 
