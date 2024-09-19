@@ -31,7 +31,7 @@ open class NavigationMapView: UIView {
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
 
-    var routes: NavigationRoutes?
+    private(set) var routes: NavigationRoutes?
 
     /// The gesture recognizer, that is used to detect taps on waypoints and routes that are currently
     /// present on the map. Enabled by default.
@@ -393,7 +393,10 @@ open class NavigationMapView: UIView {
     /// currently set route.
     /// - Parameter roadObjects: An array of road objects to be displayed.
     public func updateFreeDriveAlertAnnotations(_ roadObjects: [RoadObjectAhead]) {
-        mapStyleManager.updateFreeDriveAlertsAnnotations(roadObjects: roadObjects)
+        mapStyleManager.updateFreeDriveAlertsAnnotations(
+            roadObjects: roadObjects,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
+        )
     }
 
     // MARK: Customizing and Displaying the Route Line(s)
@@ -437,6 +440,24 @@ open class NavigationMapView: UIView {
 
     private(set) var routeAnnotationKinds: Set<RouteAnnotationKind> = []
 
+    /// Represents a set of ``RoadAlertType`` values that should be hidden from the map display.
+    /// By default, this is an empty set, which indicates that all road alerts will be displayed.
+    ///
+    /// - Note: If specific `RoadAlertType` values are added to this set, those alerts will be
+    ///   excluded from the map rendering.
+    public var excludedRouteAlertTypes: RoadAlertType = [] {
+        didSet {
+            guard let navigationRoutes = routes else {
+                return
+            }
+
+            mapStyleManager.updateRouteAlertsAnnotations(
+                navigationRoutes: navigationRoutes,
+                excludedRouteAlertTypes: excludedRouteAlertTypes
+            )
+        }
+    }
+
     /// Visualizes the given routes and it's alternatives, removing any existing from the map.
     ///
     /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
@@ -471,11 +492,14 @@ open class NavigationMapView: UIView {
             mapStyleManager.updateVoiceInstructions(route: mainRoute)
         }
         mapStyleManager.updateRouteAnnotations(
-            routes: navigationRoutes,
+            navigationRoutes: navigationRoutes,
             annotationKinds: routeAnnotationKinds,
             config: mapStyleConfig
         )
-        mapStyleManager.updateRouteAlertsAnnotations(navigationRoutes: navigationRoutes)
+        mapStyleManager.updateRouteAlertsAnnotations(
+            navigationRoutes: navigationRoutes,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
+        )
     }
 
     /// Removes routes and all visible annotations from the map.

@@ -161,12 +161,12 @@ final class NavigationMapStyleManager {
     }
 
     func updateRouteAnnotations(
-        routes: NavigationRoutes,
+        navigationRoutes: NavigationRoutes,
         annotationKinds: Set<RouteAnnotationKind>,
         config: MapStyleConfig
     ) {
         routeAnnotationsFeaturesStore.update(
-            using: routes.routeDurationMapFeatures(
+            using: navigationRoutes.routeDurationMapFeatures(
                 annotationKinds: annotationKinds,
                 config: config
             ),
@@ -176,13 +176,15 @@ final class NavigationMapStyleManager {
 
     func updateRouteAlertsAnnotations(
         navigationRoutes: NavigationRoutes,
+        excludedRouteAlertTypes: RoadAlertType,
         distanceTraveled: CLLocationDistance = 0.0
     ) {
         routeAlertsFeaturesStore.update(
             using: navigationRoutes.routeAlertsAnnotationsMapFeatures(
                 ids: .default,
                 distanceTraveled: distanceTraveled,
-                customizedLayerProvider: customizedLayerProvider
+                customizedLayerProvider: customizedLayerProvider,
+                excludedRouteAlertTypes: excludedRouteAlertTypes
             ),
             order: &layersOrder
         )
@@ -190,6 +192,7 @@ final class NavigationMapStyleManager {
 
     func updateFreeDriveAlertsAnnotations(
         roadObjects: [RoadObjectAhead],
+        excludedRouteAlertTypes: RoadAlertType,
         distanceTraveled: CLLocationDistance = 0.0
     ) {
         guard !roadObjects.isEmpty else {
@@ -199,7 +202,8 @@ final class NavigationMapStyleManager {
             using: roadObjects.routeAlertsAnnotationsMapFeatures(
                 ids: .default,
                 distanceTraveled: distanceTraveled,
-                customizedLayerProvider: customizedLayerProvider
+                customizedLayerProvider: customizedLayerProvider,
+                excludedRouteAlertTypes: excludedRouteAlertTypes
             ),
             order: &layersOrder
         )

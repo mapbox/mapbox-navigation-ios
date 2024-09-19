@@ -4,6 +4,8 @@
 
 ### Map
 
+* Added API `NavigationMapView.excludedRouteAlertTypes` for controlling the visibility of road alerts on the map.
+
 * Fixed a case when a far maneuver was framed by the navigation camera calculation with `PitchNearManeuver.enabled`. The distance to maneuver can be configured correctly by `PitchNearManeuver.triggerDistanceToManeuver`.
 
 ### Other changes

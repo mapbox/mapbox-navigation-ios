@@ -48,6 +48,7 @@ extension NavigationMapView {
         if let routes {
             mapStyleManager.updateRouteAlertsAnnotations(
                 navigationRoutes: routes,
+                excludedRouteAlertTypes: excludedRouteAlertTypes,
                 distanceTraveled: routeProgress.distanceTraveled
             )
         }

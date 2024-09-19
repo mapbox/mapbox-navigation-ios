@@ -1,6 +1,7 @@
 import _MapboxNavigationHelpers
 import MapboxDirections
 import MapboxMaps
+import MapboxNavigationNative
 import enum SwiftUI.ColorScheme
 import UIKit
 
@@ -8,11 +9,12 @@ extension NavigationRoutes {
     func routeAlertsAnnotationsMapFeatures(
         ids: FeatureIds.RouteAlertAnnotation,
         distanceTraveled: CLLocationDistance,
-        customizedLayerProvider: CustomizedLayerProvider
+        customizedLayerProvider: CustomizedLayerProvider,
+        excludedRouteAlertTypes: RoadAlertType
     ) -> [MapFeature] {
         let convertedRouteAlerts = mainRoute.nativeRoute.getRouteInfo().alerts.map {
             RoadObjectAhead(
-                roadObject: .init($0.roadObject),
+                roadObject: RoadObject($0.roadObject),
                 distance: $0.distanceToStart
             )
         }
@@ -20,7 +22,8 @@ extension NavigationRoutes {
         return convertedRouteAlerts.routeAlertsAnnotationsMapFeatures(
             ids: ids,
             distanceTraveled: distanceTraveled,
-            customizedLayerProvider: customizedLayerProvider
+            customizedLayerProvider: customizedLayerProvider,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
         )
     }
 }
@@ -29,11 +32,13 @@ extension [RoadObjectAhead] {
     func routeAlertsAnnotationsMapFeatures(
         ids: FeatureIds.RouteAlertAnnotation,
         distanceTraveled: CLLocationDistance,
-        customizedLayerProvider: CustomizedLayerProvider
+        customizedLayerProvider: CustomizedLayerProvider,
+        excludedRouteAlertTypes: RoadAlertType
     ) -> [MapFeature] {
         let featureCollection = FeatureCollection(features: roadObjectsFeatures(
             for: self,
-            currentDistance: distanceTraveled
+            currentDistance: distanceTraveled,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
         ))
         let layers: [any Layer] = [
             with(SymbolLayer(id: ids.layer, source: ids.source)) {
@@ -97,10 +102,11 @@ extension [RoadObjectAhead] {
 
     private func roadObjectsFeatures(
         for alerts: [RoadObjectAhead],
-        currentDistance: CLLocationDistance
+        currentDistance: CLLocationDistance,
+        excludedRouteAlertTypes: RoadAlertType
     ) -> [Feature] {
         var features = [Feature]()
-        for alert in alerts {
+        for alert in alerts where !alert.isExcluded(excludedRouteAlertTypes: excludedRouteAlertTypes) {
             guard alert.distance == nil || alert.distance! >= currentDistance,
                   let objectInfo = info(for: alert.roadObject.kind)
             else { continue }
@@ -344,5 +350,15 @@ extension [RoadObjectAhead] {
         static let objectImageType = "objectImageType"
         static let objectDistanceFromStart = "objectDistanceFromStart"
         static let distanceTraveled = "distanceTraveled"
+    }
+}
+
+extension RoadObjectAhead {
+    fileprivate func isExcluded(excludedRouteAlertTypes: RoadAlertType) -> Bool {
+        guard let roadAlertType = RoadAlertType(roadObjectKind: roadObject.kind) else {
+            return false
+        }
+
+        return excludedRouteAlertTypes.contains(roadAlertType)
     }
 }
