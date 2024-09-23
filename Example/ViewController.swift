@@ -101,8 +101,9 @@ class ViewController: UIViewController {
             showCurrentRoute()
         }
     }
-    
-    weak var activeNavigationViewController: NavigationViewController?
+
+    var allControllers: [NavigationViewController] = []
+    var activeNavigationViewController: NavigationViewController?
     
     var profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
     let drivingProfileText = NSLocalizedString("Start Driving", comment: "")
@@ -669,7 +670,8 @@ class ViewController: UIViewController {
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
-        
+        allControllers.append(navigationViewController)
+
         // Hide top and bottom container views before animating their presentation.
         navigationViewController.navigationView.bottomBannerContainerView.hide(animated: false)
         navigationViewController.navigationView.topBannerContainerView.hide(animated: false)
