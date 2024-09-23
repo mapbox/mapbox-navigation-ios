@@ -669,6 +669,14 @@ class ViewController: UIViewController {
                                            animated: Bool = true,
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
+
+        let previousController = allControllers.last
+        // Force-stop the previous navigation
+        if let navigationService = previousController?.navigationService {
+            navigationService.stop()
+            navigationService.router.finishRouting()
+        }
+
         activeNavigationViewController = navigationViewController
         allControllers.append(navigationViewController)
 
