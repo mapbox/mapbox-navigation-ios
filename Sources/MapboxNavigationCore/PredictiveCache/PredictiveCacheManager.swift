@@ -44,11 +44,10 @@ public class PredictiveCacheManager {
         mapController = createMapController(tilesetDescriptor)
     }
 
+    @MainActor
     func updateNavigationController(with navigator: NavigationNativeNavigator?) {
         self.navigator = navigator
-        Task { @MainActor in
-            navigationController = createNavigationController(for: navigator)
-        }
+        navigationController = createNavigationController(for: navigator)
     }
 
     @MainActor

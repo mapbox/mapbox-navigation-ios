@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.4.0
+
+### Routing
+
+* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`.
+
 ## v3.4.0-rc.1
 
 ### Map
