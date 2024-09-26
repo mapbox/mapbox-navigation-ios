@@ -6,7 +6,6 @@
 
 import Combine
 import CoreLocation
-import MapboxDirections
 import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
@@ -59,7 +58,7 @@ class RouteAlertsViewController: UIViewController {
 
 // MARK: - TopAlertsBarViewController
 
-class TopAlertsBarViewController: ContainerViewController {
+private class TopAlertsBarViewController: ContainerViewController {
     lazy var topAlertsBannerView: InstructionsBannerView = {
         let banner = InstructionsBannerView()
         banner.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +73,7 @@ class TopAlertsBarViewController: ContainerViewController {
         super.init(nibName: nil, bundle: nil)
 
         let navigation = navigationProvider.mapboxNavigation.navigation()
-        subscrite(to: navigation)
+        subscribe(to: navigation)
     }
 
     override func viewDidLoad() {
@@ -88,7 +87,7 @@ class TopAlertsBarViewController: ContainerViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func subscrite(to navigation: NavigationController) {
+    private func subscribe(to navigation: NavigationController) {
         navigation.routeProgress
             .sink { [weak self] status in
                 self?.update(with: status?.routeProgress)
@@ -150,55 +149,11 @@ class TopAlertsBarViewController: ContainerViewController {
 
 // MARK: - RouteAlert to String implementation
 
-extension MapboxDirections.Incident {
-    var alertDescription: String {
-        guard let kind else { return description }
-
-        return switch (impact, lanesBlocked) {
-        case (let impact?, let lanesBlocked?):
-            "A \(impact) \(kind) ahead blocking \(lanesBlocked)"
-        case (let impact?, nil):
-            "A \(impact) \(kind) ahead"
-        case (nil, let lanesBlocked?):
-            "A \(kind) ahead blocking \(lanesBlocked)"
-        case (nil, nil):
-            "A \(kind) ahead"
-        }
-    }
-}
-
 extension MapboxNavigationCore.RouteAlert {
-    public var displayDescription: String? {
+    var displayDescription: String? {
         let distance = Int64(distanceToStart)
         guard distance > 0, distance < 500 else { return nil }
 
-        switch roadObject.kind {
-        case .incident(let incident?):
-            return "\(incident.alertDescription) in \(distance)m."
-        case .tunnel(let alert?):
-            if let alertName = alert.name {
-                return "Tunnel \(alertName) in \(distance)m."
-            } else {
-                return "A tunnel in \(distance)m."
-            }
-        case .borderCrossing(let alert?):
-            return "Crossing border from \(alert.from) to \(alert.to) in \(distance)m."
-        case .serviceArea(let alert?):
-            switch alert.type {
-            case .restArea:
-                return "Rest area in \(distance)m."
-            case .serviceArea:
-                return "Service area in \(distance)m."
-            }
-        case .tollCollection(let alert?):
-            switch alert.type {
-            case .booth:
-                return "Toll booth in \(distance)m."
-            case .gantry:
-                return "Toll gantry in \(distance)m."
-            }
-        default:
-            return nil
-        }
+        return "\(roadObject.kind.displayDescription) in \(distance) m."
     }
 }

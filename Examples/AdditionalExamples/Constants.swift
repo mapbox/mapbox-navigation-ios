@@ -130,4 +130,11 @@ let listOfExamples: [NamedController] = [
         storyboard: nil,
         pushExampleToViewController: true
     ),
+    (
+        name: "Custom Road Objects",
+        description: "Demonstrates how to use electronic horizon to detect user-defined road objects.",
+        controller: CustomRoadObjectsViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
 ]
