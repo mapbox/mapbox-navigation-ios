@@ -214,7 +214,9 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         guard let predictiveCacheManager = configuration.predictiveCacheManager,
               case .nominal = tileVersionState else { return }
 
-        predictiveCacheManager.updateNavigationController(with: navigator)
+        Task { @MainActor in
+            predictiveCacheManager.updateNavigationController(with: navigator)
+        }
     }
 
     @MainActor
@@ -484,7 +486,11 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     deinit {
         unsubscribeNavigator()
-        configuration.predictiveCacheManager?.updateNavigationController(with: nil)
+        if let predictiveCacheManager = configuration.predictiveCacheManager {
+            Task { @MainActor in
+                predictiveCacheManager.updateNavigationController(with: nil)
+            }
+        }
     }
 
     private func subscribeToNotifications() {
