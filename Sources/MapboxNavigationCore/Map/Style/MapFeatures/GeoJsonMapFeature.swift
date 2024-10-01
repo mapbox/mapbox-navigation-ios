@@ -91,7 +91,7 @@ struct GeoJsonMapFeature: MapFeature {
                 try map.removeLayer(withId: layer.id)
             }
             order.insert(id: layer.id)
-            if let slot = order.slot(forId: layer.id) {
+            if let slot = order.slot(forId: layer.id), map.allSlotIdentifiers.contains(slot) {
                 layer.slot = slot
             }
             try map.addLayer(layer, layerPosition: order.position(forId: layer.id))

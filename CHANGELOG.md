@@ -6,12 +6,16 @@
 
 * `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`.
 
+### Map
+
+* Fixed warnings `Slot 'middle' missing for layer`.
+* Fixed possible incorrect route line layer order for map styles without slot support causing top layers to appear beneath the navigation route line.
+
 ## v3.4.0-rc.1
 
 ### Map
 
 * Added API `NavigationMapView.excludedRouteAlertTypes` for controlling the visibility of road alerts on the map.
-
 * Fixed a case when a far maneuver was framed by the navigation camera calculation with `PitchNearManeuver.enabled`. The distance to maneuver can be configured correctly by `PitchNearManeuver.triggerDistanceToManeuver`.
 
 ### Other changes

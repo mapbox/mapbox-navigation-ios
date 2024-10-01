@@ -53,7 +53,7 @@ final class NavigationMapStyleManager {
     init(mapView: MapView) {
         self.mapView = mapView
         self.layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
-        self.layersOrder = Self.makeMapLayersOrder()
+        self.layersOrder = Self.makeMapLayersOrder(with: mapView)
         self.routeFeaturesStore = .init(mapView: mapView)
         self.waypointFeaturesStore = .init(mapView: mapView)
         self.arrowFeaturesStore = .init(mapView: mapView)
@@ -63,13 +63,13 @@ final class NavigationMapStyleManager {
         self.routeAlertsFeaturesStore = .init(mapView: mapView)
 
         mapView.mapboxMap.onStyleLoaded.sink { [weak self] _ in
-            // MapsSDK removes all layers when a style is loaded, so we have to recreate MapLayersOrder
-            self?.layersOrder = Self.makeMapLayersOrder()
             self?.onStyleLoaded()
         }.store(in: &lifetimeSubscriptions)
     }
 
     func onStyleLoaded() {
+        // MapsSDK removes all layers when a style is loaded, so we have to recreate MapLayersOrder.
+        layersOrder = Self.makeMapLayersOrder(with: mapView)
         layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
         layersOrder.setStyleIds(layerIds)
 
@@ -290,7 +290,7 @@ final class NavigationMapStyleManager {
         mapView.mapboxMap.setRouteLineOffset(offset, for: routeLineIds)
     }
 
-    private static func makeMapLayersOrder() -> MapLayersOrder {
+    private static func makeMapLayersOrder(with mapView: MapView) -> MapLayersOrder {
         let alternative_0_ids = FeatureIds.RouteLine.alternative(idx: 0)
         let alternative_1_ids = FeatureIds.RouteLine.alternative(idx: 1)
         let mainLineIds = FeatureIds.RouteLine.main
@@ -301,53 +301,204 @@ final class NavigationMapStyleManager {
         let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
         typealias R = MapLayersOrder.Rule
         typealias SlottedRules = MapLayersOrder.SlottedRules
-        return .init(builder: {
-            SlottedRules(.middle) {
-                R.orderedIds([
-                    alternative_0_ids.casing,
-                    alternative_0_ids.main,
-                ])
-                R.orderedIds([
-                    alternative_1_ids.casing,
-                    alternative_1_ids.main,
-                ])
-                R.orderedIds([
-                    mainLineIds.traversedRoute,
-                    mainLineIds.casing,
-                    mainLineIds.main,
-                ])
-                R.orderedIds([
-                    arrowIds.arrowStroke,
-                    arrowIds.arrow,
-                    arrowIds.arrowSymbolCasing,
-                    arrowIds.arrowSymbol,
-                ])
-                R.orderedIds([
-                    alternative_0_ids.restrictedArea,
-                    alternative_1_ids.restrictedArea,
-                    mainLineIds.restrictedArea,
-                ])
-                /// To show on top of arrows
-                R.hasPrefix("poi")
-                R.orderedIds([
-                    voiceInstructionIds.layer,
-                    voiceInstructionIds.circleLayer,
-                ])
+
+        let allSlotIdentifiers = mapView.mapboxMap.allSlotIdentifiers
+        let containsMiddleSlot = Slot.middle.map(allSlotIdentifiers.contains) ?? false
+        let legacyPosition: ((String) -> MapboxMaps.LayerPosition?)? = containsMiddleSlot ? nil :
+            { legacyLayerPosition(for: $0, mapView: mapView) }
+
+        return .init(
+            builder: {
+                SlottedRules(.middle) {
+                    R.orderedIds([
+                        alternative_0_ids.casing,
+                        alternative_0_ids.main,
+                    ])
+                    R.orderedIds([
+                        alternative_1_ids.casing,
+                        alternative_1_ids.main,
+                    ])
+                    R.orderedIds([
+                        mainLineIds.traversedRoute,
+                        mainLineIds.casing,
+                        mainLineIds.main,
+                    ])
+                    R.orderedIds([
+                        arrowIds.arrowStroke,
+                        arrowIds.arrow,
+                        arrowIds.arrowSymbolCasing,
+                        arrowIds.arrowSymbol,
+                    ])
+                    R.orderedIds([
+                        alternative_0_ids.restrictedArea,
+                        alternative_1_ids.restrictedArea,
+                        mainLineIds.restrictedArea,
+                    ])
+                    /// To show on top of arrows
+                    R.hasPrefix("poi")
+                    R.orderedIds([
+                        voiceInstructionIds.layer,
+                        voiceInstructionIds.circleLayer,
+                    ])
+                }
+                // Setting the top position on the map. We cannot explicitly set `.top` position because `.top`
+                // renders behind Place and Transit labels
+                SlottedRules(nil) {
+                    R.orderedIds([
+                        intersectionIds.layer,
+                        routeAlertIds.layer,
+                        waypointIds.baseCircle,
+                        waypointIds.innerCircle,
+                        waypointIds.markerIcon,
+                        NavigationMapView.LayerIdentifier.puck2DLayer,
+                        NavigationMapView.LayerIdentifier.puck3DLayer,
+                    ])
+                }
+            },
+            legacyPosition: legacyPosition
+        )
+    }
+
+    static func legacyLayerPosition(for layerIdentifier: String, mapView: MapView) -> MapboxMaps.LayerPosition? {
+        let alternative_0_ids = FeatureIds.RouteLine.alternative(idx: 0)
+        let alternative_1_ids = FeatureIds.RouteLine.alternative(idx: 1)
+        let mainLineIds = FeatureIds.RouteLine.main
+        let arrowIds = FeatureIds.ManeuverArrow.nextArrow()
+        let waypointIds = FeatureIds.RouteWaypoints.default
+        let voiceInstructionIds = FeatureIds.VoiceInstruction.currentRoute
+        let intersectionIds = FeatureIds.IntersectionAnnotation.currentRoute
+        let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
+
+        let lowermostSymbolLayers: [String] = [
+            alternative_0_ids.casing,
+            alternative_0_ids.main,
+            alternative_1_ids.casing,
+            alternative_1_ids.main,
+            mainLineIds.traversedRoute,
+            mainLineIds.casing,
+            mainLineIds.main,
+            mainLineIds.restrictedArea,
+        ].compactMap { $0 }
+        let aboveRoadLayers: [String] = [
+            arrowIds.arrowStroke,
+            arrowIds.arrow,
+            arrowIds.arrowSymbolCasing,
+            arrowIds.arrowSymbol,
+            intersectionIds.layer,
+            routeAlertIds.layer,
+            waypointIds.baseCircle,
+            waypointIds.innerCircle,
+            waypointIds.markerIcon,
+        ]
+        let uppermostSymbolLayers: [String] = [
+            voiceInstructionIds.layer,
+            voiceInstructionIds.circleLayer,
+            NavigationMapView.LayerIdentifier.puck2DLayer,
+            NavigationMapView.LayerIdentifier.puck3DLayer,
+        ]
+        let isLowermostLayer = lowermostSymbolLayers.contains(layerIdentifier)
+        let isAboveRoadLayer = aboveRoadLayers.contains(layerIdentifier)
+        let allAddedLayers: [String] = lowermostSymbolLayers + aboveRoadLayers + uppermostSymbolLayers
+
+        var layerPosition: MapboxMaps.LayerPosition?
+        var lowerLayers = Set<String>()
+        var upperLayers = Set<String>()
+        var targetLayer: String?
+
+        if let index = allAddedLayers.firstIndex(of: layerIdentifier) {
+            lowerLayers = Set(allAddedLayers.prefix(upTo: index))
+            if allAddedLayers.indices.contains(index + 1) {
+                upperLayers = Set(allAddedLayers.suffix(from: index + 1))
             }
-            // Setting the top position on the map. We cannot explicitly set `.top` position because `.top`
-            // renders behind Place and Transit labels
-            SlottedRules(nil) {
-                R.orderedIds([
-                    intersectionIds.layer,
-                    routeAlertIds.layer,
-                    waypointIds.baseCircle,
-                    waypointIds.innerCircle,
-                    waypointIds.markerIcon,
-                    NavigationMapView.LayerIdentifier.puck2DLayer,
-                    NavigationMapView.LayerIdentifier.puck3DLayer,
-                ])
+        }
+
+        var foundAboveLayer = false
+        for layerInfo in mapView.mapboxMap.allLayerIdentifiers.reversed() {
+            if lowerLayers.contains(layerInfo.id) {
+                // find the topmost layer that should be below the layerIdentifier.
+                if !foundAboveLayer {
+                    layerPosition = .above(layerInfo.id)
+                    foundAboveLayer = true
+                }
+            } else if upperLayers.contains(layerInfo.id) {
+                // find the bottommost layer that should be above the layerIdentifier.
+                layerPosition = .below(layerInfo.id)
+            } else if isLowermostLayer {
+                // find the topmost non symbol layer for layerIdentifier in lowermostSymbolLayers.
+                if targetLayer == nil,
+                   layerInfo.type.rawValue != "symbol",
+                   let sourceLayer = mapView.mapboxMap.layerProperty(for: layerInfo.id, property: "source-layer")
+                       .value as? String,
+                       !sourceLayer.isEmpty
+                {
+                    if layerInfo.type.rawValue == "circle",
+                       let isPersistentCircle = try? mapView.mapboxMap.isPersistentLayer(id: layerInfo.id)
+                    {
+                        let pitchAlignment = mapView.mapboxMap.layerProperty(
+                            for: layerInfo.id,
+                            property: "circle-pitch-alignment"
+                        ).value as? String
+                        if isPersistentCircle || (pitchAlignment != "map") {
+                            continue
+                        }
+                    }
+                    targetLayer = layerInfo.id
+                }
+            } else if isAboveRoadLayer {
+                // find the topmost road name label layer for layerIdentifier in arrowLayers.
+                if targetLayer == nil,
+                   layerInfo.id.contains("road-label"),
+                   mapView.mapboxMap.layerExists(withId: layerInfo.id)
+                {
+                    targetLayer = layerInfo.id
+                }
+            } else {
+                // find the topmost layer for layerIdentifier in uppermostSymbolLayers.
+                if targetLayer == nil,
+                   let sourceLayer = mapView.mapboxMap.layerProperty(for: layerInfo.id, property: "source-layer")
+                       .value as? String,
+                       !sourceLayer.isEmpty
+                {
+                    targetLayer = layerInfo.id
+                }
             }
-        })
+        }
+
+        guard let targetLayer else { return layerPosition }
+        guard let layerPosition else { return .above(targetLayer) }
+
+        if isLowermostLayer {
+            // For layers should be below symbol layers.
+            if case .below(let sequenceLayer) = layerPosition, !lowermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in lowermostSymbolLayers, it's above symbol layer.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost non symbol
+                // layer,
+                // but under the symbol layers.
+                return .above(targetLayer)
+            }
+        } else if isAboveRoadLayer {
+            // For layers should be above road name labels but below other symbol layers.
+            if case .below(let sequenceLayer) = layerPosition, uppermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in uppermostSymbolLayers, it's above all symbol layers.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name
+                // symbol layer.
+                return .above(targetLayer)
+            } else if case .above(let sequenceLayer) = layerPosition, lowermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer is in lowermostSymbolLayers, it's below all symbol layers.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name
+                // symbol layer.
+                return .above(targetLayer)
+            }
+        } else {
+            // For other layers should be uppermost and above symbol layers.
+            if case .above(let sequenceLayer) = layerPosition, !uppermostSymbolLayers.contains(sequenceLayer) {
+                // If the sequenceLayer isn't in uppermostSymbolLayers, it's below some symbol layers.
+                // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost layer.
+                return .above(targetLayer)
+            }
+        }
+
+        return layerPosition
     }
 }
 

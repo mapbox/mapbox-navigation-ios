@@ -80,6 +80,7 @@ class RouteLineLayerPositionTests: TestCase {
             XCTFail("Should have non-nil mapboxMap")
             return
         }
+        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
         self.mapboxMap = mapboxMap
     }
 
@@ -226,6 +227,7 @@ class RouteLineLayerPositionTests: TestCase {
         .store(in: &subscriptions)
 
         mapboxMap.loadStyle(styleJSON)
+        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
 
         await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
         navigationMapView.mapStyleManager.onStyleLoaded()
@@ -261,6 +263,7 @@ class RouteLineLayerPositionTests: TestCase {
             waypointIds.baseCircle,
             waypointIds.innerCircle,
             waypointIds.markerIcon,
+            Slot.middle!.rawValue,
         ]
         XCTAssertEqual(
             allLayerIds,
@@ -290,6 +293,7 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelCircleLayer["id"]!,
             intersectionIds.layer,
             routeAlertIds.layer,
+            Slot.middle!.rawValue,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
@@ -344,6 +348,7 @@ class RouteLineLayerPositionTests: TestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
 
         mapboxMap.loadStyle(styleJSON)
+        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
 
         await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
         navigationMapView.mapStyleManager.onStyleLoaded()
@@ -375,13 +380,14 @@ class RouteLineLayerPositionTests: TestCase {
             roadExitLayer["id"]!,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
+            Slot.middle!.rawValue,
             circleLabelLayer,
         ]
         var allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(
             allLayerIds,
             expectedLayerSequence,
-            "Added custom laayer."
+            "Added custom layer."
         )
 
         // When circle layers added from map style and in runtime to `NavigationMapView`,
@@ -413,6 +419,7 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelCircleLayer["id"]!,
             intersectionIds.layer,
             routeAlertIds.layer,
+            Slot.middle!.rawValue,
             circleLabelLayer,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
@@ -444,6 +451,7 @@ class RouteLineLayerPositionTests: TestCase {
             alternative_0_ids.casing,
             alternative_1_ids.main,
             alternative_1_ids.casing,
+            Slot.middle!.rawValue,
         ]
         XCTAssertTrue(allLayerIds.isSuperset(of: expectedLayers))
     }
