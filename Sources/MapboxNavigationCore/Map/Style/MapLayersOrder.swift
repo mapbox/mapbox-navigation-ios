@@ -141,10 +141,15 @@ struct MapLayersOrder {
     /// Ordered list of rules that define order.
     private let rules: [Rule]
 
+    /// Used for styles with no slots support.
+    private let legacyPosition: ((String) -> MapboxMaps.LayerPosition?)?
+
     init(
-        @MapLayersOrder.Builder builder: () -> [Rule]
+        @MapLayersOrder.Builder builder: () -> [Rule],
+        legacyPosition: ((String) -> MapboxMaps.LayerPosition?)?
     ) {
         self.rules = builder()
+        self.legacyPosition = legacyPosition
     }
 
     /// Inserts a new id and makes it possible to use it in `position(forId:)` method.
@@ -226,6 +231,10 @@ struct MapLayersOrder {
 
     /// Query the position for given layer id.
     func position(forId id: String) -> LayerPosition? {
+        if let legacyPosition {
+            return legacyPosition(id)
+        }
+
         guard let index = orderedIdsIndices[id] else { return nil }
         let belowId = index == 0 ? nil : orderedIds[index - 1]
         let aboveId = index == orderedIds.count - 1 ? nil : orderedIds[index + 1]
