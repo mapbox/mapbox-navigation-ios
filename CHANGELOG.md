@@ -5,32 +5,14 @@
 * MapboxNavigationCore now requires [MapboxNavigationNative v320.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/320.0.0).
 * MapboxNavigationCore now requires [MapboxMaps v11.7.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.7.0).
 
-### Routing
-
-* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`.
-
-### Map
-
-* Fixed warnings `Slot 'middle' missing for layer`.
-* Fixed possible incorrect route line layer order for map styles without slot support causing top layers to appear beneath the navigation route line.
-
-## v3.4.0-rc.1
-
-### Map
-
-* Added API `NavigationMapView.excludedRouteAlertTypes` for controlling the visibility of road alerts on the map.
-* Fixed a case when a far maneuver was framed by the navigation camera calculation with `PitchNearManeuver.enabled`. The distance to maneuver can be configured correctly by `PitchNearManeuver.triggerDistanceToManeuver`.
-
-### Other changes
-
-* Fixed possible issue when the "_NONEXISTENT_KEY_VALUE_" value could have been displayed when the custom localization bundle was used and the debug option “Show non-localized strings” was enabled in Xcode.
-
-## v3.4.0-beta.1
-
 ### Map
 
 * Updated appearance and placement mechanism of the route line callouts.
 * Fixed extra coordinates outside `lookaheadDistance` for the maneuver added for the following navigation camera calculation. The camera frame can now be configured correctly by `IntersectionDensity`.
+* Added API `NavigationMapView.excludedRouteAlertTypes` for controlling the visibility of road alerts on the map.
+* Fixed a case when a far maneuver was framed by the navigation camera calculation with `PitchNearManeuver.enabled`. The distance to maneuver can be configured correctly by `PitchNearManeuver.triggerDistanceToManeuver`.
+* Fixed warnings `Slot 'middle' missing for layer`.
+* Fixed possible incorrect route line layer order for map styles without slot support causing top layers to appear beneath the navigation route line.
 
 ### CarPlay
 
@@ -42,6 +24,10 @@
 
 * Fixed the issue that a map-matched location was sent instead of a raw location in `MapMatchingState.location`. Switch to `MapMatchingState.enhancedLocation` if you need a map-matched location.
 
+### Routing
+
+* `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`.
+
 ### Other changes
 
 * `NavigatorErrors.UnexpectedNavigationStatus` is now public.
@@ -50,6 +36,7 @@
 * Fixed a UI bug when the opened steps list view was not updated and sometimes had a blank space at the top.
 * Added more feedback categories for Active Guidance.
 * Added missing languages for the `SAME_TIME` label localization.
+* Fixed possible issue when the "_NONEXISTENT_KEY_VALUE_" value could have been displayed when the custom localization bundle was used and the debug option “Show non-localized strings” was enabled in Xcode.
 
 ## v3.3.1
 
