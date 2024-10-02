@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("320.0.0-SNAPSHOT.0927T1332Z.cd6ac90", "c461552f70edd1ca32481f7a8f0f7390749e69715ee6ac3c33ba039e45ca1934", "a4a7c3436e5aea99a01bae633d792e9fc4a86334")
+let navNativeVersion: Version = "320.0.0"
 let mapsVersion: Version = "11.7.0"
 
 let mapboxApiDownloads = "https://api.mapbox.com/downloads/v2"
@@ -31,7 +31,7 @@ let package = Package(
             targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: navNativeVersion),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "3.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
