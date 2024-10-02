@@ -219,6 +219,13 @@ final class NativeHandlersFactory: @unchecked Sendable {
                 "useInternalReroute": true,
                 "useTelemetryNavigationEvents": true,
             ],
+            "navigation": [
+                "alternativeRoutes": [
+                    "dropDistance": [
+                        "maxSlightFork": 50.0,
+                    ],
+                ],
+            ],
         ]
 
         var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
