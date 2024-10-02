@@ -2,6 +2,9 @@
 
 ## v3.4.0
 
+* MapboxNavigationCore now requires [MapboxNavigationNative v320.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/320.0.0).
+* MapboxNavigationCore now requires [MapboxMaps v11.7.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.7.0).
+
 ### Routing
 
 * `NavigationRouteOptions` and `NavigationMatchOptions` no longer include `.numericCongestionLevel` attribute by default for profiles other than `.automobileAvoidingTraffic`.
