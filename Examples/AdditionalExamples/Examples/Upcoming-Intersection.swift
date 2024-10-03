@@ -11,8 +11,8 @@ import MapboxNavigationUIKit
 import Turf
 import UIKit
 
-class ElectronicHorizonEventsViewController: UIViewController {
-    let mapboxNavigationProvider: MapboxNavigationProvider = {
+final class ElectronicHorizonEventsViewController: UIViewController {
+    private let mapboxNavigationProvider: MapboxNavigationProvider = {
         var coreConfig = CoreConfig(
             // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
             locationSource: simulationIsEnabled ? .simulation(
@@ -30,19 +30,19 @@ class ElectronicHorizonEventsViewController: UIViewController {
         return MapboxNavigationProvider(coreConfig: coreConfig)
     }()
 
-    var mapboxNavigation: MapboxNavigation {
+    private var mapboxNavigation: MapboxNavigation {
         mapboxNavigationProvider.mapboxNavigation
     }
 
-    var electronicHorizonController: ElectronicHorizonController {
+    private var electronicHorizonController: ElectronicHorizonController {
         mapboxNavigationProvider.electronicHorizon()
     }
 
-    var roadGraph: RoadGraph {
+    private var roadGraph: RoadGraph {
         electronicHorizonController.roadMatching.roadGraph
     }
 
-    var navigationMapView: NavigationMapView!
+    private var navigationMapView: NavigationMapView!
 
     private var subscriptions: [AnyCancellable] = []
 
@@ -61,7 +61,7 @@ class ElectronicHorizonEventsViewController: UIViewController {
         mapboxNavigation.tripSession().startFreeDrive()
     }
 
-    func setupNavigationMapView() {
+    private func setupNavigationMapView() {
         navigationMapView = .init(
             location: mapboxNavigation.navigation()
                 .locationMatching.map(\.enhancedLocation)

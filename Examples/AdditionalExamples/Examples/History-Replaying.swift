@@ -4,8 +4,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegate, NavigationViewControllerDelegate {
-    var navigationMapView: NavigationMapView! {
+final class HistoryReplayingViewController: UIViewController {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if let navigationMapView = oldValue {
                 navigationMapView.removeFromSuperview()
@@ -17,7 +17,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         }
     }
 
-    lazy var historyReplayController: HistoryReplayController = {
+    private lazy var historyReplayController: HistoryReplayController = {
         // Create a ``HistoryReplayController`` instance with required history data and setup it's delegate.
         var historyReplayController = HistoryReplayController(
             historyReader: HistoryReader(
@@ -31,7 +31,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         return historyReplayController
     }()
 
-    lazy var mapboxNavigationProvider = MapboxNavigationProvider(
+    private lazy var mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             routingConfig: .init(
                 rerouteSettings: .init(
@@ -47,13 +47,15 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         )
     )
 
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationRoutes: NavigationRoutes?
+    private var navigationRoutes: NavigationRoutes?
 
-    var startButton: UIButton!
+    private var startButton: UIButton!
 
-    func loadNavigationViewIfNeeded() {
+    private func loadNavigationViewIfNeeded() {
         if navigationMapView == nil {
             navigationMapView = .init(
                 location: mapboxNavigation.navigation()
@@ -94,7 +96,6 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
     }
 
     private func setupNavigationMapView() {
-        navigationMapView.delegate = self
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
 
         view.insertSubview(navigationMapView, at: 0)
@@ -116,7 +117,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
     }
 
     @objc
-    func tappedButton(sender: UIButton) {
+    private func tappedButton(sender: UIButton) {
         startButton.isHidden = true
         // in this example, we are starting in free drive mode (history file usually does not contain the initial
         // route), and then starting AG.
@@ -125,7 +126,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         startFreeDrive()
     }
 
-    func presentNavigationController(with navigationRoutes: NavigationRoutes) {
+    private func presentNavigationController(with navigationRoutes: NavigationRoutes) {
         let navigationOptions = NavigationOptions(
             mapboxNavigation: mapboxNavigation,
             voiceController: mapboxNavigationProvider.routeVoiceController,
@@ -142,17 +143,7 @@ class HistoryReplayingViewController: UIViewController, NavigationMapViewDelegat
         presentAndRemoveNaviagationMapView(navigationViewController)
     }
 
-    func navigationViewControllerDidDismiss(
-        _ navigationViewController: NavigationViewController,
-        byCanceling canceled: Bool
-    ) {
-        dismiss(animated: true) {
-            self.mapboxNavigation.tripSession().setToIdle()
-        }
-        loadNavigationViewIfNeeded()
-    }
-
-    func presentAndRemoveNaviagationMapView(
+    private func presentAndRemoveNaviagationMapView(
         _ navigationViewController: NavigationViewController,
         animated: Bool = true,
         completion: CompletionHandler? = nil
@@ -195,5 +186,17 @@ extension HistoryReplayingViewController: HistoryReplayDelegate {
             self.loadNavigationViewIfNeeded()
             self.mapboxNavigation.tripSession().setToIdle()
         }
+    }
+}
+
+extension HistoryReplayingViewController: NavigationViewControllerDelegate {
+    func navigationViewControllerDidDismiss(
+        _ navigationViewController: NavigationViewController,
+        byCanceling canceled: Bool
+    ) {
+        dismiss(animated: true) {
+            self.mapboxNavigation.tripSession().setToIdle()
+        }
+        loadNavigationViewIfNeeded()
     }
 }

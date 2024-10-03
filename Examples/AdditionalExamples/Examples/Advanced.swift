@@ -10,8 +10,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class AdvancedViewController: UIViewController, NavigationMapViewDelegate, NavigationViewControllerDelegate {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class AdvancedViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
             locationSource: simulationIsEnabled ? .simulation(
@@ -19,9 +19,11 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationMapView: NavigationMapView! {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if oldValue != nil {
                 oldValue.removeFromSuperview()
@@ -40,13 +42,13 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         }
     }
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showCurrentRoute()
         }
     }
 
-    func showCurrentRoute() {
+    private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
             return
@@ -54,7 +56,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         navigationMapView.showcase(navigationRoutes)
     }
 
-    var startButton: UIButton!
+    private var startButton: UIButton!
 
     // MARK: - UIViewController lifecycle methods
 
@@ -75,7 +77,6 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         )
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.delegate = self
-        navigationMapView.mapView.mapboxMap.loadStyle(StyleURI.dark)
         navigationMapView.puckType = .puck2D(.navigationDefault)
 
         view.addSubview(navigationMapView)
@@ -114,7 +115,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             mapboxNavigation: mapboxNavigation,
             voiceController: mapboxNavigationProvider.routeVoiceController,
             eventsManager: mapboxNavigationProvider.eventsManager(),
-            styles: [NightStyle()],
+            styles: [StandardNightStyle()],
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager,
             // Replace default `NavigationMapView` instance with instance that is used in preview mode.
             navigationMapView: navigationMapView
@@ -152,7 +153,7 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
         }
     }
 
-    func requestRoute(destination: CLLocationCoordinate2D) {
+    private func requestRoute(destination: CLLocationCoordinate2D) {
         guard let userLocation = navigationMapView.mapView.location.latestLocation else { return }
 
         let location = CLLocation(
@@ -183,7 +184,24 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
             }
         }
     }
+}
 
+extension AdvancedViewController: NavigationMapViewDelegate {
+    func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
+        requestRoute(destination: mapPoint.coordinate)
+    }
+
+    // Delegate method called when the user selects a route
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect alternativeRoute: AlternativeRoute) {
+        Task {
+            guard let selectedRoutes = await self.navigationRoutes?.selecting(alternativeRoute: alternativeRoute)
+            else { return }
+            self.navigationRoutes = selectedRoutes
+        }
+    }
+}
+
+extension AdvancedViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(
         _ navigationViewController: NavigationViewController,
         byCanceling canceled: Bool
@@ -216,20 +234,5 @@ class AdvancedViewController: UIViewController, NavigationMapViewDelegate, Navig
                 }
             }
         )
-    }
-
-    // MARK: NavigationMapViewDelegate implementation
-
-    func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
-        requestRoute(destination: mapPoint.coordinate)
-    }
-
-    // Delegate method called when the user selects a route
-    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect alternativeRoute: AlternativeRoute) {
-        Task {
-            guard let selectedRoutes = await self.navigationRoutes?.selecting(alternativeRoute: alternativeRoute)
-            else { return }
-            self.navigationRoutes = selectedRoutes
-        }
     }
 }

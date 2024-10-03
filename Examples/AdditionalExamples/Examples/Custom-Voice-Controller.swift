@@ -13,8 +13,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomVoiceControllerUI: UIViewController {
-    let mapboxNavigationProvider: MapboxNavigationProvider = {
+final class CustomVoiceControllerUI: UIViewController {
+    private let mapboxNavigationProvider: MapboxNavigationProvider = {
         var coreConfig = CoreConfig(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -38,7 +38,9 @@ class CustomVoiceControllerUI: UIViewController {
         return provider
     }()
 
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +59,7 @@ class CustomVoiceControllerUI: UIViewController {
         }
     }
 
-    func presentNavigationWithCustomVoiceController(navigationRoutes: NavigationRoutes) {
+    private func presentNavigationWithCustomVoiceController(navigationRoutes: NavigationRoutes) {
         let navigationOptions = NavigationOptions(
             mapboxNavigation: mapboxNavigation,
             voiceController: mapboxNavigationProvider.routeVoiceController,
@@ -73,15 +75,15 @@ class CustomVoiceControllerUI: UIViewController {
     }
 }
 
-class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate {
+final class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate {
     private let _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
-    public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
+    var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
         _voiceInstructions.eraseToAnyPublisher()
     }
 
     // MARK: Speech Configuration
 
-    public var muted: Bool = false {
+    var muted: Bool = false {
         didSet {
             if isSpeaking {
                 interruptSpeaking()
@@ -89,7 +91,7 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
         }
     }
 
-    public var volume: VolumeMode = .system {
+    var volume: VolumeMode = .system {
         didSet {
             switch volume {
             case .system:
@@ -104,7 +106,7 @@ class CustomVoiceController: NSObject, SpeechSynthesizing, AVAudioPlayerDelegate
         }
     }
 
-    public var locale: Locale? = Locale.autoupdatingCurrent
+    var locale: Locale? = Locale.autoupdatingCurrent
     var isSpeaking: Bool {
         players.contains {
             $0?.isPlaying ?? false

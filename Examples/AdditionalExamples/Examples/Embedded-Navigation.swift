@@ -11,8 +11,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class EmbeddedExampleViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class EmbeddedExampleViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -22,11 +22,13 @@ class EmbeddedExampleViewController: UIViewController {
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     @IBOutlet var reroutedLabel: UILabel!
     @IBOutlet var container: UIView!
-    var navigationRoutes: NavigationRoutes?
+    private var navigationRoutes: NavigationRoutes?
 
     lazy var routeOptions: NavigationRouteOptions = {
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
@@ -41,7 +43,7 @@ class EmbeddedExampleViewController: UIViewController {
         calculateDirections()
     }
 
-    func calculateDirections() {
+    private func calculateDirections() {
         Task {
             switch await mapboxNavigation.routingProvider().calculateRoutes(options: routeOptions).result {
             case .failure(let error):
@@ -54,7 +56,7 @@ class EmbeddedExampleViewController: UIViewController {
         }
     }
 
-    func flashReroutedLabel() {
+    private func flashReroutedLabel() {
         reroutedLabel.isHidden = false
         reroutedLabel.alpha = 1.0
         UIView.animate(withDuration: 1.0, delay: 1, options: .curveEaseIn, animations: {
@@ -64,7 +66,7 @@ class EmbeddedExampleViewController: UIViewController {
         })
     }
 
-    func startEmbeddedNavigation() {
+    private func startEmbeddedNavigation() {
         // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
         guard let navigationRoutes else { return }
         let navigationOptions = NavigationOptions(

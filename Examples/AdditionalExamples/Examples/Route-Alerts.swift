@@ -10,8 +10,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class RouteAlertsViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class RouteAlertsViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -21,7 +21,9 @@ class RouteAlertsViewController: UIViewController {
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

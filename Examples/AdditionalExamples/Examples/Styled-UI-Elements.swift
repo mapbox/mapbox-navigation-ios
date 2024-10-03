@@ -11,8 +11,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomStyleUIElements: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class CustomStyleUIElements: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -22,7 +22,9 @@ class CustomStyleUIElements: UIViewController {
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +80,7 @@ class CustomStyleUIElements: UIViewController {
     }
 }
 
-class CustomDayStyle: DayStyle {
+private final class CustomDayStyle: DayStyle {
     private let backgroundColor = #colorLiteral(red: 0.06276176125, green: 0.6164312959, blue: 0.3432356119, alpha: 1)
     private let darkBackgroundColor = #colorLiteral(red: 0.0473754704, green: 0.4980872273, blue: 0.2575169504, alpha: 1)
     private let secondaryBackgroundColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
@@ -153,7 +155,7 @@ class CustomDayStyle: DayStyle {
     }
 }
 
-class CustomNightStyle: NightStyle {
+private final class CustomNightStyle: NightStyle {
     private let backgroundColor = #colorLiteral(red: 0.06276176125, green: 0.6164312959, blue: 0.3432356119, alpha: 1)
     private let darkBackgroundColor = #colorLiteral(red: 0.0473754704, green: 0.4980872273, blue: 0.2575169504, alpha: 1)
     private let secondaryBackgroundColor = #colorLiteral(red: 0.1335069537, green: 0.133641988, blue: 0.1335278749, alpha: 1)

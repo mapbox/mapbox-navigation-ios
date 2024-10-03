@@ -11,8 +11,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomBarsViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class CustomBarsViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -22,7 +22,9 @@ class CustomBarsViewController: UIViewController {
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,7 +94,7 @@ class CustomBarsViewController: UIViewController {
 
 // MARK: - CustomTopBarViewController
 
-class CustomTopBarViewController: ContainerViewController {
+final class CustomTopBarViewController: ContainerViewController {
     private lazy var instructionsBannerTopOffsetConstraint = instructionsBannerView.topAnchor.constraint(
         equalTo: view.safeAreaLayoutGuide.topAnchor,
         constant: 10
@@ -153,7 +155,7 @@ class CustomTopBarViewController: ContainerViewController {
         centerOffset = calculateCenterOffset(with: size)
     }
 
-    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateConstraints()
     }
@@ -172,7 +174,7 @@ class CustomTopBarViewController: ContainerViewController {
 
 // MARK: - CustomBottomBarViewController
 
-class CustomBottomBarViewController: ContainerViewController, CustomBottomBannerViewDelegate {
+final class CustomBottomBarViewController: ContainerViewController, CustomBottomBannerViewDelegate {
     weak var navigationViewController: NavigationViewController?
 
     // Or you can implement your own UI elements

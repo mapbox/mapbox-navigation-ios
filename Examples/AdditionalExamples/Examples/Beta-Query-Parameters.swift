@@ -10,19 +10,21 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, NavigationViewControllerDelegate {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class BetaQueryViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: nil
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationMapView: NavigationMapView!
+    private var navigationMapView: NavigationMapView!
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             guard let navigationRoutes else {
                 navigationMapView.removeRoutes()
@@ -32,10 +34,10 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
         }
     }
 
-    var startButton: UIButton!
-    var datePicker: UIDatePicker!
-    var dateTextField: UITextField!
-    var departureTime: Date!
+    private var startButton: UIButton!
+    private var datePicker: UIDatePicker!
+    private var dateTextField: UITextField!
+    private var departureTime: Date!
 
     // MARK: - UIViewController lifecycle methods
 
@@ -91,7 +93,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
         startButton.setNeedsDisplay()
     }
 
-    func setupDateProperties() {
+    private func setupDateProperties() {
         dateTextField = UITextField(frame: CGRect(x: 75, y: 100, width: 200, height: 35))
         dateTextField.placeholder = "Select departure time"
         dateTextField.backgroundColor = UIColor.white
@@ -102,7 +104,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
         view.addSubview(dateTextField)
     }
 
-    func showDatePicker() {
+    private func showDatePicker() {
         datePicker = UIDatePicker()
         datePicker.datePickerMode = .time
         datePicker.preferredDatePickerStyle = .wheels
@@ -119,7 +121,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
     }
 
     @objc
-    func doneButtonPressed() {
+    private func doneButtonPressed() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm" // format date correctly
         dateTextField.text = dateFormatter.string(from: datePicker.date)
@@ -127,7 +129,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
     }
 
     @objc
-    func tappedStartButton(sender: UIButton) {
+    private func tappedStartButton(sender: UIButton) {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -144,7 +146,7 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
         present(navigationViewController, animated: true, completion: nil)
     }
 
-    func requestRoute(destination: CLLocationCoordinate2D) {
+    private func requestRoute(destination: CLLocationCoordinate2D) {
         guard let userLocation = navigationMapView.mapView.location.latestLocation else { return }
 
         let location = CLLocation(
@@ -176,16 +178,18 @@ class BetaQueryViewController: UIViewController, NavigationMapViewDelegate, Navi
             }
         }
     }
+}
 
+extension BetaQueryViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(
         _ navigationViewController: NavigationViewController,
         byCanceling canceled: Bool
     ) {
         dismiss(animated: true, completion: nil)
     }
+}
 
-    // MARK: NavigationMapViewDelegate implementation
-
+extension BetaQueryViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
         guard dateTextField?.text != nil else { return }
         requestRoute(destination: mapPoint.coordinate)

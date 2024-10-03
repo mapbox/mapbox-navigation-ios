@@ -11,8 +11,8 @@ import MapboxNavigationNative
 import MapboxNavigationUIKit
 import UIKit
 
-class OfflineRegionsViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class OfflineRegionsViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
             locationSource: simulationIsEnabled ? .simulation(
@@ -22,37 +22,40 @@ class OfflineRegionsViewController: UIViewController {
             tilestoreConfig: .default
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
     // MARK: Setup variables for Tile Management
 
-    let styleURI: StyleURI = .streets
-    var region: Region?
-    let zoomMin: UInt8 = 0
-    let zoomMax: UInt8 = 16
-    let offlineManager = OfflineManager()
-    var tileStoreConfiguration: TileStoreConfiguration {
+    private let styleURI: StyleURI = .streets
+    private var region: Region?
+    private let zoomMin: UInt8 = 0
+    private let zoomMax: UInt8 = 16
+    private let offlineManager = OfflineManager()
+
+    private var tileStoreConfiguration: TileStoreConfiguration {
         mapboxNavigationProvider.coreConfig.tilestoreConfig
     }
 
-    var tileStoreLocation: TileStoreConfiguration.Location {
+    private var tileStoreLocation: TileStoreConfiguration.Location {
         tileStoreConfiguration.navigatorLocation
     }
 
-    var tileStore: TileStore {
+    private var tileStore: TileStore {
         tileStoreLocation.tileStore
     }
 
-    var currentLocation: CLLocation? {
+    private var currentLocation: CLLocation? {
         mapboxNavigation.navigation().currentLocationMatching?.mapMatchingResult.enhancedLocation
     }
 
-    var downloadButton = UIButton()
-    var startButton = UIButton()
-    var navigationMapView: NavigationMapView?
-    var options: NavigationRouteOptions?
+    private var downloadButton = UIButton()
+    private var startButton = UIButton()
+    private var navigationMapView: NavigationMapView?
+    private var options: NavigationRouteOptions?
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showRoutes()
             showStartNavigationAlert()
@@ -73,7 +76,7 @@ class OfflineRegionsViewController: UIViewController {
         addStartButton()
     }
 
-    func setupNavigationMapView() {
+    private func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(
             location: mapboxNavigation.navigation()
                 .locationMatching.map(\.enhancedLocation)
@@ -99,7 +102,7 @@ class OfflineRegionsViewController: UIViewController {
         mapboxNavigation.tripSession().startFreeDrive()
     }
 
-    func addDownloadButton() {
+    private func addDownloadButton() {
         downloadButton.setTitle("Download Offline Region", for: .normal)
         downloadButton.backgroundColor = .blue
         downloadButton.layer.cornerRadius = 5
@@ -115,7 +118,7 @@ class OfflineRegionsViewController: UIViewController {
         downloadButton.titleLabel?.font = UIFont.systemFont(ofSize: 25)
     }
 
-    func addStartButton() {
+    private func addStartButton() {
         startButton.setTitle("Start Offline Navigation", for: .normal)
         startButton.backgroundColor = .blue
         startButton.layer.cornerRadius = 5
@@ -132,32 +135,32 @@ class OfflineRegionsViewController: UIViewController {
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 25)
     }
 
-    func showStartButton(_ show: Bool = true) {
+    private func showStartButton(_ show: Bool = true) {
         startButton.isHidden = !show
         startButton.isEnabled = show
     }
 
     @objc
-    func tappedDownloadButton(sender: UIButton) {
+    private func tappedDownloadButton(sender: UIButton) {
         downloadButton.isHidden = true
         downloadTileRegion()
     }
 
     @objc
-    func tappedStartButton(sender: UIButton) {
+    private func tappedStartButton(sender: UIButton) {
         showStartButton(false)
         startNavigation()
     }
 
     // MARK: Offline navigation
 
-    func showRoutes() {
+    private func showRoutes() {
         guard let navigationRoutes else { return }
         navigationMapView?.showsRestrictedAreasOnRoute = true
         navigationMapView?.showcase(navigationRoutes, routeAnnotationKinds: [.routeDurations])
     }
 
-    func showStartNavigationAlert() {
+    private func showStartNavigationAlert() {
         let alertController = UIAlertController(
             title: "Start navigation",
             message: "Turn off network access to start active navigation",
@@ -168,7 +171,7 @@ class OfflineRegionsViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    func requestRoute() {
+    private func requestRoute() {
         guard let options else { return }
 
         Task { [weak self] in
@@ -182,7 +185,7 @@ class OfflineRegionsViewController: UIViewController {
         }
     }
 
-    func startNavigation() {
+    private func startNavigation() {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -204,7 +207,7 @@ class OfflineRegionsViewController: UIViewController {
 
     // MARK: Create regions
 
-    func createRegion() {
+    private func createRegion() {
         guard let location = currentLocation?.coordinate else { return }
         if region == nil {
             // Generate a rectangle based on current user location
@@ -216,7 +219,7 @@ class OfflineRegionsViewController: UIViewController {
         addRegionBoxLine()
     }
 
-    func addRegionBoxLine() {
+    private func addRegionBoxLine() {
         guard let style = navigationMapView?.mapView.mapboxMap,
               let coordinates = region?.bbox else { return }
         do {
@@ -236,7 +239,7 @@ class OfflineRegionsViewController: UIViewController {
 
     // MARK: Download offline Regions
 
-    func downloadTileRegion() {
+    private func downloadTileRegion() {
         // Create style package
         createRegion()
         guard let region,
@@ -263,7 +266,7 @@ class OfflineRegionsViewController: UIViewController {
         )
     }
 
-    func download(region: Region) {
+    private func download(region: Region) {
         guard let loadOptions = tileRegionLoadOptions(for: region) else { return }
         // loadTileRegions returns a Cancelable that allows developers to cancel downloading a region
         _ = tileStore.loadTileRegion(forId: region.identifier, loadOptions: loadOptions, progress: { progress in
@@ -281,7 +284,7 @@ class OfflineRegionsViewController: UIViewController {
     }
 
     // Helper method for creating TileRegionLoadOptions that are needed to download regions
-    func tileRegionLoadOptions(for region: Region) -> TileRegionLoadOptions? {
+    private func tileRegionLoadOptions(for region: Region) -> TileRegionLoadOptions? {
         let tilesetDescriptorOptions = TilesetDescriptorOptions(
             styleURI: styleURI,
             zoomRange: zoomMin...zoomMax,
@@ -302,7 +305,7 @@ class OfflineRegionsViewController: UIViewController {
         )
     }
 
-    func showDownloadCompletionAlert() {
+    private func showDownloadCompletionAlert() {
         DispatchQueue.main.async {
             let alertController = UIAlertController(
                 title: "Downloading completed",
@@ -315,7 +318,7 @@ class OfflineRegionsViewController: UIViewController {
         }
     }
 
-    func showDownloadFailedAlert(with error: Error) {
+    private func showDownloadFailedAlert(with error: Error) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(
                 title: "Error while downloading region",

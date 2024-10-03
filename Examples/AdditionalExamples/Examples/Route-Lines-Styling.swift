@@ -11,17 +11,19 @@ import MapboxNavigationUIKit
 import Turf
 import UIKit
 
-class RouteLinesStylingViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class RouteLinesStylingViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(latitude: 37.773, longitude: -122.411)
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationMapView: NavigationMapView! {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if oldValue != nil {
                 oldValue.removeFromSuperview()
@@ -38,13 +40,13 @@ class RouteLinesStylingViewController: UIViewController {
         }
     }
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showCurrentRoute()
         }
     }
 
-    func showCurrentRoute() {
+    private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
             return
@@ -52,7 +54,7 @@ class RouteLinesStylingViewController: UIViewController {
         navigationMapView.showcase(navigationRoutes)
     }
 
-    var startButton: UIButton!
+    private var startButton: UIButton!
 
     // MARK: - UIViewController lifecycle methods
 
@@ -100,7 +102,7 @@ class RouteLinesStylingViewController: UIViewController {
     }
 
     @objc
-    func tappedButton(sender: UIButton) {
+    private func tappedButton(sender: UIButton) {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -120,7 +122,7 @@ class RouteLinesStylingViewController: UIViewController {
         present(navigationViewController, animated: true)
     }
 
-    func requestRoute(destination: CLLocationCoordinate2D) {
+    private func requestRoute(destination: CLLocationCoordinate2D) {
         guard let userLocation = navigationMapView.mapView.location.latestLocation else { return }
 
         let location = CLLocation(
@@ -144,13 +146,6 @@ class RouteLinesStylingViewController: UIViewController {
                 startButton?.isHidden = false
             }
         }
-    }
-
-    func navigationViewControllerDidDismiss(
-        _ navigationViewController: NavigationViewController,
-        byCanceling canceled: Bool
-    ) {
-        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Styling methods
@@ -249,5 +244,12 @@ extension RouteLinesStylingViewController: NavigationViewControllerDelegate {
         sourceIdentifier: String
     ) -> LineLayer? {
         customRouteCasingLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
+    }
+
+    func navigationViewControllerDidDismiss(
+        _ navigationViewController: NavigationViewController,
+        byCanceling canceled: Bool
+    ) {
+        dismiss(animated: true, completion: nil)
     }
 }

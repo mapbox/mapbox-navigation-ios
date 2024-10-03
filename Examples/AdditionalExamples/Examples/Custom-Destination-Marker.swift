@@ -5,10 +5,10 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomDestinationMarkerController: UIViewController {
+final class CustomDestinationMarkerController: UIViewController {
     static let customMarkerImage = "marker"
 
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(
@@ -18,12 +18,14 @@ class CustomDestinationMarkerController: UIViewController {
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationMapView: NavigationMapView!
-    var startNavigationButton: UIButton!
+    private var navigationMapView: NavigationMapView!
+    private var startNavigationButton: UIButton!
 
-    var navigationRoutes: NavigationRoutes?
+    private var navigationRoutes: NavigationRoutes?
 
     // MARK: - UIViewController lifecycle methods
 
@@ -45,7 +47,7 @@ class CustomDestinationMarkerController: UIViewController {
 
     // MARK: - Setting-up methods
 
-    func setupNavigationMapView() {
+    private func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(
             location: mapboxNavigation.navigation()
                 .locationMatching.map(\.enhancedLocation)
@@ -70,7 +72,7 @@ class CustomDestinationMarkerController: UIViewController {
         self.navigationMapView = navigationMapView
     }
 
-    func setupStartNavigationButton() {
+    private func setupStartNavigationButton() {
         startNavigationButton = UIButton()
         startNavigationButton.setTitle("Start Navigation", for: .normal)
         startNavigationButton.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +91,7 @@ class CustomDestinationMarkerController: UIViewController {
     }
 
     @objc
-    func tappedButton(_ sender: UIButton) {
+    private func tappedButton(_ sender: UIButton) {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -110,7 +112,7 @@ class CustomDestinationMarkerController: UIViewController {
         }
     }
 
-    func requestRoute() {
+    private func requestRoute() {
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         let options = NavigationRouteOptions(coordinates: [origin, destination])

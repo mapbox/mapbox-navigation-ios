@@ -9,8 +9,8 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomNavigationCameraViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class CustomNavigationCameraViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
             locationSource: simulationIsEnabled ? .simulation(
@@ -18,11 +18,11 @@ class CustomNavigationCameraViewController: UIViewController {
             ) : .live
         )
     )
-    var mapboxNavigation: MapboxNavigation {
+    private var mapboxNavigation: MapboxNavigation {
         mapboxNavigationProvider.mapboxNavigation
     }
 
-    var navigationMapView: NavigationMapView! {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if oldValue != nil {
                 oldValue.removeFromSuperview()
@@ -42,15 +42,15 @@ class CustomNavigationCameraViewController: UIViewController {
         }
     }
 
-    var startNavigationButton: UIButton!
+    private var startNavigationButton: UIButton!
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showCurrentRoute()
         }
     }
 
-    func showCurrentRoute() {
+    private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
             return
@@ -79,7 +79,7 @@ class CustomNavigationCameraViewController: UIViewController {
 
     // MARK: - Setting-up methods
 
-    func setupNavigationMapView() {
+    private func setupNavigationMapView() {
         navigationMapView = .init(
             location: mapboxNavigation.navigation().locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
@@ -94,7 +94,7 @@ class CustomNavigationCameraViewController: UIViewController {
         navigationCamera.cameraStateTransition = CustomCameraStateTransition(navigationMapView.mapView)
     }
 
-    func setupStartNavigationButton() {
+    private func setupStartNavigationButton() {
         startNavigationButton = UIButton()
         startNavigationButton.setTitle("Start Navigation", for: .normal)
         startNavigationButton.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +111,7 @@ class CustomNavigationCameraViewController: UIViewController {
     }
 
     @objc
-    func startNavigationButtonPressed(_ sender: UIButton) {
+    private func startNavigationButtonPressed(_ sender: UIButton) {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -133,7 +133,7 @@ class CustomNavigationCameraViewController: UIViewController {
         present(navigationViewController, animated: true, completion: nil)
     }
 
-    func requestRoute(destination: CLLocationCoordinate2D) {
+    private func requestRoute(destination: CLLocationCoordinate2D) {
         guard let userLocation = navigationMapView.mapView.location.latestLocation else { return }
 
         let location = CLLocation(

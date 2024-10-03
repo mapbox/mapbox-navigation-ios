@@ -10,17 +10,19 @@ import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
-class CustomWaypointsViewController: UIViewController {
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+final class CustomWaypointsViewController: UIViewController {
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: .init(latitude: 37.773, longitude: -122.411)
             ) : .live
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationMapView: NavigationMapView! {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if oldValue != nil {
                 oldValue.removeFromSuperview()
@@ -37,14 +39,14 @@ class CustomWaypointsViewController: UIViewController {
         }
     }
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showCurrentRoute()
             startButton.isEnabled = true
         }
     }
 
-    func showCurrentRoute() {
+    private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
             return
@@ -52,7 +54,7 @@ class CustomWaypointsViewController: UIViewController {
         navigationMapView.showcase(navigationRoutes)
     }
 
-    var startButton: UIButton!
+    private var startButton: UIButton!
 
     // MARK: - UIViewController lifecycle methods
 
@@ -98,7 +100,7 @@ class CustomWaypointsViewController: UIViewController {
     }
 
     @objc
-    func tappedButton(sender: UIButton) {
+    private func tappedButton(sender: UIButton) {
         guard let navigationRoutes else {
             requestRoute()
             startButton.setTitle("Start navigation", for: .normal)
@@ -123,7 +125,7 @@ class CustomWaypointsViewController: UIViewController {
         present(navigationViewController, animated: true)
     }
 
-    func requestRoute() {
+    private func requestRoute() {
         let origin = CLLocationCoordinate2DMake(37.773, -122.411)
         let firstWaypoint = CLLocationCoordinate2DMake(37.763252389415186, -122.40061448679577)
         let secondWaypoint = CLLocationCoordinate2DMake(37.76259647118012, -122.42072747880516)
@@ -144,16 +146,9 @@ class CustomWaypointsViewController: UIViewController {
         }
     }
 
-    func navigationViewControllerDidDismiss(
-        _ navigationViewController: NavigationViewController,
-        byCanceling canceled: Bool
-    ) {
-        dismiss(animated: true, completion: nil)
-    }
-
     // MARK: - Styling methods
 
-    func customCircleLayer(with identifier: String, sourceIdentifier: String) -> CircleLayer {
+    private func customCircleLayer(with identifier: String, sourceIdentifier: String) -> CircleLayer {
         var circleLayer = CircleLayer(id: identifier, source: sourceIdentifier)
         let opacity = Exp(.switchCase) {
             Exp(.any) {
@@ -173,7 +168,7 @@ class CustomWaypointsViewController: UIViewController {
         return circleLayer
     }
 
-    func customSymbolLayer(with identifier: String, sourceIdentifier: String) -> SymbolLayer {
+    private func customSymbolLayer(with identifier: String, sourceIdentifier: String) -> SymbolLayer {
         var symbolLayer = SymbolLayer(id: identifier, source: sourceIdentifier)
         symbolLayer.textField = .expression(Exp(.toString) {
             Exp(.get) {
@@ -195,7 +190,7 @@ class CustomWaypointsViewController: UIViewController {
         return symbolLayer
     }
 
-    func customWaypointShape(shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection {
+    private func customWaypointShape(shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection {
         var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
@@ -260,5 +255,12 @@ extension CustomWaypointsViewController: NavigationViewControllerDelegate {
         legIndex: Int
     ) -> FeatureCollection? {
         customWaypointShape(shapeFor: waypoints, legIndex: legIndex)
+    }
+
+    func navigationViewControllerDidDismiss(
+        _ navigationViewController: NavigationViewController,
+        byCanceling canceled: Bool
+    ) {
+        dismiss(animated: true, completion: nil)
     }
 }

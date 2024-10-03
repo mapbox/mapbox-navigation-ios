@@ -32,8 +32,8 @@ func defaultHistoryDirectoryURL() -> URL {
     return historyDirectoryURL
 }
 
-class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegate, NavigationViewControllerDelegate {
-    var navigationMapView: NavigationMapView! {
+final class HistoryRecordingViewController: UIViewController {
+    private var navigationMapView: NavigationMapView! {
         didSet {
             if let navigationMapView = oldValue {
                 navigationMapView.removeFromSuperview()
@@ -45,7 +45,7 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
         }
     }
 
-    let mapboxNavigationProvider = MapboxNavigationProvider(
+    private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
                 initialLocation: nil
@@ -55,15 +55,17 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
             historyRecordingConfig: HistoryRecordingConfig(historyDirectoryURL: defaultHistoryDirectoryURL())
         )
     )
-    lazy var mapboxNavigation = mapboxNavigationProvider.mapboxNavigation
+    private var mapboxNavigation: MapboxNavigation {
+        mapboxNavigationProvider.mapboxNavigation
+    }
 
-    var navigationRoutes: NavigationRoutes? {
+    private var navigationRoutes: NavigationRoutes? {
         didSet {
             showCurrentRoute()
         }
     }
 
-    func showCurrentRoute() {
+    private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
             return
@@ -71,9 +73,9 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
         navigationMapView.showcase(navigationRoutes)
     }
 
-    var startButton: UIButton!
+    private var startButton: UIButton!
 
-    func loadNavigationViewIfNeeded() {
+    private func loadNavigationViewIfNeeded() {
         if navigationMapView == nil {
             navigationMapView = .init(
                 location: mapboxNavigation.navigation()
@@ -179,7 +181,7 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
     }
 
     @objc
-    func tappedButton(sender: UIButton) {
+    private func tappedButton(sender: UIButton) {
         guard let navigationRoutes else { return }
 
         let navigationOptions = NavigationOptions(
@@ -198,18 +200,6 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
         presentAndRemoveNaviagationMapView(navigationViewController)
     }
 
-    func navigationViewControllerDidDismiss(
-        _ navigationViewController: NavigationViewController,
-        byCanceling canceled: Bool
-    ) {
-        mapboxNavigation.historyRecorder()?.stopRecordingHistory { historyFileUrl in
-            guard let historyFileUrl else { return }
-            print("Active Guidance History file has been successfully saved at the path: \(historyFileUrl.path)")
-        }
-        dismiss(animated: true, completion: nil)
-        loadNavigationViewIfNeeded()
-    }
-
     func presentAndRemoveNaviagationMapView(
         _ navigationViewController: NavigationViewController,
         animated: Bool = true,
@@ -223,9 +213,11 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
             self.mapboxNavigation.historyRecorder()?.startRecordingHistory()
         }
     }
+}
 
-    // MARK: NavigationMapViewDelegate implementation
+// MARK: NavigationMapViewDelegate implementation
 
+extension HistoryRecordingViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
         requestRoute(destination: mapPoint.coordinate)
     }
@@ -237,5 +229,19 @@ class HistoryRecordingViewController: UIViewController, NavigationMapViewDelegat
             else { return }
             self.navigationRoutes = selectedRoutes
         }
+    }
+}
+
+extension HistoryRecordingViewController: NavigationViewControllerDelegate {
+    func navigationViewControllerDidDismiss(
+        _ navigationViewController: NavigationViewController,
+        byCanceling canceled: Bool
+    ) {
+        mapboxNavigation.historyRecorder()?.stopRecordingHistory { historyFileUrl in
+            guard let historyFileUrl else { return }
+            print("Active Guidance History file has been successfully saved at the path: \(historyFileUrl.path)")
+        }
+        dismiss(animated: true, completion: nil)
+        loadNavigationViewIfNeeded()
     }
 }
