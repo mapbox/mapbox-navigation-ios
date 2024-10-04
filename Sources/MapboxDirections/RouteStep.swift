@@ -1,5 +1,8 @@
 import Foundation
 import Turf
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 /// A ``TransportType`` specifies the mode of transportation used for part of a route.
 public enum TransportType: String, Codable, Equatable, Sendable {

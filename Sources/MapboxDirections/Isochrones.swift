@@ -2,6 +2,9 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 import Turf
 
 /// Computes areas that are reachable within a specified amount of time or distance from a location, and returns the

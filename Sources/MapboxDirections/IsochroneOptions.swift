@@ -6,6 +6,9 @@ import UIKit
 #elseif canImport(AppKit)
 import AppKit
 #endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 /// Options for calculating contours from the Mapbox Isochrone service.
 public struct IsochroneOptions: Equatable, Sendable {

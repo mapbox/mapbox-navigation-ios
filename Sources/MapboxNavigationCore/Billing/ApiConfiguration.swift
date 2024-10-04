@@ -1,4 +1,5 @@
 import Foundation
+import MapboxDirections
 
 /// The Mapbox access token specified in the main application bundle’s Info.plist.
 private let defaultAccessToken: String? =
@@ -65,8 +66,6 @@ public struct ApiConfiguration: Sendable, Equatable {
         .init(name: .accessTokenUrlQueryItemName, value: accessToken)
     }
 }
-
-import MapboxDirections
 
 extension Credentials {
     init(_ apiConfiguration: ApiConfiguration) {

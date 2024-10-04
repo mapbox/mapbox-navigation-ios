@@ -1,5 +1,8 @@
 import Foundation
 import Turf
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 /// A single cross street along a step.
 public struct Intersection: ForeignMemberContainer, Equatable, Sendable {

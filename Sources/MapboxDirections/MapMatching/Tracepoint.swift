@@ -1,5 +1,8 @@
 import Foundation
 import Turf
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 extension Match {
     /// A tracepoint represents a location matched to the road network.
