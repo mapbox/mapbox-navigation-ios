@@ -6,6 +6,7 @@ import Turf
 /// Additional reasonable routes besides the main roure that visit waypoints.
 public struct AlternativeRoute: @unchecked Sendable {
     let nativeRoute: RouteInterface
+    var isForkPointPassed: Bool = false
 
     /// A `Route` object that the current alternative route represents.
     public let route: Route

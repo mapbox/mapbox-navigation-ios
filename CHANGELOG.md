@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.5.0-beta.1
+
+### Map
+
+* An alternative route is hidden on the map right after an alternative starting fork point is passed.
+
 ## v3.4.0
 
 * MapboxNavigationCore now requires [MapboxNavigationNative v320.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/320.0.0).

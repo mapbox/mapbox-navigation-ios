@@ -136,7 +136,7 @@ final class MapboxNavigator: @unchecked Sendable {
                     )
 
                     guard !Task.isCancelled else { return }
-                    navigationRoutes.alternativeRoutes = alternativeRoutes
+                    navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
                     await self.updateRouteProgress(with: navigationRoutes)
                     await self.send(navigationRoutes)
                     switch reason {
@@ -557,6 +557,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
         guard !Task.isCancelled else { return }
         await updateIndices(status: status)
+        await updateAlternativesPassingForkPoint(status: status)
 
         if let privateRouteProgress, !Task.isCancelled {
             await send(RouteProgressState(routeProgress: privateRouteProgress))
@@ -680,6 +681,21 @@ final class MapboxNavigator: @unchecked Sendable {
                 switchLeg(newLegIndex: Int(status.legIndex) + 1)
             }
         }
+    }
+
+    fileprivate func updateAlternativesPassingForkPoint(status: NavigationStatus) async {
+        guard var navigationRoutes = currentNavigationRoutes else { return }
+
+        guard navigationRoutes.updateForkPointPassed(with: status) else { return }
+
+        privateRouteProgress?.updateAlternativeRoutes(using: navigationRoutes)
+        await send(navigationRoutes)
+        let alternativesStatus = AlternativesStatus(
+            event: AlternativesStatus.Events.Updated(
+                actualAlternativeRoutes: navigationRoutes.alternativeRoutes
+            )
+        )
+        await send(alternativesStatus)
     }
 
     func updateIndices(status: NavigationStatus) async {
@@ -907,10 +923,8 @@ final class MapboxNavigator: @unchecked Sendable {
         }
 
         Task { @MainActor in
-            navigator
-                .setAlternativeRoutes(
-                    with: alternatives.map(\.route)
-                ) { [weak self] result /* Result<[RouteAlternative], Error> */ in
+            navigator.setAlternativeRoutes(with: alternatives.map(\.route))
+                { [weak self] result /* Result<[RouteAlternative], Error> */ in
                     guard let self else { return }
 
                     Task {
@@ -921,30 +935,34 @@ final class MapboxNavigator: @unchecked Sendable {
                                 relateveTo: mainRoute
                             )
 
-                            var navigationRoutes = self.currentNavigationRoutes
-                            navigationRoutes?.alternativeRoutes = alternativeRoutes.filter { alternativeRoute in
-                                if alternativesAcceptionPolicy.contains(.unfiltered) {
-                                    return true
-                                } else {
-                                    if alternativesAcceptionPolicy.contains(.fasterRoutes),
-                                       alternativeRoute.expectedTravelTimeDelta < 0
-                                    {
+                            guard var navigationRoutes = self.currentNavigationRoutes else { return }
+                            navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
+                                .filter { alternativeRoute in
+                                    if alternativesAcceptionPolicy.contains(.unfiltered) {
                                         return true
+                                    } else {
+                                        if alternativesAcceptionPolicy.contains(.fasterRoutes),
+                                           alternativeRoute.expectedTravelTimeDelta < 0
+                                        {
+                                            return true
+                                        }
+                                        if alternativesAcceptionPolicy.contains(.shorterRoutes),
+                                           alternativeRoute.distanceDelta < 0
+                                        {
+                                            return true
+                                        }
                                     }
-                                    if alternativesAcceptionPolicy.contains(.shorterRoutes),
-                                       alternativeRoute.distanceDelta < 0
-                                    {
-                                        return true
-                                    }
+                                    return false
                                 }
-                                return false
+                            if let status = self.navigator.mostRecentNavigationStatus {
+                                navigationRoutes.updateForkPointPassed(with: status)
                             }
                             await self.send(navigationRoutes)
                             await self
                                 .send(
                                     AlternativesStatus(
                                         event: AlternativesStatus.Events.Updated(
-                                            actualAlternativeRoutes: alternativeRoutes
+                                            actualAlternativeRoutes: navigationRoutes.alternativeRoutes
                                         )
                                     )
                                 )
@@ -1099,13 +1117,16 @@ final class MapboxNavigator: @unchecked Sendable {
             let event = RefreshingStatus.Events.Refreshing()
             await send(RefreshingStatus(event: event))
 
-            let refreshedNavigationRoutes = await NavigationRoutes(
+            var refreshedNavigationRoutes = await NavigationRoutes(
                 mainRoute: newMainRoute,
                 alternativeRoutes: await AlternativeRoute.fromNative(
                     alternativeRoutes: refreshRouteResult.alternativeRoutes,
                     relateveTo: newMainRoute
                 )
             )
+            if let status = self.navigator.mostRecentNavigationStatus {
+                refreshedNavigationRoutes.updateForkPointPassed(with: status)
+            }
             self.privateRouteProgress = privateRouteProgress?.refreshingRoute(
                 with: refreshedNavigationRoutes,
                 legIndex: Int(legIndex),
@@ -1367,5 +1388,26 @@ extension MapboxNavigator.SetRouteReason {
         case .fasterRoute:
             return .fastestRoute
         }
+    }
+}
+
+extension NavigationRoutes {
+    @discardableResult
+    mutating func updateForkPointPassed(with status: NavigationStatus) -> Bool {
+        let newPassedForkPointRouteIds = Set(
+            status.alternativeRouteIndices
+                .compactMap { $0.isForkPointPassed ? $0.routeId : nil }
+        )
+        let oldPassedForkPointRouteIds = Set(
+            allAlternativeRoutesWithIgnored
+                .compactMap { $0.isForkPointPassed ? $0.routeId.rawValue : nil }
+        )
+        guard newPassedForkPointRouteIds != oldPassedForkPointRouteIds else { return false }
+
+        for (index, route) in allAlternativeRoutesWithIgnored.enumerated() {
+            allAlternativeRoutesWithIgnored[index].isForkPointPassed =
+                newPassedForkPointRouteIds.contains(route.routeId.rawValue)
+        }
+        return true
     }
 }

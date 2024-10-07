@@ -13,7 +13,10 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     ///
     /// To select one of the alterntives as a main route, see ``selectingAlternativeRoute(at:)`` and
     /// ``selecting(alternativeRoute:)`` methods.
-    public internal(set) var alternativeRoutes: [AlternativeRoute]
+    public var alternativeRoutes: [AlternativeRoute] {
+        allAlternativeRoutesWithIgnored.filter { !$0.isForkPointPassed }
+    }
+
     /// A list of ``Waypoint``s  visited along the routes.
     public internal(set) var waypoints: [Waypoint]
     /// A deadline after which  the routes from this `RouteResponse` are eligable for refreshing.
@@ -23,6 +26,8 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     /// Contains a map of `JSONObject`'s which were appended in the original route response, but are not recognized by
     /// the SDK.
     public internal(set) var foreignMembers: JSONObject = [:]
+
+    var allAlternativeRoutesWithIgnored: [AlternativeRoute]
 
     var isCustomExternalRoute: Bool {
         mainRoute.nativeRoute.getRouterOrigin() == .customExternal
@@ -61,7 +66,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         }
 
         self.mainRoute = NavigationRoute(route: mainRoute, nativeRoute: routesData.primaryRoute())
-        self.alternativeRoutes = alternativeRoutes
+        self.allAlternativeRoutesWithIgnored = alternativeRoutes
         self.waypoints = routeResponse.waypoints ?? []
         self.refreshInvalidationDate = routeResponse.refreshInvalidationDate
         self.foreignMembers = routeResponse.foreignMembers
@@ -69,7 +74,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
 
     init(mainRoute: NavigationRoute, alternativeRoutes: [AlternativeRoute]) async {
         self.mainRoute = mainRoute
-        self.alternativeRoutes = alternativeRoutes
+        self.allAlternativeRoutesWithIgnored = alternativeRoutes
 
         let response = try? await mainRoute.nativeRoute.convertToDirectionsRouteResponse()
         self.waypoints = response?.waypoints ?? []
