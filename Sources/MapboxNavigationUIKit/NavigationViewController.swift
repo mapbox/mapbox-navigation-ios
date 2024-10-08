@@ -286,12 +286,23 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 
     deinit {
-        let mapboxNavigation = self.navigationOptions?.mapboxNavigation
+        guard let mapboxNavigation = navigationOptions?.mapboxNavigation else { return }
         Task { @MainActor in
-            guard let mapboxNavigation,
-                  case .activeGuidance = mapboxNavigation.tripSession().currentSession.state else { return }
-            mapboxNavigation.tripSession().setToIdle()
+            Self.setToIdle(with: mapboxNavigation)
         }
+    }
+
+    @MainActor
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        Self.setToIdle(with: navigationOptions?.mapboxNavigation)
+        super.dismiss(animated: flag, completion: completion)
+    }
+
+    @MainActor
+    private static func setToIdle(with mapboxNavigation: MapboxNavigation?) {
+        guard let mapboxNavigation,
+              case .activeGuidance = mapboxNavigation.tripSession().currentSession.state else { return }
+        mapboxNavigation.tripSession().setToIdle()
     }
 
     override open func loadView() {
@@ -678,25 +689,6 @@ extension NavigationViewController: NavigationViewDelegate {
 
 extension NavigationViewController {
     private func subscribeMapboxNavigation() {
-        mapboxNavigation.tripSession().navigationRoutes
-            .sink { [weak self] routes in
-                guard let self, let routes else { return }
-                switch mapboxNavigation.tripSession().currentSession.state {
-                case .activeGuidance:
-                    // do nothing: NavigationMapView will show updated routes automatically.
-                    break
-                default:
-                    navigationMapView?.show(
-                        routes,
-                        routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever]
-                    )
-                }
-                navigationComponents.forEach {
-                    $0.onDidReroute()
-                }
-            }
-            .store(in: &subscriptions)
-
         mapboxNavigation.navigation().rerouting
             .sink { [weak self] status in
                 guard let self else { return }

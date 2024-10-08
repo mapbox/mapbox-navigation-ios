@@ -5,6 +5,12 @@
 ### Map
 
 * An alternative route is hidden on the map right after an alternative starting fork point is passed.
+* Fixed a double call of `NavigationComponent.onDidReroute()`.
+* Fixed a possible case when `.relativeDurationsOnAlternativeManuever` annotations can be visible even if they were hidden previously.
+
+### Other changes
+
+* `NavigationViewController` transitions navigation to the `idle` state when it is dismissed.
 
 ## v3.4.0
 

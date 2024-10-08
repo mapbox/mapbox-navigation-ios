@@ -229,6 +229,9 @@ extension AdvancedViewController: NavigationViewControllerDelegate {
                     // Replace `NavigationMapView` instance with instance that was used in active navigation.
                     self.navigationMapView = navigationViewController.navigationMapView
 
+                    // Re-start Free drive
+                    self.mapboxNavigation.tripSession().startFreeDrive()
+
                     // Showcase originally requested routes.
                     self.showCurrentRoute()
                 }
