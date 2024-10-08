@@ -8,6 +8,7 @@ import MapboxCoreMaps
 import MapboxNavigation
 
 class ViewController: UIViewController {
+    var finishedInitialAdvancingLeg = false // should be true if updateRouteLeg is not called
 
     @IBOutlet weak var mapHostView: UIView!
     @IBOutlet weak var longPressHintView: UIView!
@@ -74,7 +75,6 @@ class ViewController: UIViewController {
         navigationMapView.showsRestrictedAreasOnRoute = true
         navigationMapView.showcase(routeResponse)
         navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
-        navigationMapView.showRouteDurations(along: prioritizedRoutes)
         
         startButton.isEnabled = true
         clearMap.isHidden = false
@@ -104,7 +104,7 @@ class ViewController: UIViewController {
     
     weak var activeNavigationViewController: NavigationViewController?
     
-    var profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
+    var profileIdentifier: ProfileIdentifier = .cycling
     let drivingProfileText = NSLocalizedString("Start Driving", comment: "")
     let drivingAvoidingTrafficProfileText = NSLocalizedString("Start Driving Avoiding Traffic", comment: "")
     let cyclingProfileText = NSLocalizedString("Start Cycling", comment: "")
@@ -361,7 +361,24 @@ class ViewController: UIViewController {
         
         let service = navigationService(indexedRouteResponse: response)
         let navigationViewController = self.navigationViewController(navigationService: service)
-        
+        service.router.reroutesProactively = false
+        service.start()
+
+
+        let startingLegIndex = 1 // to test latitude 55.5902468731, longitude: 13.0601032597
+        let routeController = service.router as! RouteController
+        routeController.updateRouteLeg(
+            to: startingLegIndex,
+            completionHandler: { [weak self] result in
+                self?.finishedInitialAdvancingLeg = true
+                if result.isSuccess {
+                    print(">> Navigation Session Leg index successfully updated to \(startingLegIndex)")
+                } else {
+                    print(">> Navigation Session Leg index update to \(startingLegIndex)")
+                }
+            }
+        )
+
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
         
@@ -579,13 +596,13 @@ class ViewController: UIViewController {
             return
         }
 
-        let userWaypoint = Waypoint(location: currentLocation)
-        if currentLocation.course >= 0 {
-            userWaypoint.heading = currentLocation.course
-            userWaypoint.headingAccuracy = 90
-        }
-        waypoints.insert(userWaypoint, at: 0)
-        
+        waypoints = [
+            .init(coordinate: .init(latitude: 55.590743, longitude: 13.062494)),
+            .init(coordinate: .init(latitude: 55.590762, longitude: 13.060897)),
+            .init(coordinate: .init(latitude: 55.589771, longitude: 13.059258)),
+            .init(coordinate: .init(latitude: 55.589427, longitude: 13.057922)),
+        ]
+
         // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
         RouteControllerProactiveReroutingInterval = 30
 
@@ -744,6 +761,16 @@ class ViewController: UIViewController {
 // MARK: - NavigationMapViewDelegate methods
 
 extension ViewController: NavigationMapViewDelegate {
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        //!!!!! Comment this line to see the default behavior
+        print(">> Starting reroute")
+        guard finishedInitialAdvancingLeg else { return false }
+        return true
+    }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
+        print(">> Did finish reroute")
+    }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let responseOptions = indexedRouteResponse?.routeResponse.options else { return }
@@ -841,5 +868,16 @@ extension ViewController: NavigationViewControllerDelegate {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
         clearNavigationMapView()
+    }
+}
+
+extension Result {
+    var isSuccess: Bool {
+        switch self {
+        case .success:
+            return true
+        case .failure:
+            return false
+        }
     }
 }
