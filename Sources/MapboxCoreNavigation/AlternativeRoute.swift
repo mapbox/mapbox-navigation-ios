@@ -43,17 +43,22 @@ public struct AlternativeRoute: Identifiable {
     /// The difference of expected travel time between alternative and the main routes
     public let expectedTravelTimeDelta: TimeInterval
     
-    init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) {
-        self.id = nativeRouteAlternative.id
-        guard let decoded = RerouteController.decode(routeRequest: nativeRouteAlternative.route.getRequestUri(),
-                                                     routeResponse: nativeRouteAlternative.route.getResponseJsonRef()) else {
+    init?(alternativeRoute nativeRouteAlternative: RouteAlternative) {
+        guard let indexedRouteResponse = nativeRouteAlternative.indexedRouteResponse() else {
             return nil
         }
+        self.init(indexedRouteResponse: indexedRouteResponse, alternativeRoute: nativeRouteAlternative)
+    }
 
-        self.indexedRouteResponse = .init(routeResponse: decoded.routeResponse,
-                                          routeIndex: Int(nativeRouteAlternative.route.getRouteIndex()),
-                                          responseOrigin: nativeRouteAlternative.route.getRouterOrigin())
-        
+    init?(indexedRouteResponse: IndexedRouteResponse, alternativeRoute nativeRouteAlternative: RouteAlternative) {
+        var indexedRouteResponse = indexedRouteResponse
+        indexedRouteResponse.routeIndex = Int(nativeRouteAlternative.route.getRouteIndex())
+        guard let mainRoute = indexedRouteResponse.currentRoute else {
+            return nil
+        }
+        self.id = nativeRouteAlternative.id
+        self.indexedRouteResponse = indexedRouteResponse
+
         var legIndex = Int(nativeRouteAlternative.mainRouteFork.legIndex)
         var segmentIndex = Int(nativeRouteAlternative.mainRouteFork.segmentIndex)
 
@@ -120,5 +125,21 @@ extension Route {
         }
         
         return leg.steps[stepindex].intersections?[intersectionIndex]
+    }
+}
+
+extension RouteAlternative {
+    func indexedRouteResponse() -> IndexedRouteResponse? {
+        guard let decoded =
+                RerouteController.decode(routeRequest: route.getRequestUri(),
+                                         routeResponse: route.getResponseJsonRef()) else {
+            return nil
+        }
+
+        return IndexedRouteResponse(
+            routeResponse: decoded.routeResponse,
+            routeIndex: Int(route.getRouteIndex()),
+            responseOrigin: route.getRouterOrigin()
+        )
     }
 }

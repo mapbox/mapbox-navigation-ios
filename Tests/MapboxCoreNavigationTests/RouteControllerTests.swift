@@ -87,6 +87,7 @@ class RouteControllerTests: TestCase {
 
         routeController = makeRouteController()
         routeController.delegate = delegate
+        waitUntilInitialAlternativesApplied()
     }
     
     override func tearDown() {
@@ -233,8 +234,20 @@ class RouteControllerTests: TestCase {
     }
     
     func testFallbackToOffline() {
+        let alternativesExpectation = expectation(description: "Alternative route should be reported")
+        delegate.onDidUpdateAlternativeRoutes = { _,_ in
+            alternativesExpectation.fulfill()
+        }
         RouteParserSpy.returnedRoutes = [nativeRoute]
+        routeController.indexedRouteResponse = IndexedRouteResponse(
+            routeResponse: routeResponse,
+            routeIndex: 0,
+            responseOrigin: .online,
+            routeParserType: RouteParserSpy.self)
         NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion, object: nil, userInfo: nil)
+
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -243,8 +256,19 @@ class RouteControllerTests: TestCase {
     }
     
     func testRestoreToOnline() {
+        let alternativesExpectation = expectation(description: "Alternative route should be reported")
+        delegate.onDidUpdateAlternativeRoutes = { _,_ in
+            alternativesExpectation.fulfill()
+        }
         RouteParserSpy.returnedRoutes = [nativeRoute]
+        routeController.indexedRouteResponse = IndexedRouteResponse(
+            routeResponse: routeResponse,
+            routeIndex: 0,
+            responseOrigin: .online,
+            routeParserType: RouteParserSpy.self)
         NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion, object: nil, userInfo: nil)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -453,6 +477,7 @@ class RouteControllerTests: TestCase {
     func testUpdateIndexesWhenNavigationStatusDidChange() {
         let response = IndexedRouteResponse(routeResponse: multilegRouteResponse, routeIndex: 0)
         routeController = makeRouteController(routeResponse: response)
+        waitUntilInitialAlternativesApplied()
         routeController.locationManager(locationManagerSpy, didUpdateLocations: [rawLocation])
 
         let activeGuidanceInfo = makeActiveGuidanceInfo()
@@ -636,6 +661,8 @@ class RouteControllerTests: TestCase {
         routingProvider.returnedRoutesResult = .success(response)
         
         routeController.reroute(from: rawLocation, along: routeProgress)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertFalse(routeController.isRerouting)
         XCTAssertFalse(rerouteController.forceRerouteCalled)
         XCTAssertTrue(routingProvider.calculateRoutesCalled)
@@ -643,8 +670,6 @@ class RouteControllerTests: TestCase {
         
         let expectedRouteOptions = routeProgress.reroutingOptions(from: rawLocation)
         XCTAssertEqual(routingProvider.passedRouteOptions, expectedRouteOptions)
-        
-        waitForExpectations(timeout: expectationsTimeout)
     }
     
     func testSendRerouteNotificationIfRoutIsEmptyRoute() {
@@ -676,21 +701,30 @@ class RouteControllerTests: TestCase {
         routingProvider.returnedRoutesResult = .success(response)
         
         routeController.reroute(from: rawLocation, along: routeProgress)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertFalse(routeController.isRerouting)
         XCTAssertFalse(rerouteController.forceRerouteCalled)
         XCTAssertTrue(routingProvider.calculateRoutesCalled)
         
         let expectedRouteOptions = routeProgress.reroutingOptions(from: rawLocation)
         XCTAssertEqual(routingProvider.passedRouteOptions, expectedRouteOptions)
-        
-        waitForExpectations(timeout: expectationsTimeout)
     }
     
     func testRerouteWhenReroutingAndNavigatorSucceed() {
         let response = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
+
+        let expectation = expectation(description: "Did reroute call on delegate")
+        delegate.onDidRerouteAlong = { parameters in
+            XCTAssertTrue(parameters.route === response.currentRoute)
+            XCTAssertFalse(parameters.proactive)
+            expectation.fulfill()
+        }
         
         routeController.reroute(from: rawLocation, along: routeProgress)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, 0)
@@ -710,11 +744,15 @@ class RouteControllerTests: TestCase {
             return
         }
         navigationSessionManagerSpy.reset()
+
+        let completionExpectation = expectation(description: "completion")
         routeController.updateRoute(with: response,
                                     routeOptions: routeOptions,
                                     isProactive: false,
-                                    isAlternative: false,
-                                    completion: nil)
+                                    isAlternative: false) { _ in
+            completionExpectation.fulfill()
+        }
+        waitForExpectations(timeout: expectationsTimeout)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -733,11 +771,15 @@ class RouteControllerTests: TestCase {
     func testUpdateRouteIfShouldNotStartNewBillingSession() {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
+        let completionExpectation = expectation(description: "completion")
         routeController.updateRoute(with: response,
                                     routeOptions: options,
                                     isProactive: false,
-                                    isAlternative: false,
-                                    completion: nil)
+                                    isAlternative: false) { _ in
+            completionExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: expectationsTimeout)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
@@ -778,8 +820,14 @@ class RouteControllerTests: TestCase {
         let response = IndexedRouteResponse(routeResponse: singleRouteResponse, routeIndex: 0)
         routingProvider.returnedRoutesResult = .success(response)
         navigatorSpy.returnedSetRoutesResult = .failure(DirectionsError.unableToRoute)
-        
+
+        let callbackExpectation = expectation(description: "Did fail to reroute call on delegate")
+        delegate.onDidFailToRerouteWith = { _ in
+            callbackExpectation.fulfill()
+        }
         routeController.reroute(from: rawLocation, along: routeProgress)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertFalse(routeController.isRerouting)
     }
@@ -820,10 +868,17 @@ class RouteControllerTests: TestCase {
         _ = routeController.rerouteControllerDidDetectReroute(rerouteController)
         
         let routerOrigin = indexedRouteResponse.responseOrigin
+        let callbackExpectation = expectation(description: "Did reroute call on delegate")
+        delegate.onDidRerouteAlong = { arguments in
+            XCTAssertTrue(arguments.route === response.currentRoute)
+            callbackExpectation.fulfill()
+        }
         routeController.rerouteControllerDidRecieveReroute(rerouteController,
                                                            response: response.routeResponse,
                                                            options: options,
                                                            routeOrigin: routerOrigin)
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertFalse(routeController.isRerouting)
         XCTAssertTrue(routeController.routeProgress.route === response.currentRoute)
     }
@@ -947,11 +1002,10 @@ class RouteControllerTests: TestCase {
         updatedRouteProgress.currentLegProgress = legProgress
         routeController.lastProactiveRerouteDate = locationWithDate.timestamp.addingTimeInterval(-121)
         routeController.checkForFasterRoute(from: locationWithDate, routeProgress: updatedRouteProgress)
-        
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertNil(routeController.lastProactiveRerouteDate)
         XCTAssertFalse(routeController.isRerouting)
-
-        waitForExpectations(timeout: expectationsTimeout)
     }
     
     func testProactiveReroutingIfNotFasterRoad() {
@@ -970,10 +1024,9 @@ class RouteControllerTests: TestCase {
         updatedRouteProgress.currentLegProgress = legProgress
         routeController.lastProactiveRerouteDate = locationWithDate.timestamp.addingTimeInterval(-121)
         routeController.checkForFasterRoute(from: locationWithDate, routeProgress: updatedRouteProgress)
-        
-        XCTAssertNil(routeController.lastProactiveRerouteDate)
-
         waitForExpectations(timeout: expectationsTimeout)
+
+        XCTAssertNil(routeController.lastProactiveRerouteDate)
     }
     
     func testProactiveReroutingIfNonNilCompletion() {
@@ -985,20 +1038,24 @@ class RouteControllerTests: TestCase {
             routeExpectation.fulfill()
             return true
         }
-        
+        let rerouteExpectation = expectation(description: "Did reroute call on delegate")
+        delegate.onDidRerouteAlong = { _ in
+            rerouteExpectation.fulfill()
+        }
+
         let updatedRouteProgress = self.routeProgress!
         updatedRouteProgress.currentLegProgress.currentStep.expectedTravelTime = 2000
         updatedRouteProgress.currentLegProgress.currentStepProgress.distanceTraveled = 2
         routeController.lastProactiveRerouteDate = locationWithDate.timestamp.addingTimeInterval(-121)
         routeController.checkForFasterRoute(from: locationWithDate, routeProgress: updatedRouteProgress)
-        
+
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertNil(routeController.lastProactiveRerouteDate)
         XCTAssertFalse(routeController.isRerouting)
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         
         XCTAssertTrue(routeController.didProactiveReroute)
-
-        waitForExpectations(timeout: expectationsTimeout)
     }
     
     func testProactiveReroutingIfNoCompletion() {
@@ -1083,11 +1140,11 @@ class RouteControllerTests: TestCase {
         ]
         navigatorSpy.returnedSetAlternativeRoutesResult = .success([alternativeRoute])
         NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+        waitForExpectations(timeout: expectationsTimeout)
 
         XCTAssertTrue(navigatorSpy.setAlternativeRoutesCalled)
         XCTAssertEqual(routeController.continuousAlternatives.count, 1)
         XCTAssertEqual(routeController.continuousAlternatives[0].id, 1)
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testSendAlternativeRoutesNotificationIfEmptyCurrentContinuousAlternatives() {
@@ -1117,6 +1174,7 @@ class RouteControllerTests: TestCase {
     func testAlternativeRoutesReportedIfNonEmptyCurrentContinuousAlternatives() {
         navigatorSpy.returnedSetRoutesResult = .success((mainRouteInfo: nil, alternativeRoutes: [createRouteAlternative(id: 2)]))
         routeController.updateRoute(with: indexedRouteResponse, routeOptions: options, completion: nil)
+        waitUntilInitialAlternativesApplied()
 
         let alternativesExpectation = expectation(description: "Alternative route should be reported")
         delegate.onDidUpdateAlternativeRoutes = { newAlternatives, removedAlternatives in
@@ -1134,15 +1192,16 @@ class RouteControllerTests: TestCase {
         navigatorSpy.returnedSetAlternativeRoutesResult = .success([alternativeRoute])
         NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
 
+        waitForExpectations(timeout: expectationsTimeout)
         XCTAssertTrue(navigatorSpy.setAlternativeRoutesCalled)
         XCTAssertEqual(routeController.continuousAlternatives.count, 1)
         XCTAssertEqual(routeController.continuousAlternatives[0].id, 1)
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testSendAlternativeRoutesNotificationIfNonEmptyCurrentContinuousAlternatives() {
         navigatorSpy.returnedSetRoutesResult = .success((mainRouteInfo: nil, alternativeRoutes: [createRouteAlternative(id: 2)]))
         routeController.updateRoute(with: indexedRouteResponse, routeOptions: options, completion: nil)
+        waitUntilInitialAlternativesApplied()
 
         expectation(forNotification: .routeControllerDidUpdateAlternatives, object: routeController) { (notification) -> Bool in
             let userInfo = notification.userInfo
@@ -1281,11 +1340,11 @@ class RouteControllerTests: TestCase {
 
         let userInfo = [Navigator.NotificationUserInfoKey.coincideOnlineRouteKey: route]
         NotificationCenter.default.post(name: .navigatorWantsSwitchToCoincideOnlineRoute, object: nil, userInfo: userInfo)
+        waitForExpectations(timeout: expectationsTimeout)
 
         XCTAssertEqual(routeController.indexedRouteResponse.routeIndex, 0)
         XCTAssertEqual(routeController.indexedRouteResponse.responseOrigin, route.getRouterOrigin())
         XCTAssertEqual(routeController.indexedRouteResponse.currentRoute?.legs, singleDecodedRoute.legs)
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testRerouteAfterArrivalIfUserHasNotArrivedAtWaypoint() {
@@ -1381,10 +1440,10 @@ class RouteControllerTests: TestCase {
 
         let status = TestNavigationStatusProvider.createNavigationStatus(routeState: .complete)
         routeController.rerouteAfterArrivalIfNeeded(rawLocation, status: status)
+        waitForExpectations(timeout: expectationsTimeout)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(routeController.indexedRouteResponse.currentRoute, newResponse.currentRoute)
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testDoNotUpdateRouteIfFinishedRouting() {
@@ -1410,8 +1469,9 @@ class RouteControllerTests: TestCase {
             XCTAssertFalse(result)
             completionExpectation.fulfill()
         }
-        XCTAssertEqual(routeController.route, route)
         waitForExpectations(timeout: expectationsTimeout)
+
+        XCTAssertEqual(routeController.route, route)
     }
 
     func testUpdateRouteIfIfNavNativeSucceed() {
@@ -1422,53 +1482,72 @@ class RouteControllerTests: TestCase {
             XCTAssertTrue(result)
             completionExpectation.fulfill()
         }
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertEqual(routeController.route, routeResponse.routes?[1])
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testUpdateRouteIfRouteParserFailed() {
         RouteParserSpy.returnedError = "error"
-        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+        let newResponse = IndexedRouteResponse(
+            routeResponse: routeResponse,
+            routeIndex: 1,
+            responseOrigin: .online,
+            routeParserType: RouteParserSpy.self
+        )
 
         let completionExpectation = expectation(description: "Should call callback")
         routeController.updateRoute(with: newResponse, routeOptions: options) { result in
             XCTAssertFalse(result)
             completionExpectation.fulfill()
         }
-        XCTAssertFalse(navigatorSpy.setRoutesCalled)
-        XCTAssertEqual(routeController.route, routeResponse.routes?[0], "Should not change rout")
         waitForExpectations(timeout: expectationsTimeout)
+
+        XCTAssertFalse(navigatorSpy.setRoutesCalled)
+        XCTAssertEqual(routeController.route, routeResponse.routes?[0], "Should not change route")
     }
 
     func testUpdateRouteIfRouteParserSucceedButNotEnoughRoutes() {
         RouteParserSpy.returnedRoutes = [nativeRoute]
-        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+        let newResponse = IndexedRouteResponse(
+            routeResponse: routeResponse,
+            routeIndex: 1,
+            responseOrigin: .online,
+            routeParserType: RouteParserSpy.self
+        )
         let completionExpectation = expectation(description: "Should call callback")
 
         routeController.updateRoute(with: newResponse, routeOptions: options) { result in
             XCTAssertFalse(result)
             completionExpectation.fulfill()
         }
-        XCTAssertFalse(navigatorSpy.setRoutesCalled)
         waitForExpectations(timeout: expectationsTimeout)
+
+        XCTAssertFalse(navigatorSpy.setRoutesCalled)
     }
 
     func testUpdateRouteIfRouteParserSucceed() {
         RouteParserSpy.returnedRoutes = [nativeRoute, nativeRoute]
-        let newResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 1)
+        let newResponse = IndexedRouteResponse(
+            routeResponse: routeResponse,
+            routeIndex: 1,
+            responseOrigin: .online,
+            routeParserType: RouteParserSpy.self
+        )
         let completionExpectation = expectation(description: "Should call callback")
         
         routeController.updateRoute(with: newResponse, routeOptions: options) { result in
             XCTAssertTrue(result)
             completionExpectation.fulfill()
         }
+        waitForExpectations(timeout: expectationsTimeout)
+
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
         XCTAssertTrue(navigatorSpy.passedRoute === nativeRoute)
         XCTAssertEqual(navigatorSpy.passedUuid, routeController.sessionUUID)
         XCTAssertEqual(navigatorSpy.passedLegIndex, UInt32(routeController.routeProgress.legIndex))
         XCTAssertEqual(navigatorSpy.passedReason, .reroute)
-        waitForExpectations(timeout: expectationsTimeout)
     }
 
     func testHandleWillSwitchToAlternativeEvent() {
@@ -1588,8 +1667,9 @@ class RouteControllerTests: TestCase {
 
         routeController.updateSpokenInstructionProgress(status: status, willReRoute: false)
 
-        XCTAssertFalse(routeController.didProactiveReroute)
         waitForExpectations(timeout: expectationsTimeout)
+
+        XCTAssertFalse(routeController.didProactiveReroute)
     }
 
     func testDoNotUpdateVisualInstructionProgressIfNilBannerInstruction() {
@@ -1703,10 +1783,21 @@ class RouteControllerTests: TestCase {
                                          dataSource: dataSource,
                                          navigatorType: CoreNavigatorSpy.self,
                                          routeParserType: RouteParserSpy.self,
-                                         navigationSessionManager: navigationSessionManagerSpy)
+                                         navigationSessionManager: navigationSessionManagerSpy,
+                                         parsingQueue: .main,
+                                         delegateQueue: .main)
         controller.delegate = delegate
         navigatorSpy.reset()
         return controller
+    }
+
+    private func waitUntilInitialAlternativesApplied() {
+        let initializedExpectation = expectation(description: "initial alternatives set")
+        delegate.onDidUpdateAlternativeRoutes = { [weak self] _,_ in
+            initializedExpectation.fulfill()
+            self?.delegate.onDidUpdateAlternativeRoutes = nil
+        }
+        wait(for: [initializedExpectation], timeout: expectationsTimeout)
     }
 
     private func makeRouteResponse() -> RouteResponse {

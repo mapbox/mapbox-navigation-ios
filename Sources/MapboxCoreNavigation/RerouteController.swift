@@ -70,7 +70,10 @@ class RerouteController {
     }
 
     // MARK: Internal State Management
-    
+
+    private static let defaultParsingQueueLabel = "com.mapbox.navigation.reroute.parsing"
+    private let parsingQueue: DispatchQueue
+
     private let defaultRerouteController: DefaultRerouteControllerInterface
     private let rerouteDetector: RerouteDetectorInterface
     
@@ -92,12 +95,17 @@ class RerouteController {
         }
     }
 
-    required init(_ navigator: MapboxNavigationNative.Navigator, config: ConfigHandle) {
+     init(
+        _ navigator: MapboxNavigationNative.Navigator,
+        config: ConfigHandle,
+        parsingQueue: DispatchQueue = .init(label: RerouteController.defaultParsingQueueLabel, qos: .default)
+     ) {
         self.navigator = navigator
         self.config = config
         self.defaultRerouteController = DefaultRerouteControllerInterface(nativeInterface: navigator.getRerouteController())
         self.navigator?.setRerouteControllerForController(defaultRerouteController)
         self.rerouteDetector = navigator.getRerouteDetector()
+        self.parsingQueue = parsingQueue
         self.navigator?.addRerouteObserver(for: self)
     }
 
@@ -121,16 +129,18 @@ class RerouteController {
 
 extension RerouteController: RerouteObserver {
     func onSwitchToAlternative(forRoute route: RouteInterface) {
-        guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
-                                        routeResponse: route.getResponseJsonRef()) else {
-            return
+        parsingQueue.async { [weak self] in
+            guard let self else { return }
+            guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
+                                            routeResponse: route.getResponseJsonRef()) else {
+                return
+            }
+            self.delegate?.rerouteControllerWantsSwitchToAlternative(self,
+                                                                     response: decoded.routeResponse,
+                                                                     routeIndex: Int(route.getRouteIndex()),
+                                                                     options: decoded.routeOptions,
+                                                                     routeOrigin: route.getRouterOrigin())
         }
-        
-        delegate?.rerouteControllerWantsSwitchToAlternative(self,
-                                                            response: decoded.routeResponse,
-                                                            routeIndex: Int(route.getRouteIndex()),
-                                                            options: decoded.routeOptions,
-                                                            routeOrigin: route.getRouterOrigin())
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
@@ -156,18 +166,20 @@ extension RerouteController: RerouteObserver {
                                                          routeOrigin: origin)
             self.latestRouteResponse = nil
         } else {
-            guard let responseData = routeResponse.data(using: .utf8),
-                  let decodedResponse = Self.decode(routeResponse: responseData,
-                                                    routeOptions: decodedRequest.routeOptions,
-                                                    credentials: decodedRequest.credentials) else {
-                delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
-                return
+            parsingQueue.async { [weak self] in
+                guard let self else { return }
+                guard let responseData = routeResponse.data(using: .utf8),
+                      let decodedResponse = Self.decode(routeResponse: responseData,
+                                                        routeOptions: decodedRequest.routeOptions,
+                                                        credentials: decodedRequest.credentials) else {
+                    self.delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
+                    return
+                }
+                self.delegate?.rerouteControllerDidRecieveReroute(self,
+                                                                  response: decodedResponse,
+                                                                  options: decodedRequest.routeOptions,
+                                                                  routeOrigin: origin)
             }
-            
-            delegate?.rerouteControllerDidRecieveReroute(self,
-                                                         response: decodedResponse,
-                                                         options: decodedRequest.routeOptions,
-                                                         routeOrigin: origin)
         }
     }
 

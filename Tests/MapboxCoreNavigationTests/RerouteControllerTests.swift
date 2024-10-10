@@ -71,7 +71,10 @@ final class RerouteControllerTests: TestCase {
         customRoutingProvider = .init()
         delegate = .init()
 
-        rerouteController = .init(navigatorSpy, config: configHandle)
+        rerouteController = RerouteController(
+            navigatorSpy,
+            config: configHandle,
+            parsingQueue: .main)
         rerouteController.delegate = delegate
     }
 

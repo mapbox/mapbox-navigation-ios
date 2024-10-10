@@ -45,21 +45,24 @@ public struct IndexedRouteResponse {
      - returns: Array of `AlternativeRoutes` containing relative information to `currentRoute`.
      */
     public func parseAlternativeRoutes() -> [AlternativeRoute] {
-        guard let mainRoute = currentRoute,
-              let routesData = routesData(routeParserType: RouteParser.self) else {
+        guard let routesData = routesData(routeParserType: RouteParser.self) else {
             return []
         }
         
         let alternatives = routesData.alternativeRoutes().compactMap {
-            AlternativeRoute(mainRoute: mainRoute,
-                             alternativeRoute: $0)
+            AlternativeRoute(indexedRouteResponse: self, alternativeRoute: $0)
         }
         return alternatives
     }
-    
-    func routesData(routeParserType: RouteParser.Type) -> RoutesData? {
-        let routeOptions = validatedRouteOptions
-        
+
+    private let nativeRoutes: [RouteInterface]?
+
+    static func routeInterfaces(
+        routeParserType: RouteParser.Type,
+        routeResponse: RouteResponse,
+        routeOptions: RouteOptions,
+        responseOrigin: RouterOrigin
+    ) -> [RouteInterface]? {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         guard let routeData = try? encoder.encode(routeResponse) else {
@@ -73,14 +76,22 @@ public struct IndexedRouteResponse {
                                                                    request: routeRequest,
                                                                    routeOrigin: responseOrigin)
         if parsedRoutes.isValue(),
-           var routes = parsedRoutes.value as? [RouteInterface],
-           routes.indices.contains(routeIndex) {
-            return routeParserType.createRoutesData(forPrimaryRoute: routes.remove(at: routeIndex),
-                                                    alternativeRoutes: routes)
+           let routes = parsedRoutes.value as? [RouteInterface] {
+            return routes
         }
         return nil
     }
-    
+
+    func routesData(routeParserType: RouteParser.Type) -> RoutesData? {
+        guard var nativeRoutes,
+              nativeRoutes.indices.contains(routeIndex) else {
+            return nil
+        }
+
+        return routeParserType.createRoutesData(forPrimaryRoute: nativeRoutes.remove(at: routeIndex),
+                                                alternativeRoutes: nativeRoutes)
+    }
+
     /**
      Initializes a new `IndexedRouteResponse` object.
      
@@ -102,14 +113,27 @@ public struct IndexedRouteResponse {
     
     init(routeResponse: RouteResponse,
          routeIndex: Int,
-         responseOrigin: RouterOrigin) {
+         responseOrigin: RouterOrigin,
+         routeParserType: RouteParser.Type = RouteParser.self
+    ) {
         self.routeResponse = routeResponse
         self.routeIndex = routeIndex
         self.responseOrigin = responseOrigin
+        self.nativeRoutes = Self.routeInterfaces(
+            routeParserType: routeParserType,
+            routeResponse: routeResponse,
+            routeOptions: routeResponse.validatedOptions,
+            responseOrigin: responseOrigin)
     }
     
     internal var validatedRouteOptions: RouteOptions {
-        switch routeResponse.options {
+        return routeResponse.validatedOptions
+    }
+}
+
+extension RouteResponse {
+    var validatedOptions: RouteOptions {
+        switch options {
         case let .match(matchOptions):
             return RouteOptions(matchOptions: matchOptions)
         case let .route(options):
