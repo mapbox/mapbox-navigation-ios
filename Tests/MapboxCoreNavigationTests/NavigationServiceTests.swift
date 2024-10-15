@@ -38,7 +38,7 @@ class NavigationServiceTests: TestCase {
 
     let expectationsTimeout = 1.0
 
-    let indexedRouteResponse = IndexedRouteResponse.init(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
+    var indexedRouteResponse: IndexedRouteResponse!
     var location: CLLocation!
     var lastLocation: CLLocation!
     var userInfo: [String: String?] = ["key": "value"]
@@ -73,6 +73,7 @@ class NavigationServiceTests: TestCase {
     override func setUp() {
         super.setUp()
 
+        indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions), routeIndex: 0)
         delegate = NavigationServiceDelegateSpy()
         locationManager = NavigationLocationManagerSpy()
         customRoutingProvider = RoutingProviderSpy()

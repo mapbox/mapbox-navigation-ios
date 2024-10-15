@@ -33,6 +33,7 @@ open class RouteController: NSObject {
     /// Holds currently alive instance of `RouteController`.
     private static weak var instance: RouteController?
     private static let instanceLock: NSLock = .init()
+    private static let defaultParsingQueueLabel = "com.mapbox.navigation.route.parsing"
 
     let sessionUUID: UUID = .init()
     private var isInitialized: Bool = false
@@ -224,7 +225,10 @@ open class RouteController: NSObject {
     var routeTask: NavigationProviderRequest?
     
     public private(set) var continuousAlternatives: [AlternativeRoute] = []
-    
+
+    private let parsingQueue: DispatchQueue
+    private let delegateQueue: DispatchQueue
+
     /**
      Enables automatic switching to online version of the current route when possible.
      
@@ -285,9 +289,8 @@ open class RouteController: NSObject {
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
                                  reason: RouteChangeReason,
-                                 completion: ((Result<(RouteInfo?, [AlternativeRoute]), Error>) -> Void)?) {
-        guard let newMainRoute = indexedRouteResponse.currentRoute,
-              let routesData = indexedRouteResponse.routesData(routeParserType: routeParserType) else {
+                                 completion: ((Result<Void, Error>) -> Void)?) {
+        guard let routesData = indexedRouteResponse.routesData(routeParserType: routeParserType) else {
             completion?(.failure(RouteControllerError.failedToSerializeRoute))
             return
         }
@@ -295,30 +298,38 @@ open class RouteController: NSObject {
                                   uuid: sessionUUID,
                                   legIndex: UInt32(legIndex),
                                   reason: reason,
-                                  completion:  { [weak self] result in
+                                  completion: { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let info):
-                let alternativeRoutes = info.1.compactMap {
-                    AlternativeRoute(mainRoute: newMainRoute,
-                                     alternativeRoute: $0)
-                }
                 let alerts = routesData.primaryRoute().getRouteInfo().alerts
-                self.routeAlerts = alerts.reduce(into: [:]) { dictionary, alert in
+                let routeAlerts = alerts.reduce(into: [:]) { dictionary, alert in
                     dictionary[alert.roadObject.id] = alert
                 }
-                completion?(.success((info.0, alternativeRoutes)))
-                
-                let removedRoutes = self.continuousAlternatives.filter { alternative in
-                    !alternativeRoutes.contains(where: {
-                        alternative.id == $0.id
-                    })
+                self.routeAlerts = routeAlerts
+                completion?(.success(()))
+
+                self.parsingQueue.async { [weak self] in
+                    guard let self else { return }
+                    let alternativeRoutes = info.1.compactMap {
+                        AlternativeRoute(alternativeRoute: $0)
+                    }
+
+                    self.delegateQueue.async { [weak self] in
+                        guard let self else { return }
+
+                        let removedRoutes = self.continuousAlternatives.filter { alternative in
+                            !alternativeRoutes.contains(where: {
+                                alternative.id == $0.id
+                            })
+                        }
+                        self.continuousAlternatives = alternativeRoutes
+                        self.report(newAlternativeRoutes: alternativeRoutes,
+                                    removedAlternativeRoutes: removedRoutes)
+                    }
                 }
-                self.continuousAlternatives = alternativeRoutes
-                self.report(newAlternativeRoutes: alternativeRoutes,
-                            removedAlternativeRoutes: removedRoutes)
-                
+
             case .failure(let error):
                 completion?(.failure(error))
             }
@@ -677,6 +688,8 @@ open class RouteController: NSObject {
 
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.refreshesRoute = isRouteOptions && options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.parsingQueue = DispatchQueue(label: RouteController.defaultParsingQueueLabel, qos: .default)
+        self.delegateQueue = .main
 
         super.init()
 
@@ -690,7 +703,9 @@ open class RouteController: NSObject {
          dataSource source: RouterDataSource,
          navigatorType: CoreNavigator.Type,
          routeParserType: RouteParser.Type,
-         navigationSessionManager: NavigationSessionManager) {
+         navigationSessionManager: NavigationSessionManager,
+         parsingQueue: DispatchQueue = .init(label: RouteController.defaultParsingQueueLabel, qos: .default),
+         delegateQueue: DispatchQueue = .main) {
         Self.checkUniqueInstance()
 
         self.navigatorType = navigatorType
@@ -700,6 +715,8 @@ open class RouteController: NSObject {
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.navigationSessionManager = navigationSessionManager
+        self.parsingQueue = parsingQueue
+        self.delegateQueue = delegateQueue
 
         super.init()
 
@@ -1095,22 +1112,28 @@ extension RouteController {
             
             switch result {
             case .success(let routeAlternatives):
-                let alternativeRoutes = routeAlternatives.compactMap {
-                    AlternativeRoute(mainRoute: self.route,
-                                     alternativeRoute: $0)
-                }
-                
-                removedRoutes.append(contentsOf: alternatives.filter { alternative in
-                    !routeAlternatives.contains(where: {
-                        alternative.id == $0.id
+                self.parsingQueue.async { [weak self] in
+                    guard let self else { return }
+
+                    let alternativeRoutes = routeAlternatives.compactMap {
+                        AlternativeRoute(alternativeRoute: $0)
+                    }
+
+                    removedRoutes.append(contentsOf: alternatives.filter { alternative in
+                        !routeAlternatives.contains(where: {
+                            alternative.id == $0.id
+                        })
+                    }.compactMap {
+                        AlternativeRoute(alternativeRoute: $0)
                     })
-                }.compactMap {
-                    AlternativeRoute(mainRoute: self.route,
-                                     alternativeRoute: $0)
-                })
-                self.continuousAlternatives = alternativeRoutes
-                self.report(newAlternativeRoutes: alternativeRoutes,
-                            removedAlternativeRoutes: removedRoutes)
+
+                    self.delegateQueue.async { [weak self] in
+                        guard let self else { return }
+                        self.continuousAlternatives = alternativeRoutes
+                        self.report(newAlternativeRoutes: alternativeRoutes,
+                                    removedAlternativeRoutes: removedRoutes)
+                    }
+                }
             case .failure(let updateError):
                 let error = AlternativeRouteError.failedToUpdateAlternativeRoutes(reason: updateError.localizedDescription)
                 var userInfo = [RouteController.NotificationUserInfoKey: Any]()
@@ -1127,11 +1150,11 @@ extension RouteController {
         guard NavigationSettings.shared.alternativeRouteDetectionStrategy != nil else {
             return
         }
-        
+
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
         userInfo[.updatedAlternativesKey] = newAlternativeRoutes
         userInfo[.removedAlternativesKey] = removedAlternativeRoutes
-        
+
         NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
                                         object: self,
                                         userInfo: userInfo)
