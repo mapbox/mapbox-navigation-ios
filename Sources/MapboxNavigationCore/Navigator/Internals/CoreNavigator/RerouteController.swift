@@ -100,7 +100,7 @@ extension RerouteController: RerouteObserver {
     func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
         guard rerouteConfig.detectsReroute else {
             Log.warning(
-                "Reroute attempt fetched a route during 'rerouteSettings.detectsReroute' is disabled.",
+                "Reroute attempt fetched a route during 'rerouteConfig.detectsReroute' is disabled.",
                 category: .navigation
             )
             return
@@ -136,7 +136,7 @@ extension RerouteController: RerouteObserver {
     func onRerouteFailed(forError error: RerouteError) {
         guard rerouteConfig.detectsReroute else {
             Log.warning(
-                "Reroute attempt failed with an error during 'rerouteSettings.detectsReroute' is disabled. Error: \(error.message)",
+                "Reroute attempt failed with an error during 'rerouteConfig.detectsReroute' is disabled. Error: \(error.message)",
                 category: .navigation
             )
             return

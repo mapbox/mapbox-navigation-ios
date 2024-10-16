@@ -2,6 +2,10 @@
 
 ## v3.5.0-beta.1
 
+### API deprecations:
+
+* `RoutingConfig.init(alternativeRoutesDetectionSettings:fasterRouteDetectionSettings:rerouteSettings:initialManeuverAvoidanceRadius:routeRefreshPeriod:routingProviderSource:prefersOnlineRoute:detectsReroute:)` initializer is deprecated in favor of `RoutingConfig.init(alternativeRoutesDetectionConfig:fasterRouteDetectionConfig:rerouteConfig:initialManeuverAvoidanceRadius:routeRefreshPeriod:routingProviderSource:prefersOnlineRoute:)`. 
+
 ### Map
 
 * An alternative route is hidden on the map right after an alternative starting fork point is passed.

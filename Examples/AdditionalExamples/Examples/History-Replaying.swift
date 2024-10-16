@@ -34,7 +34,7 @@ final class HistoryReplayingViewController: UIViewController {
     private lazy var mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             routingConfig: .init(
-                rerouteSettings: .init(
+                rerouteConfig: .init(
                     detectsReroute: false // disabling reroute detection because we are going to set new routes manually
                     // as reported by History Replayer.
                 )
