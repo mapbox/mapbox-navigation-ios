@@ -26,6 +26,7 @@ public class PredictiveCacheManager {
     private var mapTilesetDescriptor: TilesetDescriptor?
     private var navigationController: PredictiveCacheController?
     private var mapController: PredictiveCacheController?
+    private var searchController: PredictiveCacheController?
 
     init(
         predictiveCacheOptions: PredictiveCacheConfig,
@@ -51,6 +52,12 @@ public class PredictiveCacheManager {
     }
 
     @MainActor
+    func updateSearchController(with navigator: NavigationNativeNavigator?) {
+        self.navigator = navigator
+        searchController = createSearchController(for: navigator)
+    }
+
+    @MainActor
     private func createMapController(_ tilesetDescriptor: TilesetDescriptor?) -> PredictiveCacheController? {
         guard let tilesetDescriptor else { return nil }
 
@@ -72,6 +79,31 @@ public class PredictiveCacheManager {
         let locationOptions = predictiveCacheOptions.predictiveCacheNavigationConfig.locationConfig
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(locationOptions)
         return navigator.native.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
+    }
+
+    @MainActor
+    /// Instantiate a controller for search functionality if the ``PredictiveCacheSearchConfig`` has the necessary
+    /// inputs.
+    /// Assign `tileStore.setOptionForKey("log-tile-loading", value: true)` and set MapboxCommon log level to info for
+    /// debug output
+    /// - Returns: A predictive cache controller configured for search functionality.
+    private func createSearchController(for navigator: NavigationNativeNavigator?) -> PredictiveCacheController? {
+        guard let navigator,
+              let predictiveCacheSearchConfig = predictiveCacheOptions.predictiveCacheSearchConfig
+        else {
+            return nil
+        }
+
+        let locationOptions = predictiveCacheSearchConfig.locationConfig
+        let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(locationOptions)
+
+        return navigator.native.createPredictiveCacheController(
+            for: tileStore,
+            descriptors: [
+                predictiveCacheSearchConfig.searchTilesetDescriptor,
+            ],
+            locationTrackerOptions: predictiveLocationTrackerOptions
+        )
     }
 }
 

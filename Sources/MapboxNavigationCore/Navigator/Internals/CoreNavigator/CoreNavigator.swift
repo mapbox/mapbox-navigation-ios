@@ -216,6 +216,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
         Task { @MainActor in
             predictiveCacheManager.updateNavigationController(with: navigator)
+            predictiveCacheManager.updateSearchController(with: navigator)
         }
     }
 
@@ -489,6 +490,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         if let predictiveCacheManager = configuration.predictiveCacheManager {
             Task { @MainActor in
                 predictiveCacheManager.updateNavigationController(with: nil)
+                predictiveCacheManager.updateSearchController(with: nil)
             }
         }
     }

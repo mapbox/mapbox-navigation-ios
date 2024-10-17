@@ -37,6 +37,19 @@ final class PredictiveCacheManagerTests: XCTestCase {
         predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig.currentLocationRadius = 40
         predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig.destinationLocationRadius = 400
         predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig.routeBufferRadius = 4000
+
+        var searchConfig = PredictiveCacheSearchConfig(
+            locationConfig: PredictiveCacheLocationConfig(
+                currentLocationRadius: 50,
+                routeBufferRadius: 500,
+                destinationLocationRadius: 5000
+            ),
+            searchTilesetDescriptor: TilesetDescriptorFactory.build(
+                forDataset: "mbx-gen2",
+                version: ""
+            )
+        )
+        predictiveCacheConfig.predictiveCacheSearchConfig = searchConfig
     }
 
     @MainActor
@@ -152,5 +165,41 @@ final class PredictiveCacheManagerTests: XCTestCase {
         manager.updateMapControllers(mapView: mapView)
 
         XCTAssertNil(navNavigator.passedDatasetTrackerOptions)
+    }
+
+    @MainActor
+    func testCreateSearchController() throws {
+        let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
+        XCTAssertNotNil(
+            predictiveCacheConfig.predictiveCacheSearchConfig?.searchTilesetDescriptor,
+            "Requires predictiveCacheConfig to contain a search tileset descriptor"
+        )
+
+        manager.updateSearchController(with: navigator)
+
+        let expectedOptions = try XCTUnwrap(predictiveCacheConfig.predictiveCacheSearchConfig?.locationConfig)
+        XCTAssertNotNil(navNavigator.passedTileStore)
+        XCTAssertNil(navNavigator.passedDatasetTrackerOptions)
+        XCTAssertNil(navNavigator.passedNavigationTrackerOptions)
+
+        XCTAssertNotNil(navNavigator.passedDescriptorsTrackerOptions)
+        XCTAssertEqual(
+            navNavigator.passedDescriptorsTrackerOptions?.currentLocationRadius,
+            UInt32(expectedOptions.currentLocationRadius)
+        )
+        XCTAssertEqual(
+            navNavigator.passedDescriptorsTrackerOptions?.destinationLocationRadius,
+            UInt32(expectedOptions.destinationLocationRadius)
+        )
+        XCTAssertEqual(
+            navNavigator.passedDescriptorsTrackerOptions?.routeBufferRadius,
+            UInt32(expectedOptions.routeBufferRadius)
+        )
+
+        navNavigator.passedDatasetTrackerOptions = nil
+
+        manager.updateMapControllers(mapView: mapView)
+
+        XCTAssertNil(navNavigator.passedNavigationTrackerOptions, "Does not recreate navigation controller")
     }
 }

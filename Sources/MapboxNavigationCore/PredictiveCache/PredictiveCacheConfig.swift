@@ -9,15 +9,21 @@ public struct PredictiveCacheConfig: Equatable, Sendable {
     /// Predictive cache Map related config
     public var predictiveCacheMapsConfig: PredictiveCacheMapsConfig = .init()
 
+    /// Predictive cache Search domain related config
+    public var predictiveCacheSearchConfig: PredictiveCacheSearchConfig? = nil
+
     /// Creates a new `PredictiveCacheConfig` instance.
     /// - Parameters:
     ///   - predictiveCacheNavigationConfig: Navigation related config.
     ///   - predictiveCacheMapsConfig: Map related config.
+    ///   - predictiveCacheSearchConfig: Search related config
     public init(
         predictiveCacheNavigationConfig: PredictiveCacheNavigationConfig = .init(),
-        predictiveCacheMapsConfig: PredictiveCacheMapsConfig = .init()
+        predictiveCacheMapsConfig: PredictiveCacheMapsConfig = .init(),
+        predictiveCacheSearchConfig: PredictiveCacheSearchConfig? = nil
     ) {
         self.predictiveCacheNavigationConfig = predictiveCacheNavigationConfig
         self.predictiveCacheMapsConfig = predictiveCacheMapsConfig
+        self.predictiveCacheSearchConfig = predictiveCacheSearchConfig
     }
 }

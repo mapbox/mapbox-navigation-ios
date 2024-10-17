@@ -16,6 +16,7 @@
 ### Other changes
 
 * `NavigationViewController` transitions navigation to the `idle` state when it is dismissed.
+* Added the ability to configure predictive cache for search by 'PredictiveCacheConfig.predictiveCacheSearchConfig'.
 
 ## v3.4.0
 
