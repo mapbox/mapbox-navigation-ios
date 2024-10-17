@@ -11,6 +11,7 @@
 * An alternative route is hidden on the map right after an alternative starting fork point is passed.
 * Fixed a double call of `NavigationComponent.onDidReroute()`.
 * Fixed a possible case when `.relativeDurationsOnAlternativeManuever` annotations can be visible even if they were hidden previously.
+* Added the support for specifying the custom route line layer position for map styles without slots support by `NavigationMapView.customRouteLineLayerPosition`.
 
 ### Other changes
 

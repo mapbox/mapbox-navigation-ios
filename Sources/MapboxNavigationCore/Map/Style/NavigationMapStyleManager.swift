@@ -41,6 +41,7 @@ final class NavigationMapStyleManager {
     private(set) var layerIds: [String]
 
     var customizedLayerProvider: CustomizedLayerProvider = .init { $0 }
+    var customRouteLineLayerPosition: LayerPosition?
 
     private let routeFeaturesStore: MapFeaturesStore
     private let waypointFeaturesStore: MapFeaturesStore
@@ -50,10 +51,13 @@ final class NavigationMapStyleManager {
     private let routeAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAlertsFeaturesStore: MapFeaturesStore
 
-    init(mapView: MapView) {
+    init(mapView: MapView, customRouteLineLayerPosition: LayerPosition?) {
         self.mapView = mapView
+        self.layersOrder = Self.makeMapLayersOrder(
+            with: mapView,
+            customRouteLineLayerPosition: customRouteLineLayerPosition
+        )
         self.layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
-        self.layersOrder = Self.makeMapLayersOrder(with: mapView)
         self.routeFeaturesStore = .init(mapView: mapView)
         self.waypointFeaturesStore = .init(mapView: mapView)
         self.arrowFeaturesStore = .init(mapView: mapView)
@@ -69,7 +73,7 @@ final class NavigationMapStyleManager {
 
     func onStyleLoaded() {
         // MapsSDK removes all layers when a style is loaded, so we have to recreate MapLayersOrder.
-        layersOrder = Self.makeMapLayersOrder(with: mapView)
+        layersOrder = Self.makeMapLayersOrder(with: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
         layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
         layersOrder.setStyleIds(layerIds)
 
@@ -255,6 +259,16 @@ final class NavigationMapStyleManager {
     ) -> [any MapFeature] {
         var features: [any MapFeature] = []
 
+        features.append(contentsOf: routes.mainRoute.route.routeLineMapFeatures(
+            ids: .main,
+            offset: 0,
+            isSoftGradient: true,
+            isAlternative: false,
+            config: config,
+            featureProvider: featureProvider,
+            customizedLayerProvider: customizedLayerProvider
+        ))
+
         if config.showsAlternatives {
             for (idx, alternativeRoute) in routes.alternativeRoutes.enumerated() {
                 let deviationOffset = alternativeRoute.deviationOffset()
@@ -270,16 +284,6 @@ final class NavigationMapStyleManager {
             }
         }
 
-        features.append(contentsOf: routes.mainRoute.route.routeLineMapFeatures(
-            ids: .main,
-            offset: 0,
-            isSoftGradient: true,
-            isAlternative: false,
-            config: config,
-            featureProvider: featureProvider,
-            customizedLayerProvider: customizedLayerProvider
-        ))
-
         return features
     }
 
@@ -290,7 +294,10 @@ final class NavigationMapStyleManager {
         mapView.mapboxMap.setRouteLineOffset(offset, for: routeLineIds)
     }
 
-    private static func makeMapLayersOrder(with mapView: MapView) -> MapLayersOrder {
+    private static func makeMapLayersOrder(
+        with mapView: MapView,
+        customRouteLineLayerPosition: LayerPosition?
+    ) -> MapLayersOrder {
         let alternative_0_ids = FeatureIds.RouteLine.alternative(idx: 0)
         let alternative_1_ids = FeatureIds.RouteLine.alternative(idx: 1)
         let mainLineIds = FeatureIds.RouteLine.main
@@ -304,8 +311,9 @@ final class NavigationMapStyleManager {
 
         let allSlotIdentifiers = mapView.mapboxMap.allSlotIdentifiers
         let containsMiddleSlot = Slot.middle.map(allSlotIdentifiers.contains) ?? false
-        let legacyPosition: ((String) -> MapboxMaps.LayerPosition?)? = containsMiddleSlot ? nil :
-            { legacyLayerPosition(for: $0, mapView: mapView) }
+        let legacyPosition: ((String) -> MapboxMaps.LayerPosition?)? = containsMiddleSlot ? nil : {
+            legacyLayerPosition(for: $0, mapView: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
+        }
 
         return .init(
             builder: {
@@ -359,10 +367,21 @@ final class NavigationMapStyleManager {
         )
     }
 
-    static func legacyLayerPosition(for layerIdentifier: String, mapView: MapView) -> MapboxMaps.LayerPosition? {
+    private static func legacyLayerPosition(
+        for layerIdentifier: String,
+        mapView: MapView,
+        customRouteLineLayerPosition: LayerPosition?
+    ) -> MapboxMaps.LayerPosition? {
+        let mainLineIds = FeatureIds.RouteLine.main
+        if layerIdentifier.hasPrefix(mainLineIds.main),
+           let customRouteLineLayerPosition,
+           !mapView.mapboxMap.allLayerIdentifiers.contains(where: { $0.id.hasPrefix(mainLineIds.main) })
+        {
+            return customRouteLineLayerPosition
+        }
+
         let alternative_0_ids = FeatureIds.RouteLine.alternative(idx: 0)
         let alternative_1_ids = FeatureIds.RouteLine.alternative(idx: 1)
-        let mainLineIds = FeatureIds.RouteLine.main
         let arrowIds = FeatureIds.ManeuverArrow.nextArrow()
         let waypointIds = FeatureIds.RouteWaypoints.default
         let voiceInstructionIds = FeatureIds.VoiceInstruction.currentRoute

@@ -59,7 +59,7 @@ open class NavigationMapView: UIView {
             headingProvider: heading?.map { Heading(from: $0) }.eraseToSignal()
         )
 
-        self.mapStyleManager = .init(mapView: mapView)
+        self.mapStyleManager = .init(mapView: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
         self.navigationCamera = NavigationCamera(
             mapView,
             location: location,
@@ -316,6 +316,15 @@ open class NavigationMapView: UIView {
     /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing. Defaults to `PuckBearing.course`.
     public var puckBearing: PuckBearing = .course {
         didSet { setupUserLocation() }
+    }
+
+    /// A custom route line layer position for legacy map styles without slot support.
+    public var customRouteLineLayerPosition: MapboxMaps.LayerPosition? = nil {
+        didSet {
+            mapStyleManager.customRouteLineLayerPosition = customRouteLineLayerPosition
+            guard let routes else { return }
+            show(routes, routeAnnotationKinds: routeAnnotationKinds)
+        }
     }
 
     // MARK: RouteLine Customization
