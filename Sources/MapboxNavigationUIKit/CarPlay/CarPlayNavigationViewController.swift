@@ -705,7 +705,7 @@ open class CarPlayNavigationViewController: UIViewController {
 
     func progressDidChange(_ routeProgress: RouteProgress?) {
         guard let routeProgress,
-              let location = core.navigation().currentLocationMatching?.location
+              let location = core.navigation().currentLocationMatching?.enhancedLocation
         else {
             return
         }
@@ -1015,7 +1015,7 @@ open class CarPlayNavigationViewController: UIViewController {
 
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        if let location = core.navigation().currentLocationMatching?.location {
+        if let location = core.navigation().currentLocationMatching?.enhancedLocation {
             return location
         } else {
             return nil

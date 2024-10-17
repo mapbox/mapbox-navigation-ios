@@ -286,7 +286,7 @@ open class CarPlayMapViewController: UIViewController {
             speedLimitView.signStandard = state.speedLimit.signStandard
             speedLimitView.speedLimit = state.speedLimit.value
 
-            speedLimitView.currentSpeed = state.location.speed
+            speedLimitView.currentSpeed = state.enhancedLocation.speed
         }
 
         if let wayNameView {

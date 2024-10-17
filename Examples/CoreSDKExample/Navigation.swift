@@ -22,7 +22,8 @@ final class Navigation: ObservableObject {
 
     init() {
         let config = CoreConfig(
-            credentials: .init() // You can pass a custom token if you need to
+            credentials: .init(), // You can pass a custom token if you need to,
+            locationSource: .live
         )
         let navigationProvider = MapboxNavigationProvider(coreConfig: config)
         self.core = navigationProvider.mapboxNavigation
@@ -54,7 +55,7 @@ final class Navigation: ObservableObject {
             .assign(to: &$activeNavigationRoutes)
 
         core.navigation().locationMatching
-            .map { $0.location }
+            .map { $0.enhancedLocation }
             .assign(to: &$currentLocation)
     }
 

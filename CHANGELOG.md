@@ -13,6 +13,10 @@
 * Fixed a possible case when `.relativeDurationsOnAlternativeManuever` annotations can be visible even if they were hidden previously.
 * Added the support for specifying the custom route line layer position for map styles without slots support by `NavigationMapView.customRouteLineLayerPosition`.
 
+### Location
+
+* Fixed the case when a raw, non-map-matched location was used in CarPlay.
+
 ### Other changes
 
 * `NavigationViewController` transitions navigation to the `idle` state when it is dismissed.
