@@ -32,8 +32,8 @@ extension Bundle {
         get {
             #if SWIFT_PACKAGE
             return .module
-            #else
-            var frameworkBundle = Bundle(for: RouteController.self)
+            #elseif COCOAPODS
+            let frameworkBundle = Bundle(for: RouteController.self)
 
             guard let resourceBundleURL = frameworkBundle.url(
                 forResource: "MapboxCoreNavigationResources", withExtension: "bundle")
@@ -43,6 +43,8 @@ extension Bundle {
             else { fatalError("Cannot access MapboxCoreNavigationResources.bundle!") }
 
             return resourceBundle
+            #else
+            return Bundle(for: RouteController.self)
             #endif
         }
     }
