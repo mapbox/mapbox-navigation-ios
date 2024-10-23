@@ -112,7 +112,7 @@ public class SpeedLimitView: UIView {
         let formattedSpeedLimit: String
 
         if let speedLimit {
-            if speedLimit.value.isInfinite {
+            if speedLimit.value.isInfinite || speedLimit.value == 0 {
                 formattedSpeedLimit = "∞"
             } else {
                 formattedSpeedLimit = measurementFormatter.numberFormatter
@@ -139,7 +139,7 @@ public class SpeedLimitView: UIView {
                 legend: legend
             )
         case .viennaConvention:
-            if let speedLimit, speedLimit.value.isInfinite {
+            if let speedLimit, speedLimit.value.isInfinite || speedLimit.value == 0 {
                 let image = UIImage(named: "infinite-speed-limit", in: .mapboxNavigation, compatibleWith: nil)
                 image?.draw(in: bounds)
             } else {

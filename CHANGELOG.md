@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.5.0-rc.1
+
+### Other changes
+
+* Added support for a special speed limit sign for no speed limit zones.
+
 ## v3.5.0-beta.1
 
 ### API deprecations:

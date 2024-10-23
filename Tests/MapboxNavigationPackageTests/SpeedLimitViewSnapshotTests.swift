@@ -67,7 +67,7 @@ class SpeedLimitViewSnapshotTests: TestCase {
         assertImageSnapshot(matching: speedLimitView.layer, as: .image(precision: 0.99))
     }
 
-    func testInfiniteVennaSpeedLimit() {
+    func testInfiniteViennaSpeedLimit() {
         speedLimitView.signStandard = .viennaConvention
         speedLimitView.speedLimit = .init(value: .infinity, unit: .kilometersPerHour)
         assertImageSnapshot(matching: speedLimitView.layer, as: .image(precision: 0.99))
@@ -76,6 +76,18 @@ class SpeedLimitViewSnapshotTests: TestCase {
     func testInfiniteMUTCDSpeedLimit() {
         speedLimitView.signStandard = .mutcd
         speedLimitView.speedLimit = .init(value: .infinity, unit: .kilometersPerHour)
+        assertImageSnapshot(matching: speedLimitView.layer, as: .image(precision: 0.99))
+    }
+
+    func testZeroViennaSpeedLimit() {
+        speedLimitView.signStandard = .viennaConvention
+        speedLimitView.speedLimit = .init(value: 0, unit: .kilometersPerHour)
+        assertImageSnapshot(matching: speedLimitView.layer, as: .image(precision: 0.99))
+    }
+
+    func testZeroMUTCDSpeedLimit() {
+        speedLimitView.signStandard = .mutcd
+        speedLimitView.speedLimit = .init(value: 0, unit: .kilometersPerHour)
         assertImageSnapshot(matching: speedLimitView.layer, as: .image(precision: 0.99))
     }
 }
