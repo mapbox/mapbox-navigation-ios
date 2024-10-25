@@ -34,12 +34,4 @@ extension NavigationMapView {
     enum ModelKeyIdentifier {
         static let modelSouce = "puck-model"
     }
-
-    @MainActor
-    enum AnnotationIdentifier {
-        static let finalDestinationAnnotation = "\(identifier)_finalDestinationAnnotation"
-        static let previewFinalDestinationAnnotation = "\(identifier)_previewFinalDestinationAnnotation"
-        static let candidateDestinationAnnotation = "\(identifier)_candidateDestinationAnnotation"
-        static let midpointDestinationAnnotation = "\(identifier)_midpointDestinationAnnotation"
-    }
 }

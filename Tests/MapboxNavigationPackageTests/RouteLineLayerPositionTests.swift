@@ -187,7 +187,7 @@ class RouteLineLayerPositionTests: TestCase {
 
     @MainActor
     func testLayerPosition() async {
-        routes = await Fixture.navigationRoutes(from: "multileg-route", options: routeOptions)
+        routes = await Fixture.navigationRoutes(from: "multileg-route", options: routeOptions3Waypoints)
 
         let styleJSONObject: [String: Any] = [
             "version": 8,
@@ -260,7 +260,6 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
             routeAlertIds.layer,
-            waypointIds.baseCircle,
             waypointIds.innerCircle,
             waypointIds.markerIcon,
             Slot.middle!.rawValue,
@@ -371,6 +370,7 @@ class RouteLineLayerPositionTests: TestCase {
         let arrowIds = FeatureIds.ManeuverArrow.nextArrow()
         let intersectionIds = FeatureIds.IntersectionAnnotation()
         let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
+        let waypointIds = FeatureIds.RouteWaypoints.default
 
         var expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -419,6 +419,8 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelCircleLayer["id"]!,
             intersectionIds.layer,
             routeAlertIds.layer,
+            waypointIds.innerCircle,
+            waypointIds.markerIcon,
             Slot.middle!.rawValue,
             circleLabelLayer,
         ]

@@ -157,6 +157,10 @@ open class DayStyle: Style {
                 .routeAnnotationMoreTimeTextColor = .defaultRouteAnnotationMoreTimeTextColor
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationLessTimeTextColor = .defaultRouteAnnotationLessTimeTextColor
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointColor = .defaultWaypointColor
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointStrokeColor = .defaultWaypointStrokeColor
         }
 
         DistanceLabel.appearance(for: traitCollection).unitFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
@@ -553,6 +557,10 @@ open class DayStyle: Style {
                 .routeAnnotationSelectedColor = .defaultSelectedRouteAnnotationColor
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointColor = .defaultWaypointColor
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointStrokeColor = .defaultWaypointStrokeColor
         }
 
         SpeedLimitView.appearance(for: carPlayTraitCollection).signBackColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

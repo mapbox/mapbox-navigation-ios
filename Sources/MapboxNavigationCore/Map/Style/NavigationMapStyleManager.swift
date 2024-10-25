@@ -28,8 +28,12 @@ struct MapStyleConfig: Equatable {
     var isRestrictedAreaEnabled: Bool
     var showsTrafficOnRouteLine: Bool
     var showsAlternatives: Bool
+    var showsIntermediateWaypoints: Bool
     var occlusionFactor: Value<Double>?
     var congestionConfiguration: CongestionConfiguration
+
+    var waypointColor: UIColor
+    var waypointStrokeColor: UIColor
 }
 
 /// Manages all the sources/layers used in NavigationMap.
@@ -37,8 +41,8 @@ struct MapStyleConfig: Equatable {
 final class NavigationMapStyleManager {
     private let mapView: MapView
     private var lifetimeSubscriptions: Set<AnyCancellable> = []
-    private(set) var layersOrder: MapLayersOrder
-    private(set) var layerIds: [String]
+    private var layersOrder: MapLayersOrder
+    private var layerIds: [String]
 
     var customizedLayerProvider: CustomizedLayerProvider = .init { $0 }
     var customRouteLineLayerPosition: LayerPosition?
@@ -102,20 +106,21 @@ final class NavigationMapStyleManager {
         )
     }
 
-    func updateIntermediateWaypoints(
+    func updateWaypoints(
         route: Route,
         legIndex: Int,
         config: MapStyleConfig,
-        featureProvider: IntermediateWaypointFeatureProvider
+        featureProvider: WaypointFeatureProvider
     ) {
+        let waypoints = route.waypointsMapFeature(
+            mapView: mapView,
+            legIndex: legIndex,
+            config: config,
+            featureProvider: featureProvider,
+            customizedLayerProvider: customizedLayerProvider
+        )
         waypointFeaturesStore.update(
-            using: route.intermediateWaypointsMapFeatures(
-                mapView: mapView,
-                legIndex: legIndex,
-                config: config,
-                featureProvider: featureProvider,
-                customizedLayerProvider: customizedLayerProvider
-            ),
+            using: waypoints.map { [$0] } ?? [],
             order: &layersOrder
         )
     }
@@ -315,7 +320,7 @@ final class NavigationMapStyleManager {
             legacyLayerPosition(for: $0, mapView: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
         }
 
-        return .init(
+        return MapLayersOrder(
             builder: {
                 SlottedRules(.middle) {
                     R.orderedIds([
@@ -355,7 +360,6 @@ final class NavigationMapStyleManager {
                     R.orderedIds([
                         intersectionIds.layer,
                         routeAlertIds.layer,
-                        waypointIds.baseCircle,
                         waypointIds.innerCircle,
                         waypointIds.markerIcon,
                         NavigationMapView.LayerIdentifier.puck2DLayer,
@@ -405,7 +409,6 @@ final class NavigationMapStyleManager {
             arrowIds.arrowSymbol,
             intersectionIds.layer,
             routeAlertIds.layer,
-            waypointIds.baseCircle,
             waypointIds.innerCircle,
             waypointIds.markerIcon,
         ]

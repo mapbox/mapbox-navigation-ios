@@ -197,64 +197,6 @@ class NavigationMapViewTests: TestCase {
         XCTAssertTrue(navigationMapView.navigationCamera.viewportDataSource is CarPlayViewportDataSource)
     }
 
-    func testFinalDestinationAnnotationIsPresent() {
-        class NavigationMapViewDelegateMock: NavigationMapViewDelegate {
-            var didAddFinalDestinationAnnotation = false
-
-            func navigationMapView(
-                _ navigationMapView: NavigationMapView,
-                didAdd finalDestinationAnnotation: PointAnnotation,
-                pointAnnotationManager: PointAnnotationManager
-            ) {
-                didAddFinalDestinationAnnotation = true
-            }
-        }
-
-        let navigationMapViewDelegateMock = NavigationMapViewDelegateMock()
-        navigationMapView.delegate = navigationMapViewDelegateMock
-        XCTAssertNil(navigationMapView.finalDestinationAnnotation)
-
-        navigationMapView.show(navigationRoutes, routeAnnotationKinds: [])
-        XCTAssertNotNil(navigationMapView.finalDestinationAnnotation)
-        XCTAssertNil(navigationMapView.pointAnnotationManager, "Point annotation manager should be nil.")
-
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [],
-            "layers": [],
-        ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
-        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
-
-        let didAddFinalDestinationAnnotationExpectation = expectation {
-            return navigationMapViewDelegateMock.didAddFinalDestinationAnnotation
-        }
-
-        mapboxMap.loadStyle(styleJSON)
-
-        wait(for: [didAddFinalDestinationAnnotationExpectation], timeout: 5.0)
-
-        // After fully loading style `NavigationMapView.finalDestinationAnnotation` should be assigned to nil and
-        // `NavigationMapView.pointAnnotationManager` must become valid.
-        XCTAssertNil(navigationMapView.finalDestinationAnnotation)
-        XCTAssertNotNil(navigationMapView.pointAnnotationManager, "Point annotation manager should not be nil.")
-        XCTAssertEqual(
-            navigationMapView.pointAnnotationManager?.annotations.count,
-            1,
-            "Only final destination annotation should be present."
-        )
-        XCTAssertEqual(
-            navigationMapView.pointAnnotationManager?.annotations.first?.id,
-            NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
-            "Point annotation identifiers should be equal."
-        )
-    }
-
     func testEnablePredictiveCaching() {
         let spy = PredictiveCacheManagerSpy()
         navigationMapView = NavigationMapView(

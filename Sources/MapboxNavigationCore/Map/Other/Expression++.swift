@@ -10,6 +10,10 @@ extension MapboxMaps.Expression {
         }
     }
 
+    static func routeCasingLineWidthExpression(_ multiplier: Double = 1.0) -> MapboxMaps.Expression {
+        routeLineWidthExpression(multiplier * 1.5)
+    }
+
     static func routeLineGradientExpression(
         _ gradientStops: [Double: UIColor],
         lineBaseColor: UIColor,

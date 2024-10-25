@@ -183,7 +183,7 @@ extension Route {
         let lineColor = isAlternative ? config.routeAlternateCasingColor : config.routeCasingColor
         return with(LineLayer(id: ids.casing, source: ids.source)) {
             $0.lineColor = .constant(.init(lineColor))
-            $0.lineWidth = .expression(.routeLineWidthExpression(1.5))
+            $0.lineWidth = .expression(.routeCasingLineWidthExpression())
             $0.lineJoin = .constant(.round)
             $0.lineCap = .constant(.round)
             $0.lineDepthOcclusionFactor = config.occlusionFactor

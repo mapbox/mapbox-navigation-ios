@@ -1,12 +1,6 @@
 import UIKit
 
 extension UIImage {
-    static let finalDestinationMarker = UIImage(
-        named: "final_destination_marker",
-        in: .mapboxNavigationUXCore,
-        compatibleWith: nil
-    )!
-
     static let midpointMarkerImage = UIImage(
         named: "midpoint_marker",
         in: .mapboxNavigationUXCore,

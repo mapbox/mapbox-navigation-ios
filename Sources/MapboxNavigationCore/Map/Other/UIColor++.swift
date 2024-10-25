@@ -34,4 +34,7 @@ extension UIColor {
 
     public class var defaultRouteAnnotationMoreTimeTextColor: UIColor { #colorLiteral(red: 0.9215686275, green: 0.1450980392, blue: 0.1647058824, alpha: 1) }
     public class var defaultRouteAnnotationLessTimeTextColor: UIColor { #colorLiteral(red: 0.03529411765, green: 0.6666666667, blue: 0.4549019608, alpha: 1) }
+
+    public class var defaultWaypointColor: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
+    public class var defaultWaypointStrokeColor: UIColor { #colorLiteral(red: 0.137254902, green: 0.1490196078, blue: 0.1764705882, alpha: 1) }
 }

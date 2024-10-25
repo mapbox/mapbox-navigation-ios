@@ -134,14 +134,12 @@ enum FeatureIds {
         private static let prefix: String = "\(globalPrefix)_waypoint"
 
         let featureId: String
-        let baseCircle: String
         let innerCircle: String
         let markerIcon: String
         let source: String
 
         init() {
             self.featureId = "\(Self.prefix).route-waypoints"
-            self.baseCircle = "\(Self.prefix).circleLayer"
             self.innerCircle = "\(Self.prefix).innerCircleLayer"
             self.markerIcon = "\(Self.prefix).symbolLayer"
             self.source = "\(Self.prefix).source"

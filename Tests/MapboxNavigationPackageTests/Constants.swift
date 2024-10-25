@@ -34,3 +34,11 @@ var routeOptions: NavigationRouteOptions {
     let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
     return NavigationRouteOptions(waypoints: [from, to])
 }
+
+var routeOptions3Waypoints: NavigationRouteOptions {
+    NavigationRouteOptions(waypoints: [
+        Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.210823, longitude: 9.519172)),
+        Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.214268, longitude: 9.52222)),
+        Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569)),
+    ])
+}

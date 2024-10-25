@@ -52,6 +52,11 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     ///   - navigationMapView: The ``NavigationMapView`` object.
     ///   - finalDestinationAnnotation: The point annotation that was added to the map view.
     ///   - pointAnnotationManager: The object that manages the point annotation in the map view.
+    @available(
+        *,
+        deprecated,
+        message: "This method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map."
+    )
     func navigationMapView(
         _ navigationMapView: NavigationMapView,
         didAdd finalDestinationAnnotation: PointAnnotation,
@@ -83,8 +88,8 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
         sourceIdentifier: String
     ) -> CircleLayer?
 
-    /// Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
-    /// This method is invoked any time waypoints are added or shown.
+    /// Asks the receiver to return a `SymbolLayer` for intermediate waypoint symbols, given an identifier and source.
+    /// This method is invoked any time intermediate waypoints are added or shown.
     /// - Parameters:
     ///   - navigationMapView: The ``NavigationMapView`` object.
     ///   - identifier: The `SymbolLayer` identifier.
@@ -96,7 +101,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
         sourceIdentifier: String
     ) -> SymbolLayer?
 
-    /// Asks the receiver to return a `FeatureCollection` that describes the geometry of intermediate waypoints.
+    /// Asks the receiver to return a `FeatureCollection` that describes the geometry of waypoints.
     /// - Parameters:
     ///   - navigationMapView: The ``NavigationMapView`` object.
     ///   - waypoints: The waypoints to be displayed on the map.

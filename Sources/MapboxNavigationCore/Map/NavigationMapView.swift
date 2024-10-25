@@ -119,20 +119,18 @@ open class NavigationMapView: UIView {
             .compactMap { $0 }
             .removeDuplicates { $0.legIndex == $1.legIndex }
             .sink { [weak self] _ in
-                self?.updateIntermediateWaypointsVisiblity()
+                self?.updateWaypointsVisiblity()
             }.store(in: &lifetimeSubscriptions)
     }
 
     /// `PointAnnotationManager`, which is used to manage addition and removal of a final destination annotation.
     /// `PointAnnotationManager` will become valid only after fully loading `MapView` style.
+    @available(
+        *,
+        deprecated,
+        message: "This property is deprecated and should no longer be used, as the final destination annotation is no longer added to the map. Use 'AnnotationOrchestrator.makePointAnnotationManager()' to create your own annotation manager instead. For more information see the following guide: https://docs.mapbox.com/ios/maps/guides/markers-and-annotations/annotations/#markers"
+    )
     public private(set) var pointAnnotationManager: PointAnnotationManager?
-
-    /// The `PointAnnotation`, which should be added to the `MapView` when `PointAnnotationManager` becomes
-    /// available. Since ``NavigationMapView/pointAnnotationManager`` is created only after loading `MapView` style,
-    /// there is a chance that due to a race condition ``NavigationMapView/show(_:routeAnnotationKinds:)`` will be
-    /// called before loading style. In such case final destination `PointAnnotation` will be stored in this property
-    /// and added to the `MapView` later on.
-    var finalDestinationAnnotation: PointAnnotation?
 
     private func setupMapView() {
         addSubview(mapView)
@@ -146,51 +144,6 @@ open class NavigationMapView: UIView {
         }.store(in: &lifetimeSubscriptions)
         setupGestureRecognizers()
         setupUserLocation()
-
-        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
-            guard let self else { return }
-            pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-            guard let pointAnnotationManager else { return }
-            if let finalDestinationAnnotation {
-                pointAnnotationManager.annotations = [finalDestinationAnnotation]
-                delegate?.navigationMapView(
-                    self,
-                    didAdd: finalDestinationAnnotation,
-                    pointAnnotationManager: pointAnnotationManager
-                )
-            }
-            finalDestinationAnnotation = nil
-        }.store(in: &lifetimeSubscriptions)
-    }
-
-    func addDestinationAnnotation(at coordinate: CLLocationCoordinate2D) {
-        removeDestinationAnnotation()
-
-        let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-        var destinationAnnotation = PointAnnotation(id: identifier, coordinate: coordinate)
-        destinationAnnotation.iconAnchor = .bottom
-        destinationAnnotation.iconOffset = [0, 15]
-        destinationAnnotation.image = .init(image: .finalDestinationMarker, name: ImageIdentifier.markerImage)
-        // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
-        // and add it only after fully loading `MapView` style.
-        if let pointAnnotationManager {
-            pointAnnotationManager.annotations.append(destinationAnnotation)
-            delegate?.navigationMapView(
-                self,
-                didAdd: destinationAnnotation,
-                pointAnnotationManager: pointAnnotationManager
-            )
-        } else {
-            finalDestinationAnnotation = destinationAnnotation
-        }
-    }
-
-    func removeDestinationAnnotation() {
-        let remainingAnnotations = pointAnnotationManager?.annotations.filter {
-            $0.id != AnnotationIdentifier.finalDestinationAnnotation
-        }
-
-        pointAnnotationManager?.annotations = remainingAnnotations ?? []
     }
 
     private func observeCamera() {
@@ -265,8 +218,8 @@ open class NavigationMapView: UIView {
     /// Defaults to `true`.
     ///
     /// If `true`, the part of the route that has been traversed will be rendered with full transparency, to give the
-    /// illusion of a
-    /// disappearing route. If `false`, the whole route will be shown without traversed part disappearing effect.
+    /// illusion of a disappearing route. If `false`, the whole route will be shown without traversed part disappearing
+    /// effect.
     public var routeLineTracksTraversal: Bool = true
 
     /// The maximum distance (in screen points) the user can tap for a selection to be valid when selecting a POI.
@@ -300,7 +253,7 @@ open class NavigationMapView: UIView {
     /// Controls whether intermediate waypoints displayed on the route line. Defaults to `true`.
     public var showsIntermediateWaypoints: Bool = true {
         didSet {
-            updateIntermediateWaypointsVisiblity()
+            updateWaypointsVisiblity()
         }
     }
 
@@ -387,6 +340,10 @@ open class NavigationMapView: UIView {
     @objc public dynamic var routeAnnotationLessTimeTextColor: UIColor = .defaultRouteAnnotationLessTimeTextColor
     /// Configures the text font of the route annotations.
     @objc public dynamic var routeAnnotationTextFont: UIFont = .defaultRouteAnnotationTextFont
+    /// Configures the waypoint color.
+    @objc public dynamic var waypointColor: UIColor = .defaultWaypointColor
+    /// Configures the waypoint stroke color.
+    @objc public dynamic var waypointStrokeColor: UIColor = .defaultWaypointStrokeColor
 
     // MARK: - Public methods
 
@@ -493,10 +450,7 @@ open class NavigationMapView: UIView {
             config: mapStyleConfig,
             featureProvider: customRouteLineFeatureProvider
         )
-        if let destination = mainRoute.legs.last?.destination {
-            addDestinationAnnotation(at: destination.coordinate)
-        }
-        updateIntermediateWaypointsVisiblity()
+        updateWaypointsVisiblity()
         if showsVoiceInstructionsOnMap {
             mapStyleManager.updateVoiceInstructions(route: mainRoute)
         }
@@ -517,7 +471,6 @@ open class NavigationMapView: UIView {
         routeLineGranularDistances = nil
         routeRemainingDistancesIndex = nil
         mapStyleManager.removeAllFeatures()
-        removeDestinationAnnotation()
     }
 
     func updateArrow(routeProgress: RouteProgress) {
@@ -664,10 +617,10 @@ open class NavigationMapView: UIView {
         }
     }
 
-    private var intermediateWaypointsFeatureProvider: IntermediateWaypointFeatureProvider {
-        .init { [weak self] intermediateWaypoints, legIndex in
+    private var waypointsFeatureProvider: WaypointFeatureProvider {
+        .init { [weak self] waypoints, legIndex in
             guard let self else { return nil }
-            return delegate?.navigationMapView(self, shapeFor: intermediateWaypoints, legIndex: legIndex)
+            return delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex)
         } customCirleLayer: { [weak self] identifier, sourceIdentifier in
             guard let self else { return nil }
             return delegate?.navigationMapView(
@@ -702,18 +655,18 @@ open class NavigationMapView: UIView {
         return customizedLayer
     }
 
-    private func updateIntermediateWaypointsVisiblity() {
-        if showsIntermediateWaypoints, let mainRoute = routes?.mainRoute.route {
-            let legIndex = currentRouteProgress?.legIndex ?? 0
-            mapStyleManager.updateIntermediateWaypoints(
-                route: mainRoute,
-                legIndex: legIndex,
-                config: mapStyleConfig,
-                featureProvider: intermediateWaypointsFeatureProvider
-            )
-        } else {
+    private func updateWaypointsVisiblity() {
+        guard let mainRoute = routes?.mainRoute.route else {
             mapStyleManager.removeWaypoints()
+            return
         }
+
+        mapStyleManager.updateWaypoints(
+            route: mainRoute,
+            legIndex: currentRouteProgress?.legIndex ?? 0,
+            config: mapStyleConfig,
+            featureProvider: waypointsFeatureProvider
+        )
     }
 
     // - MARK: User Tracking Features
@@ -773,8 +726,11 @@ open class NavigationMapView: UIView {
             isRestrictedAreaEnabled: showsRestrictedAreasOnRoute,
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,
             showsAlternatives: showsAlternatives,
+            showsIntermediateWaypoints: showsIntermediateWaypoints,
             occlusionFactor: .constant(routeLineOcclusionFactor),
-            congestionConfiguration: congestionConfiguration
+            congestionConfiguration: congestionConfiguration,
+            waypointColor: waypointColor,
+            waypointStrokeColor: waypointStrokeColor
         )
     }
 }

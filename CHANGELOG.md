@@ -6,6 +6,16 @@
 
 * Added support for a special speed limit sign for no speed limit zones.
 
+### ⚠️ Behavioral Changes ⚠️:
+
+* The final destination is now displayed as a waypoint circle layer instead of a point annotation. Use 'AnnotationOrchestrator.makePointAnnotationManager()' to create your own annotation manager to add the final destination annotation to the map. For more information see the following guide: https://docs.mapbox.com/ios/maps/guides/markers-and-annotations/annotations/#markers. To hide a particular waypoint, use `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)` method to supply `Feature.properties` with data that allow to distinguish waypoints. Use these properties data in `CircleLayer.circleOpacity` expression to control waypoints visibility.
+* Updated the default visual style of waypoits. To customize waypoint representation, use `NavigationMapViewDelegate.navigationMapView(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)` method to create your own `CircleLayer` for waypoints.
+
+### API deprecations:
+
+* `NavigationMapView.pointAnnotationManager` property is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
+* `NavigationMapView.navigationMapView(_, didAdd:pointAnnotationManager:)` method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
+
 ## v3.5.0-beta.1
 
 ### API deprecations:

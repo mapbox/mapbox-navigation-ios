@@ -180,6 +180,10 @@ open class NightStyle: DayStyle {
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationMoreTimeTextColor = #colorLiteral(red: 0.9176470588, green: 0.1921568627, blue: 0.2117647059, alpha: 1)
             NavigationMapView.appearance(for: traitCollection).routeAnnotationLessTimeTextColor = #colorLiteral(red: 0.0431372549, green: 0.8549019608, blue: 0.5843137255, alpha: 1)
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointColor = #colorLiteral(red: 0.9294117647, green: 0.937254902, blue: 0.9490196078, alpha: 1)
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointStrokeColor = #colorLiteral(red: 0.137254902, green: 0.1490196078, blue: 0.1764705882, alpha: 1)
         }
         NavigationView.appearance(for: traitCollection).backgroundColor = #colorLiteral(red: 0.0470588, green: 0.0509804, blue: 0.054902, alpha: 1)
 
@@ -259,6 +263,10 @@ open class NightStyle: DayStyle {
 
         Task { @MainActor in
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAlternateColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointColor = #colorLiteral(red: 0.9294117647, green: 0.937254902, blue: 0.9490196078, alpha: 1)
+            NavigationMapView.appearance(for: traitCollection)
+                .waypointStrokeColor = #colorLiteral(red: 0.137254902, green: 0.1490196078, blue: 0.1764705882, alpha: 1)
         }
 
         SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(
