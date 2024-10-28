@@ -355,12 +355,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigation()
         setupVoiceController()
         setupNavigationCamera()
-
-        if usesNightStyleInDarkMode, traitCollection.userInterfaceStyle == .dark {
-            styleManager.applyStyle(type: .night)
-        } else {
-            styleManager.applyStyle(type: .day)
-        }
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -636,7 +630,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /// If true, the map style and UI will automatically be updated given the time of day.
     public var automaticallyAdjustsStyleForTimeOfDay = true {
         didSet {
-            styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
+            styleManager?.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
         }
     }
 
@@ -650,11 +644,17 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     func setupStyleManager(_ navigationOptions: NavigationOptions?) {
         styleManager = StyleManager()
+        styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
         styleManager.delegate = self
         styleManager.styles = navigationOptions?.styles ?? [StandardDayStyle(), StandardNightStyle()]
 
         if let currentStyle = styleManager.currentStyle {
             updateMapStyle(currentStyle)
+        }
+        if usesNightStyleInDarkMode, traitCollection.userInterfaceStyle == .dark {
+            styleManager.applyStyle(type: .night)
+        } else {
+            styleManager.applyStyle(type: .day)
         }
     }
 
@@ -665,6 +665,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 
     func transitionStyle(to newCollection: UITraitCollection) {
+        guard let styleManager else { return }
         if newCollection.userInterfaceStyle == .dark {
             styleManager.applyStyle(type: .night)
         } else {
@@ -865,6 +866,7 @@ extension NavigationViewController {
     }
 
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
+        guard let styleManager else { return }
         let inTunnel = tunnelAuthority.isInTunnel(location, progress)
 
         // Entering tunnel
@@ -872,9 +874,9 @@ extension NavigationViewController {
             isTraversingTunnel = true
 
             if usesNightStyleWhileInTunnel,
-               styleManager?.currentStyle?.styleType != .night
+               styleManager.currentStyle?.styleType != .night
             {
-                styleManager?.applyStyle(type: .night)
+                styleManager.applyStyle(type: .night)
             }
         }
 

@@ -115,7 +115,7 @@ final class AdvancedViewController: UIViewController {
             mapboxNavigation: mapboxNavigation,
             voiceController: mapboxNavigationProvider.routeVoiceController,
             eventsManager: mapboxNavigationProvider.eventsManager(),
-            styles: [StandardNightStyle()],
+            styles: [StandardDayStyle(), StandardNightStyle()],
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager,
             // Replace default `NavigationMapView` instance with instance that is used in preview mode.
             navigationMapView: navigationMapView
@@ -124,6 +124,8 @@ final class AdvancedViewController: UIViewController {
             navigationRoutes: navigationRoutes,
             navigationOptions: navigationOptions
         )
+        // Enables the dark/light appearance switch.
+        navigationViewController.usesNightStyleInDarkMode = true
         navigationViewController.delegate = self
         navigationViewController.modalPresentationStyle = .fullScreen
 

@@ -29,6 +29,7 @@
 ### Other changes
 
 * Added support for a special speed limit sign for no speed limit zones.
+* Fixed a possible force `nil` unwrapping in `NavigationViewController.styleManager`.
 
 ## v3.5.0-beta.1
 
