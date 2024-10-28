@@ -16,6 +16,10 @@
 * `NavigationMapView.pointAnnotationManager` property is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
 * `NavigationMapView.navigationMapView(_, didAdd:pointAnnotationManager:)` method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
 
+### CarPlay:
+
+* `CarPlayMapViewController` does not automatically change the state to free drive when it appears if the previous state was different than `idle`.
+
 ## v3.5.0-beta.1
 
 ### API deprecations:

@@ -309,7 +309,7 @@ open class CarPlayMapViewController: UIViewController {
 
     override public func loadView() {
         setupNavigationMapView()
-        if startFreeDriveAutomatically {
+        if startFreeDriveAutomatically, core.tripSession().currentSession.state == .idle {
             startFreeDriveNavigation()
         }
     }
