@@ -6,6 +6,7 @@ public class RerouteDetectorSpy: RerouteDetectorInterface {
     public typealias ForceRerouteCallback = (Expected<RerouteInfo, RerouteError>) -> Void
 
     public var forceRerouteCalled = false
+    public var cancelRerouteCalled = false
     public var returnedIsReroute = false
 
     public func forceReroute(for reason: ForceRerouteReason) {
@@ -17,6 +18,10 @@ public class RerouteDetectorSpy: RerouteDetectorInterface {
     }
 
     public func isReroute() -> Bool {
-        return returnedIsReroute
+        returnedIsReroute
+    }
+
+    public func cancelReroute() {
+        cancelRerouteCalled = true
     }
 }

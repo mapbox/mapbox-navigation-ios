@@ -24,21 +24,7 @@ public final class CoreNavigatorMock: CoreNavigator {
     public var passedElectronicHorizonConfig: ElectronicHorizonConfig?
 
     public init() {
-        let configHandle = ConfigFactory.build(
-            for: SettingsProfile(
-                application: .mobile,
-                platform: .IOS
-            ),
-            config: NavigatorConfig(
-                voiceInstructionThreshold: nil,
-                electronicHorizonOptions: nil,
-                polling: nil,
-                incidentsOptions: nil,
-                noSignalSimulationEnabled: nil,
-                useSensors: nil
-            ),
-            customConfig: ""
-        )
+        let configHandle = ConfigHandle.mock()
         self.cacheHandle = CacheFactory.build(
             for: .init(
                 tilesPath: "",

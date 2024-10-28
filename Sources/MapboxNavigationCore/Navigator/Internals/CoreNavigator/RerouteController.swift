@@ -37,13 +37,13 @@ class RerouteController {
     weak var delegate: ReroutingControllerDelegate?
 
     func userIsOnRoute() -> Bool {
-        return !rerouteDetector.isReroute()
+        return !(rerouteDetector?.isReroute() ?? false)
     }
 
     // MARK: Internal State Management
 
     private let defaultRerouteController: DefaultRerouteControllerInterface
-    private let rerouteDetector: RerouteDetectorInterface
+    private let rerouteDetector: RerouteDetectorInterface?
 
     private weak var navigator: NavigationNativeNavigator?
 
@@ -84,11 +84,8 @@ class RerouteController {
 }
 
 extension RerouteController: RerouteObserver {
-    func onSwitchToAlternative(forRoute route: RouteInterface) {
-        delegate?.rerouteControllerWantsSwitchToAlternative(
-            self,
-            route: route
-        )
+    func onSwitchToAlternative(forRoute route: any RouteInterface, legIndex: UInt32) {
+        delegate?.rerouteControllerWantsSwitchToAlternative(self, route: route, legIndex: Int(legIndex))
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {

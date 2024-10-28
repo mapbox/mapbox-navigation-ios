@@ -1169,7 +1169,8 @@ final class MapboxNavigator: @unchecked Sendable {
 extension MapboxNavigator: ReroutingControllerDelegate {
     func rerouteControllerWantsSwitchToAlternative(
         _ rerouteController: RerouteController,
-        route: RouteInterface
+        route: RouteInterface,
+        legIndex: Int
     ) {
         Task {
             guard let navigationRoute = await NavigationRoute(nativeRoute: route) else {
@@ -1183,7 +1184,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                         mainRoute: navigationRoute,
                         alternativeRoutes: []
                     ),
-                    startLegIndex: 0,
+                    startLegIndex: legIndex,
                     reason: .alternatives
                 )
             }

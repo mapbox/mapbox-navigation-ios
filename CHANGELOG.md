@@ -2,9 +2,8 @@
 
 ## v3.5.0-rc.1
 
-### Other changes
-
-* Added support for a special speed limit sign for no speed limit zones.
+* MapboxNavigationCore now requires [MapboxNavigationNative v321.0.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/321.0.0-rc.1).
+* MapboxNavigationCore now requires [MapboxMaps v11.8.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.8.0-rc.1).
 
 ### ⚠️ Behavioral Changes ⚠️:
 
@@ -18,8 +17,18 @@
 
 ### CarPlay:
 
-* Update navigation buttons style.
+* Updated navigation buttons style.
 * `CarPlayMapViewController` does not automatically change the state to free drive when it appears if the previous state was different than `idle`.
+
+### Routing
+
+* Fixed map matching bug after leaving a tunnel.
+* Increased route stickiness in dead reckoning mode.
+* Improved odometry and road graph fusing in urban canyons.
+
+### Other changes
+
+* Added support for a special speed limit sign for no speed limit zones.
 
 ## v3.5.0-beta.1
 

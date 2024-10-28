@@ -90,12 +90,12 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     }
 
     @_implementationOnly
-    override public func getRerouteController() -> RerouteControllerInterface {
+    override public func getRerouteController() -> RerouteControllerInterface? {
         return rerouteController ?? super.getRerouteController()
     }
 
     @_implementationOnly
-    override public func getRerouteDetector() -> RerouteDetectorInterface {
+    override public func getRerouteDetector() -> RerouteDetectorInterface? {
         return rerouteDetector ?? RerouteDetectorSpy()
     }
 

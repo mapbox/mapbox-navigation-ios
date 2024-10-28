@@ -5,7 +5,8 @@ import Turf
 protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerWantsSwitchToAlternative(
         _ rerouteController: RerouteController,
-        route: RouteInterface
+        route: RouteInterface,
+        legIndex: Int
     )
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, routesData: RoutesData)
