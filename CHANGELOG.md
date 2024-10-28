@@ -18,6 +18,7 @@
 
 ### CarPlay:
 
+* Update navigation buttons style.
 * `CarPlayMapViewController` does not automatically change the state to free drive when it appears if the previous state was different than `idle`.
 
 ## v3.5.0-beta.1

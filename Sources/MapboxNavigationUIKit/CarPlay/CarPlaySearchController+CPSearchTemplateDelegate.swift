@@ -42,11 +42,8 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         interfaceController: CPInterfaceController,
         traitCollection: UITraitCollection
     ) -> CPBarButton {
-        let image = UIImage(
-            named: "carplay_search",
-            in: .mapboxNavigation,
-            compatibleWith: traitCollection
-        ) ?? UIImage()
+        let configuration = UIImage.SymbolConfiguration(pointSize: 24)
+        let image = UIImage(systemName: "magnifyingglass", withConfiguration: configuration) ?? UIImage()
 
         let searchTemplateButton = CPBarButton(image: image) { [weak self] _ in
             guard let self else { return }

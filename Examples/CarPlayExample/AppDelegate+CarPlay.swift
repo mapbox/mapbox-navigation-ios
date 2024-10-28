@@ -250,12 +250,15 @@ extension AppDelegate: CarPlayManagerDelegate {
     ) -> [CPBarButton]? {
         switch activity {
         case .browsing:
-            let image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)!
+            let configuration = UIImage.SymbolConfiguration(pointSize: 24)
+            let image = UIImage(systemName: "star.fill", withConfiguration: configuration) ?? UIImage()
+
             let favoriteTemplateButton = CPBarButton(image: image) { [weak self] _ in
                 guard let self else { return }
                 let listTemplate = favoritesListTemplate()
                 carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true, completion: nil)
             }
+
             return [favoriteTemplateButton]
         case .navigating, .panningInBrowsingMode, .panningInNavigationMode, .previewing:
             return nil
