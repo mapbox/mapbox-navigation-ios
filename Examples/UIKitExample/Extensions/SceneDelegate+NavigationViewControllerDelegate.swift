@@ -35,8 +35,10 @@ extension SceneDelegate: NavigationViewControllerDelegate {
 
                     navigationMapView.removeRoutes()
 
+                    guard let initialRoutes else { return }
+
                     showcase(
-                        navigationRoutes: navigationViewController.navigationRoutes!,
+                        navigationRoutes: initialRoutes,
                         animated: shouldAnimate,
                         duration: animationDuration
                     )

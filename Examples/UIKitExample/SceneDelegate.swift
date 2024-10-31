@@ -9,6 +9,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     var previewViewController: PreviewViewController!
+    var initialRoutes: NavigationRoutes?
 
     let shouldAnimate = true
 
@@ -128,6 +129,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         animated: Bool = true,
         duration: TimeInterval = 1.0
     ) {
+        initialRoutes = navigationRoutes
         previewViewController.navigationView.configureViewportPadding()
         previewViewController.navigationMapView.showcase(
             navigationRoutes,
