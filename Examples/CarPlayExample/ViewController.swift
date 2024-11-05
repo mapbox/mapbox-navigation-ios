@@ -59,7 +59,7 @@ class ViewController: UIViewController {
     var routes: NavigationRoutes? {
         didSet {
             guard let routes else {
-                clearNavigationMapView()
+                clearNavigationMapView(endNavigation: false)
                 return ()
             }
             waypoints = routes.mainRoute.route.legs.compactMap { $0.destination }
@@ -227,7 +227,7 @@ class ViewController: UIViewController {
         navigationMapView.removeFromSuperview()
     }
 
-    private func clearNavigationMapView() {
+    private func clearNavigationMapView(endNavigation: Bool) {
         Task { @MainActor in
             startButton.isEnabled = false
             clearMap.isHidden = true
@@ -237,7 +237,9 @@ class ViewController: UIViewController {
 
             waypoints.removeAll()
             navigationMapView?.navigationCamera.update(cameraState: .following)
-            updateCarPlayRoutesPreview()
+            if !endNavigation {
+                updateCarPlayRoutesPreview()
+            }
 
             core.tripSession().startFreeDrive()
             navigationProvider.apply(coreConfig: .init(
@@ -800,6 +802,6 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(_: NavigationViewController, byCanceling canceled: Bool) {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
-        clearNavigationMapView()
+        clearNavigationMapView(endNavigation: true)
     }
 }

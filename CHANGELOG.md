@@ -24,6 +24,8 @@
 
 ### CarPlay:
 
+* Update navigation buttons style.
+* Fixed inconsistent state while ending active navigation.
 * Updated navigation buttons style.
 * `CarPlayMapViewController` does not automatically change the state to free drive when it appears if the previous state was different than `idle`.
 
