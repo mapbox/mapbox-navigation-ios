@@ -2,6 +2,11 @@
 
 ## v3.5.0
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.8.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.8.0).
+* MapboxNavigationCore now requires [MapboxNavigationNative v321.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/321.0.0).
+
 ### Map
 
 * Fixed an issue where a destination waypoint is not displayed when `NavigationMapView.showsIntermediateWaypoints` was set to `false`.
