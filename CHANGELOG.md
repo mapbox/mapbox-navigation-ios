@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.5.0
+
+### Map
+
+* Fixed an issue where a destination waypoint is not displayed when `NavigationMapView.showsIntermediateWaypoints` was set to `false`.
+
 ## v3.5.0-rc.2
 
 ### Packaging

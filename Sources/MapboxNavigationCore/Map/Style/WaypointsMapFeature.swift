@@ -25,11 +25,10 @@ extension Route {
     ) -> MapFeature? {
         guard let startWaypoint = legs.first?.source else { return nil }
         guard let destinationWaypoint = legs.last?.destination else { return nil }
-        let intermediateWaypoints: [Waypoint] = config.showsIntermediateWaypoints
+
+        let intermediateWaypoints = config.showsIntermediateWaypoints
             ? legs.dropLast().compactMap(\.destination)
             : []
-
-        guard intermediateWaypoints.count == legs.dropLast().count else { return nil }
         let waypoints = [startWaypoint] + intermediateWaypoints + [destinationWaypoint]
 
         registerIntermediateWaypointImage(in: mapView)
