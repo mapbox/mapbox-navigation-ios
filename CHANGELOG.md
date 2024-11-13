@@ -25,8 +25,8 @@
 
 ### ⚠️ Behavioral Changes ⚠️:
 
-* The final destination is now displayed as a waypoint circle layer instead of a point annotation. Use 'AnnotationOrchestrator.makePointAnnotationManager()' to create your own annotation manager to add the final destination annotation to the map. For more information see the following guide: https://docs.mapbox.com/ios/maps/guides/markers-and-annotations/annotations/#markers. To hide a particular waypoint, use `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)` method to supply `Feature.properties` with data that allow to distinguish waypoints. Use these properties data in `CircleLayer.circleOpacity` expression to control waypoints visibility.
-* Updated the default visual style of waypoits. To customize waypoint representation, use `NavigationMapViewDelegate.navigationMapView(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)` method to create your own `CircleLayer` for waypoints.
+* The final destination is now displayed as a waypoint circle layer instead of a point annotation. Use `AnnotationOrchestrator.makePointAnnotationManager()` to create your own annotation manager to add the final destination annotation to the map. For more information see the following guide: https://docs.mapbox.com/ios/maps/guides/markers-and-annotations/annotations/#markers. To hide a particular waypoint, use `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)` method to supply `Feature.properties` with data that allows distinguishing waypoints. Use these properties data in `CircleLayer.circleOpacity` expression to control waypoints visibility.
+* Updated the default visual style of waypoints. To customize waypoint representation, use `NavigationMapViewDelegate.navigationMapView(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)` method to create your own `CircleLayer` for waypoints.
 
 ### API deprecations:
 
@@ -38,7 +38,7 @@
 * Update navigation buttons style.
 * Fixed inconsistent state while ending active navigation.
 * Updated navigation buttons style.
-* `CarPlayMapViewController` does not automatically change the state to free drive when it appears if the previous state was different than `idle`.
+* `CarPlayMapViewController` does not automatically change the state to free drive when it appears, if the previous state was different from the `idle` state.
 
 ### Routing
 
@@ -71,7 +71,7 @@
 ### Other changes
 
 * `NavigationViewController` transitions navigation to the `idle` state when it is dismissed.
-* Added the ability to configure predictive cache for search by 'PredictiveCacheConfig.predictiveCacheSearchConfig'.
+* Added the ability to configure predictive cache for search by `PredictiveCacheConfig.predictiveCacheSearchConfig`.
 
 ## v3.4.0
 
