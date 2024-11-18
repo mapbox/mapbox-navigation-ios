@@ -6,7 +6,8 @@ import UIKit
 @MainActor
 var navigationProvider: MapboxNavigationProvider = {
     let config = CoreConfig(
-        credentials: .init() // You can pass a custom token if you need to
+        credentials: .init(), // You can pass a custom token if you need to
+        historyRecordingConfig: HistoryRecordingConfig(historyDirectoryURL: defaultHistoryDirectoryURL())
     )
     return MapboxNavigationProvider(coreConfig: config)
 }()
@@ -60,13 +61,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        let historyRecordingUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("historyRecordings")
-        _ = try? FileManager.default.createDirectory(
-            at: historyRecordingUrl,
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
+        let historyDirectoryURL = defaultHistoryDirectoryURL()
+        if !FileManager.default.fileExists(atPath: historyDirectoryURL.path) {
+            try? FileManager.default.createDirectory(
+                at: historyDirectoryURL,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+        }
 
         if isRunningTests() {
             if window == nil {
@@ -113,4 +115,14 @@ extension AppDelegate: UIWindowSceneDelegate {
 
         return UISceneConfiguration(name: "ExampleAppConfiguration", sessionRole: connectingSceneSession.role)
     }
+}
+
+func defaultHistoryDirectoryURL() -> URL {
+    let basePath = NSSearchPathForDirectoriesInDomains(
+        .applicationSupportDirectory,
+        .userDomainMask,
+        true
+    ).first ?? NSTemporaryDirectory()
+    return URL(fileURLWithPath: basePath, isDirectory: true)
+        .appendingPathComponent("historyRecordings")
 }

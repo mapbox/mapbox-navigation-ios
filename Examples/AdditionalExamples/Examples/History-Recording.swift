@@ -22,7 +22,7 @@ func defaultHistoryDirectoryURL() -> URL {
         .appendingPathComponent("com.mapbox.Example")
         .appendingPathComponent("NavigationHistory")
 
-    if FileManager.default.fileExists(atPath: historyDirectoryURL.path) == false {
+    if !FileManager.default.fileExists(atPath: historyDirectoryURL.path) {
         try? FileManager.default.createDirectory(
             at: historyDirectoryURL,
             withIntermediateDirectories: true,
