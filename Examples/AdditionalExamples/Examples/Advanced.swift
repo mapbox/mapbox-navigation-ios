@@ -23,6 +23,8 @@ final class AdvancedViewController: UIViewController {
         mapboxNavigationProvider.mapboxNavigation
     }
 
+    private static let styleUrl = "mapbox://styles/mapbox-dash/standard-navigation"
+
     private var navigationMapView: NavigationMapView! {
         didSet {
             if oldValue != nil {
@@ -75,6 +77,7 @@ final class AdvancedViewController: UIViewController {
                 .eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
+        navigationMapView.mapView.mapboxMap.loadStyle(StyleURI(rawValue: Self.styleUrl)!)
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.delegate = self
         navigationMapView.puckType = .puck2D(.navigationDefault)
@@ -190,6 +193,10 @@ final class AdvancedViewController: UIViewController {
 
 extension AdvancedViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
+        requestRoute(destination: mapPoint.coordinate)
+    }
+
+    func navigationMapView(_ navigationMapView: NavigationMapView, userDidTap mapPoint: MapPoint) {
         requestRoute(destination: mapPoint.coordinate)
     }
 
