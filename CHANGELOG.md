@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.6.0-beta.1
+
+### CarPlay
+
+* Added logic to automatically recenter puck after canceling preview mode.
+
 ## v3.5.0
 
 ### Packaging
