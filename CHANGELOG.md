@@ -5,6 +5,7 @@
 ### CarPlay
 
 * Added logic to automatically recenter puck after canceling preview mode.
+* Fixed Car Play route does not properly cancel when navigating solely from the Car Play application.
 
 ## v3.5.0
 

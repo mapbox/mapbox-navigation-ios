@@ -738,7 +738,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
                 interfaceController: interfaceController,
                 rootTemplate: navigationMapTemplate,
                 animated: true
-            ) { [self] _, _ in
+            ) { [weak self] _, _ in
+                guard let self else { return }
 
                 let carPlayNavigationViewController = carPlayNavigationViewControllerType.init(
                     accessToken: navigationProvider.coreConfig.credentials.navigation.accessToken,

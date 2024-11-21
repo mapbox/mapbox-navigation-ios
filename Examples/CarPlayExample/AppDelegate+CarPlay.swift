@@ -147,6 +147,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         byCanceling canceled: Bool
     ) {
         // Dismiss NavigationViewController if it's present in the navigation stack
+        navigationProvider.tripSession().setToIdle()
         currentAppRootViewController?.dismissActiveNavigationViewController()
     }
 
