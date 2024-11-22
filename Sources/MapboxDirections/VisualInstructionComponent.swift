@@ -61,7 +61,8 @@ extension VisualInstruction {
         /// A component that represents a turn lane or through lane at the approach to an intersection.
         ///
         /// - parameter indications: The direction or directions of travel that the lane is reserved for.
-        /// - parameter isUsable: Whether the user can use this lane to continue along the current route.
+        /// - parameter isUsable: Indicates whether the lane is recommended for performing the upcoming maneuver.
+        /// If multiple lanes are active, all are equally recommended.
         /// - parameter preferredDirection: Which of the `indications` is applicable to the current route when there is
         /// more than one
         case lane(indications: LaneIndication, isUsable: Bool, preferredDirection: ManeuverDirection?)
