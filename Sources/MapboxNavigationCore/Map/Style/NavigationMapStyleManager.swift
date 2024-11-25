@@ -45,7 +45,14 @@ final class NavigationMapStyleManager {
     private var layerIds: [String]
 
     var customizedLayerProvider: CustomizedLayerProvider = .init { $0 }
-    var customRouteLineLayerPosition: LayerPosition?
+    var customRouteLineLayerPosition: LayerPosition? {
+        didSet {
+            layersOrder = Self.makeMapLayersOrder(
+                with: mapView,
+                customRouteLineLayerPosition: customRouteLineLayerPosition
+            )
+        }
+    }
 
     private let routeFeaturesStore: MapFeaturesStore
     private let waypointFeaturesStore: MapFeaturesStore
@@ -395,8 +402,10 @@ final class NavigationMapStyleManager {
         let lowermostSymbolLayers: [String] = [
             alternative_0_ids.casing,
             alternative_0_ids.main,
+            alternative_0_ids.restrictedArea,
             alternative_1_ids.casing,
             alternative_1_ids.main,
+            alternative_1_ids.restrictedArea,
             mainLineIds.traversedRoute,
             mainLineIds.casing,
             mainLineIds.main,
@@ -409,17 +418,18 @@ final class NavigationMapStyleManager {
             arrowIds.arrowSymbol,
             intersectionIds.layer,
             routeAlertIds.layer,
-            waypointIds.innerCircle,
-            waypointIds.markerIcon,
         ]
         let uppermostSymbolLayers: [String] = [
             voiceInstructionIds.layer,
             voiceInstructionIds.circleLayer,
+            waypointIds.innerCircle,
+            waypointIds.markerIcon,
             NavigationMapView.LayerIdentifier.puck2DLayer,
             NavigationMapView.LayerIdentifier.puck3DLayer,
         ]
         let isLowermostLayer = lowermostSymbolLayers.contains(layerIdentifier)
         let isAboveRoadLayer = aboveRoadLayers.contains(layerIdentifier)
+        let isUppermostLayer = uppermostSymbolLayers.contains(layerIdentifier)
         let allAddedLayers: [String] = lowermostSymbolLayers + aboveRoadLayers + uppermostSymbolLayers
 
         var layerPosition: MapboxMaps.LayerPosition?
@@ -511,7 +521,7 @@ final class NavigationMapStyleManager {
                 // symbol layer.
                 return .above(targetLayer)
             }
-        } else {
+        } else if !isUppermostLayer {
             // For other layers should be uppermost and above symbol layers.
             if case .above(let sequenceLayer) = layerPosition, !uppermostSymbolLayers.contains(sequenceLayer) {
                 // If the sequenceLayer isn't in uppermostSymbolLayers, it's below some symbol layers.

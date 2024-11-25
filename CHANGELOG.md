@@ -2,6 +2,11 @@
 
 ## v2.6.0-beta.1
 
+### Map
+
+* Fixed the case when intermediate waypoints can be displayed under the route line in map styles with no slot support.
+* Fixed the case when `NavigationMapView.customRouteLineLayerPosition` was not applied in runtime.
+
 ### CarPlay
 
 * Added logic to automatically recenter puck after canceling preview mode.
