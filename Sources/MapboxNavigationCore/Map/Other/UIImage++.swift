@@ -1,12 +1,6 @@
 import UIKit
 
 extension UIImage {
-    static let midpointMarkerImage = UIImage(
-        named: "midpoint_marker",
-        in: .mapboxNavigationUXCore,
-        compatibleWith: nil
-    )!
-
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)

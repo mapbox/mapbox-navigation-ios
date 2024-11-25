@@ -261,7 +261,6 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelCircleLayer["id"]!,
             routeAlertIds.layer,
             waypointIds.innerCircle,
-            waypointIds.markerIcon,
             Slot.middle!.rawValue,
         ]
         XCTAssertEqual(
@@ -420,7 +419,6 @@ class RouteLineLayerPositionTests: TestCase {
             intersectionIds.layer,
             routeAlertIds.layer,
             waypointIds.innerCircle,
-            waypointIds.markerIcon,
             Slot.middle!.rawValue,
             circleLabelLayer,
         ]

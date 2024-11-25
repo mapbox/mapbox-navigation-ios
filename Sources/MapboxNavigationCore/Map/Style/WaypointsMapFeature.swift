@@ -30,9 +30,6 @@ extension Route {
             ? legs.dropLast().compactMap(\.destination)
             : []
         let waypoints = [startWaypoint] + intermediateWaypoints + [destinationWaypoint]
-
-        registerIntermediateWaypointImage(in: mapView)
-
         let customFeatures = featureProvider.customFeatures(waypoints, legIndex)
 
         return waypointsMapFeature(
@@ -49,26 +46,11 @@ extension Route {
                 var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
                 var properties: [String: JSONValue] = [:]
                 properties["waypointCompleted"] = .boolean(waypointIndex <= legIndex)
-                properties["waipointIconImage"] = waypointIndex > 0 && waypointIndex < waypoints.count - 1
-                    ? .string(NavigationMapView.ImageIdentifier.midpointMarkerImage)
-                    : nil
                 feature.properties = properties
 
                 return feature
             }
         )
-    }
-
-    private func registerIntermediateWaypointImage(in mapView: MapView) {
-        let intermediateWaypointImageId = NavigationMapView.ImageIdentifier.midpointMarkerImage
-        mapView.mapboxMap.provisionImage(id: intermediateWaypointImageId) {
-            try $0.addImage(
-                UIImage.midpointMarkerImage,
-                id: intermediateWaypointImageId,
-                stretchX: [],
-                stretchY: []
-            )
-        }
     }
 
     private func waypointsMapFeature(
@@ -82,10 +64,10 @@ extension Route {
             FeatureIds.RouteWaypoints.default.source
         ) ?? customizedLayerProvider.customizedLayer(defaultCircleLayer(config: config))
 
-        let symbolLayer = featureProvider.customSymbolLayer(
+        let symbolLayer: (any Layer)? = featureProvider.customSymbolLayer(
             FeatureIds.RouteWaypoints.default.markerIcon,
             FeatureIds.RouteWaypoints.default.source
-        ) ?? customizedLayerProvider.customizedLayer(defaultSymbolLayer)
+        )
 
         return GeoJsonMapFeature(
             id: FeatureIds.RouteWaypoints.default.featureId,
@@ -96,7 +78,7 @@ extension Route {
                 ),
             ],
             customizeSource: { _, _ in },
-            layers: [circleLayer, symbolLayer],
+            layers: [circleLayer, symbolLayer].compactMap { $0 },
             onBeforeAdd: { _ in },
             onAfterRemove: { _ in }
         )
@@ -127,30 +109,6 @@ extension Route {
             $0.circleStrokeWidth = .expression(.routeCasingLineWidthExpression(0.14))
             $0.circleStrokeOpacity = .expression(opacity)
             $0.circlePitchAlignment = .constant(.map)
-        }
-    }
-
-    private var defaultSymbolLayer: SymbolLayer {
-        with(
-            SymbolLayer(
-                id: FeatureIds.RouteWaypoints.default.markerIcon,
-                source: FeatureIds.RouteWaypoints.default.source
-            )
-        ) {
-            let opacity = Exp(.switchCase) {
-                Exp(.any) {
-                    Exp(.get) {
-                        "waypointCompleted"
-                    }
-                }
-                0
-                1
-            }
-            $0.iconOpacity = .expression(opacity)
-            $0.iconImage = .expression(Exp(.get) { "waipointIconImage" })
-            $0.iconAnchor = .constant(.bottom)
-            $0.iconOffset = .constant([0, 15])
-            $0.iconAllowOverlap = .constant(true)
         }
     }
 }

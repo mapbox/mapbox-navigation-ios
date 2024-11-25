@@ -22,7 +22,6 @@ extension NavigationMapView {
 
     enum ImageIdentifier {
         static let markerImage = "default_marker"
-        static let midpointMarkerImage = "midpoint_marker"
         static let trafficSignal = "traffic_signal"
         static let railroadCrossing = "railroad_crossing"
         static let yieldSign = "yield_sign"

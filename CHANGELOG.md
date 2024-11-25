@@ -1,6 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v2.6.0-beta.1
+## v3.6.0-beta.1
+
+### ⚠️ Behavioral Changes ⚠️:
+* The default intermediate waypoint appearance is now a circle without the pin icon. To customize the appearance of intermediate waypoints
+    follow steps from `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)` documentation.
 
 ### Map
 
