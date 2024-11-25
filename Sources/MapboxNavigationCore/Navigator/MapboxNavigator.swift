@@ -87,6 +87,103 @@ final class MapboxNavigator: @unchecked Sendable {
         configuration.movementMonitor.currentProfile = profile
     }
 
+    func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
+        await send(navigationRoutes)
+
+        await updateRouteProgress(with: navigationRoutes)
+
+        await taskManager.withAsyncBarrier {
+            await setRoutes(
+                navigationRoutes: navigationRoutes,
+                startLegIndex: startLegIndex,
+                reason: .newRoute
+            )
+        }
+        let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
+        configuration.movementMonitor.currentProfile = profile
+    }
+
+    func setToIdleAsync() async {
+        await taskManager.withAsyncBarrier {
+            let hadActiveGuidance = await billingSessionIsActive(withType: .activeGuidance)
+            if let sessionUUID,
+               await billingSessionIsActive()
+            {
+                billingHandler.pauseBillingSession(with: sessionUUID)
+            }
+
+            guard await currentSession.state != .idle else {
+                Log.warning("Duplicate setting to idle state attempted", category: .navigation)
+                await send(NavigatorErrors.FailedToSetToIdle())
+                return
+            }
+
+            await send(NavigationRoutes?.none)
+            await send(RouteProgressState?.none)
+            await locationClient.stopUpdatingLocation()
+            await locationClient.stopUpdatingHeading()
+            await navigator.pause()
+
+            guard hadActiveGuidance else {
+                await send(Session(state: .idle))
+                return
+            }
+            guard let sessionUUID = self.sessionUUID else {
+                Log.error(
+                    "`MapboxNavigator.setToIdle` failed to reset routes due to missing session ID.",
+                    category: .billing
+                )
+                await send(NavigatorErrors.FailedToSetToIdle())
+                return
+            }
+
+            do {
+                try await navigator.unsetRoutes(uuid: sessionUUID)
+            } catch {
+                Log.warning(
+                    "`MapboxNavigator.setToIdle` failed to reset routes with error: \(error)",
+                    category: .navigation
+                )
+            }
+            await self.send(Session(state: .idle))
+            billingHandler.stopBillingSession(with: sessionUUID)
+            self.sessionUUID = nil
+        }
+        configuration.movementMonitor.currentProfile = nil
+    }
+
+    func startFreeDriveAsync() async throws {
+        await taskManager.withAsyncBarrier {
+            let activeGuidanceSession = await verifyFreeDriveBillingSession()
+
+            guard sessionUUID != nil else {
+                Log.error(
+                    "`MapboxNavigator.startFreeDrive` failed to start new session due to missing session ID.",
+                    category: .billing
+                )
+                return
+            }
+
+            await send(NavigationRoutes?.none)
+            await send(RouteProgressState?.none)
+            await locationClient.startUpdatingLocation()
+            await locationClient.startUpdatingHeading()
+            await navigator.resume()
+            if let activeGuidanceSession {
+                do {
+                    try await navigator.unsetRoutes(uuid: activeGuidanceSession)
+                } catch {
+                    Log.warning(
+                        "`MapboxNavigator.startFreeDrive` failed to reset routes with error: \(error)",
+                        category: .navigation
+                    )
+                }
+            }
+
+            await send(Session(state: .freeDrive(.active)))
+        }
+    }
+
     private let statusUpdateEvents: AsyncStreamBridge<NavigationStatus>
 
     enum SetRouteReason {
@@ -1368,6 +1465,14 @@ extension MapboxNavigator {
             barrier.update(true)
             cancelTasks()
             operation()
+            barrier.update(false)
+        }
+
+        @MainActor
+        func withAsyncBarrier(_ operation: () async -> Void) async {
+            barrier.update(true)
+            cancelTasks()
+            await operation()
             barrier.update(false)
         }
     }

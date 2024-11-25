@@ -109,6 +109,11 @@ public final class CoreNavigatorMock: CoreNavigator {
         passedUuid = uuid
     }
 
+    public func unsetRoutes(uuid: UUID) async throws {
+        unsetRoutesCalled = true
+        passedUuid = uuid
+    }
+
     public var passedUpdateLocation: CLLocation?
     public func updateLocation(_ location: CLLocation, completion: @escaping @Sendable (Bool) -> Void) {
         passedUpdateLocation = location

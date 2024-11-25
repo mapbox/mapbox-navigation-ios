@@ -39,6 +39,8 @@ protocol CoreNavigator {
         completion: @escaping @Sendable (Result<RoutesCoordinator.RoutesResult, Error>) -> Void
     )
 
+    func unsetRoutes(uuid: UUID) async throws
+
     @MainActor
     func updateLocation(_ location: CLLocation, completion: @escaping @Sendable (Bool) -> Void)
 
@@ -465,6 +467,20 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     @MainActor
     func unsetRoutes(uuid: UUID, completion: @escaping (Result<RoutesCoordinator.RoutesResult, Error>) -> Void) {
         routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
+    }
+
+    @MainActor
+    func unsetRoutes(uuid: UUID) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            routeCoordinator.endActiveNavigation(with: uuid) { result in
+                switch result {
+                case .success(let success):
+                    continuation.resume()
+                case .failure(let failure):
+                    continuation.resume(throwing: failure)
+                }
+            }
+        }
     }
 
     @MainActor
