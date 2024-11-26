@@ -156,7 +156,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     /// method to provide a custom `SymbolLayer`.
     ///     1. Create a `SymbolLayer`.
     ///     2. Set `SymbolLayer.iconImage` to an expression `Exp` to retrieve the icon image name based on the
-    ///     properties defined in step 1.2.
+    ///     properties defined in step 1.3.
     ///
     /// Example:
     /// ```swift
