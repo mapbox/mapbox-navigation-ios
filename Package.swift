@@ -29,7 +29,7 @@ let package = Package(
             targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", revision: navNativeRevision),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "3.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
