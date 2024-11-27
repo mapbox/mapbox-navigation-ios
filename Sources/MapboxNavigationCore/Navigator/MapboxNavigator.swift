@@ -1299,7 +1299,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
         }
     }
 
-    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, routesData: RoutesData) {
+    func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: RoutesData) {
         Log.debug(
             "Reroute was fetched with primary route id '\(routesData.primaryRoute().getRouteId())' and \(routesData.alternativeRoutes().count) alternative route(s).",
             category: .navigation

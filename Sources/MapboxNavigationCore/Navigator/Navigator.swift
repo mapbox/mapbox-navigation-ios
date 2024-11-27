@@ -294,7 +294,7 @@ public struct RefreshingStatus: Equatable, Sendable {
         /// Indicates that current route's refreshing is no longer available.
         ///
         /// It is strongly recommended to request a new route. Refreshing TTL has expired and the route will no longer
-        /// recieve refreshing updates, which may lead to suboptimal navigation experience.
+        /// receive refreshing updates, which may lead to suboptimal navigation experience.
         public struct Invalidated: RefreshingEvent, Sendable {
             /// The routes for which refreshing is no longer available.
             public let navigationRoutes: NavigationRoutes

@@ -12,7 +12,7 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
 
     var wantsSwitchToAlternativeCalled = false
     var didDetectRerouteCalled = false
-    var didRecieveRerouteCalled = false
+    var didReceiveRerouteCalled = false
     var didCancelRerouteCalled = false
     var didFailToRerouteCalled = false
 
@@ -32,8 +32,8 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
         passedRerouteController = rerouteController
     }
 
-    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, routesData: any RoutesData) {
-        didRecieveRerouteCalled = true
+    func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: any RoutesData) {
+        didReceiveRerouteCalled = true
         passedRerouteController = rerouteController
         passedRoutesData = routesData
     }

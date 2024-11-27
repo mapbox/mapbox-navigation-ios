@@ -42,7 +42,7 @@ public enum DirectionsError: LocalizedError {
     /// The server returned an empty response.
     case noData
 
-    /// The API recieved input that it didn't understand.
+    /// The API received input that it didn't understand.
     case invalidInput(message: String?)
 
     /// The server returned a response that isn’t correctly formatted.

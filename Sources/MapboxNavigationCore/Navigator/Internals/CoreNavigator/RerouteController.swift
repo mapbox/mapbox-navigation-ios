@@ -118,7 +118,7 @@ extension RerouteController: RerouteObserver {
                     forPrimaryRoute: routes.remove(at: 0),
                     alternativeRoutes: routes
                 )
-                delegate?.rerouteControllerDidRecieveReroute(self, routesData: routesData)
+                delegate?.rerouteControllerDidReceiveReroute(self, routesData: routesData)
             } else {
                 delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
             }

@@ -48,7 +48,7 @@ public enum IsochroneError: LocalizedError {
     /// ``ProfileIdentifier/automobile``.
     case profileNotFound
 
-    /// The API recieved input that it didn't understand.
+    /// The API received input that it didn't understand.
     case invalidInput(message: String?)
 
     /// Too many requests have been made with the same access token within a certain period of time.

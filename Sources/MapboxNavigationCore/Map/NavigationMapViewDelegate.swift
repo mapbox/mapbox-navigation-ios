@@ -63,7 +63,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
         pointAnnotationManager: PointAnnotationManager
     )
 
-    /// Tells the reciever that ``NavigationMapView`` has updated the displayed ``NavigationRoutes`` for the active
+    /// Tells the receiver that ``NavigationMapView`` has updated the displayed ``NavigationRoutes`` for the active
     /// guidance.
     /// - Parameters:
     ///   - navigationMapView: The ``NavigationMapView`` object.

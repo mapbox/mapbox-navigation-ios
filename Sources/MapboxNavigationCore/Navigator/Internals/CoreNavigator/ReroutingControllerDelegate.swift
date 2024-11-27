@@ -9,7 +9,7 @@ protocol ReroutingControllerDelegate: AnyObject {
         legIndex: Int
     )
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController)
-    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, routesData: RoutesData)
+    func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: RoutesData)
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
 }

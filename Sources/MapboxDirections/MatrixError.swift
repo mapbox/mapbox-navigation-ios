@@ -47,7 +47,7 @@ public enum MatrixError: LocalizedError {
     /// ``ProfileIdentifier/automobile``.
     case profileNotFound
 
-    /// The API recieved input that it didn't understand.
+    /// The API received input that it didn't understand.
     ///
     /// Make sure the number of approach elements matches the number of waypoints provided, and the number of waypoints
     /// does not exceed the maximum number per request.
