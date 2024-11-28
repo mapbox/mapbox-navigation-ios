@@ -59,7 +59,7 @@ class ViewController: UIViewController {
     var routes: NavigationRoutes? {
         didSet {
             guard let routes else {
-                clearNavigationMapView(endNavigation: false)
+                clearNavigationMapView(endNavigation: true)
                 return ()
             }
             waypoints = routes.mainRoute.route.legs.compactMap { $0.destination }
@@ -77,7 +77,9 @@ class ViewController: UIViewController {
         startButton.isEnabled = true
         clearMap.isHidden = false
 
-        updateCarPlayRoutesPreview()
+        Task {
+            await updateCarPlayRoutesPreview()
+        }
     }
 
     weak var activeNavigationViewController: NavigationViewController?
@@ -238,7 +240,7 @@ class ViewController: UIViewController {
             waypoints.removeAll()
             navigationMapView?.navigationCamera.update(cameraState: .following)
             if !endNavigation {
-                updateCarPlayRoutesPreview()
+                await updateCarPlayRoutesPreview()
             }
 
             core.tripSession().startFreeDrive()
@@ -248,14 +250,12 @@ class ViewController: UIViewController {
         }
     }
 
-    private func updateCarPlayRoutesPreview() {
+    private func updateCarPlayRoutesPreview() async {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        Task {
-            if let routes {
-                await delegate.carPlayManager.previewRoutes(for: routes)
-            } else {
-                await delegate.carPlayManager.cancelRoutesPreview()
-            }
+        if let routes {
+            await delegate.carPlayManager.previewRoutes(for: routes)
+        } else {
+            await delegate.carPlayManager.cancelRoutesPreview()
         }
     }
 
