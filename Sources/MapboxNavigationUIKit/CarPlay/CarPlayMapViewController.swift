@@ -89,7 +89,17 @@ open class CarPlayMapViewController: UIViewController {
         }
 
         let bundle = Bundle.mapboxNavigation
-        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
+
+        let imageName = switch traitCollection.userInterfaceStyle {
+        case .light, .unspecified:
+            "carplay_plus_light"
+        case .dark:
+            "carplay_plus_dark"
+        @unknown default:
+            "carplay_plus_light"
+        }
+
+        zoomInButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
         return zoomInButton
     }()
@@ -107,7 +117,15 @@ open class CarPlayMapViewController: UIViewController {
         }
 
         let bundle = Bundle.mapboxNavigation
-        zoomOutButton.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
+        let imageName = switch traitCollection.userInterfaceStyle {
+        case .light, .unspecified:
+            "carplay_minus_light"
+        case .dark:
+            "carplay_minus_dark"
+        @unknown default:
+            "carplay_minus_light"
+        }
+        zoomOutButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
         return zoomOutButton
     }()
@@ -131,7 +149,15 @@ open class CarPlayMapViewController: UIViewController {
         }
 
         let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
+        let imageName = switch traitCollection.userInterfaceStyle {
+        case .light, .unspecified:
+            "carplay_pan_light"
+        case .dark:
+            "carplay_pan_dark"
+        @unknown default:
+            "carplay_pan_light"
+        }
+        panButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
         return panButton
     }
