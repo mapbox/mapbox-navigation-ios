@@ -232,7 +232,7 @@ open class CarPlayMapViewController: UIViewController {
             navigationMapView?.localizeLabels()
         }.store(in: &lifetimeSubscriptions)
 
-        navigationMapView.puckType = .puck2D(.navigationDefault)
+        navigationMapView.puckType = .puck2D(.navigationCarPlayDefault)
 
         navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden

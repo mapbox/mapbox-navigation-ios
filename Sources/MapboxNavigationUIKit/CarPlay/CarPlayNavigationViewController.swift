@@ -648,6 +648,8 @@ open class CarPlayNavigationViewController: UIViewController {
             navigationMapView.showsTrafficOnRouteLine = false
         }.store(in: &lifetimeSubscriptions)
 
+        navigationMapView.puckType = .puck3D(.navigationCarPlayDefault)
+
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden

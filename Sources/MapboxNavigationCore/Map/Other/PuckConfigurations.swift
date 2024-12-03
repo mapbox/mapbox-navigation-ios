@@ -15,12 +15,31 @@ extension Puck3DConfiguration {
         modelReceiveShadows: .constant(false),
         modelEmissiveStrength: .constant(0)
     )
+
+    /// Default 3D user puck configuration
+    public static let navigationCarPlayDefault = Puck3DConfiguration(
+        model: Model(uri: modelURL),
+        modelScale: .constant([1.1, 1.1, 1.1]),
+        modelOpacity: .constant(1),
+        // Turn off shadows as it greatly affect performance due to constant shadow recalculation.
+        modelCastShadows: .constant(false),
+        modelReceiveShadows: .constant(false),
+        modelEmissiveStrength: .constant(0)
+    )
 }
 
 extension Puck2DConfiguration {
     public static let navigationDefault = Puck2DConfiguration(
         topImage: UIColor.clear.image(CGSize(width: 1.0, height: 1.0)),
         bearingImage: .init(named: "puck", in: .mapboxNavigationUXCore, compatibleWith: nil),
+        showsAccuracyRing: false,
+        opacity: 1
+    )
+
+    public static let navigationCarPlayDefault = Puck2DConfiguration(
+        topImage: UIColor.clear.image(CGSize(width: 1.0, height: 1.0)),
+        bearingImage: .init(named: "puck", in: .mapboxNavigationUXCore, compatibleWith: nil),
+        scale: .constant(0.8),
         showsAccuracyRing: false,
         opacity: 1
     )

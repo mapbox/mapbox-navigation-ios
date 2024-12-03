@@ -108,6 +108,13 @@ extension AppDelegate: CarPlayManagerDelegate {
         return routes != currentRoutes
     }
 
+    func carPlayManager(
+        _ carPlayManager: CarPlayManager,
+        guidanceBackgroundColorFor style: UIUserInterfaceStyle
+    ) -> UIColor? {
+        #colorLiteral(red: 0.08061028272, green: 0.4138993621, blue: 0.8905753493, alpha: 1)
+    }
+
     func carPlayManagerWillCancelPreview(
         _ carPlayManager: CarPlayManager,
         configuration: inout CarPlayManagerCancelPreviewConfiguration
