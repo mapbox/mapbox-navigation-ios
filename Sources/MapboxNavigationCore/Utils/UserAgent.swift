@@ -57,9 +57,9 @@ extension Bundle {
     /// Equals ``navigationCoreName``, ``navigationUIKitName`` or ``navigationUXName``, based on the detected project
     /// dependencies structure.
     public static var resolvedNavigationSDKName: String {
-        if NSClassFromString("NavigationUX") != nil {
+        if NSClassFromString("MapboxNavigationUX.NavigationUX") != nil {
             navigationUXName
-        } else if NSClassFromString("NavigationViewController") != nil {
+        } else if NSClassFromString("MapboxNavigationUIKit.NavigationViewController") != nil {
             navigationUIKitName
         } else {
             navigationCoreName
