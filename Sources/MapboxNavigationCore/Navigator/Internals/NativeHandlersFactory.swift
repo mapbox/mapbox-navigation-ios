@@ -94,6 +94,10 @@ final class NativeHandlersFactory: @unchecked Sendable {
         historyDirectoryURL.flatMap {
             HistoryRecorderHandle.build(
                 forHistoryDir: $0.path,
+                sdkInfo: SdkHistoryInfo(
+                    sdkVersion: Bundle.mapboxNavigationVersion,
+                    sdkName: Bundle.resolvedNavigationSDKName
+                ),
                 config: configHandle(by: configFactoryType)
             )
         }

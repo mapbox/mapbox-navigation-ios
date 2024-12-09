@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("321.0.0", "2c9ae6e116d90f1153bd365f7559bf572c2c827b039d24938698521f5a5e8c99", "730e5fef0c4a0564bfbf58fce54914e9ede9f776")
-let mapsVersion: Version = "11.8.0"
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("322.0.0-beta.1", "0e06005a6962c9685f3685419790e1c2d195bc3c3190236797845cb8be32295b", "9b35b43cedafae390a94595f85d2dd28674811c2")
+let mapsVersion: Version = "11.9.0-beta.1"
 
 let package = Package(
     name: "MapboxNavigation",
@@ -31,7 +31,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "3.0.0"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0-beta.1"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.12.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),

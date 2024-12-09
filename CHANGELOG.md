@@ -2,6 +2,11 @@
 
 ## v3.6.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.9.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.9.0-beta.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v322.0.0-beta.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/322.0.0-beta.1).
+
 ### ⚠️ Behavioral Changes ⚠️:
 * The default intermediate waypoint appearance is now a circle without the pin icon. To customize the appearance of intermediate waypoints
     follow steps from `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)` documentation.
@@ -21,7 +26,11 @@
 
 ### Other
 
-* Fixed a resolved SDK name.
+* Fixed incorrect SDK naming for the UX and UIKit frameworks. Previously, the SDK name `mapbox-navigationCore-ios` was mistakenly used for these frameworks.
+* Fixed street names filtering by user's language.
+* Improved history trace events.
+* Fixed refreshing annotation of alternative routes.
+* Avoided skipping of not passed instructions on teleports along the route.
 
 ## v3.5.0
 
