@@ -10,6 +10,7 @@
 
 * Fixed the case when intermediate waypoints can be displayed under the route line in map styles with no slot support.
 * Fixed the case when `NavigationMapView.customRouteLineLayerPosition` was not applied in runtime.
+* Fixed possible alternative route annotation position on the main route.
 
 ### CarPlay
 

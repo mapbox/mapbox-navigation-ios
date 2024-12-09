@@ -123,6 +123,9 @@ final class AdvancedViewController: UIViewController {
             // Replace default `NavigationMapView` instance with instance that is used in preview mode.
             navigationMapView: navigationMapView
         )
+
+        // Shows the alternative route duration close to the first maneuver starting the alternative route.
+        navigationMapView.showsRelativeDurationsOnAlternativeManuever = true
         let navigationViewController = NavigationViewController(
             navigationRoutes: navigationRoutes,
             navigationOptions: navigationOptions

@@ -65,11 +65,11 @@ struct ETAViewsAnnotationFeature: MapFeature {
                     )
                 }
                 let limit: Range<Double>
+                let deviationOffset = alternativeRoute.deviationOffset()
                 if annotateAtManeuver {
-                    let deviationOffset = alternativeRoute.deviationOffset()
                     limit = (deviationOffset + 0.01)..<(deviationOffset + 0.05)
                 } else {
-                    limit = 0.2..<0.8
+                    limit = (deviationOffset + 0.01)..<0.8
                 }
                 if let geometry = alternativeRoute.route.geometryForCallout(clampedTo: limit) {
                     annotations.append(
