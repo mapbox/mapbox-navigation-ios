@@ -1,11 +1,12 @@
 import Foundation
 import MapboxNavigationNative_Private
 
-class DefaultRerouteControllerInterface: RerouteControllerInterface {
+final class DefaultRerouteControllerInterface: RerouteControllerInterface {
     typealias RequestConfiguration = (String) -> String
 
     let nativeInterface: RerouteControllerInterface?
     let requestConfig: RequestConfiguration?
+    let routeOptionsAdapter: RouteOptionsAdapter?
 
     init(
         nativeInterface: RerouteControllerInterface?,
@@ -13,6 +14,19 @@ class DefaultRerouteControllerInterface: RerouteControllerInterface {
     ) {
         self.nativeInterface = nativeInterface
         self.requestConfig = requestConfig
+        self.routeOptionsAdapter = nil
+    }
+
+    init(
+        nativeInterface: RerouteControllerInterface?,
+        routeOptionsAdapter: RouteOptionsAdapter? = nil
+    ) {
+        self.nativeInterface = nativeInterface
+        self.requestConfig = nil
+        self.routeOptionsAdapter = routeOptionsAdapter
+        if let routeOptionsAdapter {
+            setOptionsAdapterForRouteRequest(routeOptionsAdapter)
+        }
     }
 
     func reroute(forUrl url: String, callback: @escaping RerouteCallback) {

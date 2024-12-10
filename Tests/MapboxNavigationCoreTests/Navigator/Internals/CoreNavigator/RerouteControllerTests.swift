@@ -57,6 +57,10 @@ final class RerouteControllerTests: XCTestCase {
     var navNavigator: NativeNavigatorSpy!
     var delegate: ReroutingControllerDelegateSpy!
 
+    private var nativeRerouteController: NativeRerouteControllerSpy {
+        navNavigator.rerouteController as! NativeRerouteControllerSpy
+    }
+
     @MainActor
     override func setUp() {
         super.setUp()
@@ -71,23 +75,30 @@ final class RerouteControllerTests: XCTestCase {
             rerouteConfig: .init(),
             initialManeuverAvoidanceRadius: 45.0
         )
-        rerouteController = rerouteController(with: true)
+        rerouteController = rerouteController(with: configuration)
     }
 
     @MainActor
-    private func rerouteController(with detectsReroute: Bool) -> RerouteController {
-        super.setUp()
-
-        let configuration = RerouteController.Configuration(
-            credentials: .mock(),
-            navigator: navigator,
-            configHandle: .mock(),
-            rerouteConfig: RerouteConfig(detectsReroute: detectsReroute),
-            initialManeuverAvoidanceRadius: 45.0
-        )
+    private func rerouteController(
+        with configuration: RerouteController.Configuration
+    ) -> RerouteController {
         let rerouteController = RerouteController(configuration: configuration)
         rerouteController.delegate = delegate
         return rerouteController
+    }
+
+    @MainActor
+    private func rerouteController(
+        with rerouteConfig: RerouteConfig
+    ) -> RerouteController {
+        let configuration = RerouteController.Configuration(
+            credentials: configuration.credentials,
+            navigator: configuration.navigator,
+            configHandle: configuration.configHandle,
+            rerouteConfig: rerouteConfig,
+            initialManeuverAvoidanceRadius: configuration.initialManeuverAvoidanceRadius
+        )
+        return rerouteController(with: configuration)
     }
 
     @MainActor
@@ -111,7 +122,7 @@ final class RerouteControllerTests: XCTestCase {
 
     @MainActor
     func testNoDidCancelRerouteCallIfRerouteDisabled() {
-        let rerouteController = rerouteController(with: false)
+        let rerouteController = rerouteController(with: .init(detectsReroute: false))
         rerouteController.onRerouteCancelled()
         XCTAssertFalse(delegate.didCancelRerouteCalled)
     }
@@ -134,8 +145,38 @@ final class RerouteControllerTests: XCTestCase {
 
     @MainActor
     func testNoWantsSwitchToAlternativeCallIfRerouteDisabled() {
-        let rerouteController = rerouteController(with: false)
+        let rerouteController = rerouteController(with: .init(detectsReroute: false))
         rerouteController.onSwitchToAlternative(forRoute: RouteInterfaceMock(), legIndex: 1)
         XCTAssertTrue(delegate.wantsSwitchToAlternativeCalled)
     }
+
+    @MainActor
+    func testDoesNotSetRouteOptionsAdapterIfUrlOptionsCustomizationNotSet() {
+        XCTAssertFalse(nativeRerouteController.setOptionsAdapterCalled)
+    }
+
+    @MainActor
+    func testSetsRouteOptionsAdapterIfUrlOptionsCustomizationSet() {
+        let customization = EquatableClosure<String, String> {
+            $0 + customQueryParam2
+        }
+        rerouteController = rerouteController(with: .init(
+            urlOptionsCustomization: customization
+        ))
+        let url = directionsUrl + customQueryParam
+
+        XCTAssertTrue(nativeRerouteController.setOptionsAdapterCalled)
+        XCTAssertEqual(
+            customization(url),
+            nativeRerouteController.passedRouteOptionsAdapter?
+                .modifyRouteRequestOptions(forUrl: url)
+        )
+    }
 }
+
+private let directionsUrl =
+    "https://api.mapbox.com/directions/v5/mapbox/driving/-84.411389,39.27665;-84.412115,39.272675?alternatives=false&continue_straight=true&geometries=polyline&overview=false&steps=false&language=en_US&access_token=" +
+    String.mockedAccessToken
+
+private let customQueryParam = "&custom_param_name=custom_param_value"
+private let customQueryParam2 = "&custom_param_name2=custom_param_value2"

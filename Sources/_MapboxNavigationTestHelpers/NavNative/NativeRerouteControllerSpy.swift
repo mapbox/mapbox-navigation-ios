@@ -10,6 +10,7 @@ public class NativeRerouteControllerSpy: RerouteControllerInterface {
 
     public var passedRerouteUrl: String?
     public var passedRerouteCallback: RerouteCallback?
+    public var passedRouteOptionsAdapter: RouteOptionsAdapter?
 
     public func reroute(forUrl url: String, callback: @escaping RerouteCallback) {
         passedRerouteUrl = url
@@ -22,5 +23,6 @@ public class NativeRerouteControllerSpy: RerouteControllerInterface {
 
     public func setOptionsAdapterForRouteRequest(_ routeRequestOptionsAdapter: (any RouteOptionsAdapter)?) {
         setOptionsAdapterCalled = true
+        passedRouteOptionsAdapter = routeRequestOptionsAdapter
     }
 }

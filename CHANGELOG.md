@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.6.0-rc.1
+
+### API deprecations:
+
+* `RerouteConfig.optionsCustomization` is deprecated in favor of `RerouteConfig.urlOptionsCustomization`. Using the deprecated `optionsCustomization` may lead to losing custom query items at reroutes.
+
 ## v3.6.0-beta.1
 
 ### Packaging

@@ -53,22 +53,7 @@ class RerouteController {
         self.navigator = configuration.navigator
         self.config = configuration.configHandle
         self.defaultInitialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
-        self.defaultRerouteController = DefaultRerouteControllerInterface(
-            nativeInterface: configuration.navigator.native.getRerouteController()
-        ) {
-            guard let url = URL(string: $0),
-                  let options = RouteOptions(url: url)
-            else {
-                return $0
-            }
-
-            return Directions
-                .url(
-                    forCalculating: configuration.rerouteConfig.optionsCustomization?(options) ?? options,
-                    credentials: .init(configuration.credentials)
-                )
-                .absoluteString
-        }
+        self.defaultRerouteController = Self.makeDefaultRerouteController(configuration: configuration)
         navigator?.native.setRerouteControllerForController(defaultRerouteController)
         self.rerouteDetector = configuration.navigator.native.getRerouteDetector()
         navigator?.native.addRerouteObserver(for: self)
@@ -80,6 +65,44 @@ class RerouteController {
 
     deinit {
         self.navigator?.removeRerouteObserver(for: self)
+    }
+}
+
+extension RerouteController {
+    @MainActor
+    private static func makeDefaultRerouteController(configuration: Configuration)
+    -> DefaultRerouteControllerInterface {
+        let nativeRerouteController = configuration.navigator.native.getRerouteController()
+
+        if let urlOptionsCustomization = configuration.rerouteConfig.urlOptionsCustomization {
+            return DefaultRerouteControllerInterface(
+                nativeInterface: nativeRerouteController,
+                routeOptionsAdapter: DefaultRouteOptionsAdapter { urlOptionsCustomization($0) ?? $0 }
+            )
+        } else if let optionsCustomization = configuration.rerouteConfig.optionsCustomization {
+            return DefaultRerouteControllerInterface(
+                nativeInterface: nativeRerouteController,
+                requestConfig: {
+                    guard let url = URL(string: $0),
+                          let options = RouteOptions(url: url)
+                    else {
+                        return $0
+                    }
+
+                    return Directions
+                        .url(
+                            forCalculating: optionsCustomization(options) ?? options,
+                            credentials: .init(configuration.credentials)
+                        )
+                        .absoluteString
+                }
+            )
+        } else {
+            return DefaultRerouteControllerInterface(
+                nativeInterface: nativeRerouteController,
+                routeOptionsAdapter: nil
+            )
+        }
     }
 }
 
