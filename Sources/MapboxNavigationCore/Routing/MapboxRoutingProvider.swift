@@ -63,13 +63,17 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
     /// - Returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the
     /// resulting routes, cancel corresponding task using this handle.
     public func calculateRoutes(options: RouteOptions) -> FetchTask {
-        return Task { [
+        Task { [
             sendableSelf = UncheckedSendable(self),
             sendableOptions = UncheckedSendable(options)
         ] in
+            try Task.checkCancellation()
+
             var result: Result<RouteResponse, DirectionsError>
             var origin: RouterOrigin
             (result, origin) = await sendableSelf.value.doRequest(options: sendableOptions.value)
+
+            try Task.checkCancellation()
 
             switch result {
             case .success(let routeResponse):
@@ -96,13 +100,17 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
     /// - Returns: Related request task. If, while waiting for the completion handler to execute, you no longer want the
     /// resulting routes, cancel corresponding task using this handle.
     public func calculateRoutes(options: MatchOptions) -> FetchTask {
-        return Task { [
+        Task { [
             sendableSelf = UncheckedSendable(self),
             sendableOptions = UncheckedSendable(options)
         ] in
+            try Task.checkCancellation()
+
             var result: Result<MapMatchingResponse, DirectionsError>
             var origin: RouterOrigin
             (result, origin) = await sendableSelf.value.doRequest(options: sendableOptions.value)
+
+            try Task.checkCancellation()
 
             switch result {
             case .success(let routeResponse):

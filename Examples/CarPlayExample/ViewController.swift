@@ -568,33 +568,43 @@ class ViewController: UIViewController {
         asyncRequestRoute(with: [userWaypoint] + waypoints)
     }
 
+    private var routeLoadingTask: Task<NavigationRoutes, Error>?
+
     func asyncRequestRoute(with waypoints: [Waypoint]) {
-        Task {
-            let provider = core.routingProvider()
+        let provider = core.routingProvider()
+        routeLoadingTask?.cancel()
+
+        if requestMapMatching {
+            let optionWaypoints = waypoints.map {
+                var waypoint = $0
+                waypoint.heading = nil
+                return waypoint
+            }
+            let mapMatchingOptions = NavigationMatchOptions(
+                waypoints: optionWaypoints,
+                profileIdentifier: profileIdentifier
+            )
+            routeLoadingTask = provider.calculateRoutes(options: mapMatchingOptions)
+        } else {
+            let routeOptions = NavigationRouteOptions(
+                waypoints: waypoints,
+                profileIdentifier: profileIdentifier
+            )
+            routeLoadingTask = provider.calculateRoutes(options: routeOptions)
+        }
+
+        Task { [weak self] in
+            guard let self else { return }
             do {
-                if requestMapMatching {
-                    let optionWaypoints = waypoints.map {
-                        var waypoint = $0
-                        waypoint.heading = nil
-                        return waypoint
-                    }
-                    let mapMatchingOptions = NavigationMatchOptions(
-                        waypoints: optionWaypoints,
-                        profileIdentifier: profileIdentifier
-                    )
-                    let navigationRoutes = try await provider.calculateRoutes(options: mapMatchingOptions).value
-                    routes = navigationRoutes
-                } else {
-                    let routeOptions = NavigationRouteOptions(
-                        waypoints: waypoints,
-                        profileIdentifier: profileIdentifier
-                    )
-                    let navigationRoutes = try await provider.calculateRoutes(options: routeOptions).value
-                    routes = navigationRoutes
-                }
+                routes = try await routeLoadingTask?.value
             } catch {
-                routes = nil
-                presentAlert(message: error.localizedDescription)
+                switch error {
+                case is CancellationError:
+                    print("Route request was cancelled")
+                default:
+                    routes = nil
+                    presentAlert(message: error.localizedDescription)
+                }
             }
         }
     }

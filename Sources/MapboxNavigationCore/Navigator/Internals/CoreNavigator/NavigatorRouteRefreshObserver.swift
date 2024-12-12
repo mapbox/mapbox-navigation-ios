@@ -22,12 +22,14 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         legIndex: UInt32,
         routeGeometryIndex: UInt32
     ) {
-        Task {
-            guard let routeRefreshResult = await self.refreshCallback(
-                routeRefreshResponse,
-                "\(routeId)#\(routeIndex)",
-                routeGeometryIndex
-            ) else {
+        Task { [weak self] in
+            guard let self,
+                  let routeRefreshResult = await refreshCallback(
+                      routeRefreshResponse,
+                      "\(routeId)#\(routeIndex)",
+                      routeGeometryIndex
+                  )
+            else {
                 return
             }
             let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [

@@ -6,6 +6,10 @@
 
 * `RerouteConfig.optionsCustomization` is deprecated in favor of `RerouteConfig.urlOptionsCustomization`. Using the deprecated `optionsCustomization` may lead to losing custom query items at reroutes.
 
+### Other changes
+
+* Improve the handling of canceled tasks when requesting `NavigationRoutes`.
+
 ## v3.6.0-beta.1
 
 ### Packaging

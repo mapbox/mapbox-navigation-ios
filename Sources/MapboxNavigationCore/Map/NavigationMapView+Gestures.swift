@@ -30,7 +30,8 @@ extension NavigationMapView {
     private func handleLongPress(_ gesture: UIGestureRecognizer) {
         guard gesture.state == .began else { return }
         let gestureLocation = gesture.location(in: self)
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             let point = await mapPoint(at: gestureLocation)
             delegate?.navigationMapView(self, userDidLongTap: point)
         }
@@ -77,7 +78,9 @@ extension NavigationMapView {
         guard gesture.state == .recognized else { return }
         let tapPoint = gesture.location(in: mapView)
 
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
+
             if let allRoutes = routes?.allRoutes() {
                 let waypointTest = legSeparatingWaypoints(on: allRoutes, closeTo: tapPoint)
                 if let selected = waypointTest?.first {
