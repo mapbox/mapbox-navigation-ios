@@ -81,7 +81,7 @@ public enum TestNavigationStatusProvider {
             shield: shield
         )
         let roadNames = roads ?? [road]
-        let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42)
+        let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42, fetchedCandidateIndex: 0)
         let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false, totalCandidatesCount: 1)
         return .init(
             routeState: routeState,

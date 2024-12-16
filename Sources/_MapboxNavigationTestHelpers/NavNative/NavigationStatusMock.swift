@@ -101,9 +101,10 @@ extension MapMatcherOutput {
 extension MapMatch {
     public static func mock(
         position: GraphPosition = .init(edgeId: 0, percentAlong: 0),
-        proba: Float = 0
+        proba: Float = 0,
+        fetchedCandidateIndex: UInt32 = 0
     ) -> Self {
-        self.init(position: position, proba: proba)
+        self.init(position: position, proba: proba, fetchedCandidateIndex: fetchedCandidateIndex)
     }
 }
 

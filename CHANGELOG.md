@@ -2,6 +2,11 @@
 
 ## v3.6.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.9.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.9.0-rc.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v322.0.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/322.0.0-rc.1).
+
 ### API deprecations:
 
 * `RerouteConfig.optionsCustomization` is deprecated in favor of `RerouteConfig.urlOptionsCustomization`. Using the deprecated `optionsCustomization` may lead to losing custom query items at reroutes.
