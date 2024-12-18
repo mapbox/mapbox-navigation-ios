@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.6.0
+
+* Improved support for tapping POI features in the Standard Style.
+
 ## v3.6.0-rc.1
 
 ### Packaging
