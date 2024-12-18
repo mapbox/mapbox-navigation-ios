@@ -1,7 +1,7 @@
 import _MapboxNavigationHelpers
 import Foundation
 import MapboxDirections
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import Turf
 import UIKit
 
@@ -130,9 +130,29 @@ extension NavigationMapView {
     }
 
     private func mapPoint(at point: CGPoint) async -> MapPoint {
-        let options = RenderedQueryOptions(layerIds: mapStyleManager.poiLayerIds, filter: nil)
         let rectSize = poiClickableAreaSize
         let rect = CGRect(x: point.x - rectSize / 2, y: point.y - rectSize / 2, width: rectSize, height: rectSize)
+
+        /// POI featureset in Standard contains poi, transit, and airport labels.
+        /// To make sure that we can use POI featureset we check that that featureset exists,
+        /// and POI are not hidden via showPointOfInterestLabels.
+        /// After Standard Style 3.0 we can remove the `basemapPOIsAreVisible` check as
+        /// POI featureset will be always used.
+        let hasPoiFeatureset = mapView.mapboxMap.featuresets.contains { $0.converted() == .standardPoi }
+        let showPoiValue = try? mapView.mapboxMap.getStyleImportConfigProperty(
+            for: "basemap",
+            config: "showPointOfInterestLabels"
+        ).value
+        let basemapPOIsAreVisible = showPoiValue as? Bool ?? true
+        if hasPoiFeatureset,
+           basemapPOIsAreVisible,
+           let features = try? await mapView.mapboxMap.queryRenderedFeatures(with: rect, featureset: .standardPoi),
+           let poi = features.first
+        {
+            return MapPoint(name: poi.name, coordinate: poi.coordinate)
+        }
+
+        let options = RenderedQueryOptions(layerIds: mapStyleManager.poiLayerIds, filter: nil)
 
         let features = try? await mapView.mapboxMap.queryRenderedFeatures(with: rect, options: options)
         if let feature = features?.first?.queriedFeature.feature,
