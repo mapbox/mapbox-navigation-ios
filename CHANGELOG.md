@@ -2,6 +2,13 @@
 
 ## v3.6.0
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.9.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.9.0).
+* MapboxNavigationCore now requires [MapboxNavigationNative v322.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/322.0.0).
+
+### Map
+
 * Improved support for tapping POI features in the Standard Style.
 
 ## v3.6.0-rc.1
