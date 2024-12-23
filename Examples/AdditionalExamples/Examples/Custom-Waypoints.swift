@@ -11,6 +11,8 @@ import MapboxNavigationUIKit
 import UIKit
 
 final class CustomWaypointsViewController: UIViewController {
+    fileprivate static let intermediateWaypointImageId = "intermediateWaypointImageId"
+
     private let mapboxNavigationProvider = MapboxNavigationProvider(
         coreConfig: .init(
             locationSource: simulationIsEnabled ? .simulation(
@@ -55,6 +57,8 @@ final class CustomWaypointsViewController: UIViewController {
     }
 
     private var startButton: UIButton!
+    private var mapStyleLoadedCancellable: Cancelable?
+    private var mapStyleLoadedNavigationVCCancellable: Cancelable?
 
     // MARK: - UIViewController lifecycle methods
 
@@ -72,6 +76,10 @@ final class CustomWaypointsViewController: UIViewController {
         )
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.delegate = self
+        mapStyleLoadedCancellable = navigationMapView.mapView.mapboxMap.onStyleLoaded
+            .observe { [weak navigationMapView] _ in
+                navigationMapView?.addIntermediateWaypointImage()
+            }
         view.addSubview(navigationMapView)
 
         startButton = UIButton()
@@ -120,6 +128,10 @@ final class CustomWaypointsViewController: UIViewController {
         )
         navigationViewController.delegate = self
         navigationViewController.modalPresentationStyle = .fullScreen
+        mapStyleLoadedNavigationVCCancellable = navigationViewController.navigationMapView?.mapView.mapboxMap
+            .onStyleLoaded.observe { [weak navigationViewController] _ in
+                navigationViewController?.navigationMapView?.addIntermediateWaypointImage()
+            }
 
         startButton.isHidden = true
         present(navigationViewController, animated: true)
@@ -176,7 +188,7 @@ final class CustomWaypointsViewController: UIViewController {
             }
         })
         symbolLayer.textSize = .constant(.init(10))
-        symbolLayer.textOpacity = .expression(Exp(.switchCase) {
+        let opacity = Exp(.switchCase) {
             Exp(.any) {
                 Exp(.get) {
                     "waypointCompleted"
@@ -184,9 +196,14 @@ final class CustomWaypointsViewController: UIViewController {
             }
             0.5
             1
-        })
+        }
+        symbolLayer.textOpacity = .expression(opacity)
         symbolLayer.textHaloWidth = .constant(.init(0.25))
         symbolLayer.textHaloColor = .constant(.init(UIColor.black))
+        symbolLayer.iconImage = .expression(Exp(.get) { "waypointIconImage" })
+        symbolLayer.iconAnchor = .constant(.bottom)
+        symbolLayer.iconOffset = .constant([0, 15])
+        symbolLayer.iconOpacity = .expression(opacity)
         return symbolLayer
     }
 
@@ -194,13 +211,32 @@ final class CustomWaypointsViewController: UIViewController {
         var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
-            feature.properties = [
-                "waypointCompleted": .boolean(waypointIndex < legIndex),
-                "name": .number(Double(waypointIndex + 1)),
-            ]
+            var properties: [String: JSONValue] = [:]
+            properties["name"] = .number(Double(waypointIndex + 1))
+            properties["waypointCompleted"] = .boolean(waypointIndex <= legIndex)
+            properties["waypointIconImage"] = waypointIndex > 0 && waypointIndex < waypoints.count - 1
+                ? .string(Self.intermediateWaypointImageId)
+                : nil
+            feature.properties = properties
+
             features.append(feature)
         }
         return FeatureCollection(features: features)
+    }
+}
+
+extension NavigationMapView {
+    fileprivate func addIntermediateWaypointImage() {
+        guard !mapView.mapboxMap.imageExists(withId: CustomWaypointsViewController.intermediateWaypointImageId) else {
+            return
+        }
+
+        try! mapView.mapboxMap.addImage(
+            UIImage(named: "intermediate_waypoint")!,
+            id: CustomWaypointsViewController.intermediateWaypointImageId,
+            stretchX: [],
+            stretchY: []
+        )
     }
 }
 
@@ -261,6 +297,7 @@ extension CustomWaypointsViewController: NavigationViewControllerDelegate {
         _ navigationViewController: NavigationViewController,
         byCanceling canceled: Bool
     ) {
+        mapStyleLoadedNavigationVCCancellable?.cancel()
         dismiss(animated: true, completion: nil)
     }
 }
