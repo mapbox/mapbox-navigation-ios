@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.7.0-beta.1
+
+### Other changes
+
+* Fixed the movement type reported to the Telemetry.
+
 ## v3.6.0
 
 * Improved support for tapping POI features in the Standard Style.

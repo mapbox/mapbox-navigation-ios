@@ -419,6 +419,7 @@ final class MapboxNavigator: @unchecked Sendable {
                 send(Session(state: .freeDrive(.active)))
             }
         }
+        configuration.movementMonitor.currentProfile = nil
     }
 
     @MainActor

@@ -56,11 +56,11 @@ final class NavigationMovementMonitor: MovementMonitorInterface {
         }
         let profile = currentProfile
         let movementModes: [NSNumber: NSNumber] = if let movementMode = profile?.movementMode {
-            [100: movementMode.rawValue as NSNumber]
+            [movementMode.rawValue as NSNumber: 100]
         } else if profile != nil {
-            [50: MovementMode.inVehicle.rawValue as NSNumber]
+            [MovementMode.inVehicle.rawValue as NSNumber: 50]
         } else {
-            [50: MovementMode.unknown.rawValue as NSNumber]
+            [MovementMode.unknown.rawValue as NSNumber: 50]
         }
         return MovementInfo(movementMode: movementModes, movementProvider: .SDK)
     }

@@ -65,7 +65,6 @@ public final class MapboxNavigationProvider {
         self.multiplexLocationClient = MultiplexLocationClient(source: coreConfig.locationSource)
         apply(coreConfig: coreConfig)
         SdkInfoRegistryFactory.getInstance().registerSdkInformation(forInfo: SdkInfo.navigationCore.native)
-        MovementMonitorFactory.setUserDefinedForCustom(movementMonitor)
     }
 
     /// Updates the SDK configuration.
@@ -183,7 +182,7 @@ public final class MapboxNavigationProvider {
                     fasterRouteController: fasterRouteController,
                     electronicHorizonConfig: coreConfig.electronicHorizonConfig,
                     congestionConfig: coreConfig.congestionConfig,
-                    movementMonitor: movementMonitor
+                    movementMonitor: Self.movementMonitor
                 )
             )
             _sharedNavigator = newNavigator
@@ -282,18 +281,20 @@ public final class MapboxNavigationProvider {
     // Need to store the metadata provider and NN Telemetry
     private var _sharedEventsManager: UnfairLocked<NavigationEventsManager?> = .init(nil)
 
-    var movementMonitor: NavigationMovementMonitor {
+    // Should be created and configured once per the app run.
+    private static var movementMonitor: NavigationMovementMonitor {
         _sharedMovementMonitor.mutate { _sharedMovementMonitor in
             if let _sharedMovementMonitor {
                 return _sharedMovementMonitor
             }
             let movementMonitor = NavigationMovementMonitor()
             _sharedMovementMonitor = movementMonitor
+            MovementMonitorFactory.setUserDefinedForCustom(movementMonitor)
             return movementMonitor
         }
     }
 
-    private var _sharedMovementMonitor: UnfairLocked<NavigationMovementMonitor?> = .init(nil)
+    private static var _sharedMovementMonitor: UnfairLocked<NavigationMovementMonitor?> = .init(nil)
 }
 
 // MARK: - MapboxNavigation implementation

@@ -16,7 +16,7 @@ final class NavigationMovementMonitorTests: XCTestCase {
     }
 
     func testSetMovementInfo() {
-        let movementInfo = MovementInfo(movementMode: [10: 1, 90: 2], movementProvider: .unknown)
+        let movementInfo = MovementInfo(movementMode: [1: 10, 2: 90], movementProvider: .unknown)
         monitor.registerObserver(for: observer1)
         monitor.registerObserver(for: observer2)
         monitor.setMovementInfoForMode(movementInfo)
@@ -26,12 +26,12 @@ final class NavigationMovementMonitorTests: XCTestCase {
     }
 
     func testUnregisterObserver() {
-        let movementInfo = MovementInfo(movementMode: [10: 1, 90: 2], movementProvider: .unknown)
+        let movementInfo = MovementInfo(movementMode: [1: 10, 2: 90], movementProvider: .unknown)
         monitor.registerObserver(for: observer1)
         monitor.registerObserver(for: observer2)
         monitor.setMovementInfoForMode(movementInfo)
 
-        let movementInfo2 = MovementInfo(movementMode: [100: 1], movementProvider: .SDK)
+        let movementInfo2 = MovementInfo(movementMode: [1: 100], movementProvider: .SDK)
         monitor.unregisterObserver(for: observer1)
 
         monitor.setMovementInfoForMode(movementInfo2)
@@ -48,7 +48,7 @@ final class NavigationMovementMonitorTests: XCTestCase {
             movementInfo = expected.value
         }
         let expectedValue = MovementInfo(
-            movementMode: [50: MovementMode.unknown.rawValue as NSNumber],
+            movementMode: [MovementMode.unknown.rawValue as NSNumber: 50],
             movementProvider: .SDK
         )
         XCTAssertEqual(movementInfo?.movementMode, expectedValue.movementMode)
@@ -61,7 +61,7 @@ final class NavigationMovementMonitorTests: XCTestCase {
             movementInfo = expected.value
         }
         let expectedValue2 = MovementInfo(
-            movementMode: [100: MovementMode.inVehicle.rawValue as NSNumber],
+            movementMode: [MovementMode.inVehicle.rawValue as NSNumber: 100],
             movementProvider: .SDK
         )
         XCTAssertEqual(movementInfo?.movementMode, expectedValue2.movementMode)
@@ -72,23 +72,23 @@ final class NavigationMovementMonitorTests: XCTestCase {
         monitor.registerObserver(for: observer1)
 
         monitor.currentProfile = .cycling
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [100: MovementMode.cycling.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.cycling.rawValue as NSNumber: 100])
         XCTAssertEqual(observer1.movementInfo?.movementProvider, .SDK)
 
         monitor.currentProfile = .walking
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [100: MovementMode.onFoot.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.onFoot.rawValue as NSNumber: 100])
 
         monitor.currentProfile = .automobile
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [100: MovementMode.inVehicle.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.inVehicle.rawValue as NSNumber: 100])
 
         monitor.currentProfile = .automobileAvoidingTraffic
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [100: MovementMode.inVehicle.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.inVehicle.rawValue as NSNumber: 100])
 
         monitor.currentProfile = nil
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [50: MovementMode.unknown.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.unknown.rawValue as NSNumber: 50])
 
         monitor.currentProfile = .init(rawValue: "custom")
-        XCTAssertEqual(observer1.movementInfo?.movementMode, [50: MovementMode.inVehicle.rawValue as NSNumber])
+        XCTAssertEqual(observer1.movementInfo?.movementMode, [MovementMode.inVehicle.rawValue as NSNumber: 50])
     }
 }
 
