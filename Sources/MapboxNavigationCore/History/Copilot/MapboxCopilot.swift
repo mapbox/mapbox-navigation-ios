@@ -93,20 +93,17 @@ public actor MapboxCopilot {
         manager.delegate = self
     }
 
+    @available(*, deprecated, message: """
+    Use startActiveGuidanceSessionAsync(requestIdentifier:route:searchResultUsed:) instead. Using the deprecated
+    method may lead to losing events in the recorded history files.
+    """)
     @discardableResult
     public func startActiveGuidanceSession(
         requestIdentifier: String?,
         route: Encodable,
         searchResultUsed: NavigationHistoryEvents.SearchResultUsed? = nil
     ) throws -> String {
-        let session = NavigationSession(
-            sessionType: .activeGuidance,
-            accessToken: options.accessToken,
-            userId: options.userId,
-            routeId: requestIdentifier,
-            navNativeVersion: options.navNativeVersion,
-            navigationVersion: options.sdkVersion
-        )
+        let session = createActiveGuidanceSession(requestIdentifier: requestIdentifier)
         try startSession(session)
         try eventsController.startActiveGuidanceSession(
             requestIdentifier: requestIdentifier,
@@ -116,50 +113,78 @@ public actor MapboxCopilot {
         return session.id
     }
 
+    @available(*, deprecated, message: """
+    Use startFreeDriveSessionAsync() instead. Using the deprecated method may lead to losing events in the recorded
+    history files.
+    """)
     @discardableResult
     public func startFreeDriveSession() throws -> String {
-        let session = NavigationSession(
-            sessionType: .freeDrive,
-            accessToken: options.accessToken,
-            userId: options.userId,
-            routeId: nil,
-            navNativeVersion: options.navNativeVersion,
-            navigationVersion: options.sdkVersion
-        )
+        let session = createFreeDriveSession()
         try startSession(session)
         eventsController.startFreeDriveSession()
         return session.id
     }
 
+    @available(*, deprecated, message: """
+    Use completeNavigationSessionAsync() instead. Using the deprecated method may lead to losing events in the
+    recorded history files.
+    """)
+    public func completeNavigationSession() throws {
+        guard let immutableSession = try prepareSessionForCompletion() else { return }
+
+        Task { [weak self] in
+            await self?.handleHistoryDump(for: immutableSession)
+        }
+    }
+
+    @discardableResult
+    public func startActiveGuidanceSessionAsync(
+        requestIdentifier: String?,
+        route: Encodable,
+        searchResultUsed: NavigationHistoryEvents.SearchResultUsed? = nil
+    ) async throws -> String {
+        let session = createActiveGuidanceSession(requestIdentifier: requestIdentifier)
+        try await startSessionAsync(session)
+        try eventsController.startActiveGuidanceSession(
+            requestIdentifier: requestIdentifier,
+            route: route,
+            searchResultUsed: searchResultUsed
+        )
+        return session.id
+    }
+
+    @discardableResult
+    public func startFreeDriveSessionAsync() async throws -> String {
+        let session = createFreeDriveSession()
+        try await startSessionAsync(session)
+        eventsController.startFreeDriveSession()
+        return session.id
+    }
+
+    @available(*, deprecated, message: "")
     private func startSession(_ session: NavigationSession) throws {
         try completeNavigationSession()
         currentSession = session
         manager.update(session)
-        historyProvider.startRecording()
+        Task {
+            await historyProvider.startRecording()
+        }
+    }
+
+    private func startSessionAsync(_ session: NavigationSession) async throws {
+        try await completeNavigationSessionAsync()
+        currentSession = session
+        manager.update(session)
+        await historyProvider.startRecording()
     }
 
     public func arrive() {
         eventsController.arrive()
     }
 
-    public func completeNavigationSession() throws {
-        guard var currentSession else { return }
-        self.currentSession = nil
-
-        currentSession.endedAt = Date()
-        manager.update(currentSession)
-        try eventsController.completeSession()
-        let immutableSession = currentSession
-
-        historyProvider.dumpHistory { [weak self] dump in
-            Task.detached { [self, immutableSession] in
-                guard let self else { return }
-                var currentSession = immutableSession
-                await self.updateSession(&currentSession, with: dump)
-                await self.delegate?.copilot(self, didFinishRecording: currentSession)
-                await self.manager.complete(currentSession)
-            }
-        }
+    public func completeNavigationSessionAsync() async throws {
+        guard let immutableSession = try prepareSessionForCompletion() else { return }
+        await handleHistoryDump(for: immutableSession)
     }
 
     public func reportSearchResults(_ event: NavigationHistoryEvents.SearchResults) throws {
@@ -186,6 +211,53 @@ public actor MapboxCopilot {
         session.historyFormat = format
         session.historyError = errorString
         session.lastHistoryFileName = fileName
+    }
+}
+
+extension MapboxCopilot {
+    private func createFreeDriveSession() -> NavigationSession {
+        NavigationSession(
+            sessionType: .freeDrive,
+            accessToken: options.accessToken,
+            userId: options.userId,
+            routeId: nil,
+            navNativeVersion: options.navNativeVersion,
+            navigationVersion: options.sdkVersion
+        )
+    }
+
+    private func createActiveGuidanceSession(requestIdentifier: String?) -> NavigationSession {
+        NavigationSession(
+            sessionType: .activeGuidance,
+            accessToken: options.accessToken,
+            userId: options.userId,
+            routeId: requestIdentifier,
+            navNativeVersion: options.navNativeVersion,
+            navigationVersion: options.sdkVersion
+        )
+    }
+
+    private func prepareSessionForCompletion() throws -> NavigationSession? {
+        guard var currentSession else { return nil }
+
+        self.currentSession = nil
+        currentSession.endedAt = Date()
+        manager.update(currentSession)
+        try eventsController.completeSession()
+        return currentSession
+    }
+
+    @MainActor
+    private func handleHistoryDump(for immutableSession: NavigationSession) async {
+        await historyProvider.dumpHistory { [weak self] dump in
+            Task.detached { [weak self, immutableSession] in
+                guard let self else { return }
+                var currentSession = immutableSession
+                await updateSession(&currentSession, with: dump)
+                await delegate?.copilot(self, didFinishRecording: currentSession)
+                await manager.complete(currentSession)
+            }
+        }
     }
 }
 

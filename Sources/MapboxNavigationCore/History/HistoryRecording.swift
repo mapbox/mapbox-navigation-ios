@@ -14,6 +14,7 @@ public protocol HistoryRecording: Sendable {
     ///
     /// - Postcondition: Use the ``HistoryRecording/stopRecordingHistory(writingFileWith:)`` method to stop recording
     /// history and write the recorded history to a file.
+    @MainActor
     func startRecordingHistory()
 
     /// Appends a custom event to the current history log. This can be useful to log things that happen during
@@ -35,6 +36,7 @@ public protocol HistoryRecording: Sendable {
     /// ``HistoryRecording/startRecordingHistory()`` method inside the completion handler of this method, history
     /// recording will be paused while the file is being prepared.
     /// - Parameter completionHandler: A closure to be executed when the history file is ready.
+    @MainActor
     func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler)
 }
 

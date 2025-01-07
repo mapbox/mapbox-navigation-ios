@@ -35,15 +35,12 @@ public actor CopilotService {
         self.isActive = isActive
     }
 
-    public private(set) var isActive: Bool {
-        get {
-            mapboxCopilot != nil
-        }
-        set {
-            switch (newValue, mapboxCopilot) {
-            case (true, .none):
+    public private(set) var isActive: Bool = false {
+        willSet {
+            switch (newValue, isActive) {
+            case (true, false):
                 activateCopilot()
-            case (false, .some):
+            case (false, true):
                 mapboxCopilot = nil
             default:
                 break

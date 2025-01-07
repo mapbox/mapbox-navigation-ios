@@ -2,10 +2,15 @@
 
 ## v3.7.0-beta.1
 
+### API deprecations:
+
+* `MapboxCopilot.startActiveGuidanceSession(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSession()`, and `MapboxCopilot.completeNavigationSession()` are deprecated in favor of `MapboxCopilot.startActiveGuidanceSessionAsync(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSessionAsync()`, `MapboxCopilot.completeNavigationSessionAsync()`. Using deprecated methods may lead to losing events in the recorded history files.
+
 ### Other changes
 
 * Fixed the movement type reported to the Telemetry.
 * Fixed possible threading errors when sending Telemetry feedback events.
+* Fixed a bug when the Copilot session recording could stop right after it was started.
 
 ## v3.6.0
 

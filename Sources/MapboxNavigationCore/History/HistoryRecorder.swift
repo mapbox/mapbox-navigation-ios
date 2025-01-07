@@ -8,9 +8,7 @@ struct HistoryRecorder: HistoryRecording, @unchecked Sendable {
     }
 
     func startRecordingHistory() {
-        Task { @MainActor in
-            handle.startRecording()
-        }
+        handle.startRecording()
     }
 
     func pushHistoryEvent(type: String, jsonData: Data?) {
@@ -33,13 +31,11 @@ struct HistoryRecorder: HistoryRecording, @unchecked Sendable {
     }
 
     func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        Task { @MainActor in
-            handle.stopRecording { path in
-                if let path {
-                    completionHandler(URL(fileURLWithPath: path))
-                } else {
-                    completionHandler(nil)
-                }
+        handle.stopRecording { path in
+            if let path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
             }
         }
     }
