@@ -122,7 +122,7 @@ class ArrivalController: NavigationComponentDelegate {
         endOfRoute.dismissHandler = { [weak self] stars, comment in
             let feedbackRating = self?.rating(for: stars)
             if let feedbackRating, let eventsManager = self?.eventsManager {
-                Task {
+                Task { @MainActor in
                     guard let feedbackEvent = await eventsManager.createFeedback() else { return }
                     let eventType = ActiveNavigationFeedbackType.arrival(rating: feedbackRating)
                     eventsManager.sendActiveNavigationFeedback(

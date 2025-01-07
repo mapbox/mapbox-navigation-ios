@@ -20,7 +20,8 @@ public final class NavigationEventsManager: Sendable {
         set { navNativeEventsManager?.userInfo = newValue }
     }
 
-    required init(
+    @MainActor
+    init(
         eventsMetadataProvider: EventsMetadataProvider,
         telemetry: Telemetry
     ) {
@@ -112,7 +113,7 @@ public final class NavigationEventsManager: Sendable {
         description: String?,
         source: FeedbackSource
     ) async -> UserFeedback? {
-        return try? await navNativeEventsManager?.sendActiveNavigationFeedback(
+        try? await navNativeEventsManager?.sendActiveNavigationFeedback(
             feedback,
             type: type,
             description: description,
@@ -133,7 +134,7 @@ public final class NavigationEventsManager: Sendable {
         description: String?,
         source: FeedbackSource
     ) async throws -> UserFeedback? {
-        return try? await navNativeEventsManager?.sendNavigationFeedback(
+        try? await navNativeEventsManager?.sendNavigationFeedback(
             feedback,
             type: type,
             description: description,
@@ -157,7 +158,7 @@ public final class NavigationEventsManager: Sendable {
         description: String?,
         source: FeedbackSource
     ) async -> UserFeedback? {
-        return try? await navNativeEventsManager?.sendPassiveNavigationFeedback(
+        try? await navNativeEventsManager?.sendPassiveNavigationFeedback(
             feedback,
             type: type,
             description: description,
@@ -167,11 +168,15 @@ public final class NavigationEventsManager: Sendable {
 
     /// Send event that Car Play was connected.
     public func sendCarPlayConnectEvent() {
-        navNativeEventsManager?.sendCarPlayConnectEvent()
+        Task { [weak self] in
+            await self?.navNativeEventsManager?.sendCarPlayConnectEvent()
+        }
     }
 
     /// Send event that Car Play was disconnected.
     public func sendCarPlayDisconnectEvent() {
-        navNativeEventsManager?.sendCarPlayDisconnectEvent()
+        Task { [weak self] in
+            await self?.navNativeEventsManager?.sendCarPlayDisconnectEvent()
+        }
     }
 }

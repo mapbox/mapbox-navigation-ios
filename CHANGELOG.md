@@ -5,6 +5,7 @@
 ### Other changes
 
 * Fixed the movement type reported to the Telemetry.
+* Fixed possible threading errors when sending Telemetry feedback events.
 
 ## v3.6.0
 

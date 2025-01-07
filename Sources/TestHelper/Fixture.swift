@@ -2,6 +2,7 @@ import CoreLocation
 import Foundation
 import MapboxDirections
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
+import MapboxNavigationNative
 import Turf
 import UIKit.UIImage
 
@@ -114,7 +115,7 @@ public class Fixture: NSObject {
         return route
     }
 
-    public class func waypoints(from jsonFile: String, options: RouteOptions) -> [Waypoint] {
+    public class func waypoints(from jsonFile: String, options: RouteOptions) -> [MapboxDirections.Waypoint] {
         let response = routeResponse(from: jsonFile, options: options)
         guard let waypoints = response.waypoints else {
             preconditionFailure("No waypoints")
@@ -385,10 +386,10 @@ public class Fixture: NSObject {
     }
 
     public static func createFeedbackEvent() -> FeedbackEvent {
-        return FeedbackEvent(metadata: .init(
-            userFeedbackHandle: nil,
-            screenshot: nil,
-            userFeedbackMetadata: nil
+        let userFeedbackMetadata = UserFeedbackMetadata(locationsBefore: [], locationsAfter: [], step: nil)
+        return FeedbackEvent(metadata: FeedbackMetadata(
+            userFeedbackMetadata: userFeedbackMetadata,
+            screenshot: nil
         ))
     }
 

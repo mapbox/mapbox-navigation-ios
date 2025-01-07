@@ -13,9 +13,9 @@ public struct UserFeedback: @unchecked Sendable {
 protocol NavigationTelemetryManager: AnyObject, Sendable {
     var userInfo: [String: String?]? { get set }
 
-    func sendCarPlayConnectEvent()
+    func sendCarPlayConnectEvent() async
 
-    func sendCarPlayDisconnectEvent()
+    func sendCarPlayDisconnectEvent() async
 
     func createFeedback(screenshotOption: FeedbackScreenshotOption) async -> FeedbackEvent?
 

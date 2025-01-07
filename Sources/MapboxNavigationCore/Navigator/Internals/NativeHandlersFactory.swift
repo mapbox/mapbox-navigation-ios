@@ -260,6 +260,9 @@ final class NativeHandlersFactory: @unchecked Sendable {
 
     @MainActor
     func telemetry(eventsMetadataProvider: EventsMetadataInterface) -> Telemetry {
+        // TODO: The Nav SDK annotates `native` as MainActor, but telemetry can be
+        // sent from the background thread. We should create Telemetry from the same thread
+        // as it will later send feedback
         navigator.native.getTelemetryForEventsMetadataProvider(eventsMetadataProvider)
     }
 }

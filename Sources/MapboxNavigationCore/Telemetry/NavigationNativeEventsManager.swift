@@ -7,29 +7,33 @@ import UIKit
 
 final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable {
     private let eventsMetadataProvider: EventsMetadataProvider
-    private let telemetry: UnfairLocked<Telemetry>
+    @MainActor
+    private let telemetry: Telemetry
 
-    private let _userInfo: UnfairLocked<[String: String?]?>
-    var userInfo: [String: String?]? {
+    nonisolated var userInfo: [String: String?]? {
         get {
-            _userInfo.read()
+            eventsMetadataProvider.userInfo
         }
         set {
-            _userInfo.update(newValue)
             eventsMetadataProvider.userInfo = newValue
         }
     }
 
-    required init(eventsMetadataProvider: EventsMetadataProvider, telemetry: Telemetry) {
+    @MainActor
+    init(eventsMetadataProvider: EventsMetadataProvider, telemetry: Telemetry) {
         self.eventsMetadataProvider = eventsMetadataProvider
-        self.telemetry = .init(telemetry)
-        self._userInfo = .init(nil)
+        self.telemetry = telemetry
     }
 
     func createFeedback(screenshotOption: FeedbackScreenshotOption) async -> FeedbackEvent? {
-        let userFeedbackHandle = telemetry.read().startBuildUserFeedbackMetadata()
+        let userFeedbackMetadata = await MainActor.run {
+            // `getMetadata()` should be called from the same thread as Telemetry was created
+            // to avoid bindgen errors.
+            // Currently, we use the main thread to work with Telemetry.
+            telemetry.startBuildUserFeedbackMetadata().getMetadata()
+        }
         let screenshot = await createScreenshot(screenshotOption: screenshotOption)
-        let feedbackMetadata = FeedbackMetadata(userFeedbackHandle: userFeedbackHandle, screenshot: screenshot)
+        let feedbackMetadata = FeedbackMetadata(userFeedbackMetadata: userFeedbackMetadata, screenshot: screenshot)
         return FeedbackEvent(metadata: feedbackMetadata)
     }
 
@@ -39,7 +43,7 @@ final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable 
         description: String?,
         source: FeedbackSource
     ) async throws -> UserFeedback {
-        return try await sendNavigationFeedback(
+        try await sendNavigationFeedback(
             feedback,
             type: type,
             description: description,
@@ -53,7 +57,7 @@ final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable 
         description: String?,
         source: FeedbackSource
     ) async throws -> UserFeedback {
-        return try await sendNavigationFeedback(
+        try await sendNavigationFeedback(
             feedback,
             type: type,
             description: description,
@@ -78,8 +82,9 @@ final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable 
             description: description,
             source: source
         )
+        let localTelemetry = await telemetry
         return try await withCheckedThrowingContinuation { continuation in
-            telemetry.read().postUserFeedback(
+            localTelemetry.postUserFeedback(
                 for: userFeedbackMetadata,
                 userFeedback: userFeedback
             ) { expected in
@@ -93,8 +98,8 @@ final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable 
                     )
                     continuation.resume(returning: userFeedback)
                 } else if expected.isError(), let errorString = expected.error {
-                    continuation
-                        .resume(throwing: NavigationEventsManagerError.failedToSend(reason: errorString as String))
+                    let error = NavigationEventsManagerError.failedToSend(reason: errorString as String)
+                    continuation.resume(throwing: error)
                 } else {
                     continuation.resume(throwing: NavigationEventsManagerError.failedToSend(reason: "Unknown"))
                 }
@@ -102,12 +107,12 @@ final class NavigationNativeEventsManager: NavigationTelemetryManager, Sendable 
         }
     }
 
-    func sendCarPlayConnectEvent() {
-        telemetry.read().postOuterDeviceEvent(for: .connected)
+    func sendCarPlayConnectEvent() async {
+        await telemetry.postOuterDeviceEvent(for: .connected)
     }
 
-    func sendCarPlayDisconnectEvent() {
-        telemetry.read().postOuterDeviceEvent(for: .disconnected)
+    func sendCarPlayDisconnectEvent() async {
+        await telemetry.postOuterDeviceEvent(for: .disconnected)
     }
 
     private func createNativeUserCallback(

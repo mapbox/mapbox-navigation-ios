@@ -30,11 +30,11 @@ public final class NavigationTelemetryManagerSpy: NavigationTelemetryManager {
 
     init() {}
 
-    public func sendCarPlayConnectEvent() {
+    public func sendCarPlayConnectEvent() async {
         sendCarPlayConnectEventCalled = true
     }
 
-    public func sendCarPlayDisconnectEvent() {
+    public func sendCarPlayDisconnectEvent() async {
         sendCarPlayDisconnectEventCalled = true
     }
 

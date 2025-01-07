@@ -5,23 +5,11 @@ import MapboxNavigationNative_Private
 
 public struct FeedbackMetadata: Sendable, Equatable {
     public static func == (lhs: FeedbackMetadata, rhs: FeedbackMetadata) -> Bool {
-        let handlesAreEqual: Bool = switch (lhs.userFeedbackHandle, rhs.userFeedbackHandle) {
-        case (let lhsHandle as UserFeedbackHandle, let rhsHandle as UserFeedbackHandle):
-            lhsHandle == rhsHandle
-        default:
-            true
-        }
-        return handlesAreEqual &&
-            lhs.calculatedUserFeedbackMetadata == rhs.calculatedUserFeedbackMetadata &&
+        lhs.userFeedbackMetadata == rhs.userFeedbackMetadata &&
             lhs.screenshot == rhs.screenshot
     }
 
-    private let userFeedbackHandle: (any NativeUserFeedbackHandle)?
-    private let calculatedUserFeedbackMetadata: UserFeedbackMetadata?
-
-    var userFeedbackMetadata: UserFeedbackMetadata? {
-        calculatedUserFeedbackMetadata ?? userFeedbackHandle?.getMetadata()
-    }
+    let userFeedbackMetadata: UserFeedbackMetadata?
 
     public let screenshot: String?
     public var contents: [String: Any] {
@@ -37,13 +25,11 @@ public struct FeedbackMetadata: Sendable, Equatable {
     }
 
     init(
-        userFeedbackHandle: (any NativeUserFeedbackHandle)?,
-        screenshot: String?,
-        userFeedbackMetadata: UserFeedbackMetadata? = nil
+        userFeedbackMetadata: UserFeedbackMetadata,
+        screenshot: String?
     ) {
-        self.userFeedbackHandle = userFeedbackHandle
+        self.userFeedbackMetadata = userFeedbackMetadata
         self.screenshot = screenshot
-        self.calculatedUserFeedbackMetadata = userFeedbackMetadata
     }
 }
 
@@ -58,8 +44,7 @@ extension FeedbackMetadata: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.screenshot = try container.decodeIfPresent(String.self, forKey: .screenshot)
-        self.calculatedUserFeedbackMetadata = try? UserFeedbackMetadata(from: decoder)
-        self.userFeedbackHandle = nil
+        self.userFeedbackMetadata = try? UserFeedbackMetadata(from: decoder)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -72,8 +57,6 @@ extension FeedbackMetadata: Codable {
 protocol NativeUserFeedbackHandle: Sendable {
     func getMetadata() -> UserFeedbackMetadata
 }
-
-extension UserFeedbackHandle: NativeUserFeedbackHandle, @unchecked Sendable {}
 
 extension UserFeedbackMetadata: @unchecked Sendable {}
 
