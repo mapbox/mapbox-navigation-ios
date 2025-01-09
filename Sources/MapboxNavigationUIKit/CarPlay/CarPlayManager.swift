@@ -594,6 +594,7 @@ extension CarPlayManager {
     }
 
     /// Allows to cancel routes preview on CarPlay .
+    @MainActor
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
         var configuration = CarPlayManagerCancelPreviewConfiguration()
@@ -603,7 +604,7 @@ extension CarPlayManager {
         if configuration.popToRoot {
             _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
         }
-        await navigationMapView?.navigationCamera.update(cameraState: .following)
+        navigationMapView?.navigationCamera.update(cameraState: .following)
         delegate?.carPlayManagerDidCancelPreview(self)
     }
 
