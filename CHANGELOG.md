@@ -5,6 +5,7 @@
 ### API deprecations:
 
 * `MapboxCopilot.startActiveGuidanceSession(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSession()`, and `MapboxCopilot.completeNavigationSession()` are deprecated in favor of `MapboxCopilot.startActiveGuidanceSessionAsync(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSessionAsync()`, `MapboxCopilot.completeNavigationSessionAsync()`. Using deprecated methods may lead to losing events in the recorded history files.
+* `NavigationViewControllerDelegate.navigationMapView(_:didAdd:pointAnnotationManager:)` method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
 
 ### Other changes
 
@@ -99,7 +100,7 @@
 ### API deprecations:
 
 * `NavigationMapView.pointAnnotationManager` property is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
-* `NavigationMapView.navigationMapView(_, didAdd:pointAnnotationManager:)` method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
+* `NavigationMapViewDelegate.navigationMapView(_:didAdd:pointAnnotationManager:)` method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map.
 
 ### CarPlay:
 

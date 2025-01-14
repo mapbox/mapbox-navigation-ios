@@ -55,7 +55,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     @available(
         *,
         deprecated,
-        message: "This method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map."
+        message: "This method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map. Use corresponding delegate methods to customize waypoints appearance."
     )
     func navigationMapView(
         _ navigationMapView: NavigationMapView,
@@ -73,9 +73,11 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
         didAddRedrawActiveGuidanceRoutes navigationRoutes: NavigationRoutes
     )
 
-    // MARK: Supplying Waypoint(s) Data
+    // MARK: Customizing Waypoint(s) Appearance
 
     /// Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
+    ///  The returned layer is added to the map below the layer returned by
+    /// ``NavigationMapViewDelegate/navigationMapView(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:)-792zf``.
     /// This method is invoked any time waypoints are added or shown.
     /// - Parameters:
     ///   - navigationMapView: The ``NavigationMapView`` object.
@@ -89,6 +91,8 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     ) -> CircleLayer?
 
     /// Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
+    /// The returned layer is added to the map above the layer returned by
+    /// ``NavigationMapViewDelegate/navigationMapView(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)-8a2bi``.
     /// This method is invoked any time waypoints are added or shown.
     /// - Parameters:
     ///   - navigationMapView: The ``NavigationMapView`` object.

@@ -83,18 +83,6 @@ extension NavigationViewController: NavigationMapViewDelegate {
 
     public func navigationMapView(
         _ navigationMapView: NavigationMapView,
-        didAdd finalDestinationAnnotation: PointAnnotation,
-        pointAnnotationManager: PointAnnotationManager
-    ) {
-        delegate?.navigationViewController(
-            self,
-            didAdd: finalDestinationAnnotation,
-            pointAnnotationManager: pointAnnotationManager
-        )
-    }
-
-    public func navigationMapView(
-        _ navigationMapView: NavigationMapView,
         didSelect waypoint: Waypoint
     ) {
         delegate?.navigationViewController(self, didSelect: waypoint)
