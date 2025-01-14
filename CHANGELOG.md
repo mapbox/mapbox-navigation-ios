@@ -11,6 +11,7 @@
 * Fixed the movement type reported to the Telemetry.
 * Fixed possible threading errors when sending Telemetry feedback events.
 * Fixed a bug when the Copilot session recording could stop right after it was started.
+* Fixed a possible crash in `SimulatedLocationManager` when starting the simulation at the point on the route far away from the start.
 
 ## v3.6.0
 
