@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.6.1
+
+### Other changes
+
+* Fixed the behavior when `NavigationViewController` transitions navigation to the `idle` state when its presented controllers disappear. Instead, it happens only when it disappears.
+
 ## v3.6.0
 
 ### Packaging
