@@ -2,6 +2,10 @@
 
 ## v3.6.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.9.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.9.1).
+
 ### Other changes
 
 * Fixed the behavior when `NavigationViewController` transitions navigation to the `idle` state when its presented controllers disappear. Instead, it happens only when it disappears.
