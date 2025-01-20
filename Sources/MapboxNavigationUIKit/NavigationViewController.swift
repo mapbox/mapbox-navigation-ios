@@ -294,8 +294,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     @MainActor
     override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        Self.setToIdle(with: navigationOptions?.mapboxNavigation)
         super.dismiss(animated: flag, completion: completion)
+        if isBeingDismissed {
+            Self.setToIdle(with: navigationOptions?.mapboxNavigation)
+        }
     }
 
     @MainActor
@@ -409,6 +411,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
+        if isMovingFromParent {
+            Self.setToIdle(with: mapboxNavigation)
+        }
 
         viewObservers.forEach {
             $0?.navigationViewWillDisappear(animated)

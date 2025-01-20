@@ -14,6 +14,12 @@
 * Fixed a bug when the Copilot session recording could stop right after it was started.
 * Fixed a possible crash in `SimulatedLocationManager` when starting the simulation at the point on the route far away from the start.
 
+## v3.6.1
+
+### Other changes
+
+* Fixed the behavior when `NavigationViewController` transitions navigation to the `idle` state when its presented controllers disappear. Instead, it happens only when it disappears.
+
 ## v3.6.0
 
 ### Packaging
