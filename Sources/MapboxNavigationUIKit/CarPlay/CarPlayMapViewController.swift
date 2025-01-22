@@ -47,7 +47,8 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     @MainActor
-    var navigationMapView: NavigationMapView {
+    /// The map view showing the route and the user’s location.
+    public var navigationMapView: NavigationMapView {
         return view as! NavigationMapView
     }
 
@@ -435,18 +436,6 @@ extension CarPlayMapViewController: StyleManagerDelegate {
 // MARK: NavigationMapViewDelegate Methods
 
 extension CarPlayMapViewController: NavigationMapViewDelegate {
-    public func navigationMapView(
-        _ navigationMapView: NavigationMapView,
-        didAdd finalDestinationAnnotation: PointAnnotation,
-        pointAnnotationManager: PointAnnotationManager
-    ) {
-        delegate?.carPlayMapViewController(
-            self,
-            didAdd: finalDestinationAnnotation,
-            pointAnnotationManager: pointAnnotationManager
-        )
-    }
-
     public func navigationMapView(
         _ navigationMapView: NavigationMapView,
         shapeFor waypoints: [Waypoint],

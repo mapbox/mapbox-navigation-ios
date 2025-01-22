@@ -1198,19 +1198,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 
     public func carPlayNavigationViewController(
         _ carPlayNavigationViewController: CarPlayNavigationViewController,
-        didAdd finalDestinationAnnotation: PointAnnotation,
-        pointAnnotationManager: PointAnnotationManager
-    ) {
-        delegate?.carPlayManager(
-            self,
-            didAdd: finalDestinationAnnotation,
-            to: carPlayNavigationViewController,
-            pointAnnotationManager: pointAnnotationManager
-        )
-    }
-
-    public func carPlayNavigationViewController(
-        _ carPlayNavigationViewController: CarPlayNavigationViewController,
         shapeFor waypoints: [Waypoint],
         legIndex: Int
     ) -> FeatureCollection? {
@@ -1295,19 +1282,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 // MARK: CarPlayMapViewControllerDelegate Methods
 
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
-    public func carPlayMapViewController(
-        _ carPlayMapViewController: CarPlayMapViewController,
-        didAdd finalDestinationAnnotation: PointAnnotation,
-        pointAnnotationManager: PointAnnotationManager
-    ) {
-        delegate?.carPlayManager(
-            self,
-            didAdd: finalDestinationAnnotation,
-            to: carPlayMapViewController,
-            pointAnnotationManager: pointAnnotationManager
-        )
-    }
-
     public func carPlayMapViewController(
         _ carPlayMapViewController: CarPlayMapViewController,
         routeLineLayerWithIdentifier identifier: String,

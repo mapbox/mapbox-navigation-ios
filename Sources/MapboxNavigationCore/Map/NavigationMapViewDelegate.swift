@@ -55,7 +55,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     @available(
         *,
         deprecated,
-        message: "This method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map. Use corresponding delegate methods to customize waypoints appearance."
+        message: "This method is deprecated and should no longer be used, as the final destination annotation is no longer added to the map. Use the corresponding delegate methods to customize waypoints appearance."
     )
     func navigationMapView(
         _ navigationMapView: NavigationMapView,
@@ -113,7 +113,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     /// `FeatureCollection` for waypoints.
     /// Within this method:
     ///     1. Add an image to the map by calling `MapboxMap.addImage(_:id:stretchX:stretchY:)` method.
-    ///     2. Iterate through `waypoints` array and create `Feature` for each waypoint.
+    ///     2. Iterate through the `waypoints` array and create `Feature` for each waypoint.
     ///     3. Add a key-value pair to `Feature.properties` for specifying an icon image if the waypoint is
     ///     intermediate.
     ///
