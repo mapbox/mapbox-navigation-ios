@@ -2,6 +2,11 @@
 
 ## v3.7.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.10.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.10.0-beta.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v323.0.0-beta.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/323.0.0-beta.2).
+
 ### API deprecations:
 
 * `MapboxCopilot.startActiveGuidanceSession(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSession()`, and `MapboxCopilot.completeNavigationSession()` are deprecated in favor of `MapboxCopilot.startActiveGuidanceSessionAsync(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSessionAsync()`, `MapboxCopilot.completeNavigationSessionAsync()`. Using deprecated methods may lead to losing events in the recorded history files.
@@ -15,6 +20,11 @@
 * Fixed a possible crash in `SimulatedLocationManager` when starting the simulation at the point on the route far away from the start.
 
 ## v3.6.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.9.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.9.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v322.1.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/322.1.0).
 
 ### Other changes
 

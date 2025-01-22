@@ -386,9 +386,8 @@ public class Fixture: NSObject {
     }
 
     public static func createFeedbackEvent() -> FeedbackEvent {
-        let userFeedbackMetadata = UserFeedbackMetadata(locationsBefore: [], locationsAfter: [], step: nil)
-        return FeedbackEvent(metadata: FeedbackMetadata(
-            userFeedbackMetadata: userFeedbackMetadata,
+        FeedbackEvent(metadata: FeedbackMetadata(
+            userFeedbackMetadata: .mock(),
             screenshot: nil
         ))
     }

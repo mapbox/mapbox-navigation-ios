@@ -51,12 +51,24 @@ class TelemetrySpy: Telemetry {
     }
 }
 
+extension UserFeedbackMetadata {
+    public static func mock(
+        feedbackId: String = "",
+        locationsBefore: [FixLocation] = [],
+        locationsAfter: [FixLocation] = [],
+        step: Step? = nil
+    ) -> Self {
+        .init(
+            feedbackId: feedbackId,
+            locationsBefore: locationsBefore,
+            locationsAfter: locationsAfter,
+            step: step
+        )
+    }
+}
+
 class NativeUserFeedbackHandleSpy: NativeUserFeedbackHandle, @unchecked Sendable {
-    var returnedUserFeedbackMetadata: UserFeedbackMetadata = .init(
-        locationsBefore: [],
-        locationsAfter: [],
-        step: nil
-    )
+    var returnedUserFeedbackMetadata: UserFeedbackMetadata = .mock()
 
     func getMetadata() -> UserFeedbackMetadata {
         returnedUserFeedbackMetadata

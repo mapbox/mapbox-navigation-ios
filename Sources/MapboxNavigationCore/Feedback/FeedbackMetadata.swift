@@ -39,6 +39,7 @@ extension FeedbackMetadata: Codable {
         case locationsBefore
         case locationsAfter
         case step
+        case feedbackId
     }
 
     public init(from decoder: Decoder) throws {
@@ -66,6 +67,7 @@ extension UserFeedbackMetadata: Encodable {
         let eventLocationsAfter: [EventFixLocation] = locationsAfter.map { .init($0) }
         let eventLocationsBefore: [EventFixLocation] = locationsBefore.map { .init($0) }
         let eventStep = step.map { EventStep($0) }
+        try container.encode(feedbackId, forKey: .feedbackId)
         try container.encode(eventLocationsAfter, forKey: .locationsAfter)
         try container.encode(eventLocationsBefore, forKey: .locationsBefore)
         try container.encodeIfPresent(eventStep, forKey: .step)
@@ -73,11 +75,13 @@ extension UserFeedbackMetadata: Encodable {
 
     convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: FeedbackMetadata.CodingKeys.self)
+        let feedbackId = try container.decode(String.self, forKey: .feedbackId)
         let locationsBefore = try container.decode([EventFixLocation].self, forKey: .locationsBefore)
         let locationsAfter = try container.decode([EventFixLocation].self, forKey: .locationsAfter)
         let eventStep = try container.decodeIfPresent(EventStep.self, forKey: .step)
 
         self.init(
+            feedbackId: feedbackId,
             locationsBefore: locationsBefore.map { FixLocation($0) },
             locationsAfter: locationsAfter.map { FixLocation($0) },
             step: Step(eventStep)

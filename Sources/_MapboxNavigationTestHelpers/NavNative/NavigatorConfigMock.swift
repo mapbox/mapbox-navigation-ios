@@ -7,7 +7,8 @@ extension NavigatorConfig {
         polling: PollingConfig? = nil,
         incidentsOptions: IncidentsOptions? = nil,
         noSignalSimulationEnabled: NSNumber? = nil,
-        useSensors: NSNumber? = nil
+        useSensors: NSNumber? = nil,
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled
     ) -> NavigatorConfig {
         NavigatorConfig(
             voiceInstructionThreshold: voiceInstructionThreshold,
@@ -15,7 +16,8 @@ extension NavigatorConfig {
             polling: polling,
             incidentsOptions: incidentsOptions,
             noSignalSimulationEnabled: noSignalSimulationEnabled,
-            useSensors: useSensors
+            useSensors: useSensors,
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )
     }
 }
