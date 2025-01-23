@@ -33,9 +33,9 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: false
     ),
     (
-        name: "Custom Destination Marker",
-        description: "Use a custom image for styling the destination marker.",
-        controller: CustomDestinationMarkerController.self,
+        name: "Custom Final Waypoint",
+        description: "Use a custom image and hide the circle layer of the final waypoint.",
+        controller: CustomFinalWaypointController.self,
         storyboard: nil,
         pushExampleToViewController: true
     ),

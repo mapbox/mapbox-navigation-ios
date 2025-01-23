@@ -227,15 +227,9 @@ final class CustomWaypointsViewController: UIViewController {
 
 extension NavigationMapView {
     fileprivate func addIntermediateWaypointImage() {
-        guard !mapView.mapboxMap.imageExists(withId: CustomWaypointsViewController.intermediateWaypointImageId) else {
-            return
-        }
-
-        try! mapView.mapboxMap.addImage(
-            UIImage(named: "intermediate_waypoint")!,
-            id: CustomWaypointsViewController.intermediateWaypointImageId,
-            stretchX: [],
-            stretchY: []
+        addImageIfNotExists(
+            withId: CustomWaypointsViewController.intermediateWaypointImageId,
+            image: UIImage(named: "intermediate_waypoint")!
         )
     }
 }

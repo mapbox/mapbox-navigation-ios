@@ -10,7 +10,7 @@
 		2C27B0F72C9DC20D005B1484 /* Custom-Road-Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */; };
 		2C27B0FA2C9DD386005B1484 /* RoadObjectKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27B0F92C9DD386005B1484 /* RoadObjectKind.swift */; };
 		2C305FB32C385111000710D7 /* Upcoming-Intersection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */; };
-		2C5D23DE2BF7B3FF00194158 /* Custom-Destination-Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */; };
+		2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */; };
 		2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */; };
 		2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */; };
 		2C6A3C7A2BA3AE780039BBC9 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A3C792BA3AE780039BBC9 /* Navigation.swift */; };
@@ -114,6 +114,7 @@
 		2CC92CF62C33171000A94834 /* Custom-Navigation-Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
+		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
 /* End PBXBuildFile section */
@@ -155,7 +156,7 @@
 		2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom-Road-Objects.swift"; sourceTree = "<group>"; };
 		2C27B0F92C9DD386005B1484 /* RoadObjectKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectKind.swift; sourceTree = "<group>"; };
 		2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Upcoming-Intersection.swift"; sourceTree = "<group>"; };
-		2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Destination-Marker.swift"; sourceTree = "<group>"; };
+		2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Final-Waypoint.swift"; sourceTree = "<group>"; };
 		2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Waypoints.swift"; sourceTree = "<group>"; };
 		2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route-Lines-Styling.swift"; sourceTree = "<group>"; };
 		2C6A3C792BA3AE780039BBC9 /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
@@ -258,6 +259,7 @@
 		2CE469202BA31CF20075A32B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
 		DF92974F2BBD4A910047329A /* mapbox-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-navigation-ios"; path = ..; sourceTree = "<group>"; };
@@ -366,7 +368,7 @@
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
 				2CA31A082BC9878A0071176E /* Beta-Query-Parameters.swift */,
-				2C5D23DB2BF7B3FF00194158 /* Custom-Destination-Marker.swift */,
+				2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */,
 				2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */,
 				2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */,
 				2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */,
@@ -382,6 +384,7 @@
 				2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */,
 				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
 				2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */,
+				753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -877,13 +880,14 @@
 				2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */,
 				2CA31A1B2BC9878A0071176E /* Embedded-Navigation.swift in Sources */,
 				2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */,
-				2C5D23DE2BF7B3FF00194158 /* Custom-Destination-Marker.swift in Sources */,
+				2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */,
 				DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
+				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
 				2C27B0FA2C9DD386005B1484 /* RoadObjectKind.swift in Sources */,
