@@ -5,6 +5,7 @@
 ### Other changes
 
 * Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
+* Improved route refreshing by removing unnecessary internal navigator update on refresh.
 
 ## v3.7.0-beta.1
 

@@ -8,7 +8,7 @@ struct RouteRefreshResult: @unchecked Sendable {
 }
 
 class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
-    typealias RefreshCallback = (String, String, UInt32) async -> RouteRefreshResult?
+    typealias RefreshCallback = () -> RouteRefreshResult?
     private var refreshCallback: RefreshCallback
 
     init(refreshCallback: @escaping RefreshCallback) {
@@ -22,29 +22,22 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         legIndex: UInt32,
         routeGeometryIndex: UInt32
     ) {
-        Task { [weak self] in
-            guard let self,
-                  let routeRefreshResult = await refreshCallback(
-                      routeRefreshResponse,
-                      "\(routeId)#\(routeIndex)",
-                      routeGeometryIndex
-                  )
-            else {
-                return
-            }
-            let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
-                .refreshRequestIdKey: routeId,
-                .refreshedRoutesResultKey: routeRefreshResult,
-                .legIndexKey: legIndex,
-            ]
+        guard let routeRefreshResult = refreshCallback() else {
+            return
+        }
 
-            onMainAsync {
-                NotificationCenter.default.post(
-                    name: .routeRefreshDidUpdateAnnotations,
-                    object: nil,
-                    userInfo: userInfo
-                )
-            }
+        let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
+            .refreshRequestIdKey: routeId,
+            .refreshedRoutesResultKey: routeRefreshResult,
+            .legIndexKey: legIndex,
+        ]
+
+        onMainAsync {
+            NotificationCenter.default.post(
+                name: .routeRefreshDidUpdateAnnotations,
+                object: nil,
+                userInfo: userInfo
+            )
         }
     }
 

@@ -297,33 +297,14 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         }
 
         let refreshObserver =
-            NavigatorRouteRefreshObserver(refreshCallback: { [weak self] refreshResponse, routeId, geometryIndex in
-                return await withCheckedContinuation { continuation in
-                    self?.navigator.native.refreshRoute(
-                        forRouteRefreshResponse: refreshResponse,
-                        routeId: routeId,
-                        geometryIndex: geometryIndex
-                    ) { result in
-                        _Concurrency.Task {
-                            if result.isValue() {
-                                continuation.resume(
-                                    returning: RouteRefreshResult(
-                                        updatedRoute: result.value.route,
-                                        alternativeRoutes: result.value.alternatives
-                                    )
-                                )
-                            } else if result.isError(),
-                                      let error = result.error
-                            {
-                                Log.warning(
-                                    "Failed to apply route refresh response with error: \(error)",
-                                    category: .navigation
-                                )
-                                continuation.resume(returning: nil)
-                            }
-                        }
-                    }
-                }
+            NavigatorRouteRefreshObserver(refreshCallback: { [weak self] in
+                guard let self else { return nil }
+
+                guard let refreshedRouteData = navigator.native.getCurrentRoutesData() else { return nil }
+                return RouteRefreshResult(
+                    updatedRoute: refreshedRouteData.primaryRoute(),
+                    alternativeRoutes: refreshedRouteData.alternativeRoutes()
+                )
             })
         navigator.native.addRouteRefreshObserver(for: refreshObserver)
         navigator.native.startRoutesRefresh(
@@ -474,7 +455,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         try await withCheckedThrowingContinuation { continuation in
             routeCoordinator.endActiveNavigation(with: uuid) { result in
                 switch result {
-                case .success(let success):
+                case .success:
                     continuation.resume()
                 case .failure(let failure):
                     continuation.resume(throwing: failure)
