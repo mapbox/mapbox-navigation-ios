@@ -67,7 +67,7 @@ extension CPTrip {
         return CPRouteChoice(
             summaryVariants: summaryVariants,
             additionalInformationVariants: [route.description],
-            selectionSummaryVariants: [route.description]
+            selectionSummaryVariants: [Measurement(distance: route.distance).localized().description]
         )
     }
 }

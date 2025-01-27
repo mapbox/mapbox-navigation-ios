@@ -25,6 +25,7 @@
 
 ### Other changes
 
+* Updated alternative routes preview mode for CarPlay.
 * Fixed the movement type reported to the Telemetry.
 * Fixed possible threading errors when sending Telemetry feedback events.
 * Fixed a bug when the Copilot session recording could stop right after it was started.
