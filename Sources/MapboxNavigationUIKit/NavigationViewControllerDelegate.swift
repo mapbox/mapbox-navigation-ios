@@ -320,7 +320,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
     ///   - navigationViewController: The ``NavigationViewController`` object.
     ///   - waypoints: The waypoints to be displayed on the map.
     ///   - legIndex: The index of the current leg during navigation.
-    /// - Returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default
+    /// - Returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use the default
     /// behavior.
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
