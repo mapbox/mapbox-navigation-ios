@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.7.0-rc.1
+
+### Other changes
+
+* Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
+
 ## v3.7.0-beta.1
 
 ### Packaging

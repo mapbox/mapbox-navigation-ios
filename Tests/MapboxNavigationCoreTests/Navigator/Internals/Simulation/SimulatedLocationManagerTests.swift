@@ -53,7 +53,9 @@ final class SimulatedLocationManagerTests: XCTestCase {
             // to make sure the queue tasks are executed
         }
         while locationManager.currentDistance < initialShape.distance() ?? 0 {
-            locationManager.tick()
+            customQueue.sync { [weak self] in
+                self?.locationManager.tick()
+            }
         }
         let testCoordinates = locationDelegate.passedLocations.map { $0.coordinate }
 
@@ -70,6 +72,30 @@ final class SimulatedLocationManagerTests: XCTestCase {
         let newProgress = await RouteProgress.mock(navigationRoutes: .mock(mainRoute: .mock(route: newRoute)))
         locationManager.didReroute(progress: newProgress)
         customQueue.sync {}
+        XCTAssertEqual(locationManager.routeProgress, newProgress)
+    }
+
+    func testUpdateProgressDuringNavigation() async {
+        locationManager.progressDidChange(progress)
+        let lineString = LineString([
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            CLLocationCoordinate2D(latitude: 2, longitude: 2),
+        ])
+        let newRoute = Route.mock(shape: lineString)
+        let newProgress = await RouteProgress.mock(navigationRoutes: .mock(mainRoute: .mock(route: newRoute)))
+        locationManager.didReroute(progress: newProgress)
+        customQueue.sync {}
+        for _ in 0..<100 {
+            customQueue.async { [weak self] in
+                self?.locationManager.tick()
+            }
+            locationManager.progressDidChange(nil)
+            customQueue.async { [weak self] in
+                self?.locationManager.tick()
+            }
+            locationManager.progressDidChange(newProgress)
+        }
         XCTAssertEqual(locationManager.routeProgress, newProgress)
     }
 }

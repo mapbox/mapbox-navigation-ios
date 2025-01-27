@@ -133,19 +133,19 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             guard let self else { return }
 
             self.routeProgress = routeProgress
-            if let shape = routeProgress?.route.shape {
-                queue.async { [shape, weak self] in
-                    self?.reset(with: shape)
-                }
-            }
+            reset(with: routeProgress?.route.shape)
         }
     }
 
     private func reset(with shape: LineString?) {
         guard let shape else { return }
 
-        remainingRouteShape = shape
-        locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+        queue.async { [weak self] in
+            guard let self else { return }
+
+            remainingRouteShape = shape
+            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+        }
     }
 
     func tick() {
@@ -273,9 +273,13 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
     }
 
     func cleanUp() {
-        routeProgress = nil
-        remainingRouteShape = nil
-        locations = []
+        onMainQueueSync { [weak self] in
+            self?.routeProgress = nil
+        }
+        queue.async { [weak self] in
+            self?.remainingRouteShape = nil
+            self?.locations = []
+        }
     }
 
     func didReroute(progress: RouteProgress?) {
