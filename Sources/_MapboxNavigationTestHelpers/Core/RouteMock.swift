@@ -52,7 +52,8 @@ extension RouteStep {
         instructions: String = "",
         drivingSide: DrivingSide = .right,
         distance: LocationDistance = 100,
-        expectedTravelTime: TimeInterval = 65
+        expectedTravelTime: TimeInterval = 65,
+        instructionsDisplayedAlongStep: [VisualInstructionBanner]? = nil
     ) -> Self {
         var step = self.init(
             transportType: transportType,
@@ -63,6 +64,7 @@ extension RouteStep {
             distance: distance,
             expectedTravelTime: expectedTravelTime,
             intersections: [.mock()],
+            instructionsDisplayedAlongStep: instructionsDisplayedAlongStep,
             segmentIndicesByIntersection: [0]
         )
         step.shape = .init([maneuverLocation, maneuverLocation])
