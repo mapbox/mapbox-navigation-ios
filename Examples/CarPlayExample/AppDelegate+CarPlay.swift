@@ -165,7 +165,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
-        in template: CPTemplate,
+        in template: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
         guard let interfaceController = self.carPlayManager.interfaceController else {
@@ -253,7 +253,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
-        in template: CPTemplate,
+        in template: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
         switch activity {

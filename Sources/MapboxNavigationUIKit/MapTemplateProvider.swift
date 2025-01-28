@@ -4,7 +4,6 @@ class MapTemplateProvider: NSObject {
     weak var delegate: MapTemplateProviderDelegate?
 
     func mapTemplate(
-        forPreviewing trip: CPTrip,
         traitCollection: UITraitCollection,
         mapDelegate: CPMapTemplateDelegate
     ) -> CPMapTemplate {

@@ -41,18 +41,18 @@ extension CPTrip {
         let routeChoice = prepareRouteChiceModel(for: alternateRoute.route)
 
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
-        let newRoutes = await routes.selecting(alternativeRoute: alternateRoute)
-        let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: newRoutes)
-        let userInfo: CarPlayUserInfo = [key: value]
-        routeChoice.userInfo = userInfo
+        if let newRoutes = await routes.selecting(alternativeRoute: alternateRoute) {
+            let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: newRoutes, searchResultRecord: nil)
+            let userInfo: CarPlayUserInfo = [key: value]
+            routeChoice.userInfo = userInfo
+        }
         return routeChoice
     }
 
     private static func makeMainRouteChoice(routes: NavigationRoutes) -> CPRouteChoice {
         let routeChoice = prepareRouteChiceModel(for: routes.mainRoute.route)
-
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
-        let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes)
+        let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes, searchResultRecord: nil)
         let userInfo: CarPlayUserInfo = [key: value]
         routeChoice.userInfo = userInfo
         return routeChoice
@@ -68,6 +68,33 @@ extension CPTrip {
             summaryVariants: summaryVariants,
             additionalInformationVariants: [route.description],
             selectionSummaryVariants: [Measurement(distance: route.distance).localized().description]
+        )
+    }
+}
+
+extension CPTrip {
+    convenience init(searchResultRecord: SearchResultRecord) {
+        let placemark: MKPlacemark = .init(coordinate: searchResultRecord.coordinate)
+        let destination = MKMapItem(placemark: placemark)
+        destination.name = searchResultRecord.name
+        let routeChoice = CPRouteChoice(
+            summaryVariants: [searchResultRecord.name],
+            additionalInformationVariants: [searchResultRecord.descriptionText ?? ""],
+            selectionSummaryVariants: []
+        )
+
+        let key: String = CPRouteChoice.RouteResponseUserInfo.key
+        let value: CPRouteChoice.RouteResponseUserInfo = .init(
+            navigationRoutes: nil,
+            searchResultRecord: searchResultRecord
+        )
+
+        let userInfo: CarPlayUserInfo = [key: value]
+        routeChoice.userInfo = userInfo
+        self.init(
+            origin: .forCurrentLocation(),
+            destination: destination,
+            routeChoices: [routeChoice]
         )
     }
 }

@@ -23,6 +23,15 @@
     * `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`
     * `CarPlayManagerDelegate.carPlayManager(_:didAdd:to:pointAnnotationManager:)`
 
+### CarPlay: 
+* Deprecated following methods which return `CPTemplate`:  
+    * `CarPlayManagerDelegate.carPlayManager(_:leadingNavigationBarButtonsCompatibleWith:in:for:)`
+    * `CarPlayManagerDelegate.carPlayManager(_:trailingNavigationBarButtonsCompatibleWith:in:for:)`
+* Introduced new methods which return `CPMapTemplate`: 
+    * `CarPlayManagerDelegate.carPlayManager(_:leadingNavigationBarButtonsCompatibleWith:in:for:)`
+    * `CarPlayManagerDelegate.carPlayManager(_:trailingNavigationBarButtonsCompatibleWith:in:for:)` 
+    
+
 ### Other changes
 
 * Updated alternative routes preview mode for CarPlay.

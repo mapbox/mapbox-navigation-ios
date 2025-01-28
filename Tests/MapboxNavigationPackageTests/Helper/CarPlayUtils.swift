@@ -54,7 +54,10 @@ func createValidRouteChoice() async -> CPRouteChoice {
     )
     let routes = await createNavigationRoutes()
     let routeResponseUserInfoKey = CPRouteChoice.RouteResponseUserInfo.key
-    let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes)
+    let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(
+        navigationRoutes: routes,
+        searchResultRecord: nil
+    )
     let userInfo: CarPlayUserInfo = [
         routeResponseUserInfoKey: routeResponseUserInfo,
     ]
@@ -183,8 +186,26 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
 
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
+        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in: CPMapTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]? {
+        returnedLeadingBarButtons
+    }
+
+    func carPlayManager(
+        _ carPlayManager: CarPlayManager,
         trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
         in: CPTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]? {
+        returnedTrailingBarButtons
+    }
+
+    func carPlayManager(
+        _ carPlayManager: CarPlayManager,
+        trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
         returnedTrailingBarButtons

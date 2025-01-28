@@ -8,6 +8,7 @@ extension CPRouteChoice {
 
         /// Route response from the Mapbox Directions service with a selected route.
         let navigationRoutes: NavigationRoutes?
+        let searchResultRecord: SearchResultRecord?
     }
 
     var routeResponseUserInfo: RouteResponseUserInfo? {
@@ -20,5 +21,10 @@ extension CPRouteChoice {
 
     public var navigationRoutes: NavigationRoutes? {
         return routeResponseUserInfo?.navigationRoutes
+    }
+
+    @_spi(MapboxInternal)
+    public var searchResult: SearchResultRecord? {
+        return routeResponseUserInfo?.searchResultRecord
     }
 }

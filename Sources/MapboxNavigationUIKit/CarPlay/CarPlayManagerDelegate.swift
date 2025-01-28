@@ -26,6 +26,31 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in carPlayTemplate: CPMapTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]?
+
+    /// Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the
+    /// template stack for the given activity.
+    ///
+    /// These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the
+    /// hierarchy of templates is adequately navigable.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - traitCollection: The trait collection of the view controller being shown in the CarPlay window.
+    ///   - carPlayTemplate: The template into which the returned bar buttons will be inserted.
+    ///   - activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between
+    /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
+    /// - Returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is
+    /// visible.
+    @available(
+        *,
+        deprecated,
+        message: "Use carPlayManager(_:leadingNavigationBarButtonsCompatibleWith:in:for:) instead."
+    )
+    func carPlayManager(
+        _ carPlayManager: CarPlayManager,
+        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
         in carPlayTemplate: CPTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]?
@@ -43,6 +68,31 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
     /// - Returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is
     /// visible.
+    func carPlayManager(
+        _ carPlayManager: CarPlayManager,
+        trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in carPlayTemplate: CPMapTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]?
+
+    /// Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the
+    /// template stack for the given activity.
+    ///
+    /// These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the
+    /// hierarchy of templates is adequately navigable.
+    /// - Parameters:
+    ///   - carPlayManager: The ``CarPlayManager`` instance.
+    ///   - traitCollection: The trait collection of the view controller being shown in the CarPlay window.
+    ///   - carPlayTemplate: The template into which the returned bar buttons will be inserted.
+    ///   - activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between
+    /// multiple templates of the same kind, such as multiple `CPMapTemplate`s.
+    /// - Returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is
+    /// visible.
+    @available(
+        *,
+        deprecated,
+        message: "Use carPlayManager(_:trailingNavigationBarButtonsCompatibleWith:in:for:) instead."
+    )
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
@@ -610,8 +660,30 @@ extension CarPlayManagerDelegate {
     /// `UnimplementedLogging` prints a warning to standard output the first time this method is called.
     public func carPlayManager(
         _ carPlayManager: CarPlayManager,
+        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in carPlayTemplate: CPMapTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .info)
+        return nil
+    }
+
+    /// `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+    public func carPlayManager(
+        _ carPlayManager: CarPlayManager,
         trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
         in carPlayTemplate: CPTemplate,
+        for activity: CarPlayActivity
+    ) -> [CPBarButton]? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .info)
+        return nil
+    }
+
+    /// `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+    public func carPlayManager(
+        _ carPlayManager: CarPlayManager,
+        trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in carPlayTemplate: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .info)

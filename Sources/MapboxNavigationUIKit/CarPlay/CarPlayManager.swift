@@ -78,6 +78,7 @@ public class CarPlayManager: NSObject {
     private let navigationProvider: MapboxNavigationProvider
     private let core: MapboxNavigation
     private var cameraStateCancellable: AnyCancellable?
+    private var fetchedSearchResults: [SearchResultRecord] = []
 
     /// Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
     /// - Parameters:
@@ -597,6 +598,7 @@ extension CarPlayManager {
     @MainActor
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
+        carPlayMapViewController?.removeSearchResultsAnnotations()
         var configuration = CarPlayManagerCancelPreviewConfiguration()
         delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
         routes = nil
@@ -604,6 +606,7 @@ extension CarPlayManager {
         if configuration.popToRoot {
             _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
         }
+        clearMapAnnotations()
         navigationMapView?.navigationCamera.update(cameraState: .following)
         delegate?.carPlayManagerDidCancelPreview(self)
     }
@@ -611,6 +614,59 @@ extension CarPlayManager {
     func shouldPreviewRoutes(for routes: NavigationRoutes) -> Bool {
         guard self.routes?.mainRoute == routes.mainRoute else { return true }
         return self.routes?.alternativeRoutes != routes.alternativeRoutes
+    }
+
+    @MainActor
+    @_spi(MapboxInternal)
+    public func previewRoutes(with searchResults: [SearchResultRecord]) async throws {
+        guard let traitCollection = (carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
+              let interfaceController
+        else {
+            return
+        }
+
+        let template = mapTemplateProvider.mapTemplate(
+            traitCollection: traitCollection,
+            mapDelegate: self
+        )
+
+        struct DataForPreview {
+            let trip: CPTrip
+            let estimates: CPTravelEstimates?
+        }
+
+        var dataForPreviews: [DataForPreview] = []
+        for searchResult in searchResults {
+            let trip = CPTrip(searchResultRecord: searchResult)
+            var estimates: CPTravelEstimates?
+            if let distance = searchResult.estimatedDistance,
+               let time = searchResult.estimatedTime
+            {
+                estimates = CPTravelEstimates(
+                    distanceRemaining: .init(distance: distance),
+                    timeRemaining: time
+                )
+            }
+            dataForPreviews.append(.init(trip: trip, estimates: estimates))
+        }
+
+        let trips = dataForPreviews.map(\.trip)
+
+        template.showTripPreviews(
+            trips,
+            selectedTrip: trips.first,
+            textConfiguration: nil
+        )
+
+        for dataForPreview in dataForPreviews {
+            guard let estimates = dataForPreview.estimates else { continue }
+            template.updateEstimates(estimates, for: dataForPreview.trip)
+        }
+
+        fetchedSearchResults = searchResults
+        carPlayMapViewController?.showSearchResultsAnnotations(with: searchResults, selectedResult: searchResults.first)
+        _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: false)
+        try await interfaceController.pushTemplate(template, animated: true)
     }
 
     @MainActor
@@ -624,7 +680,6 @@ extension CarPlayManager {
         let modifiedTrip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
         let previewMapTemplate = mapTemplateProvider.mapTemplate(
-            forPreviewing: modifiedTrip,
             traitCollection: traitCollection,
             mapDelegate: self
         )
@@ -721,15 +776,35 @@ extension CarPlayManager: CPMapTemplateDelegate {
         startedTrip trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
+        clearMapAnnotations()
+        if let searchResult = routeChoice.searchResult {
+            Task {
+                let waypoint = Waypoint(
+                    coordinate: searchResult.coordinate,
+                    name: searchResult.name
+                )
+                await previewRoutes(to: waypoint)
+            }
+        } else if let navigationRoutes = routeChoice.navigationRoutes {
+            startTrip(mapTemplate: mapTemplate, trip: trip, navigationRoutes: navigationRoutes)
+        } else {
+            preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+        }
+    }
+
+    @MainActor
+    private func startTrip(
+        mapTemplate: CPMapTemplate,
+        trip: CPTrip,
+        navigationRoutes: NavigationRoutes
+    ) {
         guard let interfaceController,
               let carPlayMapViewController
         else {
             return
         }
-
-        guard let navigationRoutes = routeChoice.navigationRoutes else {
-            preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
-        }
+        clearMapAnnotations()
+        carPlayMapViewController.removeSearchResultsAnnotations()
 
         mapTemplate.hideTripPreviews()
 
@@ -789,13 +864,34 @@ extension CarPlayManager: CPMapTemplateDelegate {
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {
-        guard let carPlayMapViewController else { return }
-
-        guard let navigationRoutes = routeChoice.navigationRoutes else {
+        if let navigationRoutes = routeChoice.navigationRoutes {
+            showcaseIfNeeded(routes: navigationRoutes, mapTemplate: mapTemplate, trip: trip, routeChoice: routeChoice)
+        } else if let searchResult = routeChoice.searchResult {
+            carPlayMapViewController?.showSearchResultsAnnotations(
+                with: fetchedSearchResults,
+                selectedResult: searchResult
+            )
+        } else {
             preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
         }
+    }
 
-        let route = navigationRoutes.mainRoute.route
+    @MainActor
+    @_spi(MapboxInternal)
+    public func clearMapAnnotations() {
+        fetchedSearchResults = []
+        carPlayMapViewController?.removeSearchResultsAnnotations()
+    }
+
+    @MainActor
+    private func showcaseIfNeeded(
+        routes: NavigationRoutes?,
+        mapTemplate: CPMapTemplate,
+        trip: CPTrip,
+        routeChoice: CPRouteChoice
+    ) {
+        guard let carPlayMapViewController, let routes else { return }
+        let route = routes.mainRoute.route
         let estimates = CPTravelEstimates(
             distanceRemaining: Measurement(distance: route.distance).localized(),
             timeRemaining: route.expectedTravelTime
@@ -804,10 +900,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.showcase(
-            navigationRoutes,
+            routes,
             routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever]
         )
-        routes = navigationRoutes
+        self.routes = routes
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }
 
