@@ -162,7 +162,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
         let tickDistance = currentSpeed * defaultTickInterval
         guard let remainingShape = remainingRouteShape,
               let originalShape,
-              let indexedNewCoordinate = remainingShape.indexedCoordinateFromStart(distance: tickDistance)
+              let slicingMetaData = remainingShape.slicingMetadata(at: tickDistance)
         else {
             // report last known coordinate or real one
             if let simulatedLocation {
@@ -206,7 +206,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             return
         }
 
-        let newCoordinate = indexedNewCoordinate.coordinate
+        let newCoordinate = slicingMetaData.coordinate
         // Closest coordinate ahead
         guard let lookAheadCoordinate = remainingShape.coordinateFromStart(distance: tickDistance + 10) else { return }
         guard let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
@@ -255,7 +255,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             )
         }
         currentDistance += remainingShape.distance(to: newCoordinate) ?? 0
-        remainingRouteShape = remainingShape.sliced(from: newCoordinate)
+        remainingRouteShape = slicingMetaData.trailingLineString
     }
 
     func progressDidChange(_ progress: RouteProgress?) {
