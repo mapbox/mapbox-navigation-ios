@@ -1,9 +1,19 @@
 import CoreLocation
 import Foundation
 import MapboxCommon
+import MapboxDirections
 import MapboxNavigationNative
 
 public final class RouteInterfaceMock: RouteInterface {
+    public static let realRequestUri = "https://api.mapbox.com/directions/v5/mapbox/driving/1.0,1.0;2.0,2.0"
+
+    public static let realRouteJson = {
+        let encoder = JSONEncoder()
+        let route = Route.mock()
+        let jsonData = try! encoder.encode(route)
+        return String(data: jsonData, encoding: .utf8)!
+    }()
+
     public var routeId: String
     public var responseUuid: String
     public var routeIndex: UInt32
@@ -21,11 +31,11 @@ public final class RouteInterfaceMock: RouteInterface {
         routeId: String = UUID().uuidString,
         responseUuid: String = UUID().uuidString,
         routeIndex: UInt32 = 0,
-        responseJsonRef: DataRef = .init(data: .init()),
-        requestUri: String = "https:api.mapbox.com/directions/",
+        responseJsonRef: DataRef = .init(data: RouteInterfaceMock.realRouteJson.data(using: .utf8)!),
+        requestUri: String = RouteInterfaceMock.realRequestUri,
         routerOrigin: RouterOrigin = .online,
         routeInfo: RouteInfo = .init(alerts: []),
-        waypoints: [Waypoint] = [],
+        waypoints: [MapboxNavigationNative.Waypoint] = [],
         expirationTimeMs: NSNumber? = nil,
         lastRefreshTimestamp: Date? = nil,
         routeGeometry: [Coordinate2D] = [],
@@ -59,7 +69,7 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public func getRouteInfo() -> RouteInfo { routeInfo }
 
-    public func getWaypoints() -> [Waypoint] { waypoints }
+    public func getWaypoints() -> [MapboxNavigationNative.Waypoint] { waypoints }
 
     public func getExpirationTimeMs() -> NSNumber? { expirationTimeMs }
 

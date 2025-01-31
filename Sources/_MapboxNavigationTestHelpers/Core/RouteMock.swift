@@ -79,7 +79,7 @@ extension Intersection {
                 latitude: 1,
                 longitude: 2
             ),
-            headings: [],
+            headings: [90],
             approachIndex: 0,
             outletIndex: 0,
             outletIndexes: .init(integer: 0),

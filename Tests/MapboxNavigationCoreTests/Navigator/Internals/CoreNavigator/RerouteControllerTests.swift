@@ -61,13 +61,12 @@ final class RerouteControllerTests: XCTestCase {
         navNavigator.rerouteController as! NativeRerouteControllerSpy
     }
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         delegate = ReroutingControllerDelegateSpy()
         navNavigator = NativeNavigatorSpy()
-        navigator = NavigationNativeNavigator(navigator: navNavigator, locale: .current)
+        navigator = await NavigationNativeNavigator(navigator: navNavigator, locale: .current)
         configuration = RerouteController.Configuration(
             credentials: .mock(),
             navigator: navigator,
@@ -75,7 +74,7 @@ final class RerouteControllerTests: XCTestCase {
             rerouteConfig: .init(),
             initialManeuverAvoidanceRadius: 45.0
         )
-        rerouteController = rerouteController(with: configuration)
+        rerouteController = await rerouteController(with: configuration)
     }
 
     @MainActor

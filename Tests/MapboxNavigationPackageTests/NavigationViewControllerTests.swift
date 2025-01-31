@@ -208,54 +208,64 @@ class NavigationViewControllerTests: TestCase {
         XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
     }
 
-//    @MainActor // TODO
-//    func disabled_testCompleteRoute() async {
-//        let navigationProvider = navigationProvider!
-//
-//        class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
-//            var didArriveAtCalled = false
-//            let didArriveExpectation = XCTestExpectation(description: "Navigation finished expectation.")
-//
-//            init() {
-//                didArriveExpectation.assertForOverFulfill = true
-//            }
-//
-//            func navigationViewController(
-//                _ navigationViewController: NavigationViewController,
-//                didArriveAt waypoint: Waypoint
-//            ) {
-//                didArriveAtCalled = true
-//                didArriveExpectation.fulfill()
-//            }
-//        }
-//        let navigationViewController = createViewController()
-//        let delegate = NavigationViewControllerDelegateMock()
-//        navigationViewController.delegate = delegate
-//
-//        _ = navigationViewController.view
-//        navigationViewController.viewWillAppear(false)
-//        navigationViewController.viewDidAppear(false)
-//
-//        let locations = Fixture.generateTrace(for: initialRoutes.mainRoute.route)
-//        for location in locations {
-//            let status = TestNavigationStatusProvider.createNavigationStatus(location: location)
-//            locationPublisher.send(location)
-//            await navigationProvider.navigator().updateMapMatching(status: status)
-//        }
-//        let route = initialRoutes.mainRoute.route
-//        let finalStatus = TestNavigationStatusProvider.createActiveStatus(
-//            routeState: .complete,
-//            location: locations.last!,
-//            routeIndex: 0,
-//            legIndex: UInt32(route.legs.count - 1),
-//            stepIndex: UInt32(route.legs.last!.steps.count - 1)
-//        )
-//        await navigationProvider.navigator().updateIndices(status: finalStatus)
-//        await navigationProvider.navigator().handleRouteProgressUpdates(status: finalStatus)
-//
-//        await fulfillment(of: [delegate.didArriveExpectation], timeout: 1)
-//        XCTAssertTrue(delegate.didArriveAtCalled)
-//    }
+    @MainActor
+    func testCompleteRoute() async {
+        let navigationProvider = navigationProvider!
+
+        class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
+            var didArriveAtCalled = false
+            let didArriveExpectation = XCTestExpectation(description: "Navigation finished expectation.")
+
+            init() {
+                didArriveExpectation.assertForOverFulfill = true
+            }
+
+            func navigationViewController(
+                _ navigationViewController: NavigationViewController,
+                didArriveAt waypoint: Waypoint
+            ) {
+                didArriveAtCalled = true
+                didArriveExpectation.fulfill()
+            }
+        }
+        let navigationViewController = createViewController()
+        let delegate = NavigationViewControllerDelegateMock()
+        navigationViewController.delegate = delegate
+
+        _ = navigationViewController.view
+        navigationViewController.viewWillAppear(false)
+        navigationViewController.viewDidAppear(false)
+
+        let locations = Fixture.generateTrace(for: initialRoutes.mainRoute.route)
+        for location in locations {
+            let status = TestNavigationStatusProvider.createNavigationStatus(location: location)
+            locationPublisher.send(location)
+            await navigationProvider.navigator().updateMapMatching(status: status)
+        }
+        let route = initialRoutes.mainRoute.route
+        let finalStatus = TestNavigationStatusProvider.createActiveStatus(
+            routeState: .complete,
+            location: locations.last!,
+            routeIndex: 0,
+            legIndex: UInt32(route.legs.count - 1),
+            stepIndex: UInt32(route.legs.last!.steps.count - 1)
+        )
+        await navigationProvider.navigator().updateIndices(status: finalStatus)
+        var routeProgress = RouteProgress(
+            navigationRoutes: initialRoutes,
+            waypoints: routeOptions.waypoints,
+            congestionConfiguration: .default
+        )
+        routeProgress.currentLegProgress.update(using: finalStatus)
+
+        await navigationProvider.navigator().handleRouteProgressUpdates(
+            status: finalStatus,
+            routeProgress: routeProgress
+        )
+
+        await fulfillment(of: [delegate.didArriveExpectation], timeout: 2)
+        XCTAssertTrue(delegate.didArriveAtCalled)
+    }
 
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we
     // have only 1 style.

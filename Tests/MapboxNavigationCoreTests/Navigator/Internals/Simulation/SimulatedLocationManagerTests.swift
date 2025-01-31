@@ -5,7 +5,7 @@ import MapboxDirections
 import Turf
 import XCTest
 
-final class SimulatedLocationManagerTests: XCTestCase {
+final class SimulatedLocationManagerTests: BaseTestCase {
     fileprivate var locationDelegate: NavigationLocationManagerDelegateSpy!
     var locationManager: SimulatedLocationManager!
     var initialShape: LineString!
@@ -29,7 +29,6 @@ final class SimulatedLocationManagerTests: XCTestCase {
         .init(latitude: 59.33865, longitude: 18.074935),
     ]
 
-    @MainActor
     override func setUp() async throws {
         try await super.setUp()
 
@@ -38,7 +37,7 @@ final class SimulatedLocationManagerTests: XCTestCase {
         route = Route.mock(shape: initialShape)
         progress = await RouteProgress.mock(navigationRoutes: .mock(mainRoute: .mock(route: route)))
         customQueue = DispatchQueue(label: "test.queue")
-        locationManager = SimulatedLocationManager(
+        locationManager = await SimulatedLocationManager(
             initialLocation: initialLocation,
             queue: customQueue
         )

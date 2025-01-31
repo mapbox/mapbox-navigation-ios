@@ -8,9 +8,8 @@ final class NativeNavigatorTests: XCTestCase {
     var navigator: NativeNavigator!
     var testLocation: CLLocation!
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         testLocation = CLLocation(latitude: 1.0, longitude: 2.0)
         let nativeHandlersFactory = NativeHandlersFactory(
@@ -25,7 +24,7 @@ final class NativeNavigatorTests: XCTestCase {
             initialManeuverAvoidanceRadius: 8,
             locale: .current
         )
-        navigator = .init(with: .init(
+        navigator = await .init(with: .init(
             credentials: .mock(),
             nativeHandlersFactory: nativeHandlersFactory,
             routingConfig: .init(),

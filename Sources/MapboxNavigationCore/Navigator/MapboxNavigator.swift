@@ -20,6 +20,25 @@ final class MapboxNavigator: @unchecked Sendable {
         let movementMonitor: NavigationMovementMonitor
     }
 
+    actor NavigatorState {
+        var privateRouteProgress: RouteProgress?
+        var setRoutesTask: Task<Void, Never>?
+        var previousArrivalWaypoint: MapboxDirections.Waypoint?
+
+        func update(privateRouteProgress: RouteProgress?) async {
+            self.privateRouteProgress = privateRouteProgress
+        }
+
+        func update(setRoutesTask: Task<Void, Never>?) {
+            self.setRoutesTask?.cancel()
+            self.setRoutesTask = setRoutesTask
+        }
+
+        func update(previousArrivalWaypoint: MapboxDirections.Waypoint?) {
+            self.previousArrivalWaypoint = previousArrivalWaypoint
+        }
+    }
+
     // MARK: - Navigator Implementation
 
     @CurrentValuePublisher var session: AnyPublisher<Session, Never>
@@ -28,7 +47,12 @@ final class MapboxNavigator: @unchecked Sendable {
         _session.value
     }
 
+    var privateSession: CurrentValuePublisher<Session> {
+        _session
+    }
+
     @CurrentValuePublisher var routeProgress: AnyPublisher<RouteProgressState?, Never>
+    @MainActor
     var currentRouteProgress: RouteProgressState? {
         _routeProgress.value
     }
@@ -195,8 +219,6 @@ final class MapboxNavigator: @unchecked Sendable {
         case restoreToOnline
     }
 
-    private var setRoutesTask: Task<Void, Never>?
-
     @MainActor
     func setRoutes(navigationRoutes: NavigationRoutes, startLegIndex: Int, reason: SetRouteReason) {
         verifyActiveGuidanceBillingSession(for: navigationRoutes)
@@ -222,8 +244,9 @@ final class MapboxNavigator: @unchecked Sendable {
         ) { [weak self] result in
             guard let self else { return }
 
-            setRoutesTask?.cancel()
-            setRoutesTask = Task.detached {
+            let newTask = Task.detached { [weak self] in
+                guard let self else { return }
+
                 switch result {
                 case .success(let info):
                     var navigationRoutes = navigationRoutes
@@ -234,41 +257,47 @@ final class MapboxNavigator: @unchecked Sendable {
 
                     guard !Task.isCancelled else { return }
                     navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
-                    await self.updateRouteProgress(with: navigationRoutes)
-                    await self.send(navigationRoutes)
+                    await updateRouteProgress(with: navigationRoutes)
+                    await send(navigationRoutes)
                     switch reason {
                     case .newRoute:
                         // Do nothing, routes updates are already sent
                         break
                     case .reroute:
-                        await self.send(
+                        await send(
                             ReroutingStatus(event: ReroutingStatus.Events.Fetched())
                         )
                     case .alternatives:
                         let event = AlternativesStatus.Events.SwitchedToAlternative(navigationRoutes: navigationRoutes)
-                        await self.send(AlternativesStatus(event: event))
+                        await send(AlternativesStatus(event: event))
                     case .fasterRoute:
-                        await self.send(FasterRoutesStatus(event: FasterRoutesStatus.Events.Applied()))
+                        await send(FasterRoutesStatus(event: FasterRoutesStatus.Events.Applied()))
                     case .fallbackToOffline:
-                        await self.send(
+                        await send(
                             FallbackToTilesState(usingLatestTiles: false)
                         )
                     case .restoreToOnline:
-                        await self.send(FallbackToTilesState(usingLatestTiles: true))
+                        await send(FallbackToTilesState(usingLatestTiles: true))
                     }
-                    await self.send(Session(state: .activeGuidance(.uncertain)))
+                    await send(Session(state: .activeGuidance(.uncertain)))
                 case .failure(let error):
                     Log.error("Failed to set routes, error: \(error).", category: .navigation)
-                    await self.send(NavigatorErrors.FailedToSetRoute(underlyingError: error))
+                    await send(NavigatorErrors.FailedToSetRoute(underlyingError: error))
                 }
-                self.setRoutesTask = nil
-                self.rerouteController?.abortReroutePipeline = navigationRoutes.isCustomExternalRoute
+                await state.update(setRoutesTask: nil)
+                await rerouteController?.abortReroutePipeline = navigationRoutes.isCustomExternalRoute
+            }
+            Task { [weak self] in
+                await self?.state.update(setRoutesTask: newTask)
             }
         }
     }
 
+    @MainActor
     func selectAlternativeRoute(at index: Int) {
-        taskManager.cancellableTask { [self] in
+        taskManager.cancellableTask { [weak self] in
+            guard let self else { return }
+
             guard case .activeGuidance = await currentSession.state,
                   let alternativeRoutes = await currentNavigationRoutes?.selectingAlternativeRoute(at: index),
                   !Task.isCancelled
@@ -289,6 +318,7 @@ final class MapboxNavigator: @unchecked Sendable {
         }
     }
 
+    @MainActor
     func selectAlternativeRoute(with routeId: RouteId) {
         guard let index = currentNavigationRoutes?.alternativeRoutes.firstIndex(where: { $0.routeId == routeId }) else {
             Log.warning(
@@ -348,7 +378,6 @@ final class MapboxNavigator: @unchecked Sendable {
                 send(NavigatorErrors.FailedToSetToIdle())
                 return
             }
-
             send(NavigationRoutes?.none)
             send(RouteProgressState?.none)
             locationClient.stopUpdatingLocation()
@@ -397,7 +426,6 @@ final class MapboxNavigator: @unchecked Sendable {
                 )
                 return
             }
-
             send(NavigationRoutes?.none)
             send(RouteProgressState?.none)
             locationClient.startUpdatingLocation()
@@ -546,9 +574,10 @@ final class MapboxNavigator: @unchecked Sendable {
 
     private let configuration: Configuration
 
+    @MainActor
     private var rerouteController: RerouteController?
 
-    private var privateRouteProgress: RouteProgress?
+    private let state = NavigatorState()
 
     private let locationClient: LocationClient
 
@@ -617,10 +646,10 @@ final class MapboxNavigator: @unchecked Sendable {
                 waypoints: waypoints,
                 congestionConfiguration: configuration.congestionConfig
             )
-            privateRouteProgress = routeProgress
+            await state.update(privateRouteProgress: routeProgress)
             await send(RouteProgressState(routeProgress: routeProgress))
         } else {
-            privateRouteProgress = nil
+            await state.update(privateRouteProgress: nil)
             await send(RouteProgressState?.none)
         }
     }
@@ -657,10 +686,11 @@ final class MapboxNavigator: @unchecked Sendable {
         await updateIndices(status: status)
         await updateAlternativesPassingForkPoint(status: status)
 
-        if let privateRouteProgress, !Task.isCancelled {
-            await send(RouteProgressState(routeProgress: privateRouteProgress))
+        let routeProgress = await state.privateRouteProgress
+        if let routeProgress, !Task.isCancelled {
+            await send(RouteProgressState(routeProgress: routeProgress))
         }
-        await handleRouteProgressUpdates(status: status)
+        await handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
     }
 
     func updateMapMatching(status: NavigationStatus) async {
@@ -730,39 +760,38 @@ final class MapboxNavigator: @unchecked Sendable {
         ))
     }
 
-    private var previousArrivalWaypoint: MapboxDirections.Waypoint?
+    func handleRouteProgressUpdates(status: NavigationStatus, routeProgress: RouteProgress?) async {
+        guard let routeProgress else { return }
 
-    func handleRouteProgressUpdates(status: NavigationStatus) async {
-        guard let privateRouteProgress else { return }
-
-        if let newSpokenInstruction = privateRouteProgress.currentLegProgress.currentStepProgress
+        if let newSpokenInstruction = routeProgress.currentLegProgress.currentStepProgress
             .currentSpokenInstruction
         {
             await send(SpokenInstructionState(spokenInstruction: newSpokenInstruction))
         }
 
-        if let newVisualInstruction = privateRouteProgress.currentLegProgress.currentStepProgress
+        if let newVisualInstruction = routeProgress.currentLegProgress.currentStepProgress
             .currentVisualInstruction
         {
             await send(VisualInstructionState(visualInstruction: newVisualInstruction))
         }
 
-        let legProgress = privateRouteProgress.currentLegProgress
+        let legProgress = routeProgress.currentLegProgress
 
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 {
             if status.routeState == .complete {
+                let previousArrivalWaypoint = await state.previousArrivalWaypoint
                 guard previousArrivalWaypoint != legProgress.leg.destination else {
                     return
                 }
                 if let destination = legProgress.leg.destination {
-                    previousArrivalWaypoint = destination
-                    let event: any WaypointArrivalEvent = if privateRouteProgress.isFinalLeg {
+                    await state.update(previousArrivalWaypoint: destination)
+                    let event: any WaypointArrivalEvent = if routeProgress.isFinalLeg {
                         WaypointArrivalStatus.Events.ToFinalDestination(destination: destination)
                     } else {
                         WaypointArrivalStatus.Events.ToWaypoint(
                             waypoint: destination,
-                            legIndex: privateRouteProgress.legIndex
+                            legIndex: routeProgress.legIndex
                         )
                     }
                     await send(WaypointArrivalStatus(event: event))
@@ -771,9 +800,9 @@ final class MapboxNavigator: @unchecked Sendable {
                 case .automatically:
                     true
                 case .manually(let approval):
-                    await approval(.init(arrivedLegIndex: privateRouteProgress.legIndex))
+                    await approval(.init(arrivedLegIndex: routeProgress.legIndex))
                 }
-                guard !privateRouteProgress.isFinalLeg, advancesToNextLeg else {
+                guard !routeProgress.isFinalLeg, advancesToNextLeg else {
                     return
                 }
                 switchLeg(newLegIndex: Int(status.legIndex) + 1)
@@ -782,11 +811,13 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     fileprivate func updateAlternativesPassingForkPoint(status: NavigationStatus) async {
+        var routeProgress = await state.privateRouteProgress
         guard var navigationRoutes = currentNavigationRoutes else { return }
 
         guard navigationRoutes.updateForkPointPassed(with: status) else { return }
 
-        privateRouteProgress?.updateAlternativeRoutes(using: navigationRoutes)
+        routeProgress?.updateAlternativeRoutes(using: navigationRoutes)
+        await state.update(privateRouteProgress: routeProgress)
         await send(navigationRoutes)
         let alternativesStatus = AlternativesStatus(
             event: AlternativesStatus.Events.Updated(
@@ -797,10 +828,12 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     func updateIndices(status: NavigationStatus) async {
+        var routeProgress = await state.privateRouteProgress
         if let currentNavigationRoutes {
-            privateRouteProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
+            routeProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
         }
-        privateRouteProgress?.update(using: status)
+        routeProgress?.update(using: status)
+        await state.update(privateRouteProgress: routeProgress)
     }
 
     // MARK: - Notifications handling
@@ -963,22 +996,25 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     private func unsubscribeNotifications() {
-        rerouteController?.delegate = nil
         subscriptions.removeAll()
     }
 
     func fallbackToOffline(_ notification: Notification) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
             rerouteController = configuration.navigator.rerouteController
             rerouteController?.delegate = self
 
-            guard let navigationRoutes = self.currentNavigationRoutes,
-                  let privateRouteProgress else { return }
-            taskManager.cancellableTask { [self] in
+            let routeProgress = await state.privateRouteProgress
+
+            guard let navigationRoutes = currentNavigationRoutes,
+                  let routeProgress else { return }
+            taskManager.cancellableTask { [weak self] in
                 guard !Task.isCancelled else { return }
-                await setRoutes(
+                await self?.setRoutes(
                     navigationRoutes: navigationRoutes,
-                    startLegIndex: privateRouteProgress.legIndex,
+                    startLegIndex: routeProgress.legIndex,
                     reason: .fallbackToOffline
                 )
             }
@@ -986,17 +1022,21 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     func restoreToOnline(_ notification: Notification) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
             rerouteController = configuration.navigator.rerouteController
             rerouteController?.delegate = self
 
-            guard let navigationRoutes = self.currentNavigationRoutes,
-                  let privateRouteProgress else { return }
-            taskManager.cancellableTask { [self] in
+            let routeProgress = await state.privateRouteProgress
+
+            guard let navigationRoutes = currentNavigationRoutes,
+                  let routeProgress else { return }
+            taskManager.cancellableTask { [weak self] in
                 guard !Task.isCancelled else { return }
-                await setRoutes(
+                await self?.setRoutes(
                     navigationRoutes: navigationRoutes,
-                    startLegIndex: privateRouteProgress.legIndex,
+                    startLegIndex: routeProgress.legIndex,
                     reason: .restoreToOnline
                 )
             }
@@ -1020,12 +1060,16 @@ final class MapboxNavigator: @unchecked Sendable {
             return
         }
 
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
             navigator.setAlternativeRoutes(with: alternatives.map(\.route))
                 { [weak self] result /* Result<[RouteAlternative], Error> */ in
                     guard let self else { return }
 
-                    Task {
+                    Task { [weak self] in
+                        guard let self else { return }
+
                         switch result {
                         case .success(let routeAlternatives):
                             let alternativeRoutes = await AlternativeRoute.fromNative(
@@ -1033,7 +1077,7 @@ final class MapboxNavigator: @unchecked Sendable {
                                 relateveTo: mainRoute
                             )
 
-                            guard var navigationRoutes = self.currentNavigationRoutes else { return }
+                            guard var navigationRoutes = currentNavigationRoutes else { return }
                             navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
                                 .filter { alternativeRoute in
                                     if alternativesAcceptionPolicy.contains(.unfiltered) {
@@ -1052,18 +1096,17 @@ final class MapboxNavigator: @unchecked Sendable {
                                     }
                                     return false
                                 }
-                            if let status = self.navigator.mostRecentNavigationStatus {
+                            if let status = navigator.mostRecentNavigationStatus {
                                 navigationRoutes.updateForkPointPassed(with: status)
                             }
-                            await self.send(navigationRoutes)
-                            await self
-                                .send(
-                                    AlternativesStatus(
-                                        event: AlternativesStatus.Events.Updated(
-                                            actualAlternativeRoutes: navigationRoutes.alternativeRoutes
-                                        )
+                            await send(navigationRoutes)
+                            await send(
+                                AlternativesStatus(
+                                    event: AlternativesStatus.Events.Updated(
+                                        actualAlternativeRoutes: navigationRoutes.alternativeRoutes
                                     )
                                 )
+                            )
                         case .failure(let updateError):
                             Log.warning(
                                 "Failed to update alternative routes, error: \(updateError)",
@@ -1072,7 +1115,7 @@ final class MapboxNavigator: @unchecked Sendable {
                             let error = NavigatorErrors.FailedToUpdateAlternativeRoutes(
                                 localizedDescription: updateError.localizedDescription
                             )
-                            await self.send(error)
+                            await send(error)
                         }
                     }
                 }
@@ -1104,12 +1147,15 @@ final class MapboxNavigator: @unchecked Sendable {
             guard let route = await NavigationRoute(nativeRoute: onlineRoute) else {
                 return
             }
+
             let navigationRoutes = await NavigationRoutes(
                 mainRoute: route,
                 alternativeRoutes: []
             )
 
-            taskManager.cancellableTask { [self] in
+            taskManager.cancellableTask { [weak self] in
+                guard let self else { return }
+
                 guard !Task.isCancelled else { return }
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
@@ -1225,16 +1271,18 @@ final class MapboxNavigator: @unchecked Sendable {
             if let status = self.navigator.mostRecentNavigationStatus {
                 refreshedNavigationRoutes.updateForkPointPassed(with: status)
             }
-            self.privateRouteProgress = privateRouteProgress?.refreshingRoute(
+            let routeProgress = await state.privateRouteProgress
+            let updatedRouteProgress = routeProgress?.refreshingRoute(
                 with: refreshedNavigationRoutes,
                 legIndex: Int(legIndex),
                 legShapeIndex: 0, // TODO: NN should provide this value in `MBNNRouteRefreshObserver`
                 congestionConfiguration: configuration.congestionConfig
             )
+            await state.update(privateRouteProgress: updatedRouteProgress)
             await self.send(refreshedNavigationRoutes)
 
-            if let privateRouteProgress {
-                await send(RouteProgressState(routeProgress: privateRouteProgress))
+            if let updatedRouteProgress {
+                await send(RouteProgressState(routeProgress: updatedRouteProgress))
             }
             let endEvent = RefreshingStatus.Events.Refreshed()
             await send(RefreshingStatus(event: endEvent))
@@ -1275,7 +1323,9 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 return
             }
 
-            taskManager.cancellableTask { [self] in
+            taskManager.cancellableTask { [weak self] in
+                guard let self else { return }
+
                 guard !Task.isCancelled else { return }
                 await setRoutes(
                     navigationRoutes: NavigationRoutes(
@@ -1313,7 +1363,9 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 )
                 return
             }
-            taskManager.cancellableTask { [self] in
+            taskManager.cancellableTask { [weak self] in
+                guard let self else { return }
+
                 guard !Task.isCancelled else { return }
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
@@ -1353,7 +1405,9 @@ extension MapboxNavigator {
     @MainActor
     private func send(_ details: NavigationRoutes?) {
         if details == nil {
-            previousArrivalWaypoint = nil
+            Task {
+                await state.update(previousArrivalWaypoint: nil)
+            }
         }
         _navigationRoutes.emit(details)
     }

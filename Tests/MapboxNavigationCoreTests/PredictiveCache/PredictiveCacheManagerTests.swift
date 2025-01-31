@@ -17,13 +17,12 @@ final class PredictiveCacheManagerTests: XCTestCase {
 
     let delay: TimeInterval = 0.1
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         navNavigator = NativeNavigatorSpy()
-        navigator = NavigationNativeNavigator(navigator: navNavigator, locale: .current)
-        mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
+        navigator = await NavigationNativeNavigator(navigator: navNavigator, locale: .current)
+        mapView = await MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
         predictiveCacheConfig = PredictiveCacheConfig()
         let path = NSTemporaryDirectory()
         tileStore = TileStore.__create(forPath: path)
@@ -38,7 +37,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
         predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig.destinationLocationRadius = 400
         predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig.routeBufferRadius = 4000
 
-        var searchConfig = PredictiveCacheSearchConfig(
+        let searchConfig = PredictiveCacheSearchConfig(
             locationConfig: PredictiveCacheLocationConfig(
                 currentLocationRadius: 50,
                 routeBufferRadius: 500,

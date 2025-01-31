@@ -6,6 +6,7 @@
 
 * Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
 * Improved route refreshing by removing unnecessary internal navigator update on refresh.
+* Fixed possible not thread-safe memory access to `RouteProgress` in `NavigationController`.
 
 ## v3.7.0-beta.1
 

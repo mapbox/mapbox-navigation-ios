@@ -5,11 +5,16 @@ import XCTest
 
 final class EventsMetadataProviderTests: TestCase {
     class ScreenSpy: UIScreen {
-        var returnedBrightness: Float = 1
+        var returnedBrightness: Float
 
         override var brightness: CGFloat {
             set { returnedBrightness = Float(newValue) }
             get { CGFloat(returnedBrightness) }
+        }
+
+        init(returnedBrightness: Float = 1) {
+            self.returnedBrightness = returnedBrightness
+            super.init()
         }
     }
 
@@ -30,24 +35,22 @@ final class EventsMetadataProviderTests: TestCase {
     var audioSessionInfoProvider: AudioSessionInfoProviderSpy!
     var connectivityTypeProvider: ConnectivityTypeProviderSpy!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
-        screen = ScreenSpy()
-        screen.brightness = 0.5
-        device = DeviceSpy()
-        device.returnedOrientation = .landscapeLeft
+        screen = await ScreenSpy(returnedBrightness: 0.5)
+        device = await DeviceSpy(returnedOrientation: .landscapeLeft)
         let environment = EventAppState.Environment(
             date: { Date() },
             applicationState: { .active },
             screenOrientation: { .landscapeLeft },
             deviceOrientation: { .faceUp }
         )
-        appState = EventAppState(environment: environment)
+        appState = await EventAppState(environment: environment)
         audioSessionInfoProvider = AudioSessionInfoProviderSpy()
         connectivityTypeProvider = ConnectivityTypeProviderSpy()
 
-        provider = EventsMetadataProvider(
+        provider = await EventsMetadataProvider(
             appState: appState,
             screen: screen,
             audioSessionInfoProvider: audioSessionInfoProvider,

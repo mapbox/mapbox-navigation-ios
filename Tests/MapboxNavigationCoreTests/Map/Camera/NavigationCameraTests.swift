@@ -66,21 +66,20 @@ class NavigationCameraTests: BaseTestCase {
     var routeProgressPublisher: CurrentValueSubject<RouteProgress?, Never>!
     var subscriptions: Set<AnyCancellable>!
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         subscriptions = []
         let location = CLLocation(latitude: 9.519172, longitude: 47.210823)
         locationPublisher = .init(location)
         routeProgressPublisher = .init(nil)
 
-        navigationMapView = .init(
+        navigationMapView = await .init(
             location: locationPublisher.eraseToAnyPublisher(),
             routeProgress: routeProgressPublisher.eraseToAnyPublisher()
         )
-        navigationCamera = navigationMapView.navigationCamera
-        navigationCameraStateTransition = NavigationCameraStateTransition(navigationMapView.mapView)
+        navigationCamera = await navigationMapView.navigationCamera
+        navigationCameraStateTransition = await NavigationCameraStateTransition(navigationMapView.mapView)
     }
 
     @MainActor

@@ -11,9 +11,8 @@ final class EventAppStateTests: TestCase {
 
     var appState: EventAppState!
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         date = Date()
         applicationState = .active
@@ -25,7 +24,7 @@ final class EventAppStateTests: TestCase {
             screenOrientation: { self.screenOrientation },
             deviceOrientation: { self.deviceOrientation }
         )
-        appState = EventAppState(environment: environment)
+        appState = await EventAppState(environment: environment)
     }
 
     override func tearDown() {

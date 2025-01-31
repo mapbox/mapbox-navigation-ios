@@ -5,15 +5,13 @@ import MapboxDirections
 @testable import MapboxNavigationCore
 import XCTest
 
-open class TestCase: XCTestCase {
+open class TestCase: BaseTestCase {
     public var billingServiceMock: BillingServiceMock!
     public var coreConfig: CoreConfig!
     public var locationPublisher: CurrentValueSubject<CLLocation, Never>!
 
-    @MainActor
-    override open func setUp() {
-        super.setUp()
-        Credentials.injectSharedToken()
+    override open func setUp() async throws {
+        try? await super.setUp()
 
         billingServiceMock = .init()
         let billingHandler = BillingHandler.__createMockedHandler(with: billingServiceMock)

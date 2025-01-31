@@ -9,14 +9,25 @@ final class MapboxNavigatorTests: TestCase {
     var navigator: MapboxNavigator!
     var coreNavigator: CoreNavigatorMock!
     var subscriptions: Set<AnyCancellable>!
+    var refreshNotification: Notification!
+    var routeRefreshResult: RouteRefreshResult!
     let timeout: TimeInterval = 0.5
 
-    @MainActor
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try? await super.setUp()
 
         subscriptions = []
-        coreNavigator = CoreNavigatorMock()
+        coreNavigator = await CoreNavigatorMock()
+        coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), []))
+        routeRefreshResult = RouteRefreshResult(
+            updatedRoute: RouteInterfaceMock(),
+            alternativeRoutes: []
+        )
+        let userInfo: [AnyHashable: Any] = [
+            NativeNavigator.NotificationUserInfoKey.refreshedRoutesResultKey: routeRefreshResult!,
+            NativeNavigator.NotificationUserInfoKey.legIndexKey: 0,
+        ]
+        refreshNotification = Notification(name: .routeRefreshDidUpdateAnnotations, userInfo: userInfo)
         let coonfiguration = MapboxNavigator.Configuration(
             navigator: coreNavigator,
             routeParserType: RouteParser.self,
@@ -32,7 +43,78 @@ final class MapboxNavigatorTests: TestCase {
             congestionConfig: .default,
             movementMonitor: .init()
         )
-        navigator = MapboxNavigator(configuration: coonfiguration)
+        navigator = await MapboxNavigator(configuration: coonfiguration)
+    }
+
+    @MainActor
+    func testStartActiveGuidanceAndRefresh() async {
+        XCTAssertFalse(navigator.currentSession.state.isTripSessionActive)
+
+        let navigationRoutes = await NavigationRoutes.mock()
+        navigator.privateSession.emit(Session(state: .activeGuidance(.initialized)))
+
+        for _ in 0..<100 {
+            navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+            navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .newRoute)
+            navigator.didRefreshAnnotations(refreshNotification)
+        }
+        XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
+    }
+
+    @MainActor
+    func testStartActiveGuidanceAndFreeDrive() async {
+        let navigationRoutes = await NavigationRoutes.mock()
+
+        for _ in 0..<100 {
+            navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+            navigator.startFreeDrive()
+        }
+    }
+
+    @MainActor
+    func testMultipleUpdatesSetRouteTask() async {
+        XCTAssertFalse(navigator.currentSession.state.isTripSessionActive)
+
+        let navigationRoutes = await NavigationRoutes.mock()
+        navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+        navigator.privateSession.emit(Session(state: .activeGuidance(.initialized)))
+
+        let status = NavigationStatus.mock()
+        let userInfo: [AnyHashable: Any] = [
+            NativeNavigator.NotificationUserInfoKey.statusKey: status,
+        ]
+        let statusNotification = Notification(name: .navigationStatusDidChange, userInfo: userInfo)
+
+        for _ in 0..<100 {
+            Task.detached { [weak self] in
+                NotificationCenter.default.post(statusNotification)
+                await self?.navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .newRoute)
+            }
+        }
+        XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
+    }
+
+    @MainActor
+    func testUpdateNavigationRoutesFromStatus() async {
+        let navigationRoutes = await NavigationRoutes.mock()
+        await navigator.startActiveGuidanceAsync(with: navigationRoutes, startLegIndex: 0)
+        navigator.privateSession.emit(Session(state: .activeGuidance(.initialized)))
+
+        let status = NavigationStatus.mock()
+        let userInfo: [AnyHashable: Any] = [
+            NativeNavigator.NotificationUserInfoKey.statusKey: status,
+        ]
+        let statusNotification = Notification(name: .navigationStatusDidChange, userInfo: userInfo)
+
+        for _ in 0..<100 {
+            Task.detached { [weak self] in
+                guard let self else { return }
+                NotificationCenter.default.post(statusNotification)
+                navigator.didRefreshAnnotations(refreshNotification)
+                await navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .reroute)
+            }
+        }
+        XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
     }
 
     func testUpdateMapMatchingResult() async {
@@ -131,7 +213,8 @@ final class MapboxNavigatorTests: TestCase {
         await fulfillment(of: [expectation], timeout: timeout)
     }
 
-    func testUpdateCurrentSpeedIfKilometersPerHour() async { let date = "2024-01-01T15:00:00.000Z".ISO8601Date!
+    func testUpdateCurrentSpeedIfKilometersPerHour() async {
+        let date = "2024-01-01T15:00:00.000Z".ISO8601Date!
         let location1 = CLLocation(
             coordinate: .init(latitude: 1, longitude: 2),
             altitude: -1,

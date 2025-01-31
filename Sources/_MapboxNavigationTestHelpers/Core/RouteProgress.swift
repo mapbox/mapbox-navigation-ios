@@ -19,7 +19,7 @@ extension RouteProgress {
         navigationRoutes: NavigationRoutes,
         waypoints: [Waypoint] = [],
         congestionConfiguration: CongestionRangesConfiguration = .default
-    ) async -> Self {
+    ) -> Self {
         self.init(
             navigationRoutes: navigationRoutes,
             waypoints: waypoints,

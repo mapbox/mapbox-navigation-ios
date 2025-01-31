@@ -7,6 +7,11 @@ open class BaseTestCase: XCTestCase {
         Self.injectSharedToken()
     }
 
+    override open func setUp() async throws {
+        try? await super.setUp()
+        Self.injectSharedToken()
+    }
+
     override open func tearDownWithError() throws {
         Self.clearInjectSharedToken()
     }

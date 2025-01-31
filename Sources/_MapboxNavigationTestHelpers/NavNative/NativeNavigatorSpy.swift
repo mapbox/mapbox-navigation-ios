@@ -3,6 +3,13 @@
 import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
+extension NavigationNativeNavigator {
+    @MainActor
+    public static func mock() -> Self {
+        .init(navigator: NativeNavigatorSpy(), locale: .current)
+    }
+}
+
 public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
     public var passedTileStore: TileStore?
     public var passedDescriptors: [TilesetDescriptor]?

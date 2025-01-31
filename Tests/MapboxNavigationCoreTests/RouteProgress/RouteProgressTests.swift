@@ -7,7 +7,7 @@ import MapboxNavigationNative
 import Turf
 import XCTest
 
-class RouteProgressTests: XCTestCase {
+class RouteProgressTests: BaseTestCase {
     var routes: NavigationRoutes!
     var routeProgress: RouteProgress!
 
