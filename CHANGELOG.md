@@ -2,6 +2,11 @@
 
 ## v3.7.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.10.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.10.0-rc.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v323.0.0-rc.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/323.0.0-rc.2).
+
 ### Other changes
 
 * Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
