@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.20.0
+
+### Other changes
+
+* `RoutingProvider` now requires `AnyObject` conformance.
+
 ## v2.19.0
 
 ### Packaging

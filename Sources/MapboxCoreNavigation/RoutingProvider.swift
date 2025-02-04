@@ -6,8 +6,8 @@ import MapboxDirections
  
  SDK provides conformance to this protocol for `Directions` and `MapboxRoutingProvider`.
  */
-public protocol RoutingProvider {
-    
+public protocol RoutingProvider: AnyObject {
+
     typealias IndexedRouteResponseCompletionHandler = (_ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
     
     /**
