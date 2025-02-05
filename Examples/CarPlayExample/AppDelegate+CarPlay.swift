@@ -92,6 +92,8 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 // MARK: - CarPlayManagerDelegate methods
 
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didSetup navigationMapView: NavigationMapView) {}
+
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         selectedPreviewFor trip: CPTrip,

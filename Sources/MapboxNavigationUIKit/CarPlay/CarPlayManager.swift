@@ -1459,6 +1459,14 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
             sourceIdentifier: sourceIdentifier
         )
     }
+
+    @_spi(MapboxInternal)
+    public func carPlayMapViewController(
+        _ carPlayMapViewController: CarPlayMapViewController,
+        didSetup navigationMapView: NavigationMapView
+    ) {
+        delegate?.carPlayManager(self, didSetup: navigationMapView)
+    }
 }
 
 // MARK: MapTemplateProviderDelegate Methods

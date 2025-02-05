@@ -184,6 +184,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         returnedLeadingBarButtons
     }
 
+    func carPlayManager(_ carPlayManager: CarPlayManager, didSetup navigationMapView: NavigationMapView) {}
+
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,

@@ -258,6 +258,7 @@ open class CarPlayMapViewController: UIViewController {
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
 
         view = navigationMapView
+        delegate?.carPlayMapViewController(self, didSetup: navigationMapView)
     }
 
     func setupStyleManager() {

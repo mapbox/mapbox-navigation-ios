@@ -205,6 +205,12 @@ public protocol CarPlayMapViewControllerDelegate: AnyObject, UnimplementedLoggin
         shapeFor waypoints: [Waypoint],
         legIndex: Int
     ) -> FeatureCollection?
+
+    @_spi(MapboxInternal)
+    func carPlayMapViewController(
+        _ carPlayMapViewController: CarPlayMapViewController,
+        didSetup navigationMapView: NavigationMapView
+    )
 }
 
 extension CarPlayMapViewControllerDelegate {
@@ -284,5 +290,13 @@ extension CarPlayMapViewControllerDelegate {
     ) -> SymbolLayer? {
         logUnimplemented(protocolType: CarPlayMapViewControllerDelegate.self, level: .info)
         return nil
+    }
+
+    @_spi(MapboxInternal)
+    public func carPlayMapViewController(
+        _ carPlayMapViewController: CarPlayMapViewController,
+        didSetup navigationMapView: NavigationMapView
+    ) {
+        logUnimplemented(protocolType: CarPlayMapViewControllerDelegate.self, level: .info)
     }
 }
