@@ -209,7 +209,7 @@ commands:
           command: |
             xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
             -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-            $(find "${HOME}/Library/Developer/Xcode/DerivedData" -ipath "*<<parameters.module_name>>.framework/<<parameters.module_name>>") > coverage.lcov
+            $(find "${HOME}/Library/Developer/Xcode/DerivedData" \( -iname "<<parameters.module_name>>.o" -o -ipath "*<<parameters.module_name>>.framework/<<parameters.module_name>>" \)) > coverage.lcov
       - run:
           name: Generate html report
           command: |
