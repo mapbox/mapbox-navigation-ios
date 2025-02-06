@@ -141,6 +141,32 @@ public class CarPlayManager: NSObject {
         case .overview:
             break
         }
+
+        let traitCollection: UITraitCollection
+        if let carPlayNavigationViewController {
+            traitCollection = carPlayNavigationViewController.traitCollection
+        } else if let carPlayMapViewController {
+            traitCollection = carPlayMapViewController.traitCollection
+        } else {
+            assertionFailure("Panning interface is only supported for free-drive or active-guidance navigation.")
+            return
+        }
+
+        guard let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate,
+              let activity = mapTemplate.currentActivity
+        else {
+            return
+        }
+
+        if let buttons = delegate?.carPlayManager(
+            self,
+            leadingNavigationBarButtonsCompatibleWith: traitCollection,
+            in: mapTemplate,
+            for: activity,
+            cameraState: state
+        ) {
+            mapTemplate.leadingNavigationBarButtons = buttons
+        }
     }
 
     // MARK: Map Configuration
@@ -1524,7 +1550,6 @@ extension CarPlayManager {
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window
-
         let mapTemplate = previewMapTemplate()
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)

@@ -77,7 +77,7 @@ open class CarPlayMapViewController: UIViewController {
     }()
 
     /// The map button for zooming in the current map view.
-    public lazy var zoomInButton: CPMapButton = {
+    public var zoomInButton: CPMapButton {
         let zoomInButton = CPMapButton { [weak self] _ in
             guard let self else { return }
 
@@ -92,21 +92,21 @@ open class CarPlayMapViewController: UIViewController {
         let bundle = Bundle.mapboxNavigation
 
         let imageName = switch traitCollection.userInterfaceStyle {
-        case .light, .unspecified:
+        case .light:
             "carplay_plus_light"
-        case .dark:
+        case .dark, .unspecified:
             "carplay_plus_dark"
         @unknown default:
-            "carplay_plus_light"
+            "carplay_plus_dark"
         }
 
         zoomInButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
         return zoomInButton
-    }()
+    }
 
     /// The map button for zooming out the current map view.
-    public lazy var zoomOutButton: CPMapButton = {
+    public var zoomOutButton: CPMapButton {
         let zoomOutButton = CPMapButton { [weak self] _ in
             guard let self else { return }
             let mapView = navigationMapView.mapView
@@ -119,17 +119,17 @@ open class CarPlayMapViewController: UIViewController {
 
         let bundle = Bundle.mapboxNavigation
         let imageName = switch traitCollection.userInterfaceStyle {
-        case .light, .unspecified:
+        case .light:
             "carplay_minus_light"
-        case .dark:
+        case .dark, .unspecified:
             "carplay_minus_dark"
         @unknown default:
-            "carplay_minus_light"
+            "carplay_minus_dark"
         }
         zoomOutButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
         return zoomOutButton
-    }()
+    }
 
     /// The map button property for hiding or showing the pan map button.
     public internal(set) var panMapButton: CPMapButton?
@@ -151,12 +151,12 @@ open class CarPlayMapViewController: UIViewController {
 
         let bundle = Bundle.mapboxNavigation
         let imageName = switch traitCollection.userInterfaceStyle {
-        case .light, .unspecified:
+        case .light:
             "carplay_pan_light"
-        case .dark:
+        case .dark, .unspecified:
             "carplay_pan_dark"
         @unknown default:
-            "carplay_pan_light"
+            "carplay_pan_dark"
         }
         panButton.image = UIImage(named: imageName, in: bundle, compatibleWith: traitCollection)
 
@@ -203,6 +203,7 @@ open class CarPlayMapViewController: UIViewController {
         self.styles = styles
         super.init(nibName: nil, bundle: nil)
         self.sessionConfiguration = CPSessionConfiguration(delegate: self)
+        navigationMapView.update(navigationCameraState: .following)
     }
 
     /// Returns nil.
@@ -281,8 +282,8 @@ open class CarPlayMapViewController: UIViewController {
             equalTo: view.trailingAnchor,
             constant: -8
         )
-        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
         self.speedLimitView = speedLimitView
     }

@@ -272,6 +272,16 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         didDismissPanningInterfaceCalled = true
         passedTemplate = template
     }
+
+    func carPlayManager(
+        _ carPlayManager: MapboxNavigationUIKit.CarPlayManager,
+        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+        in carPlayTemplate: CPMapTemplate,
+        for activity: MapboxNavigationUIKit.CarPlayActivity,
+        cameraState: MapboxNavigationCore.NavigationCameraState
+    ) -> [CPBarButton]? {
+        return nil
+    }
 }
 
 class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
