@@ -213,7 +213,8 @@ commands:
       - run:
           name: Generate html report
           command: |
-            genhtml coverage.lcov --output-directory coverage
+            lcov --extract coverage.lcov '*/<<parameters.module_name>>/*' -o filtered_coverage.lcov
+            genhtml filtered_coverage.lcov --output-directory coverage
       - store_artifacts:
           path: coverage
           destination: coverage-report
@@ -875,6 +876,7 @@ workflows:
             spm: true
             codecoverage: true
             context: Slack Orb
+            scheme: "MapboxNavigation"
         - build-job:
             name: "Xcode_14.1_iOS_16.1_SPM_Debug"
             xcode: "14.1"
@@ -883,6 +885,7 @@ workflows:
             spm: true
             codecoverage: true
             context: Slack Orb
+            scheme: "MapboxNavigation"
         - build-job:
             name: "Xcode_14.1.0_iOS_16.1_Release"
             xcode: "14.1.0"
