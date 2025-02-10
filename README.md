@@ -1,7 +1,6 @@
 # [Mapbox Navigation SDK for iOS](https://docs.mapbox.com/ios/navigation/)
 
 [![CircleCI](https://circleci.com/gh/mapbox/mapbox-navigation-ios.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-navigation-ios)
-[![codecov](https://codecov.io/gh/mapbox/mapbox-navigation-ios/branch/main/graph/badge.svg)](https://codecov.io/gh/mapbox/mapbox-navigation-ios)
 [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 

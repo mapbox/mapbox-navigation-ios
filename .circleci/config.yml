@@ -195,6 +195,32 @@ commands:
           when: on_fail
           command: |
             curl -X POST -H 'Content-type: application/json' --data '{"text": ":x: '"$SLACK_MENTION_SLUG"' <'"$CIRCLE_BUILD_URL"' | '"$CIRCLE_JOB"'> job from snapshot pipeline failed.", "link_names" : 1}' $SLACK_WEBHOOK
+            
+  generate-coverage-report:
+    parameters:
+      module_name:
+        type: string
+    steps:
+      - run:
+          name: Install lcov
+          command: brew install lcov
+      - run:
+          name: Generate code coverage report
+          command: |
+            xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+            -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+            $(find "${HOME}/Library/Developer/Xcode/DerivedData" \( -iname "<<parameters.module_name>>.o" -o -ipath "*<<parameters.module_name>>.framework/<<parameters.module_name>>" \)) > coverage.lcov
+      - run:
+          name: Generate html report
+          command: |
+            lcov --extract coverage.lcov '*/<<parameters.module_name>>/*' -o filtered_coverage.lcov
+            genhtml filtered_coverage.lcov --output-directory coverage
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
+      - store_test_results:
+          path: test-results
+          when: always
 
 
 step-library:
@@ -406,7 +432,7 @@ jobs:
                 xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme << parameters.scheme >> -configuration << parameters.configuration >> <<# parameters.clean_build >>clean build <</ parameters.clean_build >><<# parameters.test >>test <</ parameters.test >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" <<# parameters.codecoverage >>-enableCodeCoverage YES | xcpretty --report junit --output test-results/junit.xml<</ parameters.codecoverage >>
       - when:
           condition: << parameters.spm >>
           steps:
@@ -418,25 +444,13 @@ jobs:
                 command: xcodebuild -resolvePackageDependencies
             - run:
                 name: MapboxNavigation-Package
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" <<# parameters.codecoverage >>-enableCodeCoverage YES | xcpretty --report junit --output test-results/junit.xml<</ parameters.codecoverage >>
       # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
           steps:
-            - run:
-                name: Generate code coverage report
-                command: |
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-                    $(find "${HOME}/Library/Developer/Xcode/DerivedData" -name "MapboxNavigation.o") > coverage.lcov
-            - run:
-                name: Send code coverage
-                command: |
-                  curl -Os https://uploader.codecov.io/latest/macos/codecov
-                  chmod +x codecov
-                  ./codecov
-            - store_artifacts:
-                path: coverage.lcov
+            - generate-coverage-report:
+                module_name: << parameters.scheme >>
       - notify-build-finished
 
   build-example:
@@ -537,24 +551,12 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build test host application and execute tests
-          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
+          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test ENABLE_TESTABILITY=YES <<# parameters.codecoverage >>-enableCodeCoverage YES | xcpretty --report junit --output test-results/junit.xml<</ parameters.codecoverage >>
       - when:
           condition: << parameters.codecoverage >>
           steps:
-            - run:
-                name: Generate code coverage report
-                command: |
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-                    $(find build -name "MapboxNavigation.o") > coverage.lcov
-            - run:
-                name: Send code coverage
-                command: |
-                  curl -Os https://uploader.codecov.io/latest/macos/codecov
-                  chmod +x codecov
-                  ./codecov
-            - store_artifacts:
-                path: coverage.lcov
+            - generate-coverage-report:
+                module_name: MapboxNavigation
       - notify-build-finished
 
   get-api-log-job:
@@ -864,7 +866,7 @@ workflows:
             xcode: "14.3.1"
             iOS: "16.4"
             device: "iPhone 14 Pro Max"
-            codecoverage: false
+            codecoverage: true
             context: Slack Orb
         - build-job:
             name: "Xcode_15.2_iOS_17.2_SPM_Debug"
@@ -874,6 +876,7 @@ workflows:
             spm: true
             codecoverage: true
             context: Slack Orb
+            scheme: "MapboxNavigation"
         - build-job:
             name: "Xcode_14.1_iOS_16.1_SPM_Debug"
             xcode: "14.1"
@@ -882,6 +885,7 @@ workflows:
             spm: true
             codecoverage: true
             context: Slack Orb
+            scheme: "MapboxNavigation"
         - build-job:
             name: "Xcode_14.1.0_iOS_16.1_Release"
             xcode: "14.1.0"
