@@ -319,6 +319,7 @@ DEPENDENCIES
   fastlane
   jazzy (~> 0.14)
   snapshot
+  xcpretty
 
 BUNDLED WITH
    2.1.4

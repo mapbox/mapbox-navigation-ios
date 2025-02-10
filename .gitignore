@@ -18,6 +18,9 @@ Carthage/Checkouts
 /build
 .build
 
+coverage
+coverage.lcov
+junit.xml
 
 Examples/Swift/Navigation_Example.mobileprovision
 
