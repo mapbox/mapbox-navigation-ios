@@ -70,6 +70,7 @@ open class NavigationMapView: UIView {
         super.init(frame: Constants.initialMapRect)
 
         mapStyleManager.customizedLayerProvider = customizedLayerProvider
+        mapStyleManager.delegate = self
         setupMapView()
         observeCamera()
         enablePredictiveCaching(with: predictiveCacheManager)
@@ -463,6 +464,7 @@ open class NavigationMapView: UIView {
             navigationRoutes: navigationRoutes,
             excludedRouteAlertTypes: excludedRouteAlertTypes
         )
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     /// Removes routes and all visible annotations from the map.
@@ -732,5 +734,17 @@ open class NavigationMapView: UIView {
             waypointColor: waypointColor,
             waypointStrokeColor: waypointStrokeColor
         )
+    }
+}
+
+extension NavigationMapView: NavigationMapStyleManagerDelegate {
+    func styleManager<T>(_ styleManager: NavigationMapStyleManager, layer: T) -> T? where T: Layer, T: MapStyleContent {
+        guard let customizedLayer = delegate?.navigationMapView(self, willAdd: layer) else {
+            return layer
+        }
+        guard let customizedLayer = customizedLayer as? T else {
+            preconditionFailure("The customized layer should have the same layer type as the default layer.")
+        }
+        return customizedLayer
     }
 }

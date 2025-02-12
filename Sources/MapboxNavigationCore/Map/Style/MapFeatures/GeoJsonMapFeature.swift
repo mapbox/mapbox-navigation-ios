@@ -226,7 +226,7 @@ struct GeoJsonMapFeature: MapFeature {
 
 extension GeoJSONObject {
     /// Ported from MapboxMaps as the same var is internal in the SDK.
-    fileprivate var sourceData: GeoJSONSourceData {
+    var sourceData: GeoJSONSourceData? {
         switch self {
         case .geometry(let geometry):
             return .geometry(geometry)
@@ -234,6 +234,26 @@ extension GeoJSONObject {
             return .feature(feature)
         case .featureCollection(let collection):
             return .featureCollection(collection)
+        @unknown default:
+            return nil
         }
+    }
+}
+
+extension GeoJsonMapFeature.Source {
+    static let defaultTolerance: Double = 0.375
+
+    func data(
+        lineMetrics: Bool = false,
+        tolerance: Double? = nil
+    ) -> GeoJSONSource? {
+        guard let jsonSourceData = geoJson.sourceData else { return nil }
+
+        var data = GeoJSONSource(id: id).data(jsonSourceData)
+        data.lineMetrics = lineMetrics
+        if let tolerance {
+            data.tolerance = tolerance
+        }
+        return data
     }
 }

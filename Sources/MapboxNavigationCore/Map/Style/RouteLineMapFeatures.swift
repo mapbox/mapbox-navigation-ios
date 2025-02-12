@@ -11,9 +11,53 @@ struct LineGradientSettings {
 }
 
 struct RouteLineFeatureProvider {
-    var customRouteLineLayer: (String, String) -> Layer?
-    var customRouteCasingLineLayer: (String, String) -> Layer?
-    var customRouteRestrictedAreasLineLayer: (String, String) -> Layer?
+    var customRouteLineLayer: (String, String) -> LineLayer?
+    var customRouteCasingLineLayer: (String, String) -> LineLayer?
+    var customRouteRestrictedAreasLineLayer: (String, String) -> LineLayer?
+}
+
+struct RouteLineStyleContent: MapStyleContent {
+    var offset: Double
+    let featureIds: FeatureIds.RouteLine
+
+    let routeSource: GeoJSONSource
+    let restrictedAreaSource: GeoJSONSource?
+
+    let routeLineLayer: LineLayer?
+    let casingLineLayer: LineLayer?
+    let traversedLineLayer: LineLayer?
+    let restrictedAreaLayer: LineLayer?
+
+    var body: some MapStyleContent {
+        routeSource
+        if let restrictedAreaSource {
+            restrictedAreaSource
+        }
+
+        if let traversedLineLayer {
+            traversedLineLayer
+                .slot(.middle)
+        }
+        if let casingLineLayer {
+            casingLineLayer
+                .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
+                .slot(.middle)
+        }
+        if let routeLineLayer {
+            routeLineLayer
+                .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
+                .slot(.middle)
+        }
+        if let restrictedAreaLayer {
+            restrictedAreaLayer
+                .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
+                .slot(.middle)
+        }
+    }
+
+    private var lineTrimOffsetEnd: Double {
+        Double.minimum(1.0, offset)
+    }
 }
 
 extension Route {
@@ -24,136 +68,161 @@ extension Route {
         isAlternative: Bool,
         config: MapStyleConfig,
         featureProvider: RouteLineFeatureProvider,
-        customizedLayerProvider: CustomizedLayerProvider
-    ) -> [any MapFeature] {
-        var features: [any MapFeature] = []
+        customizedLayerProvider: CustomizedTypeLayerProvider<LineLayer>
+    ) -> (RouteLineStyleContent, MapFeature)? {
+        guard let shape else { return nil }
 
-        if let shape {
-            let congestionFeatures = congestionFeatures(
-                legIndex: nil,
-                rangesConfiguration: config.congestionConfiguration.ranges
+        let congestionFeatures = congestionFeatures(
+            legIndex: nil,
+            rangesConfiguration: config.congestionConfiguration.ranges
+        )
+        let gradientStops = routeLineCongestionGradient(
+            congestionFeatures: congestionFeatures,
+            isMain: !isAlternative,
+            isSoft: isSoftGradient,
+            config: config
+        )
+        let colors = config.congestionConfiguration.colors
+        let trafficGradient: Value<StyleColor> = .expression(
+            .routeLineGradientExpression(
+                gradientStops,
+                lineBaseColor: isAlternative ? colors.alternativeRouteColors.unknown : colors.mainRouteColors
+                    .unknown,
+                isSoft: isSoftGradient
             )
-            let gradientStops = routeLineCongestionGradient(
-                congestionFeatures: congestionFeatures,
-                isMain: !isAlternative,
-                isSoft: isSoftGradient,
+        )
+
+        let routeSource = GeoJsonMapFeature.Source(
+            id: ids.source,
+            geoJson: .init(Feature(geometry: .lineString(shape)))
+        )
+
+        let customRouteLineLayer = featureProvider.customRouteLineLayer(ids.main, ids.source)
+        let customRouteCasingLineLayer = featureProvider.customRouteCasingLineLayer(ids.casing, ids.source)
+        let routeLineLayer: LineLayer? =
+            customRouteLineLayer ?? customizedLayerProvider.customizedLayer(defaultRouteLineLayer(
+                ids: ids,
+                isAlternative: isAlternative,
+                trafficGradient: trafficGradient,
                 config: config
-            )
-            let colors = config.congestionConfiguration.colors
-            let trafficGradient: Value<StyleColor> = .expression(
-                .routeLineGradientExpression(
-                    gradientStops,
-                    lineBaseColor: isAlternative ? colors.alternativeRouteColors.unknown : colors.mainRouteColors
-                        .unknown,
-                    isSoft: isSoftGradient
-                )
-            )
+            ))
+        let casingLineLayer: LineLayer?
+            = customRouteCasingLineLayer ?? customizedLayerProvider.customizedLayer(defaultRouteCasingLineLayer(
+                ids: ids,
+                isAlternative: isAlternative,
+                config: config
+            ))
 
-            var sources: [GeoJsonMapFeature.Source] = [
-                .init(
-                    id: ids.source,
-                    geoJson: .init(Feature(geometry: .lineString(shape)))
-                ),
-            ]
-
-            let customRouteLineLayer = featureProvider.customRouteLineLayer(ids.main, ids.source)
-            let customRouteCasingLineLayer = featureProvider.customRouteCasingLineLayer(ids.casing, ids.source)
-            var layers: [any Layer] = [
-                customRouteLineLayer ?? customizedLayerProvider.customizedLayer(defaultRouteLineLayer(
-                    ids: ids,
-                    isAlternative: isAlternative,
-                    trafficGradient: trafficGradient,
-                    config: config
-                )),
-                customRouteCasingLineLayer ?? customizedLayerProvider.customizedLayer(defaultRouteCasingLineLayer(
-                    ids: ids,
-                    isAlternative: isAlternative,
-                    config: config
-                )),
-            ]
-
-            if let traversedRouteColor = config.traversedRouteColor, !isAlternative, config.routeLineTracksTraversal {
-                layers.append(
-                    customizedLayerProvider.customizedLayer(defaultTraversedRouteLineLayer(
-                        ids: ids,
-                        traversedRouteColor: traversedRouteColor,
-                        config: config
-                    ))
-                )
-            }
-
-            let restrictedRoadsFeatures: [Feature]? = config.isRestrictedAreaEnabled ? restrictedRoadsFeatures() : nil
-            let restrictedAreaGradientExpression: Value<StyleColor>? = restrictedRoadsFeatures
-                .map { routeLineRestrictionsGradient($0, config: config) }
-                .map {
-                    .expression(
-                        MapboxMaps.Expression.routeLineGradientExpression(
-                            $0,
-                            lineBaseColor: config.routeRestrictedAreaColor
-                        )
-                    )
-                }
-
-            if let restrictedRoadsFeatures, let restrictedAreaGradientExpression {
-                let shape = LineString(restrictedRoadsFeatures.compactMap {
-                    guard case .lineString(let lineString) = $0.geometry else {
-                        return nil
-                    }
-                    return lineString.coordinates
-                }.reduce([CLLocationCoordinate2D](), +))
-
-                sources.append(
-                    .init(
-                        id: ids.restrictedAreaSource,
-                        geoJson: .geometry(.lineString(shape))
-                    )
-                )
-                let customRouteRestrictedAreasLine = featureProvider.customRouteRestrictedAreasLineLayer(
-                    ids.restrictedArea,
-                    ids.restrictedAreaSource
-                )
-
-                layers.append(
-                    customRouteRestrictedAreasLine ??
-                        customizedLayerProvider.customizedLayer(defaultRouteRestrictedAreasLine(
-                            ids: ids,
-                            gradientExpression: restrictedAreaGradientExpression,
-                            config: config
-                        ))
-                )
-            }
-
-            features.append(
-                GeoJsonMapFeature(
-                    id: ids.main,
-                    sources: sources,
-                    customizeSource: { source, _ in
-                        source.lineMetrics = true
-                        source.tolerance = 0.375
-                    },
-                    layers: layers,
-                    onAfterAdd: { mapView in
-                        mapView.mapboxMap.setRouteLineOffset(offset, for: ids)
-                    },
-                    onUpdate: { mapView in
-                        mapView.mapboxMap.setRouteLineOffset(offset, for: ids)
-                    },
-                    onAfterUpdate: { mapView in
-                        let map: MapboxMap = mapView.mapboxMap
-                        try map.updateLayer(withId: ids.main, type: LineLayer.self, update: { layer in
-                            layer.lineGradient = trafficGradient
-                        })
-                        if let restrictedAreaGradientExpression {
-                            try map.updateLayer(withId: ids.restrictedArea, type: LineLayer.self, update: { layer in
-                                layer.lineGradient = restrictedAreaGradientExpression
-                            })
-                        }
-                    }
-                )
-            )
+        var traversedLineLayer: LineLayer?
+        if let traversedRouteColor = config.traversedRouteColor, !isAlternative, config.routeLineTracksTraversal {
+            traversedLineLayer = customizedLayerProvider.customizedLayer(defaultTraversedRouteLineLayer(
+                ids: ids,
+                traversedRouteColor: traversedRouteColor,
+                config: config
+            ))
         }
 
-        return features
+        let restrictedRoadsFeatures: [Feature]? = config.isRestrictedAreaEnabled ? restrictedRoadsFeatures() : nil
+        let restrictedAreaGradientExpression: Value<StyleColor>? = restrictedRoadsFeatures
+            .map { routeLineRestrictionsGradient($0, config: config) }
+            .map {
+                .expression(
+                    MapboxMaps.Expression.routeLineGradientExpression(
+                        $0,
+                        lineBaseColor: config.routeRestrictedAreaColor
+                    )
+                )
+            }
+
+        var restrictedAreaSource: GeoJsonMapFeature.Source?
+        var restrictedAreaLayer: LineLayer?
+        if let restrictedRoadsFeatures, let restrictedAreaGradientExpression {
+            let shape = LineString(restrictedRoadsFeatures.compactMap {
+                guard case .lineString(let lineString) = $0.geometry else {
+                    return nil
+                }
+                return lineString.coordinates
+            }.reduce([CLLocationCoordinate2D](), +))
+
+            restrictedAreaSource = GeoJsonMapFeature.Source(
+                id: ids.restrictedAreaSource,
+                geoJson: .geometry(.lineString(shape))
+            )
+            let customRouteRestrictedAreasLine = featureProvider.customRouteRestrictedAreasLineLayer(
+                ids.restrictedArea,
+                ids.restrictedAreaSource
+            )
+
+            restrictedAreaLayer = customRouteRestrictedAreasLine ??
+                customizedLayerProvider.customizedLayer(defaultRouteRestrictedAreasLine(
+                    ids: ids,
+                    gradientExpression: restrictedAreaGradientExpression,
+                    config: config
+                ))
+        }
+        guard let routeJsonSource = routeSource.data(
+            lineMetrics: true,
+            tolerance: GeoJsonMapFeature.Source.defaultTolerance
+        ) else {
+            return nil
+        }
+
+        let content = RouteLineStyleContent(
+            offset: offset,
+            featureIds: ids,
+            routeSource: routeJsonSource,
+            restrictedAreaSource: restrictedAreaSource?.data(
+                lineMetrics: true,
+                tolerance: GeoJsonMapFeature.Source.defaultTolerance
+            ),
+            routeLineLayer: routeLineLayer,
+            casingLineLayer: casingLineLayer,
+            traversedLineLayer: traversedLineLayer,
+            restrictedAreaLayer: restrictedAreaLayer
+        )
+
+        let layers: [(any Layer)?] = [
+            routeLineLayer,
+            casingLineLayer,
+            traversedLineLayer,
+            restrictedAreaLayer,
+        ]
+        let sources: [GeoJsonMapFeature.Source?] = [
+            routeSource, restrictedAreaSource,
+        ]
+
+        let feature = GeoJsonMapFeature(
+            id: ids.main,
+            sources: sources.compactMap { $0 },
+            customizeSource: { source, _ in
+                source.lineMetrics = true
+                source.tolerance = GeoJsonMapFeature.Source.defaultTolerance
+            },
+            layers: layers.compactMap { $0 },
+            onAfterAdd: { mapView in
+                mapView.mapboxMap.setRouteLineOffset(offset, for: ids)
+            },
+            onUpdate: { mapView in
+                mapView.mapboxMap.setRouteLineOffset(offset, for: ids)
+            },
+            onAfterUpdate: { mapView in
+                let map: MapboxMap = mapView.mapboxMap
+                try map.updateLayer(withId: ids.main, type: LineLayer.self, update: { layer in
+                    layer.lineGradient = trafficGradient
+                })
+                if let restrictedAreaGradientExpression {
+                    try map.updateLayer(withId: ids.restrictedArea, type: LineLayer.self, update: { layer in
+                        layer.lineGradient = restrictedAreaGradientExpression
+                    })
+                }
+            }
+        )
+        return (content, feature)
+    }
+
+    private func customize(source: inout GeoJSONSource) {
+        source.lineMetrics = true
+        source.tolerance = 0.375
     }
 
     private func defaultRouteLineLayer(

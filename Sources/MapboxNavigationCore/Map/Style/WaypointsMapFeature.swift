@@ -10,6 +10,25 @@ struct WaypointFeatureProvider {
     var customSymbolLayer: (String, String) -> SymbolLayer?
 }
 
+struct WaypointsLineStyleContent: MapStyleContent {
+    let featureIds: FeatureIds.RouteWaypoints
+
+    let source: GeoJSONSource
+
+    let circleLayer: CircleLayer?
+    let symbolLayer: SymbolLayer?
+
+    var body: some MapStyleContent {
+        source
+        if let circleLayer {
+            circleLayer
+        }
+        if let symbolLayer {
+            symbolLayer
+        }
+    }
+}
+
 @MainActor
 extension Route {
     /// Generates a map feature that visually represents waypoints along a route line.
@@ -21,8 +40,9 @@ extension Route {
         legIndex: Int,
         config: MapStyleConfig,
         featureProvider: WaypointFeatureProvider,
-        customizedLayerProvider: CustomizedLayerProvider
-    ) -> MapFeature? {
+        customizedCircleLayerProvider: CustomizedTypeLayerProvider<CircleLayer>,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>
+    ) -> (WaypointsLineStyleContent, MapFeature)? {
         guard let startWaypoint = legs.first?.source else { return nil }
         guard let destinationWaypoint = legs.last?.destination else { return nil }
 
@@ -36,7 +56,8 @@ extension Route {
             with: customFeatures ?? waypointsFeatures(legIndex: legIndex, waypoints: waypoints),
             config: config,
             featureProvider: featureProvider,
-            customizedLayerProvider: customizedLayerProvider
+            customizedCircleLayerProvider: customizedCircleLayerProvider,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider
         )
     }
 
@@ -57,31 +78,44 @@ extension Route {
         with features: FeatureCollection,
         config: MapStyleConfig,
         featureProvider: WaypointFeatureProvider,
-        customizedLayerProvider: CustomizedLayerProvider
-    ) -> MapFeature {
+        customizedCircleLayerProvider: CustomizedTypeLayerProvider<CircleLayer>,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>
+    ) -> (WaypointsLineStyleContent, MapFeature)? {
         let circleLayer = featureProvider.customCirleLayer(
             FeatureIds.RouteWaypoints.default.innerCircle,
             FeatureIds.RouteWaypoints.default.source
-        ) ?? customizedLayerProvider.customizedLayer(defaultCircleLayer(config: config))
+        ) ?? customizedCircleLayerProvider.customizedLayer(defaultCircleLayer(config: config))
 
-        let symbolLayer: (any Layer)? = featureProvider.customSymbolLayer(
+        let defaultSymbolLayer = featureProvider.customSymbolLayer(
             FeatureIds.RouteWaypoints.default.markerIcon,
             FeatureIds.RouteWaypoints.default.source
         )
+        let symbolLayer: SymbolLayer? = if let defaultSymbolLayer {
+            customizedSymbolLayerProvider.customizedLayer(defaultSymbolLayer)
+        } else { nil }
+        let source = GeoJsonMapFeature.Source(
+            id: FeatureIds.RouteWaypoints.default.source,
+            geoJson: .featureCollection(features)
+        )
+        guard let waypointSource = source.data() else { return nil }
 
-        return GeoJsonMapFeature(
+        let content = WaypointsLineStyleContent(
+            featureIds: FeatureIds.RouteWaypoints.default,
+            source: waypointSource,
+            circleLayer: circleLayer,
+            symbolLayer: symbolLayer
+        )
+        let layers: [(any Layer)?] = [circleLayer, symbolLayer]
+
+        let mapFeature = GeoJsonMapFeature(
             id: FeatureIds.RouteWaypoints.default.featureId,
-            sources: [
-                .init(
-                    id: FeatureIds.RouteWaypoints.default.source,
-                    geoJson: .featureCollection(features)
-                ),
-            ],
+            sources: [source],
             customizeSource: { _, _ in },
-            layers: [circleLayer, symbolLayer].compactMap { $0 },
+            layers: layers.compactMap { $0 },
             onBeforeAdd: { _ in },
             onAfterRemove: { _ in }
         )
+        return (content, mapFeature)
     }
 
     private func defaultCircleLayer(config: MapStyleConfig) -> CircleLayer {

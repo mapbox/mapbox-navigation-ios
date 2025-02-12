@@ -4,8 +4,13 @@ import MapboxDirections
 import enum SwiftUI.ColorScheme
 import UIKit
 
+// TODO: remove after declarative Maps API is fully supported.
 struct CustomizedLayerProvider {
     var customizedLayer: (Layer) -> Layer
+}
+
+struct CustomizedTypeLayerProvider<T: MapStyleContent> {
+    var customizedLayer: (T) -> T
 }
 
 struct MapStyleConfig: Equatable {
@@ -36,21 +41,68 @@ struct MapStyleConfig: Equatable {
     var waypointStrokeColor: UIColor
 }
 
+@MainActor
+protocol NavigationMapStyleManagerDelegate: AnyObject {
+    func styleManager<T>(_ styleManager: NavigationMapStyleManager, layer: T) -> T? where T: Layer & MapStyleContent
+}
+
 /// Manages all the sources/layers used in NavigationMap.
 @MainActor
 final class NavigationMapStyleManager {
+    // TODO: remove after declarative Maps API is fully supported.
+    var shouldUseDeclarativeApproach: Bool = false {
+        didSet {
+            guard shouldUseDeclarativeApproach else { return }
+
+            mapContent = NavigationStyleContent(
+                routeLines: [:],
+                waypoints: nil
+            )
+        }
+    }
+
     private let mapView: MapView
     private var lifetimeSubscriptions: Set<AnyCancellable> = []
     private var layersOrder: MapLayersOrder
     private var layerIds: [String]
 
     var customizedLayerProvider: CustomizedLayerProvider = .init { $0 }
+    weak var delegate: NavigationMapStyleManagerDelegate?
+
+    private func customizedLayer<T>(_ layer: T) -> T where T: Layer & MapStyleContent {
+        guard let customizedLayer = delegate?.styleManager(self, layer: layer) else {
+            return layer
+        }
+        return customizedLayer
+    }
+
     var customRouteLineLayerPosition: LayerPosition? {
         didSet {
             layersOrder = Self.makeMapLayersOrder(
                 with: mapView,
                 customRouteLineLayerPosition: customRouteLineLayerPosition
             )
+        }
+    }
+
+    var customizedLineLayerProvider: CustomizedTypeLayerProvider<LineLayer> {
+        .init { [weak self] in
+            guard let self else { return $0 }
+            return customizedLayer($0)
+        }
+    }
+
+    var customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer> {
+        .init { [weak self] in
+            guard let self else { return $0 }
+            return customizedLayer($0)
+        }
+    }
+
+    var customizedCircleLayerProvider: CustomizedTypeLayerProvider<CircleLayer> {
+        .init { [weak self] in
+            guard let self else { return $0 }
+            return customizedLayer($0)
         }
     }
 
@@ -88,13 +140,32 @@ final class NavigationMapStyleManager {
         layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
         layersOrder.setStyleIds(layerIds)
 
-        routeFeaturesStore.styleLoaded(order: &layersOrder)
-        waypointFeaturesStore.styleLoaded(order: &layersOrder)
-        arrowFeaturesStore.styleLoaded(order: &layersOrder)
-        voiceInstructionFeaturesStore.styleLoaded(order: &layersOrder)
-        intersectionAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
-        routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
-        routeAlertsFeaturesStore.styleLoaded(order: &layersOrder)
+        if !shouldUseDeclarativeApproach {
+            routeFeaturesStore.styleLoaded(order: &layersOrder)
+            waypointFeaturesStore.styleLoaded(order: &layersOrder)
+            arrowFeaturesStore.styleLoaded(order: &layersOrder)
+            voiceInstructionFeaturesStore.styleLoaded(order: &layersOrder)
+            intersectionAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
+            routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
+            routeAlertsFeaturesStore.styleLoaded(order: &layersOrder)
+        }
+    }
+
+    private(set) var mapContent: NavigationStyleContent?
+
+    // Should be called for each maps content update
+    func mapStyleDeclarativeContentUpdate() {
+        guard shouldUseDeclarativeApproach else { return }
+
+        if let mapContent {
+            mapView.mapboxMap.setMapStyleContent {
+                mapContent
+            }
+        } else {
+            mapView.mapboxMap.setMapStyleContent {
+                EmptyMapStyleContent()
+            }
+        }
     }
 
     func updateRoutes(
@@ -102,15 +173,20 @@ final class NavigationMapStyleManager {
         config: MapStyleConfig,
         featureProvider: RouteLineFeatureProvider
     ) {
-        routeFeaturesStore.update(
-            using: routeLineMapFeatures(
-                routes: routes,
-                config: config,
-                featureProvider: featureProvider,
-                customizedLayerProvider: customizedLayerProvider
-            ),
-            order: &layersOrder
+        let features = routeLineMapFeatures(
+            routes: routes,
+            config: config,
+            featureProvider: featureProvider,
+            customizedLayerProvider: customizedLineLayerProvider
         )
+        if !shouldUseDeclarativeApproach {
+            routeFeaturesStore.update(
+                using: features.map { $0.1 },
+                order: &layersOrder
+            )
+        } else {
+            mapContent?.routeLines = features.reduce(into: [:]) { $0[$1.0.featureIds] = $1.0 }
+        }
     }
 
     func updateWaypoints(
@@ -119,17 +195,22 @@ final class NavigationMapStyleManager {
         config: MapStyleConfig,
         featureProvider: WaypointFeatureProvider
     ) {
-        let waypoints = route.waypointsMapFeature(
+        let feature = route.waypointsMapFeature(
             mapView: mapView,
             legIndex: legIndex,
             config: config,
             featureProvider: featureProvider,
-            customizedLayerProvider: customizedLayerProvider
+            customizedCircleLayerProvider: customizedCircleLayerProvider,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider
         )
-        waypointFeaturesStore.update(
-            using: waypoints.map { [$0] } ?? [],
-            order: &layersOrder
-        )
+        if shouldUseDeclarativeApproach {
+            mapContent?.waypoints = feature?.0
+        } else {
+            waypointFeaturesStore.update(
+                using: feature.map { [$0.1] } ?? [],
+                order: &layersOrder
+            )
+        }
     }
 
     func updateArrows(
@@ -226,11 +307,19 @@ final class NavigationMapStyleManager {
     }
 
     func removeRoutes() {
-        routeFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.routeLines = [:]
+        } else {
+            routeFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeWaypoints() {
-        waypointFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.waypoints = nil
+        } else {
+            waypointFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeArrows() {
@@ -261,17 +350,18 @@ final class NavigationMapStyleManager {
         removeIntersectionAnnotations()
         removeRouteAnnotations()
         removeRoadAlertsAnnotations()
+
+        mapStyleDeclarativeContentUpdate()
     }
 
     private func routeLineMapFeatures(
         routes: NavigationRoutes,
         config: MapStyleConfig,
         featureProvider: RouteLineFeatureProvider,
-        customizedLayerProvider: CustomizedLayerProvider
-    ) -> [any MapFeature] {
-        var features: [any MapFeature] = []
-
-        features.append(contentsOf: routes.mainRoute.route.routeLineMapFeatures(
+        customizedLayerProvider: CustomizedTypeLayerProvider<LineLayer>
+    ) -> [(RouteLineStyleContent, MapFeature)] {
+        var features: [(RouteLineStyleContent, MapFeature)] = []
+        let mainRouteFeature = routes.mainRoute.route.routeLineMapFeatures(
             ids: .main,
             offset: 0,
             isSoftGradient: true,
@@ -279,12 +369,15 @@ final class NavigationMapStyleManager {
             config: config,
             featureProvider: featureProvider,
             customizedLayerProvider: customizedLayerProvider
-        ))
+        )
+        if let mainRouteFeature {
+            features.append(mainRouteFeature)
+        }
 
         if config.showsAlternatives {
             for (idx, alternativeRoute) in routes.alternativeRoutes.enumerated() {
                 let deviationOffset = alternativeRoute.deviationOffset()
-                features.append(contentsOf: alternativeRoute.route.routeLineMapFeatures(
+                if let alternativeRouteFeature = alternativeRoute.route.routeLineMapFeatures(
                     ids: .alternative(idx: idx),
                     offset: deviationOffset,
                     isSoftGradient: true,
@@ -292,7 +385,9 @@ final class NavigationMapStyleManager {
                     config: config,
                     featureProvider: featureProvider,
                     customizedLayerProvider: customizedLayerProvider
-                ))
+                ) {
+                    features.append(alternativeRouteFeature)
+                }
             }
         }
 
@@ -543,5 +638,26 @@ extension NavigationMapStyleManager {
             }
         }
         return Array(poiLayerIds)
+    }
+}
+
+struct NavigationStyleContent: MapStyleContent {
+    var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent]
+    var waypoints: WaypointsLineStyleContent?
+
+    var body: some MapStyleContent {
+        if let content = routeLines[.alternative(idx: 0)] {
+            content
+        }
+        if let content = routeLines[.alternative(idx: 1)] {
+            content
+        }
+        if let content = routeLines[.main] {
+            content
+        }
+
+        if let waypoints {
+            waypoints
+        }
     }
 }
