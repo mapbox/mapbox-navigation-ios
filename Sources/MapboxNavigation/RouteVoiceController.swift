@@ -163,14 +163,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         speechSynthesizer.stopSpeaking()
         
-        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
-            let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
-                                                                action: .duck,
-                                                                underlying: error)
-            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
+        AVAudioSessionHelper.shared.duckAudio { [weak self] result in
+            guard let self else { return }
+            if case let .failure(error) = result {
+                let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
+                                                                    action: .duck,
+                                                                    underlying: error)
+                routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
+            }
+            rerouteSoundPlayer.play()
         }
-        
-        rerouteSoundPlayer.play()
     }
     
     // MARK: Sounding Rerouting
@@ -224,11 +226,10 @@ extension RouteVoiceController: AVAudioPlayerDelegate {
             return
         }
         
-        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
-            let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
-                                                                action: .unduck,
-                                                                underlying: error)
-            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
+        if AVAudioSessionHelper.shared.deferredUnduckAudio() == true {
+            
+        } else {
+            
         }
     }
 }
