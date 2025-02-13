@@ -6,6 +6,8 @@ import MapboxDirections
 @MainActor
 /// ``SpeechSynthesizing`` implementation, using Mapbox Voice API. Uses pre-caching mechanism for upcoming instructions.
 public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
+    private static let audioSessionDeactivationDelay: TimeInterval = 1.0
+
     private var _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
     public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
         _voiceInstructions.eraseToAnyPublisher()
@@ -112,8 +114,15 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     deinit {
-        Task { @MainActor [_audioPlayer] in
+        Task { @MainActor [_audioPlayer, managesAudioSession] in
             _audioPlayer?.stop()
+
+            if !managesAudioSession {
+                return
+            }
+            Task {
+                try await AVAudioSessionHelper.shared.unduckAudio() // not deferred
+            }
         }
     }
 
@@ -129,14 +138,14 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
             return
         }
 
-        for insturction in instructions.prefix(Int(stepsAheadToCache)) {
-            if !hasCachedSpokenInstructionForKey(insturction.ssmlText, with: locale) {
-                downloadAndCacheSpokenInstruction(instruction: insturction, locale: locale)
+        for instruction in instructions.prefix(Int(stepsAheadToCache)) {
+            if !hasCachedSpokenInstructionForKey(instruction.ssmlText, with: locale) {
+                downloadAndCacheSpokenInstruction(instruction: instruction, locale: locale)
             }
         }
     }
 
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
+    public func speak(_ instruction: SpokenInstruction, during _: RouteLegProgress, locale: Locale? = nil) {
         guard !muted else { return }
         guard let locale = locale ?? self.locale else {
             _voiceInstructions.send(
@@ -159,15 +168,21 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
                 instruction: instruction
             )
         )
-        safeDuckAudio(instruction: instruction)
-        speak(instruction, data: data)
+        Task { [weak self] in
+            guard let self else { return }
+            Log.debug("MapboxSpeechSynthesizer: Will speak text: [\(instruction.text)]", category: .audio)
+            await safeDuckAudio(instruction: instruction)
+            speak(instruction, data: data)
+        }
     }
 
     public func stopSpeaking() {
+        Log.debug("MapboxSpeechSynthesizer: Stop speaking", category: .audio)
         audioPlayer?.stop()
     }
 
     public func interruptSpeaking() {
+        Log.debug("MapboxSpeechSynthesizer: Interrupt speaking", category: .audio)
         audioPlayer?.stop()
     }
 
@@ -200,14 +215,18 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         case .success(let player):
             _audioPlayer = .init(player)
             previousInstruction = instruction
+            Log.debug("MapboxSpeechSynthesizer: audio player Will play text: [\(instruction.text)]", category: .audio)
             audioPlayer?.play()
         case .failure(let error):
-            safeUnduckAudio(instruction: instruction)
-            _voiceInstructions.send(
-                VoiceInstructionEvents.EncounteredError(
-                    error: error
+            Log.error("MapboxSpeechSynthesizer: audio player Failed to initialize: \(error)", category: .audio)
+            Task {
+                await safeDeferredUnduckAudio(instruction: previousInstruction)
+                _voiceInstructions.send(
+                    VoiceInstructionEvents.EncounteredError(
+                        error: error
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -230,7 +249,8 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
                 let audio = try await self.remoteSpeechSynthesizer.audioData(with: options)
                 try Task.checkCancellation()
                 self.cache(audio, forKey: ssmlText, with: locale)
-                self.safeDuckAudio(instruction: instruction)
+                await self.safeDuckAudio(instruction: instruction)
+                try Task.checkCancellation()
                 self.speak(
                     instruction,
                     data: audio
@@ -274,9 +294,13 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    func safeDuckAudio(instruction: SpokenInstruction?) {
+    func safeDuckAudio(instruction: SpokenInstruction?) async {
         guard managesAudioSession else { return }
-        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
+
+        do {
+            try await AVAudioSessionHelper.shared.duckAudio()
+        } catch {
+            Log.error("SystemSpeechSynthesizer: Failed to Activate AVAudioSession, error: \(error)", category: .audio)
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(
                     error: SpeechError.unableToControlAudio(
@@ -289,17 +313,15 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    func safeUnduckAudio(instruction: SpokenInstruction?) {
+    func safeDeferredUnduckAudio(instruction: SpokenInstruction?) async {
         guard managesAudioSession else { return }
-        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
-            _voiceInstructions.send(
-                VoiceInstructionEvents.EncounteredError(
-                    error: SpeechError.unableToControlAudio(
-                        instruction: instruction,
-                        action: .unduck,
-                        underlying: error
-                    )
-                )
+
+        let deactivationScheduled = await AVAudioSessionHelper.shared
+            .deferredUnduckAudio(delayBy: Self.audioSessionDeactivationDelay)
+        if !deactivationScheduled {
+            Log.debug(
+                "SystemSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
+                category: .audio
             )
         }
     }
@@ -331,12 +353,25 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         do {
             let player = try AVAudioPlayer(data: data)
             player.delegate = audioPlayerDelegate
-            audioPlayerDelegate.onAudioPlayerDidFinishPlaying = { [weak self] _, _ in
+            audioPlayerDelegate.onAudioPlayerDidFinishPlaying = { [weak self] _, successfully in
                 guard let self else { return }
-                safeUnduckAudio(instruction: previousInstruction)
+
+                if successfully {
+                    Log.debug("MapboxSpeechSynthesizer: audio player Did Finish playing Successfully", category: .audio)
+                } else {
+                    Log.warning(
+                        "MapboxSpeechSynthesizer: audio player Did Finish playing with Failure",
+                        category: .audio
+                    )
+                }
+
+                Task { [weak self] in
+                    guard let self else { return }
+                    await safeDeferredUnduckAudio(instruction: previousInstruction)
+                }
 
                 guard let instruction = previousInstruction else {
-                    assertionFailure("Speech Synthesizer finished speaking 'nil' instruction")
+                    Log.warning("MapboxSpeechSynthesizer: Finished speaking 'nil' instruction", category: .audio)
                     return
                 }
 

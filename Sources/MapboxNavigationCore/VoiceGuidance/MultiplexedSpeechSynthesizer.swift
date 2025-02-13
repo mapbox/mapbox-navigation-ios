@@ -52,7 +52,7 @@ public final class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     /// Default value is `true`.
     public var managesAudioSession: Bool {
         get {
-            speechSynthesizers.allSatisfy { $0.managesAudioSession == true }
+            speechSynthesizers.contains { $0.managesAudioSession == true }
         }
         set {
             speechSynthesizers.forEach { $0.managesAudioSession = newValue }

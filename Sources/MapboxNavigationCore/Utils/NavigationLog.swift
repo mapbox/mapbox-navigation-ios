@@ -51,6 +51,7 @@ public struct NavigationLogCategory: RawRepresentable, Sendable {
     public static let navigationUI: Self = .init(rawValue: "navigation-ui")
     public static let carPlay: Self = .init(rawValue: "car-play")
     public static let copilot: Self = .init(rawValue: "copilot")
+    public static let audio: Self = .init(rawValue: "audio")
 
     public var rawLogCategory: String {
         "navigation-ios/\(rawValue)"

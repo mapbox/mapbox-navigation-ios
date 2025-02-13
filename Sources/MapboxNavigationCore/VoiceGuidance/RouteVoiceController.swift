@@ -103,24 +103,23 @@ public final class RouteVoiceController {
             return
         }
 
-        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
-            Log.error("Failed to duck sound for reroute with error: \(error)", category: .navigation)
-        }
-
-        defer {
-            if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
-                Log.error("Failed to unduck sound for reroute with error: \(error)", category: .navigation)
-            }
+        Log.debug("RouteVoiceController: Will play reroute sound", category: .audio)
+        do {
+            try await AVAudioSessionHelper.shared.duckAudio()
+        } catch {
+            Log.error("RouteVoiceController: Failed to Activate AVAudioSession, error: \(error)", category: .audio)
         }
 
         do {
             let successful = try await Current.audioPlayerClient.play(rerouteSoundUrl)
             if !successful {
-                Log.error("Failed to play sound for reroute", category: .navigation)
+                Log.error("RouteVoiceController: Failed to play sound for reroute", category: .audio)
             }
         } catch {
-            Log.error("Failed to play sound for reroute with error: \(error)", category: .navigation)
+            Log.error("RouteVoiceController: Failed to play sound for reroute with error: \(error)", category: .audio)
         }
+
+        await AVAudioSessionHelper.shared.deferredUnduckAudio()
     }
 
     private func loadSounds() {
@@ -129,7 +128,7 @@ public final class RouteVoiceController {
                 guard let rerouteSoundUrl = Bundle.mapboxNavigationUXCore.rerouteSoundUrl else { return }
                 try await Current.audioPlayerClient.load([rerouteSoundUrl])
             } catch {
-                Log.error("Failed to load sound for reroute", category: .navigation)
+                Log.error("RouteVoiceController: Failed to load sound for reroute", category: .navigation)
             }
         }
     }
