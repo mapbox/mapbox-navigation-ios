@@ -56,10 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = try? FileManager.default.createDirectory(at: historyRecordingUrl,
                                                      withIntermediateDirectories: true,
                                                      attributes: nil)
-        
-        let settingsValues = NavigationSettings.Values(logLevel: .debug)
-        NavigationSettings.shared.initialize(with: settingsValues)
-        
+
         PassiveLocationManager.historyDirectoryURL = historyRecordingUrl
 
         if isRunningTests() {
