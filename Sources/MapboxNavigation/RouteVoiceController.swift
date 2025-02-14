@@ -169,9 +169,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
                 let wrappedError = SpeechError.unableToControlAudio(instruction: nil,
                                                                     action: .duck,
                                                                     underlying: error)
-                routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
+                self.routeVoiceControllerDelegate?.routeVoiceController(self, encountered: wrappedError)
             }
-            rerouteSoundPlayer.play()
+            self.rerouteSoundPlayer.play()
         }
     }
     

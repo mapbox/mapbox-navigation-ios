@@ -112,7 +112,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         Log.debug("SystemSpeechSynthesizer: Requesting to speak: [\(utteranceToSpeak.speechString)]", category: .audio)
         safeDuckAudioAsync() { [weak self] in
             guard let self else { return }
-            speechSynthesizer.speak(utteranceToSpeak)
+            self.speechSynthesizer.speak(utteranceToSpeak)
         }
     }
     
@@ -135,13 +135,13 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         AVAudioSessionHelper.shared.duckAudio { [weak self] result in
             guard let self else { return }
             if case let .failure(error) = result {
-                if previousInstruction == nil {
+                if self.previousInstruction == nil {
                     Log.warning("SystemSpeechSynthesizer: Speech Synthesizer finished speaking 'nil' instruction", category: .audio)
                 }
-                delegate?.speechSynthesizer(self,
-                                            encounteredError: SpeechError.unableToControlAudio(instruction: previousInstruction,
-                                                                                               action: .duck,
-                                                                                               underlying: error))
+                self.delegate?.speechSynthesizer(self,
+                                                 encounteredError: SpeechError.unableToControlAudio(instruction: self.previousInstruction,
+                                                                                                    action: .duck,
+                                                                                                    underlying: error))
             }
             completion?()
         }

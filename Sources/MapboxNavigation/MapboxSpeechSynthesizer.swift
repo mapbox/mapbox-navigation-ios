@@ -127,7 +127,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             Log.debug("MapboxSpeechSynthesizer: Will speak text: [\(instruction.text)]", category: .audio)
             safeDuckAudioAsync(instruction: instruction) { [weak self] in
                 guard let self else { return }
-                speak(instruction, data: data)
+                self.speak(instruction, data: data)
             }
         }
     }
@@ -217,7 +217,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             
             self.cache(data, forKey: ssmlText, with: locale)
             Log.debug("MapboxSpeechSynthesizer: Will speak text: [\(instruction.text)]", category: .audio)
-            safeDuckAudioAsync(instruction: modifiedInstruction) { [weak self] in
+            self.safeDuckAudioAsync(instruction: modifiedInstruction) { [weak self] in
                 guard let self else { return }
                 self.speak(modifiedInstruction,
                            data: data)
@@ -247,10 +247,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         AVAudioSessionHelper.shared.duckAudio { [weak self] result in
             guard let self else { return }
             if case let .failure(error) = result {
-                delegate?.speechSynthesizer(self,
-                                            encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                               action: .duck,
-                                                                                               underlying: error))
+                self.delegate?.speechSynthesizer(self,
+                                                 encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                                    action: .duck,
+                                                                                                    underlying: error))
             }
             completion?()
         }
