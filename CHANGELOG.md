@@ -6,6 +6,12 @@
 
 * Improved AVAudioSession handling for playback of the reroute sound and voice instructions. Activation and deactivation of AVAudioSession no longer occur on the main thread, and these operations are synchronized. This eliminates UI freezes that occurred to a lesser extent during activation and to a greater extent during deactivation.
 
+### API Deprecations
+
+* The extension for AVAudioSession is no longer supported and has been deprecated, which affects the following methods:
+    * `AVAudioSession.tryDuckAudio()`
+    * `AVAudioSession.tryUnduckAudio()`
+
 ## v3.7.0-rc.1
 
 ### Packaging
