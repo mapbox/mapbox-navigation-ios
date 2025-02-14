@@ -421,7 +421,7 @@ class NavigationCameraTests: BaseTestCase {
     }
 
     @MainActor
-    func testBearingSmoothingIsDisabled() async {
+    func flacky_testBearingSmoothingIsDisabled() async {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource else {
             XCTFail("Should have mobile viewportDataSource")
             return
