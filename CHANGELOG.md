@@ -1,5 +1,40 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.7.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.10.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.10.0-rc.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v323.0.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/323.0.0-rc.1).
+
+### API deprecations:
+
+* `MapboxCopilot.startActiveGuidanceSession(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSession()`, and `MapboxCopilot.completeNavigationSession()` are deprecated in favor of `MapboxCopilot.startActiveGuidanceSessionAsync(requestIdentifier:route:searchResultUsed:)`, `MapboxCopilot.startFreeDriveSessionAsync()`, `MapboxCopilot.completeNavigationSessionAsync()`. Using deprecated methods may lead to losing events in the recorded history files.
+* The following methods are deprecated and should no longer be used, as the final destination annotation is no longer added to the map:
+    * `NavigationViewControllerDelegate.navigationViewController(_:didAdd:pointAnnotationManager:)`
+    * `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didAdd:pointAnnotationManager:)`
+    * `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`
+    * `CarPlayManagerDelegate.carPlayManager(_:didAdd:to:pointAnnotationManager:)`
+
+### CarPlay: 
+* Deprecated following methods which return `CPTemplate`:  
+    * `CarPlayManagerDelegate.carPlayManager(_:leadingNavigationBarButtonsCompatibleWith:in:for:)`
+    * `CarPlayManagerDelegate.carPlayManager(_:trailingNavigationBarButtonsCompatibleWith:in:for:)`
+* Introduced new methods which return `CPMapTemplate`: 
+    * `CarPlayManagerDelegate.carPlayManager(_:leadingNavigationBarButtonsCompatibleWith:in:for:)`
+    * `CarPlayManagerDelegate.carPlayManager(_:trailingNavigationBarButtonsCompatibleWith:in:for:)` 
+
+### Other changes
+
+* Updated alternative routes preview mode for CarPlay.
+* Fixed the movement type reported to the Telemetry.
+* Fixed possible threading errors when sending Telemetry feedback events.
+* Fixed a bug when the Copilot session recording could stop right after it was started.
+* Fixed a possible crash in `SimulatedLocationManager` when starting the simulation at the point on the route far away from the start.
+* Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
+* Improved route refreshing by removing unnecessary internal navigator update on refresh.
+* Fixed possible not thread-safe memory access to `RouteProgress` in `NavigationController`.
+
 ## v3.7.0-rc.1
 
 ### Packaging
