@@ -261,7 +261,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         let deactivationScheduled = AVAudioSessionHelper.shared.deferredUnduckAudio()
         if !deactivationScheduled {
             Log.debug(
-                "SystemSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
+                "MapboxSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
                 category: .audio
             )
         }

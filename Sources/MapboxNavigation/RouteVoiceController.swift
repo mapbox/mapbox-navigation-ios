@@ -226,10 +226,12 @@ extension RouteVoiceController: AVAudioPlayerDelegate {
             return
         }
         
-        if AVAudioSessionHelper.shared.deferredUnduckAudio() == true {
-            
-        } else {
-            
+        let deactivationScheduled = AVAudioSessionHelper.shared.deferredUnduckAudio()
+        if !deactivationScheduled {
+            Log.debug(
+                "RouteVoiceController: Deactivation of AVAudioSession not scheduled - another one in progress",
+                category: .audio
+            )
         }
     }
 }
