@@ -3,14 +3,24 @@ import MapboxDirections
 import MapboxMaps
 import enum SwiftUI.ColorScheme
 
+struct IntersectionAnnotationsStyleContent: MapStyleContent {
+    let source: GeoJSONSource
+    let symbolLayer: SymbolLayer
+
+    var body: some MapStyleContent {
+        source
+
+        symbolLayer
+    }
+}
+
 extension RouteProgress {
     func intersectionAnnotationsMapFeatures(
         ids: FeatureIds.IntersectionAnnotation,
-        customizedLayerProvider: CustomizedLayerProvider
-    ) -> [any MapFeature] {
-        guard !routeIsComplete else {
-            return []
-        }
+        mapboxMap: MapboxMap,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>
+    ) -> (IntersectionAnnotationsStyleContent, MapFeature)? {
+        guard !routeIsComplete else { return nil }
 
         var featureCollection = FeatureCollection(features: [])
 
@@ -25,52 +35,63 @@ extension RouteProgress {
             }
         }
 
-        let layers: [any Layer] = [
-            with(SymbolLayer(id: ids.layer, source: ids.source)) {
-                $0.iconAllowOverlap = .constant(false)
-                $0.iconImage = .expression(Exp(.get) {
-                    "imageName"
-                })
+        let source = GeoJsonMapFeature.Source(
+            id: ids.source,
+            geoJson: .featureCollection(featureCollection)
+        )
+        guard let sourceData = source.data() else { return nil }
+
+        let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
+            $0.iconAllowOverlap = .constant(false)
+            $0.iconImage = .expression(Exp(.get) {
+                "imageName"
+            })
+        }
+
+        Self.upsertIntersectionSymbolImages(
+            map: mapboxMap,
+            ids: ids
+        )
+
+        let customizedLayer = customizedSymbolLayerProvider.customizedLayer(layer)
+
+        let content = IntersectionAnnotationsStyleContent(
+            source: sourceData,
+            symbolLayer: customizedLayer
+        )
+
+        let mapFeature = GeoJsonMapFeature(
+            id: ids.featureId,
+            sources: [source],
+            customizeSource: { _, _ in },
+            layers: [customizedLayer],
+            onBeforeAdd: { mapView in
+                Self.upsertIntersectionSymbolImages(
+                    map: mapView.mapboxMap,
+                    ids: ids
+                )
             },
-        ]
-        return [
-            GeoJsonMapFeature(
-                id: ids.featureId,
-                sources: [
-                    .init(
-                        id: ids.source,
-                        geoJson: .featureCollection(featureCollection)
-                    ),
-                ],
-                customizeSource: { _, _ in },
-                layers: layers.map { customizedLayerProvider.customizedLayer($0) },
-                onBeforeAdd: { mapView in
-                    Self.upsertIntersectionSymbolImages(
+            onUpdate: { mapView in
+                Self.upsertIntersectionSymbolImages(
+                    map: mapView.mapboxMap,
+                    ids: ids
+                )
+            },
+            onAfterRemove: { mapView in
+                do {
+                    try Self.removeIntersectionSymbolImages(
                         map: mapView.mapboxMap,
                         ids: ids
                     )
-                },
-                onUpdate: { mapView in
-                    Self.upsertIntersectionSymbolImages(
-                        map: mapView.mapboxMap,
-                        ids: ids
+                } catch {
+                    Log.error(
+                        "Failed to remove intersection annotation images with error \(error)",
+                        category: .navigationUI
                     )
-                },
-                onAfterRemove: { mapView in
-                    do {
-                        try Self.removeIntersectionSymbolImages(
-                            map: mapView.mapboxMap,
-                            ids: ids
-                        )
-                    } catch {
-                        Log.error(
-                            "Failed to remove intersection annotation images with error \(error)",
-                            category: .navigationUI
-                        )
-                    }
                 }
-            ),
-        ]
+            }
+        )
+        return (content, mapFeature)
     }
 
     private func intersectionFeature(
@@ -103,7 +124,7 @@ extension RouteProgress {
         ids: FeatureIds.IntersectionAnnotation
     ) {
         for (imageName, imageIdentifier) in imageNameToMapIdentifier(ids: ids) {
-            if let image = Bundle.module.image(named: imageName) {
+            if let image = Bundle.mapboxNavigationUXCore.image(named: imageName) {
                 map.provisionImage(id: imageIdentifier) { style in
                     try style.addImage(image, id: imageIdentifier)
                 }

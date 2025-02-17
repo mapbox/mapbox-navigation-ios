@@ -255,13 +255,20 @@ final class NavigationMapStyleManager {
     }
 
     func updateIntersectionAnnotations(routeProgress: RouteProgress) {
-        intersectionAnnotationsFeaturesStore.update(
-            using: routeProgress.intersectionAnnotationsMapFeatures(
-                ids: .currentRoute,
-                customizedLayerProvider: customizedLayerProvider
-            ),
-            order: &layersOrder
+        let feature = routeProgress.intersectionAnnotationsMapFeatures(
+            ids: .currentRoute,
+            mapboxMap: mapView.mapboxMap,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider
         )
+
+        if shouldUseDeclarativeApproach {
+            mapContent?.intersectionAnnotations = feature?.0
+        } else {
+            intersectionAnnotationsFeaturesStore.update(
+                with: feature?.1,
+                order: &layersOrder
+            )
+        }
     }
 
     func updateRouteAnnotations(
@@ -342,7 +349,11 @@ final class NavigationMapStyleManager {
     }
 
     func removeIntersectionAnnotations() {
-        intersectionAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.intersectionAnnotations = nil
+        } else {
+            intersectionAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeRouteAnnotations() {
@@ -656,6 +667,7 @@ struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent]
     var waypoints: WaypointsLineStyleContent?
     var maneuverArrow: ManeuverArrowStyleContent?
+    var intersectionAnnotations: IntersectionAnnotationsStyleContent?
 
     var body: some MapStyleContent {
         if let content = routeLines[.alternative(idx: 0)] {
@@ -670,6 +682,10 @@ struct NavigationStyleContent: MapStyleContent {
 
         if let maneuverArrow {
             maneuverArrow
+        }
+
+        if let intersectionAnnotations {
+            intersectionAnnotations
         }
 
         if let waypoints {

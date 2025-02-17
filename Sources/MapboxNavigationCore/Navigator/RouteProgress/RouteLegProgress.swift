@@ -71,7 +71,7 @@ public struct RouteLegProgress: Equatable, Sendable {
     // MARK: Details About the Leg’s Steps
 
     /// Index representing the current step.
-    public private(set) var stepIndex: Int = 0
+    public internal(set) var stepIndex: Int = 0
 
     /// The remaining steps for user to complete.
     public var remainingSteps: [RouteStep] {
