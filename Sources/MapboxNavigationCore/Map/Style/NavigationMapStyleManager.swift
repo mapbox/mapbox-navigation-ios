@@ -245,13 +245,19 @@ final class NavigationMapStyleManager {
     }
 
     func updateVoiceInstructions(route: Route) {
-        voiceInstructionFeaturesStore.update(
-            using: route.voiceInstructionMapFeatures(
-                ids: .init(),
-                customizedLayerProvider: customizedLayerProvider
-            ),
-            order: &layersOrder
+        let feature = route.voiceInstructionMapFeatures(
+            ids: .init(),
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider,
+            customizedCircleLayerProvider: customizedCircleLayerProvider
         )
+        if shouldUseDeclarativeApproach {
+            mapContent?.voiceInstruction = feature?.0
+        } else {
+            voiceInstructionFeaturesStore.update(
+                with: feature?.1,
+                order: &layersOrder
+            )
+        }
     }
 
     func updateIntersectionAnnotations(routeProgress: RouteProgress) {
@@ -357,7 +363,11 @@ final class NavigationMapStyleManager {
     }
 
     func removeVoiceInstructions() {
-        voiceInstructionFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.voiceInstruction = nil
+        } else {
+            voiceInstructionFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeIntersectionAnnotations() {
@@ -685,6 +695,7 @@ struct NavigationStyleContent: MapStyleContent {
     var maneuverArrow: ManeuverArrowStyleContent?
     var routeAlert: RouteAlertsStyleContent?
     var intersectionAnnotations: IntersectionAnnotationsStyleContent?
+    var voiceInstruction: VoiceInstructionsTextStyleContent?
 
     var body: some MapStyleContent {
         if let content = routeLines[.alternative(idx: 0)] {
@@ -699,6 +710,10 @@ struct NavigationStyleContent: MapStyleContent {
 
         if let maneuverArrow {
             maneuverArrow
+        }
+
+        if let voiceInstruction {
+            voiceInstruction
         }
 
         if let intersectionAnnotations {
