@@ -290,15 +290,14 @@ final class NavigationMapStyleManager {
         excludedRouteAlertTypes: RoadAlertType,
         distanceTraveled: CLLocationDistance = 0.0
     ) {
-        routeAlertsFeaturesStore.update(
-            using: navigationRoutes.routeAlertsAnnotationsMapFeatures(
-                ids: .default,
-                distanceTraveled: distanceTraveled,
-                customizedLayerProvider: customizedLayerProvider,
-                excludedRouteAlertTypes: excludedRouteAlertTypes
-            ),
-            order: &layersOrder
+        let feature = navigationRoutes.routeAlertsAnnotationsMapFeatures(
+            ids: .default,
+            mapboxMap: mapView.mapboxMap,
+            distanceTraveled: distanceTraveled,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
         )
+        updateAlertsAnnotations(with: feature)
     }
 
     func updateFreeDriveAlertsAnnotations(
@@ -309,15 +308,28 @@ final class NavigationMapStyleManager {
         guard !roadObjects.isEmpty else {
             return removeRoadAlertsAnnotations()
         }
-        routeAlertsFeaturesStore.update(
-            using: roadObjects.routeAlertsAnnotationsMapFeatures(
-                ids: .default,
-                distanceTraveled: distanceTraveled,
-                customizedLayerProvider: customizedLayerProvider,
-                excludedRouteAlertTypes: excludedRouteAlertTypes
-            ),
-            order: &layersOrder
+
+        let feature = roadObjects.routeAlertsAnnotationsMapFeatures(
+            ids: .default,
+            mapboxMap: mapView.mapboxMap,
+            distanceTraveled: distanceTraveled,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider,
+            excludedRouteAlertTypes: excludedRouteAlertTypes
         )
+        updateAlertsAnnotations(with: feature)
+    }
+
+    private func updateAlertsAnnotations(
+        with feature: (RouteAlertsStyleContent, MapFeature)?
+    ) {
+        if shouldUseDeclarativeApproach {
+            mapContent?.routeAlert = feature?.0
+        } else {
+            routeAlertsFeaturesStore.update(
+                with: feature?.1,
+                order: &layersOrder
+            )
+        }
     }
 
     func removeRoutes() {
@@ -361,7 +373,11 @@ final class NavigationMapStyleManager {
     }
 
     private func removeRoadAlertsAnnotations() {
-        routeAlertsFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.routeAlert = nil
+        } else {
+            routeAlertsFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeAllFeatures() {
@@ -667,6 +683,7 @@ struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent]
     var waypoints: WaypointsLineStyleContent?
     var maneuverArrow: ManeuverArrowStyleContent?
+    var routeAlert: RouteAlertsStyleContent?
     var intersectionAnnotations: IntersectionAnnotationsStyleContent?
 
     var body: some MapStyleContent {
@@ -686,6 +703,10 @@ struct NavigationStyleContent: MapStyleContent {
 
         if let intersectionAnnotations {
             intersectionAnnotations
+        }
+
+        if let routeAlert {
+            routeAlert
         }
 
         if let waypoints {

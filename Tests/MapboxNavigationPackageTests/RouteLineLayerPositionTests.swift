@@ -38,7 +38,7 @@ class RouteLineLayerPositionTests: TestCase {
         "source-layer": "poi",
     ]
     let poiLabelCircleLayer: [String: String] = [
-        "id": "poi-label copy",
+        "id": "poi-label-circle",
         "type": "circle",
         "source": "composite",
         "source-layer": "poi",
@@ -242,7 +242,6 @@ class RouteLineLayerPositionTests: TestCase {
         let arrowIds = FeatureIds.ManeuverArrow.nextArrow()
         let waypointIds = FeatureIds.RouteWaypoints.default
         let intersectionIds = FeatureIds.IntersectionAnnotation()
-        let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
 
         var allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         var expectedLayerSequence = [
@@ -259,7 +258,6 @@ class RouteLineLayerPositionTests: TestCase {
             routeIds.restrictedArea,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
-            routeAlertIds.layer,
             waypointIds.innerCircle,
             Slot.middle!.rawValue,
         ]
@@ -290,7 +288,6 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
             intersectionIds.layer,
-            routeAlertIds.layer,
             Slot.middle!.rawValue,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
@@ -308,7 +305,130 @@ class RouteLineLayerPositionTests: TestCase {
     }
 
     @MainActor
+    func testLayerPositionIfIncludeRouteAlerts() async {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.77938, longitude: -122.40227),
+            CLLocationCoordinate2D(latitude: 37.778426, longitude: -122.401601),
+        ])
+
+        routes = await Fixture.navigationRoutes(from: "route-with-incidents", options: navigationRouteOptions)
+
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.385563, 37.763330,
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
+                    "type": "vector",
+                ],
+                "custom": [
+                    "url": "http://api.example.com/tilejson.json",
+                    "type": "raster",
+                ],
+            ],
+            "layers": [
+                buildingLayer,
+                roadTrafficLayer,
+                roadLabelLayer,
+                roadExitLayer,
+            ],
+        ]
+
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+
+        mapboxMap.onMapLoadingError.observe { _ in
+            mapLoadingErrorExpectation.fulfill()
+        }
+        .store(in: &subscriptions)
+
+        mapboxMap.loadStyle(styleJSON)
+        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
+
+        await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
+        navigationMapView.mapStyleManager.onStyleLoaded()
+
+        navigationMapView.show(routes, routeAnnotationKinds: [])
+        navigationMapView.showsRestrictedAreasOnRoute = true
+        let status = TestNavigationStatusProvider.createActiveStatus(stepIndex: 1)
+        routeProgress.update(using: status)
+        navigationMapView.updateRouteLine(routeProgress: routeProgress)
+
+        let routeIds = FeatureIds.RouteLine.main
+        let arrowIds = FeatureIds.ManeuverArrow.nextArrow()
+        let waypointIds = FeatureIds.RouteWaypoints.default
+        let routeAlertIds = FeatureIds.RouteAlertAnnotation.default
+        let intersectionIds = FeatureIds.IntersectionAnnotation()
+
+        var allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
+        var expectedLayerSequence = [
+            buildingLayer["id"]!,
+            roadTrafficLayer["id"]!,
+            roadLabelLayer["id"]!,
+            roadExitLayer["id"]!,
+            Slot.middle!.rawValue,
+            routeIds.casing,
+            routeIds.main,
+            arrowIds.arrowStroke,
+            arrowIds.arrow,
+            arrowIds.arrowSymbolCasing,
+            arrowIds.arrowSymbol,
+            routeIds.restrictedArea,
+            intersectionIds.layer,
+            routeAlertIds.layer,
+            waypointIds.innerCircle,
+        ]
+        XCTAssertEqual(allLayerIds, expectedLayerSequence)
+
+        navigationMapView.showsRestrictedAreasOnRoute = false
+        navigationMapView.show(routes, routeAnnotationKinds: [])
+        navigationMapView.mapStyleManager.removeWaypoints()
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.updateRouteLine(routeProgress: routeProgress)
+
+        expectedLayerSequence = [
+            buildingLayer["id"]!,
+            roadTrafficLayer["id"]!,
+            roadLabelLayer["id"]!,
+            roadExitLayer["id"]!,
+            Slot.middle!.rawValue,
+            routeIds.casing,
+            routeIds.main,
+            arrowIds.arrowStroke,
+            arrowIds.arrow,
+            arrowIds.arrowSymbolCasing,
+            arrowIds.arrowSymbol,
+            intersectionIds.layer,
+            routeAlertIds.layer,
+        ]
+        allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
+
+        let status0 = TestNavigationStatusProvider.createActiveStatus(stepIndex: 0)
+        routeProgress.update(using: status0)
+        navigationMapView.updateArrow(routeProgress: routeProgress)
+        allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
+        XCTAssertEqual(
+            allLayerIds,
+            expectedLayerSequence,
+            "Failed to keep custom layer positions in active navigation."
+        )
+    }
+
+    @MainActor
     func testLayerPositionIfAddedCustomLayer() async {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.77938, longitude: -122.40227),
+            CLLocationCoordinate2D(latitude: 37.778426, longitude: -122.401601),
+        ])
+
+        routes = await Fixture.navigationRoutes(from: "route-with-incidents", options: navigationRouteOptions)
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
 

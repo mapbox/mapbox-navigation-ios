@@ -5,13 +5,24 @@ import MapboxNavigationNative
 import enum SwiftUI.ColorScheme
 import UIKit
 
+struct RouteAlertsStyleContent: MapStyleContent {
+    let source: GeoJSONSource
+    let symbolLayer: SymbolLayer
+
+    var body: some MapStyleContent {
+        source
+        symbolLayer
+    }
+}
+
 extension NavigationRoutes {
     func routeAlertsAnnotationsMapFeatures(
         ids: FeatureIds.RouteAlertAnnotation,
+        mapboxMap: MapboxMap,
         distanceTraveled: CLLocationDistance,
-        customizedLayerProvider: CustomizedLayerProvider,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>,
         excludedRouteAlertTypes: RoadAlertType
-    ) -> [MapFeature] {
+    ) -> (RouteAlertsStyleContent, MapFeature)? {
         let convertedRouteAlerts = mainRoute.nativeRoute.getRouteInfo().alerts.map {
             RoadObjectAhead(
                 roadObject: RoadObject($0.roadObject),
@@ -21,8 +32,9 @@ extension NavigationRoutes {
 
         return convertedRouteAlerts.routeAlertsAnnotationsMapFeatures(
             ids: ids,
+            mapboxMap: mapboxMap,
             distanceTraveled: distanceTraveled,
-            customizedLayerProvider: customizedLayerProvider,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider,
             excludedRouteAlertTypes: excludedRouteAlertTypes
         )
     }
@@ -31,66 +43,73 @@ extension NavigationRoutes {
 extension [RoadObjectAhead] {
     func routeAlertsAnnotationsMapFeatures(
         ids: FeatureIds.RouteAlertAnnotation,
+        mapboxMap: MapboxMap,
         distanceTraveled: CLLocationDistance,
-        customizedLayerProvider: CustomizedLayerProvider,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>,
         excludedRouteAlertTypes: RoadAlertType
-    ) -> [MapFeature] {
+    ) -> (RouteAlertsStyleContent, MapFeature)? {
+        guard !isEmpty else { return nil }
+
         let featureCollection = FeatureCollection(features: roadObjectsFeatures(
             for: self,
             currentDistance: distanceTraveled,
             excludedRouteAlertTypes: excludedRouteAlertTypes
         ))
-        let layers: [any Layer] = [
-            with(SymbolLayer(id: ids.layer, source: ids.source)) {
-                $0.iconImage = .expression(Exp(.get) { RoadObjectInfo.objectImageType })
-                $0.minZoom = 10
 
-                $0.iconSize = .expression(
-                    Exp(.interpolate) {
-                        Exp(.linear)
-                        Exp(.zoom)
-                        Self.interpolationFactors.mapValues { $0 * 0.2 }
-                    }
-                )
+        let source = GeoJsonMapFeature.Source(
+            id: ids.source,
+            geoJson: .featureCollection(featureCollection)
+        )
+        guard let sourceData = source.data() else { return nil }
 
-                $0.iconColor = .expression(Exp(.get) { RoadObjectInfo.objectColor })
-            },
-        ]
-        return [
-            GeoJsonMapFeature(
-                id: ids.featureId,
-                sources: [
-                    .init(
-                        id: ids.source,
-                        geoJson: .featureCollection(featureCollection)
-                    ),
-                ],
-                customizeSource: { _, _ in },
-                layers: layers.map { customizedLayerProvider.customizedLayer($0) },
-                onBeforeAdd: { mapView in
-                    Self.upsertRouteAlertsSymbolImages(
-                        map: mapView.mapboxMap
-                    )
-                },
-                onUpdate: { mapView in
-                    Self.upsertRouteAlertsSymbolImages(
-                        map: mapView.mapboxMap
-                    )
-                },
-                onAfterRemove: { mapView in
-                    do {
-                        try Self.removeRouteAlertSymbolImages(
-                            from: mapView.mapboxMap
-                        )
-                    } catch {
-                        Log.error(
-                            "Failed to remove route alerts annotation images with error \(error)",
-                            category: .navigationUI
-                        )
-                    }
+        let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
+            $0.iconImage = .expression(Exp(.get) { RoadObjectInfo.objectImageType })
+            $0.minZoom = 10
+
+            $0.iconSize = .expression(
+                Exp(.interpolate) {
+                    Exp(.linear)
+                    Exp(.zoom)
+                    Self.interpolationFactors.mapValues { $0 * 0.2 }
                 }
-            ),
-        ]
+            )
+
+            $0.iconColor = .expression(Exp(.get) { RoadObjectInfo.objectColor })
+        }
+        let customizedLayer = customizedSymbolLayerProvider.customizedLayer(layer)
+        Self.upsertRouteAlertsSymbolImages(map: mapboxMap)
+
+        let content = RouteAlertsStyleContent(source: sourceData, symbolLayer: customizedLayer)
+
+        let feature = GeoJsonMapFeature(
+            id: ids.featureId,
+            sources: [source],
+            customizeSource: { _, _ in },
+            layers: [customizedLayer],
+            onBeforeAdd: { mapView in
+                Self.upsertRouteAlertsSymbolImages(
+                    map: mapView.mapboxMap
+                )
+            },
+            onUpdate: { mapView in
+                Self.upsertRouteAlertsSymbolImages(
+                    map: mapView.mapboxMap
+                )
+            },
+            onAfterRemove: { mapView in
+                do {
+                    try Self.removeRouteAlertSymbolImages(
+                        from: mapView.mapboxMap
+                    )
+                } catch {
+                    Log.error(
+                        "Failed to remove route alerts annotation images with error \(error)",
+                        category: .navigationUI
+                    )
+                }
+            }
+        )
+        return (content, feature)
     }
 
     private static let interpolationFactors = [
@@ -246,7 +265,7 @@ extension [RoadObjectAhead] {
         map: MapboxMap
     ) {
         for (imageName, imageIdentifier) in imageNameToMapIdentifier(ids: RoadObjectFeature.ImageType.allCases) {
-            if let image = Bundle.module.image(named: imageName) {
+            if let image = Bundle.mapboxNavigationUXCore.image(named: imageName) {
                 map.provisionImage(id: imageIdentifier) { _ in
                     try map.addImage(image, id: imageIdentifier)
                 }
