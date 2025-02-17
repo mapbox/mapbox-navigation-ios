@@ -60,6 +60,11 @@ final class MapFeaturesStore {
         features.forEach { $0.remove(from: mapView, order: &order) }
     }
 
+    func update(with feature: (any MapFeature)?, order: inout MapLayersOrder) {
+        let features = feature.map { [$0] }
+        update(using: features, order: &order)
+    }
+
     func update(using allFeatures: [any MapFeature]?, order: inout MapLayersOrder) {
         guard let allFeatures, !allFeatures.isEmpty else {
             removeAll(order: &order); return

@@ -55,8 +55,7 @@ final class NavigationMapStyleManager {
             guard shouldUseDeclarativeApproach else { return }
 
             mapContent = NavigationStyleContent(
-                routeLines: [:],
-                waypoints: nil
+                routeLines: [:]
             )
         }
     }
@@ -207,7 +206,7 @@ final class NavigationMapStyleManager {
             mapContent?.waypoints = feature?.0
         } else {
             waypointFeaturesStore.update(
-                using: feature.map { [$0.1] } ?? [],
+                with: feature?.1,
                 order: &layersOrder
             )
         }
@@ -224,17 +223,25 @@ final class NavigationMapStyleManager {
             removeArrows(); return
         }
 
-        arrowFeaturesStore.update(
-            using: route.maneuverArrowMapFeatures(
-                ids: .nextArrow(),
-                cameraZoom: mapView.mapboxMap.cameraState.zoom,
-                legIndex: legIndex,
-                stepIndex: stepIndex,
-                config: config,
-                customizedLayerProvider: customizedLayerProvider
-            ),
-            order: &layersOrder
+        let arrowFeature = route.maneuverArrowMapFeatures(
+            ids: .nextArrow(),
+            cameraZoom: mapView.mapboxMap.cameraState.zoom,
+            mapboxMap: mapView.mapboxMap,
+            legIndex: legIndex,
+            stepIndex: stepIndex,
+            config: config,
+            customizedLineLayerProvider: customizedLineLayerProvider,
+            customizedSymbolLayerProvider: customizedSymbolLayerProvider
         )
+
+        if shouldUseDeclarativeApproach {
+            mapContent?.maneuverArrow = arrowFeature?.0
+        } else {
+            arrowFeaturesStore.update(
+                with: arrowFeature?.1,
+                order: &layersOrder
+            )
+        }
     }
 
     func updateVoiceInstructions(route: Route) {
@@ -323,7 +330,11 @@ final class NavigationMapStyleManager {
     }
 
     func removeArrows() {
-        arrowFeaturesStore.update(using: nil, order: &layersOrder)
+        if shouldUseDeclarativeApproach {
+            mapContent?.maneuverArrow = nil
+        } else {
+            arrowFeaturesStore.update(using: nil, order: &layersOrder)
+        }
     }
 
     func removeVoiceInstructions() {
@@ -644,6 +655,7 @@ extension NavigationMapStyleManager {
 struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent]
     var waypoints: WaypointsLineStyleContent?
+    var maneuverArrow: ManeuverArrowStyleContent?
 
     var body: some MapStyleContent {
         if let content = routeLines[.alternative(idx: 0)] {
@@ -654,6 +666,10 @@ struct NavigationStyleContent: MapStyleContent {
         }
         if let content = routeLines[.main] {
             content
+        }
+
+        if let maneuverArrow {
+            maneuverArrow
         }
 
         if let waypoints {

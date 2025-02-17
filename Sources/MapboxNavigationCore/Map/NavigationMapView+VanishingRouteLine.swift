@@ -27,22 +27,6 @@ extension NavigationMapView {
         routeLineGranularDistances = calculateGranularDistances(routePoints?.flatList ?? [])
     }
 
-    /// Transform the route data into nested arrays of legs -> steps -> coordinates.
-    /// The first and last point of adjacent steps overlap and are duplicated.
-    func parseRoutePoints(route: Route) -> RoutePoints {
-        let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
-            return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
-                if let routeShape = routeStep.shape {
-                    return routeShape.coordinates
-                } else {
-                    return []
-                }
-            }
-        }
-        let flatList = nestedList.flatMap { $0.flatMap { $0.compactMap { $0 } } }
-        return RoutePoints(nestedList: nestedList, flatList: flatList)
-    }
-
     func updateRouteLine(routeProgress: RouteProgress) {
         updateIntersectionAnnotations(routeProgress: routeProgress)
         if let routes {
@@ -63,6 +47,7 @@ extension NavigationMapView {
             updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         }
         updateArrow(routeProgress: routeProgress)
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     func updateAlternatives(routeProgress: RouteProgress?) {
@@ -78,8 +63,24 @@ extension NavigationMapView {
         }
     }
 
+    /// Transform the route data into nested arrays of legs -> steps -> coordinates.
+    /// The first and last point of adjacent steps overlap and are duplicated.
+    private func parseRoutePoints(route: Route) -> RoutePoints {
+        let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
+            return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
+                if let routeShape = routeStep.shape {
+                    return routeShape.coordinates
+                } else {
+                    return []
+                }
+            }
+        }
+        let flatList = nestedList.flatMap { $0.flatMap { $0.compactMap { $0 } } }
+        return RoutePoints(nestedList: nestedList, flatList: flatList)
+    }
+
     /// Find and cache the index of the upcoming [RouteLineDistancesIndex].
-    func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
+    private func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
         guard let completeRoutePoints = routePoints,
               completeRoutePoints.nestedList.indices.contains(routeProgress.legIndex)
         else {
@@ -128,7 +129,7 @@ extension NavigationMapView {
         routeRemainingDistancesIndex = allPoints - allRemainingPoints
     }
 
-    func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+    private func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
         if coordinates.isEmpty { return nil }
         var distance = 0.0
         var indexArray = [RouteLineDistancesIndex?](repeating: nil, count: coordinates.count)
@@ -145,7 +146,7 @@ extension NavigationMapView {
         return RouteLineGranularDistances(distance: distance, distanceArray: indexArray.compactMap { $0 })
     }
 
-    func findClosestCoordinateOnCurrentLine(
+    private func findClosestCoordinateOnCurrentLine(
         coordinate: CLLocationCoordinate2D,
         granularDistances: RouteLineGranularDistances,
         upcomingIndex: Int
@@ -169,7 +170,7 @@ extension NavigationMapView {
     /// Updates the fractionTraveled along the route line from the origin point to the indicated point.
     ///
     /// - parameter coordinate: Current position of the user location.
-    func calculateFractionTraveled(coordinate: CLLocationCoordinate2D) -> Double? {
+    private func calculateFractionTraveled(coordinate: CLLocationCoordinate2D) -> Double? {
         guard let granularDistances = routeLineGranularDistances,
               let index = routeRemainingDistancesIndex,
               granularDistances.distanceArray.indices.contains(index) else { return nil }
