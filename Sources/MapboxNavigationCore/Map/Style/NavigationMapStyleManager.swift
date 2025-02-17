@@ -145,9 +145,12 @@ final class NavigationMapStyleManager {
             arrowFeaturesStore.styleLoaded(order: &layersOrder)
             voiceInstructionFeaturesStore.styleLoaded(order: &layersOrder)
             intersectionAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
-            routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
             routeAlertsFeaturesStore.styleLoaded(order: &layersOrder)
         }
+
+        // Until ViewAnnotations are supported in Declarative Map Styling in Maps SDK iOS, we should usethe old approach
+        // for route annotations.
+        routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
     }
 
     private(set) var mapContent: NavigationStyleContent?
