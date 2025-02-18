@@ -51,6 +51,10 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     deinit {
         interruptSpeaking()
+        if !managesAudioSession {
+            return
+        }
+        AVAudioSessionHelper.shared.unduckAudio(completion: nil)
     }
     
     open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
@@ -104,44 +108,53 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
         
         previousInstruction = modifiedInstruction
-        speechSynthesizer.speak(utteranceToSpeak)
+        
+        Log.debug("SystemSpeechSynthesizer: Requesting to speak: [\(utteranceToSpeak.speechString)]", category: .audio)
+        safeDuckAudioAsync() { [weak self] in
+            guard let self else { return }
+            self.speechSynthesizer.speak(utteranceToSpeak)
+        }
     }
     
     open func stopSpeaking() {
+        Log.debug("SystemSpeechSynthesizer: Stop speaking", category: .audio)
         speechSynthesizer.stopSpeaking(at: .word)
     }
     
     open func interruptSpeaking() {
+        Log.debug("SystemSpeechSynthesizer: Interrupt speaking", category: .audio)
         speechSynthesizer.stopSpeaking(at: .immediate)
     }
     
-    private func safeDuckAudio() {
-        guard managesAudioSession else { return }
-        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
-            guard let instruction = previousInstruction else {
-                assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
-                return
+    private func safeDuckAudioAsync(completion: (() -> Void)?) {
+        guard managesAudioSession else {
+            completion?()
+            return
+        }
+        
+        AVAudioSessionHelper.shared.duckAudio { [weak self] result in
+            guard let self else { return }
+            if case let .failure(error) = result {
+                if self.previousInstruction == nil {
+                    Log.warning("SystemSpeechSynthesizer: Speech Synthesizer finished speaking 'nil' instruction", category: .audio)
+                }
+                self.delegate?.speechSynthesizer(self,
+                                                 encounteredError: SpeechError.unableToControlAudio(instruction: self.previousInstruction,
+                                                                                                    action: .duck,
+                                                                                                    underlying: error))
             }
-            
-            delegate?.speechSynthesizer(self,
-                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                           action: .duck,
-                                                                                           underlying: error))
+            completion?()
         }
     }
     
-    private func safeUnduckAudio() {
+    private func safeDeferredUnduckAudio() {
         guard managesAudioSession else { return }
-        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
-            guard let instruction = previousInstruction else {
-                assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
-                return
-            }
-            
-            delegate?.speechSynthesizer(self,
-                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                           action: .unduck,
-                                                                                           underlying: error))
+        let deactivationScheduled = AVAudioSessionHelper.shared.deferredUnduckAudio()
+        if !deactivationScheduled {
+            Log.debug(
+                "SystemSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
+                category: .audio
+            )
         }
     }
 }
@@ -149,17 +162,40 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
 extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
-        safeDuckAudio()
+        Log.debug("SystemSpeechSynthesizer: didStart utterance: [\(utterance.speechString)]", category: .audio)
+    }
+    
+    public func speechSynthesizer(
+        _ synthesizer: AVSpeechSynthesizer,
+        willSpeakRangeOfSpeechString characterRange: NSRange,
+        utterance: AVSpeechUtterance
+    ) {
+        if characterRange.location == 0 { // logging just first occurrence for utterance string
+            Log.debug(
+                "SystemSpeeechSynthesizer: willSpeakString utterance: [\(utterance.speechString)]",
+                category: .audio
+            )
+        }
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
-        safeDuckAudio()
+        // Should never be called because AVSpeechSynthesizer's pauseSpeaking(at:) and continueSpeaking() are not used
+        Log.warning(
+            "SystemSpeechSynthesizer: Unexpectedly called didContinue utterance: [\(utterance.speechString)]",
+            category: .audio
+        )
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        safeUnduckAudio()
+        Log.debug(
+            "SystemSpeechSynthesizer: didFinish utterance: [\(utterance.speechString), isSpeaking == \(synthesizer.isSpeaking)]",
+            category: .audio
+        )
+        
+        safeDeferredUnduckAudio()
+        
         guard let instruction = previousInstruction else {
-            assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+            Log.warning("SystemSpeechSynthesizer finished speaking 'nil' instruction", category: .audio)
             return
         }
         delegate?.speechSynthesizer(self,
@@ -168,13 +204,23 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
-        safeUnduckAudio()
+        // Should never be called because AVSpeechSynthesizer's pauseSpeaking(at:) and continueSpeaking() are not used
+        Log.warning(
+            "SystemSpeechSynthesizer: Unexpectly called didPause utterance: [\(utterance.speechString)]",
+            category: .audio
+        )
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        safeUnduckAudio()
+        Log.debug(
+            "SystemSpeechSynthesizer: didCancel utterance: [\(utterance.speechString), isSpeaking == \(synthesizer.isSpeaking)]",
+            category: .audio
+        )
+        
+        safeDeferredUnduckAudio()
+        
         guard let instruction = previousInstruction else {
-            assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+            Log.warning("SystemSpeechSynthesizer: Finished speaking 'nil' instruction", category: .audio)
             return
         }
         delegate?.speechSynthesizer(self,

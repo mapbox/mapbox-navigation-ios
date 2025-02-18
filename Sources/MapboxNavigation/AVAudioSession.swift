@@ -1,5 +1,6 @@
 import AVFoundation
 
+@available(*, deprecated, message: "This extension is no longer supported.")
 public extension AVAudioSession {
     
     // MARK: Adjusting the Volume

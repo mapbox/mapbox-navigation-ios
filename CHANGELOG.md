@@ -1,5 +1,17 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.20.0
+
+### Audio
+
+* Improved AVAudioSession handling for playback of the reroute sound and voice instructions. Activation and deactivation of AVAudioSession no longer occur on the main thread, and these operations are synchronized. This eliminates UI freezes that occurred to a lesser extent during activation and to a greater extent during deactivation.
+
+### API Deprecations
+
+* The extension for AVAudioSession is no longer supported and has been deprecated, which affects the following methods:
+    * `AVAudioSession.tryDuckAudio()`
+    * `AVAudioSession.tryUnduckAudio()`
+    
 ## v2.19.0
 
 ### Packaging
@@ -65,8 +77,8 @@
 
 ### User interface
 
-* `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584)) 
-* `TopBannerViewController.delegate` and `TopBannerViewController.instructionsBannerView` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595)) 
+* `SpeedLimitView` now shows a special "Limits no longer apply" sign on roads where speed limit is known to not exist. ([#4584](https://github.com/mapbox/mapbox-navigation-ios/pull/4584))
+* `TopBannerViewController.delegate` and `TopBannerViewController.instructionsBannerView` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595))
 * `BottomBannerViewController.dateFormatter`, `BottomBannerViewController.dateComponentsFormatter`, `BottomBannerViewController.distanceFormatter` and `InstructionsBannerView.distanceFormatter` are now public. ([#4595](https://github.com/mapbox/mapbox-navigation-ios/pull/4595))
 
 ### CarPlay
