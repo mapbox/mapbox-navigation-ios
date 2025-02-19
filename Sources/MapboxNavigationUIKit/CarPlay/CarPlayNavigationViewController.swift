@@ -1079,6 +1079,18 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
 
     public func navigationMapView(
         _ navigationMapView: NavigationMapView,
+        shapeFor waypoints: [Waypoint],
+        legIndex: Int
+    ) -> FeatureCollection? {
+        delegate?.carPlayNavigationViewController(
+            self,
+            shapeFor: waypoints,
+            legIndex: legIndex
+        )
+    }
+
+    public func navigationMapView(
+        _ navigationMapView: NavigationMapView,
         routeLineLayerWithIdentifier identifier: String,
         sourceIdentifier: String
     ) -> LineLayer? {

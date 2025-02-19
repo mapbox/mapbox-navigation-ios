@@ -11,6 +11,10 @@
 * The extension for AVAudioSession is no longer supported and has been deprecated, which affects the following methods:
     * `AVAudioSession.tryDuckAudio()`
     * `AVAudioSession.tryUnduckAudio()`
+    
+### CarPlay:
+
+* Forwarded shapes for waypoints from `CarPlayNavigationViewControllerDelegate` to `NavigationMapViewDelegate`.
 
 ## v3.7.0
 
