@@ -67,7 +67,8 @@ class NavigationCameraTests: BaseTestCase {
     var subscriptions: Set<AnyCancellable>!
 
     override func setUp() async throws {
-        try? await super.setUp()
+        try await super.setUp()
+        Self.injectSharedToken()
 
         subscriptions = []
         let location = CLLocation(latitude: 9.519172, longitude: 47.210823)

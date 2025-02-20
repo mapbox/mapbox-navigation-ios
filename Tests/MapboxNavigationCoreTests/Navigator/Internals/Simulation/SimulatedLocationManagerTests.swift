@@ -43,6 +43,7 @@ final class SimulatedLocationManagerTests: BaseTestCase {
         )
         locationDelegate = NavigationLocationManagerDelegateSpy()
         locationManager.locationDelegate = locationDelegate
+        Self.injectSharedToken()
     }
 
     @MainActor

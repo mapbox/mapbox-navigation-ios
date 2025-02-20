@@ -64,15 +64,19 @@ class CarPlayManagerTests: TestCase {
             XCTFail("CPInterfaceController should be valid.")
             return
         }
+        eventsManagerSpy.sendCarPlayConnectExpectation = expectation(description: "did connect")
+        eventsManagerSpy.sendCarPlayDisconnectExpectation = expectation(description: "did disconnect")
 
         carPlayManager.application(
             .shared,
             didConnectCarInterfaceController: interfaceController,
             to: CPWindow()
         )
+        wait(for: [eventsManagerSpy.sendCarPlayConnectExpectation!], timeout: 1.0)
         XCTAssertTrue(eventsManagerSpy.sendCarPlayConnectEventCalled)
 
         simulateCarPlayDisconnection(carPlayManager)
+        wait(for: [eventsManagerSpy.sendCarPlayDisconnectExpectation!], timeout: 1.0)
         XCTAssertTrue(eventsManagerSpy.sendCarPlayDisconnectEventCalled)
     }
 

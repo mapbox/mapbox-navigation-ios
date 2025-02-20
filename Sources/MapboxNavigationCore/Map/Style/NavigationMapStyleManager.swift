@@ -39,6 +39,9 @@ struct MapStyleConfig: Equatable {
 
     var waypointColor: UIColor
     var waypointStrokeColor: UIColor
+
+    var etaAnnotationAnchors: [ViewAnnotationAnchor]
+    var fixedEtaAnnotationPosition: Bool
 }
 
 @MainActor

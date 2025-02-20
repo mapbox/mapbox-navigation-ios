@@ -10,7 +10,7 @@ final class ETAView: UIView {
 
     private var tail = UIView()
     private let backgroundShape = CAShapeLayer()
-    private let mapStyleConfig: MapStyleConfig
+    let mapStyleConfig: MapStyleConfig
 
     let textColor: UIColor
     let baloonColor: UIColor

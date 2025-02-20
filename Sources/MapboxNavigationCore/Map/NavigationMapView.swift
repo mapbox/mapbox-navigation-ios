@@ -709,6 +709,11 @@ open class NavigationMapView: UIView {
         }
     }
 
+    var etaAnnotationAnchors: [ViewAnnotationAnchor] = [
+        .bottomLeft, .bottomRight, .topLeft, .topRight,
+    ]
+    var fixedEtaAnnotationPosition = false
+
     private var mapStyleConfig: MapStyleConfig {
         .init(
             routeCasingColor: routeCasingColor,
@@ -732,7 +737,9 @@ open class NavigationMapView: UIView {
             occlusionFactor: .constant(routeLineOcclusionFactor),
             congestionConfiguration: congestionConfiguration,
             waypointColor: waypointColor,
-            waypointStrokeColor: waypointStrokeColor
+            waypointStrokeColor: waypointStrokeColor,
+            etaAnnotationAnchors: etaAnnotationAnchors,
+            fixedEtaAnnotationPosition: fixedEtaAnnotationPosition
         )
     }
 }
