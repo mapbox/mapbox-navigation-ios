@@ -32,6 +32,8 @@ extension CPTrip {
             destination: destinationMapItem,
             routeChoices: routeChoices
         )
+
+        self.userInfo = routes
     }
 
     private static func makeRouteChoice(
@@ -96,5 +98,7 @@ extension CPTrip {
             destination: destination,
             routeChoices: [routeChoice]
         )
+
+        self.userInfo = searchResultRecord
     }
 }
