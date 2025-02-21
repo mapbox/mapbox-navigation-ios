@@ -6,8 +6,6 @@ import MapboxDirections
 @MainActor
 /// ``SpeechSynthesizing`` implementation, using Mapbox Voice API. Uses pre-caching mechanism for upcoming instructions.
 public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
-    private static let audioSessionDeactivationDelay: TimeInterval = 1.0
-
     private var _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
     public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
         _voiceInstructions.eraseToAnyPublisher()
@@ -220,7 +218,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         case .failure(let error):
             Log.error("MapboxSpeechSynthesizer: audio player Failed to initialize: \(error)", category: .audio)
             Task {
-                await safeDeferredUnduckAudio(instruction: previousInstruction)
+                await safeDeferredUnduckAudio()
                 _voiceInstructions.send(
                     VoiceInstructionEvents.EncounteredError(
                         error: error
@@ -249,6 +247,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
                 let audio = try await self.remoteSpeechSynthesizer.audioData(with: options)
                 try Task.checkCancellation()
                 self.cache(audio, forKey: ssmlText, with: locale)
+                Log.debug("MapboxSpeechSynthesizer: Will speak text: [\(instruction.text)]", category: .audio)
                 await self.safeDuckAudio(instruction: instruction)
                 try Task.checkCancellation()
                 self.speak(
@@ -313,11 +312,10 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    func safeDeferredUnduckAudio(instruction: SpokenInstruction?) async {
+    func safeDeferredUnduckAudio() async {
         guard managesAudioSession else { return }
 
-        let deactivationScheduled = await AVAudioSessionHelper.shared
-            .deferredUnduckAudio(delayBy: Self.audioSessionDeactivationDelay)
+        let deactivationScheduled = await AVAudioSessionHelper.shared.deferredUnduckAudio()
         if !deactivationScheduled {
             Log.debug(
                 "SystemSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
@@ -367,7 +365,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
 
                 Task { [weak self] in
                     guard let self else { return }
-                    await safeDeferredUnduckAudio(instruction: previousInstruction)
+                    await safeDeferredUnduckAudio()
                 }
 
                 guard let instruction = previousInstruction else {

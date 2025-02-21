@@ -5,7 +5,6 @@ import MapboxDirections
 /// ``SpeechSynthesizing`` implementation, using ``AVSpeechSynthesizer``.
 @_spi(MapboxInternal)
 public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
-    private static let audioSessionDeactivationDelay: TimeInterval = 1.0
     private let _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
     public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
         _voiceInstructions.eraseToAnyPublisher()
@@ -191,8 +190,7 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
 
     private func safeDeferredUnduckAudio() async {
         guard managesAudioSession else { return }
-        let deactivationScheduled = await AVAudioSessionHelper.shared
-            .deferredUnduckAudio(delayBy: Self.audioSessionDeactivationDelay)
+        let deactivationScheduled = await AVAudioSessionHelper.shared.deferredUnduckAudio()
         if !deactivationScheduled {
             Log.debug(
                 "SystemSpeechSynthesizer: Deactivation of AVAudioSession not scheduled - another one in progress",
@@ -242,8 +240,10 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
         _ synthesizer: AVSpeechSynthesizer,
         didFinish utterance: AVSpeechUtterance
     ) {
-        Log.debug("SystemSpeechSynthesizer: didFinish utterance: [\(utterance.speechString)]", category: .audio)
-        Log.debug("SystemSpeechSynthesizer: didFinish isSpeaking == \(synthesizer.isSpeaking)", category: .audio)
+        Log.debug(
+            "SystemSpeechSynthesizer: didFinish utterance: [\(utterance.speechString)], isSpeaking == \(synthesizer.isSpeaking)",
+            category: .audio
+        )
 
         Task {
             await safeDeferredUnduckAudio()
