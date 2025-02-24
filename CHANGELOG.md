@@ -11,6 +11,10 @@
 * The extension for AVAudioSession is no longer supported and has been deprecated, which affects the following methods:
     * `AVAudioSession.tryDuckAudio()`
     * `AVAudioSession.tryUnduckAudio()`
+
+### Other changes
+
+* Added movement type reports to Telemetry.
     
 ## v2.19.0
 
