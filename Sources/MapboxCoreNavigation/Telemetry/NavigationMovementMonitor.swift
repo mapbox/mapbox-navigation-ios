@@ -79,12 +79,14 @@ final class NavigationMovementMonitor: MovementMonitorInterface {
             return customMovementInfo
         }
         let profile = _currentProfile
-        let movementModes: [NSNumber: NSNumber] = if let movementMode = profile?.movementMode {
-            [movementMode.rawValue as NSNumber: 100]
+
+        let movementModes: [NSNumber: NSNumber]
+        if let movementMode = profile?.movementMode {
+            movementModes = [movementMode.rawValue as NSNumber: 100]
         } else if profile != nil {
-            [MovementMode.inVehicle.rawValue as NSNumber: 50]
+            movementModes = [MovementMode.inVehicle.rawValue as NSNumber: 50]
         } else {
-            [MovementMode.unknown.rawValue as NSNumber: 50]
+            movementModes = [MovementMode.unknown.rawValue as NSNumber: 50]
         }
         return MovementInfo(movementMode: movementModes, movementProvider: .SDK)
     }
@@ -94,13 +96,13 @@ extension ProfileIdentifier {
     var movementMode: MovementMode? {
         switch self {
         case .automobile, .automobileAvoidingTraffic:
-            .inVehicle
+            return .inVehicle
         case .cycling:
-            .cycling
+            return .cycling
         case .walking:
-            .onFoot
+            return .onFoot
         default:
-            nil
+            return nil
         }
     }
 }
