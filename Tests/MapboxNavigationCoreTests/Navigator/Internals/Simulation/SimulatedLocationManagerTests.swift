@@ -47,7 +47,7 @@ final class SimulatedLocationManagerTests: BaseTestCase {
     }
 
     @MainActor
-    func testSimulateCoordinates() {
+    func testSimulateCoordinatesFromTheStart() {
         locationManager.progressDidChange(progress)
         customQueue.sync {
             // to make sure the queue tasks are executed
@@ -61,18 +61,57 @@ final class SimulatedLocationManagerTests: BaseTestCase {
 
         XCTAssertEqual(testCoordinates.last, coordinates.last)
         let testDistance = LineString(testCoordinates).distance()!
-        XCTAssertEqual(initialShape.distance()!, testDistance, accuracy: 50)
+        XCTAssertEqual(testDistance, initialShape.distance()!, accuracy: 50)
+    }
+
+    @MainActor
+    func testSimulateCoordinatesFromTheMidLocation() {
+        locationManager.location = CLLocation(coordinate: coordinates[4])
+        locationManager.progressDidChange(progress)
+        customQueue.sync {
+            // to make sure the queue tasks are executed
+        }
+        while locationManager.currentDistance < initialShape.distance() ?? 0 {
+            customQueue.sync { [weak self] in
+                self?.locationManager.tick()
+            }
+        }
+        let testCoordinates = locationDelegate.passedLocations.map { $0.coordinate }
+
+        XCTAssertEqual(testCoordinates.last, coordinates.last)
+        let trimmedCoordinates = Array(coordinates.suffix(from: 4))
+        let expectedShape = LineString(trimmedCoordinates)
+        let testDistance = LineString(testCoordinates).distance()!
+        XCTAssertEqual(testDistance, expectedShape.distance()!, accuracy: 50)
     }
 
     func testUpdateRouteProgress() async {
         locationManager.progressDidChange(progress)
         customQueue.sync {}
 
-        let newRoute = Route.mock()
+        let shape = LineString([coordinates[3]])
+        let newRoute = Route.mock(shape: shape)
         let newProgress = await RouteProgress.mock(navigationRoutes: .mock(mainRoute: .mock(route: newRoute)))
         locationManager.didReroute(progress: newProgress)
         customQueue.sync {}
         XCTAssertEqual(locationManager.routeProgress, newProgress)
+        XCTAssertEqual(locationManager.remainingRouteShape, shape)
+    }
+
+    func testHandlesRouteChangeFromProgressUpdates() async {
+        locationManager.progressDidChange(progress)
+        customQueue.sync {}
+
+        let shape = LineString(Array(coordinates.suffix(from: 4)))
+        let newRoute = Route.mock(shape: shape, distance: 200)
+        let newProgress = await RouteProgress.mock(navigationRoutes: .mock(mainRoute: .mock(route: newRoute)))
+
+        locationManager.progressDidChange(newProgress)
+        customQueue.sync {}
+
+        let trimmedShape = LineString(Array(coordinates.suffix(from: 9)))
+        XCTAssertEqual(locationManager.routeProgress, newProgress)
+        XCTAssertEqual(locationManager.remainingRouteShape, trimmedShape)
     }
 
     func testUpdateProgressDuringNavigation() async {

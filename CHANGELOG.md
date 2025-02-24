@@ -12,9 +12,13 @@
     * `AVAudioSession.tryDuckAudio()`
     * `AVAudioSession.tryUnduckAudio()`
     
-### CarPlay:
+### CarPlay
 
 * Forwarded shapes for waypoints from `CarPlayNavigationViewControllerDelegate` to `NavigationMapViewDelegate`.
+
+### Simulation
+
+* Fixed case when route refresh or an alternative route selection causes the simulation progress reset.
 
 ## v3.7.0
 

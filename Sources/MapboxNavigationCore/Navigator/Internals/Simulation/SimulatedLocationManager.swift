@@ -105,7 +105,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
 
     // These properties should be accessed from the queue.
     private var locations: [SimulatedLocation] = []
-    private var remainingRouteShape: LineString?
+    var remainingRouteShape: LineString?
 
     // These properties should be access from the main thread.
     private(set) var routeProgress: RouteProgress?
@@ -267,7 +267,8 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
             guard let self else { return }
 
             if progress.route.distance != routeProgress?.route.distance {
-                update(with: progress)
+                // This can happen when an alternative route was selected.
+                didReroute(progress: progress)
             }
         }
     }
@@ -306,13 +307,15 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
                 newClosestCoordinate = shape?.coordinateFromStart(distance: currentDistance)
             }
 
-            onMainQueueSync { [weak self] in
+            onMainAsync { [weak self] in
                 guard let self else { return }
 
                 routeProgress = progress
             }
-            reset(with: shape)
-            remainingRouteShape = remainingRouteShape?.sliced(from: newClosestCoordinate)
+            guard let shape else { return }
+
+            remainingRouteShape = shape.sliced(from: newClosestCoordinate)
+            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
             slicedIndex = nil
         }
     }
@@ -416,7 +419,7 @@ extension [CLLocationCoordinate2D] {
             altitude: 0,
             horizontalAccuracy: horizontalAccuracy,
             verticalAccuracy: verticalAccuracy,
-            course: locations.last!.course,
+            course: locations.last?.course ?? 0,
             speed: minimumSpeed,
             timestamp: Date()
         ))

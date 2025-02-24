@@ -41,7 +41,10 @@ public final class MultiplexLocationClient: @unchecked Sendable {
         Task { @MainActor in
             self.isInitialized = true
             self.routeProgress = navigator.routeProgress
-            self.rerouteEvents = navigator.navigationRoutes
+            self.rerouteEvents = navigator.rerouting
+                .filter {
+                    $0.event is ReroutingStatus.Events.Fetched
+                }
                 .map { _ in navigator.currentRouteProgress?.routeProgress }
                 .eraseToAnyPublisher()
             setLocationSource(source)
