@@ -5,7 +5,8 @@ import MapboxDirections
 import MapboxNavigationNative
 
 public final class RouteInterfaceMock: RouteInterface {
-    public static let realRequestUri = "https://api.mapbox.com/directions/v5/mapbox/driving/1.0,1.0;2.0,2.0"
+    public static let realRequestUri =
+        "https://api.mapbox.com/directions/v5/mapbox/driving/1.0,1.0;2.0,2.0?access_token=mock"
 
     public static let realRouteJson = {
         let encoder = JSONEncoder()

@@ -43,7 +43,6 @@ final class SimulatedLocationManagerTests: BaseTestCase {
         )
         locationDelegate = NavigationLocationManagerDelegateSpy()
         locationManager.locationDelegate = locationDelegate
-        Self.injectSharedToken()
     }
 
     @MainActor
@@ -85,6 +84,7 @@ final class SimulatedLocationManagerTests: BaseTestCase {
         XCTAssertEqual(testDistance, expectedShape.distance()!, accuracy: 50)
     }
 
+    @MainActor
     func testUpdateRouteProgress() async {
         locationManager.progressDidChange(progress)
         customQueue.sync {}
@@ -114,6 +114,7 @@ final class SimulatedLocationManagerTests: BaseTestCase {
         XCTAssertEqual(locationManager.remainingRouteShape, trimmedShape)
     }
 
+    @MainActor
     func testUpdateProgressDuringNavigation() async {
         locationManager.progressDidChange(progress)
         let lineString = LineString([
