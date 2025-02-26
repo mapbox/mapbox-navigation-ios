@@ -22,6 +22,7 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         case allowsArrivingOnOppositeSide
         case snappedDistance = "distance"
         case layer
+        case timeZone = "time_zone"
     }
 
     // MARK: Creating a Waypoint
@@ -62,6 +63,8 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
 
         self.layer = try container.decodeIfPresent(Int.self, forKey: .layer)
 
+        self.timeZone = try container.decodeIfPresent(TimeZoneInformation.self, forKey: .timeZone)
+
         try decodeForeignMembers(notKeyedBy: CodingKeys.self, with: decoder)
     }
 
@@ -79,6 +82,7 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(snappedDistance, forKey: .snappedDistance)
         try container.encodeIfPresent(layer, forKey: .layer)
+        try container.encodeIfPresent(timeZone, forKey: .timeZone)
 
         try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
     }
@@ -318,6 +322,9 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
     /// This property corresponds to the [`approaches`](https://docs.mapbox.com/api/navigation/#retrieve-directions)
     /// query parameter in the Mapbox Directions and Map Matching APIs.
     public var separatesLegs: Bool = true
+
+    /// An object describing time zone relevant to the waypoint location
+    public var timeZone: TimeZoneInformation? = nil
 }
 
 extension Waypoint: CustomStringConvertible {

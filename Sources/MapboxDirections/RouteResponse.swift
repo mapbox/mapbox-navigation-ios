@@ -195,7 +195,7 @@ extension RouteResponse: Codable {
                 waypoint.headingAccuracy = waypointInOptions.headingAccuracy
                 waypoint.separatesLegs = waypointInOptions.separatesLegs
                 waypoint.allowsArrivingOnOppositeSide = waypointInOptions.allowsArrivingOnOppositeSide
-
+                waypoint.timeZone = decodedWaypoint.timeZone
                 waypoint.foreignMembers = decodedWaypoint.foreignMembers
 
                 return waypoint
