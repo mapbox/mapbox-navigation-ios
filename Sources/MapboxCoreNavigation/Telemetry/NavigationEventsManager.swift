@@ -51,7 +51,7 @@ open class NavigationEventsManager {
                          accessToken possibleToken: String? = nil) {
         if NavigationTelemetryConfiguration.useNavNativeTelemetryEvents {
 
-            let navNativeEventsManager = NavigationNativeEventsManager.init(navigator: Navigator.shared)
+            let navNativeEventsManager = NavigationNativeEventsManager(navigator: Navigator.shared)
             self.commonEventsManager = nil
             self.navNativeEventsManager = navNativeEventsManager
             self.actualEventsManager = navNativeEventsManager
@@ -64,6 +64,8 @@ open class NavigationEventsManager {
             self.commonEventsManager = commonEventsManager
             self.actualEventsManager = commonEventsManager
         }
+        // Initialize shared instance
+        _ = NavigationMovementMonitor.shared
     }
 
     init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,

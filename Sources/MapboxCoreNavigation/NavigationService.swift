@@ -272,6 +272,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
            BillingHandler.shared.sessionState(uuid: routeController.sessionUUID) != .running {
             BillingHandler.shared.resumeBillingSession(with: routeController.sessionUUID)
         }
+        NavigationMovementMonitor.shared.currentProfile = router.routeProgress.routeOptions.profileIdentifier
     }
     
     /**
@@ -298,6 +299,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
            BillingHandler.shared.sessionState(uuid: routeController.sessionUUID) == .running {
             BillingHandler.shared.pauseBillingSession(with: routeController.sessionUUID)
         }
+        NavigationMovementMonitor.shared.currentProfile = nil
     }
     
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
