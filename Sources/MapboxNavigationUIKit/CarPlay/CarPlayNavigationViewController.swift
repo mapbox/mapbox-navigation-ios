@@ -820,6 +820,9 @@ open class CarPlayNavigationViewController: UIViewController {
             timeRemaining: step.expectedTravelTime
         )
 
+        if #available(iOS 15.4, *) {
+            primaryManeuver.cardBackgroundColor = #colorLiteral(red: 0.07450980392, green: 0.3137254902, blue: 0.7843137255, alpha: 1)
+        }
         // Just incase, set some default text
         var text = visualInstruction.primaryInstruction.text ?? step.instructions
         if let secondaryText = visualInstruction.secondaryInstruction?.text {

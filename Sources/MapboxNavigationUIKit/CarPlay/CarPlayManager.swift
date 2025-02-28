@@ -255,18 +255,23 @@ public class CarPlayManager: NSObject {
         )
 
         let altsButton = CPBarButton(title: title) { [weak self] (_: CPBarButton) in
-            guard let template = self?.carPlayNavigationViewController?.alternativesListTemplate() else {
-                return
-            }
-            self?.interfaceController?.pushTemplate(
-                template,
-                animated: true,
-                completion: nil
-            )
+            self?.showAlternativesListTemplate()
         }
 
         return altsButton
     }()
+
+    @_spi(MapboxInternal)
+    public func showAlternativesListTemplate() {
+        guard let template = carPlayNavigationViewController?.alternativesListTemplate() else {
+            return
+        }
+        interfaceController?.pushTemplate(
+            template,
+            animated: true,
+            completion: nil
+        )
+    }
 
     /// The bar button that prompts the presented navigation view controller to display the feedback screen.
     public lazy var showFeedbackButton: CPMapButton = {
