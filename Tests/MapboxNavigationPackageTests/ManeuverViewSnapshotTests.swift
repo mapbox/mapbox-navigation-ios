@@ -12,7 +12,6 @@ class ManeuverViewSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         maneuverView.backgroundColor = .white
-        isRecording = false
 
         let window = UIWindow(frame: maneuverView.bounds)
         window.addSubview(maneuverView)

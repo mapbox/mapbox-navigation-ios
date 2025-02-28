@@ -29,7 +29,7 @@ func assertImageSnapshot<Value>(
         .appendingPathComponent(fileName)
 
     let failure = try verifySnapshot(
-        matching: value(),
+        of: value(),
         as: snapshotting,
         named: name,
         record: recording,

@@ -13,11 +13,6 @@ class CarPlayCompassViewSnapshotTests: TestCase {
 
     private let styles = [DayStyle(), NightStyle()]
 
-    override func setUp() {
-        super.setUp()
-        isRecording = false
-    }
-
     func testCarPlayCompassView() {
         for style in styles {
             // `StyleManager` switches between user interface styles depending on platform, on

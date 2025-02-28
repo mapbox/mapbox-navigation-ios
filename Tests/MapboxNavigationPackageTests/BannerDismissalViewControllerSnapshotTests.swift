@@ -9,7 +9,6 @@ class BannerDismissalViewControllerSnapshotTests: TestCase {
 
     override func setUp() {
         super.setUp()
-        isRecording = false
         bannerDismissalViewController = BannerDismissalViewController()
     }
 

@@ -11,7 +11,6 @@ class FeedbackViewControllerSnapshotTests: TestCase {
 
     override func setUp() {
         super.setUp()
-        isRecording = false
         let eventsManager = navigationProvider.eventsManager()
         feedbackViewController = FeedbackViewController(eventsManager: eventsManager, type: .passiveNavigation)
         DayStyle().apply()

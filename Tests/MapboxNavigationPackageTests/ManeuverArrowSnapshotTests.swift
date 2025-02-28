@@ -16,7 +16,6 @@ class ManeuverArrowSnapshotTests: TestCase {
 
     override func setUp() {
         super.setUp()
-        isRecording = false
         DayStyle().apply()
     }
 

@@ -14,7 +14,6 @@ class SpeedLimitViewSnapshotTests: TestCase {
         speedLimitView = .init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
         speedLimitView.backgroundColor = .white
         speedLimitView.signBackColor = .white
-        isRecording = false
 
         let window = UIWindow(frame: speedLimitView.bounds)
         window.addSubview(speedLimitView)

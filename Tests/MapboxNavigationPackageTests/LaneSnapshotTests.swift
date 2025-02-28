@@ -8,7 +8,6 @@ import XCTest
 class LaneSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
-        isRecording = false
         DayStyle().apply()
 
         // Apply correct appearance for test case envirounment.

@@ -11,7 +11,6 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
 
     override func setUp() {
         super.setUp()
-        isRecording = false
 
         let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
         let us101Representation = VisualInstruction.Component
