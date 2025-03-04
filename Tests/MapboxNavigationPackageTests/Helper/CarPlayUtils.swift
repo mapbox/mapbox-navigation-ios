@@ -54,6 +54,7 @@ func createValidRouteChoice() async -> CPRouteChoice {
     )
     let routes = await createNavigationRoutes()
     let routeResponseUserInfoKey = CPRouteChoice.RouteResponseUserInfo.key
+
     let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(
         navigationRoutes: routes,
         searchResultRecord: nil

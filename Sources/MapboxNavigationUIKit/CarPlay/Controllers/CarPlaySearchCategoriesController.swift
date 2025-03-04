@@ -8,11 +8,13 @@
 import CarPlay
 import Combine
 import MapboxDirections
+import MapboxNavigationCore
 
 @_spi(MapboxInternal)
-public protocol CarPlaySearchCategoriesControllerDelegate: AnyObject {
+public protocol CarPlaySearchCategoriesControllerDelegate: AnyObject, UnimplementedLogging {
     func didSelectBackButton(_ controller: CarPlaySearchCategoriesController)
     func didSelectKeyboardInput(_ controller: CarPlaySearchCategoriesController)
+    func didSelectVoiceInput(_ controller: CarPlaySearchCategoriesController)
     func didSelectCategory(_ controller: CarPlaySearchCategoriesController, category: CarPlaySearchControllerCategory)
 }
 
@@ -68,7 +70,12 @@ public final class CarPlaySearchCategoriesController {
             delegate?.didSelectKeyboardInput(self)
         }
 
-        template.trailingNavigationBarButtons = [keyboardButton]
+        let voiceInputButton = CPBarButton(image: UIImage(systemName: "mic.fill")!) { [weak self] _ in
+            guard let self else { return }
+            delegate?.didSelectVoiceInput(self)
+        }
+
+        template.trailingNavigationBarButtons = [keyboardButton, voiceInputButton]
     }
 
     private func makeGridButtons(for searchCategories: [CarPlaySearchControllerCategory]) -> [CPGridButton] {
