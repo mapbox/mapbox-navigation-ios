@@ -72,7 +72,7 @@ class SKUTests: TestCase {
 
         override func dataTask(
             with request: URLRequest,
-            completionHandler: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void
+            completionHandler: @escaping @Sendable (Foundation.Data?, URLResponse?, Error?) -> Void
         ) -> URLSessionDataTask {
             passedRequest = request
             return URLSessionDataTaskSpy(completionHandler: completionHandler)
@@ -80,7 +80,7 @@ class SKUTests: TestCase {
     }
 
     fileprivate class URLSessionDataTaskSpy: URLSessionDataTask {
-        typealias CompletionHandler = (Data?, URLResponse?, Error?) -> Void
+        typealias CompletionHandler = (Foundation.Data?, URLResponse?, Error?) -> Void
         private let completionHandler: CompletionHandler
 
         init(completionHandler: @escaping CompletionHandler) {

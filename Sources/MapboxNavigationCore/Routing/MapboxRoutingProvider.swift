@@ -197,7 +197,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
     private func parseResponse<ResponseType: Codable>(
         userInfo: [CodingUserInfoKey: Any],
-        result data: Data,
+        result data: Foundation.Data,
         error: Error?
     ) -> Result<ResponseType, DirectionsError> {
         do {

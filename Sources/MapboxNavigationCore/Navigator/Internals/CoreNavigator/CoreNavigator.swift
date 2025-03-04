@@ -296,16 +296,15 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
             return
         }
 
-        let refreshObserver =
-            NavigatorRouteRefreshObserver(refreshCallback: { [weak self] in
-                guard let self else { return nil }
+        let refreshObserver = NavigatorRouteRefreshObserver(refreshCallback: { [weak self] in
+            guard let self else { return nil }
 
-                guard let refreshedRouteData = navigator.native.getCurrentRoutesData() else { return nil }
-                return RouteRefreshResult(
-                    updatedRoute: refreshedRouteData.primaryRoute(),
-                    alternativeRoutes: refreshedRouteData.alternativeRoutes()
-                )
-            })
+            guard let primaryRoute = navigator.native.getPrimaryRoute() else { return nil }
+            return RouteRefreshResult(
+                updatedRoute: primaryRoute,
+                alternativeRoutes: navigator.native.getAlternativeRoutes()
+            )
+        })
         navigator.native.addRouteRefreshObserver(for: refreshObserver)
         navigator.native.startRoutesRefresh(
             forDefaultRefreshPeriodMs: UInt64(refreshPeriod * 1000),
