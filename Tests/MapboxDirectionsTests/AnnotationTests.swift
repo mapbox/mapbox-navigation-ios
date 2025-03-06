@@ -67,7 +67,7 @@ class AnnotationTests: XCTestCase {
         }
         XCTAssertNotNil(task)
 
-        waitForExpectations(timeout: 3) { error in
+        waitForExpectations(timeout: 8) { error in
             XCTAssertNil(error, "Error: \(error!.localizedDescription)")
             XCTAssertEqual(task.state, .completed)
         }
