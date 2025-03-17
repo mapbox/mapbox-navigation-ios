@@ -11,11 +11,11 @@ import Foundation
 @_spi(MapboxInternal)
 public struct CarPlayListItem: Equatable, Hashable, Sendable {
     public let text: String
-    public let detailText: String
-    public let icon: UIImage
-    public let location: CLLocation
+    public let detailText: String?
+    public let icon: UIImage?
+    public let location: CLLocation?
 
-    public init(text: String, detailText: String, icon: UIImage, location: CLLocation) {
+    public init(text: String, detailText: String?, icon: UIImage?, location: CLLocation?) {
         self.text = text
         self.detailText = detailText
         self.icon = icon
