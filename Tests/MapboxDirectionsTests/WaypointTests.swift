@@ -272,4 +272,27 @@ class WaypointTests: XCTestCase {
         XCTAssertEqual(routeOptions.urlQueryItems.first { $0.name == "snapping_include_static_closures" }?.value, nil)
         XCTAssertEqual(matchOptions.urlQueryItems.first { $0.name == "snapping_include_static_closures" }?.value, nil)
     }
+
+    func testApplyWaypointTargetCoordinatesOnCorrespondingWaypoint() {
+        let origin = Waypoint(
+            coordinate: .init(latitude: 36.162569, longitude: -86.7821)
+        )
+        let destination = Waypoint(
+            coordinate: .init(latitude: 36.152638, longitude: -86.790639)
+        )
+
+        let targetLat = 36.152884
+        let targetLon = -86.790838
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "waypoint_targets", value: ";\(targetLon),\(targetLat)"),
+        ]
+
+        let options = RouteOptions(waypoints: [origin, destination], queryItems: queryItems)
+        XCTAssertNil(options.waypoints[0].targetCoordinate)
+        XCTAssertNotNil(options.waypoints[1].targetCoordinate)
+        XCTAssertEqual(
+            options.waypoints[1].targetCoordinate,
+            LocationCoordinate2D(latitude: targetLat, longitude: targetLon)
+        )
+    }
 }

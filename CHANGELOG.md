@@ -1,5 +1,14 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.8.0-rc.1
+
+### Other changes
+
+* Fixed the crash on `RouteOptions` initialization with url query items with invalid target coordinates parameters set. The failure pattern is:
+   * Use the `RouteOptions.init(waypoints:profileIdentifier:queryItems:)` initializer.
+   * Build options with wayipoints treated as a stops. More information here: [Silent waypoints](https://docs.mapbox.com/ios/navigation/guides/turn-by-turn-navigation/route-generation/#silent-waypoints)
+   * Provide optional parameter `waypoint_targets` query item with empty data for at least one waypoint. It may look like this: `waypoint_targets=;-86.790838,36.152884`. More information here: [Optional parameters](https://docs.mapbox.com/api/navigation/directions/#optional-parameters)
+ 
 ## v3.8.0-beta.1
 
 ### Packaging

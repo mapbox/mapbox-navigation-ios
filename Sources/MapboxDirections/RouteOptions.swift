@@ -95,10 +95,19 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
                 }
 
                 let coordinatesComponents = mappedValues[mappedValuesIndex].components(separatedBy: ",")
-                waypoints[waypointsIndex].targetCoordinate = LocationCoordinate2D(
-                    latitude: LocationDegrees(coordinatesComponents.last!)!,
-                    longitude: LocationDegrees(coordinatesComponents.first!)!
-                )
+
+                if coordinatesComponents.count >= 2,
+                   let latString = coordinatesComponents.last,
+                   let lonString = coordinatesComponents.first,
+                   let latDegrees = LocationDegrees(latString),
+                   let lonDegrees = LocationDegrees(lonString)
+                {
+                    waypoints[waypointsIndex].targetCoordinate = LocationCoordinate2D(
+                        latitude: latDegrees,
+                        longitude: lonDegrees
+                    )
+                }
+
                 waypointsIndex = waypoints.index(after: waypointsIndex)
                 mappedValuesIndex = mappedValues.index(after: mappedValuesIndex)
             }
