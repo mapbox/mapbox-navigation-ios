@@ -2,9 +2,11 @@
 
 ## v2.20.0
 
+* MapboxNavigation now requires minimim [MapboxMaps v10.19.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.19.0). ([#4750](https://github.com/mapbox/mapbox-navigation-ios/pull/4750))
+
 ### Audio
 
-* Improved AVAudioSession handling for playback of the reroute sound and voice instructions. Activation and deactivation of AVAudioSession no longer occur on the main thread, and these operations are synchronized. This eliminates UI freezes that occurred to a lesser extent during activation and to a greater extent during deactivation.
+* Improved `AVAudioSession` handling for playback of the reroute sound and voice instructions. Activation and deactivation of `AVAudioSession` no longer occur on the main thread, and these operations are synchronized. This eliminates UI freezes that occurred to a lesser extent during activation and to a greater extent during deactivation.
 
 ### API Deprecations
 

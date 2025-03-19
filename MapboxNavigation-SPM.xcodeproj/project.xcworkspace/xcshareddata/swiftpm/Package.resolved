@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {
           "branch": null,
-          "revision": "3ef6999c73b6938cc0da422f2c912d0158abb0a0",
-          "version": "2.2.0"
+          "revision": "07b2ba21d361c223e25e3c1e924288742923f08c",
+          "version": "2.2.1"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
         "state": {
           "branch": null,
-          "revision": "2ef56b2caf25f55fa7eef8784c30d5a767550f54",
-          "version": "2.2.1"
+          "revision": "0139c665ebb45e6a9fbdb68aabfd7c39f3fe0071",
+          "version": "2.2.2"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "c2aa7022afdcf5a070ace4e3b608562101a04690",
-          "version": "23.10.1"
+          "revision": "fb04cb619192455fbcb46efdb8c19d6f9e1433a9",
+          "version": "23.11.4"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "51f776b11bcff34ced88fcf14e4ed9c568257232",
-          "version": "10.18.0"
+          "revision": "95bb164a4ca016cb6fce3cdfb13c4902bf8b8c18",
+          "version": "10.19.2"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "8ef49bb140bbd5d51917f1e69d4c3949a176c009",
-          "version": "10.18.2"
+          "revision": "27d8d1c68455ef5f271ab07ce8da7a0b410b6688",
+          "version": "10.19.4"
         }
       },
       {
