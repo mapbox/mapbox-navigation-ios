@@ -2,6 +2,11 @@
 
 ## v3.8.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.11.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.11.0-rc.1).
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.0.0-rc.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.0.0-rc.2).
+
 ### Other changes
 
 * Fixed the crash on `RouteOptions` initialization with url query items with invalid target coordinates parameters set. The failure pattern is:

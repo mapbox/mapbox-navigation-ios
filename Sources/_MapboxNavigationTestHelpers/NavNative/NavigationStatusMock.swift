@@ -42,7 +42,8 @@ extension NavigationStatus {
         isSyntheticLocation: Bool = false,
         correctedLocationData: CorrectedLocationData? = nil,
         hdMatchingResult: HdMatchingResult? = nil,
-        mapMatchedSystemTime: Date = NavigationStatus.date
+        mapMatchedSystemTime: Date = NavigationStatus.date,
+        isAdasDataAvailable: NSNumber? = nil
     ) -> Self {
         let fixLocation = FixLocation(location)
         return .init(
@@ -79,7 +80,8 @@ extension NavigationStatus {
             isSyntheticLocation: isSyntheticLocation,
             correctedLocationData: correctedLocationData,
             hdMatchingResult: hdMatchingResult,
-            mapMatchedSystemTime: mapMatchedSystemTime
+            mapMatchedSystemTime: mapMatchedSystemTime,
+            isAdasDataAvailable: isAdasDataAvailable
         )
     }
 

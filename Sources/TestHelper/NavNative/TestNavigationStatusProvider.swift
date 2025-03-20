@@ -70,7 +70,8 @@ public enum TestNavigationStatusProvider {
         voiceInstruction: VoiceInstruction? = nil,
         bannerInstruction: BannerInstruction? = nil,
         activeGuidanceInfo: ActiveGuidanceInfo? = nil,
-        upcomingRouteAlertUpdates: [UpcomingRouteAlertUpdate] = []
+        upcomingRouteAlertUpdates: [UpcomingRouteAlertUpdate] = [],
+        isAdasDataAvailable: NSNumber? = nil
     )
     -> NavigationStatus {
         let fixLocation = FixLocation(location ?? CLLocation(latitude: 37.788443, longitude: -122.4020258))
@@ -118,7 +119,8 @@ public enum TestNavigationStatusProvider {
             isSyntheticLocation: false,
             correctedLocationData: nil,
             hdMatchingResult: nil,
-            mapMatchedSystemTime: date
+            mapMatchedSystemTime: date,
+            isAdasDataAvailable: isAdasDataAvailable
         )
     }
 
