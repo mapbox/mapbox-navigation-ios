@@ -5,7 +5,7 @@ import MapboxCommon_Private
 import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
-public class MapboxNavigationProvider {
+public final class MapboxNavigationProvider {
     let multiplexLocationClient: MultiplexLocationClient
 
     public var skuTokenProvider: SkuTokenProvider {
