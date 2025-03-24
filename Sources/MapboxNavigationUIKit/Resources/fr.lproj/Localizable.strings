@@ -61,24 +61,6 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Réactiver le son";
 
-/* Specific route feedback that audio guidance provided was confusing. */
-"CONFUSING_AUDIO_FEEDBACK" = "Confusing audio";
-
-/* Specific route feedback that audio guidance was provided too early before a maneuever. */
-"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Guidance too early";
-
-/* Specific route feedback that audio guidance was provided too late for a maneuever. */
-"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Guidance too late";
-
-/* Specific route feedback that audio guidance instruction is missing */
-"CONFUSING_AUDIO_INSTRUCTION_MISSING_FEEDBACK" = "Instruction missing";
-
-/* Specific route feedback that audio guidance used incorrect pronunciation. */
-"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciation incorrect";
-
-/* Specific route feedback that audio guidance repeated a road name. */
-"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Road name repeated";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Fermer";
 
@@ -110,31 +92,10 @@
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
 
 /* Specific route feedback that a speed limit is incorrect. */
-"INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+"WRONG_SPEED_LIMIT" = "Wrong speed limit";
 
-/* Specific route feedback that an exit was incorrect. */
-"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Exit info incorrect";
-
-/* General category of route feedback where visual instruction was incorrect. */
-"INCORRECT_VISUAL_FEEDBACK" = "Looks incorrect";
-
-/* Specific route feedback that an instruction was missing. */
-"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Instruction missing";
-
-/* Specific route feedback for an unnecessary instruction. */
-"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Instruction unnecessary";
-
-/* Specific route feedback that the wrong lane was specified. */
-"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Lane guidance incorrect";
-
-/* Specific route feedback that a maneuver specified was incorrect. */
-"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maneuver incorrect";
-
-/* Specific route feedback for incorrect street name. */
-"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Street name incorrect";
-
-/* Specific route feedback for incorrect turn arrow being shown. */
-"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Turn icon incorrect";
+/* General route feedback. */
+"OTHER" = "Other";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ et %2$@";
@@ -155,40 +116,22 @@
 "NO_RATING" = "Pas encore d'evaluation.";
 
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
 
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Looks incorrect";
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
 
-/* Specific route feedback that a speed limit is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
 
-/* Specific route feedback for incorrect street name. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Street name incorrect";
-
-/* General category of feedback where there is an issue on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Road issue";
-
-/* Feedback that map shows a non-existant road. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Missing road";
-
-/* Feedback that a street is permanently blocked off. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Street permanently blocked off";
-
-/* Feedback that a street is temporarily blocked off. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Street temporarily blocked off";
-
-/* Feedback that there is a congestion on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";
-
-/* Feedback that there is a moderate traffic on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Moderate";
-
-/* Feedback that there is no traffic on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
 
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Wrong traffic";
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
+
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
 
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Positioning";
@@ -217,44 +160,38 @@
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
 
-/* General category of route feedback where route quality was poor. */
-"ROUTE_QUALITY_FEEDBACK" = "Route quality";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
 
-/* Specific route feedback that route suggested an illegal roadway. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Cars not allowed on street";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
+
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
+
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
+
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
 
 /* General route feedback that route contained illegal instructions. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
 
-/* Specific route feedback that route travelled wrong way on a one-way road. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Routed down a one way";
-
 /* Specific route feedback that route suggested an illegal turn. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
 
-/* Specific route feedback that route contained non-existant roads. */
-"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Route includes missing roads";
-
-/* Specific route feedback that route was not drivable. */
-"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Route non drivable";
-
-/* Specific route feedback that route was not ideal according to user. */
-"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Route not preferred";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
 
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
 
-/* Specifc route feedback that route contained road that is permanently closed. */
-"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Street permanently blocked off";
-
-/* Specific route feedback that route contained impassible, narrow roads. */
-"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Route had roads too narrow to pass";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
 
 /* Alternatives selection note about equal travel distance. */
 "SAME_DISTANCE" = "Same distance";
-
-/* Alternatives selection note about equal travel time. */
-"SAME_TIME" = "Same time";
 
 /* Alternatives selection note about a shorter route distance in any unit. */
 "SHORTER_ALTERNATIVE" = "%@ shorter";

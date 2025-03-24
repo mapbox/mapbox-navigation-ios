@@ -61,24 +61,6 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Dejar de silenciar";
 
-/* Specific route feedback that audio guidance provided was confusing. */
-"CONFUSING_AUDIO_FEEDBACK" = "Audio confuso";
-
-/* Specific route feedback that audio guidance was provided too early before a maneuever. */
-"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Instrucciones tempranas";
-
-/* Specific route feedback that audio guidance was provided too late for a maneuever. */
-"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Instrucciones tardes";
-
-/* Specific route feedback that audio guidance instruction is missing */
-"CONFUSING_AUDIO_INSTRUCTION_MISSING_FEEDBACK" = "Faltan instrucciones";
-
-/* Specific route feedback that audio guidance used incorrect pronunciation. */
-"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciación incorrecta";
-
-/* Specific route feedback that audio guidance repeated a road name. */
-"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Nombre de calle repetido";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
 
@@ -110,31 +92,7 @@
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Ajustar el volumen para escuchar las instrucciones";
 
 /* Specific route feedback that a speed limit is incorrect. */
-"INCORRECT_SPEED_LIMIT" = "Límite de velocidad incorrecto";
-
-/* Specific route feedback that an exit was incorrect. */
-"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Detalles de la salida incorrectos";
-
-/* General category of route feedback where visual instruction was incorrect. */
-"INCORRECT_VISUAL_FEEDBACK" = "Parece incorrecto";
-
-/* Specific route feedback that an instruction was missing. */
-"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Faltan instrucciones";
-
-/* Specific route feedback for an unnecessary instruction. */
-"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Instrucción innecessaria";
-
-/* Specific route feedback that the wrong lane was specified. */
-"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Guiado de carriles incorrecto";
-
-/* Specific route feedback that a maneuver specified was incorrect. */
-"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maniobra incorrecta";
-
-/* Specific route feedback for incorrect street name. */
-"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Nombre de calle incorrecto";
-
-/* Specific route feedback for incorrect turn arrow being shown. */
-"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Icono de giro incorrecto";
+"WRONG_SPEED_LIMIT" = "Límite de velocidad incorrecto";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ y %2$@";
@@ -155,40 +113,28 @@
 "NO_RATING" = "No hay calificación.";
 
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
 
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Parece incorrecto";
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Parece incorrecto";
 
 /* Specific route feedback that a speed limit is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Límite de velocidad incorrecto";
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Límite de velocidad incorrecto";
 
-/* Specific route feedback for incorrect street name. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Nombre de calle incorrecto";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Accidente de tráfico";
 
-/* General category of feedback where there is an issue on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Problema del camino";
-
-/* Feedback that map shows a non-existant road. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Falta camino";
-
-/* Feedback that a street is permanently blocked off. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Calle cerrada permanentemente";
-
-/* Feedback that a street is temporarily blocked off. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Calle cerrada temporalmente";
-
-/* Feedback that there is a congestion on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";
-
-/* Feedback that there is a moderate traffic on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Moderate";
-
-/* Feedback that there is no traffic on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Cámara de velocidad";
 
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Wrong traffic";
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
+
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Otro";
+
+/* General route feedback. */
+"OTHER" = "Otro";
 
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Posicionamiento";
@@ -217,44 +163,38 @@
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Ruta alternativa inesperada";
 
-/* General category of route feedback where route quality was poor. */
-"ROUTE_QUALITY_FEEDBACK" = "Calidad de la ruta";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
 
-/* Specific route feedback that route suggested an illegal roadway. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "El tránsito de autos no está permitido en la calle";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
+
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Guiado de carriles incorrecto";
+
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
+
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
 
 /* General route feedback that route contained illegal instructions. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Ruta no permitida";
 
-/* Specific route feedback that route travelled wrong way on a one-way road. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "La ruta sigue contra un sentido único";
-
 /* Specific route feedback that route suggested an illegal turn. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "No se permite girar";
 
-/* Specific route feedback that route contained non-existant roads. */
-"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "La ruta incluye calles faltantes";
-
-/* Specific route feedback that route was not drivable. */
-"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "La ruta es intransitable";
-
-/* Specific route feedback that route was not ideal according to user. */
-"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "No es la ruta preferida";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Ruta incorrecta";
 
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Camino cerrado";
 
-/* Specifc route feedback that route contained road that is permanently closed. */
-"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Calle cerrada permanentemente";
-
-/* Specific route feedback that route contained impassible, narrow roads. */
-"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "La ruta tiene caminos angostos al tránsito";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Calle cerrada";
 
 /* Alternatives selection note about equal travel distance. */
 "SAME_DISTANCE" = "Same distance";
-
-/* Alternatives selection note about equal travel time. */
-"SAME_TIME" = "Same time";
 
 /* Alternatives selection note about a shorter route distance in any unit. */
 "SHORTER_ALTERNATIVE" = "%@ shorter";

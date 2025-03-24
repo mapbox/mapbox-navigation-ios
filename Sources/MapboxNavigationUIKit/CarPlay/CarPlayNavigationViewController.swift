@@ -145,7 +145,8 @@ open class CarPlayNavigationViewController: UIViewController {
                         timeDeltaText
                     ),
                     equal: "SAME_TIME".localizedString(
-                        value: "Same time",
+                        value: "Similar ETA",
+                        defaultBundle: .mapboxNavigationUXCore,
                         comment: "Alternatives selection note about equal travel time."
                     )
                 )

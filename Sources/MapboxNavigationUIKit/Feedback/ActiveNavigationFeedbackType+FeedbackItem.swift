@@ -2,35 +2,32 @@ import MapboxNavigationCore
 import UIKit
 
 extension ActiveNavigationFeedbackType {
-    // TODO: Localize these strings
     var title: String {
         switch self {
         case .closure:
-            return "Closure"
-        case .poorRoute:
-            return "Poor route"
+            return "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK".localizedString(value: "Closure")
+        case .badRoute, .poorRoute:
+            return "ROUTE_QUALITY_POOR_ROUTE_FEEDBACK".localizedString(value: "Poor route")
         case .wrongSpeedLimit:
-            return "Wrong speed limit"
-        case .badRoute:
-            return "Bad route"
+            return "WRONG_SPEED_LIMIT".localizedString(value: "Wrong speed limit")
         case .illegalTurn:
-            return "Illegal turn"
+            return "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK".localizedString(value: "Illegal turn")
         case .roadClosed:
-            return "Road closed"
+            return "ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK".localizedString(value: "Road closed")
         case .incorrectLaneGuidance:
-            return "Incorrect lane guidance"
+            return "ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK".localizedString(value: "Incorrect lane guidance")
         case .other:
-            return "Other"
+            return "OTHER".localizedString(value: "Other")
         case .arrival:
-            return "Arrival"
+            return "ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK".localizedString(value: "Arrival")
         case .falsePositiveTraffic:
-            return "FP Traffic"
+            return "ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK".localizedString(value: "FP Traffic")
         case .falseNegativeTraffic:
-            return "FN Traffic"
+            return "ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK".localizedString(value: "FN Traffic")
         case .missingConstruction:
-            return "Missing Construction"
+            return "ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK".localizedString(value: "Missing Construction")
         case .missingSpeedLimit:
-            return "Missing speed limit"
+            return "ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK".localizedString(value: "Missing speed limit")
         }
     }
 
