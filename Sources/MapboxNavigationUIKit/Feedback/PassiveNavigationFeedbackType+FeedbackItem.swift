@@ -5,19 +5,19 @@ extension PassiveNavigationFeedbackType {
     var title: String {
         switch self {
         case .poorGPS:
-            return "Poor GPS"
+            return "PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS".localizedString(value: "Poor GPS")
         case .incorrectMapData:
-            return "Incorrect map data"
+            return "PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA".localizedString(value: "Incorrect map data")
         case .accident:
-            return "Accident"
+            return "PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT".localizedString(value: "Accident")
         case .camera:
-            return "Camera"
+            return "PASSIVE_NAVIGATION_FEEDBACK_CAMERA".localizedString(value: "Camera")
         case .traffic:
-            return "Traffic"
+            return "PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC".localizedString(value: "Traffic")
         case .wrongSpeedLimit:
-            return "Wrong speed limit"
+            return "PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT".localizedString(value: "Wrong speed limit")
         case .other:
-            return "Other"
+            return "PASSIVE_NAVIGATION_FEEDBACK_OTHER".localizedString(value: "Other")
         }
     }
 
