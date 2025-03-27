@@ -40,7 +40,8 @@ public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
             utilizeSensorData: true,
             historyDirectoryURL: nil,
             initialManeuverAvoidanceRadius: 8,
-            locale: .current
+            locale: .current,
+            rerouteStrategyForMatchRoute: .rerouteDisabled
         )
 
         super.init(

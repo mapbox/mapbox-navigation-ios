@@ -95,18 +95,19 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         let routeRequest = Directions.url(forCalculating: options, credentials: routeResponse.credentials)
             .absoluteString
 
-        let parsedRoutes = RouteParser.parseDirectionsResponse(
-            forResponseDataRef: .init(data: routeData),
-            request: routeRequest,
-            routeOrigin: responseOrigin
+        let routeParserClient = Environment.shared.routeParserClient
+        let parsedRoutes = routeParserClient.parseDirectionsResponseForResponseDataRef(
+            .init(data: routeData),
+            routeRequest,
+            responseOrigin
         )
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
            routes.indices.contains(routeIndex)
         {
-            let routesData = RouteParser.createRoutesData(
-                forPrimaryRoute: routes.remove(at: routeIndex),
-                alternativeRoutes: routes
+            let routesData = routeParserClient.createRoutesData(
+                routes.remove(at: routeIndex),
+                routes
             )
             let navigationRoutes = try NavigationRoutes(routesData: routesData, routeResponse: routeResponse)
             self = navigationRoutes
@@ -124,10 +125,97 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         }
     }
 
+    init(
+        mapMatchingResponse: MapMatchingResponse,
+        routeIndex: Int,
+        responseOrigin: RouterOrigin
+    ) async throws {
+        let options = mapMatchingResponse.options
+        let credentials = mapMatchingResponse.credentials
+
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = options
+        encoder.userInfo[.credentials] = credentials
+
+        let responseData = try encoder.encode(mapMatchingResponse)
+
+        let request = Directions.url(forCalculating: options, credentials: credentials).absoluteString
+
+        let routeParserClient = Environment.shared.routeParserClient
+        let parsedRoutes = routeParserClient.parseMapMatchingResponseForResponseDataRef(
+            .init(data: responseData),
+            request,
+            responseOrigin
+        )
+
+        if parsedRoutes.isValue(),
+           var routes = parsedRoutes.value as? [RouteInterface],
+           routes.indices.contains(routeIndex)
+        {
+            let routesData = routeParserClient.createRoutesData(
+                routes.remove(at: routeIndex),
+                routes
+            )
+
+            let routeResponse = try RouteResponse(
+                matching: mapMatchingResponse,
+                options: options,
+                credentials: credentials
+            )
+
+            let routes = routeResponse.routes ?? []
+
+            guard !routes.isEmpty else {
+                Log.error("Unable to get routes", category: .navigation)
+                throw NavigationRoutesError.emptyRoutes
+            }
+
+            guard routes.count == routesData.alternativeRoutes().count + 1 else {
+                Log.error("Routes mismatched", category: .navigation)
+                throw NavigationRoutesError.incorrectRoutesNumber
+            }
+
+            let mainRoute = routes[Int(routesData.primaryRoute().getRouteIndex())]
+
+            let waypoints = routeResponse.waypoints ?? []
+
+            var alternativeRoutes = [AlternativeRoute]()
+            for routeAlternative in routesData.alternativeRoutes() {
+                guard let alternativeRoute = AlternativeRoute(
+                    mainRoute: mainRoute,
+                    alternativeRoute: routes[Int(routeAlternative.route.getRouteIndex())],
+                    nativeRouteAlternative: routeAlternative
+                ) else {
+                    Log.error(
+                        "Unable to convert alternative route with id: \(routeAlternative.id)",
+                        category: .navigation
+                    )
+                    continue
+                }
+                alternativeRoutes.append(alternativeRoute)
+            }
+
+            self.mainRoute = NavigationRoute(route: mainRoute, nativeRoute: routesData.primaryRoute())
+            self.waypoints = waypoints
+            self.allAlternativeRoutesWithIgnored = alternativeRoutes
+            self.foreignMembers = mapMatchingResponse.foreignMembers
+
+        } else if parsedRoutes.isError(),
+                  let error = parsedRoutes.error
+        {
+            Log.error("Failed to parse routes with error: \(error)", category: .navigation)
+            throw NavigationRoutesError.responseParsingError(description: error as String)
+        } else {
+            Log.error("Unexpected error during routes parsing.", category: .navigation)
+            throw NavigationRoutesError.unknownError
+        }
+    }
+
     func asRoutesData() -> RoutesData {
-        return RouteParser.createRoutesData(
-            forPrimaryRoute: mainRoute.nativeRoute,
-            alternativeRoutes: alternativeRoutes.map(\.nativeRoute)
+        let routeParserClient = Environment.shared.routeParserClient
+        return routeParserClient.createRoutesData(
+            mainRoute.nativeRoute,
+            alternativeRoutes.map(\.nativeRoute)
         )
     }
 
@@ -174,9 +262,9 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
 
         let alternativeRoute = alternativeRoutes.remove(at: index)
 
-        let routesData = RouteParser.createRoutesData(
-            forPrimaryRoute: alternativeRoute.nativeRoute,
-            alternativeRoutes: alternativeRoutes.map(\.nativeRoute) + [mainRoute.nativeRoute]
+        let routesData = Environment.shared.routeParserClient.createRoutesData(
+            alternativeRoute.nativeRoute,
+            alternativeRoutes.map(\.nativeRoute) + [mainRoute.nativeRoute]
         )
 
         let newMainRoute = NavigationRoute(route: alternativeRoute.route, nativeRoute: alternativeRoute.nativeRoute)

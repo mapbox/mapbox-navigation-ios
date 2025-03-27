@@ -20,6 +20,11 @@ public struct RerouteConfig: Equatable {
     /// Reroute detecting is enabled by default.
     public var detectsReroute: Bool
 
+    /// Reroute strategy for Map Matching API routes.
+    ///
+    /// Defaults to ``RerouteStrategyForMatchRoute/rerouteDisabled``.
+    public var rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute
+
     public typealias UrlOptionsCustomization = EquatableClosure<String, String>
 
     /// Optional customization callback triggered on reroute attempts.
@@ -29,26 +34,37 @@ public struct RerouteConfig: Equatable {
     public var urlOptionsCustomization: UrlOptionsCustomization?
 
     @available(*, deprecated, message: """
-    Use init(detectsReroute:urlOptionsCustomization:) instead. Using optionsCustomization may lead to losing custom
-    query items at reroutes.
+    Use init(detectsReroute:rerouteStrategyForMatchRoute:urlOptionsCustomization:) instead. 
+    Using optionsCustomization may lead to losing custom query items at reroutes.
     """)
     public init(
         detectsReroute: Bool = true,
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled,
         optionsCustomization: OptionsCustomization? = nil
     ) {
         self.detectsReroute = detectsReroute
+        self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
         self.optionsCustomization = optionsCustomization
     }
 
     public init(
         detectsReroute: Bool = true,
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled,
         urlOptionsCustomization: UrlOptionsCustomization? = nil
     ) {
         self.detectsReroute = detectsReroute
+        self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
         self.urlOptionsCustomization = urlOptionsCustomization
     }
 
-    public init(detectsReroute: Bool = true) {
-        self.init(detectsReroute: detectsReroute, urlOptionsCustomization: nil)
+    public init(
+        detectsReroute: Bool = true,
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled
+    ) {
+        self.init(
+            detectsReroute: detectsReroute,
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute,
+            urlOptionsCustomization: nil
+        )
     }
 }

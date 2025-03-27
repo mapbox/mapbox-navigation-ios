@@ -5,14 +5,9 @@ struct AudioPlayerClient: Sendable {
     var load: @Sendable (_ sounds: [URL]) async throws -> Void
 }
 
-@globalActor actor AudioPlayerActor {
-    static let shared = AudioPlayerActor()
-}
-
 extension AudioPlayerClient {
-    @AudioPlayerActor
-    static func liveValue() -> AudioPlayerClient {
-        let audioActor = AudioActor()
+    static var liveValue: AudioPlayerClient {
+        let audioActor = AudioPlayerActor()
         return Self(
             play: { sound in
                 try await audioActor.play(sound: sound)
@@ -24,7 +19,7 @@ extension AudioPlayerClient {
     }
 }
 
-private actor AudioActor {
+actor AudioPlayerActor {
     enum Failure: Error {
         case soundIsPlaying(URL)
         case soundNotLoaded(URL)

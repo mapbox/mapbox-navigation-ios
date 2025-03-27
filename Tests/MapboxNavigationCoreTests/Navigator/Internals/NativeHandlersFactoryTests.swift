@@ -157,9 +157,18 @@ final class NativeHandlersFactoryTests: XCTestCase {
         XCTAssertEqual(nativeIncidentsOptions?.apiUrl, incidentsOptions.apiURL?.absoluteString)
     }
 
+    func testConfigureRerouteStrategyForMatchRoute() {
+        let strategy: MapboxNavigationCore.RerouteStrategyForMatchRoute = .navigateToFinalDestination
+        factory = nativeHandlersFactory(rerouteStrategyForMatchRoute: strategy)
+        _ = factory.configHandle(by: ConfigFactorySpy.self)
+        let navigatorConfig = ConfigFactorySpy.passedConfig!
+        XCTAssertEqual(navigatorConfig.rerouteStrategyForMatchRoute, strategy.nativeValue)
+    }
+
     private func nativeHandlersFactory(
         liveIncidentsOptions: IncidentsConfig? = nil,
         navigatorPredictionInterval: TimeInterval? = nil,
+        rerouteStrategyForMatchRoute: MapboxNavigationCore.RerouteStrategyForMatchRoute = .rerouteDisabled,
         statusUpdatingSettings: StatusUpdatingSettings? = nil
     ) -> NativeHandlersFactory {
         NativeHandlersFactory(
@@ -173,7 +182,8 @@ final class NativeHandlersFactoryTests: XCTestCase {
             utilizeSensorData: true,
             historyDirectoryURL: nil,
             initialManeuverAvoidanceRadius: 12,
-            locale: .current
+            locale: .current,
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )
     }
 }

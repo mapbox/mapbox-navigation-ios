@@ -36,6 +36,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         }
     }
 
+    var rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute
+
     init(
         tileStorePath: String,
         apiConfiguration: ApiConfiguration,
@@ -50,7 +52,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
         utilizeSensorData: Bool,
         historyDirectoryURL: URL?,
         initialManeuverAvoidanceRadius: TimeInterval,
-        locale: Locale
+        locale: Locale,
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute
     ) {
         self.tileStorePath = tileStorePath
         self.apiConfiguration = apiConfiguration
@@ -67,6 +70,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.historyDirectoryURL = historyDirectoryURL
         self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
         self.locale = locale
+        self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
     }
 
     func targeting(version: String?) -> NativeHandlersFactory {
@@ -84,7 +88,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
             utilizeSensorData: utilizeSensorData,
             historyDirectoryURL: historyDirectoryURL,
             initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
-            locale: locale
+            locale: locale,
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )
     }
 
@@ -214,7 +219,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
             incidentsOptions: nativeIncidentsOptions,
             noSignalSimulationEnabled: nil,
             useSensors: NSNumber(booleanLiteral: utilizeSensorData),
-            rerouteStrategyForMatchRoute: .rerouteDisabled // TODO: support rerouteStrategyForMatchRoute
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute.nativeValue
         )
     }
 

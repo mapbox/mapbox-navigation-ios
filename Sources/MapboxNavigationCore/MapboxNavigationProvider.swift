@@ -227,7 +227,8 @@ public final class MapboxNavigationProvider {
         utilizeSensorData: coreConfig.utilizeSensorData,
         historyDirectoryURL: coreConfig.historyRecordingConfig?.historyDirectoryURL,
         initialManeuverAvoidanceRadius: coreConfig.routingConfig.initialManeuverAvoidanceRadius,
-        locale: coreConfig.locale
+        locale: coreConfig.locale,
+        rerouteStrategyForMatchRoute: coreConfig.routingConfig.rerouteConfig.rerouteStrategyForMatchRoute
     )
 
     private lazy var _historyRecorder: HistoryRecording? = {

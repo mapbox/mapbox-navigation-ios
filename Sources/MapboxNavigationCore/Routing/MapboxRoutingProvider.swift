@@ -4,9 +4,6 @@ import MapboxDirections
 import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
-/// RouterInterface from MapboxNavigationNative.
-typealias RouterInterfaceNative = MapboxNavigationNative_Private.RouterInterface
-
 struct RoutingProviderConfiguration: Sendable {
     var source: RoutingProviderSource
     var nativeHandlersFactory: NativeHandlersFactory
@@ -31,14 +28,15 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
     // MARK: Performing and Parsing Requests
 
-    private lazy var router: RouterInterfaceNative = {
+    private lazy var routerClient: RouterClient = {
         let factory = configuration.nativeHandlersFactory
-        return RouterFactory.build(
+        let router = RouterFactory.build(
             for: configuration.source.nativeSource,
             cache: factory.cacheHandle,
             config: factory.configHandle(),
             historyRecorder: factory.historyRecorderHandle
         )
+        return Environment.shared.routerProviderClient.build(router)
     }()
 
     struct ResponseDisposition: Decodable {
@@ -113,13 +111,9 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
             try Task.checkCancellation()
 
             switch result {
-            case .success(let routeResponse):
+            case .success(let mapMatchingResponse):
                 guard let navigationRoutes = try? await NavigationRoutes(
-                    routeResponse: RouteResponse(
-                        matching: routeResponse,
-                        options: options,
-                        credentials: .init(sendableSelf.value.configuration.nativeHandlersFactory.apiConfiguration)
-                    ),
+                    mapMatchingResponse: mapMatchingResponse,
                     routeIndex: 0,
                     responseOrigin: origin
                 ) else {
@@ -136,19 +130,35 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
         ResponseType,
         DirectionsError
     >, RouterOrigin) {
-        let directionsUri = Directions.url(forCalculating: options, credentials: configuration.credentials)
+        let uri = Directions.url(forCalculating: options, credentials: configuration.credentials)
             .removingSKU().absoluteString
+
         let (result, origin) = await withCheckedContinuation { continuation in
-            let routeSignature = GetRouteSignature(reason: .newRoute, origin: .platformSDK, comment: "")
-            router.getRouteForDirectionsUri(
-                directionsUri,
-                options: GetRouteOptions(timeoutSeconds: nil),
-                caller: routeSignature
-            ) { (
-                result: Expected<DataRef, NSArray>,
-                origin: RouterOrigin
-            ) in
-                continuation.resume(returning: (result, origin))
+            let getRouteOptions = GetRouteOptions(timeoutSeconds: nil)
+            let getRouteSignature = GetRouteSignature(reason: .newRoute, origin: .platformSDK, comment: "")
+
+            if options is MatchOptions {
+                _ = routerClient.getRouteMapMatchedFor(
+                    uri,
+                    getRouteOptions
+                ) { (
+                    result: Expected<DataRef, NSArray>,
+                    origin: RouterOrigin
+                ) in
+                    continuation.resume(returning: (result, origin))
+                }
+
+            } else {
+                _ = routerClient.getRouteForDirectionsUri(
+                    uri,
+                    getRouteOptions,
+                    getRouteSignature
+                ) { (
+                    result: Expected<DataRef, NSArray>,
+                    origin: RouterOrigin
+                ) in
+                    continuation.resume(returning: (result, origin))
+                }
             }
         }
 

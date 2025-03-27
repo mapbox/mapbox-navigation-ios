@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* Added `RerouteConfig.rerouteStrategyForMatchRoute` to configure rerouting behavior with map-matched routes.
+
 ## v3.8.0
 
 ### Other changes

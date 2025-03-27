@@ -111,7 +111,7 @@ public final class RouteVoiceController {
         }
 
         do {
-            let successful = try await Current.audioPlayerClient.play(rerouteSoundUrl)
+            let successful = try await Environment.shared.audioPlayerClient.play(rerouteSoundUrl)
             if !successful {
                 Log.error("RouteVoiceController: Failed to play sound for reroute", category: .audio)
             }
@@ -126,7 +126,7 @@ public final class RouteVoiceController {
         Task {
             do {
                 guard let rerouteSoundUrl = Bundle.mapboxNavigationUXCore.rerouteSoundUrl else { return }
-                try await Current.audioPlayerClient.load([rerouteSoundUrl])
+                try await Environment.shared.audioPlayerClient.load([rerouteSoundUrl])
             } catch {
                 Log.error("RouteVoiceController: Failed to load sound for reroute", category: .navigation)
             }
