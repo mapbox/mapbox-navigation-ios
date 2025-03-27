@@ -1,21 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>RATING_ACCESSIBILITY_SET</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>RATING_STARS_FORMAT</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>NAVIGATION_REPORT_ISSUES</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-	</dict>
-</dict>
+  <dict>
+    <key>RATING_ACCESSIBILITY_SET</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>zero</key>
+        <string>تعيين تقييم %ld نجوم</string>
+        <key>one</key>
+        <string>تعيين تقييم %ld نجمة</string>
+        <key>two</key>
+        <string>تعيين تقييم %ld نجوم</string>
+        <key>few</key>
+        <string>تعيين تقييم %ld نجوم</string>
+        <key>many</key>
+        <string>تعيين تقييم %ld نجمة</string>
+        <key>other</key>
+        <string>تعيين تقييم %ld نجمة</string>
+      </dict>
+    </dict>
+    <key>RATING_STARS_FORMAT</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>zero</key>
+        <string>%ld مجموعة نجوم.</string>
+        <key>one</key>
+        <string>تم تعيين %ld نجمة.</string>
+        <key>two</key>
+        <string>تم تعيين %ld نجمتين.</string>
+        <key>few</key>
+        <string>تم تعيين %ld نجوم.</string>
+        <key>many</key>
+        <string>تم تعيين %ld نجمة.</string>
+        <key>other</key>
+        <string>تم تعيين %ld نجمة.</string>
+      </dict>
+    </dict>
+    <key>NAVIGATION_REPORT_ISSUES</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@items@</string>
+      <key>items</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>zero</key>
+        <string>إرسال 1 عنصر</string>
+        <key>one</key>
+        <string>إرسال عنصر واحد</string>
+        <key>two</key>
+        <string>إرسال عنصرين</string>
+        <key>few</key>
+        <string>إرسال %ld عناصر</string>
+        <key>many</key>
+        <string>إرسال %ld عنصرًا</string>
+        <key>other</key>
+        <string>إرسال %ld عنصر</string>
+      </dict>
+    </dict>
+  </dict>
 </plist>

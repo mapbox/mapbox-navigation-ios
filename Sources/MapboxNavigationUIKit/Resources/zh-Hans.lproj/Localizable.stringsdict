@@ -12,10 +12,5 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@stars@</string>
 	</dict>
-	<key>NAVIGATION_REPORT_ISSUES</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-	</dict>
 </dict>
 </plist>

@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Ei tietulleja";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Tietullit";
 /* Alternatives selection note about equal travel time. */
-"SAME_TIME" = "Samanlainen arvioitu saapumisaika";
+"SAME_TIME" = "Samanlainen ETA";

@@ -1,0 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "통행료 없음";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "통행료";
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "비슷한 ETA";

@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Inga vägtullar";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Vägtullar";
 /* Alternatives selection note about equal travel time. */
-"SAME_TIME" = "Liknande ankomsttid";
+"SAME_TIME" = "Liknande ETA";

@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.8.0
+
+### Other changes
+
+* Updated localized strings, replaced English values in translations.
+
 ## v3.8.0-rc.1
 
 ### Packaging

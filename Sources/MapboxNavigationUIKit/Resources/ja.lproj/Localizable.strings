@@ -1,213 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
-"BACK" = "Back";
-
+"BACK" = "戻る";
 /* Title for alternatives selection list button */
-"CARPLAY_ALTERNATIVES" = "Alternatives";
-
+"CARPLAY_ALTERNATIVES" = "代替案";
 /* Subtitle for the alternative list template empty variants */
-"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
-
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "代替ルートが見つかりませんでした。";
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "目的地に到着しました";
-
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "ご希望の操作を教えて下さい";
-
 /* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "Continue";
-
+"CARPLAY_CONTINUE" = "続行";
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "現在地";
-
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "閉じる";
-
 /* Title for end navigation button */
 "CARPLAY_END" = "終了";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "ナビゲーションを終了する";
-
 /* Title for feedback template in CarPlay */
 "CARPLAY_FEEDBACK" = "フィードバック";
-
 /* Title for start button in CPTripPreviewTextConfiguration */
 "CARPLAY_GO" = "発車する";
-
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "他のルートを表示";
-
 /* Title for mute button */
 "CARPLAY_MUTE" = "消音";
-
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "全体を見る";
-
 /* Title for trip preview back button */
 "CARPLAY_PREVIEW_BACK" = "Back";
-
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "乗車の評価を行う";
-
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "乗車の評価を行う";
-
+"CARPLAY_RATE_TRIP" = "今回の乗車の評価を行う";
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "提出済み";
-
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "音声を出す";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "閉じる";
-
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "目的地に到着しました";
-
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "改善点を教えてください";
-
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
-"FASTER_ALTERNATIVE" = "%@ faster";
-
+"FASTER_ALTERNATIVE" = "%@もっと早く";
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "より早い経路が見つかりました";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "フィードバックにご協力頂きありがとうございました";
-
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "問題を報告する";
-
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
-
 /* Specific route feedback that a speed limit is incorrect. */
-"WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"WRONG_SPEED_LIMIT" = "速度制限が間違っている";
 /* General route feedback. */
-"OTHER" = "Other";
-
+"OTHER" = "その他";
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@と%2$@";
-
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "%@より小さい";
-
 /* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "%@ longer";
-
+"LONGER_ALTERNATIVE" = "%@長くなりました";
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Cancel";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
-
+"NAVIGATION_REPORT_CANCEL" = "キャンセル";
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "評価レートがありません";
-
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
-
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPSが貧弱";
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
-
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "地図データが正しくありません";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "事故";
 /* Specific route feedback that a speed limit is wrong. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "速度制限が間違っている";
 /* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
-
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "カメラ";
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "交通";
 /* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
-
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Positioning";
-
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "その他";
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "タップすることで評価レートを０にできます";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "%ld つ星のレートをつける";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld つ星のレート";
-
 /* Indicates that rerouting is in progress */
-"REROUTING" = "経路を再検索中です…";
-
+"REROUTING" = "ルートを再計算中…";
 /* Button title for resume tracking */
 "RESUME" = "再開する";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
-
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
-
 /* False positive Traffic. */
-"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
-
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FPトラフィック";
 /* False negative Traffic. */
-"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
-
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FNトラフィック";
 /* Specific route feedback that the lane guidance was incorrect. */
-"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
-
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "誤った車線案内";
 /* Specific route feedback that construction works were missing. */
-"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
-
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "欠落した建設";
 /* Specific route feedback that a speed limit was missing. */
-"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
-
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "速度制限がない";
 /* General route feedback that route contained illegal instructions. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "違法ルート";
 /* Specific route feedback that route suggested an illegal turn. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "違法な方向転換";
 /* Specific route feedback that route was not good enough. */
-"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
-
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "悪いルート";
 /* General route feedback that route contained closed road. */
-"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
-
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "閉鎖";
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "通行止め";
 /* Alternatives selection note about equal travel distance. */
-"SAME_DISTANCE" = "Same distance";
-
+"SAME_DISTANCE" = "同じ距離";
 /* Alternatives selection note about a shorter route distance in any unit. */
-"SHORTER_ALTERNATIVE" = "%@ shorter";
-
+"SHORTER_ALTERNATIVE" = "%@短い";
 /* Alternatives selection note about a slower route time interval in any unit. */
-"SLOWER_ALTERNATIVE" = "%@ slower";
-
+"SLOWER_ALTERNATIVE" = "%@ゆっくり";
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
-"SPEED_LIMIT_LEGEND" = "Max";
-
+"SPEED_LIMIT_LEGEND" = "マックス";
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "%@ にてナビのシュミレーションを行う";
-
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%2$@経由で%1$@に向かう";
-
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@と%2$@";
-

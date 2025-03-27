@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Sem Portagens";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Portagens";
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "ETA semelhante";

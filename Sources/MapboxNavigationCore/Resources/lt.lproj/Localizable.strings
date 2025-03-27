@@ -1,0 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Nėra rinkliavų";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Rinkliavos";
+/* Alternatives selection note about equal travel time. */
+"SAME_TIME" = "Panašus ETA";

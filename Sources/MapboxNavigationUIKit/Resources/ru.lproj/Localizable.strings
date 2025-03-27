@@ -1,216 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
 "BACK" = "Назад";
-
 /* Title for alternatives selection list button */
 "CARPLAY_ALTERNATIVES" = "Другие";
-
 /* Subtitle for the alternative list template empty variants */
 "CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Других маршрутов не найдено.";
-
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Вы прибыли";
-
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Куда дальше?";
-
 /* Title on continue button in CarPlay */
 "CARPLAY_CONTINUE" = "Продолжить";
-
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Текущее положение";
-
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "Отказаться";
-
+"CARPLAY_DISMISS" = "Закрыть";
 /* Title for end navigation button */
 "CARPLAY_END" = "Завершить";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Закончить маршрут";
-
 /* Title for feedback template in CarPlay */
 "CARPLAY_FEEDBACK" = "Отзыв";
-
 /* Title for start button in CPTripPreviewTextConfiguration */
 "CARPLAY_GO" = "Старт";
-
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "Другие маршруты";
-
 /* Title for mute button */
 "CARPLAY_MUTE" = "Без звука";
-
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Обзор";
-
 /* Title for trip preview back button */
 "CARPLAY_PREVIEW_BACK" = "Назад";
-
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Оцените вашу поездку";
-
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "Оцените вашу поездку";
-
+"CARPLAY_RATE_TRIP" = "Оцените Вашу поездку";
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Отправлено";
-
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Звук";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрыть";
-
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Для навигации требуется точное позиционирование";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Вы прибыли";
-
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Чем мы можем помочь?";
-
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
 "FASTER_ALTERNATIVE" = "Быстрее на %@";
-
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Найден маршрут быстрее";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "Благодарим за отзыв!";
-
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Сообщить о проблеме";
-
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Увеличить громкость для голосовых инструкций";
-
 /* Specific route feedback that a speed limit is incorrect. */
 "WRONG_SPEED_LIMIT" = "Неверное ограничение скорости";
-
-/* Format for displaying the first two major ways */
-"LEG_MAJOR_WAYS_FORMAT" = "%1$@ и %2$@";
-
-/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
-"LESS_THAN" = "<%@";
-
-/* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "Дольше на %@";
-
-/* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Отмена";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Переслать %ld отчётов";
-
-/* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "Нет рейтинга.";
-
-/* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Плохой GPS";
-
-/* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Неверные данные на карте";
-
-/* Specific route feedback that a speed limit is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Неверное ограничение скорости";
-
-/* Specific feedback for an accident on the map. */
-"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Дорожное происшествие";
-
-/* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Камера";
-
-/* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Трафик";
-
-/* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Другое";
-
 /* General route feedback. */
 "OTHER" = "Другое";
-
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Позиционирование";
-
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ и %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "Дольше на %@";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Отмена";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Нет рейтинга.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Плохой GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Неверные данные на карте";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Дорожное происшествие";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Неверное ограничение скорости";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Камера";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Дорожная обстановка";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Другое";
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Нажмите для обнуления рейтинга.";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "Поставить %ld звёзд";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld звёзд.";
-
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Пересчёт маршрута…";
-
+"REROUTING" = "Перестроение маршрута…";
 /* Button title for resume tracking */
 "RESUME" = "Возобновить";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "Нет оплаты";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Платная дорога";
-
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Альтернативный маршрут не подходит";
-
 /* False positive Traffic. */
 "ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Трафик";
-
 /* False negative Traffic. */
 "ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Трафик";
-
 /* Specific route feedback that the lane guidance was incorrect. */
 "ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Неверный указатель по полосам";
-
 /* Specific route feedback that construction works were missing. */
 "ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Дорожные работы";
-
 /* Specific route feedback that a speed limit was missing. */
 "ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Не указано ограничение скорости";
-
 /* General route feedback that route contained illegal instructions. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Недопустимый маршрут";
-
 /* Specific route feedback that route suggested an illegal turn. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Поворот не разрешён";
-
 /* Specific route feedback that route was not good enough. */
 "ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Плохой маршрут";
-
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Дорога закрыта";
-
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Дорога перекрыта";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Дорога закрыта";
 /* Alternatives selection note about equal travel distance. */
 "SAME_DISTANCE" = "То же расстояние";
-
 /* Alternatives selection note about a shorter route distance in any unit. */
 "SHORTER_ALTERNATIVE" = "Короче на %@";
-
 /* Alternatives selection note about a slower route time interval in any unit. */
 "SLOWER_ALTERNATIVE" = "Медленнее на %@";
-
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Скорость";
-
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Ускорение моделирования маршрута в %@ раз";
-
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@ через %2$@";
-
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ и %2$@";
-

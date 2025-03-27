@@ -1,216 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
-"BACK" = "Back";
-
+"BACK" = "Назад";
 /* Title for alternatives selection list button */
-"CARPLAY_ALTERNATIVES" = "Alternatives";
-
+"CARPLAY_ALTERNATIVES" = "Альтернативи";
 /* Subtitle for the alternative list template empty variants */
-"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
-
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Альтернативних маршрутів не знайдено.";
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Ви прибули";
-
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Що ви хотіли б зробити?";
-
 /* Title on continue button in CarPlay */
 "CARPLAY_CONTINUE" = "Продовжити";
-
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Поточне місцезнаходження";
-
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "Відхилити";
-
+"CARPLAY_DISMISS" = "Закрити";
 /* Title for end navigation button */
 "CARPLAY_END" = "Завершити";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Завершити навігацію";
-
 /* Title for feedback template in CarPlay */
 "CARPLAY_FEEDBACK" = "Зворотній зв'язок";
-
 /* Title for start button in CPTripPreviewTextConfiguration */
 "CARPLAY_GO" = "Розпочати";
-
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "Додаткові маршрути";
-
 /* Title for mute button */
 "CARPLAY_MUTE" = "Вимкнути звук";
-
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Огляд";
-
 /* Title for trip preview back button */
 "CARPLAY_PREVIEW_BACK" = "Back";
-
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Оцініть вашу поїздку";
-
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "Оцініть вашу подорож";
-
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Надіслано";
-
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Увімкнути звук";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрити";
-
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Увімкніть точне місцезнаходження для навігації";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Ви прибули";
-
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Що можна покращити?";
-
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
 "FASTER_ALTERNATIVE" = "%@ faster";
-
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Знайдено швидший маршрут";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "Дякуємо за зворотній зв'язок!";
-
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Повідомити про проблему";
-
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Відрегулюйте гучність щоб чути інструкції";
-
 /* Specific route feedback that a speed limit is incorrect. */
-"WRONG_SPEED_LIMIT" = "Неправильне обмеження швидкості";
-
-/* Format for displaying the first two major ways */
-"LEG_MAJOR_WAYS_FORMAT" = "%1$@ та %2$@";
-
-/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
-"LESS_THAN" = "<%@";
-
-/* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "%@ longer";
-
-/* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Скасувати";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Надіслати %ld пункт(ів)";
-
-/* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "Рейтинг не встановлено.";
-
-/* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Поганий сигнал GPS";
-
-/* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Виглядає неправильно";
-
-/* Specific route feedback that a speed limit is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Обмеження швидкості";
-
-/* Specific feedback for an accident on the map. */
-"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Аварія";
-
-/* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Камера";
-
-/* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Трафік";
-
-/* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Інше";
-
+"WRONG_SPEED_LIMIT" = "Обмеження швидкості";
 /* General route feedback. */
 "OTHER" = "Інше";
-
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Позиціонування";
-
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ та %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ довше";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Скасувати";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Рейтинг не встановлено.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Поганий сигнал GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Виглядає неправильно";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Аварія";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Обмеження швидкості";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Камера";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Трафік";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Інше";
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Натисніть, щоб встановити нульовий рейтинг.";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "Встановити %ld-зірковий рейтинг";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld зірка(ок).";
-
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Зміна маршруту…";
-
+"REROUTING" = "Перепрокладання маршруту…";
 /* Button title for resume tracking */
 "RESUME" = "Продовжити";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "Проїзд бесплатний";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Проїзд платний";
-
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Неочікуваний альтернативний маршрут";
-
 /* False positive Traffic. */
 "ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Трафік";
-
 /* False negative Traffic. */
 "ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Трафік";
-
 /* Specific route feedback that the lane guidance was incorrect. */
 "ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
-
 /* Specific route feedback that construction works were missing. */
 "ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
-
 /* Specific route feedback that a speed limit was missing. */
 "ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
-
 /* General route feedback that route contained illegal instructions. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Нелегальний маршрут";
-
 /* Specific route feedback that route suggested an illegal turn. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Поворот не дозволений";
-
 /* Specific route feedback that route was not good enough. */
 "ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Поганий маршрут";
-
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Дорога закрита";
-
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Вулиця заблокована";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Дорога закрита";
 /* Alternatives selection note about equal travel distance. */
-"SAME_DISTANCE" = "Same distance";
-
+"SAME_DISTANCE" = "Така ж відстань";
 /* Alternatives selection note about a shorter route distance in any unit. */
-"SHORTER_ALTERNATIVE" = "%@ shorter";
-
+"SHORTER_ALTERNATIVE" = "%@ коротше";
 /* Alternatives selection note about a slower route time interval in any unit. */
-"SLOWER_ALTERNATIVE" = "%@ slower";
-
+"SLOWER_ALTERNATIVE" = "%@ повільніше";
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Максимум";
-
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Симуляція навігації %@×";
-
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, через %2$@";
-
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ та %2$@";
-

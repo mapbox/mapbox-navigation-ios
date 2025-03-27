@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Terug";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatieven";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Geen alternatieve routes gevonden.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "U bent gearriveerd";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Wat wilt u doen?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Doorgaan";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Huidige locatie";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Afwijzen";
+/* Title for end navigation button */
+"CARPLAY_END" = "Einde";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Navigatie afsluiten";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Ga";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Meer routes";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Dempen";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overzicht";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Terug";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Beoordeel je rit";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Beoordeel uw rit";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Verzonden";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Dempen uit";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Sluiten";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "U bent gearriveerd";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Hoe kunnen we verbeteren?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ sneller";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Snellere route gevonden";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Bedankt voor uw melding!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Probleem Melden";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Verkeerde snelheidslimiet";
+/* General route feedback. */
+"OTHER" = "Overige";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ en %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ langer";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Annuleren";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Geen beoordeling ingesteld.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Slechte GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Onjuiste kaartgegevens";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Ongeval";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Verkeerde snelheidslimiet";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Verkeer";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Overige";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tik om de beoordeling op nul te zetten.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Omleiden…";
+/* Button title for resume tracking */
+"RESUME" = "Hervatten";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Verkeer";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Verkeer";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Onjuiste rijstrookbegeleiding";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Ontbrekende Constructie";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Ontbrekende snelheidslimiet";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegale route";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Illegale bocht";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Slechte route";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Afsluiting";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Weg afgesloten";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Zelfde afstand";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ korter";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ langzamer";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Navigatie simuleren bij %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ en %2$@";
