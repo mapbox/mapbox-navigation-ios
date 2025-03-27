@@ -679,7 +679,7 @@ open class CarPlayNavigationViewController: UIViewController {
                 if let event = state.event as? WaypointArrivalStatus.Events.ToWaypoint {
                     self?.didArrive(at: event.waypoint, isFinal: false)
                 } else if let event = state.event as? WaypointArrivalStatus.Events.ToFinalDestination {
-                    self?.didArrive(at: event.destination, isFinal: false)
+                    self?.didArrive(at: event.destination, isFinal: true)
                 }
             }
             .store(in: &cancellable)

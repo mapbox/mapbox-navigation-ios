@@ -5,6 +5,7 @@
 ### Other changes
 
 * Updated localized strings, replaced English values in translations.
+* Fixed a bug when `CarPlayNavigationViewController` showed a midpoint arrival view even when arrived at the final destination.
 
 ## v3.8.0-rc.1
 
