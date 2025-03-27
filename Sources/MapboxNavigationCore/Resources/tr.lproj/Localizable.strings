@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Ücret Yok";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Geçiş Ücretleri";
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "Benzer ETA";

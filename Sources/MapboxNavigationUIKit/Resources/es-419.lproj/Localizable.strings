@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Atrás";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternativas";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No se encontraron rutas alternativas.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Has llegado";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "¿Qué te gustaría hacer?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continuar";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Ubicación actual";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Descartar";
+/* Title for end navigation button */
+"CARPLAY_END" = "Finalizar";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Salir de la navegación";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Comentarios";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Ir";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Más rutas";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Silenciar";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Descripción general";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Atrás";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Califica tu viaje";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Califica tu viaje";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Enviado";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Activar sonido";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Cerrar";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Has llegado";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "¿Cómo podemos mejorar?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ más rápido";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Ruta más rápida encontrada";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "¡Gracias por tu informe!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Reportar problema";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Límite de velocidad incorrecto";
+/* General route feedback. */
+"OTHER" = "Otro";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ y %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ más largo";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Cancelar";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No se ha establecido calificación.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS deficiente";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Datos de mapa incorrectos";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Accidente";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Límite de velocidad incorrecto";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Cámara";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Tráfico";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Otro";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Toca para restablecer la calificación a cero.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Redirigiendo…";
+/* Button title for resume tracking */
+"RESUME" = "Reanudar";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "Tráfico FP";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "Tráfico FN";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Guía de carril incorrecta";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Falta de construcción";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Límite de velocidad faltante";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Ruta ilegal";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Giro ilegal";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Ruta deficiente";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Cierre";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Carretera cerrada";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Misma distancia";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ más corto";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ más lento";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Máx";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulando navegación a %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, vía %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ y %2$@";

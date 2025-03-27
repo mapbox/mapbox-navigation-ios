@@ -1,213 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
-"BACK" = "Back";
-
+"BACK" = "Tillbaka";
 /* Title for alternatives selection list button */
-"CARPLAY_ALTERNATIVES" = "Alternatives";
-
+"CARPLAY_ALTERNATIVES" = "Alternativ";
 /* Subtitle for the alternative list template empty variants */
-"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
-
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Inga alternativa rutter hittades.";
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Du har anlänt";
-
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Vad vill du göra?";
-
 /* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "Continue";
-
+"CARPLAY_CONTINUE" = "Fortsätt";
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Din Position";
-
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Avfärda";
-
 /* Title for end navigation button */
 "CARPLAY_END" = "Avsluta";
-
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "Avsluta";
-
+"CARPLAY_EXIT_NAVIGATION" = "Avsluta navigering";
 /* Title for feedback template in CarPlay */
-"CARPLAY_FEEDBACK" = "Feedback";
-
+"CARPLAY_FEEDBACK" = "Återkoppling";
 /* Title for start button in CPTripPreviewTextConfiguration */
-"CARPLAY_GO" = "Fortsätt";
-
+"CARPLAY_GO" = "Starta";
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
-"CARPLAY_MORE_ROUTES" = "Fler Rutter";
-
+"CARPLAY_MORE_ROUTES" = "Fler rutter";
 /* Title for mute button */
-"CARPLAY_MUTE" = "Tyst";
-
+"CARPLAY_MUTE" = "Stäng av ljudet";
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "Översikt";
-
 /* Title for trip preview back button */
-"CARPLAY_PREVIEW_BACK" = "Back";
-
+"CARPLAY_PREVIEW_BACK" = "Tillbaka";
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Betygsätt din resa";
-
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "Betygsätt din resa";
-
 /* Alert title that shows when feedback has been submitted */
-"CARPLAY_SUBMITTED_FEEDBACK" = "Skickat";
-
+"CARPLAY_SUBMITTED_FEEDBACK" = "Inskickad";
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "Ljud på";
-
+"CARPLAY_UNMUTE" = "Slå på ljudet";
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Stäng";
-
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Du har anlänt";
-
 /* Comment Placeholder Text */
-"END_OF_ROUTE_TITLE" = "Hur kan vi förbättra?";
-
+"END_OF_ROUTE_TITLE" = "Hur kan vi förbättra oss?";
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
-"FASTER_ALTERNATIVE" = "%@ faster";
-
+"FASTER_ALTERNATIVE" = "%@ snabbare";
 /* Indicates a faster route was found */
-"FASTER_ROUTE_FOUND" = "Hittade snabbare rutt";
-
+"FASTER_ROUTE_FOUND" = "Snabbare rutt hittad";
 /* Message confirming that the user has successfully sent feedback */
-"FEEDBACK_THANK_YOU" = "Tack för din feedback!";
-
+"FEEDBACK_THANK_YOU" = "Tack för din rapport!";
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Rapportera Problem";
-
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Justera volymen för att höra instruktionerna";
-
+"FEEDBACK_TITLE" = "Rapportera problem";
 /* Specific route feedback that a speed limit is incorrect. */
-"WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"WRONG_SPEED_LIMIT" = "Fel hastighetsgräns";
 /* General route feedback. */
-"OTHER" = "Other";
-
+"OTHER" = "Övrigt";
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ och %2$@";
-
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
-
 /* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "%@ longer";
-
+"LONGER_ALTERNATIVE" = "%@ längre";
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Cancel";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
-
+"NAVIGATION_REPORT_CANCEL" = "Avbryt";
 /* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "Ingen betygsättning.";
-
+"NO_RATING" = "Ingen betyg satt.";
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
-
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Dålig GPS";
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
-
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Felaktiga kartdata";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Olycka";
 /* Specific route feedback that a speed limit is wrong. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Fel hastighetsgräns";
 /* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
-
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Kamera";
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Trafik";
 /* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
-
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Positioning";
-
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Övrigt";
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tryck för att återställa betyget till noll.";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "Ange ett %ld-stjärnigt betyg";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld stjärn(or).";
-
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Uppdaterar rutt…";
-
+"REROUTING" = "Omdirigerar…";
 /* Button title for resume tracking */
 "RESUME" = "Återuppta";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
-
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
-
 /* False positive Traffic. */
-"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
-
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Trafik";
 /* False negative Traffic. */
-"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
-
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Trafik";
 /* Specific route feedback that the lane guidance was incorrect. */
-"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
-
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Felaktig körfältsvägledning";
 /* Specific route feedback that construction works were missing. */
-"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
-
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Saknad byggnation";
 /* Specific route feedback that a speed limit was missing. */
-"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
-
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Saknad hastighetsbegränsning";
 /* General route feedback that route contained illegal instructions. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Olaglig rutt";
 /* Specific route feedback that route suggested an illegal turn. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Olaglig tur";
 /* Specific route feedback that route was not good enough. */
-"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
-
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Dålig rutt";
 /* General route feedback that route contained closed road. */
-"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
-
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Avstängning";
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Vägen stängd";
 /* Alternatives selection note about equal travel distance. */
-"SAME_DISTANCE" = "Same distance";
-
+"SAME_DISTANCE" = "Samma avstånd";
 /* Alternatives selection note about a shorter route distance in any unit. */
-"SHORTER_ALTERNATIVE" = "%@ shorter";
-
+"SHORTER_ALTERNATIVE" = "%@ kortare";
 /* Alternatives selection note about a slower route time interval in any unit. */
-"SLOWER_ALTERNATIVE" = "%@ slower";
-
+"SLOWER_ALTERNATIVE" = "%@ långsammare";
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Max";
-
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Simulerar Navigation i %@×";
-
+"USER_IN_SIMULATION_MODE" = "Simulerar navigering vid %@×";
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
-
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ och %2$@";
-

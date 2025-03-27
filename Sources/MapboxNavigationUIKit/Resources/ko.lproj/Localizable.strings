@@ -1,213 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
-"BACK" = "Back";
-
+"BACK" = "뒤쪽에";
 /* Title for alternatives selection list button */
-"CARPLAY_ALTERNATIVES" = "Alternatives";
-
+"CARPLAY_ALTERNATIVES" = "대안";
 /* Subtitle for the alternative list template empty variants */
-"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
-
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "대체 경로를 찾을 수 없습니다.";
 /* Title on arrival action sheet */
-"CARPLAY_ARRIVED" = "You have arrived";
-
+"CARPLAY_ARRIVED" = "도착하였습니다";
 /* Message on arrival action sheet */
-"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
-
+"CARPLAY_ARRIVED_MESSAGE" = "무엇을 하고 싶으신가요?";
 /* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "Continue";
-
+"CARPLAY_CONTINUE" = "계속";
 /* Name of the waypoint associated with the current location */
-"CARPLAY_CURRENT_LOCATION" = "Current Location";
-
+"CARPLAY_CURRENT_LOCATION" = "현재 위치";
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "Dismiss";
-
+"CARPLAY_DISMISS" = "닫기";
 /* Title for end navigation button */
-"CARPLAY_END" = "End";
-
+"CARPLAY_END" = "종료";
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
-
+"CARPLAY_EXIT_NAVIGATION" = "탐색 종료";
 /* Title for feedback template in CarPlay */
-"CARPLAY_FEEDBACK" = "Feedback";
-
+"CARPLAY_FEEDBACK" = "피드백";
 /* Title for start button in CPTripPreviewTextConfiguration */
-"CARPLAY_GO" = "Go";
-
+"CARPLAY_GO" = "가다";
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
-"CARPLAY_MORE_ROUTES" = "More Routes";
-
+"CARPLAY_MORE_ROUTES" = "더 많은 경로";
 /* Title for mute button */
-"CARPLAY_MUTE" = "Mute";
-
+"CARPLAY_MUTE" = "무음";
 /* Title for overview button in CPTripPreviewTextConfiguration */
-"CARPLAY_OVERVIEW" = "Overview";
-
+"CARPLAY_OVERVIEW" = "개요";
 /* Title for trip preview back button */
-"CARPLAY_PREVIEW_BACK" = "Back";
-
+"CARPLAY_PREVIEW_BACK" = "뒤쪽에";
 /* Title for rating template in CarPlay */
-"CARPLAY_RATE_RIDE" = "Rate your ride";
-
+"CARPLAY_RATE_RIDE" = "당신의 차를 평가하세요";
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "Rate your trip";
-
+"CARPLAY_RATE_TRIP" = "당신의 여정을 평가하세요";
 /* Alert title that shows when feedback has been submitted */
-"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
-
+"CARPLAY_SUBMITTED_FEEDBACK" = "제출된";
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "Unmute";
-
+"CARPLAY_UNMUTE" = "음소거 해제";
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "종료";
-
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "도착하였습니다";
-
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "어떻게 향상 시킬 수 있을까요?";
-
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
-"FASTER_ALTERNATIVE" = "%@ faster";
-
+"FASTER_ALTERNATIVE" = "%@ 더 빠르게";
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "더 빠른 경로를 찾았습니다";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "당신의 보고에 감사드립니다!";
-
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "문제 리포트";
-
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
-
 /* Specific route feedback that a speed limit is incorrect. */
-"WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"WRONG_SPEED_LIMIT" = "잘못된 속도 제한";
 /* General route feedback. */
-"OTHER" = "Other";
-
+"OTHER" = "기타";
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ 와 %2$@";
-
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
-
 /* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "%@ longer";
-
+"LONGER_ALTERNATIVE" = "%@ 더 길게";
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Cancel";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
-
+"NAVIGATION_REPORT_CANCEL" = "취소";
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "등급이 설정되지 않았습니다.";
-
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
-
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS가 불량함";
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
-
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "잘못된 지도 데이터";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "사고";
 /* Specific route feedback that a speed limit is wrong. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "잘못된 속도 제한";
 /* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
-
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "카메라";
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "교통";
 /* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
-
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Positioning";
-
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "기타";
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "등급을 영점으로 리셋하기 위해 탭하세요.";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "등급 %ld-별점평가";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld 평가 설정.";
-
 /* Indicates that rerouting is in progress */
-"REROUTING" = "경로재탐색…";
-
+"REROUTING" = "경로 재설정 중…";
 /* Button title for resume tracking */
 "RESUME" = "재시작";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
-
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
-
 /* False positive Traffic. */
-"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
-
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP 트래픽";
 /* False negative Traffic. */
-"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
-
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN 교통";
 /* Specific route feedback that the lane guidance was incorrect. */
-"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
-
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "잘못된 차선 안내";
 /* Specific route feedback that construction works were missing. */
-"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
-
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "건설이 누락되었습니다";
 /* Specific route feedback that a speed limit was missing. */
-"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
-
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "속도 제한이 없습니다";
 /* General route feedback that route contained illegal instructions. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "불법 경로";
 /* Specific route feedback that route suggested an illegal turn. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "불법적인 회전";
 /* Specific route feedback that route was not good enough. */
-"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
-
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "나쁜 경로";
 /* General route feedback that route contained closed road. */
-"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
-
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "폐쇄";
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "도로 폐쇄";
 /* Alternatives selection note about equal travel distance. */
-"SAME_DISTANCE" = "Same distance";
-
+"SAME_DISTANCE" = "같은 거리";
 /* Alternatives selection note about a shorter route distance in any unit. */
-"SHORTER_ALTERNATIVE" = "%@ shorter";
-
+"SHORTER_ALTERNATIVE" = "%@ 더 짧음";
 /* Alternatives selection note about a slower route time interval in any unit. */
-"SLOWER_ALTERNATIVE" = "%@ slower";
-
+"SLOWER_ALTERNATIVE" = "%@ 더 느림";
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
-"SPEED_LIMIT_LEGEND" = "Max";
-
+"SPEED_LIMIT_LEGEND" = "맥스";
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "네비게이션을 %@×에서 시뮬레이션합니다.";
-
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, 통한 %2$@";
-
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ 와 %2$@";
-

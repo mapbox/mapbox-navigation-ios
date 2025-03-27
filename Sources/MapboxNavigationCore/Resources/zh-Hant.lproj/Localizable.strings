@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "無通行費";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "通行費";
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "類似 ETA";

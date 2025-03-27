@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "กลับ";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "ทางเลือก";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "ไม่พบเส้นทางอื่น";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "คุณมาถึงแล้ว";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "คุณต้องการทำอะไร?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "ดำเนินการต่อ";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "ตำแหน่งปัจจุบัน";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "ปิด";
+/* Title for end navigation button */
+"CARPLAY_END" = "สิ้นสุด";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "ออกจากการนำทาง";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "ข้อเสนอแนะ";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "ไป";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "เส้นทางเพิ่มเติม";
+/* Title for mute button */
+"CARPLAY_MUTE" = "ปิดเสียง";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "ภาพรวม";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "กลับ";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "ให้คะแนนการเดินทางของคุณ";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "ให้คะแนนการเดินทางของคุณ";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "ส่งแล้ว";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "เปิดเสียง";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "ปิด";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "คุณได้มาถึงแล้ว";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "เราจะปรับปรุงได้อย่างไร?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ เร็วกว่า";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "พบเส้นทางที่เร็วกว่า";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "ขอบคุณสำหรับรายงานของคุณ!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "รายงานปัญหา";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "จำกัดความเร็วผิด";
+/* General route feedback. */
+"OTHER" = "อื่นๆ";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ และ %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ ยาวกว่า";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "ยกเลิก";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "ไม่มีการตั้งค่าการให้คะแนน";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS ไม่ดี";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "ข้อมูลแผนที่ไม่ถูกต้อง";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "อุบัติเหตุ";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "จำกัดความเร็วผิด";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "กล้อง";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "การจราจร";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "อื่นๆ";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "แตะเพื่อรีเซ็ตการให้คะแนนเป็นศูนย์";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "กำลังคำนวณเส้นทางใหม่...";
+/* Button title for resume tracking */
+"RESUME" = "ดำเนินการต่อ";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "การจราจรที่ผิดพลาด";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "การจราจร FN";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "คำแนะนำเลนที่ไม่ถูกต้อง";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "การก่อสร้างที่หายไป";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "ขาดข้อมูลจำกัดความเร็ว";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "เส้นทางที่ผิดกฎหมาย";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "เลี้ยวผิดกฎหมาย";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "เส้นทางที่ไม่ดี";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "ปิด";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "ถนนปิด";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "ระยะทางเท่ากัน";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ สั้นกว่า";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ ช้ากว่า";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "สูงสุด";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "กำลังจำลองการนำทางที่ %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, ผ่าน %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ และ %2$@";

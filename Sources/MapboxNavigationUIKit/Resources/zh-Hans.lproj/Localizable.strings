@@ -64,8 +64,6 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "关闭";
 
-/* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "你已到达目的地";
@@ -88,8 +86,6 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "问题上报";
 
-/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
 
 /* Specific route feedback that a speed limit is incorrect. */
 "WRONG_SPEED_LIMIT" = "Wrong speed limit";
@@ -108,9 +104,6 @@
 
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
 "NAVIGATION_REPORT_CANCEL" = "Cancel";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
-"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "还没有评分。";
@@ -133,8 +126,6 @@
 /* General category of feedback for passive navigation. */
 "PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
 
-/* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Positioning";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "点击将评分置零。";
@@ -157,8 +148,6 @@
 /* This route does have tolls */
 "ROUTE_HAS_TOLLS" = "Tolls";
 
-/* Specific route feedback that user was offered an alternative that was unexpected. */
-"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
 
 /* False positive Traffic. */
 "ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";

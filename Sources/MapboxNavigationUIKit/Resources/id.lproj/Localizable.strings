@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Kembali";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatif";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Tidak ada rute alternatif yang ditemukan.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Anda telah tiba";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Apa yang ingin Anda lakukan?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Lanjutkan";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Lokasi Saat Ini";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Tutup";
+/* Title for end navigation button */
+"CARPLAY_END" = "Akhiri";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Keluar navigasi";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Umpan Balik";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Mulai";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Rute Lain";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Bisu";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Ikhtisar";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Kembali";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Beri penilaian untuk perjalanan Anda";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Beri nilai perjalanan Anda";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Terkirim";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Bunyikan";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Tutup";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Anda telah tiba";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Bagaimana kami dapat meningkatkan?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ lebih cepat";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Rute Lebih Cepat Ditemukan";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Terima kasih atas laporan Anda!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Laporkan Masalah";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Batas kecepatan salah";
+/* General route feedback. */
+"OTHER" = "Lainnya";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ dan %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ lebih panjang";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Batal";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Tidak ada penilaian yang ditetapkan.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS Buruk";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Data peta salah";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Kecelakaan";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Batas kecepatan salah";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Kamera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Lalu Lintas";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Lainnya";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Ketuk untuk mengatur ulang peringkat ke nol.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Menghitung ulang rute…";
+/* Button title for resume tracking */
+"RESUME" = "Lanjutkan";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "Lalu Lintas FP";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Lalu Lintas";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Panduan jalur yang salah";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Konstruksi Hilang";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Batas kecepatan hilang";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Rute ilegal";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Belokan ilegal";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Rute buruk";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Penutupan";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Jalan ditutup";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Jarak yang sama";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ lebih pendek";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ lebih lambat";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Maks";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Mensimulasikan Navigasi pada %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, melalui %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ dan %2$@";

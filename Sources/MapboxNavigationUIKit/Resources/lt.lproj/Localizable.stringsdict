@@ -1,21 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>RATING_ACCESSIBILITY_SET</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>RATING_STARS_FORMAT</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>NAVIGATION_REPORT_ISSUES</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-	</dict>
-</dict>
+  <dict>
+    <key>RATING_ACCESSIBILITY_SET</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>Nustatyti %ld žvaigždutės įvertinimą</string>
+        <key>few</key>
+        <string>Nustatyti %ld žvaigždučių įvertinimą</string>
+        <key>many</key>
+        <string>Nustatyti %ld žvaigždučių įvertinimą</string>
+        <key>other</key>
+        <string>Nustatyti %ld žvaigždučių įvertinimą</string>
+      </dict>
+    </dict>
+    <key>RATING_STARS_FORMAT</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>%ld žvaigždutė nustatyta.</string>
+        <key>few</key>
+        <string>%ld žvaigždutės nustatytos.</string>
+        <key>many</key>
+        <string>%ld žvaigždutės nustatytos.</string>
+        <key>other</key>
+        <string>%ld žvaigždutės nustatytos.</string>
+      </dict>
+    </dict>
+    <key>NAVIGATION_REPORT_ISSUES</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@items@</string>
+      <key>items</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>Pateikti 1 elementą</string>
+        <key>few</key>
+        <string>Pateikti %ld elementus</string>
+        <key>many</key>
+        <string>Pateikti %ld elementų</string>
+        <key>other</key>
+        <string>Pateikti %ld elementus</string>
+      </dict>
+    </dict>
+  </dict>
 </plist>

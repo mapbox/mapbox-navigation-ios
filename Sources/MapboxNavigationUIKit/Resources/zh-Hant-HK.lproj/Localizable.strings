@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "返回";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "替代方案";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "找不到替代路線。";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "您已到達";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "你想做什麼？";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "繼續";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "當前位置";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "關閉";
+/* Title for end navigation button */
+"CARPLAY_END" = "結束";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "退出導航";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "意見反饋";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "開始";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "更多路線";
+/* Title for mute button */
+"CARPLAY_MUTE" = "靜音";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "概覽";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "返回";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "為你的行程評分";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "為你的行程評分";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "已提交";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "取消靜音";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "關閉";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "您已到達";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "我們可以如何改進？";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ 更快";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "找到更快的路線";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "感謝您的報告！";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "回報問題";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "錯誤的速度限制";
+/* General route feedback. */
+"OTHER" = "其他";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ 和 %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ 較長";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "取消";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "未設置評分。";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS 信號差";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "地圖數據不正確";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "意外";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "錯誤的速度限制";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "攝影機";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "交通";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "其他";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "點擊以將評分重置為零。";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "重新路由中…";
+/* Button title for resume tracking */
+"RESUME" = "繼續";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "誤報交通";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "假陰性交通";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "錯誤的車道指引";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "缺少施工";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "缺少速度限制";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "非法路徑";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "非法轉彎";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "路線不佳";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "封閉";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "道路封閉";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "相同距離";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ 較短";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ 較慢";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "最高";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "正在模擬導航，速度為%@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@，經由 %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ 和 %2$@";

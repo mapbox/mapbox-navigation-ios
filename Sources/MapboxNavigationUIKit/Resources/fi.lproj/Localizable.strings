@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Takaisin";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Vaihtoehdot";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Vaihtoehtoisia reittejä ei löytynyt.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Olet saapunut";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Mitä haluaisit tehdä?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Jatka";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Nykyinen sijainti";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Hylkää";
+/* Title for end navigation button */
+"CARPLAY_END" = "Lopeta";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Poistu navigoinnista";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Palaute";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Aloita";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Lisää reittejä";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Mykistä";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Yleiskatsaus";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Takaisin";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Arvostele matkasi";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Arvostele matkasi";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Lähetetty";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Poista mykistys";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Sulje";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Olet saapunut";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Kuinka voimme parantaa?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ nopeampi";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Nopeampi reitti löytyi";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Kiitos raportistasi!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Ilmoita ongelmasta";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Väärä nopeusrajoitus";
+/* General route feedback. */
+"OTHER" = "Muu";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ ja %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ pidempi";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Peruuta";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Ei arviota asetettu.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Heikko GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Virheelliset karttatiedot";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Onnettomuus";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Väärä nopeusrajoitus";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Kamera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Liikenne";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Muu";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Napauta nollataksesi arvion.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Uudelleenreititys…";
+/* Button title for resume tracking */
+"RESUME" = "Jatka";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "Väärä hälytys Liikenne";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Liikenne";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Virheellinen kaistaopastus";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Puuttuva rakennustyömaa";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Puuttuva nopeusrajoitus";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Laiton reitti";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Laiton käännös";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Huono reitti";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Sulkeminen";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Tie suljettu";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Sama etäisyys";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ lyhyempi";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ hitaampi";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Enint.";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Navigoinnin simulointi nopeudella %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, kautta %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ ja %2$@";

@@ -1,2 +1,6 @@
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Без пътни такси";
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Пътни";
 /* Alternatives selection note about equal travel time. */
-"SAME_TIME" = "Подобно време на пристигане";
+"SAME_TIME" = "Подобен ETA";

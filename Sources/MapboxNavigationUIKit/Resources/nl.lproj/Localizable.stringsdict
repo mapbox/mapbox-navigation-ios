@@ -1,21 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>RATING_ACCESSIBILITY_SET</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>RATING_STARS_FORMAT</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@stars@</string>
-	</dict>
-	<key>NAVIGATION_REPORT_ISSUES</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-	</dict>
-</dict>
+  <dict>
+    <key>RATING_ACCESSIBILITY_SET</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>Stel %ld-sterrenbeoordeling in</string>
+        <key>other</key>
+        <string>Stel %ld-sterrenbeoordeling in</string>
+      </dict>
+    </dict>
+    <key>RATING_STARS_FORMAT</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@stars@</string>
+      <key>stars</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>%ld ster ingesteld.</string>
+        <key>other</key>
+        <string>%ld sterren ingesteld.</string>
+      </dict>
+    </dict>
+    <key>NAVIGATION_REPORT_ISSUES</key>
+    <dict>
+      <key>NSStringLocalizedFormatKey</key>
+      <string>%#@items@</string>
+      <key>items</key>
+      <dict>
+        <key>NSStringFormatSpecTypeKey</key>
+        <string>NSStringPluralRuleType</string>
+        <key>NSStringFormatValueTypeKey</key>
+        <string>li</string>
+        <key>one</key>
+        <string>Verzend 1 item</string>
+        <key>other</key>
+        <string>Verzend %ld items</string>
+      </dict>
+    </dict>
+  </dict>
 </plist>

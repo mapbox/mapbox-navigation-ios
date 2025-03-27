@@ -1,0 +1,124 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Back";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatives";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "You have arrived";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continue";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Current Location";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Dismiss";
+/* Title for end navigation button */
+"CARPLAY_END" = "End";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Go";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "More Routes";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Mute";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overview";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Back";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Rate your trip";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Close";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "You have arrived";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "How can we improve?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ faster";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Faster Route Found";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Thank you for your report!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Report Problem";
+/* General route feedback. */
+"OTHER" = "Other";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ longer";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Cancel";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No rating set.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Accident";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Rerouting…";
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "False Positive Traffic";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "False Negative Traffic";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Illegal turn";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Closure";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Same distance";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ shorter";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ slower";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ and %2$@";
