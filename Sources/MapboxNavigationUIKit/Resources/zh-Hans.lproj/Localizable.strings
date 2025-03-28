@@ -1,202 +1,126 @@
 /* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
 "ALTERNATIVE_NOTES" = "%1$@ / %2$@";
-
 /* Title of the back button. */
-"BACK" = "Back";
-
+"BACK" = "返回";
 /* Title for alternatives selection list button */
-"CARPLAY_ALTERNATIVES" = "Alternatives";
-
+"CARPLAY_ALTERNATIVES" = "替代方案";
 /* Subtitle for the alternative list template empty variants */
-"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "No alternative routes found.";
-
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "未找到替代路线。";
 /* Title on arrival action sheet */
-"CARPLAY_ARRIVED" = "You have arrived";
-
+"CARPLAY_ARRIVED" = "您已到达";
 /* Message on arrival action sheet */
-"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
-
+"CARPLAY_ARRIVED_MESSAGE" = "您想要做什么？";
 /* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "Continue";
-
+"CARPLAY_CONTINUE" = "继续";
 /* Name of the waypoint associated with the current location */
-"CARPLAY_CURRENT_LOCATION" = "Current Location";
-
+"CARPLAY_CURRENT_LOCATION" = "当前位置";
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "Dismiss";
-
+"CARPLAY_DISMISS" = "关闭";
 /* Title for end navigation button */
-"CARPLAY_END" = "End";
-
+"CARPLAY_END" = "结束";
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
-
+"CARPLAY_EXIT_NAVIGATION" = "退出导航";
 /* Title for feedback template in CarPlay */
-"CARPLAY_FEEDBACK" = "Feedback";
-
+"CARPLAY_FEEDBACK" = "反馈";
 /* Title for start button in CPTripPreviewTextConfiguration */
-"CARPLAY_GO" = "Go";
-
+"CARPLAY_GO" = "开始";
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
-"CARPLAY_MORE_ROUTES" = "More Routes";
-
+"CARPLAY_MORE_ROUTES" = "更多路线";
 /* Title for mute button */
-"CARPLAY_MUTE" = "Mute";
-
+"CARPLAY_MUTE" = "静音";
 /* Title for overview button in CPTripPreviewTextConfiguration */
-"CARPLAY_OVERVIEW" = "Overview";
-
+"CARPLAY_OVERVIEW" = "概览";
 /* Title for trip preview back button */
-"CARPLAY_PREVIEW_BACK" = "Back";
-
+"CARPLAY_PREVIEW_BACK" = "返回";
 /* Title for rating template in CarPlay */
-"CARPLAY_RATE_RIDE" = "Rate your ride";
-
+"CARPLAY_RATE_RIDE" = "评价您的行程";
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "Rate your trip";
-
+"CARPLAY_RATE_TRIP" = "评价您的行程";
 /* Alert title that shows when feedback has been submitted */
-"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
-
+"CARPLAY_SUBMITTED_FEEDBACK" = "已提交";
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "Unmute";
-
+"CARPLAY_UNMUTE" = "取消静音";
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "关闭";
-
-
 /* Title used for arrival */
-"END_OF_ROUTE_ARRIVED" = "你已到达目的地";
-
+"END_OF_ROUTE_ARRIVED" = "您已到达";
 /* Comment Placeholder Text */
-"END_OF_ROUTE_TITLE" = "针对本次导航有何意见？";
-
+"END_OF_ROUTE_TITLE" = "我们如何改进？";
 /* Number string with an explicit '+' sign. */
 "EXPLICITLY_POSITIVE_NUMBER" = "+%@";
-
 /* Alternatives selection note about a faster route time interval in any unit. */
-"FASTER_ALTERNATIVE" = "%@ faster";
-
+"FASTER_ALTERNATIVE" = "%@ 更快";
 /* Indicates a faster route was found */
-"FASTER_ROUTE_FOUND" = "发现一条更快的路线";
-
+"FASTER_ROUTE_FOUND" = "发现更快的路线";
 /* Message confirming that the user has successfully sent feedback */
-"FEEDBACK_THANK_YOU" = "谢谢您的反馈！";
-
+"FEEDBACK_THANK_YOU" = "感谢您的反馈！";
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "问题上报";
-
-
+"FEEDBACK_TITLE" = "报告问题";
 /* Specific route feedback that a speed limit is incorrect. */
-"WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"WRONG_SPEED_LIMIT" = "错误的限速";
 /* General route feedback. */
-"OTHER" = "Other";
-
+"OTHER" = "其他";
 /* Format for displaying the first two major ways */
-"LEG_MAJOR_WAYS_FORMAT" = "%1$@和%2$@";
-
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ 和 %2$@";
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
-"LESS_THAN" = "＜%@";
-
+"LESS_THAN" = "<%@";
 /* Alternatives selection note about a longer route distance in any unit. */
-"LONGER_ALTERNATIVE" = "%@ longer";
-
+"LONGER_ALTERNATIVE" = "%@ 更长";
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "Cancel";
-
+"NAVIGATION_REPORT_CANCEL" = "取消";
 /* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "还没有评分。";
-
+"NO_RATING" = "未设置评分。";
 /* Specific route feedback that user positioning is incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Poor GPS";
-
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS信号差";
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Incorrect map data";
-
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "地图数据不正确";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "事故";
 /* Specific route feedback that a speed limit is wrong. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Wrong speed limit";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "错误的限速";
 /* Feedback that there is a camera on the road. */
-"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Camera";
-
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "摄像头";
 /* General category of feedback where there is a wrong traffic. */
-"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Traffic";
-
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "交通";
 /* General category of feedback for passive navigation. */
-"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Other";
-
-
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "其他";
 /* Rating Reset To Zero Accessability Hint */
-"RATING_ACCESSIBILITY_RESET" = "点击将评分置零。";
-
-/* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "设置为%ld-星评分";
-
-/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld星。";
-
+"RATING_ACCESSIBILITY_RESET" = "点击以将评分重置为零。";
 /* Indicates that rerouting is in progress */
-"REROUTING" = "线路重新规划中…";
-
+"REROUTING" = "重新路由中…";
 /* Button title for resume tracking */
-"RESUME" = "我的位置";
-
-/* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
-
-/* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
-
-
+"RESUME" = "继续";
 /* False positive Traffic. */
-"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Traffic";
-
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "误报流量";
 /* False negative Traffic. */
-"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Traffic";
-
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "假阴性流量";
 /* Specific route feedback that the lane guidance was incorrect. */
-"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Incorrect lane guidance";
-
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "错误的车道指引";
 /* Specific route feedback that construction works were missing. */
-"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Missing Construction";
-
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "缺少施工";
 /* Specific route feedback that a speed limit was missing. */
-"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Missing speed limit";
-
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "缺少限速标志";
 /* General route feedback that route contained illegal instructions. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "非法路线";
 /* Specific route feedback that route suggested an illegal turn. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
-
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "非法转弯";
 /* Specific route feedback that route was not good enough. */
-"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Poor route";
-
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "路线不佳";
 /* General route feedback that route contained closed road. */
-"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
-
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "封闭";
 /* Specific route feedback that route contained road that is closed. */
-"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Road closed";
-
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "道路封闭";
 /* Alternatives selection note about equal travel distance. */
-"SAME_DISTANCE" = "Same distance";
-
+"SAME_DISTANCE" = "相同距离";
 /* Alternatives selection note about a shorter route distance in any unit. */
-"SHORTER_ALTERNATIVE" = "%@ shorter";
-
+"SHORTER_ALTERNATIVE" = "%@ 更短";
 /* Alternatives selection note about a slower route time interval in any unit. */
-"SLOWER_ALTERNATIVE" = "%@ slower";
-
+"SLOWER_ALTERNATIVE" = "%@ 更慢";
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
-"SPEED_LIMIT_LEGEND" = "Max";
-
+"SPEED_LIMIT_LEGEND" = "最高";
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "正在模拟导航，当前速率 %@";
-
+"USER_IN_SIMULATION_MODE" = "正在以%@×模拟导航";
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
-"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@，经由%2$@";
-
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@，途经 %2$@";
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
-"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@和%2$@";
-
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ 和 %2$@";
