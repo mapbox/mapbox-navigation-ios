@@ -2,6 +2,11 @@
 
 ## v3.8.0
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.11.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.11.0).
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.0.0).
+
 ### Other changes
 
 * Updated localized strings, replaced English values in translations.
@@ -84,7 +89,6 @@
 * Fixed possible not thread-safe memory access in `SimulatedLocationManager`.
 * Improved route refreshing by removing unnecessary internal navigator update on refresh.
 * Fixed possible not thread-safe memory access to `RouteProgress` in `NavigationController`.
->>>>>>> 98ac228f99 (Update versions (#8200))
 
 ## v3.7.0-rc.1
 

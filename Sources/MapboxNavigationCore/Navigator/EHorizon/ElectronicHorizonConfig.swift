@@ -51,7 +51,8 @@ extension MapboxNavigationNative.ElectronicHorizonOptions {
             branchLength: options.branchLength,
             doNotRecalculateInUncertainState: true,
             minTimeDeltaBetweenUpdates: options.minimumTimeIntervalBetweenUpdates as NSNumber?,
-            alertsService: nil
+            alertsService: nil,
+            enableEnhancedDataAlongEH: false // TODO: (NAVIOS-2147) Expose to public if needed
         )
     }
 }
