@@ -413,8 +413,27 @@ final class BillingHandler: @unchecked Sendable {
         }
     }
 
-    func shouldStartNewBillingSession(for newRoute: Route, remainingWaypoints: [Waypoint]) -> Bool {
-        let newRouteWaypoints = newRoute.legs.compactMap(\.destination)
+    func shouldStartNewBillingSession(
+        for newNavigationRoutes: NavigationRoutes,
+        currentRouteProgress: RouteProgressState?,
+        reason: MapboxNavigator.SetRouteReason
+    ) -> Bool {
+        var newRouteWaypoints = newNavigationRoutes.mainRoute.route.legs.compactMap(\.destination)
+        var remainingWaypoints = currentRouteProgress?.routeProgress.remainingWaypoints ?? []
+
+        // Reroutes with RerouteStrategyForMatchRoute.navigateToFinalDestination may cause
+        // the number of waypoints to change, but should not start a new billing session
+        // as long as the final destination stays the same
+        let oldApi = currentRouteProgress?.routeProgress.navigationRoutes.mapboxApi
+        let newApi = newNavigationRoutes.mapboxApi
+        let checkOnlyLastWaypoint = reason == .reroute
+            && oldApi == .mapMatching
+            && newApi == .directions
+
+        if checkOnlyLastWaypoint {
+            newRouteWaypoints = newRouteWaypoints.suffix(1)
+            remainingWaypoints = remainingWaypoints.suffix(1)
+        }
 
         guard !newRouteWaypoints.isEmpty else {
             return false // Don't need to bil for routes without waypoints

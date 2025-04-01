@@ -33,6 +33,10 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         mainRoute.nativeRoute.getRouterOrigin() == .customExternal
     }
 
+    var mapboxApi: MapboxAPI {
+        mainRoute.nativeRoute.getMapboxAPI()
+    }
+
     init(routesData: RoutesData) async throws {
         let routeResponse = try await routesData.primaryRoute().convertToDirectionsRouteResponse()
         try self.init(routesData: routesData, routeResponse: routeResponse)

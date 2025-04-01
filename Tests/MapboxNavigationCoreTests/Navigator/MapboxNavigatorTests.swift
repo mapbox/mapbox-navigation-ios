@@ -13,6 +13,8 @@ final class MapboxNavigatorTests: TestCase {
     var routeRefreshResult: RouteRefreshResult!
     let timeout: TimeInterval = 0.5
 
+    var routeProgressExpectation: XCTestExpectation?
+
     override func setUp() async throws {
         try? await super.setUp()
 
@@ -44,6 +46,14 @@ final class MapboxNavigatorTests: TestCase {
             movementMonitor: .init()
         )
         navigator = await MapboxNavigator(configuration: coonfiguration)
+
+        routeProgressExpectation = nil
+        navigator.routeProgress
+            .dropFirst()
+            .sink(receiveValue: { [weak self] _ in
+                self?.routeProgressExpectation?.fulfill()
+            })
+            .store(in: &subscriptions)
     }
 
     @MainActor
@@ -257,5 +267,120 @@ final class MapboxNavigatorTests: TestCase {
 
         await navigator.updateMapMatching(status: status)
         await fulfillment(of: [expectation], timeout: timeout)
+    }
+
+    @MainActor
+    func testSetRoutesSimilarNewRouteKeepsSession() async {
+        await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
+        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .newRoute)
+
+        billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
+    }
+
+    @MainActor
+    func testSetRoutesSimilarRerouteKeepsSession() async {
+        await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
+        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .reroute)
+
+        billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
+    }
+
+    @MainActor
+    func testSetRoutesDifferentNewRouteBeginsNewSession() async {
+        await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes())
+        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .newRoute)
+
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    @MainActor
+    func testSetRoutesDifferentRerouteBeginsNewSession() async {
+        await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes())
+        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .reroute)
+
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    @MainActor
+    func testSetRoutesMapMatchingRerouteToDirectionsWithSameDestinationKeepsSession() async {
+        // This scenario happens with RerouteStrategyForMatchRoute.navigateToFinalDestination
+        // when there were more than one waypoint remaining before reroute
+        await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes(mapboxApi: .mapMatching))
+        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: .reroute)
+
+        billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
+    }
+
+    // MARK: - Helpers
+
+    private func startActiveGuidanceAndWaitForRouteProgress(
+        with navigationRoutes: NavigationRoutes
+    ) async {
+        await navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+        routeProgressExpectation = XCTestExpectation(description: "route progress after startActiveGuidance")
+        await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
+    }
+
+    private func setRoutesAndWaitForRouteProgress(
+        with navigationRoutes: NavigationRoutes,
+        reason: MapboxNavigator.SetRouteReason
+    ) async {
+        await navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: reason)
+        routeProgressExpectation = XCTestExpectation(description: "route progress after setRoutes")
+        await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
+    }
+
+    // Three points along California St in San Fransisco
+    private let coordinateA = CLLocationCoordinate2D(latitude: 37.785832, longitude: -122.458148)
+    private let coordinateB = CLLocationCoordinate2D(latitude: 37.787594, longitude: -122.444172)
+    private let coordinateC = CLLocationCoordinate2D(latitude: 37.78927, longitude: -122.430577)
+
+    private func oneLegNavigationRoutes(
+        mapboxApi: MapboxAPI = .directions
+    ) async -> NavigationRoutes {
+        await mockNavigationRoutes(
+            with: [mockLeg(from: coordinateA, to: coordinateC)],
+            mapboxApi: mapboxApi
+        )
+    }
+
+    private func twoLegNavigationRoutes(
+        mapboxApi: MapboxAPI = .directions
+    ) async -> NavigationRoutes {
+        await mockNavigationRoutes(
+            with: [
+                mockLeg(from: coordinateA, to: coordinateB),
+                mockLeg(from: coordinateB, to: coordinateC),
+            ],
+            mapboxApi: mapboxApi
+        )
+    }
+
+    private func mockNavigationRoutes(
+        with legs: [RouteLeg],
+        mapboxApi: MapboxAPI = .directions
+    ) async -> NavigationRoutes {
+        await NavigationRoutes.mock(mainRoute: .mock(
+            route: .mock(legs: legs),
+            nativeRoute: RouteInterfaceMock(mapboxApi: mapboxApi)
+        ))
+    }
+
+    private func mockLeg(
+        from source: CLLocationCoordinate2D,
+        to destination: CLLocationCoordinate2D
+    ) -> RouteLeg {
+        var leg = RouteLeg.mock()
+        leg.source = Waypoint(coordinate: source)
+        leg.destination = Waypoint(coordinate: destination)
+        return leg
     }
 }

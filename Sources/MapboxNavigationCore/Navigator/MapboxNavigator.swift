@@ -221,7 +221,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     @MainActor
     func setRoutes(navigationRoutes: NavigationRoutes, startLegIndex: Int, reason: SetRouteReason) {
-        verifyActiveGuidanceBillingSession(for: navigationRoutes)
+        verifyActiveGuidanceBillingSession(for: navigationRoutes, reason: reason)
 
         guard let sessionUUID else {
             Log.error(
@@ -518,7 +518,10 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     @MainActor
-    private func verifyActiveGuidanceBillingSession(for navigationRoutes: NavigationRoutes) {
+    private func verifyActiveGuidanceBillingSession(
+        for navigationRoutes: NavigationRoutes,
+        reason: SetRouteReason
+    ) {
         if let sessionUUID,
            let sessionType = billingHandler.sessionType(uuid: sessionUUID)
         {
@@ -528,8 +531,9 @@ final class MapboxNavigator: @unchecked Sendable {
                 beginNewSession(of: .activeGuidance)
             case .activeGuidance:
                 if billingHandler.shouldStartNewBillingSession(
-                    for: navigationRoutes.mainRoute.route,
-                    remainingWaypoints: currentRouteProgress?.routeProgress.remainingWaypoints ?? []
+                    for: navigationRoutes,
+                    currentRouteProgress: currentRouteProgress,
+                    reason: reason
                 ) {
                     billingHandler.stopBillingSession(with: sessionUUID)
                     beginNewSession(of: .activeGuidance)
