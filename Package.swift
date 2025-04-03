@@ -21,6 +21,10 @@ let package = Package(
             targets: ["MapboxNavigationCore"]
         ),
         .library(
+            name: "_MapboxNavigationLocalization",
+            targets: ["_MapboxNavigationLocalization"]
+        ),
+        .library(
             name: "_MapboxNavigationTestKit",
             targets: ["_MapboxNavigationTestKit"]
         ),
@@ -50,8 +54,14 @@ let package = Package(
         ),
         .target(name: "_MapboxNavigationHelpers"),
         .target(
+            name: "_MapboxNavigationLocalization",
+            dependencies: [
+                "_MapboxNavigationHelpers"
+            ]),
+        .target(
             name: "MapboxNavigationCore",
             dependencies: [
+                "_MapboxNavigationLocalization",
                 "_MapboxNavigationHelpers",
                 .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
                 "MapboxDirections",

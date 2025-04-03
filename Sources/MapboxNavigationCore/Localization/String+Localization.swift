@@ -1,3 +1,4 @@
+import _MapboxNavigationLocalization
 import Foundation
 
 extension String {
