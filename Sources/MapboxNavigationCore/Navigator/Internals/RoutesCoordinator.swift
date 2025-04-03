@@ -20,10 +20,6 @@ final class RoutesCoordinator {
         _ completion: @escaping (Result<[RouteAlternative], Error>) -> Void
     ) -> Void
 
-    private struct ActiveNavigationSession {
-        let uuid: UUID
-    }
-
     private let routesSetupHandler: RoutesSetupHandler
     private let alternativeRoutesSetupHandler: AlternativeRoutesSetupHandler
     /// The lock that protects mutable state in `RoutesCoordinator`.

@@ -55,6 +55,15 @@ class ViewController: UIViewController {
     }
 
     var requestMapMatching = false
+    var freeDriveEnabled = true {
+        didSet {
+            if freeDriveEnabled {
+                core.tripSession().startFreeDrive()
+            } else {
+                core.tripSession().setToIdle()
+            }
+        }
+    }
 
     var routes: NavigationRoutes? {
         didSet {
@@ -243,7 +252,9 @@ class ViewController: UIViewController {
                 await updateCarPlayRoutesPreview()
             }
 
-            core.tripSession().startFreeDrive()
+            if freeDriveEnabled {
+                core.tripSession().startFreeDrive()
+            }
             navigationProvider.apply(coreConfig: .init(
                 locationSource: .live
             ))
@@ -465,6 +476,7 @@ class ViewController: UIViewController {
         let turnOnHistoryRecording: ActionHandler = { _ in self.turnOnHistoryRecording() }
         let turnOffHistoryRecording: ActionHandler = { _ in self.turnOffHistoryRecording() }
         let toggleMapMatching: ActionHandler = { _ in self.requestMapMatching.toggle() }
+        let toggleFreeDrive: ActionHandler = { _ in self.freeDriveEnabled.toggle() }
 
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
@@ -480,6 +492,11 @@ class ViewController: UIViewController {
                 requestMapMatching ? "Enable Routing Requesting" : "Enable Map Match Requesting",
                 .default,
                 toggleMapMatching
+            ),
+            (
+                freeDriveEnabled ? "Disable Free Drive" : "Enable Free Drive",
+                .default,
+                toggleFreeDrive
             ),
             ("Cancel", .cancel, nil),
         ]

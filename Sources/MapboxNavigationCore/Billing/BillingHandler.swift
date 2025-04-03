@@ -415,16 +415,17 @@ final class BillingHandler: @unchecked Sendable {
 
     func shouldStartNewBillingSession(
         for newNavigationRoutes: NavigationRoutes,
-        currentRouteProgress: RouteProgressState?,
+        previousRouteProgress: RouteProgress?,
+        remainingWaypoints: [Waypoint],
         reason: MapboxNavigator.SetRouteReason
     ) -> Bool {
         var newRouteWaypoints = newNavigationRoutes.mainRoute.route.legs.compactMap(\.destination)
-        var remainingWaypoints = currentRouteProgress?.routeProgress.remainingWaypoints ?? []
+        var remainingWaypoints = remainingWaypoints
 
         // Reroutes with RerouteStrategyForMatchRoute.navigateToFinalDestination may cause
         // the number of waypoints to change, but should not start a new billing session
         // as long as the final destination stays the same
-        let oldApi = currentRouteProgress?.routeProgress.navigationRoutes.mapboxApi
+        let oldApi = previousRouteProgress?.navigationRoutes.mapboxApi
         let newApi = newNavigationRoutes.mapboxApi
         let checkOnlyLastWaypoint = reason == .reroute
             && oldApi == .mapMatching
@@ -441,7 +442,7 @@ final class BillingHandler: @unchecked Sendable {
 
         guard newRouteWaypoints.count == remainingWaypoints.count else {
             Log.info(
-                "A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.",
+                "A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/navigation/guides/pricing/)” guide.",
                 category: .billing
             )
             return true
@@ -450,7 +451,7 @@ final class BillingHandler: @unchecked Sendable {
         for (newWaypoint, currentWaypoint) in zip(newRouteWaypoints, remainingWaypoints) {
             if newWaypoint.coordinate.distance(to: currentWaypoint.coordinate) > 100 {
                 Log.info(
-                    "A new route waypoint \(newWaypoint) is further than 100 meters from current waypoint \(currentWaypoint), leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/navigation/guides/pricing/)” guide. ",
+                    "A new route waypoint \(newWaypoint) is further than 100 meters from current waypoint \(currentWaypoint), leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/navigation/guides/pricing/)” guide.",
                     category: .billing
                 )
                 return true

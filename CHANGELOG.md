@@ -6,6 +6,10 @@
 
 * Added `RerouteConfig.rerouteStrategyForMatchRoute` to configure rerouting behavior with map-matched routes.
 
+### Pricing
+
+* Fixes a case when the SDK stopped the billing session when finishing active guidance. Now the SDK supports the possibility to restore the previous active guidance billing session.
+
 ## v3.8.0
 
 ### Packaging

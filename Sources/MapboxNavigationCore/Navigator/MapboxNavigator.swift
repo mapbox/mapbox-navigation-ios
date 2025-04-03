@@ -96,6 +96,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     @MainActor
     func startActiveGuidance(with navigationRoutes: NavigationRoutes, startLegIndex: Int) {
+        let previousRouteProgress = currentRouteProgress?.routeProgress
         send(navigationRoutes)
         Task {
             await updateRouteProgress(with: navigationRoutes)
@@ -104,7 +105,8 @@ final class MapboxNavigator: @unchecked Sendable {
             setRoutes(
                 navigationRoutes: navigationRoutes,
                 startLegIndex: startLegIndex,
-                reason: .newRoute
+                reason: .newRoute,
+                previousRouteProgress: previousRouteProgress
             )
         }
         let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
@@ -113,14 +115,15 @@ final class MapboxNavigator: @unchecked Sendable {
 
     func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
         await send(navigationRoutes)
-
+        let previousRouteProgress = await currentRouteProgress?.routeProgress
         await updateRouteProgress(with: navigationRoutes)
 
         await taskManager.withAsyncBarrier {
             await setRoutes(
                 navigationRoutes: navigationRoutes,
                 startLegIndex: startLegIndex,
-                reason: .newRoute
+                reason: .newRoute,
+                previousRouteProgress: previousRouteProgress
             )
         }
         let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
@@ -130,7 +133,7 @@ final class MapboxNavigator: @unchecked Sendable {
     func setToIdleAsync() async {
         await taskManager.withAsyncBarrier {
             let hadActiveGuidance = await billingSessionIsActive(withType: .activeGuidance)
-            if let sessionUUID,
+            if let sessionUUID = await sessionUUID,
                await billingSessionIsActive()
             {
                 billingHandler.pauseBillingSession(with: sessionUUID)
@@ -142,6 +145,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 return
             }
 
+            let waypoints = await currentRouteProgress?.routeProgress.remainingWaypoints
+            await update(previousSessionWaypoints: waypoints)
             await send(NavigationRoutes?.none)
             await send(RouteProgressState?.none)
             await locationClient.stopUpdatingLocation()
@@ -152,7 +157,7 @@ final class MapboxNavigator: @unchecked Sendable {
                 await send(Session(state: .idle))
                 return
             }
-            guard let sessionUUID = self.sessionUUID else {
+            guard let sessionUUID = await sessionUUID else {
                 Log.error(
                     "`MapboxNavigator.setToIdle` failed to reset routes due to missing session ID.",
                     category: .billing
@@ -170,8 +175,6 @@ final class MapboxNavigator: @unchecked Sendable {
                 )
             }
             await self.send(Session(state: .idle))
-            billingHandler.stopBillingSession(with: sessionUUID)
-            self.sessionUUID = nil
         }
         configuration.movementMonitor.currentProfile = nil
     }
@@ -180,6 +183,7 @@ final class MapboxNavigator: @unchecked Sendable {
         await taskManager.withAsyncBarrier {
             let activeGuidanceSession = await verifyFreeDriveBillingSession()
 
+            let sessionUUID = await sessionUUID
             guard sessionUUID != nil else {
                 Log.error(
                     "`MapboxNavigator.startFreeDrive` failed to start new session due to missing session ID.",
@@ -220,8 +224,17 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     @MainActor
-    func setRoutes(navigationRoutes: NavigationRoutes, startLegIndex: Int, reason: SetRouteReason) {
-        verifyActiveGuidanceBillingSession(for: navigationRoutes, reason: reason)
+    func setRoutes(
+        navigationRoutes: NavigationRoutes,
+        startLegIndex: Int,
+        reason: SetRouteReason,
+        previousRouteProgress: RouteProgress?
+    ) {
+        verifyActiveGuidanceBillingSession(
+            for: navigationRoutes,
+            previousRouteProgress: previousRouteProgress,
+            reason: reason
+        )
 
         guard let sessionUUID else {
             Log.error(
@@ -313,7 +326,8 @@ final class MapboxNavigator: @unchecked Sendable {
             await setRoutes(
                 navigationRoutes: alternativeRoutes,
                 startLegIndex: 0,
-                reason: .alternatives
+                reason: .alternatives,
+                previousRouteProgress: currentRouteProgress?.routeProgress
             )
         }
     }
@@ -342,21 +356,23 @@ final class MapboxNavigator: @unchecked Sendable {
 
             navigator.updateRouteLeg(to: UInt32(newLegIndex)) { [weak self] success in
                 Task { [weak self] in
+                    guard let self else { return }
+
                     if success {
-                        guard let sessionUUID = self?.sessionUUID else {
+                        guard let sessionUUID = await sessionUUID else {
                             Log.error(
                                 "Route leg switching failed due to missing session ID.",
                                 category: .billing
                             )
-                            await self?.send(NavigatorErrors.FailedToSelectRouteLeg())
+                            await send(NavigatorErrors.FailedToSelectRouteLeg())
                             return
                         }
-                        self?.billingHandler.beginNewBillingSessionIfExists(with: sessionUUID)
+                        billingHandler.beginNewBillingSessionIfExists(with: sessionUUID)
                         let event = WaypointArrivalStatus.Events.NextLegStarted(newLegIndex: newLegIndex)
-                        await self?.send(WaypointArrivalStatus(event: event))
+                        await send(WaypointArrivalStatus(event: event))
                     } else {
                         Log.warning("Route leg switching failed.", category: .navigation)
-                        await self?.send(NavigatorErrors.FailedToSelectRouteLeg())
+                        await send(NavigatorErrors.FailedToSelectRouteLeg())
                     }
                 }
             }
@@ -378,6 +394,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 send(NavigatorErrors.FailedToSetToIdle())
                 return
             }
+            let waypoints = currentRouteProgress?.routeProgress.remainingWaypoints
+            update(previousSessionWaypoints: waypoints)
             send(NavigationRoutes?.none)
             send(RouteProgressState?.none)
             locationClient.stopUpdatingLocation()
@@ -388,7 +406,7 @@ final class MapboxNavigator: @unchecked Sendable {
                 send(Session(state: .idle))
                 return
             }
-            guard let sessionUUID = self.sessionUUID else {
+            guard let sessionUUID else {
                 Log.error(
                     "`MapboxNavigator.setToIdle` failed to reset routes due to missing session ID.",
                     category: .billing
@@ -408,8 +426,6 @@ final class MapboxNavigator: @unchecked Sendable {
                     await self.send(Session(state: .idle))
                 }
             }
-            billingHandler.stopBillingSession(with: sessionUUID)
-            self.sessionUUID = nil
         }
         configuration.movementMonitor.currentProfile = nil
     }
@@ -520,6 +536,7 @@ final class MapboxNavigator: @unchecked Sendable {
     @MainActor
     private func verifyActiveGuidanceBillingSession(
         for navigationRoutes: NavigationRoutes,
+        previousRouteProgress: RouteProgress?,
         reason: SetRouteReason
     ) {
         if let sessionUUID,
@@ -530,13 +547,17 @@ final class MapboxNavigator: @unchecked Sendable {
                 billingHandler.stopBillingSession(with: sessionUUID)
                 beginNewSession(of: .activeGuidance)
             case .activeGuidance:
+                let previousWaypoints = previousRouteProgress?.remainingWaypoints ?? previousSessionWaypoints
                 if billingHandler.shouldStartNewBillingSession(
                     for: navigationRoutes,
-                    currentRouteProgress: currentRouteProgress,
+                    previousRouteProgress: previousRouteProgress,
+                    remainingWaypoints: previousWaypoints ?? [],
                     reason: reason
                 ) {
                     billingHandler.stopBillingSession(with: sessionUUID)
                     beginNewSession(of: .activeGuidance)
+                } else {
+                    billingHandler.resumeBillingSession(with: sessionUUID)
                 }
             }
         } else {
@@ -570,7 +591,10 @@ final class MapboxNavigator: @unchecked Sendable {
     @MainActor
     private let billingHandler: BillingHandler
 
+    @MainActor
     private var sessionUUID: UUID?
+    @MainActor
+    private var previousSessionWaypoints: [Waypoint]?
 
     private var navigator: CoreNavigator {
         configuration.navigator
@@ -581,7 +605,7 @@ final class MapboxNavigator: @unchecked Sendable {
     @MainActor
     private var rerouteController: RerouteController?
 
-    private let state = NavigatorState()
+    let state = NavigatorState()
 
     private let locationClient: LocationClient
 
@@ -976,11 +1000,13 @@ final class MapboxNavigator: @unchecked Sendable {
                         )
                     )
                     self?.taskManager.cancellableTask { [weak self] in
+                        guard let self else { return }
                         guard !Task.isCancelled else { return }
-                        await self?.setRoutes(
+                        await setRoutes(
                             navigationRoutes: fasterRoutes,
                             startLegIndex: 0,
-                            reason: .fasterRoute
+                            reason: .fasterRoute,
+                            previousRouteProgress: currentRouteProgress?.routeProgress
                         )
                     }
                 }
@@ -1019,7 +1045,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 await self?.setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: routeProgress.legIndex,
-                    reason: .fallbackToOffline
+                    reason: .fallbackToOffline,
+                    previousRouteProgress: routeProgress
                 )
             }
         }
@@ -1041,7 +1068,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 await self?.setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: routeProgress.legIndex,
-                    reason: .restoreToOnline
+                    reason: .restoreToOnline,
+                    previousRouteProgress: routeProgress
                 )
             }
         }
@@ -1164,7 +1192,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
-                    reason: .restoreToOnline
+                    reason: .restoreToOnline,
+                    previousRouteProgress: currentRouteProgress?.routeProgress
                 )
             }
         }
@@ -1337,7 +1366,8 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                         alternativeRoutes: []
                     ),
                     startLegIndex: legIndex,
-                    reason: .alternatives
+                    reason: .alternatives,
+                    previousRouteProgress: currentRouteProgress?.routeProgress
                 )
             }
         }
@@ -1374,7 +1404,8 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
-                    reason: .reroute
+                    reason: .reroute,
+                    previousRouteProgress: currentRouteProgress?.routeProgress
                 )
             }
         }
@@ -1406,6 +1437,11 @@ extension MapboxNavigator: ReroutingControllerDelegate {
 }
 
 extension MapboxNavigator {
+    @MainActor
+    private func update(previousSessionWaypoints: [Waypoint]?) {
+        self.previousSessionWaypoints = previousSessionWaypoints
+    }
+
     @MainActor
     private func send(_ details: NavigationRoutes?) {
         if details == nil {

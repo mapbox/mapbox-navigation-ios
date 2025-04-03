@@ -12,6 +12,8 @@ final class MapboxNavigatorTests: TestCase {
     var refreshNotification: Notification!
     var routeRefreshResult: RouteRefreshResult!
     let timeout: TimeInterval = 0.5
+    var locationClientState: MockLocationClientState!
+    var routeProgress: RouteProgress!
 
     var routeProgressExpectation: XCTestExpectation?
 
@@ -19,6 +21,7 @@ final class MapboxNavigatorTests: TestCase {
         try? await super.setUp()
 
         subscriptions = []
+        locationClientState = MockLocationClientState()
         coreNavigator = await CoreNavigatorMock()
         coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), []))
         routeRefreshResult = RouteRefreshResult(
@@ -30,10 +33,14 @@ final class MapboxNavigatorTests: TestCase {
             NativeNavigator.NotificationUserInfoKey.legIndexKey: 0,
         ]
         refreshNotification = Notification(name: .routeRefreshDidUpdateAnnotations, userInfo: userInfo)
+        routeProgress = await .mock()
         let coonfiguration = MapboxNavigator.Configuration(
             navigator: coreNavigator,
             routeParserType: RouteParser.self,
-            locationClient: .mockLocationClient(locationPublisher: locationPublisher.eraseToAnyPublisher()),
+            locationClient: .mockLocationClient(
+                locationPublisher: locationPublisher.eraseToAnyPublisher(),
+                state: locationClientState
+            ),
             alternativesAcceptionPolicy: coreConfig.routingConfig.alternativeRoutesDetectionConfig?
                 .acceptionPolicy,
             billingHandler: coreConfig.__customBillingHandler!(),
@@ -65,7 +72,12 @@ final class MapboxNavigatorTests: TestCase {
 
         for _ in 0..<100 {
             navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
-            navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .newRoute)
+            navigator.setRoutes(
+                navigationRoutes: navigationRoutes,
+                startLegIndex: 0,
+                reason: .newRoute,
+                previousRouteProgress: routeProgress
+            )
             navigator.didRefreshAnnotations(refreshNotification)
         }
         XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
@@ -97,8 +109,14 @@ final class MapboxNavigatorTests: TestCase {
 
         for _ in 0..<100 {
             Task.detached { [weak self] in
+                guard let self else { return }
                 NotificationCenter.default.post(statusNotification)
-                await self?.navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .newRoute)
+                await navigator.setRoutes(
+                    navigationRoutes: navigationRoutes,
+                    startLegIndex: 0,
+                    reason: .newRoute,
+                    previousRouteProgress: routeProgress
+                )
             }
         }
         XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
@@ -121,7 +139,12 @@ final class MapboxNavigatorTests: TestCase {
                 guard let self else { return }
                 NotificationCenter.default.post(statusNotification)
                 navigator.didRefreshAnnotations(refreshNotification)
-                await navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: .reroute)
+                await navigator.setRoutes(
+                    navigationRoutes: navigationRoutes,
+                    startLegIndex: 0,
+                    reason: .reroute,
+                    previousRouteProgress: routeProgress
+                )
             }
         }
         XCTAssertTrue(navigator.currentSession.state.isTripSessionActive)
@@ -270,9 +293,118 @@ final class MapboxNavigatorTests: TestCase {
     }
 
     @MainActor
+    func testSetStateToIdleAsyncAfterFreeDrive() async {
+        try? await navigator.startFreeDriveAsync()
+        await navigator.setToIdleAsync()
+        let state = navigator.currentSession.state
+        XCTAssertEqual(state, .idle)
+        XCTAssertTrue(coreNavigator.pauseCalled)
+        XCTAssertFalse(coreNavigator.unsetRoutesCalled)
+        XCTAssertFalse(locationClientState.updatingHeading)
+        XCTAssertFalse(locationClientState.updatingLocation)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .stopped)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .paused)
+    }
+
+    @MainActor
+    func testSetStateToIdleAsyncAfterActiveGuidance() async {
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        await navigator.setToIdleAsync()
+        let state = navigator.currentSession.state
+        XCTAssertEqual(state, .idle)
+        XCTAssertTrue(coreNavigator.pauseCalled)
+        XCTAssertTrue(coreNavigator.unsetRoutesCalled)
+        XCTAssertFalse(locationClientState.updatingHeading)
+        XCTAssertFalse(locationClientState.updatingLocation)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .paused)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+    }
+
+    @MainActor
+    func testStartActiveGuidanceAsync() async {
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        let state = navigator.currentSession.state
+        // TODO: (NAVIOS-2155) set active guidance state before returning from startActiveGuidance
+        XCTAssertEqual(state, .idle)
+        XCTAssertFalse(coreNavigator.unsetRoutesCalled)
+        XCTAssertTrue(coreNavigator.setRoutesCalled)
+        XCTAssertTrue(locationClientState.updatingHeading)
+        XCTAssertTrue(locationClientState.updatingLocation)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    @MainActor
+    func testSetStateToFreeDriveAsync() async {
+        await navigator.setToIdleAsync()
+        try? await navigator.startFreeDriveAsync()
+        let state = navigator.currentSession.state
+        XCTAssertEqual(state, .freeDrive(.active))
+        XCTAssertTrue(locationClientState.updatingHeading)
+        XCTAssertTrue(locationClientState.updatingLocation)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+    }
+
+    func testPauseAndResumeActiveGuidanceSessionAsync() async {
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        await navigator.setToIdleAsync()
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+            .resumeBillingSession(.activeGuidance),
+        ])
+    }
+
+    @MainActor
+    func testPauseAndStartActiveGuidanceSessionWhenFreeDriveAsync() async {
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        await navigator.setToIdleAsync()
+        try? await navigator.startFreeDriveAsync()
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .beginBillingSession(.freeDrive),
+            .stopBillingSession(.freeDrive),
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    func testPauseAndStartNewSessionIfShouldStartNewSesion() async {
+        await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        await navigator.setToIdleAsync()
+        var leg = RouteLeg.mock()
+        leg.destination = Waypoint(coordinate: .init(latitude: 1.0, longitude: 2.0))
+        let routes = await NavigationRoutes.mock(
+            mainRoute: .mock(route: .mock(legs: [leg]))
+        )
+        await navigator.startActiveGuidanceAsync(with: routes, startLegIndex: 0)
+
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    @MainActor
     func testSetRoutesSimilarNewRouteKeepsSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
-        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .newRoute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }
@@ -280,7 +412,7 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetRoutesSimilarRerouteKeepsSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
-        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .reroute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute)
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }
@@ -288,7 +420,7 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetRoutesDifferentNewRouteBeginsNewSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes())
-        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .newRoute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
         billingServiceMock.assertEvents([
             .beginBillingSession(.activeGuidance),
@@ -300,7 +432,7 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetRoutesDifferentRerouteBeginsNewSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes())
-        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(), reason: .reroute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute)
 
         billingServiceMock.assertEvents([
             .beginBillingSession(.activeGuidance),
@@ -314,7 +446,7 @@ final class MapboxNavigatorTests: TestCase {
         // This scenario happens with RerouteStrategyForMatchRoute.navigateToFinalDestination
         // when there were more than one waypoint remaining before reroute
         await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes(mapboxApi: .mapMatching))
-        await setRoutesAndWaitForRouteProgress(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: .reroute)
+        await setRoutes(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: .reroute)
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }
@@ -329,13 +461,17 @@ final class MapboxNavigatorTests: TestCase {
         await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
     }
 
-    private func setRoutesAndWaitForRouteProgress(
+    private func setRoutes(
         with navigationRoutes: NavigationRoutes,
         reason: MapboxNavigator.SetRouteReason
     ) async {
-        await navigator.setRoutes(navigationRoutes: navigationRoutes, startLegIndex: 0, reason: reason)
-        routeProgressExpectation = XCTestExpectation(description: "route progress after setRoutes")
-        await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
+        let progress = await navigator.currentRouteProgress?.routeProgress
+        await navigator.setRoutes(
+            navigationRoutes: navigationRoutes,
+            startLegIndex: 0,
+            reason: reason,
+            previousRouteProgress: progress
+        )
     }
 
     // Three points along California St in San Fransisco

@@ -4,22 +4,37 @@ import MapboxNavigationCore
 
 extension LocationClient {
     public static func mockLocationClient(
-        locationPublisher: AnyPublisher<CLLocation, Never>
+        locationPublisher: AnyPublisher<CLLocation, Never>,
+        state: MockLocationClientState = MockLocationClientState()
     ) -> LocationClient {
-        var updatingLocation = true
-        return Self(
-            locations: locationPublisher
-                .filter { _ in updatingLocation }
-                .eraseToAnyPublisher(),
+        LocationClient(
+            locations: locationPublisher.eraseToAnyPublisher(),
             headings: Empty<CLHeading, Never>().eraseToAnyPublisher(),
             startUpdatingLocation: {
-                updatingLocation = true
+                state.updatingLocation = true
             },
             stopUpdatingLocation: {
-                updatingLocation = false
+                state.updatingLocation = false
             },
-            startUpdatingHeading: {},
-            stopUpdatingHeading: {}
+            startUpdatingHeading: {
+                state.updatingHeading = true
+            },
+            stopUpdatingHeading: {
+                state.updatingHeading = false
+            }
         )
+    }
+}
+
+public final class MockLocationClientState {
+    public var updatingLocation = false
+    public var updatingHeading = false
+
+    public init(
+        updatingLocation: Bool = false,
+        updatingHeading: Bool = false
+    ) {
+        self.updatingLocation = updatingLocation
+        self.updatingHeading = updatingHeading
     }
 }
