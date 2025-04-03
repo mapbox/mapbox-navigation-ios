@@ -9,16 +9,61 @@ import MapboxMaps
 import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
+import Combine
 
-final class AdvancedViewController: UIViewController {
-    private let mapboxNavigationProvider = MapboxNavigationProvider(
-        coreConfig: .init(
-            // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
-            locationSource: simulationIsEnabled ? .simulation(
-                initialLocation: nil
-            ) : .live
+final class AdvancedViewController: UIViewController, CLLocationManagerDelegate {
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        Task { [weak self] in
+            await self?.locationsSubject.send(locations)
+        }
+    }
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        Task { [weak self] in
+            await self?.headingSubject.send(newHeading)
+        }
+    }
+
+    private let locationManager = CLLocationManager()
+    private let locationsSubject = PassthroughSubject<[CLLocation], Never>()
+    private let headingSubject = PassthroughSubject<CLHeading, Never>()
+
+    private lazy var mapboxNavigationProvider: MapboxNavigationProvider = {
+        locationManager.delegate = self
+        var mapboxNavigationLocationClient: MapboxNavigationCore.LocationClient {
+            LocationClient(
+                locations: locationsSubject
+                    .compactMap { $0.last }
+                    .eraseToAnyPublisher(),
+                headings: headingSubject
+                    .compactMap { $0 }
+                    .eraseToAnyPublisher(),
+                startUpdatingLocation: { [weak self] in
+                    print(">>> Starting Location updates")
+                    self?.locationManager.startUpdatingLocation()
+                },
+                stopUpdatingLocation: { [weak self] in
+                    print(">>> Stopping Location updates")
+                    self?.locationManager.stopUpdatingLocation()
+                },
+                startUpdatingHeading: { [weak self] in
+                    print(">>> Starting Heading updates")
+                    self?.locationManager.startUpdatingHeading()
+                },
+                stopUpdatingHeading: { [weak self] in
+                    print(">>> Stopping Heading updates")
+                    self?.locationManager.stopUpdatingHeading()
+                })
+        }
+        let provider = MapboxNavigationProvider(
+            coreConfig: .init(
+                locationSource: .custom(mapboxNavigationLocationClient)
+            )
         )
-    )
+        return provider
+    }()
+
     private var mapboxNavigation: MapboxNavigation {
         mapboxNavigationProvider.mapboxNavigation
     }
@@ -242,7 +287,7 @@ extension AdvancedViewController: NavigationViewControllerDelegate {
                     self.navigationMapView = navigationViewController.navigationMapView
 
                     // Re-start Free drive
-                    self.mapboxNavigation.tripSession().startFreeDrive()
+//                    self.mapboxNavigation.tripSession().startFreeDrive()
 
                     // Showcase originally requested routes.
                     self.showCurrentRoute()
