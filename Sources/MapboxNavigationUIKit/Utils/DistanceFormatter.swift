@@ -1,5 +1,6 @@
 import CoreLocation
 import Foundation
+import MapboxDirections
 import MapboxNavigationCore
 
 /// A formatter that provides localized representations of distance units and measurements.
@@ -41,6 +42,9 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
             measurementFormatter.locale = newValue
         }
     }
+
+    /// The measurement system used to overwrite the measurement system of locale.
+    open var measurementSystem: MeasurementSystem?
 
     /// The underlying measurement formatter.
     @NSCopying open var measurementFormatter = MeasurementFormatter()
@@ -88,7 +92,10 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     /// - Parameter measurement: The measurement to localize and format.
     /// - Returns: A localized, formatted representation of the measurement.
     open func string(from measurement: Measurement<UnitLength>) -> String {
-        return measurementFormatter.string(from: measurement.localized(into: locale))
+        return measurementFormatter.string(from: measurement.localized(
+            into: locale,
+            measurementSystem: measurementSystem
+        ))
     }
 
     /// Creates and returns a localized, formatted attributed string representation of the given measurement.
@@ -104,7 +111,10 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil
     ) -> NSAttributedString {
         let string = string(from: measurement)
-        let localizedMeasurement = measurement.localized(into: locale)
+        let localizedMeasurement = measurement.localized(
+            into: locale,
+            measurementSystem: measurementSystem
+        )
 
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         if let quantityString = measurementFormatter.numberFormatter
@@ -179,6 +189,19 @@ extension Measurement where UnitType == UnitLength {
             threshold = .uk
         } else {
             threshold = .us
+        }
+        return threshold.threshold(for: distance).measurement(of: distance)
+    }
+
+    func localized(into locale: Locale, measurementSystem: MeasurementSystem?) -> Measurement<UnitLength> {
+        guard let measurementSystem else {
+            return localized(into: locale)
+        }
+        let threshold: RoundingTable = switch measurementSystem {
+        case .imperial:
+            locale.languageCode == "en" && locale.regionCode == "GB" ? .uk : .us
+        case .metric:
+            .metric
         }
         return threshold.threshold(for: distance).measurement(of: distance)
     }

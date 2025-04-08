@@ -97,6 +97,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let distanceFormatter = DistanceFormatter()
         continuousAlternatives.forEach { alternative in
             let title = alternative.route.description
+            distanceFormatter.measurementSystem = distanceMeasurementSystem
             distanceFormatter.measurementFormatter.numberFormatter.negativePrefix = ""
             let distanceDeltaText = distanceFormatter.string(from: alternative.distanceDelta)
             let distanceDelta = format(
@@ -663,6 +664,22 @@ open class CarPlayNavigationViewController: UIViewController {
         self.navigationMapView = navigationMapView
     }
 
+    private var routeOptions: RouteOptions? {
+        navigationRoutes.mainRoute.routeOptions
+    }
+
+    private var locale: Locale {
+        routeOptions?.locale ?? carPlayManager.coreConfig.locale
+    }
+
+    private var distanceMeasurementSystem: MeasurementSystem {
+        routeOptions?.distanceMeasurementSystem ?? carPlayManager.coreConfig.distanceMeasurementSystem
+    }
+
+    private func localized(measurement: Measurement<UnitLength>) -> Measurement<UnitLength> {
+        measurement.localized(into: locale, measurementSystem: distanceMeasurementSystem)
+    }
+
     // MARK: Notifications Observer Methods
 
     private var cancellable: Set<AnyCancellable> = []
@@ -718,7 +735,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
 
-        let routeDistance = Measurement(distance: routeProgress.distanceRemaining).localized()
+        let routeDistance = localized(measurement: Measurement(distance: routeProgress.distanceRemaining))
         let routeEstimates = CPTravelEstimates(
             distanceRemaining: routeDistance,
             timeRemaining: routeProgress.durationRemaining
@@ -726,7 +743,7 @@ open class CarPlayNavigationViewController: UIViewController {
         mapTemplate.update(routeEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
 
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let stepDistance = Measurement(distance: stepProgress.distanceRemaining).localized()
+        let stepDistance = localized(measurement: Measurement(distance: stepProgress.distanceRemaining))
         let stepEstimates = CPTravelEstimates(
             distanceRemaining: stepDistance,
             timeRemaining: stepProgress.durationRemaining
@@ -815,7 +832,7 @@ open class CarPlayNavigationViewController: UIViewController {
         currentVisualInstruction = visualInstruction
         let step = routeProgress.currentLegProgress.currentStep
         let primaryManeuver = CPManeuver()
-        let distance = Measurement(distance: step.distance).localized()
+        let distance = localized(measurement: Measurement(distance: step.distance))
         primaryManeuver.initialTravelEstimates = CPTravelEstimates(
             distanceRemaining: distance,
             timeRemaining: step.expectedTravelTime
@@ -936,7 +953,7 @@ open class CarPlayNavigationViewController: UIViewController {
             }
 
             if let upcomingStep = routeProgress.currentLegProgress.upcomingStep {
-                let distance = Measurement(distance: upcomingStep.distance).localized()
+                let distance = localized(measurement: Measurement(distance: upcomingStep.distance))
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(
                     distanceRemaining: distance,
                     timeRemaining: upcomingStep

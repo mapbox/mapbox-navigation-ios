@@ -65,7 +65,11 @@ public class CarPlayManager: NSObject {
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D) {
         Task { @MainActor in
             if let routes = core.tripSession().currentNavigationRoutes {
-                var trip = await CPTrip(routes: routes)
+                var trip = await CPTrip(
+                    routes: routes,
+                    locale: locale,
+                    distanceMeasurementSystem: distanceMeasurementSystem
+                )
                 trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
                 if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
@@ -79,6 +83,22 @@ public class CarPlayManager: NSObject {
     private let core: MapboxNavigation
     private var cameraStateCancellable: AnyCancellable?
     private var fetchedSearchResults: [SearchResultRecord] = []
+
+    var coreConfig: CoreConfig {
+        navigationProvider.coreConfig
+    }
+
+    private var routeOptions: RouteOptions? {
+        routes?.mainRoute.routeOptions
+    }
+
+    private var locale: Locale {
+        routeOptions?.locale ?? coreConfig.locale
+    }
+
+    var distanceMeasurementSystem: MeasurementSystem {
+        routes?.mainRoute.routeOptions?.distanceMeasurementSystem ?? coreConfig.distanceMeasurementSystem
+    }
 
     /// Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
     /// - Parameters:
@@ -621,7 +641,7 @@ extension CarPlayManager {
     /// - Parameter routes: `NavigationRoutes` object, containing all information of routes that will be previewed.
     public func previewRoutes(for routes: NavigationRoutes) async {
         guard shouldPreviewRoutes(for: routes) else { return }
-        let trip = await CPTrip(routes: routes)
+        let trip = await CPTrip(routes: routes, locale: locale, distanceMeasurementSystem: distanceMeasurementSystem)
         try? await previewRoutes(for: trip)
     }
 
@@ -914,6 +934,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
         carPlayMapViewController?.removeSearchResultsAnnotations()
     }
 
+    private func localized(measurement: Measurement<UnitLength>) -> Measurement<UnitLength> {
+        measurement.localized(into: locale, measurementSystem: distanceMeasurementSystem)
+    }
+
     @MainActor
     private func showcaseIfNeeded(
         routes: NavigationRoutes?,
@@ -923,8 +947,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     ) {
         guard let carPlayMapViewController, let routes else { return }
         let route = routes.mainRoute.route
+        let measurement = Measurement(distance: route.distance)
         let estimates = CPTravelEstimates(
-            distanceRemaining: Measurement(distance: route.distance).localized(),
+            distanceRemaining: localized(measurement: measurement),
             timeRemaining: route.expectedTravelTime
         )
         mapTemplate.updateEstimates(estimates, for: trip)

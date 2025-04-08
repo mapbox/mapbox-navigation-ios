@@ -24,6 +24,8 @@ public class StepsViewController: UIViewController, NavigationComponent {
     var previousLegIndex: Int = NSNotFound
     var previousStepIndex: Int = NSNotFound
 
+    var measurementSystem: MeasurementSystem?
+
     /// Initializes ``StepsViewController`` with a `RouteProgress` object.
     /// - Parameter routeProgress: The user's current route progress.
     public convenience init(routeProgress: RouteProgress) {
@@ -206,6 +208,9 @@ extension StepsViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
+        if let measurementSystem {
+            cell.instructionsView.distanceFormatter.measurementSystem = measurementSystem
+        }
         return cell
     }
 

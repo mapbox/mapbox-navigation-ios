@@ -149,8 +149,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationRoutes?.mainRoute.routeOptions
     }
 
-    var _routeOptions: RouteOptions?
-
     // MARK: Traversing the Route
 
     var _navigationRoutes: NavigationRoutes?
@@ -567,6 +565,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                 action: #selector(NavigationViewController.didChangeSpeed(_:)),
                 for: .valueChanged
             )
+            if let options = _navigationRoutes?.mainRoute.routeOptions {
+                viewController.instructionsBannerView.distanceFormatter.measurementSystem =
+                    options.distanceMeasurementSystem
+            }
 
             return viewController
         }()
@@ -580,6 +582,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         let bottomBanner = navigationOptions?.bottomBanner ?? {
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
+            if let options = _navigationRoutes?.mainRoute.routeOptions {
+                viewController.distanceFormatter.measurementSystem = options.distanceMeasurementSystem
+            }
 
             return viewController
         }()

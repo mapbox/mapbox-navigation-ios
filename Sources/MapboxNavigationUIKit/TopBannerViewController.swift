@@ -279,7 +279,9 @@ open class TopBannerViewController: UIViewController {
             return
         }
 
+        let formatter = instructionsBannerView.distanceFormatter
         let controller = StepsViewController(routeProgress: progress)
+        controller.measurementSystem = formatter.measurementSystem
         controller.delegate = self
 
         var stepsHeightPresizingConstraint: NSLayoutConstraint? = nil

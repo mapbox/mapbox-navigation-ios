@@ -19,8 +19,8 @@ import MapboxDirections
 open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchecked Sendable {
     /// Specifies the preferred distance measurement unit.
     ///
-    /// Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more
-    /// information.
+    /// Meters and feet will be used when the presented distances are small enough.
+    /// See `DistanceFormatter` for more information.
     public var distanceUnit: LengthFormatter.Unit = Locale.current.usesMetricSystem ? .kilometer : .mile
 
     public convenience init(

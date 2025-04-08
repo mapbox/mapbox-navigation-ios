@@ -3,15 +3,26 @@ import MapboxDirections
 import MapboxNavigationCore
 
 extension CPTrip {
-    convenience init(routes: NavigationRoutes) async {
+    convenience init(
+        routes: NavigationRoutes,
+        locale: Locale,
+        distanceMeasurementSystem: MeasurementSystem
+    ) async {
         let waypoints: [Waypoint] = routes.waypoints
 
         var routeChoices: [CPRouteChoice] = [
-            Self.makeMainRouteChoice(routes: routes),
+            Self.makeMainRouteChoice(
+                routes: routes,
+                locale: locale,
+                distanceMeasurementSystem: distanceMeasurementSystem
+            ),
         ]
 
         for alternativeRoute in routes.alternativeRoutes {
-            let choice = await Self.makeRouteChoice(routes: routes, alternateRoute: alternativeRoute)
+            let choice = await Self.makeRouteChoice(
+                routes: routes, alternateRoute: alternativeRoute, locale: locale,
+                distanceMeasurementSystem: distanceMeasurementSystem
+            )
             routeChoices.append(choice)
         }
 
@@ -38,9 +49,15 @@ extension CPTrip {
 
     private static func makeRouteChoice(
         routes: NavigationRoutes,
-        alternateRoute: AlternativeRoute
+        alternateRoute: AlternativeRoute,
+        locale: Locale,
+        distanceMeasurementSystem: MeasurementSystem
     ) async -> CPRouteChoice {
-        let routeChoice = prepareRouteChiceModel(for: alternateRoute.route)
+        let routeChoice = prepareRouteChoiceModel(
+            for: alternateRoute.route,
+            locale: locale,
+            distanceMeasurementSystem: distanceMeasurementSystem
+        )
 
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
         if let newRoutes = await routes.selecting(alternativeRoute: alternateRoute) {
@@ -51,8 +68,16 @@ extension CPTrip {
         return routeChoice
     }
 
-    private static func makeMainRouteChoice(routes: NavigationRoutes) -> CPRouteChoice {
-        let routeChoice = prepareRouteChiceModel(for: routes.mainRoute.route)
+    private static func makeMainRouteChoice(
+        routes: NavigationRoutes,
+        locale: Locale,
+        distanceMeasurementSystem: MeasurementSystem
+    ) -> CPRouteChoice {
+        let routeChoice = prepareRouteChoiceModel(
+            for: routes.mainRoute.route,
+            locale: locale,
+            distanceMeasurementSystem: distanceMeasurementSystem
+        )
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
         let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes, searchResultRecord: nil)
         let userInfo: CarPlayUserInfo = [key: value]
@@ -60,16 +85,25 @@ extension CPTrip {
         return routeChoice
     }
 
-    private static func prepareRouteChiceModel(for route: Route) -> CPRouteChoice {
+    private static func prepareRouteChoiceModel(
+        for route: Route,
+        locale: Locale,
+        distanceMeasurementSystem: MeasurementSystem
+    ) -> CPRouteChoice {
         let summaryVariants = [
-            DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-            DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-            DateComponentsFormatter.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+            DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime),
+            DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime),
+            DateComponentsFormatter.briefDateComponentsFormatter.string(from: route.expectedTravelTime),
         ]
+        let measurement = Measurement(distance: route.distance)
+        let localizedMeasurement = measurement.localized(
+            into: locale,
+            measurementSystem: distanceMeasurementSystem
+        )
         return CPRouteChoice(
-            summaryVariants: summaryVariants,
+            summaryVariants: summaryVariants.compactMap { $0 },
             additionalInformationVariants: [route.description],
-            selectionSummaryVariants: [Measurement(distance: route.distance).localized().description]
+            selectionSummaryVariants: [localizedMeasurement.description]
         )
     }
 }

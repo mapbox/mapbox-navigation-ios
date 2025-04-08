@@ -10,6 +10,10 @@
 
 * Fixes a case when the SDK stopped the billing session when finishing active guidance. Now the SDK supports the possibility to restore the previous active guidance billing session.
 
+### Other changes
+
+* Fixed an issue where the user interface did not necessarily display distances in the same measurement system as the requested route by default.
+
 ## v3.8.0
 
 ### Packaging
