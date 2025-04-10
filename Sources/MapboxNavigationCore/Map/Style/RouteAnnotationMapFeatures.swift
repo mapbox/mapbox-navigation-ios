@@ -41,8 +41,21 @@ extension NavigationRoutes {
             }
         }
 
+        guard !config.useLegacyEtaRouteAnnotations else {
+            return [
+                ETAViewsAnnotationFeature(
+                    for: self,
+                    showMainRoute: showMainRoute,
+                    showAlternatives: showAlternatives,
+                    isRelative: showAsRelative,
+                    annotateAtManeuver: annotateManeuver,
+                    mapStyleConfig: config
+                ),
+            ]
+        }
+
         return [
-            ETAViewsAnnotationFeature(
+            RouteCalloutsFeature(
                 for: self,
                 showMainRoute: showMainRoute,
                 showAlternatives: showAlternatives,

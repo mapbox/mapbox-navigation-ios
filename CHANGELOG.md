@@ -6,6 +6,14 @@
 
 * Added `RerouteConfig.rerouteStrategyForMatchRoute` to configure rerouting behavior with map-matched routes.
 
+### Map
+
+* New design for route callouts (travel duration annotations) replacing the previous default one.
+* Added properties to change font and color for new caption element in default route callout views:
+    * `NavigationMapView.routeAnnotationCaptionTextFont`
+    * `NavigationMapView.routeAnnotationCaptionTextColor`
+    * `NavigationMapView.routeAnnotationSelectedCaptionTextColor`
+
 ### Pricing
 
 * Fixes a case when the SDK stopped the billing session when finishing active guidance. Now the SDK supports the possibility to restore the previous active guidance billing session.

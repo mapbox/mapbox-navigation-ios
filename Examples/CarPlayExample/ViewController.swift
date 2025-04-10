@@ -81,7 +81,7 @@ class ViewController: UIViewController {
 
         longPressHintView.isHidden = true
         navigationMapView.showsRestrictedAreasOnRoute = true
-        navigationMapView.showcase(routes)
+        navigationMapView.showcase(routes, routeAnnotationKinds: [.routeDurations])
 
         startButton.isEnabled = true
         clearMap.isHidden = false

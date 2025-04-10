@@ -154,6 +154,10 @@ open class DayStyle: Style {
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationSelectedTextColor = .defaultSelectedRouteAnnotationTextColor
             NavigationMapView.appearance(for: traitCollection)
+                .routeAnnotationCaptionTextColor = .defaultRouteAnnotationCaptionTextColor
+            NavigationMapView.appearance(for: traitCollection)
+                .routeAnnotationSelectedCaptionTextColor = .defaultSelectedRouteAnnotationCaptionTextColor
+            NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationMoreTimeTextColor = .defaultRouteAnnotationMoreTimeTextColor
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationLessTimeTextColor = .defaultRouteAnnotationLessTimeTextColor
@@ -557,6 +561,8 @@ open class DayStyle: Style {
                 .routeAnnotationSelectedColor = .defaultSelectedRouteAnnotationColor
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationCaptionTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+            NavigationMapView.appearance(for: carPlayTraitCollection).routeAnnotationSelectedCaptionTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             NavigationMapView.appearance(for: traitCollection)
                 .waypointColor = .defaultWaypointColor
             NavigationMapView.appearance(for: traitCollection)

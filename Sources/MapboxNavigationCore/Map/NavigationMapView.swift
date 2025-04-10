@@ -324,23 +324,40 @@ open class NavigationMapView: UIView {
 
     // MARK: Route Annotations Customization
 
-    /// Configures the color of the route annotation for the main route.
+    /// Configures the color of the route annotation background (selected state).
     @objc public dynamic var routeAnnotationSelectedColor: UIColor =
         .defaultSelectedRouteAnnotationColor
-    /// Configures the color of the route annotation for alternative routes.
+    /// Configures the color of the route annotation background (not selected state).
     @objc public dynamic var routeAnnotationColor: UIColor = .defaultRouteAnnotationColor
-    /// Configures the text color of the route annotation for the main route.
+    /// Configures the text color of the route annotation primary text (selected state).
     @objc public dynamic var routeAnnotationSelectedTextColor: UIColor = .defaultSelectedRouteAnnotationTextColor
-    /// Configures the text color of the route annotation for alternative routes.
+    /// Configures the text color of the route annotation caption text (selected state).
+    @objc public dynamic var routeAnnotationSelectedCaptionTextColor: UIColor =
+        .defaultSelectedRouteAnnotationCaptionTextColor
+    /// Configures the text color of the route annotation primary text (not selected state).
     @objc public dynamic var routeAnnotationTextColor: UIColor = .defaultRouteAnnotationTextColor
+    /// Configures the text color of the route annotation caption text (not selected state).
+    @objc public dynamic var routeAnnotationCaptionTextColor: UIColor = .defaultRouteAnnotationCaptionTextColor
     /// Configures the text color of the route annotation for alternative routes when relative duration is greater then
     /// the main route.
+    @available(
+        *,
+        deprecated,
+        message: "Has no effect in current design. Use `routeAnnotationTextColor` and `routeAnnotationCaptionTextColor` instead."
+    )
     @objc public dynamic var routeAnnotationMoreTimeTextColor: UIColor = .defaultRouteAnnotationMoreTimeTextColor
     /// Configures the text color of the route annotation for alternative routes when relative duration is lesser then
     /// the main route.
+    @available(
+        *,
+        deprecated,
+        message: "Has no effect in current design. Use `routeAnnotationTextColor` and `routeAnnotationCaptionTextColor` instead."
+    )
     @objc public dynamic var routeAnnotationLessTimeTextColor: UIColor = .defaultRouteAnnotationLessTimeTextColor
     /// Configures the text font of the route annotations.
     @objc public dynamic var routeAnnotationTextFont: UIFont = .defaultRouteAnnotationTextFont
+    /// Configures the secondary text font of the route annotations.
+    @objc public dynamic var routeAnnotationCaptionTextFont: UIFont = .defaultRouteAnnotationCaptionTextFont
     /// Configures the waypoint color.
     @objc public dynamic var waypointColor: UIColor = .defaultWaypointColor
     /// Configures the waypoint stroke color.
@@ -709,10 +726,29 @@ open class NavigationMapView: UIView {
         }
     }
 
-    var etaAnnotationAnchors: [ViewAnnotationAnchor] = [
+    var routeCalloutAnchors: [ViewAnnotationAnchor] = [
         .bottomLeft, .bottomRight, .topLeft, .topRight,
     ]
-    var fixedEtaAnnotationPosition = false
+
+    enum FixedRouteCalloutPosition: Equatable {
+        /// Position is dynamic
+        case disabled
+        /// Modifier from 0.0 to 1.0 describing the position within the available range used for callouts
+        case fixed(Double)
+    }
+
+    var fixedRouteCalloutPosition: FixedRouteCalloutPosition = .disabled {
+        didSet {
+            let validRange = 0.0...1.0
+            if case .fixed(let position) = fixedRouteCalloutPosition, !validRange.contains(position) {
+                assertionFailure("Position value out of range: \(position). Must be between 0.0 and 1.0.")
+                fixedRouteCalloutPosition = .fixed(position.clamped(to: validRange))
+            }
+        }
+    }
+
+    @_spi(ExperimentalMapboxAPI)
+    public var useLegacyEtaRouteAnnotations = false
 
     private var mapStyleConfig: MapStyleConfig {
         .init(
@@ -726,9 +762,12 @@ open class NavigationMapView: UIView {
             routeAnnotationColor: routeAnnotationColor,
             routeAnnotationSelectedTextColor: routeAnnotationSelectedTextColor,
             routeAnnotationTextColor: routeAnnotationTextColor,
+            routeAnnotationSelectedCaptionTextColor: routeAnnotationSelectedCaptionTextColor,
+            routeAnnotationCaptionTextColor: routeAnnotationCaptionTextColor,
             routeAnnotationMoreTimeTextColor: routeAnnotationMoreTimeTextColor,
             routeAnnotationLessTimeTextColor: routeAnnotationLessTimeTextColor,
             routeAnnotationTextFont: routeAnnotationTextFont,
+            routeAnnnotationCaptionTextFont: routeAnnotationCaptionTextFont,
             routeLineTracksTraversal: routeLineTracksTraversal,
             isRestrictedAreaEnabled: showsRestrictedAreasOnRoute,
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,
@@ -738,8 +777,9 @@ open class NavigationMapView: UIView {
             congestionConfiguration: congestionConfiguration,
             waypointColor: waypointColor,
             waypointStrokeColor: waypointStrokeColor,
-            etaAnnotationAnchors: etaAnnotationAnchors,
-            fixedEtaAnnotationPosition: fixedEtaAnnotationPosition
+            routeCalloutAnchors: routeCalloutAnchors,
+            fixedRouteCalloutPosition: fixedRouteCalloutPosition,
+            useLegacyEtaRouteAnnotations: useLegacyEtaRouteAnnotations
         )
     }
 }

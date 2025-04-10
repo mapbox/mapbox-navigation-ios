@@ -106,8 +106,9 @@ extension Route {
         clampedTo range: Range<Double> = 0.2..<0.8,
         mapStyleConfig: MapStyleConfig
     ) -> Geometry? {
-        guard !mapStyleConfig.fixedEtaAnnotationPosition else {
-            let centerDistance = distance * (range.lowerBound + (range.upperBound - range.lowerBound) / 3)
+        if case .fixed(let positionModifier) = mapStyleConfig.fixedRouteCalloutPosition {
+            let centerDistance = distance *
+                (range.lowerBound + (range.upperBound - range.lowerBound) * positionModifier)
             let coordinate = shape?.coordinateFromStart(distance: centerDistance)
             return coordinate.map { Point($0).geometry }
         }
@@ -129,7 +130,7 @@ extension ViewAnnotation {
         onAnchorChanged = { config in
             etaView.anchor = config.anchor
         }
-        variableAnchors = etaView.mapStyleConfig.etaAnnotationAnchors.map {
+        variableAnchors = etaView.mapStyleConfig.routeCalloutAnchors.map {
             ViewAnnotationAnchorConfig(anchor: $0)
         }
         setNeedsUpdateSize()

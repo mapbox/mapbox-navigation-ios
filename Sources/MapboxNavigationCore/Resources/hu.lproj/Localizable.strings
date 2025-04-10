@@ -4,3 +4,15 @@
 "ROUTE_HAS_TOLLS" = "Útdíjak";
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "Hasonló ETA";
+/* Caption label shown on alternative route (next to travel duration difference label) when it is slower than the main route. (When slower at least by a predefined margin, so not perceived as a route with similar travel time). */
+"ROUTE_CALLOUT_FASTER" = "gyorsabb";
+/* Caption label shown on alternative route (next to travel duration difference label) when it is slower than the main route. (When slower at least by a predefined margin, so not perceived as a route with similar travel time). */
+"ROUTE_CALLOUT_SLOWER" = "lassabb";
+/* Caption label shown next to travel duration label on a route when it is a fastest route out of all routes presented. */
+"ROUTE_CALLOUT_FASTEST" = "Leggyorsabb";
+/* Caption label shown next to travel duration label on a route when it is a best route (no alternative routes). */
+"ROUTE_CALLOUT_BEST" = "Legjobb";
+/* Caption label shown next to travel time label on a route when it is a suggested route. (In case when there is some other route with same travel duration in minutes also presented.) */
+"ROUTE_CALLOUT_SUGGESTED" = "Javasolt";
+/* Caption label shown on an alternative route when it is has similar travel duration as the main route. (When travel duration difference between those routes is not bigger than the predefined margin.) */
+"ROUTE_CALLOUT_SIMILAR_ETA" = "Hasonló ETA";

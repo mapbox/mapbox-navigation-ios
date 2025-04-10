@@ -25,9 +25,12 @@ struct MapStyleConfig: Equatable {
     var routeAnnotationColor: UIColor
     var routeAnnotationSelectedTextColor: UIColor
     var routeAnnotationTextColor: UIColor
+    var routeAnnotationSelectedCaptionTextColor: UIColor
+    var routeAnnotationCaptionTextColor: UIColor
     var routeAnnotationMoreTimeTextColor: UIColor
     var routeAnnotationLessTimeTextColor: UIColor
     var routeAnnotationTextFont: UIFont
+    var routeAnnnotationCaptionTextFont: UIFont
 
     var routeLineTracksTraversal: Bool
     var isRestrictedAreaEnabled: Bool
@@ -40,8 +43,18 @@ struct MapStyleConfig: Equatable {
     var waypointColor: UIColor
     var waypointStrokeColor: UIColor
 
-    var etaAnnotationAnchors: [ViewAnnotationAnchor]
-    var fixedEtaAnnotationPosition: Bool
+    var routeCalloutAnchors: [ViewAnnotationAnchor]
+    var fixedRouteCalloutPosition: NavigationMapView.FixedRouteCalloutPosition {
+        didSet {
+            let validRange = 0.0...1.0
+            if case .fixed(let position) = fixedRouteCalloutPosition, !validRange.contains(position) {
+                assertionFailure("Position value out of range: \(position). Must be between 0.0 and 1.0.")
+                fixedRouteCalloutPosition = .fixed(position.clamped(to: validRange))
+            }
+        }
+    }
+
+    var useLegacyEtaRouteAnnotations = false
 }
 
 @MainActor

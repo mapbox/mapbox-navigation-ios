@@ -16,4 +16,13 @@ extension String {
             comment: comment
         )
     }
+
+    func localizedValue(prefix: String) -> String {
+        localizedKeyValue(prefix: prefix).localizedString(value: self)
+    }
+
+    private func localizedKeyValue(prefix: String) -> String {
+        let value = replacingOccurrences(of: " ", with: "_")
+        return "\(prefix)\(value)".uppercased()
+    }
 }

@@ -4,3 +4,5 @@
 "ROUTE_HAS_TOLLS" = "Portagens";
 /* Alternatives selection note about equal travel time. */
 "SAME_TIME" = "ETA semelhante";
+/* Caption label shown on an alternative route when it is has similar travel duration as the main route. (When travel duration difference between those routes is not bigger than the predefined margin.) */
+"ROUTE_CALLOUT_SIMILAR_ETA" = "ETA semelhante";

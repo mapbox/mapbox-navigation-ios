@@ -8,7 +8,6 @@ final class ETAView: UIView {
         return label
     }()
 
-    private var tail = UIView()
     private let backgroundShape = CAShapeLayer()
     let mapStyleConfig: MapStyleConfig
 
