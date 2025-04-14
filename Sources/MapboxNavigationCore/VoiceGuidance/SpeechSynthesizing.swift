@@ -24,8 +24,7 @@ public protocol SpeechSynthesizing: AnyObject, Sendable {
 
     /// Used to notify speech synthesizer about future spoken instructions in order to give extra time for preparations.
     /// - parameter instructions: An array of ``SpokenInstruction``s that will be encountered further.
-    /// - parameter locale: A locale to be used for preparing instructions. If `nil` is passed -
-    /// ``SpeechSynthesizing/locale`` will be used as 'default'.
+    /// - parameter locale: A locale to be used for preparing instructions.
     ///
     /// It is not guaranteed that all these instructions will be spoken. For example navigation may be re-routed.
     /// This method may be (and most likely will be) called multiple times along the route progress
@@ -34,8 +33,7 @@ public protocol SpeechSynthesizing: AnyObject, Sendable {
     /// A request to vocalize the instruction
     /// - parameter instruction: an instruction to be vocalized
     /// - parameter legProgress: current leg progress, corresponding to the instruction
-    /// - parameter locale: A locale to be used for vocalizing the instruction. If `nil` is passed -
-    /// ``SpeechSynthesizing/locale`` will be used as 'default'.
+    /// - parameter locale: A locale to be used for vocalizing the instruction.
     ///
     /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished,
     /// ``VoiceInstructionEvents/DidSpeak`` should be published by ``voiceInstructions``.

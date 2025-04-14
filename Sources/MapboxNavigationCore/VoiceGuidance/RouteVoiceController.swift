@@ -72,6 +72,9 @@ public final class RouteVoiceController {
 
         let locale = routeProgress.route.speechLocale
 
+        let fallbackRequestedLocale = routeProgress.navigationRoutes.mainRoute.routeOptions?.locale
+        speechSynthesizer.locale = fallbackRequestedLocale
+
         var remainingSpokenInstructions = routeProgressState?.routeProgress.currentLegProgress.currentStepProgress
             .remainingSpokenInstructions ?? []
         let nextStepInstructions = routeProgressState?.routeProgress.upcomingLeg?.steps.first?
@@ -84,7 +87,6 @@ public final class RouteVoiceController {
             )
         }
 
-        speechSynthesizer.locale = locale
         speechSynthesizer.speak(
             spokenInstruction,
             during: routeProgress.currentLegProgress,

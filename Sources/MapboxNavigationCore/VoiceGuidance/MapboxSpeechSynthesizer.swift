@@ -124,8 +124,12 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale? = nil) {
-        guard let locale = locale ?? self.locale else {
+    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+        prepareIncomingSpokenInstructions(instructions, locale: locale)
+    }
+
+    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
+        guard let locale else {
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(
                     error: SpeechError.undefinedSpeechLocale(
@@ -143,9 +147,13 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    public func speak(_ instruction: SpokenInstruction, during _: RouteLegProgress, locale: Locale? = nil) {
+    public func speak(_ instruction: SpokenInstruction, during legStepProgress: RouteLegProgress) {
+        speak(instruction, during: legStepProgress, locale: locale)
+    }
+
+    public func speak(_ instruction: SpokenInstruction, during _: RouteLegProgress, locale: Locale?) {
         guard !muted else { return }
-        guard let locale = locale ?? self.locale else {
+        guard let locale else {
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(
                     error: SpeechError.undefinedSpeechLocale(
