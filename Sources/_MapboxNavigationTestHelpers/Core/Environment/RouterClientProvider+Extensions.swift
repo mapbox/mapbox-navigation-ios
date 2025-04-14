@@ -1,7 +1,7 @@
 @testable import MapboxNavigationCore
 
-extension RouterProviderClient {
-    public static func value(with routerClient: RouterClient) -> RouterProviderClient {
+extension RouterClientProvider {
+    public static func value(with routerClient: RouterClient) -> RouterClientProvider {
         Self(
             build: { _ in
                 return routerClient
@@ -9,7 +9,7 @@ extension RouterProviderClient {
         )
     }
 
-    public static var testValue: RouterProviderClient {
+    public static var testValue: RouterClientProvider {
         Self(
             build: { _ in
                 return RouterClient.testValue
@@ -17,7 +17,7 @@ extension RouterProviderClient {
         )
     }
 
-    public static var noopValue: RouterProviderClient {
+    public static var noopValue: RouterClientProvider {
         Self(
             build: { _ in
                 return RouterClient.noopValue

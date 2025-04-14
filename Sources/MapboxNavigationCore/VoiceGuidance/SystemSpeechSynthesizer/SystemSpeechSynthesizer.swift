@@ -40,11 +40,11 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
 
     // MARK: Speaking Instructions
 
-    public var isSpeaking: Bool { return speechSynthesizer.isSpeaking }
-
-    private var speechSynthesizer: AVSpeechSynthesizer {
-        _speechSynthesizer.speechSynthesizer
+    public var isSpeaking: Bool {
+        speechSynthesizerClient.isSpeaking()
     }
+
+    private let speechSynthesizerClient: SystemSpeechSynthesizerClient
 
     /// Holds `AVSpeechSynthesizer` that can be sent between isolation contexts but should be operated on MainActor.
     ///
@@ -56,9 +56,14 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     private var previousInstruction: SpokenInstruction?
 
     override public init() {
+        let avSynthesizer = AVSpeechSynthesizer()
+        let wrapper = SendableSpeechSynthesizer(avSynthesizer)
+        self.speechSynthesizerClient = Environment.shared.speechSynthesizerClientProvider
+            .systemSpeechSynthesizer(wrapper)
+
         self._speechSynthesizer = .init(AVSpeechSynthesizer())
         super.init()
-        speechSynthesizer.delegate = self
+        avSynthesizer.delegate = self
     }
 
     deinit {
@@ -109,8 +114,9 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
 
         if localeCode == "en-US" {
             // Alex can’t handle attributed text.
-            utterance = AVSpeechUtterance(string: instruction.text)
-            utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+            let cleanUtterance = AVSpeechUtterance(string: instruction.text)
+            cleanUtterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+            utterance = cleanUtterance
         }
 
         _voiceInstructions.send(VoiceInstructionEvents.WillSpeak(instruction: instruction))
@@ -134,7 +140,7 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             )
             return
         }
-        if let previousInstruction, speechSynthesizer.isSpeaking {
+        if let previousInstruction, speechSynthesizerClient.isSpeaking() {
             _voiceInstructions.send(
                 VoiceInstructionEvents.DidInterrupt(
                     interruptedInstruction: previousInstruction,
@@ -148,24 +154,24 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         Task { [weak self] in
             guard let self else { return }
 
-            if speechSynthesizer.isSpeaking {
+            if speechSynthesizerClient.isSpeaking() {
                 Log.debug("SystemSpeechSynthesizer: Interrupting current instruction speech", category: .audio)
-                speechSynthesizer.stopSpeaking(at: .immediate)
+                speechSynthesizerClient.stopSpeaking(.immediate)
             }
 
             await safeDuckAudioAsync()
-            speechSynthesizer.speak(utteranceToSpeak)
+            speechSynthesizerClient.speak(utteranceToSpeak)
         }
     }
 
     public func stopSpeaking() {
         Log.debug("SystemSpeechSynthesizer: Stop speaking", category: .audio)
-        speechSynthesizer.stopSpeaking(at: .word)
+        speechSynthesizerClient.stopSpeaking(.word)
     }
 
     public func interruptSpeaking() {
         Log.debug("SystemSpeechSynthesizer: Interrupt speaking", category: .audio)
-        speechSynthesizer.stopSpeaking(at: .immediate)
+        speechSynthesizerClient.stopSpeaking(.immediate)
     }
 
     private func safeDuckAudioAsync() async {
@@ -293,14 +299,5 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             }
             _voiceInstructions.send(VoiceInstructionEvents.DidSpeak(instruction: instruction))
         }
-    }
-}
-
-@MainActor
-private final class SendableSpeechSynthesizer: Sendable {
-    let speechSynthesizer: AVSpeechSynthesizer
-
-    init(_ speechSynthesizer: AVSpeechSynthesizer) {
-        self.speechSynthesizer = speechSynthesizer
     }
 }

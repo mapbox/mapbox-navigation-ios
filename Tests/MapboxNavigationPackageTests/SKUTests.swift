@@ -34,7 +34,7 @@ class SKUTests: TestCase {
 
     func testSpeechSynthesizerSKU() async {
         let skuTokenProvider = billingHandler.skuTokenProvider()
-        let speechSynthesizer = SpeechSynthesizer(
+        let speechSynthesizer = RemoteSpeechSynthesizer(
             apiConfiguration: .mock(),
             skuTokenProvider: skuTokenProvider,
             urlSession: urlSessionSpy

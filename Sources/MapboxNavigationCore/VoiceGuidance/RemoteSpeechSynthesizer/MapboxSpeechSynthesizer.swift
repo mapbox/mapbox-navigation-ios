@@ -3,8 +3,8 @@ import AVFoundation
 import Combine
 import MapboxDirections
 
-@MainActor
 /// ``SpeechSynthesizing`` implementation, using Mapbox Voice API. Uses pre-caching mechanism for upcoming instructions.
+@MainActor
 public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     private var _voiceInstructions: PassthroughSubject<VoiceInstructionEvent, Never> = .init()
     public var voiceInstructions: AnyPublisher<VoiceInstructionEvent, Never> {
@@ -76,7 +76,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     /// Mapbox speech engine instance.
     ///
     /// The speech synthesizer uses this object to convert instruction text to audio.
-    private(set) var remoteSpeechSynthesizer: SpeechSynthesizer
+    private let remoteSpeechSynthesizer: RemoteSpeechSynthesizerClient
 
     private var cache: SyncBimodalCache
     private var audioTask: Task<Void, Error>?
@@ -90,22 +90,17 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         return audioPlayer?.isPlaying ?? false
     }
 
-    /// Creates new `MapboxSpeechSynthesizer` with standard `SpeechSynthesizer` for converting text to audio.
-    ///
-    /// - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/) used to
-    /// authorize Mapbox Voice API requests. If an access token is not specified when initializing the speech
-    /// synthesizer object, it should be specified in the `MBXAccessToken` key in the main application bundle’s
-    /// Info.plist.
-    /// - parameter host: An optional hostname to the server API. The Mapbox Voice API endpoint is used by default.
+    /// Creates new `MapboxSpeechSynthesizer` with standard `RemoteSpeechSynthesizer` for converting text to audio.
     init(
         apiConfiguration: ApiConfiguration,
         skuTokenProvider: SkuTokenProvider
     ) {
         self.cache = MapboxSyncBimodalCache()
 
-        self.remoteSpeechSynthesizer = SpeechSynthesizer(
-            apiConfiguration: apiConfiguration,
-            skuTokenProvider: skuTokenProvider
+        let clientProvider = Environment.shared.speechSynthesizerClientProvider
+        self.remoteSpeechSynthesizer = clientProvider.remoteSpeechSynthesizer(
+            apiConfiguration,
+            skuTokenProvider
         )
 
         subscribeToSystemVolume()
@@ -129,6 +124,10 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
+        guard !instructions.isEmpty else {
+            return
+        }
+
         guard let locale else {
             _voiceInstructions.send(
                 VoiceInstructionEvents.EncounteredError(
@@ -252,7 +251,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
 
         audioTask = Task {
             do {
-                let audio = try await self.remoteSpeechSynthesizer.audioData(with: options)
+                let audio = try await self.remoteSpeechSynthesizer.audioData(options)
                 try Task.checkCancellation()
                 self.cache(audio, forKey: ssmlText, with: locale)
                 Log.debug("MapboxSpeechSynthesizer: Will speak text: [\(instruction.text)]", category: .audio)
@@ -290,7 +289,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
 
         Task {
             do {
-                let audio = try await remoteSpeechSynthesizer.audioData(with: options)
+                let audio = try await remoteSpeechSynthesizer.audioData(options)
                 cache(audio, forKey: ssmlText, with: locale)
             } catch {
                 Log.error(
@@ -332,7 +331,7 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
-    private func cache(_ data: Data, forKey key: String, with locale: Locale) {
+    func cache(_ data: Data, forKey key: String, with locale: Locale) {
         cache.store(
             data: data,
             key: locale.identifier + key,
@@ -340,12 +339,12 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         )
     }
 
-    private func cachedDataForKey(_ key: String, with locale: Locale) -> Data? {
-        return cache[locale.identifier + key]
+    func cachedDataForKey(_ key: String, with locale: Locale) -> Data? {
+        cache[locale.identifier + key]
     }
 
     private func hasCachedSpokenInstructionForKey(_ key: String, with locale: Locale) -> Bool {
-        return cachedDataForKey(key, with: locale) != nil
+        cachedDataForKey(key, with: locale) != nil
     }
 
     private func updatePlayerVolume(_ player: AVAudioPlayer?) {

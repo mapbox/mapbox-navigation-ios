@@ -36,7 +36,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
             config: factory.configHandle(),
             historyRecorder: factory.historyRecorderHandle
         )
-        return Environment.shared.routerProviderClient.build(router)
+        return Environment.shared.routerClientProvider.build(router)
     }()
 
     struct ResponseDisposition: Decodable {

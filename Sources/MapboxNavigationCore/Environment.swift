@@ -2,8 +2,9 @@ struct Environment {
     private(set) static var shared: Environment = .live
 
     var audioPlayerClient: AudioPlayerClient
-    var routerProviderClient: RouterProviderClient
+    var routerClientProvider: RouterClientProvider
     var routeParserClient: RouteParserClient
+    var speechSynthesizerClientProvider: SpeechSynthesizerClientProvider
 
     static func switchEnvironment(to environment: Environment) {
         shared = environment
@@ -17,7 +18,8 @@ struct Environment {
 extension Environment {
     static let live = Environment(
         audioPlayerClient: .liveValue,
-        routerProviderClient: .liveValue,
-        routeParserClient: .liveValue
+        routerClientProvider: .liveValue,
+        routeParserClient: .liveValue,
+        speechSynthesizerClientProvider: .liveValue
     )
 }

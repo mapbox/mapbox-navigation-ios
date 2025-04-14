@@ -9,15 +9,18 @@ extension Route {
         shape: LineString? = nil,
         distance: LocationDistance = 300,
         expectedTravelTime: TimeInterval = 195,
-        typicalTravelTime: TimeInterval? = 200
+        typicalTravelTime: TimeInterval? = 200,
+        speechLocale: Locale? = .current
     ) -> Self {
-        self.init(
+        var route = self.init(
             legs: legs,
             shape: shape,
             distance: distance,
             expectedTravelTime: expectedTravelTime,
             typicalTravelTime: typicalTravelTime
         )
+        route.speechLocale = speechLocale
+        return route
     }
 }
 

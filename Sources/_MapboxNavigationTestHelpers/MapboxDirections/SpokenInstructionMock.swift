@@ -5,7 +5,7 @@ extension SpokenInstruction {
     public static func mock(
         distanceAlongStep: LocationDistance = 100,
         text: String = "Instruction",
-        ssmlText: String = "Instruction"
+        ssmlText: String = "SSML Instruction"
     ) -> Self {
         self.init(distanceAlongStep: distanceAlongStep, text: text, ssmlText: ssmlText)
     }

@@ -35,8 +35,8 @@ final class MapboxRoutingProviderTests: TestCase {
             XCTFail("getRouteMapMatchedFor should not be called")
             return 0
         }
-        let routerProviderClient = RouterProviderClient.value(with: routerClient)
-        Environment.set(\.routerProviderClient, routerProviderClient)
+        let routerClientProvider = RouterClientProvider.value(with: routerClient)
+        Environment.set(\.routerClientProvider, routerClientProvider)
 
         let navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
         let routingProvider = navigationProvider.routingProvider()
@@ -67,8 +67,8 @@ final class MapboxRoutingProviderTests: TestCase {
             XCTFail("getRouteForDirectionsUri should not be called")
             return 0
         }
-        let routerProviderClient = RouterProviderClient.value(with: routerClient)
-        Environment.set(\.routerProviderClient, routerProviderClient)
+        let routerClientProvider = RouterClientProvider.value(with: routerClient)
+        Environment.set(\.routerClientProvider, routerClientProvider)
 
         let navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
         let routingProvider = navigationProvider.routingProvider()

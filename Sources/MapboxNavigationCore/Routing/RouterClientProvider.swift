@@ -1,11 +1,11 @@
 import MapboxNavigationNative_Private.MBNNRouterInterface_Internal
 
-struct RouterProviderClient {
+struct RouterClientProvider {
     var build: @Sendable (_ router: RouterInterface) -> RouterClient
 }
 
-extension RouterProviderClient {
-    static var liveValue: RouterProviderClient {
+extension RouterClientProvider {
+    static var liveValue: RouterClientProvider {
         Self(
             build: { router in
                 RouterClient(
