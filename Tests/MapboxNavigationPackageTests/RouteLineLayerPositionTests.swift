@@ -52,7 +52,16 @@ class RouteLineLayerPositionTests: TestCase {
         ]
     )
 
-    var routes: NavigationRoutes!
+    var routes: NavigationRoutes! {
+        didSet {
+            routeProgress = RouteProgress(
+                navigationRoutes: routes,
+                waypoints: [],
+                congestionConfiguration: .default
+            )
+        }
+    }
+
     var routeProgress: RouteProgress!
     var navigationMapView: NavigationMapView!
     var mapboxMap: MapboxMap!
@@ -89,27 +98,11 @@ class RouteLineLayerPositionTests: TestCase {
     }
 
     @MainActor
-    func testRouteLineLayerPosition() {
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [
-                "composite": [
-                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
-                    "type": "vector",
-                ],
-                "custom": [
-                    "url": "http://api.example.com/tilejson.json",
-                    "type": "raster",
-                ],
-            ],
-            "layers": [],
-        ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+    private func loadJsonStyle(
+        with layers: [[String: String]] = [],
+        slot: Slot? = .middle
+    ) {
+        let styleJSON = mapboxMap.mockJsonStyle(with: layers)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
@@ -121,9 +114,28 @@ class RouteLineLayerPositionTests: TestCase {
         .store(in: &subscriptions)
 
         mapboxMap.loadStyle(styleJSON)
+        if let slot {
+            try? mapboxMap.addLayer(SlotLayer(id: slot.rawValue))
+        }
 
         wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
+        navigationMapView.mapStyleManager.onStyleLoaded()
+    }
 
+    @MainActor
+    func testRouteLineLayerPositionWithDeclarativeApproach() {
+        configureRouteLineLayerPosition(useLegacyManualLayersOrderApproach: false)
+    }
+
+    @MainActor
+    func testRouteLineLayerPositionWithManualApproach() {
+        configureRouteLineLayerPosition(useLegacyManualLayersOrderApproach: true)
+    }
+
+    @MainActor
+    func configureRouteLineLayerPosition(useLegacyManualLayersOrderApproach: Bool) {
+        loadJsonStyle(slot: nil)
+        navigationMapView.useLegacyManualLayersOrderApproach = useLegacyManualLayersOrderApproach
         let mainRouteIdentifier = FeatureIds.RouteLine.main.main
         let mainRouteCasingIdentifier = FeatureIds.RouteLine.main.casing
 
@@ -148,7 +160,8 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.removeRoutes()
 
         // After removing all routes there should be no layers in style.
-        XCTAssertEqual(mapboxMap.allLayerIdentifiers.count, 0, "Unexpected number of layer identifiers in style.")
+        let expectedLayers = useLegacyManualLayersOrderApproach ? [] : ["middle"]
+        XCTAssertEqual(mapboxMap.allLayerIdentifiers.map { $0.id }, expectedLayers)
 
         let sourceIdentifier = "test_source"
         var source = GeoJSONSource(id: sourceIdentifier)
@@ -156,85 +169,44 @@ class RouteLineLayerPositionTests: TestCase {
 
         try? mapboxMap.addSource(source)
 
-        let layerIdentifier = "test_dentifier"
+        let layerIdentifier = "test_identifier"
         var layer = LineLayer(id: layerIdentifier, source: sourceIdentifier)
         layer.source = sourceIdentifier
         try? mapboxMap.addLayer(layer)
 
+        navigationMapView.customRouteLineLayerPosition = .above(layerIdentifier)
         navigationMapView.show(routes, routeAnnotationKinds: [])
 
         // In case if layer position was provided to be placed above specific layer,
         // main route line casing layer should be placed above that specific layer followed by the
         // main route line layer.
-        XCTAssertEqual(
-            mapboxMap.allLayerIdentifiers[safe: 0]?.id,
-            layerIdentifier,
-            "Custom line layer identifiers should be equal."
-        )
-
-        XCTAssertEqual(
-            mapboxMap.allLayerIdentifiers[safe: 1]?.id,
-            mainRouteCasingIdentifier,
-            "Route line casing layer identifiers should be equal."
-        )
-
-        XCTAssertEqual(
-            mapboxMap.allLayerIdentifiers[safe: 2]?.id,
-            mainRouteIdentifier,
-            "Route line layer identifiers should be equal."
-        )
+        let routeLineLayerId = useLegacyManualLayersOrderApproach ? mainRouteCasingIdentifier : "custom_route_line_slot"
+        let testLayerPosition = mapboxMap.allLayerIdentifiers.firstIndex {
+            $0.id == layerIdentifier
+        }
+        let routeLinePosition = mapboxMap.allLayerIdentifiers.firstIndex {
+            $0.id == routeLineLayerId
+        }
+        XCTAssertEqual(routeLinePosition, testLayerPosition! + 1)
     }
 
     @MainActor
     func testLayerPosition() async {
-        routes = await Fixture.navigationRoutes(from: "multileg-route", options: routeOptions3Waypoints)
-
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [
-                "composite": [
-                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
-                    "type": "vector",
-                ],
-                "custom": [
-                    "url": "http://api.example.com/tilejson.json",
-                    "type": "raster",
-                ],
-            ],
-            "layers": [
-                buildingLayer,
-                roadTrafficLayer,
-                roadLabelLayer,
-                roadExitLayer,
-                poiLabelLayer,
-                poiLabelCircleLayer,
-            ],
+        let layers = [
+            buildingLayer,
+            roadTrafficLayer,
+            roadLabelLayer,
+            roadExitLayer,
+            poiLabelLayer,
+            poiLabelCircleLayer,
         ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
-        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
-
-        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
-        mapLoadingErrorExpectation.assertForOverFulfill = false
-
-        mapboxMap.onMapLoadingError.observe { _ in
-            mapLoadingErrorExpectation.fulfill()
-        }
-        .store(in: &subscriptions)
-
-        mapboxMap.loadStyle(styleJSON)
-        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
-
-        await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
+        loadJsonStyle(with: layers)
+        routes = await Fixture.navigationRoutes(from: "multileg-route", options: routeOptions3Waypoints)
         navigationMapView.mapStyleManager.onStyleLoaded()
 
         navigationMapView.show(routes, routeAnnotationKinds: [])
         navigationMapView.showsRestrictedAreasOnRoute = true
-        let status = TestNavigationStatusProvider.createActiveStatus(stepIndex: 1)
+        let status = TestNavigationStatusProvider.createActiveStatus(stepIndex: 0)
         routeProgress.update(using: status)
         navigationMapView.updateArrow(routeProgress: routeProgress)
 
@@ -267,12 +239,12 @@ class RouteLineLayerPositionTests: TestCase {
             "Failed to add route line layers below bottommost symbol layer."
         )
 
+        let completedStatus = TestNavigationStatusProvider.createActiveStatus(stepIndex: 1)
+        routeProgress.update(using: completedStatus)
+        navigationMapView.routeLineTracksTraversal = true
         navigationMapView.showsRestrictedAreasOnRoute = false
         navigationMapView.show(routes, routeAnnotationKinds: [])
-        navigationMapView.mapStyleManager.removeWaypoints()
-        navigationMapView.routeLineTracksTraversal = true
-        navigationMapView.updateIntersectionAnnotations(routeProgress: routeProgress)
-        navigationMapView.updateArrow(routeProgress: routeProgress)
+        navigationMapView.updateRouteLine(routeProgress: routeProgress)
 
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -281,27 +253,14 @@ class RouteLineLayerPositionTests: TestCase {
             roadExitLayer["id"]!,
             routeIds.casing,
             routeIds.main,
-            arrowIds.arrowStroke,
-            arrowIds.arrow,
-            arrowIds.arrowSymbolCasing,
-            arrowIds.arrowSymbol,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
             intersectionIds.layer,
+            waypointIds.innerCircle,
             Slot.middle!.rawValue,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
-
-        let status0 = TestNavigationStatusProvider.createActiveStatus(stepIndex: 0)
-        routeProgress.update(using: status0)
-        navigationMapView.updateArrow(routeProgress: routeProgress)
-        allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
-        XCTAssertEqual(
-            allLayerIds,
-            expectedLayerSequence,
-            "Failed to keep custom layer positions in active navigation."
-        )
     }
 
     @MainActor
@@ -312,47 +271,13 @@ class RouteLineLayerPositionTests: TestCase {
         ])
 
         routes = await Fixture.navigationRoutes(from: "route-with-incidents", options: navigationRouteOptions)
-
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [
-                "composite": [
-                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
-                    "type": "vector",
-                ],
-                "custom": [
-                    "url": "http://api.example.com/tilejson.json",
-                    "type": "raster",
-                ],
-            ],
-            "layers": [
-                buildingLayer,
-                roadTrafficLayer,
-                roadLabelLayer,
-                roadExitLayer,
-            ],
+        let layers = [
+            buildingLayer,
+            roadTrafficLayer,
+            roadLabelLayer,
+            roadExitLayer,
         ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
-        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
-
-        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
-        mapLoadingErrorExpectation.assertForOverFulfill = false
-
-        mapboxMap.onMapLoadingError.observe { _ in
-            mapLoadingErrorExpectation.fulfill()
-        }
-        .store(in: &subscriptions)
-
-        mapboxMap.loadStyle(styleJSON)
-        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
-
-        await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
-        navigationMapView.mapStyleManager.onStyleLoaded()
+        loadJsonStyle(with: layers)
 
         navigationMapView.show(routes, routeAnnotationKinds: [])
         navigationMapView.showsRestrictedAreasOnRoute = true
@@ -388,7 +313,6 @@ class RouteLineLayerPositionTests: TestCase {
 
         navigationMapView.showsRestrictedAreasOnRoute = false
         navigationMapView.show(routes, routeAnnotationKinds: [])
-        navigationMapView.mapStyleManager.removeWaypoints()
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.updateRouteLine(routeProgress: routeProgress)
 
@@ -406,6 +330,7 @@ class RouteLineLayerPositionTests: TestCase {
             arrowIds.arrowSymbol,
             intersectionIds.layer,
             routeAlertIds.layer,
+            waypointIds.innerCircle,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
@@ -429,47 +354,15 @@ class RouteLineLayerPositionTests: TestCase {
         ])
 
         routes = await Fixture.navigationRoutes(from: "route-with-incidents", options: navigationRouteOptions)
-        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
-        mapLoadingErrorExpectation.assertForOverFulfill = false
-
-        mapboxMap.onMapLoadingError.observe { _ in
-            mapLoadingErrorExpectation.fulfill()
-        }
-        .store(in: &subscriptions)
-
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [
-                "composite": [
-                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
-                    "type": "vector",
-                ],
-                "custom": [
-                    "url": "http://api.example.com/tilejson.json",
-                    "type": "raster",
-                ],
-            ],
-            "layers": [
-                buildingLayer,
-                roadTrafficLayer,
-                roadLabelLayer,
-                roadExitLayer,
-                poiLabelLayer,
-                poiLabelCircleLayer,
-            ],
+        let layers = [
+            buildingLayer,
+            roadTrafficLayer,
+            roadLabelLayer,
+            roadExitLayer,
+            poiLabelLayer,
+            poiLabelCircleLayer,
         ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
-
-        mapboxMap.loadStyle(styleJSON)
-        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
-
-        await fulfillment(of: [mapLoadingErrorExpectation], timeout: 1)
-        navigationMapView.mapStyleManager.onStyleLoaded()
+        loadJsonStyle(with: layers)
 
         // Add different circle layers in runtime to NavigationMapView at designed layer positions.
         let circleLabelLayer = "circleLabelLayer"
@@ -503,11 +396,7 @@ class RouteLineLayerPositionTests: TestCase {
             circleLabelLayer,
         ]
         var allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
-        XCTAssertEqual(
-            allLayerIds,
-            expectedLayerSequence,
-            "Added custom layer."
-        )
+        XCTAssertEqual(allLayerIds, expectedLayerSequence, "Added custom layer.")
 
         // When circle layers added from map style and in runtime to `NavigationMapView`,
         // the route line should be added above the un-persistent circle layer that has non-empty source layer
@@ -520,6 +409,7 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.show(routes, routeAnnotationKinds: [])
         navigationMapView.updateArrow(routeProgress: routeProgress)
         navigationMapView.updateIntersectionAnnotations(routeProgress: routeProgress)
+        navigationMapView.mapStyleManager.mapStyleDeclarativeContentUpdate()
 
         expectedLayerSequence = [
             buildingLayer["id"]!,
@@ -556,7 +446,8 @@ class RouteLineLayerPositionTests: TestCase {
 
         routes = await Fixture.navigationRoutes(from: "multileg-route-alternatives", options: navigationRouteOptions)
 
-        navigationMapView.mapStyleManager.onStyleLoaded()
+        loadJsonStyle()
+        try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
         navigationMapView.showcase(routes)
 
         let allLayerIds = Set(mapboxMap.allLayerIdentifiers.map { $0.id })
@@ -586,7 +477,7 @@ class RouteLineLayerPositionTests: TestCase {
 
         routes = await Fixture.navigationRoutes(from: "multileg-route-alternatives", options: navigationRouteOptions)
 
-        navigationMapView.mapStyleManager.onStyleLoaded()
+        loadJsonStyle()
         navigationMapView.showsAlternatives = false
         navigationMapView.showcase(routes)
 

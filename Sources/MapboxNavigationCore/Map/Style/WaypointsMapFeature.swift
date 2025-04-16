@@ -20,11 +20,14 @@ struct WaypointsLineStyleContent: MapStyleContent {
 
     var body: some MapStyleContent {
         source
+
         if let circleLayer {
             circleLayer
+                .slot(nil)
         }
         if let symbolLayer {
             symbolLayer
+                .slot(nil)
         }
     }
 }

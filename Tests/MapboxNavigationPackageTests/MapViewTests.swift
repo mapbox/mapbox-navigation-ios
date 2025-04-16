@@ -49,26 +49,7 @@ class MapViewTests: TestCase {
     }
 
     func testMapViewTileSetAndSourceIdentifiers() {
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-                -122.385563, 37.763330,
-            ],
-            "zoom": 15,
-            "sources": [
-                "composite": [
-                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
-                    "type": "vector",
-                ],
-                "custom": [
-                    "url": "http://api.example.com/tilejson.json",
-                    "type": "raster",
-                ],
-            ],
-            "layers": [],
-        ]
-
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        let styleJSON = mapboxMap.mockJsonStyle()
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")

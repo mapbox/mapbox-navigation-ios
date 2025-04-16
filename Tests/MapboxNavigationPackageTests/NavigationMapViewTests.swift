@@ -208,6 +208,7 @@ class NavigationMapViewTests: TestCase {
     }
 
     func testUpdateIntersectionAnnotationsIfCorrectIndex() {
+        loadJsonStyle()
         var progress = RouteProgress(
             navigationRoutes: navigationRoutes,
             waypoints: [],
@@ -231,6 +232,7 @@ class NavigationMapViewTests: TestCase {
     }
 
     func testUpdateIntersectionAnnotationsIfIncorrectIndex() {
+        loadJsonStyle()
         var progress = RouteProgress(
             navigationRoutes: navigationRoutes,
             waypoints: [],
@@ -279,5 +281,23 @@ class NavigationMapViewTests: TestCase {
         let annotation = FeatureIds.IntersectionAnnotation()
         XCTAssertFalse(mapboxMap.layerExists(withId: annotation.layer))
         XCTAssertFalse(mapboxMap.sourceExists(withId: annotation.source))
+    }
+
+    @MainActor
+    private func loadJsonStyle() {
+        let styleJSON = mapboxMap.mockJsonStyle()
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+
+        mapboxMap.onMapLoadingError.observe { _ in
+            mapLoadingErrorExpectation.fulfill()
+        }
+        .store(in: &subscriptions)
+
+        mapboxMap.loadStyle(styleJSON)
+        wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
+        navigationMapView.mapStyleManager.onStyleLoaded()
     }
 }

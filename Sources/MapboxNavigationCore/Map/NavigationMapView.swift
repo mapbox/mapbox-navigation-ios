@@ -37,6 +37,12 @@ open class NavigationMapView: UIView {
     /// present on the map. Enabled by default.
     public internal(set) var mapViewTapGestureRecognizer: UITapGestureRecognizer!
 
+    /// Provides the possibility to return to the manual layer order approach.
+    var useLegacyManualLayersOrderApproach: Bool {
+        get { !mapStyleManager.shouldUseDeclarativeApproach }
+        set { mapStyleManager.shouldUseDeclarativeApproach = !newValue }
+    }
+
     /// Initializes ``NavigationMapView`` instance.
     /// - Parameters:
     ///   - location: A publisher that emits current user location.
@@ -191,6 +197,7 @@ open class NavigationMapView: UIView {
     public var showsIntersectionAnnotations: Bool = true {
         didSet {
             updateIntersectionAnnotations(routeProgress: currentRouteProgress)
+            mapStyleManager.mapStyleDeclarativeContentUpdate()
         }
     }
 
@@ -272,12 +279,10 @@ open class NavigationMapView: UIView {
         didSet { setupUserLocation() }
     }
 
-    /// A custom route line layer position for legacy map styles without slot support.
+    /// A custom route line layer position.
     public var customRouteLineLayerPosition: MapboxMaps.LayerPosition? = nil {
         didSet {
             mapStyleManager.customRouteLineLayerPosition = customRouteLineLayerPosition
-            guard let routes else { return }
-            show(routes, routeAnnotationKinds: routeAnnotationKinds)
         }
     }
 
@@ -381,6 +386,7 @@ open class NavigationMapView: UIView {
             roadObjects: roadObjects,
             excludedRouteAlertTypes: excludedRouteAlertTypes
         )
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     // MARK: Customizing and Displaying the Route Line(s)
@@ -412,7 +418,6 @@ open class NavigationMapView: UIView {
         duration: TimeInterval = 1.0
     ) {
         show(navigationRoutes, routeAnnotationKinds: routeAnnotationKinds)
-        mapStyleManager.removeArrows()
 
         fitCamera(
             routes: navigationRoutes,
@@ -431,14 +436,11 @@ open class NavigationMapView: UIView {
     ///   excluded from the map rendering.
     public var excludedRouteAlertTypes: RoadAlertType = [] {
         didSet {
-            guard let navigationRoutes = routes else {
-                return
-            }
-
             mapStyleManager.updateRouteAlertsAnnotations(
-                navigationRoutes: navigationRoutes,
+                navigationRoutes: routes,
                 excludedRouteAlertTypes: excludedRouteAlertTypes
             )
+            mapStyleManager.mapStyleDeclarativeContentUpdate()
         }
     }
 
@@ -457,31 +459,22 @@ open class NavigationMapView: UIView {
         routeAnnotationKinds: Set<RouteAnnotationKind>
     ) {
         removeRoutes()
+
         routes = navigationRoutes
+        routeRemainingDistancesIndex = nil
         self.routeAnnotationKinds = routeAnnotationKinds
         let mainRoute = navigationRoutes.mainRoute.route
         if routeLineTracksTraversal {
             initPrimaryRoutePoints(route: mainRoute)
         }
-        mapStyleManager.updateRoutes(
-            navigationRoutes,
-            config: mapStyleConfig,
-            featureProvider: customRouteLineFeatureProvider
-        )
-        updateWaypointsVisiblity()
-        if showsVoiceInstructionsOnMap {
-            mapStyleManager.updateVoiceInstructions(route: mainRoute)
-        }
-        mapStyleManager.updateRouteAnnotations(
-            navigationRoutes: navigationRoutes,
+        mapStyleManager.showRoutes(
+            routes,
+            routeProgress: currentRouteProgress,
             annotationKinds: routeAnnotationKinds,
-            config: mapStyleConfig
+            config: mapStyleConfig,
+            routelineFeatureProvider: customRouteLineFeatureProvider,
+            waypointFeatureProvider: waypointsFeatureProvider
         )
-        mapStyleManager.updateRouteAlertsAnnotations(
-            navigationRoutes: navigationRoutes,
-            excludedRouteAlertTypes: excludedRouteAlertTypes
-        )
-        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     /// Removes routes and all visible annotations from the map.
@@ -493,21 +486,10 @@ open class NavigationMapView: UIView {
     }
 
     func updateArrow(routeProgress: RouteProgress) {
-        if routeProgress.currentLegProgress.followOnStep != nil {
-            mapStyleManager.updateArrows(
-                route: routeProgress.route,
-                legIndex: routeProgress.legIndex,
-                stepIndex: routeProgress.currentLegProgress.stepIndex + 1,
-                config: mapStyleConfig
-            )
-        } else {
-            removeArrows()
-        }
-    }
-
-    /// Removes the `RouteStep` arrow from the `MapView`.
-    func removeArrows() {
-        mapStyleManager.removeArrows()
+        mapStyleManager.updateArrows(
+            routeProgress: routeProgress,
+            config: mapStyleConfig
+        )
     }
 
     // MARK: - Debug Viewport
@@ -604,11 +586,8 @@ open class NavigationMapView: UIView {
     }
 
     private func updateVoiceInstructionsVisiblity() {
-        if showsVoiceInstructionsOnMap {
-            mapStyleManager.removeVoiceInstructions()
-        } else if let routes {
-            mapStyleManager.updateVoiceInstructions(route: routes.mainRoute.route)
-        }
+        mapStyleManager.updateVoiceInstructions(route: routes?.mainRoute.route, config: mapStyleConfig)
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     private var customRouteLineFeatureProvider: RouteLineFeatureProvider {
@@ -675,17 +654,13 @@ open class NavigationMapView: UIView {
     }
 
     private func updateWaypointsVisiblity() {
-        guard let mainRoute = routes?.mainRoute.route else {
-            mapStyleManager.removeWaypoints()
-            return
-        }
-
         mapStyleManager.updateWaypoints(
-            route: mainRoute,
-            legIndex: currentRouteProgress?.legIndex ?? 0,
+            routes: routes,
+            legIndex: currentRouteProgress?.legIndex,
             config: mapStyleConfig,
             featureProvider: waypointsFeatureProvider
         )
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     // - MARK: User Tracking Features
@@ -750,7 +725,7 @@ open class NavigationMapView: UIView {
     @_spi(ExperimentalMapboxAPI)
     public var useLegacyEtaRouteAnnotations = false
 
-    private var mapStyleConfig: MapStyleConfig {
+    var mapStyleConfig: MapStyleConfig {
         .init(
             routeCasingColor: routeCasingColor,
             routeAlternateCasingColor: routeAlternateCasingColor,
@@ -773,8 +748,11 @@ open class NavigationMapView: UIView {
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,
             showsAlternatives: showsAlternatives,
             showsIntermediateWaypoints: showsIntermediateWaypoints,
+            showsVoiceInstructionsOnMap: showsVoiceInstructionsOnMap,
+            showsIntersectionAnnotations: showsIntersectionAnnotations,
             occlusionFactor: .constant(routeLineOcclusionFactor),
             congestionConfiguration: congestionConfiguration,
+            excludedRouteAlertTypes: excludedRouteAlertTypes,
             waypointColor: waypointColor,
             waypointStrokeColor: waypointStrokeColor,
             routeCalloutAnchors: routeCalloutAnchors,

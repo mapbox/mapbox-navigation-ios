@@ -17,7 +17,9 @@ struct RouteLineFeatureProvider {
 }
 
 struct RouteLineStyleContent: MapStyleContent {
-    var offset: Double
+    static let customSlotName = "custom_route_line_slot"
+
+    let offset: Double
     let featureIds: FeatureIds.RouteLine
 
     let routeSource: GeoJSONSource
@@ -28,6 +30,8 @@ struct RouteLineStyleContent: MapStyleContent {
     let traversedLineLayer: LineLayer?
     let restrictedAreaLayer: LineLayer?
 
+    var customPosition: LayerPosition?
+
     var body: some MapStyleContent {
         routeSource
         if let restrictedAreaSource {
@@ -36,23 +40,27 @@ struct RouteLineStyleContent: MapStyleContent {
 
         if let traversedLineLayer {
             traversedLineLayer
-                .slot(.middle)
+                .slot(slot)
         }
         if let casingLineLayer {
             casingLineLayer
                 .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
-                .slot(.middle)
+                .slot(slot)
         }
         if let routeLineLayer {
             routeLineLayer
                 .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
-                .slot(.middle)
+                .slot(slot)
         }
         if let restrictedAreaLayer {
             restrictedAreaLayer
                 .lineTrimOffset(start: 0, end: lineTrimOffsetEnd)
-                .slot(.middle)
+                .slot(slot)
         }
+    }
+
+    private var slot: Slot? {
+        customPosition == nil ? .middle : .init(rawValue: Self.customSlotName)
     }
 
     private var lineTrimOffsetEnd: Double {
@@ -68,7 +76,8 @@ extension Route {
         isAlternative: Bool,
         config: MapStyleConfig,
         featureProvider: RouteLineFeatureProvider,
-        customizedLayerProvider: CustomizedTypeLayerProvider<LineLayer>
+        customizedLayerProvider: CustomizedTypeLayerProvider<LineLayer>,
+        customPosition: LayerPosition?
     ) -> (RouteLineStyleContent, MapFeature)? {
         guard let shape else { return nil }
 
@@ -178,7 +187,8 @@ extension Route {
             routeLineLayer: routeLineLayer,
             casingLineLayer: casingLineLayer,
             traversedLineLayer: traversedLineLayer,
-            restrictedAreaLayer: restrictedAreaLayer
+            restrictedAreaLayer: restrictedAreaLayer,
+            customPosition: customPosition
         )
 
         let layers: [(any Layer)?] = [

@@ -28,26 +28,10 @@ extension NavigationMapView {
     }
 
     func updateRouteLine(routeProgress: RouteProgress) {
-        updateIntersectionAnnotations(routeProgress: routeProgress)
-        if let routes {
-            mapStyleManager.updateRouteAlertsAnnotations(
-                navigationRoutes: routes,
-                excludedRouteAlertTypes: excludedRouteAlertTypes,
-                distanceTraveled: routeProgress.distanceTraveled
-            )
-        }
-
-        if routeLineTracksTraversal, routes != nil {
-            guard !routeProgress.routeIsComplete else {
-                mapStyleManager.removeRoutes()
-                mapStyleManager.removeArrows()
-                return
-            }
-
+        mapStyleManager.updateRouteLine(routeProgress: routeProgress, config: mapStyleConfig)
+        if routeLineTracksTraversal, routes != nil, !routeProgress.routeIsComplete {
             updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         }
-        updateArrow(routeProgress: routeProgress)
-        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     func updateAlternatives(routeProgress: RouteProgress?) {
@@ -56,11 +40,7 @@ extension NavigationMapView {
     }
 
     func updateIntersectionAnnotations(routeProgress: RouteProgress?) {
-        if let routeProgress, showsIntersectionAnnotations {
-            mapStyleManager.updateIntersectionAnnotations(routeProgress: routeProgress)
-        } else {
-            mapStyleManager.removeIntersectionAnnotations()
-        }
+        mapStyleManager.updateIntersectionAnnotations(routeProgress: routeProgress, config: mapStyleConfig)
     }
 
     /// Transform the route data into nested arrays of legs -> steps -> coordinates.

@@ -13,18 +13,24 @@ struct ManeuverArrowStyleContent: MapStyleContent {
     let arrowSymbolLayer: SymbolLayer
     let arrowSymbolCasingLayer: SymbolLayer
 
+    var customPosition: LayerPosition?
+
     var body: some MapStyleContent {
         arrowSource
         arrowSymbolSource
 
         arrowStrokeLineLayer
-            .slot(.middle)
+            .slot(slot)
         arrowLineLayer
-            .slot(.middle)
+            .slot(slot)
         arrowSymbolCasingLayer
-            .slot(.middle)
+            .slot(slot)
         arrowSymbolLayer
-            .slot(.middle)
+            .slot(slot)
+    }
+
+    private var slot: Slot? {
+        customPosition == nil ? .middle : .init(rawValue: RouteLineStyleContent.customSlotName)
     }
 }
 

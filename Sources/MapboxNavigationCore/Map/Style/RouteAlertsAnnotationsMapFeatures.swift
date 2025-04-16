@@ -12,6 +12,7 @@ struct RouteAlertsStyleContent: MapStyleContent {
     var body: some MapStyleContent {
         source
         symbolLayer
+            .slot(nil)
     }
 }
 

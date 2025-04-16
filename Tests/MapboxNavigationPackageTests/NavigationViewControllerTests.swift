@@ -673,16 +673,19 @@ class NavigationViewControllerTests: TestCase {
 
         let delegateMock = NavigationViewControllerDelegateMock()
         let navigationViewController = createViewController(delegate: delegateMock)
-        navigationViewController.navigationMapView!.mapStyleManager.onStyleLoaded()
-        navigationViewController.routeLineTracksTraversal = true
-        navigationViewController.navigationMapView!.traversedRouteColor = .gray
-        navigationViewController.navigationMapView!.show(initialRoutes, routeAnnotationKinds: [])
-
-        guard let mapboxMap = navigationViewController.navigationMapView?.mapView.mapboxMap else {
-            XCTFail("Failed to get the MapView style object.")
-            return
+        let navigationMapView = navigationViewController.navigationMapView!
+        let expectation = expectation(description: "Map loading error expectation")
+        let styleJSON = navigationMapView.mapView.mapboxMap.mockJsonStyle()
+        navigationMapView.mapView.mapboxMap.loadStyle(styleJSON) { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
+        navigationMapView.mapStyleManager.onStyleLoaded()
+        navigationViewController.routeLineTracksTraversal = true
+        navigationMapView.traversedRouteColor = .gray
+        navigationMapView.show(initialRoutes, routeAnnotationKinds: [])
 
+        let mapboxMap = navigationMapView.mapView.mapboxMap!
         let mainRouteIds = FeatureIds.RouteLine.main
         navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
 
