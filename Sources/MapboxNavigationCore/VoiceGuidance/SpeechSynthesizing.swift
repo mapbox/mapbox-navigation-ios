@@ -22,21 +22,28 @@ public protocol SpeechSynthesizing: AnyObject, Sendable {
     /// Default value is `true`.
     var managesAudioSession: Bool { get set }
 
-    /// Used to notify speech synthesizer about future spoken instructions in order to give extra time for preparations.
-    /// - parameter instructions: An array of ``SpokenInstruction``s that will be encountered further.
-    /// - parameter locale: A locale to be used for preparing instructions.
+    /// Notifies the speech synthesizer about future spoken instructions to give time for preloading and preparation.
     ///
-    /// It is not guaranteed that all these instructions will be spoken. For example navigation may be re-routed.
+    /// This method helps reduce latency by preloading audio for instructions that will be spoken soon. It attempts to
+    /// download and cache the audio for each provided instruction, using the specified locale for synthesis.
+    /// It is not guaranteed that all these instructions will be spoken. For example, navigation may be re-routed.
     /// This method may be (and most likely will be) called multiple times along the route progress
+    /// - Parameters:
+    ///   - instructions: An array of upcoming ``SpokenInstruction`` instances that should be prepared in advance.
+    ///   - locale: The locale to use for preparing the spoken instructions. If `nil`, an error will be sent to the
+    /// ``SpeechSynthesizing/voiceInstructions`` stream indicating a missing speech locale.
     func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?)
 
-    /// A request to vocalize the instruction
-    /// - parameter instruction: an instruction to be vocalized
-    /// - parameter legProgress: current leg progress, corresponding to the instruction
-    /// - parameter locale: A locale to be used for vocalizing the instruction.
+    /// Requests the vocalization of a given spoken instruction.
     ///
-    /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished,
-    /// ``VoiceInstructionEvents/DidSpeak`` should be published by ``voiceInstructions``.
+    /// This method handles the playback of a spoken instruction, using cached audio data if available.
+    /// If no cached data is found, it initiates a download before speaking.
+    /// When vocalizing is finished, ``VoiceInstructionEvents/DidSpeak`` should be published by
+    /// ``SpeechSynthesizing/voiceInstructions``.
+    /// - Parameters:
+    ///   - instruction: The ``SpokenInstruction`` to be vocalized.
+    ///   - legProgress: The current ``RouteLegProgress`` associated with the instruction.
+    ///   - locale: The `Locale` to be used for speech synthesis.
     func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?)
 
     /// Tells synthesizer to stop current vocalization in a graceful manner.

@@ -119,10 +119,25 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
+    @available(
+        *,
+        deprecated,
+        message: "Use prepareIncomingSpokenInstructions(_:locale:) instead. Pass non-nil locale."
+    )
     public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         prepareIncomingSpokenInstructions(instructions, locale: locale)
     }
 
+    /// Notifies the speech synthesizer about future spoken instructions to give time for preloading and preparation.
+    ///
+    /// This method helps reduce latency by preloading audio for instructions that will be spoken soon. It attempts to
+    /// download and cache the audio for each provided instruction, using the specified locale for synthesis.
+    /// It is not guaranteed that all these instructions will be spoken. For example, navigation may be re-routed.
+    /// This method may be (and most likely will be) called multiple times along the route progress
+    /// - Parameters:
+    ///   - instructions: An array of upcoming ``SpokenInstruction`` instances that should be prepared in advance.
+    ///   - locale: The locale is to use for preparing the spoken instructions. If `nil`, an error will be sent to the
+    /// ``SpeechSynthesizing/voiceInstructions`` stream indicating a missing speech locale.
     public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
         guard !instructions.isEmpty else {
             return
@@ -146,10 +161,22 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         }
     }
 
+    @available(*, deprecated, message: "Use speak(_:during:locale:) instead. Pass non-nil locale.")
     public func speak(_ instruction: SpokenInstruction, during legStepProgress: RouteLegProgress) {
         speak(instruction, during: legStepProgress, locale: locale)
     }
 
+    /// Requests the vocalization of a given spoken instruction.
+    ///
+    /// This method handles the playback of a spoken instruction, using cached audio data if available.
+    /// If no cached data is found, it initiates a download before speaking.
+    /// When vocalizing is finished, ``VoiceInstructionEvents/DidSpeak`` should be published by
+    /// ``SpeechSynthesizing/voiceInstructions``.
+    /// - Parameters:
+    ///   - instruction: The ``SpokenInstruction`` to be vocalized.
+    ///   - legProgress: The current ``RouteLegProgress`` associated with the instruction.
+    ///   - locale: The `Locale` to be used for speech synthesis. If `nil`, an error will be sent to the
+    /// ``SpeechSynthesizing/voiceInstructions`` stream indicating a missing speech locale.
     public func speak(_ instruction: SpokenInstruction, during _: RouteLegProgress, locale: Locale?) {
         guard !muted else { return }
         guard let locale else {

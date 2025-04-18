@@ -84,10 +84,6 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         // Do nothing
     }
 
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
-        speak(instruction, during: legProgress, locale: locale)
-    }
-
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
         guard !muted else {
             _voiceInstructions.send(

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### API Deprecations
+
+* `MapboxSpeechSynthesizer.prepareIncomingSpokenInstructions(_:)` and `MapboxSpeechSynthesizer.speak(_:during:)` are deprecated in favor of `MapboxSpeechSynthesizer.prepareIncomingSpokenInstructions(_:locale:)` and `MapboxSpeechSynthesizer.speak(_:during:locale:)`.
+
 ### Routing
 
 * Added `RerouteConfig.rerouteStrategyForMatchRoute` to configure rerouting behavior with map-matched routes.
