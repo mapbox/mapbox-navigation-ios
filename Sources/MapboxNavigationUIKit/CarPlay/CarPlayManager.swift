@@ -60,7 +60,8 @@ public class CarPlayManager: NSObject {
     private var routes: NavigationRoutes?
 
     /// Programatically begins a CarPlay turn-by-turn navigation session.
-    /// - Parameter currentLocation: The current location of the user. This will be used to initally draw the current
+    /// - Parameter currentLocation: The current location of the user. This will be used to initally draw SignInViewthe
+    /// current
     /// location icon.
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D) {
         Task { @MainActor in
@@ -703,10 +704,12 @@ extension CarPlayManager {
 
         let trips = dataForPreviews.map(\.trip)
 
+        var previewText = defaultTripPreviewTextConfiguration()
+
         template.showTripPreviews(
             trips,
             selectedTrip: trips.first,
-            textConfiguration: nil
+            textConfiguration: previewText
         )
 
         for dataForPreview in dataForPreviews {
@@ -715,9 +718,10 @@ extension CarPlayManager {
         }
 
         fetchedSearchResults = searchResults
-        carPlayMapViewController?.showSearchResultsAnnotations(with: searchResults, selectedResult: searchResults.first)
         _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: false)
         try await interfaceController.pushTemplate(template, animated: true)
+
+        carPlayMapViewController?.showSearchResultsAnnotations(with: searchResults, selectedResult: searchResults.first)
     }
 
     @MainActor
@@ -804,9 +808,9 @@ extension CarPlayManager {
     }
 
     private func defaultTripPreviewBackButton() -> CPBarButton {
-        let title = "CARPLAY_PREVIEW_BACK".localizedString(
-            value: "Back",
-            comment: "Title for trip preview back button"
+        let title = "NAVIGATION_REPORT_CANCEL".localizedString(
+            value: "Cancel",
+            comment: "Title for trip preview cancel button"
         )
         let backButton = CPBarButton(title: title) { [weak self] (_: CPBarButton) in
             guard let self else { return }

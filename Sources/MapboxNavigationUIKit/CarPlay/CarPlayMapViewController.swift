@@ -282,8 +282,8 @@ open class CarPlayMapViewController: UIViewController {
             equalTo: view.trailingAnchor,
             constant: -8
         )
-        speedLimitView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         self.speedLimitView = speedLimitView
     }
@@ -520,7 +520,6 @@ open class CarPlayMapViewController: UIViewController {
     func removeSearchResultsAnnotations() {
         guard !searchResultAnnotations.isEmpty else { return }
 
-        let annotationIds = searchResultAnnotations.ids
         pointAnnotationManager?.annotations = []
         searchResultAnnotations.removeAll()
         navigationMapView.navigationCamera.update(cameraState: .following)
@@ -528,12 +527,13 @@ open class CarPlayMapViewController: UIViewController {
 
     func fitCameraToSearchResults(searchResults: [SearchResultRecord]) {
         navigationMapView.navigationCamera.stop()
+        let coordinates: [CLLocationCoordinate2D] = searchResults.map { $0.coordinate }
+
         let initialCameraOptions = CameraOptions(
             padding: navigationMapView.navigationCamera.viewportPadding,
             bearing: 0,
             pitch: 0
         )
-        let coordinates = searchResults.map { $0.coordinate }
         do {
             let cameraOptions = try navigationMapView.mapView.mapboxMap.camera(
                 for: coordinates,
@@ -542,7 +542,7 @@ open class CarPlayMapViewController: UIViewController {
                 maxZoom: nil,
                 offset: nil
             )
-            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 0.0)
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 0.3)
         } catch {
             Log.error("Failed to fit the camera: \(error.localizedDescription)", category: .navigationUI)
         }

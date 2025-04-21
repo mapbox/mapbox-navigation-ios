@@ -11,7 +11,7 @@ import UIKit
 /// `WayNameView.isHidden` property to `true`.
 @objc(MBWayNameView)
 open class WayNameView: UIView {
-    lazy var label: WayNameLabel = .forAutoLayout()
+    public lazy var label: WayNameLabel = .forAutoLayout()
 
     /// A host view for the ``WayNameLabel`` instance that is used internally to show or hide ``WayNameLabel`` depending
     /// on the road name data availability.

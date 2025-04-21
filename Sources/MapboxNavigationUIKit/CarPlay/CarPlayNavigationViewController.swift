@@ -244,7 +244,7 @@ open class CarPlayNavigationViewController: UIViewController {
         speedLimitView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(speedLimitView)
 
-        speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
+        speedLimitView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
         safeTrailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
             constant: -8
@@ -253,8 +253,8 @@ open class CarPlayNavigationViewController: UIViewController {
             equalTo: view.trailingAnchor,
             constant: -8
         )
-        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         self.speedLimitView = speedLimitView
 

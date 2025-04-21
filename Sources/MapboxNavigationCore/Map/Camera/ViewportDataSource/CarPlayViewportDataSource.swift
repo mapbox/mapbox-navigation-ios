@@ -118,7 +118,7 @@ public class CarPlayViewportDataSource: ViewportDataSource {
 
             // Bottom of the viewport on CarPlay should be placed at the same level with
             // trip estimate view.
-            carPlayCameraPadding.bottom += 65.0
+            carPlayCameraPadding.bottom += 45.0
 
             if geometryFramingAfterManeuver.enabled {
                 let nextStepIndex = min(activeState.currentLegStepIndex + 1, activeState.currentLegSteps.count - 1)
