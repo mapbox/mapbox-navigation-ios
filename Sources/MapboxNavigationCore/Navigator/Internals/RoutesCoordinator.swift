@@ -53,13 +53,6 @@ final class RoutesCoordinator {
         completion: @escaping (Result<RoutesResult, Error>) -> Void
     ) {
         lock.lock()
-        if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
-            Log.fault(
-                "[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController is deallocated once not in use.",
-                category: .navigation
-            )
-        }
-
         state = .activeNavigation(uuid)
         lock.unlock()
 
