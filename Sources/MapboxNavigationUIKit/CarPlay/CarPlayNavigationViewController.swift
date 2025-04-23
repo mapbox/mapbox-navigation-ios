@@ -736,9 +736,12 @@ open class CarPlayNavigationViewController: UIViewController {
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
 
         let routeDistance = localized(measurement: Measurement(distance: routeProgress.distanceRemaining))
+        // Show "1 min" instead of "0 min" when less than 1 min remaining
+        var timeRemaining = routeProgress.durationRemaining
+        timeRemaining = timeRemaining > 0 ? max(timeRemaining, 60) : timeRemaining
         let routeEstimates = CPTravelEstimates(
             distanceRemaining: routeDistance,
-            timeRemaining: routeProgress.durationRemaining
+            timeRemaining: timeRemaining
         )
         mapTemplate.update(routeEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
 

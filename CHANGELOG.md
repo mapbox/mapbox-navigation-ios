@@ -6,6 +6,10 @@
 
 * `MapboxSpeechSynthesizer.prepareIncomingSpokenInstructions(_:)` and `MapboxSpeechSynthesizer.speak(_:during:)` are deprecated in favor of `MapboxSpeechSynthesizer.prepareIncomingSpokenInstructions(_:locale:)` and `MapboxSpeechSynthesizer.speak(_:during:locale:)`.
 
+### CarPlay
+
+* In `CarPlayNavigationViewController`, trip travel estimates now show 1 instead of 0 minutes remaining when there is less than 1 minute remaining. 
+
 ### Routing
 
 * Added `RerouteConfig.rerouteStrategyForMatchRoute` to configure rerouting behavior with map-matched routes.
