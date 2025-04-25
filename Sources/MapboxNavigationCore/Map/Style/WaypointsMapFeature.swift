@@ -23,11 +23,11 @@ struct WaypointsLineStyleContent: MapStyleContent {
 
         if let circleLayer {
             circleLayer
-                .slot(nil)
+                .slot(NavigationSlot.aboveBasemap)
         }
         if let symbolLayer {
             symbolLayer
-                .slot(nil)
+                .slot(NavigationSlot.aboveBasemap)
         }
     }
 }

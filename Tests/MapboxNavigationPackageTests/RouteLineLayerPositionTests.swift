@@ -134,8 +134,8 @@ class RouteLineLayerPositionTests: TestCase {
 
     @MainActor
     func configureRouteLineLayerPosition(useLegacyManualLayersOrderApproach: Bool) {
-        loadJsonStyle(slot: nil)
         navigationMapView.useLegacyManualLayersOrderApproach = useLegacyManualLayersOrderApproach
+        loadJsonStyle(slot: nil)
         let mainRouteIdentifier = FeatureIds.RouteLine.main.main
         let mainRouteCasingIdentifier = FeatureIds.RouteLine.main.casing
 
@@ -145,14 +145,15 @@ class RouteLineLayerPositionTests: TestCase {
         // Style doesn't contain any layers besides main route layer and its casing. In case if
         // layer position wasn't provided main route line casing layer should be placed below the
         // main route line layer.
+        let startIndex = useLegacyManualLayersOrderApproach ? 0 : 1
         XCTAssertEqual(
-            mapboxMap.allLayerIdentifiers[safe: 0]?.id,
+            mapboxMap.allLayerIdentifiers[safe: startIndex]?.id,
             mainRouteCasingIdentifier,
             "Route line casing layer identifiers should be equal."
         )
 
         XCTAssertEqual(
-            mapboxMap.allLayerIdentifiers[safe: 1]?.id,
+            mapboxMap.allLayerIdentifiers[safe: startIndex + 1]?.id,
             mainRouteIdentifier,
             "Route line layer identifiers should be equal."
         )
@@ -160,7 +161,7 @@ class RouteLineLayerPositionTests: TestCase {
         navigationMapView.removeRoutes()
 
         // After removing all routes there should be no layers in style.
-        let expectedLayers = useLegacyManualLayersOrderApproach ? [] : ["middle"]
+        let expectedLayers = useLegacyManualLayersOrderApproach ? [] : ["middle", "navigation-above-basemap"]
         XCTAssertEqual(mapboxMap.allLayerIdentifiers.map { $0.id }, expectedLayers)
 
         let sourceIdentifier = "test_source"
@@ -232,6 +233,7 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelCircleLayer["id"]!,
             waypointIds.innerCircle,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
         ]
         XCTAssertEqual(
             allLayerIds,
@@ -258,6 +260,7 @@ class RouteLineLayerPositionTests: TestCase {
             intersectionIds.layer,
             waypointIds.innerCircle,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
@@ -298,6 +301,7 @@ class RouteLineLayerPositionTests: TestCase {
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
             routeIds.casing,
             routeIds.main,
             arrowIds.arrowStroke,
@@ -322,6 +326,7 @@ class RouteLineLayerPositionTests: TestCase {
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
             routeIds.casing,
             routeIds.main,
             arrowIds.arrowStroke,
@@ -393,6 +398,7 @@ class RouteLineLayerPositionTests: TestCase {
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
             circleLabelLayer,
         ]
         var allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
@@ -430,6 +436,7 @@ class RouteLineLayerPositionTests: TestCase {
             routeAlertIds.layer,
             waypointIds.innerCircle,
             Slot.middle!.rawValue,
+            NavigationSlot.aboveBasemap.rawValue,
             circleLabelLayer,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }

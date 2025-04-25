@@ -159,6 +159,7 @@ final class NavigationMapStyleManager {
         layersOrder.setStyleIds(layerIds)
 
         if !shouldUseDeclarativeApproach {
+            createNavigationSlotsIfNeeded()
             routeFeaturesStore.styleLoaded(order: &layersOrder)
             waypointFeaturesStore.styleLoaded(order: &layersOrder)
             arrowFeaturesStore.styleLoaded(order: &layersOrder)
@@ -167,25 +168,22 @@ final class NavigationMapStyleManager {
             routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
             routeAlertsFeaturesStore.styleLoaded(order: &layersOrder)
         } else {
-            addMiddleSlotIfNeeded()
             // Until ViewAnnotations are supported in Declarative Map Styling in Maps SDK iOS,
             // we should use the old approach for route annotations.
             routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
         }
     }
 
-    private func addMiddleSlotIfNeeded() {
-        guard shouldUseDeclarativeApproach else { return }
+    private func createNavigationSlotsIfNeeded() {
+        guard !mapView.mapboxMap.allSlotIdentifiers.isEmpty else { return }
 
-        // Add middle slot for the route line. The clients can customize the slot position using
-        // `NavigationMapView.customRouteLineLayerPosition`.
-        if let middleSlot = Slot.middle,
-           !mapView.mapboxMap.allSlotIdentifiers.contains(middleSlot)
-        {
-            try? mapView.mapboxMap.addLayer(
-                SlotLayer(id: middleSlot.rawValue), layerPosition: middleSlotPosition()
-            )
+        if !contains(navigationSlot: NavigationSlot.aboveBasemap) {
+            try? mapView.mapboxMap.addLayer(SlotLayer(id: NavigationSlot.aboveBasemap.rawValue))
         }
+    }
+
+    private func contains(navigationSlot: Slot) -> Bool {
+        mapView.mapboxMap.allSlotIdentifiers.contains(navigationSlot)
     }
 
     private(set) var mapContent: NavigationStyleContent?
@@ -194,7 +192,6 @@ final class NavigationMapStyleManager {
     func mapStyleDeclarativeContentUpdate() {
         guard shouldUseDeclarativeApproach else { return }
 
-        addMiddleSlotIfNeeded()
         if let mapContent {
             mapView.mapboxMap.setMapStyleContent {
                 mapContent
@@ -621,12 +618,18 @@ final class NavigationMapStyleManager {
                 }
                 // Setting the top position on the map. We cannot explicitly set `.top` position because `.top`
                 // renders behind Place and Transit labels
-                SlottedRules(nil) {
+                SlottedRules(NavigationSlot.aboveBasemap) {
                     R.orderedIds([
                         intersectionIds.layer,
                         routeAlertIds.layer,
                         waypointIds.innerCircle,
                         waypointIds.markerIcon,
+                    ])
+                }
+                // The puck layer is not added by the Nav SDK, so this method doesn't get called for it and the slot
+                // should be set manually.
+                SlottedRules(nil) {
+                    R.orderedIds([
                         NavigationMapView.LayerIdentifier.puck2DLayer,
                         NavigationMapView.LayerIdentifier.puck3DLayer,
                     ])
@@ -732,6 +735,22 @@ final class NavigationMapStyleManager {
             }
         }
 
+        let layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
+        if isAboveRoadLayer, let position = manualLayerPosition(
+            for: layerIdentifier,
+            groupIds: aboveRoadLayers,
+            allExistingLayerIds: layerIds
+        ) {
+            return position
+        }
+        if isUppermostLayer, let position = manualLayerPosition(
+            for: layerIdentifier,
+            groupIds: uppermostSymbolLayers,
+            allExistingLayerIds: layerIds
+        ) {
+            return position
+        }
+
         var foundAboveLayer = false
         for layerInfo in mapView.mapboxMap.allLayerIdentifiers.reversed() {
             if lowerLayers.contains(layerInfo.id) {
@@ -807,7 +826,7 @@ final class NavigationMapStyleManager {
                 // If the sequenceLayer is in lowermostSymbolLayers, it's below all symbol layers.
                 // So for the layerIdentifier, it should be put above the targetLayer, which is the topmost road name
                 // symbol layer.
-                return .above(targetLayer)
+                return layerPosition
             }
         } else if !isUppermostLayer {
             // For other layers should be uppermost and above symbol layers.
@@ -819,6 +838,25 @@ final class NavigationMapStyleManager {
         }
 
         return layerPosition
+    }
+
+    private static func manualLayerPosition(
+        for layerIdentifier: String,
+        groupIds: [String],
+        allExistingLayerIds: [String]
+    ) -> LayerPosition? {
+        // Adopting v2 logic, where only the position for the first layer from the group `aboveRoadLayers` was
+        // calculated.
+        guard let index = groupIds.firstIndex(of: layerIdentifier) else { return nil }
+
+        if let next = groupIds.dropFirst(index + 1).first(where: { allExistingLayerIds.contains($0) }) {
+            return .below(next)
+        }
+
+        if let prev = groupIds[..<index].reversed().first(where: { allExistingLayerIds.contains($0) }) {
+            return .above(prev)
+        }
+        return nil
     }
 }
 

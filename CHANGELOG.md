@@ -21,6 +21,8 @@
     * `NavigationMapView.routeAnnotationCaptionTextFont`
     * `NavigationMapView.routeAnnotationCaptionTextColor`
     * `NavigationMapView.routeAnnotationSelectedCaptionTextColor`
+* Fixed an issue when intersection annotations could render above the user puck.
+* Fixed an issue where maneuver arrow layers could render in the incorrect order in map styles that do not support slots.
 
 ### Pricing
 

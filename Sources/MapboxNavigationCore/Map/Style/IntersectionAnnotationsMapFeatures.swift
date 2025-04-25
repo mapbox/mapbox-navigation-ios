@@ -11,6 +11,7 @@ struct IntersectionAnnotationsStyleContent: MapStyleContent {
         source
 
         symbolLayer
+            .slot(NavigationSlot.aboveBasemap)
     }
 }
 

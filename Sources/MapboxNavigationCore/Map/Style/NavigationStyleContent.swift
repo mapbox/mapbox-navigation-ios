@@ -1,5 +1,9 @@
 import MapboxMaps
 
+enum NavigationSlot {
+    static let aboveBasemap = Slot(rawValue: "navigation-above-basemap")!
+}
+
 struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent] = [:]
     var waypoints: WaypointsLineStyleContent?
@@ -18,9 +22,13 @@ struct NavigationStyleContent: MapStyleContent {
     }
 
     var body: some MapStyleContent {
-        if let customRoutePosition, !routeLines.isEmpty {
-            SlotLayer(id: RouteLineStyleContent.customSlotName)
-                .position(customRoutePosition)
+        if let customRoutePosition {
+            if !routeLines.isEmpty {
+                SlotLayer(id: RouteLineStyleContent.customSlotName)
+                    .position(customRoutePosition)
+            }
+        } else if let middle = Slot.middle {
+            SlotLayer(id: middle.rawValue)
         }
 
         if let content = routeLines[.alternative(idx: 0)] {
@@ -40,6 +48,8 @@ struct NavigationStyleContent: MapStyleContent {
         if let voiceInstruction {
             voiceInstruction
         }
+
+        SlotLayer(id: NavigationSlot.aboveBasemap.rawValue)
 
         if let intersectionAnnotations {
             intersectionAnnotations
