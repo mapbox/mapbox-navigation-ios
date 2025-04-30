@@ -44,7 +44,7 @@ public final class NavigationEventsManager: Sendable {
     ///  If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show
     /// the custom UI so the location and timestamp are more accurate. Alternatively, you can use
     /// `FeedbackViewContoller` which handles feedback lifecycle internally.
-    /// - Parameter screenshotOption: The options to configure how the screenshot for the vent is provided.
+    /// - Parameter screenshotOption: The options to configure how the screenshot for the event is provided.
     /// - Returns: A ``FeedbackEvent``.
     /// - Postcondition: Call ``sendActiveNavigationFeedback(_:type:description:)`` and
     /// ``sendPassiveNavigationFeedback(_:type:description:)`` with the returned feedback to attach additional metadata
