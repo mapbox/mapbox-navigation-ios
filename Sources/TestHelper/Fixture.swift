@@ -2,7 +2,6 @@ import CoreLocation
 import Foundation
 import MapboxDirections
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
-import MapboxNavigationNative
 import Turf
 import UIKit.UIImage
 
@@ -115,7 +114,7 @@ public class Fixture: NSObject {
         return route
     }
 
-    public class func waypoints(from jsonFile: String, options: RouteOptions) -> [MapboxDirections.Waypoint] {
+    public class func waypoints(from jsonFile: String, options: RouteOptions) -> [Waypoint] {
         let response = routeResponse(from: jsonFile, options: options)
         guard let waypoints = response.waypoints else {
             preconditionFailure("No waypoints")

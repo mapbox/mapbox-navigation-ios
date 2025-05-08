@@ -2,6 +2,10 @@ import Foundation
 import MapboxNavigationNative
 
 class NavigatorStatusObserver: NavigatorObserver {
+    func onPrimaryRouteChanged(forPrimaryRoute primaryRoute: (any RouteInterface)?, reason: PrimaryRouteChangeReason) {}
+
+    func onAlternativeRoutesChanged(forAlternativeRoutes alternativeRoutes: [RouteAlternative]) {}
+
     var mostRecentNavigationStatus: NavigationStatus? = nil
 
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {

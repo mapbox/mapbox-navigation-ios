@@ -1,6 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.9.0-rc.1
+
+### Packaging
+
+* Xcode 16.2 or above is now required for the SDK usage.
+* MapboxNavigationCore now requires [MapboxMaps v11.12.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.12.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.12.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.12.0)
 
 ### API Deprecations
 
@@ -33,10 +39,6 @@
 * Fixed an issue where the user interface did not necessarily display distances in the same measurement system as the requested route by default.
 * Fixed the fallback to the `RouteOptions.locale` for on-device speech synthesizing if the Mapbox Voice API does not support the requested language.
 * Fixed the delay on camera changes during heading updates with using the walking routing profile.
-
-### Packaging
-
-* Xcode 16.0 or above is now required for SDK usage.
 
 ## v3.8.0
 
