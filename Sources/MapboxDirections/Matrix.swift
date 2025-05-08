@@ -52,7 +52,6 @@ open class Matrix: @unchecked Sendable {
 
     // MARK: Getting Matrix
 
-    @discardableResult
     /// Begins asynchronously calculating matrices using the given options and delivers the results to a closure.
     ///
     /// This method retrieves the matrices asynchronously from the [Mapbox Matrix
@@ -64,6 +63,7 @@ open class Matrix: @unchecked Sendable {
     /// application’s main thread.
     /// - Returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to
     /// execute, you no longer want the resulting matrices, cancel this task.
+    @discardableResult
     open func calculate(
         _ options: MatrixOptions,
         completionHandler: @escaping MatrixCompletionHandler

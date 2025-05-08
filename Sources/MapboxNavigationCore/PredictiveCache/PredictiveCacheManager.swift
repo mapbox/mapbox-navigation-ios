@@ -81,12 +81,12 @@ public class PredictiveCacheManager {
         return navigator.native.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
     }
 
-    @MainActor
     /// Instantiate a controller for search functionality if the ``PredictiveCacheSearchConfig`` has the necessary
     /// inputs.
     /// Assign `tileStore.setOptionForKey("log-tile-loading", value: true)` and set MapboxCommon log level to info for
     /// debug output
     /// - Returns: A predictive cache controller configured for search functionality.
+    @MainActor
     private func createSearchController(for navigator: NavigationNativeNavigator?) -> PredictiveCacheController? {
         guard let navigator,
               let predictiveCacheSearchConfig = predictiveCacheOptions.predictiveCacheSearchConfig
