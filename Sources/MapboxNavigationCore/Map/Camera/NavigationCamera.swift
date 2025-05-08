@@ -85,7 +85,7 @@ public class NavigationCamera {
         observe(viewportDataSource: self.viewportDataSource)
 
         _states
-            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .throttle(for: 0.2, scheduler: DispatchQueue.main, latest: true)
             .sink { [weak self] newState in
                 guard let self else { return }
                 if let location = newState.location {

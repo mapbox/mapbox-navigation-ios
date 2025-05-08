@@ -244,15 +244,8 @@ class NavigationCameraTests: BaseTestCase {
     }
 
     @MainActor
-    func testViewportDataSourceForActiveGuidance() async {
+    func testViewportDataSourceForActiveGuidance() async throws {
         let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource
-
-        let expectation = XCTestExpectation(description: "Camera options expectation.")
-        navigationCamera.cameraStates
-            .sink { _ in
-                expectation.fulfill()
-            }.store(in: &subscriptions)
-
         let location = CLLocation(latitude: 37.112341, longitude: -122.1111678)
         locationPublisher.send(location)
 
@@ -261,7 +254,7 @@ class NavigationCameraTests: BaseTestCase {
         progress.update(using: status)
         routeProgressPublisher.send(progress)
 
-        await fulfillment(of: [expectation], timeout: 1)
+        try await Task.sleep(nanoseconds: NSEC_PER_SEC)
 
         let cameraOptions = navigationViewportDataSource?.currentNavigationCameraOptions
         guard let temporaryPitch = cameraOptions?.followingCamera.pitch else {

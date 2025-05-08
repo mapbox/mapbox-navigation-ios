@@ -32,6 +32,7 @@
 
 * Fixed an issue where the user interface did not necessarily display distances in the same measurement system as the requested route by default.
 * Fixed the fallback to the `RouteOptions.locale` for on-device speech synthesizing if the Mapbox Voice API does not support the requested language.
+* Fixed the delay on camera changes during heading updates with using the walking routing profile.
 
 ### Packaging
 
