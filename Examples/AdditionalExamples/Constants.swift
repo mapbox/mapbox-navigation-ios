@@ -137,4 +137,11 @@ let listOfExamples: [NamedController] = [
         storyboard: nil,
         pushExampleToViewController: true
     ),
+    (
+        name: "Declarative Map Styling",
+        description: "Demonstrates how to use Declarative Map Styling.",
+        controller: DeclarativeMapViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
 ]

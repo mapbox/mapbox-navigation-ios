@@ -4,7 +4,9 @@ enum NavigationSlot {
     static let aboveBasemap = Slot(rawValue: "navigation-above-basemap")!
 }
 
-struct NavigationStyleContent: MapStyleContent {
+/// The navigation declarative map style content.
+@_spi(ExperimentalMapboxAPI)
+public struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent] = [:]
     var waypoints: WaypointsLineStyleContent?
     var maneuverArrow: ManeuverArrowStyleContent?
@@ -21,7 +23,8 @@ struct NavigationStyleContent: MapStyleContent {
         }
     }
 
-    var body: some MapStyleContent {
+    /// Provides the navigation style content.
+    public var body: some MapStyleContent {
         if let customRoutePosition {
             if !routeLines.isEmpty {
                 SlotLayer(id: RouteLineStyleContent.customSlotName)

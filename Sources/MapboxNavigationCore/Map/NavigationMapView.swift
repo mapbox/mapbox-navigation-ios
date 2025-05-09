@@ -38,9 +38,41 @@ open class NavigationMapView: UIView {
     public internal(set) var mapViewTapGestureRecognizer: UITapGestureRecognizer!
 
     /// Provides the possibility to return to the manual layer order approach.
-    var useLegacyManualLayersOrderApproach: Bool {
+    /// This property is`true` by default. Change this value to test a new rendering approach.
+    @_spi(ExperimentalMapboxAPI)
+    public var useLegacyManualLayersOrderApproach: Bool {
         get { !mapStyleManager.shouldUseDeclarativeApproach }
         set { mapStyleManager.shouldUseDeclarativeApproach = !newValue }
+    }
+
+    /// The current navigation style content being used.
+    /// Returns `nil` if the declarative map style is not used.
+    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable it.
+    @_spi(ExperimentalMapboxAPI)
+    public var currentNavigationStyleContent: NavigationStyleContent? {
+        mapStyleManager.currentNavigationStyleContent
+    }
+
+    /// A Boolean value that determines whether the declarative map content should be automatically set by the Nav SDK.
+    /// Setting this to `false` allows manual control over the declarative map content.
+    /// You would need to set the content by subscribing to the ``NavigationMapView/navigationStyleContent`` updates.
+    /// This property is`true` by default.
+    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
+    /// styling approach.
+    @_spi(ExperimentalMapboxAPI)
+    public var automaticallySetDeclarativeMapContent: Bool {
+        get { !mapStyleManager.automaticallySetDeclarativeMapContent }
+        set { mapStyleManager.automaticallySetDeclarativeMapContent = newValue }
+    }
+
+    /// A publisher that emits updates to the current navigation style content.
+    ///
+    /// Subscribers can observe this publisher to be notified when the ``NavigationStyleContent`` changes.
+    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
+    /// styling approach.
+    @_spi(ExperimentalMapboxAPI)
+    public var navigationStyleContent: AnyPublisher<NavigationStyleContent?, Never> {
+        mapStyleManager.navigationStyleContent
     }
 
     /// Initializes ``NavigationMapView`` instance.

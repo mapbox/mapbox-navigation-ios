@@ -1,7 +1,7 @@
 import Combine
 import MapboxDirections
 import MapboxMaps
-@testable import MapboxNavigationCore
+@_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationCore
 @testable import MapboxNavigationUIKit
 import TestHelper
 import XCTest

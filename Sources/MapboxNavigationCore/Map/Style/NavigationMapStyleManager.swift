@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import Combine
 import MapboxDirections
 @_spi(Experimental) import MapboxMaps
@@ -83,6 +84,14 @@ final class NavigationMapStyleManager {
     private var layersOrder: MapLayersOrder
     private var layerIds: [String]
 
+    var currentNavigationStyleContent: NavigationStyleContent? {
+        _navigationStyleContent.value
+    }
+
+    @CurrentValuePublisher
+    var navigationStyleContent: AnyPublisher<NavigationStyleContent?, Never>
+    var automaticallySetDeclarativeMapContent: Bool = true
+
     var customizedLayerProvider: CustomizedLayerProvider = .init { $0 }
     weak var delegate: NavigationMapStyleManagerDelegate?
 
@@ -144,6 +153,8 @@ final class NavigationMapStyleManager {
         self.routeAnnotationsFeaturesStore = .init(mapView: mapView)
         self.routeAlertsFeaturesStore = .init(mapView: mapView)
         self.customRouteLineLayerPosition = customRouteLineLayerPosition
+        _navigationStyleContent = .init(mapContent)
+
         mapContent?.customRoutePosition = customRouteLineLayerPosition
         mapStyleDeclarativeContentUpdate()
 
@@ -192,15 +203,18 @@ final class NavigationMapStyleManager {
     func mapStyleDeclarativeContentUpdate() {
         guard shouldUseDeclarativeApproach else { return }
 
-        if let mapContent {
-            mapView.mapboxMap.setMapStyleContent {
-                mapContent
-            }
-        } else {
-            mapView.mapboxMap.setMapStyleContent {
-                EmptyMapStyleContent()
+        if automaticallySetDeclarativeMapContent {
+            if let mapContent {
+                mapView.mapboxMap.setMapStyleContent {
+                    mapContent
+                }
+            } else {
+                mapView.mapboxMap.setMapStyleContent {
+                    EmptyMapStyleContent()
+                }
             }
         }
+        _navigationStyleContent.emit(mapContent)
     }
 
     func showRoutes(
