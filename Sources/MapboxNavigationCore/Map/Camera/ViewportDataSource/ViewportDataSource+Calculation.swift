@@ -31,7 +31,8 @@ extension ViewportDataSource {
         return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
     }
 
-    func zoom(
+    @_spi(MapboxInternal)
+    public func zoom(
         _ coordinates: [CLLocationCoordinate2D],
         mapView: MapView?,
         pitch: Double = 0.0,
