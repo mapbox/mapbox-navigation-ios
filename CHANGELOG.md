@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.9.0
+
+* No changes.
+
 ## 3.9.0-rc.1
 
 ### Packaging
