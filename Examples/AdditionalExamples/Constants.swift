@@ -33,6 +33,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: false
     ),
     (
+        name: "Multiple Waypoints",
+        description: "Demonstrates how to create a route with multiple waypoints.",
+        controller: MultiWaypointViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
+    (
         name: "Custom Final Waypoint",
         description: "Use a custom image and hide the circle layer of the final waypoint.",
         controller: CustomFinalWaypointController.self,
