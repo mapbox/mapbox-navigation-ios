@@ -2,6 +2,11 @@
 
 ## 3.10.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.13.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.13.0-beta.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.13.0-beta.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.13.0-beta.1)
+
 ### Pricing
 
 * Fixed a case when the SDK didn't respect `startLegIndex` when checking the waypoints for billing session for multiwaypoint routes. The SDK now correctly supports resuming a previous active guidance billing session when `startLegIndex` is greater than 0.
