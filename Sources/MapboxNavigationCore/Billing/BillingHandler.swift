@@ -415,11 +415,14 @@ final class BillingHandler: @unchecked Sendable {
 
     func shouldStartNewBillingSession(
         for newNavigationRoutes: NavigationRoutes,
+        startLegIndex: Int,
         previousRouteProgress: RouteProgress?,
         remainingWaypoints: [Waypoint],
         reason: MapboxNavigator.SetRouteReason
     ) -> Bool {
-        var newRouteWaypoints = newNavigationRoutes.mainRoute.route.legs.compactMap(\.destination)
+        var newRouteWaypoints = newNavigationRoutes.mainRoute.route.legs
+            .dropFirst(startLegIndex)
+            .compactMap(\.destination)
         var remainingWaypoints = remainingWaypoints
 
         // Reroutes with RerouteStrategyForMatchRoute.navigateToFinalDestination may cause
@@ -437,14 +440,16 @@ final class BillingHandler: @unchecked Sendable {
         }
 
         guard !newRouteWaypoints.isEmpty else {
-            return false // Don't need to bil for routes without waypoints
+            return false // Don't need to bill for routes without waypoints
         }
 
         guard newRouteWaypoints.count == remainingWaypoints.count else {
-            Log.info(
-                "A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/navigation/guides/pricing/)” guide.",
-                category: .billing
-            )
+            if remainingWaypoints.count > 0 {
+                Log.info(
+                    "A new route is about to be set with a different set of waypoints, leading to the initiation of a new Active Guidance trip. For more information, see the “[Pricing](https://docs.mapbox.com/ios/navigation/guides/pricing/)” guide.",
+                    category: .billing
+                )
+            }
             return true
         }
 

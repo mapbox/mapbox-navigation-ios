@@ -99,7 +99,7 @@ final class MapboxNavigator: @unchecked Sendable {
         let previousRouteProgress = currentRouteProgress?.routeProgress
         send(navigationRoutes)
         Task {
-            await updateRouteProgress(with: navigationRoutes)
+            await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
         }
         taskManager.withBarrier {
             setRoutes(
@@ -116,7 +116,7 @@ final class MapboxNavigator: @unchecked Sendable {
     func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
         await send(navigationRoutes)
         let previousRouteProgress = await currentRouteProgress?.routeProgress
-        await updateRouteProgress(with: navigationRoutes)
+        await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
 
         await taskManager.withAsyncBarrier {
             await setRoutes(
@@ -232,6 +232,7 @@ final class MapboxNavigator: @unchecked Sendable {
     ) {
         verifyActiveGuidanceBillingSession(
             for: navigationRoutes,
+            startLegIndex: startLegIndex,
             previousRouteProgress: previousRouteProgress,
             reason: reason
         )
@@ -270,7 +271,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
                     guard !Task.isCancelled else { return }
                     navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
-                    await updateRouteProgress(with: navigationRoutes)
+                    await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
                     await send(navigationRoutes)
                     switch reason {
                     case .newRoute:
@@ -536,6 +537,7 @@ final class MapboxNavigator: @unchecked Sendable {
     @MainActor
     private func verifyActiveGuidanceBillingSession(
         for navigationRoutes: NavigationRoutes,
+        startLegIndex: Int,
         previousRouteProgress: RouteProgress?,
         reason: SetRouteReason
     ) {
@@ -550,6 +552,7 @@ final class MapboxNavigator: @unchecked Sendable {
                 let previousWaypoints = previousRouteProgress?.remainingWaypoints ?? previousSessionWaypoints
                 if billingHandler.shouldStartNewBillingSession(
                     for: navigationRoutes,
+                    startLegIndex: startLegIndex,
                     previousRouteProgress: previousRouteProgress,
                     remainingWaypoints: previousWaypoints ?? [],
                     reason: reason
@@ -660,7 +663,10 @@ final class MapboxNavigator: @unchecked Sendable {
 
     // MARK: - NavigationStatus processing
 
-    private func updateRouteProgress(with routes: NavigationRoutes?) async {
+    private func updateRouteProgress(
+        with routes: NavigationRoutes?,
+        startLegIndex: Int
+    ) async {
         if let routes {
             let waypoints = routes.mainRoute.route.legs.enumerated()
                 .reduce(into: [MapboxDirections.Waypoint]()) { partialResult, element in
@@ -672,7 +678,8 @@ final class MapboxNavigator: @unchecked Sendable {
             let routeProgress = RouteProgress(
                 navigationRoutes: routes,
                 waypoints: waypoints,
-                congestionConfiguration: configuration.congestionConfig
+                congestionConfiguration: configuration.congestionConfig,
+                legIndex: startLegIndex
             )
             await state.update(privateRouteProgress: routeProgress)
             await send(RouteProgressState(routeProgress: routeProgress))

@@ -55,16 +55,21 @@ class ViewController: UIViewController {
     }
 
     var requestMapMatching = false
-    var freeDriveEnabled = true {
+    var shouldShowSessionButton = false
+    var navigationSessionPaused = false {
         didSet {
-            if freeDriveEnabled {
-                core.tripSession().startFreeDrive()
-            } else {
+            if navigationSessionPaused {
+                startLegIndex = navigation.currentRouteProgress?.routeProgress.legIndex
                 core.tripSession().setToIdle()
+            } else if let routes {
+                core.tripSession().startActiveGuidance(with: routes, startLegIndex: startLegIndex ?? 0)
+            } else {
+                core.tripSession().startFreeDrive()
             }
         }
     }
 
+    var startLegIndex: Int?
     var routes: NavigationRoutes? {
         didSet {
             guard let routes else {
@@ -252,7 +257,7 @@ class ViewController: UIViewController {
                 await updateCarPlayRoutesPreview()
             }
 
-            if freeDriveEnabled {
+            if !navigationSessionPaused {
                 core.tripSession().startFreeDrive()
             }
             navigationProvider.apply(coreConfig: .init(
@@ -291,6 +296,17 @@ class ViewController: UIViewController {
     @IBAction
     func startButtonPressed(_: Any) {
         presentActionsAlertController()
+    }
+
+    var sessionButton: UIButton?
+    var sessionButtonTitle: String {
+        navigationSessionPaused ? "Resume session" : "Pause session"
+    }
+
+    @objc
+    func onSessionButtonTap() {
+        navigationSessionPaused.toggle()
+        sessionButton?.setTitle(sessionButtonTitle, for: .normal)
     }
 
     @objc
@@ -476,7 +492,7 @@ class ViewController: UIViewController {
         let turnOnHistoryRecording: ActionHandler = { _ in self.turnOnHistoryRecording() }
         let turnOffHistoryRecording: ActionHandler = { _ in self.turnOffHistoryRecording() }
         let toggleMapMatching: ActionHandler = { _ in self.requestMapMatching.toggle() }
-        let toggleFreeDrive: ActionHandler = { _ in self.freeDriveEnabled.toggle() }
+        let toggleSession: ActionHandler = { _ in self.shouldShowSessionButton.toggle() }
 
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
@@ -493,11 +509,7 @@ class ViewController: UIViewController {
                 .default,
                 toggleMapMatching
             ),
-            (
-                freeDriveEnabled ? "Disable Free Drive" : "Enable Free Drive",
-                .default,
-                toggleFreeDrive
-            ),
+            (shouldShowSessionButton ? "Disable session pausing" : "Enable session pausing", .default, toggleSession),
             ("Cancel", .cancel, nil),
         ]
 
@@ -643,9 +655,17 @@ class ViewController: UIViewController {
         navigationViewController.navigationView.floatingStackView.alpha = 0.0
         navigationViewController.navigationView.speedLimitView.alpha = 0.0
 
-        present(navigationViewController, animated: animated) {
+        // The active guidance is enabled by `navigationViewController`.
+        navigationSessionPaused = false
+        present(navigationViewController, animated: animated) { [weak self] in
             completion?()
-            self.navigationMapView = nil
+
+            guard let self else { return }
+            navigationMapView = nil
+
+            if shouldShowSessionButton {
+                addSessionButton(to: navigationViewController)
+            }
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
 
             // Animate top and bottom banner views presentation.
@@ -703,6 +723,27 @@ class ViewController: UIViewController {
                     }
             }
         )
+    }
+
+    private func addSessionButton(to viewController: UIViewController) {
+        let button = UIButton(type: .system)
+        sessionButton = button
+        button.setTitle(sessionButtonTitle, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.lightText, for: .normal)
+        button.frame = CGRect(x: 20, y: 60, width: 100, height: 40)
+        button.addTarget(self, action: #selector(onSessionButtonTap), for: .touchUpInside)
+        viewController.view.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            button.trailingAnchor.constraint(
+                equalTo: viewController.view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -20
+            ),
+            button.heightAnchor.constraint(equalToConstant: 40),
+            button.widthAnchor.constraint(equalToConstant: 120),
+        ])
     }
 
     // MARK: - Utility methods

@@ -35,15 +35,26 @@ extension RouteLeg {
         name: String = "",
         distance: LocationDistance = 300,
         expectedTravelTime: TimeInterval = 195,
-        profileIdentifier: ProfileIdentifier = .automobile
+        profileIdentifier: ProfileIdentifier = .automobile,
+        destination: Waypoint? = .mock()
     ) -> Self {
-        self.init(
+        var leg = self.init(
             steps: steps,
             name: name,
             distance: distance,
             expectedTravelTime: expectedTravelTime,
             profileIdentifier: profileIdentifier
         )
+        leg.destination = destination
+        return leg
+    }
+}
+
+extension Waypoint {
+    public static func mock(
+        coordinate: LocationCoordinate2D = .init(latitude: 1, longitude: 2)
+    ) -> Self {
+        self.init(coordinate: coordinate)
     }
 }
 

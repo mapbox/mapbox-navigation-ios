@@ -14,15 +14,23 @@ public struct RouteProgress: Equatable, Sendable {
     ///   - navigationRoutes: The selection of routes to follow.
     ///   - waypoints: The waypoints of the routes.
     ///   - congestionConfiguration: The congestion configuration to use to display the routes.
+    ///   - legIndex: The index representing current ``RouteLeg``.
     public init(
         navigationRoutes: NavigationRoutes,
         waypoints: [Waypoint],
-        congestionConfiguration: CongestionRangesConfiguration = .default
+        congestionConfiguration: CongestionRangesConfiguration = .default,
+        legIndex: Int = 0
     ) {
         self.navigationRoutes = navigationRoutes
         self.waypoints = waypoints
 
-        self.currentLegProgress = RouteLegProgress(leg: navigationRoutes.mainRoute.route.legs[legIndex])
+        let legs = navigationRoutes.mainRoute.route.legs
+        if !legs.indices.contains(legIndex) {
+            Log.warning("Incorrect legIndex \(legIndex) passed to RouteProgress", category: .navigation)
+        }
+        self.legIndex = max(0, min(legIndex, legs.count - 1))
+
+        self.currentLegProgress = RouteLegProgress(leg: legs[self.legIndex])
 
         self.routeAlerts = routeAlerts(from: navigationRoutes.mainRoute)
         calculateLegsCongestion(configuration: congestionConfiguration)

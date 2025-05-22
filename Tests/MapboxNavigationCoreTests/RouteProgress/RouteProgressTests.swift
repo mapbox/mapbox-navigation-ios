@@ -9,12 +9,16 @@ import XCTest
 
 class RouteProgressTests: BaseTestCase {
     var routes: NavigationRoutes!
+    var twoLegsRoutes: NavigationRoutes!
     var routeProgress: RouteProgress!
 
     override func setUp() async throws {
         try? await super.setUp()
 
         routes = await .mock()
+        let mainRoute = Route.mock(legs: [.mock(), .mock(), .mock()])
+        let navigationRoute = NavigationRoute.mock(route: mainRoute)
+        twoLegsRoutes = await NavigationRoutes.mock(mainRoute: navigationRoute)
 
         routeProgress = RouteProgress(
             navigationRoutes: routes,
@@ -28,6 +32,32 @@ class RouteProgressTests: BaseTestCase {
         XCTAssertEqual(routeProgress.distanceRemaining, 0)
         XCTAssertEqual(routeProgress.distanceTraveled, 0)
         XCTAssertEqual(routeProgress.durationRemaining, 0)
+    }
+
+    func testSetLegIndex() {
+        let oneLegRouteProgress = RouteProgress(
+            navigationRoutes: routes,
+            waypoints: [],
+            congestionConfiguration: .default,
+            legIndex: 1
+        )
+        XCTAssertEqual(oneLegRouteProgress.legIndex, 0, "Should not be greater than legs count")
+
+        let twoLegsRouteProgress = RouteProgress(
+            navigationRoutes: twoLegsRoutes,
+            waypoints: [],
+            congestionConfiguration: .default,
+            legIndex: 1
+        )
+        XCTAssertEqual(twoLegsRouteProgress.legIndex, 1)
+
+        let incorrectIndexRouteProgress = RouteProgress(
+            navigationRoutes: routes,
+            waypoints: [],
+            congestionConfiguration: .default,
+            legIndex: -1
+        )
+        XCTAssertEqual(incorrectIndexRouteProgress.legIndex, 0)
     }
 
     func testReturnDistanceTraveled() {

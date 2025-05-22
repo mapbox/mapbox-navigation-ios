@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.10.0-beta.1
+
+### Pricing
+
+* Fixed a case when the SDK didn't respect `startLegIndex` when checking the waypoints for billing session for multiwaypoint routes. The SDK now correctly supports resuming a previous active guidance billing session when `startLegIndex` is greater than 0.
+
 ## 3.9.1
 
 ### Packaging
@@ -43,7 +49,7 @@
 
 ### Pricing
 
-* Fixes a case when the SDK stopped the billing session when finishing active guidance. Now the SDK supports the possibility to restore the previous active guidance billing session.
+* Fixed a case when the SDK stopped the billing session when finishing active guidance. Now the SDK supports the possibility to restore the previous active guidance billing session.
 
 ### Other changes
 
