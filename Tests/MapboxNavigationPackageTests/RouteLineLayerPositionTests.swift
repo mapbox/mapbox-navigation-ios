@@ -80,17 +80,29 @@ class RouteLineLayerPositionTests: TestCase {
             congestionConfiguration: .default
         )
 
-        navigationMapView = NavigationMapView(
+        navigationMapView = configuredNavigationMapView()
+        mapboxMap = configuredMapboxMap()
+    }
+
+    @MainActor
+    private func configuredNavigationMapView(useLegacyManualLayersOrderApproach: Bool = false) -> NavigationMapView {
+        let navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
-            routeProgress: routeProgressPublisher.eraseToAnyPublisher()
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            useLegacyManualLayersOrderApproach: useLegacyManualLayersOrderApproach
         )
         navigationMapView.frame = UIScreen.main.bounds
+        return navigationMapView
+    }
+
+    @MainActor
+    private func configuredMapboxMap() -> MapboxMap? {
         guard let mapboxMap = navigationMapView.mapView.mapboxMap else {
             XCTFail("Should have non-nil mapboxMap")
-            return
+            return nil
         }
         try? mapboxMap.addLayer(SlotLayer(id: Slot.middle!.rawValue))
-        self.mapboxMap = mapboxMap
+        return mapboxMap
     }
 
     var route: Route {
@@ -134,7 +146,11 @@ class RouteLineLayerPositionTests: TestCase {
 
     @MainActor
     func configureRouteLineLayerPosition(useLegacyManualLayersOrderApproach: Bool) {
-        navigationMapView.useLegacyManualLayersOrderApproach = useLegacyManualLayersOrderApproach
+        navigationMapView = configuredNavigationMapView(
+            useLegacyManualLayersOrderApproach: useLegacyManualLayersOrderApproach
+        )
+        mapboxMap = configuredMapboxMap()
+
         loadJsonStyle(slot: nil)
         let mainRouteIdentifier = FeatureIds.RouteLine.main.main
         let mainRouteCasingIdentifier = FeatureIds.RouteLine.main.casing
@@ -222,18 +238,18 @@ class RouteLineLayerPositionTests: TestCase {
             roadTrafficLayer["id"]!,
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
+            Slot.middle!.rawValue,
             routeIds.casing,
             routeIds.main,
+            routeIds.restrictedArea,
             arrowIds.arrowStroke,
             arrowIds.arrow,
             arrowIds.arrowSymbolCasing,
             arrowIds.arrowSymbol,
-            routeIds.restrictedArea,
-            poiLabelLayer["id"]!,
-            poiLabelCircleLayer["id"]!,
-            waypointIds.innerCircle,
-            Slot.middle!.rawValue,
             NavigationSlot.aboveBasemap.rawValue,
+            waypointIds.innerCircle,
         ]
         XCTAssertEqual(
             allLayerIds,
@@ -253,14 +269,14 @@ class RouteLineLayerPositionTests: TestCase {
             roadTrafficLayer["id"]!,
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
-            routeIds.casing,
-            routeIds.main,
             poiLabelLayer["id"]!,
             poiLabelCircleLayer["id"]!,
+            Slot.middle!.rawValue,
+            routeIds.casing,
+            routeIds.main,
+            NavigationSlot.aboveBasemap.rawValue,
             intersectionIds.layer,
             waypointIds.innerCircle,
-            Slot.middle!.rawValue,
-            NavigationSlot.aboveBasemap.rawValue,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }
         XCTAssertEqual(allLayerIds, expectedLayerSequence, "Failed to apply custom layer position for route line.")
@@ -301,14 +317,14 @@ class RouteLineLayerPositionTests: TestCase {
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
             Slot.middle!.rawValue,
-            NavigationSlot.aboveBasemap.rawValue,
             routeIds.casing,
             routeIds.main,
+            routeIds.restrictedArea,
             arrowIds.arrowStroke,
             arrowIds.arrow,
             arrowIds.arrowSymbolCasing,
             arrowIds.arrowSymbol,
-            routeIds.restrictedArea,
+            NavigationSlot.aboveBasemap.rawValue,
             intersectionIds.layer,
             routeAlertIds.layer,
             waypointIds.innerCircle,
@@ -326,13 +342,13 @@ class RouteLineLayerPositionTests: TestCase {
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
             Slot.middle!.rawValue,
-            NavigationSlot.aboveBasemap.rawValue,
             routeIds.casing,
             routeIds.main,
             arrowIds.arrowStroke,
             arrowIds.arrow,
             arrowIds.arrowSymbolCasing,
             arrowIds.arrowSymbol,
+            NavigationSlot.aboveBasemap.rawValue,
             intersectionIds.layer,
             routeAlertIds.layer,
             waypointIds.innerCircle,
@@ -423,20 +439,20 @@ class RouteLineLayerPositionTests: TestCase {
             circleMapLayer,
             roadLabelLayer["id"]!,
             roadExitLayer["id"]!,
+            poiLabelLayer["id"]!,
+            poiLabelCircleLayer["id"]!,
+            Slot.middle!.rawValue,
             routeIds.casing,
             routeIds.main,
+            routeIds.restrictedArea,
             arrowIds.arrowStroke,
             arrowIds.arrow,
             arrowIds.arrowSymbolCasing,
             arrowIds.arrowSymbol,
-            routeIds.restrictedArea,
-            poiLabelLayer["id"]!,
-            poiLabelCircleLayer["id"]!,
+            NavigationSlot.aboveBasemap.rawValue,
             intersectionIds.layer,
             routeAlertIds.layer,
             waypointIds.innerCircle,
-            Slot.middle!.rawValue,
-            NavigationSlot.aboveBasemap.rawValue,
             circleLabelLayer,
         ]
         allLayerIds = mapboxMap.allLayerIdentifiers.map { $0.id }

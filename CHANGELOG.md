@@ -7,6 +7,17 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.13.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.13.0-beta.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.13.0-beta.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.13.0-beta.1)
 
+### Map
+
+* The SDK now uses [Declarative Map Styling](https://docs.mapbox.com/ios/maps/guides/styles/declarative-map-styling/) by default.
+If you want to customize the map content using declarative styling, e.g. to style non-navigation-related content, you should:
+    * set `NavigationMapView.automaticallySetDeclarativeMapContent` to `false`,
+    * subscribe to the `NavigationMapView.navigationStyleContent` updates,
+    * add `currentNavigationStyleContent` to your `MapStyleContent`,
+    * call `setMapStyleContent(content:)` with new map style content.
+For implementation details, refer to the [Declarative-Map](https://github.com/mapbox/mapbox-navigation-ios/blob/main/Examples/AdditionalExamples/Examples/Declarative-Map.swift) sample app.
+Set `NavigationMapView.useLegacyManualLayersOrderApproach` to `true` to enable legacy manual layer order calculation.
+
 ### Pricing
 
 * Fixed a case when the SDK didn't respect `startLegIndex` when checking the waypoints for billing session for multiwaypoint routes. The SDK now correctly supports resuming a previous active guidance billing session when `startLegIndex` is greater than 0.

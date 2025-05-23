@@ -68,8 +68,7 @@ protocol NavigationMapStyleManagerDelegate: AnyObject {
 /// Manages all the sources/layers used in NavigationMap.
 @MainActor
 final class NavigationMapStyleManager {
-    // TODO: remove after declarative Maps API is fully supported.
-    var shouldUseDeclarativeApproach: Bool = false {
+    var shouldUseDeclarativeApproach: Bool = true {
         didSet {
             guard shouldUseDeclarativeApproach else { return }
 
@@ -138,8 +137,13 @@ final class NavigationMapStyleManager {
     private let routeAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAlertsFeaturesStore: MapFeaturesStore
 
-    init(mapView: MapView, customRouteLineLayerPosition: LayerPosition?) {
+    init(
+        mapView: MapView,
+        customRouteLineLayerPosition: LayerPosition?,
+        shouldUseDeclarativeApproach: Bool
+    ) {
         self.mapView = mapView
+        self.shouldUseDeclarativeApproach = shouldUseDeclarativeApproach
         self.layersOrder = Self.makeMapLayersOrder(
             with: mapView,
             customRouteLineLayerPosition: customRouteLineLayerPosition

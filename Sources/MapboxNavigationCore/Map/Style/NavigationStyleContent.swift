@@ -5,7 +5,6 @@ enum NavigationSlot {
 }
 
 /// The navigation declarative map style content.
-@_spi(ExperimentalMapboxAPI)
 public struct NavigationStyleContent: MapStyleContent {
     var routeLines: [FeatureIds.RouteLine: RouteLineStyleContent] = [:]
     var waypoints: WaypointsLineStyleContent?

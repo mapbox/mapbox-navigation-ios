@@ -37,7 +37,7 @@ open class NavigationMapView: UIView {
     /// present on the map. Enabled by default.
     public internal(set) var mapViewTapGestureRecognizer: UITapGestureRecognizer!
 
-    /// Provides the possibility to return to the manual layer order approach.
+    /// Provides the possibility to use the manual layer order calculation approach.
     /// This property is`true` by default. Change this value to test a new rendering approach.
     @_spi(ExperimentalMapboxAPI)
     public var useLegacyManualLayersOrderApproach: Bool {
@@ -48,7 +48,6 @@ open class NavigationMapView: UIView {
     /// The current navigation style content being used.
     /// Returns `nil` if the declarative map style is not used.
     /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable it.
-    @_spi(ExperimentalMapboxAPI)
     public var currentNavigationStyleContent: NavigationStyleContent? {
         mapStyleManager.currentNavigationStyleContent
     }
@@ -59,7 +58,6 @@ open class NavigationMapView: UIView {
     /// This property is`true` by default.
     /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
     /// styling approach.
-    @_spi(ExperimentalMapboxAPI)
     public var automaticallySetDeclarativeMapContent: Bool {
         get { !mapStyleManager.automaticallySetDeclarativeMapContent }
         set { mapStyleManager.automaticallySetDeclarativeMapContent = newValue }
@@ -70,7 +68,6 @@ open class NavigationMapView: UIView {
     /// Subscribers can observe this publisher to be notified when the ``NavigationStyleContent`` changes.
     /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
     /// styling approach.
-    @_spi(ExperimentalMapboxAPI)
     public var navigationStyleContent: AnyPublisher<NavigationStyleContent?, Never> {
         mapStyleManager.navigationStyleContent
     }
@@ -84,12 +81,42 @@ open class NavigationMapView: UIView {
     ///   - heading: A publisher that emits current user heading. Defaults to `nil.`
     ///   - predictiveCacheManager: An instance of ``PredictiveCacheManager`` used to continuously cache upcoming map
     /// tiles.
-    public init(
+    public convenience init(
         location: AnyPublisher<CLLocation, Never>,
         routeProgress: AnyPublisher<RouteProgress?, Never>,
         navigationCameraType: NavigationCameraType = .mobile,
         heading: AnyPublisher<CLHeading, Never>? = nil,
         predictiveCacheManager: PredictiveCacheManager? = nil
+    ) {
+        self.init(
+            location: location,
+            routeProgress: routeProgress,
+            navigationCameraType: navigationCameraType,
+            heading: heading,
+            predictiveCacheManager: predictiveCacheManager,
+            useLegacyManualLayersOrderApproach: false
+        )
+    }
+
+    /// Initializes ``NavigationMapView`` instance.
+    /// - Parameters:
+    ///   - location: A publisher that emits current user location.
+    ///   - routeProgress: A publisher that emits route navigation progress.
+    ///   - navigationCameraType: The type of ``NavigationCamera``. Defaults to ``NavigationCameraType/mobile``.
+    ///   which is used for the current instance of ``NavigationMapView``.
+    ///   - heading: A publisher that emits current user heading. Defaults to `nil.`
+    ///   - predictiveCacheManager: An instance of ``PredictiveCacheManager`` used to continuously cache upcoming map
+    /// tiles.
+    ///   - useLegacyManualLayersOrderApproach: Provides the possibility to use the manual layer order calculation
+    /// approach.
+    @_spi(ExperimentalMapboxAPI)
+    public init(
+        location: AnyPublisher<CLLocation, Never>,
+        routeProgress: AnyPublisher<RouteProgress?, Never>,
+        navigationCameraType: NavigationCameraType = .mobile,
+        heading: AnyPublisher<CLHeading, Never>? = nil,
+        predictiveCacheManager: PredictiveCacheManager? = nil,
+        useLegacyManualLayersOrderApproach: Bool = false
     ) {
         self.mapView = MapView(frame: Constants.initialMapRect).autoresizing()
         mapView.location.override(
@@ -97,7 +124,11 @@ open class NavigationMapView: UIView {
             headingProvider: heading?.map { Heading(from: $0) }.eraseToSignal()
         )
 
-        self.mapStyleManager = .init(mapView: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
+        self.mapStyleManager = .init(
+            mapView: mapView,
+            customRouteLineLayerPosition: customRouteLineLayerPosition,
+            shouldUseDeclarativeApproach: !useLegacyManualLayersOrderApproach
+        )
         self.navigationCamera = NavigationCamera(
             mapView,
             location: location,
@@ -522,6 +553,7 @@ open class NavigationMapView: UIView {
             routeProgress: routeProgress,
             config: mapStyleConfig
         )
+        mapStyleManager.mapStyleDeclarativeContentUpdate()
     }
 
     // MARK: - Debug Viewport

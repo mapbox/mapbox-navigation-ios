@@ -7,7 +7,7 @@
 import Combine
 import MapboxDirections
 import MapboxMaps
-@_spi(ExperimentalMapboxAPI) import MapboxNavigationCore
+import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
 
@@ -39,7 +39,7 @@ final class DeclarativeMapViewController: UIViewController {
 
     private var navigationContent: NavigationStyleContent? {
         didSet {
-            // you need to call `setMapStyleContent()` for each NavigationStyleContent update
+            // you need to call `setMapStyleContent(content:)` for each NavigationStyleContent update
             updateMapContent()
         }
     }
@@ -197,8 +197,11 @@ extension DeclarativeMapViewController {
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         navigationMapView.mapView.mapboxMap.loadStyle(StyleURI(rawValue: Self.styleUrl)!)
+        // The SDK won't call the `setMapStyleContent(content:)` now. You need to do it manually.
         navigationMapView.automaticallySetDeclarativeMapContent = false
-        navigationMapView.useLegacyManualLayersOrderApproach = false
+
+        // Uncomment this line to use the legacy manual layers order approach.
+//        navigationMapView.useLegacyManualLayersOrderApproach = true
 
         navigationMapView.navigationStyleContent
             .sink { [weak self] navigationContent in
