@@ -182,9 +182,12 @@ public actor MapboxCopilot {
         eventsController.arrive()
     }
 
-    public func completeNavigationSessionAsync() async throws {
-        guard let immutableSession = try prepareSessionForCompletion() else { return }
-        await handleHistoryDump(for: immutableSession)
+    @discardableResult
+    public func completeNavigationSessionAsync(
+        removesHistoryDump: Bool = true
+    ) async throws -> URL? {
+        guard let immutableSession = try prepareSessionForCompletion() else { return nil }
+        return await handleHistoryDump(for: immutableSession, removesHistoryDump: removesHistoryDump)
     }
 
     public func reportSearchResults(_ event: NavigationHistoryEvents.SearchResults) throws {
@@ -248,16 +251,15 @@ extension MapboxCopilot {
     }
 
     @MainActor
-    private func handleHistoryDump(for immutableSession: NavigationSession) async {
-        await historyProvider.dumpHistory { [weak self] dump in
-            Task.detached { [weak self, immutableSession] in
-                guard let self else { return }
-                var currentSession = immutableSession
-                await updateSession(&currentSession, with: dump)
-                await delegate?.copilot(self, didFinishRecording: currentSession)
-                await manager.complete(currentSession)
-            }
-        }
+    private func handleHistoryDump(
+        for immutableSession: NavigationSession,
+        removesHistoryDump: Bool = true
+    ) async -> URL? {
+        let dump = await historyProvider.dumpHistoryAsync()
+        var currentSession = immutableSession
+        await updateSession(&currentSession, with: dump)
+        await delegate?.copilot(self, didFinishRecording: currentSession)
+        return await manager.complete(currentSession, removesHistoryDump: removesHistoryDump)
     }
 }
 

@@ -17,3 +17,14 @@ public protocol NavigationHistoryProviderProtocol: AnyObject {
     @MainActor
     func dumpHistory(_ completion: @escaping @Sendable (DumpResult) -> Void)
 }
+
+extension NavigationHistoryProviderProtocol {
+    @MainActor
+    func dumpHistoryAsync() async -> DumpResult {
+        await withCheckedContinuation { continuation in
+            dumpHistory { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+}

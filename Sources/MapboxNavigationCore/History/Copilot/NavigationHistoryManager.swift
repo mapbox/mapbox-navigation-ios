@@ -58,30 +58,32 @@ final class NavigationHistoryManager: ObservableObject, @unchecked Sendable {
             let removalDeadline = Date().addingTimeInterval(RemovalPolicy.maxTimeIntervalToKeepHistory)
             NavigationHistoryLocalStorage.removeExpiredMetadataFiles(deadline: removalDeadline)
             for session in restoredSessions {
-                await upload(session)
+                _ = await upload(session, removesHistoryDump: true)
             }
         }
     }
 
-    func complete(_ session: NavigationSession) async {
+    func complete(_ session: NavigationSession, removesHistoryDump: Bool) async -> URL? {
         var session = session
         session.state = .local
         localStorage?.saveSession(session)
-        await upload(session)
+        return await upload(session, removesHistoryDump: removesHistoryDump)
     }
 
     func update(_ session: NavigationSession) {
         localStorage?.saveSession(session)
     }
 
-    private func upload(_ session: NavigationSession) async {
+    private func upload(_ session: NavigationSession, removesHistoryDump: Bool) async -> URL? {
         var session = session
         session.state = .uploading
 
         do {
             try await uploader.upload(session, log: log)
             delegate?.historyManager(self, didUploadHistoryForSession: session)
-            localStorage?.deleteSession(session)
+            if removesHistoryDump {
+                localStorage?.deleteSession(session)
+            }
         } catch {
             // We will retry to upload the file on next launch
             session.state = .local
@@ -92,6 +94,7 @@ final class NavigationHistoryManager: ObservableObject, @unchecked Sendable {
             ))
             localStorage?.saveSession(session)
         }
+        return session.lastHistoryFileUrl
     }
 
     private func shouldRetryUpload(_ session: NavigationSession) -> Bool {
