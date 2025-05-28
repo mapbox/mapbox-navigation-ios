@@ -193,4 +193,11 @@ extension MultiWaypointViewController: NavigationViewControllerDelegate {
     ) {
         navigationViewController.dismiss(animated: true)
     }
+
+    func navigationViewController(
+        _ navigationViewController: NavigationViewController,
+        didArriveAt waypoint: Waypoint
+    ) {
+        print("Arrived at waypoint: \(waypoint.name ?? "Unknown")")
+    }
 }

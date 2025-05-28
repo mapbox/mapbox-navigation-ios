@@ -776,20 +776,26 @@ extension NavigationViewController {
             .store(in: &subscriptions)
 
         mapboxNavigation.navigation().waypointsArrival
-            .compactMap {
-                $0.event as? WaypointArrivalStatus.Events.ToFinalDestination
-            }
             .sink { [weak self] status in
                 guard let self else { return }
 
-                delegate?.navigationViewController(self, didArriveAt: status.destination)
-                if showsEndOfRouteFeedback {
-                    arrivalController?.showEndOfRouteIfNeeded(self, advancesToNextLeg: true) {
-                        [weak self] in
-                        self?.dismiss()
+                switch status.event {
+                case let toWaypoint as WaypointArrivalStatus.Events.ToWaypoint:
+                    delegate?.navigationViewController(self, didArriveAt: toWaypoint.waypoint)
+
+                case let toFinal as WaypointArrivalStatus.Events.ToFinalDestination:
+                    delegate?.navigationViewController(self, didArriveAt: toFinal.destination)
+
+                    if showsEndOfRouteFeedback {
+                        arrivalController?.showEndOfRouteIfNeeded(self, advancesToNextLeg: true) { [weak self] in
+                            self?.dismiss()
+                        }
+                    } else {
+                        dismiss()
                     }
-                } else {
-                    dismiss()
+
+                default:
+                    break
                 }
             }
             .store(in: &subscriptions)

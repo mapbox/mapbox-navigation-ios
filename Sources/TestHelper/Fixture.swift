@@ -164,7 +164,11 @@ public class Fixture: NSObject {
     }
 
     public class func generateTrace(for route: Route, speedMultiplier: Double = 1) -> [CLLocation] {
-        route.shape?.coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) } ?? []
+        generateTrace(for: route.shape, speedMultiplier: speedMultiplier)
+    }
+
+    public class func generateTrace(for shape: LineString?, speedMultiplier: Double = 1) -> [CLLocation] {
+        shape?.coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) } ?? []
     }
 
     public class func routeLegProgress(

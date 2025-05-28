@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.11.0-beta.1
+
+### Other changes
+
+* Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was not called for intermediate waypoints.
+
 ## 3.10.0-beta.1
 
 ### Packaging

@@ -212,19 +212,13 @@ class NavigationViewControllerTests: TestCase {
     func testCompleteRoute() async {
         let navigationProvider = navigationProvider!
 
-        class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
-            var didArriveAtCalled = false
+        final class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
             let didArriveExpectation = XCTestExpectation(description: "Navigation finished expectation.")
-
-            init() {
-                didArriveExpectation.assertForOverFulfill = true
-            }
 
             func navigationViewController(
                 _ navigationViewController: NavigationViewController,
                 didArriveAt waypoint: Waypoint
             ) {
-                didArriveAtCalled = true
                 didArriveExpectation.fulfill()
             }
         }
@@ -236,19 +230,71 @@ class NavigationViewControllerTests: TestCase {
         navigationViewController.viewWillAppear(false)
         navigationViewController.viewDidAppear(false)
 
-        let locations = Fixture.generateTrace(for: initialRoutes.mainRoute.route)
+        await completeLeg(in: initialRoutes, legIndex: 0)
+        await fulfillment(of: [delegate.didArriveExpectation], timeout: 2)
+    }
+
+    @MainActor
+    func testCompleteMultilegRoute() async {
+        initialRoutes = await Fixture.navigationRoutes(from: "multileg-route", options: routeOptions3Waypoints)
+
+        final class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
+            let didArriveToStopExpectation = XCTestExpectation(description: "Did arrive to the waypoint.")
+
+            let didArriveToDestinationExpectation =
+                XCTestExpectation(description: "Did arrive to the final destination.")
+
+            let routes: NavigationRoutes
+            init(routes: NavigationRoutes) {
+                self.routes = routes
+            }
+
+            func navigationViewController(
+                _ navigationViewController: NavigationViewController,
+                didArriveAt waypoint: Waypoint
+            ) {
+                let route = routes.mainRoute.route
+                if waypoint == route.legs[0].destination {
+                    didArriveToStopExpectation.fulfill()
+                } else if waypoint == route.legs[1].destination {
+                    didArriveToDestinationExpectation.fulfill()
+                }
+            }
+        }
+        let navigationViewController = createViewController()
+        let delegate = NavigationViewControllerDelegateMock(routes: initialRoutes)
+        navigationViewController.delegate = delegate
+
+        _ = navigationViewController.view
+        navigationViewController.viewWillAppear(false)
+        navigationViewController.viewDidAppear(false)
+
+        await completeLeg(in: initialRoutes, legIndex: 0)
+        await fulfillment(of: [delegate.didArriveToStopExpectation], timeout: 5)
+
+        await completeLeg(in: initialRoutes, legIndex: 1)
+        await fulfillment(of: [delegate.didArriveToDestinationExpectation], timeout: 5)
+    }
+
+    private func completeLeg(in routes: NavigationRoutes, legIndex: Int) async {
+        let leg = routes.mainRoute.route.legs[legIndex]
+        let locations = Fixture.generateTrace(for: leg.shape)
         for location in locations {
-            let status = TestNavigationStatusProvider.createNavigationStatus(location: location)
+            let status = TestNavigationStatusProvider.createNavigationStatus(
+                routeState: .tracking,
+                location: location,
+                routeIndex: 0,
+                legIndex: UInt32(legIndex)
+            )
             locationPublisher.send(location)
             await navigationProvider.navigator().updateMapMatching(status: status)
         }
-        let route = initialRoutes.mainRoute.route
         let finalStatus = TestNavigationStatusProvider.createActiveStatus(
             routeState: .complete,
             location: locations.last!,
             routeIndex: 0,
-            legIndex: UInt32(route.legs.count - 1),
-            stepIndex: UInt32(route.legs.last!.steps.count - 1)
+            legIndex: UInt32(legIndex),
+            stepIndex: UInt32(leg.steps.count - 1)
         )
         await navigationProvider.navigator().updateIndices(status: finalStatus)
         var routeProgress = RouteProgress(
@@ -256,15 +302,12 @@ class NavigationViewControllerTests: TestCase {
             waypoints: routeOptions.waypoints,
             congestionConfiguration: .default
         )
-        routeProgress.currentLegProgress.update(using: finalStatus)
+        routeProgress.update(using: finalStatus)
 
         await navigationProvider.navigator().handleRouteProgressUpdates(
             status: finalStatus,
             routeProgress: routeProgress
         )
-
-        await fulfillment(of: [delegate.didArriveExpectation], timeout: 2)
-        XCTAssertTrue(delegate.didArriveAtCalled)
     }
 
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we
@@ -647,7 +690,7 @@ class NavigationViewControllerTests: TestCase {
 
     @MainActor
     func testNavigationMapViewWillAddLayerDelegate() {
-        class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
+        final class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
             let expectedRouteLineOpacity: Double = 0.2
             let expectedRouteCasingOpacity: Double = 0.3
             let expectedRouteCasingWidth: Double = 10.0
