@@ -57,4 +57,33 @@ final class NavigationRouteOptionsTests: XCTestCase {
             [.expectedTravelTime, .maximumSpeedLimit]
         )
     }
+
+    func testSetDistanceMeasurementSystemToRouteOptions() {
+        let locale = Locale(identifier: "en_US")
+        let waypoints = coordinates.map { Waypoint(coordinate: $0) }
+
+        let options1 = NavigationRouteOptions(
+            waypoints: waypoints,
+            locale: locale,
+            distanceUnit: .meter
+        )
+        XCTAssertEqual(options1.distanceMeasurementSystem, .metric)
+
+        let options2 = NavigationRouteOptions(
+            waypoints: waypoints,
+            locale: locale,
+            distanceUnit: .mile
+        )
+        XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
+    }
+
+    func testSetDistanceMeasurementSystemToMatchOptions() {
+        let waypoints = coordinates.map { Waypoint(coordinate: $0) }
+
+        let options1 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .meter)
+        XCTAssertEqual(options1.distanceMeasurementSystem, .metric)
+
+        let options2 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .mile)
+        XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
+    }
 }

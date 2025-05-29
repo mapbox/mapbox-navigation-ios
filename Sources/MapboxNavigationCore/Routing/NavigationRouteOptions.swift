@@ -37,6 +37,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
         )
         self.locale = locale
         self.distanceUnit = distanceUnit
+        distanceMeasurementSystem = .init(distanceUnit)
     }
 
     /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
@@ -136,6 +137,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchec
             queryItems: queryItems
         )
         self.distanceUnit = distanceUnit
+        distanceMeasurementSystem = .init(distanceUnit)
     }
 
     /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
