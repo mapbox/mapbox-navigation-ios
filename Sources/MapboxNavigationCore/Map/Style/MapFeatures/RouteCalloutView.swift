@@ -204,7 +204,7 @@ final class RouteCalloutView: UIView {
         captionLabel.textColor = textColor
 
         layer.addSublayer(backgroundShapeLayer)
-        backgroundShapeLayer.shadowRadius = Self.cornerRadius
+        backgroundShapeLayer.shadowRadius = 8.0
         backgroundShapeLayer.shadowOffset = CGSize(width: 0, height: 4.0)
         backgroundShapeLayer.shadowColor = UIColor(white: 0.0, alpha: 0.12).cgColor
         backgroundShapeLayer.shadowOpacity = 1.0
