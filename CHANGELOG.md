@@ -2,6 +2,10 @@
 
 ## 3.11.0-beta.1
 
+### Map
+
+* Updated toll icon in route callout view.
+
 ### Other changes
 
 * Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was not called for intermediate waypoints.
