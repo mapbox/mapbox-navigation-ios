@@ -45,6 +45,9 @@ extension RouteLeg {
             expectedTravelTime: expectedTravelTime,
             profileIdentifier: profileIdentifier
         )
+        leg.source = if let coordinate = steps.first?.maneuverLocation {
+            .init(coordinate: coordinate)
+        } else { .mock() }
         leg.destination = destination
         return leg
     }
@@ -67,7 +70,9 @@ extension RouteStep {
         drivingSide: DrivingSide = .right,
         distance: LocationDistance = 100,
         expectedTravelTime: TimeInterval = 65,
-        instructionsDisplayedAlongStep: [VisualInstructionBanner]? = nil
+        instructionsDisplayedAlongStep: [VisualInstructionBanner]? = nil,
+        administrativeAreaContainerByIntersection: [Int?]? = [0],
+        segmentIndicesByIntersection: [Int?]? = [0]
     ) -> Self {
         var step = self.init(
             transportType: transportType,
@@ -79,7 +84,8 @@ extension RouteStep {
             expectedTravelTime: expectedTravelTime,
             intersections: [.mock()],
             instructionsDisplayedAlongStep: instructionsDisplayedAlongStep,
-            segmentIndicesByIntersection: [0]
+            administrativeAreaContainerByIntersection: administrativeAreaContainerByIntersection,
+            segmentIndicesByIntersection: segmentIndicesByIntersection
         )
         step.shape = .init([maneuverLocation, maneuverLocation])
         return step

@@ -114,7 +114,8 @@ public final class MapboxNavigationProvider {
     ///
     /// It is intended to be used when creating off-line tile packs.
     public func getLatestNavigationTilesetDescriptor() -> TilesetDescriptor {
-        TilesetDescriptorFactory.getLatestForCache(nativeHandlersFactory.cacheHandle)
+        // TODO: (NAVIOS-2231) Add support for adas tiles
+        TilesetDescriptorFactory.getLatestForCache(nativeHandlersFactory.cacheHandle, includeAdas: false)
     }
 
     // MARK: - Instance Lifecycle control

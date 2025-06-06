@@ -1290,32 +1290,45 @@ final class MapboxNavigator: @unchecked Sendable {
                 return
             }
 
-            var newMainRoute = currentNavigationRoutes.mainRoute
-            let isMainRouteUpdate = refreshRouteResult.updatedRoute.getRouteId() ==
-                currentNavigationRoutes.mainRoute.routeId.rawValue
-            if isMainRouteUpdate {
-                guard let updatedMainRoute = await NavigationRoute(nativeRoute: refreshRouteResult.updatedRoute)
-                else { return }
-                newMainRoute = updatedMainRoute
-            }
             let event = RefreshingStatus.Events.Refreshing()
             await send(RefreshingStatus(event: event))
 
-            var refreshedNavigationRoutes = await NavigationRoutes(
-                mainRoute: newMainRoute,
-                alternativeRoutes: await AlternativeRoute.fromNative(
-                    alternativeRoutes: refreshRouteResult.alternativeRoutes,
-                    relateveTo: newMainRoute
-                )
-            )
+            var refreshedNavigationRoutes = currentNavigationRoutes
+
+            switch refreshRouteResult {
+            case .mainRoute(let refreshedMainRoute):
+                guard let updatedMainRoute = await NavigationRoute(nativeRoute: refreshedMainRoute)
+                else {
+                    await sendFailedToRefreshEvent()
+                    return
+                }
+                refreshedNavigationRoutes.mainRoute = updatedMainRoute
+
+            case .alternativeRoute(alternative: let refreshedAlternative):
+                guard let newAlternative = await AlternativeRoute(
+                    mainRoute: currentNavigationRoutes.mainRoute.route,
+                    alternativeRoute: refreshedAlternative
+                ), let index = currentNavigationRoutes.allAlternativeRoutesWithIgnored
+                    .firstIndex(where: { $0.nativeRoute.getRouteId() == refreshedAlternative.route.getRouteId() })
+                else {
+                    await sendFailedToRefreshEvent()
+                    return
+                }
+                refreshedNavigationRoutes.allAlternativeRoutesWithIgnored[index] = newAlternative
+            }
+
             if let status = self.navigator.mostRecentNavigationStatus {
                 refreshedNavigationRoutes.updateForkPointPassed(with: status)
             }
             let routeProgress = await state.privateRouteProgress
+            let refreshedMainLegIndex: Int? = switch refreshRouteResult {
+            case .mainRoute: Int(legIndex)
+            case .alternativeRoute: nil
+            }
             let updatedRouteProgress = routeProgress?.refreshingRoute(
                 with: refreshedNavigationRoutes,
-                legIndex: Int(legIndex),
-                legShapeIndex: 0, // TODO: NN should provide this value in `MBNNRouteRefreshObserver`
+                refreshedMainLegIndex: refreshedMainLegIndex,
+                // TODO: Pass legShapeIndex. NN should provide this value in `MBNNRouteRefreshObserver`
                 congestionConfiguration: configuration.congestionConfig
             )
             await state.update(privateRouteProgress: updatedRouteProgress)
@@ -1327,6 +1340,12 @@ final class MapboxNavigator: @unchecked Sendable {
             let endEvent = RefreshingStatus.Events.Refreshed()
             await send(RefreshingStatus(event: endEvent))
         }
+    }
+
+    private func sendFailedToRefreshEvent() async {
+        Log.warning("Failed to refresh the routes", category: .navigation)
+        let error = RefreshingStatus.Events.FailedToRefresh()
+        await send(RefreshingStatus(event: error))
     }
 
     func didFailToRefreshAnnotations(_ notification: Notification) {

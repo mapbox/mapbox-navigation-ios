@@ -115,8 +115,7 @@ public struct RouteProgress: Equatable, Sendable {
 
     func refreshingRoute(
         with refreshedRoutes: NavigationRoutes,
-        legIndex: Int,
-        legShapeIndex: Int,
+        refreshedMainLegIndex: Int?,
         congestionConfiguration: CongestionRangesConfiguration
     ) -> RouteProgress {
         var refreshedRouteProgress = self
@@ -125,8 +124,10 @@ public struct RouteProgress: Equatable, Sendable {
 
         refreshedRouteProgress.navigationRoutes = refreshedRoutes
 
-        refreshedRouteProgress.currentLegProgress = refreshedRouteProgress.currentLegProgress
-            .refreshingLeg(with: refreshedRouteProgress.route.legs[legIndex])
+        if let refreshedMainLegIndex {
+            refreshedRouteProgress.currentLegProgress = refreshedRouteProgress.currentLegProgress
+                .refreshingLeg(with: refreshedRouteProgress.route.legs[refreshedMainLegIndex])
+        }
         refreshedRouteProgress.calculateLegsCongestion(configuration: congestionConfiguration)
 
         return refreshedRouteProgress

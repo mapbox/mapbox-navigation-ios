@@ -8,12 +8,24 @@ public final class RouteInterfaceMock: RouteInterface {
     public static let realRequestUri =
         "https://api.mapbox.com/directions/v5/mapbox/driving/1.0,1.0;2.0,2.0?access_token=mock"
 
-    public static let realRouteJson = {
+    static func makeRoutesOptions(with route: Route) -> RouteOptions {
+        let source = route.legs[0].source?.coordinate ?? route.legs[0].steps[0].maneuverLocation
+        var waypoints = [Waypoint(coordinate: source)]
+        waypoints += route.legs.compactMap { $0.destination }
+        return RouteOptions(waypoints: waypoints)
+    }
+
+    static func makeRoutesJson(with routes: [Route]) -> String {
         let encoder = JSONEncoder()
-        let route = Route.mock()
-        let jsonData = try! encoder.encode(route)
+        let route = routes[0]
+        let routeOptions = makeRoutesOptions(with: route)
+        var routeResponse = RouteResponse(httpResponse: nil, options: .route(routeOptions), credentials: .mock())
+        routeResponse.routes = routes
+        let jsonData = try! encoder.encode(routeResponse)
         return String(data: jsonData, encoding: .utf8)!
-    }()
+    }
+
+    public static let realRouteJson = RouteInterfaceMock.makeRoutesJson(with: [.mock()])
 
     public var routeId: String
     public var responseUuid: String
@@ -27,6 +39,21 @@ public final class RouteInterfaceMock: RouteInterface {
     public var lastRefreshTimestamp: Date?
     public var routeGeometry: [Coordinate2D]
     public var mapboxApi: MapboxAPI
+
+    public convenience init(
+        route: Route,
+        routeId: String = UUID().uuidString,
+        routeIndex: Int = 0
+    ) {
+        let json = RouteInterfaceMock.makeRoutesJson(with: [route])
+        let options = RouteInterfaceMock.makeRoutesOptions(with: route)
+        self.init(
+            routeId: routeId,
+            routeIndex: UInt32(routeIndex),
+            responseJsonRef: .init(data: json.data(using: .utf8)!),
+            requestUri: Directions.url(forCalculating: options, credentials: .mock()).absoluteString
+        )
+    }
 
     public init(
         routeId: String = UUID().uuidString,
