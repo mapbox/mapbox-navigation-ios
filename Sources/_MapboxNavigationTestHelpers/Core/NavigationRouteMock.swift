@@ -6,8 +6,9 @@ extension NavigationRoute {
     public static func mock(
         route: Route = .mock(),
         routeId: RouteId = .mock(),
-        nativeRoute: RouteInterface = RouteInterfaceMock()
+        nativeRoute: RouteInterface? = nil
     ) -> Self {
-        self.init(route: route, nativeRoute: nativeRoute)
+        let nativeRoute = nativeRoute ?? RouteInterfaceMock(route: route)
+        return self.init(route: route, nativeRoute: nativeRoute)
     }
 }

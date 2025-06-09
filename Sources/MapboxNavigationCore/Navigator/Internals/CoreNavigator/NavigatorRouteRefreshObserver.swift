@@ -2,13 +2,13 @@ import _MapboxNavigationHelpers
 import Foundation
 @preconcurrency import MapboxNavigationNative
 
-struct RouteRefreshResult: @unchecked Sendable {
-    let updatedRoute: RouteInterface
-    let alternativeRoutes: [RouteAlternative]
+enum RouteRefreshResult: @unchecked Sendable {
+    case mainRoute(RouteInterface)
+    case alternativeRoute(alternative: RouteAlternative)
 }
 
 class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
-    typealias RefreshCallback = () -> RouteRefreshResult?
+    typealias RefreshCallback = (String, UInt32, UInt32) -> RouteRefreshResult?
     private var refreshCallback: RefreshCallback
 
     init(refreshCallback: @escaping RefreshCallback) {
@@ -22,7 +22,7 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         legIndex: UInt32,
         routeGeometryIndex: UInt32
     ) {
-        guard let routeRefreshResult = refreshCallback() else {
+        guard let routeRefreshResult = refreshCallback(routeId, routeIndex, legIndex) else {
             return
         }
 

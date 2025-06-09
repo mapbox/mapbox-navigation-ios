@@ -162,4 +162,55 @@ class RouteProgressTests: BaseTestCase {
 
         XCTAssertNotEqual(routeProgress.navigationRoutes, newRoutes)
     }
+
+    func testRefreshingRouteIfMainRouteRefreshed() async {
+        let refreshedSteps: [RouteStep] = [
+            .mock(maneuverType: .arrive),
+        ]
+        let refreshedLeg = RouteLeg.mock(steps: refreshedSteps)
+        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
+        let refreshedRoutes = await NavigationRoutes.mock(
+            mainRoute: .mock(route: refreshedDirectionsRoute),
+            alternativeRoutes: [.mock()]
+        )
+        let refreshedProgress = routeProgress.refreshingRoute(
+            with: refreshedRoutes,
+            refreshedMainLegIndex: 0,
+            congestionConfiguration: .default
+        )
+        XCTAssertEqual(refreshedProgress.navigationRoutes, refreshedRoutes)
+        XCTAssertEqual(refreshedProgress.currentLeg, refreshedLeg)
+        XCTAssertEqual(refreshedProgress.currentLegProgress.leg, refreshedLeg)
+    }
+
+    func testRefreshingRouteIfAlternativeRouteRefreshed() async {
+        let refreshedSteps: [RouteStep] = [
+            .mock(maneuverType: .depart),
+            .mock(maneuverType: .useLane),
+        ]
+        let refreshedLeg = RouteLeg.mock(steps: refreshedSteps)
+        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
+        let refreshedAlternative = AlternativeRoute.mock(
+            mainRoute: routes.mainRoute.route,
+            alternativeRoute: refreshedDirectionsRoute
+        )
+        let refreshedRoutes = await NavigationRoutes.mock(
+            mainRoute: twoLegsRoutes.mainRoute,
+            alternativeRoutes: [refreshedAlternative]
+        )
+        routeProgress = RouteProgress(
+            navigationRoutes: twoLegsRoutes,
+            waypoints: [],
+            congestionConfiguration: .default,
+            legIndex: 1
+        )
+        let refreshedProgress = routeProgress.refreshingRoute(
+            with: refreshedRoutes,
+            refreshedMainLegIndex: nil,
+            congestionConfiguration: .default
+        )
+        XCTAssertEqual(refreshedProgress.navigationRoutes, refreshedRoutes)
+        XCTAssertEqual(refreshedProgress.currentLeg, twoLegsRoutes.mainRoute.route.legs[1])
+        XCTAssertEqual(refreshedProgress.currentLegProgress.leg, twoLegsRoutes.mainRoute.route.legs[1])
+    }
 }

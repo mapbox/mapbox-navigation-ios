@@ -10,12 +10,13 @@ extension AlternativeRoute {
             shape: mockShape
         ),
         alternativeRoute: Route = .mock(),
-        nativeRouteAlternative: RouteAlternative = .mock()
+        nativeRouteAlternative: RouteAlternative? = nil
     ) -> Self {
-        self.init(
+        let nativeAlternative = nativeRouteAlternative ?? .mock(route: alternativeRoute)
+        return self.init(
             mainRoute: mainRoute,
             alternativeRoute: alternativeRoute,
-            nativeRouteAlternative: nativeRouteAlternative
+            nativeRouteAlternative: nativeAlternative
         )!
     }
 
@@ -33,6 +34,10 @@ extension AlternativeRoute {
 }
 
 extension RouteAlternative {
+    public static func mock(route: Route, routeIndex: Int = 0) -> Self {
+        .mock(route: RouteInterfaceMock(route: route, routeIndex: routeIndex))
+    }
+
     public static func mock(
         id: UInt32 = 0,
         route: RouteInterface = RouteInterfaceMock(),

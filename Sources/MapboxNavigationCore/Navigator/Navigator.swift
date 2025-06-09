@@ -291,6 +291,8 @@ public struct RefreshingStatus: Equatable, Sendable {
         public struct Refreshing: RefreshingEvent, Sendable {}
         /// The route has been refreshed.
         public struct Refreshed: RefreshingEvent, Sendable {}
+        /// The route has failed to refresh.
+        public struct FailedToRefresh: RefreshingEvent, Sendable {}
         /// Indicates that current route's refreshing is no longer available.
         ///
         /// It is strongly recommended to request a new route. Refreshing TTL has expired and the route will no longer

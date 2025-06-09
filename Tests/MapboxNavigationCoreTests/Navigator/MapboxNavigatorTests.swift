@@ -25,10 +25,7 @@ final class MapboxNavigatorTests: TestCase {
         locationClientState = MockLocationClientState()
         coreNavigator = await CoreNavigatorMock()
         coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), []))
-        routeRefreshResult = RouteRefreshResult(
-            updatedRoute: RouteInterfaceMock(),
-            alternativeRoutes: []
-        )
+        routeRefreshResult = RouteRefreshResult.mainRoute(RouteInterfaceMock())
         let userInfo: [AnyHashable: Any] = [
             NativeNavigator.NotificationUserInfoKey.refreshedRoutesResultKey: routeRefreshResult!,
             NativeNavigator.NotificationUserInfoKey.legIndexKey: 0,
@@ -62,6 +59,11 @@ final class MapboxNavigatorTests: TestCase {
                 self?.routeProgressExpectation?.fulfill()
             })
             .store(in: &subscriptions)
+    }
+
+    override func tearDown() {
+        Environment.switchEnvironment(to: .live)
+        super.tearDown()
     }
 
     @MainActor
@@ -508,7 +510,133 @@ final class MapboxNavigatorTests: TestCase {
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }
 
+    func testRefreshMainRoute() async {
+        let originalRoutes = await NavigationRoutes.mock(
+            mainRoute: .mock(),
+            alternativeRoutes: [.mock()]
+        )
+        mockAlternativesRoutesDataParser()
+        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes)
+
+        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
+        let refreshedRoute = RouteInterfaceMock(
+            route: refreshedDirectionsRoute,
+            routeId: originalRoutes.mainRoute.nativeRoute.getRouteId()
+        )
+        let routeRefreshResult = RouteRefreshResult.mainRoute(refreshedRoute)
+        let notification = makeRefreshNotification(routeRefreshResult: routeRefreshResult)
+
+        await refresh(with: notification)
+
+        let currentProgress = await navigator.currentRouteProgress!.routeProgress
+        XCTAssertEqual(currentProgress.currentLegProgress.leg, refreshedDirectionsRoute.legs[0])
+        let currentRoutes = currentProgress.navigationRoutes
+        XCTAssertEqual(currentRoutes.mainRoute.route.legs, refreshedDirectionsRoute.legs)
+        XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, originalRoutes.alternativeRoutes[0].route.legs)
+    }
+
+    func testRefreshAlternativeRoute() async {
+        let originalRoutes = await NavigationRoutes.mock(
+            mainRoute: .mock(),
+            alternativeRoutes: [.mock()]
+        )
+        mockAlternativesRoutesDataParser()
+        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes)
+
+        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
+        let refreshedRoute = RouteInterfaceMock(
+            route: refreshedDirectionsRoute,
+            routeId: originalRoutes.alternativeRoutes[0].nativeRoute.getRouteId()
+        )
+        let refreshedAlternative = RouteAlternative.mock(route: refreshedRoute)
+        let routeRefreshResult = RouteRefreshResult.alternativeRoute(alternative: refreshedAlternative)
+        let notification = makeRefreshNotification(routeRefreshResult: routeRefreshResult)
+
+        await refresh(with: notification)
+
+        let currentProgress = await navigator.currentRouteProgress!.routeProgress
+        XCTAssertEqual(currentProgress.currentLegProgress.leg, originalRoutes.mainRoute.route.legs[0])
+        let currentRoutes = currentProgress.navigationRoutes
+        XCTAssertEqual(currentRoutes.mainRoute, originalRoutes.mainRoute)
+        XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, refreshedDirectionsRoute.legs)
+    }
+
+    func testRefreshMultilegRoute() async {
+        let stepsFor1Leg: [RouteStep] = [
+            .mock(maneuverType: .depart),
+            .mock(maneuverType: .arrive),
+        ]
+        let originalMainRoute = Route.mock(legs: [.mock(steps: stepsFor1Leg), .mock()])
+        let originalRoutes = await NavigationRoutes.mock(
+            mainRoute: .mock(route: originalMainRoute),
+            alternativeRoutes: [.mock()]
+        )
+        mockAlternativesRoutesDataParser()
+        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes, startLegIndex: 1)
+        Environment.switchEnvironment(to: .live)
+
+        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
+        let refreshedRoute = RouteInterfaceMock(
+            route: refreshedDirectionsRoute,
+            routeId: originalRoutes.alternativeRoutes[0].nativeRoute.getRouteId()
+        )
+        let refreshedAlternative = RouteAlternative.mock(route: refreshedRoute)
+        let routeRefreshResult = RouteRefreshResult.alternativeRoute(alternative: refreshedAlternative)
+        let notification = makeRefreshNotification(routeRefreshResult: routeRefreshResult, legIndex: 0)
+
+        await refresh(with: notification)
+
+        let currentProgress = await navigator.currentRouteProgress!.routeProgress
+        XCTAssertEqual(currentProgress.currentLegProgress.leg, originalRoutes.mainRoute.route.legs[1])
+        let currentRoutes = currentProgress.navigationRoutes
+        XCTAssertEqual(currentRoutes.mainRoute, originalRoutes.mainRoute)
+        XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, refreshedDirectionsRoute.legs)
+    }
+
     // MARK: - Helpers
+
+    private var refreshedLeg: RouteLeg {
+        let steps: [RouteStep] = [
+            .mock(maneuverType: .depart),
+            .mock(maneuverType: .turn),
+            .mock(maneuverType: .turnAtRoundabout),
+            .mock(maneuverType: .arrive),
+        ]
+        return .mock(steps: steps)
+    }
+
+    private func refresh(with notification: Notification) async {
+        let startedExpectation = XCTestExpectation(description: "started")
+        let refreshedExpectation = XCTestExpectation(description: "refreshed")
+
+        navigator.routeRefreshing
+            .filter { $0.event is RefreshingStatus.Events.Refreshing }
+            .sink { _ in
+                startedExpectation.fulfill()
+            }
+            .store(in: &subscriptions)
+        navigator.routeRefreshing
+            .filter { $0.event is RefreshingStatus.Events.Refreshed }
+            .sink { _ in
+                refreshedExpectation.fulfill()
+            }
+            .store(in: &subscriptions)
+
+        navigator.didRefreshAnnotations(notification)
+
+        await fulfillment(of: [startedExpectation, refreshedExpectation], timeout: 2)
+    }
+
+    private func makeRefreshNotification(
+        routeRefreshResult: RouteRefreshResult,
+        legIndex: UInt32 = 0
+    ) -> Notification {
+        let userInfo: [AnyHashable: Any] = [
+            NativeNavigator.NotificationUserInfoKey.refreshedRoutesResultKey: routeRefreshResult,
+            NativeNavigator.NotificationUserInfoKey.legIndexKey: legIndex,
+        ]
+        return Notification(name: .routeRefreshDidUpdateAnnotations, userInfo: userInfo)
+    }
 
     private func startActiveGuidanceAndWaitForRouteProgress(
         with navigationRoutes: NavigationRoutes,
@@ -517,6 +645,17 @@ final class MapboxNavigatorTests: TestCase {
         await navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: startLegIndex)
         routeProgressExpectation = XCTestExpectation(description: "route progress after startActiveGuidance")
         await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
+    }
+
+    private func mockAlternativesRoutesDataParser() {
+        var routeParserClient = RouteParserClient.testValue
+        routeParserClient.createRoutesData = { [weak self] in
+            let data = RoutesDataMock.mock(primaryRoute: $0, alternativeRoutes: $1)
+            self?.coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), data.alternativeRoutes()))
+            return data
+        }
+        Environment.set(\.routeParserClient, routeParserClient)
+        coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), []))
     }
 
     private func setRoutes(
