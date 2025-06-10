@@ -26,9 +26,10 @@ final class MapboxNavigatorTests: TestCase {
         coreNavigator = await CoreNavigatorMock()
         coreNavigator.setRoutesResult = .success((RouteInfo(alerts: []), []))
         routeRefreshResult = RouteRefreshResult.mainRoute(RouteInterfaceMock())
+        let legIndex = UInt32(0)
         let userInfo: [AnyHashable: Any] = [
             NativeNavigator.NotificationUserInfoKey.refreshedRoutesResultKey: routeRefreshResult!,
-            NativeNavigator.NotificationUserInfoKey.legIndexKey: 0,
+            NativeNavigator.NotificationUserInfoKey.legIndexKey: legIndex,
         ]
         refreshNotification = Notification(name: .routeRefreshDidUpdateAnnotations, userInfo: userInfo)
         routeProgress = await .mock()
@@ -516,7 +517,8 @@ final class MapboxNavigatorTests: TestCase {
             alternativeRoutes: [.mock()]
         )
         mockAlternativesRoutesDataParser()
-        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes)
+        await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 0)
+        await waitForRouteProgress()
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
         let refreshedRoute = RouteInterfaceMock(
@@ -541,7 +543,8 @@ final class MapboxNavigatorTests: TestCase {
             alternativeRoutes: [.mock()]
         )
         mockAlternativesRoutesDataParser()
-        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes)
+        await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 0)
+        await waitForRouteProgress()
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
         let refreshedRoute = RouteInterfaceMock(
@@ -572,7 +575,8 @@ final class MapboxNavigatorTests: TestCase {
             alternativeRoutes: [.mock()]
         )
         mockAlternativesRoutesDataParser()
-        await startActiveGuidanceAndWaitForRouteProgress(with: originalRoutes, startLegIndex: 1)
+        await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 1)
+        await waitForRouteProgress()
         Environment.switchEnvironment(to: .live)
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
@@ -643,6 +647,10 @@ final class MapboxNavigatorTests: TestCase {
         startLegIndex: Int = 0
     ) async {
         await navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: startLegIndex)
+        await waitForRouteProgress()
+    }
+
+    private func waitForRouteProgress() async {
         routeProgressExpectation = XCTestExpectation(description: "route progress after startActiveGuidance")
         await fulfillment(of: [routeProgressExpectation!], timeout: timeout)
     }

@@ -20,9 +20,16 @@ final class NavigationRoutesTests: TestCase {
         profileIdentifier: .automobileAvoidingTraffic
     )
 
-    private lazy var routeResponse: RouteResponse? = {
+    private lazy var routeResponse: RouteResponse? = makeResponse(options: routeOptions, fileName: "routeResponse")
+
+    private lazy var mapMatchingResponse: MapMatchingResponse? = makeResponse(
+        options: matchOptions,
+        fileName: "matchResponse"
+    )
+
+    private func makeResponse<ResponseType: Codable>(options: DirectionsOptions, fileName: String) -> ResponseType? {
         guard let fixtureURL = Bundle.module.url(
-            forResource: "routeResponse",
+            forResource: fileName,
             withExtension: "json",
             subdirectory: "Fixtures"
         ) else {
@@ -36,39 +43,14 @@ final class NavigationRoutesTests: TestCase {
         }
         do {
             let decoder = JSONDecoder()
-            decoder.userInfo[.options] = routeOptions
+            decoder.userInfo[.options] = options
             decoder.userInfo[.credentials] = Credentials.mock()
-            return try decoder.decode(RouteResponse.self, from: responseData)
+            return try decoder.decode(ResponseType.self, from: responseData)
         } catch {
             XCTFail("File cannot be decoded, error: \(error)")
             return nil
         }
-    }()
-
-    private lazy var mapMatchingResponse: MapMatchingResponse? = {
-        guard let fixtureURL = Bundle.module.url(
-            forResource: "matchResponse",
-            withExtension: "json",
-            subdirectory: "Fixtures"
-        ) else {
-            XCTFail("File not found")
-            return nil
-        }
-
-        guard let responseData = try? Data(contentsOf: fixtureURL) else {
-            XCTFail("File cannot be read")
-            return nil
-        }
-        do {
-            let decoder = JSONDecoder()
-            decoder.userInfo[.options] = matchOptions
-            decoder.userInfo[.credentials] = Credentials.mock()
-            return try decoder.decode(MapMatchingResponse.self, from: responseData)
-        } catch {
-            XCTFail("File cannot be decoded, error: \(error)")
-            return nil
-        }
-    }()
+    }
 
     override func setUp() {
         super.setUp()
@@ -152,5 +134,69 @@ final class NavigationRoutesTests: TestCase {
         }
 
         await fulfillment(of: [callExpectation1, callExpectation2], timeout: 0.1)
+    }
+
+    func testCreateRoutesWithLessAlternatives() async throws {
+        var routeParserClient = RouteParserClient.testValue
+
+        guard let routeResponse: RouteResponse = makeResponse(
+            options: routeOptions,
+            fileName: "alternativesRouteResponse"
+        ) else {
+            XCTFail("Cannot create RouteResponse")
+            return
+        }
+
+        let alternativeMock = RouteInterfaceMock(route: .mock(), routeIndex: 2)
+        routeParserClient.parseDirectionsResponseForResponseDataRef = { responseDataRef, request, origin in
+            RouteParserClient.liveValue.parseDirectionsResponseForResponseDataRef(responseDataRef, request, origin)
+        }
+        routeParserClient.createRoutesData = { _, _ in
+            RoutesDataMock(alternativeRoutes: [.mock(route: alternativeMock)])
+        }
+        Environment.set(\.routeParserClient, routeParserClient)
+
+        let navigationRoutes = try await NavigationRoutes(
+            routeResponse: routeResponse,
+            routeIndex: 0,
+            responseOrigin: .online
+        )
+        XCTAssertNotNil(navigationRoutes)
+        XCTAssertEqual(routeResponse.routes!.count, 3)
+        XCTAssertEqual(navigationRoutes.alternativeRoutes.count, 1, "One alternative is missing")
+    }
+
+    func testCreateRoutesWithLessAlternativesIfInvalidIndex() async throws {
+        var routeParserClient = RouteParserClient.testValue
+
+        guard let routeResponse: RouteResponse = makeResponse(
+            options: routeOptions,
+            fileName: "alternativesRouteResponse"
+        ) else {
+            XCTFail("Cannot create RouteResponse")
+            return
+        }
+
+        let alternativeMock = RouteInterfaceMock(route: .mock(), routeIndex: 10)
+        routeParserClient.parseDirectionsResponseForResponseDataRef = { responseDataRef, request, origin in
+            RouteParserClient.liveValue.parseDirectionsResponseForResponseDataRef(responseDataRef, request, origin)
+        }
+        routeParserClient.createRoutesData = { _, _ in
+            RoutesDataMock(alternativeRoutes: [.mock(route: alternativeMock)])
+        }
+        Environment.set(\.routeParserClient, routeParserClient)
+
+        let navigationRoutes = try await NavigationRoutes(
+            routeResponse: routeResponse,
+            routeIndex: 0,
+            responseOrigin: .online
+        )
+        XCTAssertNotNil(navigationRoutes)
+        XCTAssertEqual(routeResponse.routes!.count, 3)
+        XCTAssertEqual(
+            navigationRoutes.alternativeRoutes.count,
+            0,
+            "No alternatives should be created for invalid index"
+        )
     }
 }
