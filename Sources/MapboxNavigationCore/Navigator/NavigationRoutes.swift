@@ -48,20 +48,24 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             throw NavigationRoutesError.emptyRoutes
         }
 
-        guard routes.count == routesData.alternativeRoutes().count + 1 else {
+        let mainRouteIndex = Int(routesData.primaryRoute().getRouteIndex())
+        guard routes.indices.contains(mainRouteIndex) else {
             Log.error("Routes mismatched", category: .navigation)
             throw NavigationRoutesError.incorrectRoutesNumber
         }
 
-        let mainRoute = routes[Int(routesData.primaryRoute().getRouteIndex())]
+        let mainRoute = routes[mainRouteIndex]
 
         var alternativeRoutes = [AlternativeRoute]()
         for routeAlternative in routesData.alternativeRoutes() {
-            guard let alternativeRoute = AlternativeRoute(
-                mainRoute: mainRoute,
-                alternativeRoute: routes[Int(routeAlternative.route.getRouteIndex())],
-                nativeRouteAlternative: routeAlternative
-            ) else {
+            let index = Int(routeAlternative.route.getRouteIndex())
+            guard routes.indices.contains(index),
+                  let alternativeRoute = AlternativeRoute(
+                      mainRoute: mainRoute,
+                      alternativeRoute: routes[index],
+                      nativeRouteAlternative: routeAlternative
+                  )
+            else {
                 Log.error("Unable to convert alternative route with id: \(routeAlternative.id)", category: .navigation)
                 continue
             }
@@ -174,22 +178,26 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
                 throw NavigationRoutesError.emptyRoutes
             }
 
-            guard routes.count == routesData.alternativeRoutes().count + 1 else {
+            let mainRouteIndex = Int(routesData.primaryRoute().getRouteIndex())
+            guard routes.indices.contains(mainRouteIndex) else {
                 Log.error("Routes mismatched", category: .navigation)
                 throw NavigationRoutesError.incorrectRoutesNumber
             }
 
-            let mainRoute = routes[Int(routesData.primaryRoute().getRouteIndex())]
+            let mainRoute = routes[mainRouteIndex]
 
             let waypoints = routeResponse.waypoints ?? []
 
             var alternativeRoutes = [AlternativeRoute]()
             for routeAlternative in routesData.alternativeRoutes() {
-                guard let alternativeRoute = AlternativeRoute(
-                    mainRoute: mainRoute,
-                    alternativeRoute: routes[Int(routeAlternative.route.getRouteIndex())],
-                    nativeRouteAlternative: routeAlternative
-                ) else {
+                let index = Int(routeAlternative.route.getRouteIndex())
+                guard routes.indices.contains(index),
+                      let alternativeRoute = AlternativeRoute(
+                          mainRoute: mainRoute,
+                          alternativeRoute: routes[index],
+                          nativeRouteAlternative: routeAlternative
+                      )
+                else {
                     Log.error(
                         "Unable to convert alternative route with id: \(routeAlternative.id)",
                         category: .navigation

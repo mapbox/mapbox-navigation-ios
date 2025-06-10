@@ -11,6 +11,12 @@
 * Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was not called for intermediate waypoints.
 * Fixed an issue where the `distanceUnit` passed to the `NavigationRouteOptions` and `NavigationMatchOptions` initializers was not correctly applied to the `distanceMeasurementSystem`.
 
+## 3.10.0
+
+### Other changes
+
+* Fixed an issue where the `NavigationRoutes` couldn't be created due to too similar alternatives.
+
 ## 3.10.0-rc.1
 
 ### Packaging
