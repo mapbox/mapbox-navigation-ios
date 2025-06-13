@@ -317,7 +317,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         navigator.native.addRouteRefreshObserver(for: refreshObserver)
         navigator.native.startRoutesRefresh(
             forDefaultRefreshPeriodMs: UInt64(refreshPeriod * 1000),
-            ignoreExpirationTime: true
+            ignoreExpirationTime: configuration.routingConfig.ignoreExpirationTimeInRefresh
         )
     }
 

@@ -27,6 +27,15 @@ public struct RoutingConfig: Equatable {
     /// Use `nil` value to disable the mechanism.
     public var routeRefreshPeriod: TimeInterval?
 
+    /// Indicates if the expiration time of the route should be ignored during route refresh. The refresh period is
+    /// controlled by server responses and may differ from the default value.
+    ///
+    /// This property is ignored unless ``profileIdentifier`` is `ProfileIdentifier.automobileAvoidingTraffic` and
+    /// ``routeRefreshPeriod`` is not `nil`.
+    ///
+    ///  The default value of this property is `false`.
+    public var ignoreExpirationTimeInRefresh: Bool
+
     /// Type of routing to be used by various SDK objects when providing route calculations. Use this value to configure
     /// online vs. offline data usage for routing.
     ///
@@ -56,7 +65,8 @@ public struct RoutingConfig: Equatable {
         routeRefreshPeriod: TimeInterval? = 120,
         routingProviderSource: RoutingProviderSource = .hybrid,
         prefersOnlineRoute: Bool = true,
-        detectsReroute: Bool = true
+        detectsReroute: Bool = true,
+        ignoreExpirationTimeInRefresh: Bool = false
     ) {
         self.alternativeRoutesDetectionConfig = alternativeRoutesDetectionSettings
         self.fasterRouteDetectionConfig = fasterRouteDetectionSettings
@@ -65,6 +75,7 @@ public struct RoutingConfig: Equatable {
         self.routeRefreshPeriod = routeRefreshPeriod
         self.routingProviderSource = routingProviderSource
         self.prefersOnlineRoute = prefersOnlineRoute
+        self.ignoreExpirationTimeInRefresh = ignoreExpirationTimeInRefresh
     }
 
     public init(
@@ -74,7 +85,8 @@ public struct RoutingConfig: Equatable {
         initialManeuverAvoidanceRadius: TimeInterval = 8,
         routeRefreshPeriod: TimeInterval? = 120,
         routingProviderSource: RoutingProviderSource = .hybrid,
-        prefersOnlineRoute: Bool = true
+        prefersOnlineRoute: Bool = true,
+        ignoreExpirationTimeInRefresh: Bool = false
     ) {
         self.alternativeRoutesDetectionConfig = alternativeRoutesDetectionConfig
         self.fasterRouteDetectionConfig = fasterRouteDetectionConfig
@@ -83,5 +95,6 @@ public struct RoutingConfig: Equatable {
         self.routeRefreshPeriod = routeRefreshPeriod
         self.routingProviderSource = routingProviderSource
         self.prefersOnlineRoute = prefersOnlineRoute
+        self.ignoreExpirationTimeInRefresh = ignoreExpirationTimeInRefresh
     }
 }

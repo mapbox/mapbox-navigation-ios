@@ -6,6 +6,10 @@
 
 * Updated toll icon in route callout view.
 
+### Routing
+
+* Added the ability to disable the server-side control on refreshed route expiration.
+
 ### Other changes
 
 * Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was not called for intermediate waypoints.
