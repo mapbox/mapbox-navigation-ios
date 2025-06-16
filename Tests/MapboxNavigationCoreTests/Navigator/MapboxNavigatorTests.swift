@@ -597,6 +597,30 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, refreshedDirectionsRoute.legs)
     }
 
+    @MainActor
+    func testSendSessionEventsWithoutDuplication() async {
+        var resultSession: Session = .init(state: .freeDrive(.paused))
+        var eventsCounter = 0
+        var cancellables = Set<AnyCancellable>()
+
+        navigator.session
+            .sink { session in
+                resultSession = session
+                eventsCounter += 1
+            }
+            .store(in: &cancellables)
+
+        XCTAssertEqual(resultSession, .init(state: .idle)) // initial navigator state
+        XCTAssertEqual(eventsCounter, 1)
+
+        navigator.startFreeDrive() // this method always sends .freeDrive(.active)
+        navigator.startFreeDrive()
+        navigator.startFreeDrive()
+
+        XCTAssertEqual(resultSession, .init(state: .freeDrive(.active)))
+        XCTAssertEqual(eventsCounter, 2)
+    }
+
     // MARK: - Helpers
 
     private var refreshedLeg: RouteLeg {

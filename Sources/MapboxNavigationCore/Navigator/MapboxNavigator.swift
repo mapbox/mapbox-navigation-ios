@@ -1480,7 +1480,9 @@ extension MapboxNavigator {
 
     @MainActor
     private func send(_ details: Session) {
-        _session.emit(details)
+        if currentSession != details {
+            _session.emit(details)
+        }
     }
 
     @MainActor

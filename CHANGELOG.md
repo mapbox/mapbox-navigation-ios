@@ -14,6 +14,7 @@
 
 * Fixed an issue where the `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was not called for intermediate waypoints.
 * Fixed an issue where the `distanceUnit` passed to the `NavigationRouteOptions` and `NavigationMatchOptions` initializers was not correctly applied to the `distanceMeasurementSystem`.
+* Fixed an issue where the `SessionController.session` was emitting `Session` updates with the same value (no state change).
 
 ## 3.10.0
 
