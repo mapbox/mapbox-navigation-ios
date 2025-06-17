@@ -237,13 +237,13 @@ extension TimeInterval {
 }
 
 extension NavigationRoute {
-    fileprivate var isSuggested: Bool {
+    var isSuggested: Bool {
         nativeRoute.getRouteIndex() == 0
     }
 }
 
 extension AlternativeRoute {
-    fileprivate var isSuggested: Bool {
+    var isSuggested: Bool {
         nativeRoute.getRouteIndex() == 0
     }
 }

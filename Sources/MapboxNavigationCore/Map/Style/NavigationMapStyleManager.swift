@@ -57,7 +57,8 @@ struct MapStyleConfig: Equatable {
         }
     }
 
-    var useLegacyEtaRouteAnnotations = false
+    var useLegacyEtaRouteAnnotations: Bool
+    var apiRouteCalloutViewProviderEnabled: Bool
 }
 
 @MainActor
@@ -136,6 +137,8 @@ final class NavigationMapStyleManager {
     private let intersectionAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAlertsFeaturesStore: MapFeaturesStore
+
+    private var redrawableFeaturesSubscriptions: [AnyHashable: AnyCancellable] = [:]
 
     init(
         mapView: MapView,
@@ -227,7 +230,8 @@ final class NavigationMapStyleManager {
         annotationKinds: Set<RouteAnnotationKind>,
         config: MapStyleConfig,
         routelineFeatureProvider: RouteLineFeatureProvider,
-        waypointFeatureProvider: WaypointFeatureProvider
+        waypointFeatureProvider: WaypointFeatureProvider,
+        routeCalloutViewProvider: (any RouteCalloutViewProvider)?
     ) {
         defer { mapStyleDeclarativeContentUpdate() }
         cleanup()
@@ -242,11 +246,21 @@ final class NavigationMapStyleManager {
             featureProvider: waypointFeatureProvider
         )
         updateVoiceInstructions(route: routes.mainRoute.route, config: config)
-        updateRouteAnnotations(
-            navigationRoutes: routes,
-            annotationKinds: annotationKinds,
-            config: config
-        )
+
+        if config.apiRouteCalloutViewProviderEnabled {
+            updateRouteCallouts(
+                navigationRoutes: routes,
+                config: config,
+                routeCalloutViewProvider: routeCalloutViewProvider
+            )
+        } else {
+            updateRouteAnnotations(
+                navigationRoutes: routes,
+                annotationKinds: annotationKinds,
+                config: config
+            )
+        }
+
         updateRouteAlertsAnnotations(
             navigationRoutes: routes,
             excludedRouteAlertTypes: config.excludedRouteAlertTypes
@@ -419,6 +433,46 @@ final class NavigationMapStyleManager {
         )
     }
 
+    private func subscribeToRedrawableFeature(_ redrawableFeature: any RedrawableMapFeature) {
+        let cancellable = redrawableFeature.redrawRequestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] id in
+                guard let self else { return }
+                let feature = routeAnnotationsFeaturesStore[id] as? (any RedrawableMapFeature)
+                if let feature {
+                    redrawableFeaturesSubscriptions[id] = nil
+                    let refreshedFeature = feature.refreshed()
+                    routeAnnotationsFeaturesStore.update(with: refreshedFeature, order: &layersOrder)
+                    subscribeToRedrawableFeature(refreshedFeature)
+                }
+            }
+        redrawableFeaturesSubscriptions[redrawableFeature.id] = cancellable
+    }
+
+    func updateRouteCallouts(
+        navigationRoutes: NavigationRoutes,
+        config: MapStyleConfig,
+        routeCalloutViewProvider: (any RouteCalloutViewProvider)?
+    ) {
+        guard let routeCalloutViewProvider else { return }
+
+        if let defaultProvider = routeCalloutViewProvider as? DefaultRouteCalloutViewProvider {
+            defaultProvider.mapStyleConfig = config
+        }
+
+        let calloutsFeature = ExperimentalRouteCalloutsFeature(
+            for: navigationRoutes,
+            mapStyleConfig: config,
+            routeCalloutViewProvider: routeCalloutViewProvider
+        )
+        subscribeToRedrawableFeature(calloutsFeature)
+
+        routeAnnotationsFeaturesStore.update(
+            with: calloutsFeature,
+            order: &layersOrder
+        )
+    }
+
     func updateRouteAlertsAnnotations(
         navigationRoutes: NavigationRoutes?,
         excludedRouteAlertTypes: RoadAlertType,
@@ -511,6 +565,7 @@ final class NavigationMapStyleManager {
         if shouldUseDeclarativeApproach {
             mapContent = NavigationStyleContent()
             mapContent?.customRoutePosition = customRouteLineLayerPosition
+            redrawableFeaturesSubscriptions.removeAll()
             routeAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
         } else {
             routeFeaturesStore.update(using: nil, order: &layersOrder)
@@ -518,6 +573,7 @@ final class NavigationMapStyleManager {
             arrowFeaturesStore.update(using: nil, order: &layersOrder)
             voiceInstructionFeaturesStore.update(using: nil, order: &layersOrder)
             intersectionAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
+            redrawableFeaturesSubscriptions.removeAll()
             routeAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
             routeAlertsFeaturesStore.update(using: nil, order: &layersOrder)
         }

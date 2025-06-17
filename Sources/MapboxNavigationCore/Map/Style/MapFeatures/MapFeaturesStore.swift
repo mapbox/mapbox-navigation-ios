@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import MapboxMaps
 
@@ -9,13 +10,13 @@ import MapboxMaps
 @MainActor
 final class MapFeaturesStore {
     private struct Features: Sequence {
-        private var features: [String: any MapFeature] = [:]
+        private var features: [AnyHashable: any MapFeature] = [:]
 
         func makeIterator() -> some IteratorProtocol<MapFeature> {
             features.values.makeIterator()
         }
 
-        subscript(_ id: String) -> (any MapFeature)? {
+        subscript(_ id: AnyHashable) -> (any MapFeature)? {
             features[id]
         }
 
@@ -78,6 +79,10 @@ final class MapFeaturesStore {
         for feature in allFeatures {
             update(feature, order: &order)
         }
+    }
+
+    subscript(_ id: AnyHashable) -> (any MapFeature)? {
+        features[id]
     }
 
     private func removeAll(order: inout MapLayersOrder) {

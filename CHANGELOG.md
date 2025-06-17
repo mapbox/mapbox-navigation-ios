@@ -4,7 +4,8 @@
 
 ### Map
 
-* Updated toll icon in route callout view.
+* Added experimental custom route callouts API accessible when importing MapboxNavigationCore with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationCore`. Enable it by setting `NavigationMapView.apiRouteCalloutViewProviderEnabled` to `true`, then configure using `NavigationMapView.routeCalloutViewProvider` property. New `NavigationMapView.showRoutes(_:)` and `NavigationMapView.showcaseRoutes(_:routesPresentationStyle:animated:duration:)` methods are available without `routeAnnotationKinds` parameter but original methods `NavigationMapView.show(_:routeAnnotationKinds:)` and `NavigationMapView.showcase(_:routesPresentationStyle:routeAnnotationKinds:animated:duration:)` also work and their `routeAnnotationKinds` parameter is ignored when `NavigationMapView.apiRouteCalloutViewProviderEnabled` is set to `true`.
+* Updated the toll icon in the default route callout view.
 
 ### Routing
 

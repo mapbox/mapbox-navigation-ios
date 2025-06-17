@@ -431,6 +431,51 @@ open class NavigationMapView: UIView {
     /// Configures the waypoint stroke color.
     @objc public dynamic var waypointStrokeColor: UIColor = .defaultWaypointStrokeColor
 
+    // MARK: Route callouts customization
+
+    /// Enables the experimental API for custom route callouts.
+    ///
+    /// When enabled, route callouts will be created using the ``routeCalloutViewProvider`` instead of
+    /// the default annotation approach. Must be set to `true` to use custom route callouts.
+    /// Defaults to `false`.
+    @_spi(ExperimentalMapboxAPI)
+    public var apiRouteCalloutViewProviderEnabled = false
+
+    /// A provider that creates route callout views displayed on the map.
+    ///
+    /// Use this property to customize the appearance and behavior of route callouts, which display
+    /// information like estimated travel times, toll information, etc. The provider is responsible for
+    /// creating appropriate callout views for each route.
+    ///
+    /// To use custom route callouts:
+    /// 1. Set ``apiRouteCalloutViewProviderEnabled`` to `true`
+    /// 2. Assign your custom provider or use ``DefaultRouteCalloutViewProvider``
+    ///
+    /// New ``showRoutes(_:)`` and ``showcaseRoutes(_:routesPresentationStyle:animated:duration:)`` methods
+    /// are available without `routeAnnotationKinds` parameter but original methods ``show(_:routeAnnotationKinds:)``
+    /// and ``showcase(_:routesPresentationStyle:routeAnnotationKinds:animated:duration:)``
+    /// also work and their `routeAnnotationKinds` parameter is ignored.
+    ///
+    /// For default Mapbox-styled route callouts, you can use the ``DefaultRouteCalloutViewProvider`` class:
+    /// ```swift
+    /// navigationMapView.apiRouteCalloutViewProviderEnabled = true
+    /// let sessionController = navigationProvider.mapboxNavigation.tripSession()
+    /// navigationMapView.routeCalloutViewProvider =
+    ///     DefaultRouteCalloutViewProvider(sessionController: sessionController)
+    ///
+    /// navigationMapView.showRoutes(routes)
+    /// // or
+    /// navigationMapView.showcaseRoutes(routes, routesPresentationStyle: .all())
+    /// ```
+    @_spi(ExperimentalMapboxAPI)
+    public var routeCalloutViewProvider: RouteCalloutViewProvider? {
+        didSet {
+            if let defaultProvider = routeCalloutViewProvider as? DefaultRouteCalloutViewProvider {
+                defaultProvider.mapStyleConfig = mapStyleConfig
+            }
+        }
+    }
+
     // MARK: - Public methods
 
     /// Updates the inner navigation camera state.
@@ -454,13 +499,17 @@ open class NavigationMapView: UIView {
 
     // MARK: Customizing and Displaying the Route Line(s)
 
-    /// Visualizes the given routes and it's alternatives, removing any existing from the map.
+    /// Visualizes the given main route and its alternatives, removing any existing from the map.
     ///
     /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are
     /// present.
     /// Waypoints along the route are visualized as markers.
     /// To only visualize the routes and not the waypoints, or to have more control over the camera,
     /// use the ``show(_:routeAnnotationKinds:)`` method.
+    ///
+    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
+    /// then `routeAnnotationKinds` parameter is ignored and ``routeCalloutViewProvider``
+    /// will be used to create route callouts which will be displayed. If it is `nil` no callouts will be displayed.
     ///
     /// - parameter navigationRoutes: ``NavigationRoutes`` containing routes to visualize. The selected route by
     /// `routeIndex` is considered primary, while the remaining routes are displayed as if they are currently deselected
@@ -490,6 +539,44 @@ open class NavigationMapView: UIView {
         )
     }
 
+    /// Visualizes the given main route and its alternatives, removing any existing from the map.
+    ///
+    /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are
+    /// present.
+    /// Waypoints along the route are visualized as markers.
+    /// To only visualize the routes and not the waypoints, or to have more control over the camera,
+    /// use the ``showRoutes(_:)`` method.
+    ///
+    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
+    /// ``routeCalloutViewProvider`` will be used to create route callouts which will be displayed.
+    /// If it is `nil` no callouts will be displayed. Also no callouts are displayed in case when
+    /// ``apiRouteCalloutViewProviderEnabled`` is set to `false`.
+    ///
+    /// - parameter navigationRoutes: ``NavigationRoutes`` containing routes to visualize. The selected route by
+    /// `routeIndex` is considered primary, while the remaining routes are displayed as if they are currently deselected
+    /// or inactive.
+    /// - parameter routesPresentationStyle: Route lines presentation style. By default the map will be
+    /// updated to fit all routes.
+    /// - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
+    /// zoom and pan the map. Defaults to `false`.
+    /// - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+    /// is set to `false` this value is ignored. Defaults to `1`.
+    @_spi(ExperimentalMapboxAPI)
+    public func showcaseRoutes(
+        _ navigationRoutes: NavigationRoutes,
+        routesPresentationStyle: RoutesPresentationStyle = .all(),
+        animated: Bool = false,
+        duration: TimeInterval = 1.0
+    ) {
+        showcase(
+            navigationRoutes,
+            routesPresentationStyle: routesPresentationStyle,
+            routeAnnotationKinds: Set<RouteAnnotationKind>(),
+            animated: animated,
+            duration: duration
+        )
+    }
+
     private(set) var routeAnnotationKinds: Set<RouteAnnotationKind> = []
 
     /// Represents a set of ``RoadAlertType`` values that should be hidden from the map display.
@@ -507,11 +594,15 @@ open class NavigationMapView: UIView {
         }
     }
 
-    /// Visualizes the given routes and it's alternatives, removing any existing from the map.
+    /// Visualizes the given main route and its alternatives, removing any existing from the map.
     ///
     /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
     /// levels are present. To also visualize waypoints and zoom the map to fit,
     /// use the ``showcase(_:routesPresentationStyle:routeAnnotationKinds:animated:duration:)`` method.
+    ///
+    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
+    /// then `routeAnnotationKinds` parameter is ignored and ``routeCalloutViewProvider``
+    /// will be used to create route callouts which will be displayed. If it is `nil` no callouts will be displayed.
     ///
     /// To undo the effects of this method, use ``removeRoutes()`` method.
     /// - Parameters:
@@ -536,8 +627,28 @@ open class NavigationMapView: UIView {
             annotationKinds: routeAnnotationKinds,
             config: mapStyleConfig,
             routelineFeatureProvider: customRouteLineFeatureProvider,
-            waypointFeatureProvider: waypointsFeatureProvider
+            waypointFeatureProvider: waypointsFeatureProvider,
+            routeCalloutViewProvider: routeCalloutViewProvider
         )
+    }
+
+    /// Visualizes the given main route and its alternatives, removing any existing from the map.
+    ///
+    /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
+    /// levels are present. To also visualize waypoints and zoom the map to fit,
+    /// use the ``showcaseRoutes(_:routesPresentationStyle:animated:duration:)`` method.
+    ///
+    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
+    /// ``routeCalloutViewProvider`` will be used to create route callouts which will be displayed.
+    /// If it is `nil` no callouts will be displayed. Also no callouts are displayed in case when
+    /// ``apiRouteCalloutViewProviderEnabled`` is set to `false`.
+    ///
+    /// To undo the effects of this method, use ``removeRoutes()`` method.
+    /// - Parameters:
+    ///   - navigationRoutes: ``NavigationRoutes`` to be displayed on the map.
+    @_spi(ExperimentalMapboxAPI)
+    public func showRoutes(_ navigationRoutes: NavigationRoutes) {
+        show(navigationRoutes, routeAnnotationKinds: Set<RouteAnnotationKind>())
     }
 
     /// Removes routes and all visible annotations from the map.
@@ -821,7 +932,8 @@ open class NavigationMapView: UIView {
             waypointStrokeColor: waypointStrokeColor,
             routeCalloutAnchors: routeCalloutAnchors,
             fixedRouteCalloutPosition: fixedRouteCalloutPosition,
-            useLegacyEtaRouteAnnotations: useLegacyEtaRouteAnnotations
+            useLegacyEtaRouteAnnotations: useLegacyEtaRouteAnnotations,
+            apiRouteCalloutViewProviderEnabled: apiRouteCalloutViewProviderEnabled
         )
     }
 }
