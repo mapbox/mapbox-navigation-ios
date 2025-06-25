@@ -19,6 +19,11 @@
 
 ## 3.10.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.13.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.13.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.13.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.13.1)
+
 ### Other changes
 
 * Fixed an issue where the `NavigationRoutes` couldn't be created due to too similar alternatives.
