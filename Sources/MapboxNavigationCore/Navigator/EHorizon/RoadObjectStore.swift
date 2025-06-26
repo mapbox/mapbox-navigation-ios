@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadObject {
     /// Identifies a road object in an electronic horizon. A road object represents a notable transition point along a
@@ -84,7 +84,7 @@ public final class RoadObjectStore: @unchecked Sendable {
         native.removeAllCustomRoadObjects()
     }
 
-    init(_ native: MapboxNavigationNative.RoadObjectsStore) {
+    init(_ native: MapboxNavigationNative_Private.RoadObjectsStore) {
         self.native = native
     }
 
@@ -94,7 +94,7 @@ public final class RoadObjectStore: @unchecked Sendable {
         }
     }
 
-    var native: MapboxNavigationNative.RoadObjectsStore {
+    var native: MapboxNavigationNative_Private.RoadObjectsStore {
         didSet {
             updateObserver()
         }

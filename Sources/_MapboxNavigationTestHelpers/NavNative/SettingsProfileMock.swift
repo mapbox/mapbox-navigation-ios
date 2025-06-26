@@ -1,4 +1,4 @@
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension SettingsProfile {
     public static func mock(

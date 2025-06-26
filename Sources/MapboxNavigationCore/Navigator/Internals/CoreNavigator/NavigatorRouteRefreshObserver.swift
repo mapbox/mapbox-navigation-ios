@@ -1,6 +1,6 @@
 import _MapboxNavigationHelpers
 import Foundation
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 
 enum RouteRefreshResult: @unchecked Sendable {
     case mainRoute(RouteInterface)

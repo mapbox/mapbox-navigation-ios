@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadGraph.Edge {
     /// Indicates how many directions the user may travel along an edge.

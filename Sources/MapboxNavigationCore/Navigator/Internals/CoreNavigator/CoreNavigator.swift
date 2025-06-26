@@ -1,7 +1,7 @@
 import CoreLocation
 import MapboxCommon_Private
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import UIKit
 
 protocol CoreNavigator {
@@ -147,7 +147,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         self.navigator = factory.navigator
         self.telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator)
         self.roadObjectStore = RoadObjectStore(navigator.native.roadObjectStore())
-        self.roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
+        self.roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle))
         self.rerouteController = RerouteController(
             configuration: .init(
                 credentials: configuration.credentials,
@@ -188,7 +188,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         navigator.native.restoreNavigationSession(for: previousNavigationSessionState)
         telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator, previousSession: previousSession)
         roadObjectStore.native = navigator.native.roadObjectStore()
-        roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
+        roadObjectMatcher.native = MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle)
         rerouteController = RerouteController(
             configuration: .init(
                 credentials: configuration.credentials,
@@ -383,7 +383,8 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     private var electronicHorizonConfig: ElectronicHorizonConfig? {
         didSet {
-            let nativeOptions = electronicHorizonConfig.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
+            let nativeOptions = electronicHorizonConfig
+                .map(MapboxNavigationNative_Private.ElectronicHorizonOptions.init)
             navigator.setElectronicHorizonOptionsFor(
                 nativeOptions
             )

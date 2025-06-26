@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Contains information about routing and passing interchange along the route.
 public struct Interchange: Equatable {

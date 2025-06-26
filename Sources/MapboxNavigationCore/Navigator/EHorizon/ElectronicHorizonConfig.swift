@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Defines options for emitting ``Foundation/NSNotification/Name/electronicHorizonDidUpdatePosition``,
 /// ``Foundation/NSNotification/Name/electronicHorizonDidEnterRoadObject``, and
@@ -43,7 +43,7 @@ public struct ElectronicHorizonConfig: Equatable, Sendable {
     }
 }
 
-extension MapboxNavigationNative.ElectronicHorizonOptions {
+extension MapboxNavigationNative_Private.ElectronicHorizonOptions {
     convenience init(_ options: ElectronicHorizonConfig) {
         self.init(
             length: options.length,

@@ -1,7 +1,7 @@
 import CarPlay
 import CarPlayTestHelper
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 @testable import MapboxNavigationUIKit
 import TestHelper
 import XCTest

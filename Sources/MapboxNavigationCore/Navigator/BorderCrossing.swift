@@ -1,7 +1,7 @@
 
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension AdministrativeRegion {
     init(_ adminInfo: AdminInfo) {

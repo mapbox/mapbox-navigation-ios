@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 extension RoadObject {
@@ -68,7 +68,7 @@ extension RoadObject {
         /// - Parameter shape: Shape of an object.
         case routeAlert(shape: Turf.Geometry)
 
-        init(_ native: MapboxNavigationNative.MatchedRoadObjectLocation) {
+        init(_ native: MapboxNavigationNative_Private.MatchedRoadObjectLocation) {
             switch native.type {
             case .openLRLineLocation:
                 let location = native.getOpenLRLineLocation()

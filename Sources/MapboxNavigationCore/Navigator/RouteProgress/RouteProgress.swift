@@ -1,8 +1,8 @@
 import CoreLocation
 import Foundation
 import MapboxDirections
-import class MapboxNavigationNative.NavigationStatus
-import class MapboxNavigationNative.UpcomingRouteAlert
+import class MapboxNavigationNative_Private.NavigationStatus
+import class MapboxNavigationNative_Private.UpcomingRouteAlert
 import Turf
 
 /// ``RouteProgress`` stores the user’s progress along a route.

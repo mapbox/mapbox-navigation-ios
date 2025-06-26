@@ -2,7 +2,6 @@ import _MapboxNavigationHelpers
 import Foundation
 import MapboxCommon
 import MapboxCommon_Private
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 public final class MapboxNavigationProvider {

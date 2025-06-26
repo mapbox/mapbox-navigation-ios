@@ -1,4 +1,4 @@
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Describes a road shield information.
 ///
@@ -33,7 +33,7 @@ public struct RoadShield: Equatable, Sendable {
         self.textColor = textColor
     }
 
-    init(_ native: MapboxNavigationNative.Shield) {
+    init(_ native: MapboxNavigationNative_Private.Shield) {
         self.baseUrl = native.baseUrl
         self.name = native.name
         self.displayRef = native.displayRef

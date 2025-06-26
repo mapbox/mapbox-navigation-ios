@@ -1,4 +1,4 @@
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 struct HistoryRecorder: HistoryRecording, @unchecked Sendable {
     private let handle: HistoryRecorderHandle

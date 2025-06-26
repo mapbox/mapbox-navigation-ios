@@ -1,7 +1,7 @@
 import _MapboxNavigationTestHelpers
 import CoreLocation
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class MapMatchingResultTests: XCTestCase {

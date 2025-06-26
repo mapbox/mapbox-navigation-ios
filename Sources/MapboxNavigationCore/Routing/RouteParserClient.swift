@@ -1,5 +1,4 @@
 import MapboxCommon_Private
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 struct RouteParserClient: Sendable {

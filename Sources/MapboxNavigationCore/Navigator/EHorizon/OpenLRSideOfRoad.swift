@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Describes the relationship between the road object and the road.
 /// The road object can be on the right side of the road, on the left side of the road, on both sides of the road or
@@ -20,7 +20,7 @@ public enum OpenLRSideOfRoad: Equatable, Sendable {
     /// The road object is on both sides of the road or directly on the road.
     case both
 
-    init(_ native: MapboxNavigationNative.SideOfRoad) {
+    init(_ native: MapboxNavigationNative_Private.SideOfRoad) {
         switch native {
         case .onRoadOrUnknown:
             self = .unknown

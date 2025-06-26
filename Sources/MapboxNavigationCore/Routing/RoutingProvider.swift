@@ -1,5 +1,5 @@
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Allows fetching ``NavigationRoutes`` by given parameters.
 public protocol RoutingProvider: Sendable {

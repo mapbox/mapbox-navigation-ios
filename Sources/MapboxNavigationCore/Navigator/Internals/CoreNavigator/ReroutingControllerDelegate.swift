@@ -1,5 +1,5 @@
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 protocol ReroutingControllerDelegate: AnyObject {
@@ -44,7 +44,7 @@ public enum ReroutingError: Error {
         case .rerouteInProgress:
             self = .anotherRerouteInProgress
         @unknown default:
-            assertionFailure("Unknown MapboxNavigationNative.RerouteError value.")
+            assertionFailure("Unknown MapboxNavigationNative_Private.RerouteError value.")
             return nil
         }
     }

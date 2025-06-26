@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadGraph {
     /// An edge in a routing graph. For example, an edge may represent a road segment between two intersections or

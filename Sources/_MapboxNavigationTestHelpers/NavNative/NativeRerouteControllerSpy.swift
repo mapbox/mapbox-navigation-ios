@@ -1,6 +1,5 @@
 @_implementationOnly import MapboxCommon_Private
-import MapboxNavigationNative
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 public class NativeRerouteControllerSpy: RerouteControllerInterface {
     public typealias RerouteCallback = (Expected<RerouteInfo, RerouteError>) -> Void

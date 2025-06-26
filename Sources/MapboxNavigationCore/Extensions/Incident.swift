@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension Incident {
     init(_ incidentInfo: IncidentInfo) {

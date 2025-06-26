@@ -1,10 +1,10 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
     public func onPositionUpdated(
         for position: ElectronicHorizonPosition,
-        distances: [MapboxNavigationNative.RoadObjectDistance]
+        distances: [MapboxNavigationNative_Private.RoadObjectDistance]
     ) {
         let positionInfo = RoadGraph.Position(position.position())
         let treeInfo = RoadGraph.Edge(position.tree().start)

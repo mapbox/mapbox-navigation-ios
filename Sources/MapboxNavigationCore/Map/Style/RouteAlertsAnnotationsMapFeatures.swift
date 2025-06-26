@@ -1,7 +1,7 @@
 import _MapboxNavigationHelpers
 import MapboxDirections
 import MapboxMaps
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import enum SwiftUI.ColorScheme
 import UIKit
 

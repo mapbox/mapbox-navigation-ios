@@ -1,7 +1,7 @@
 import CoreLocation
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 @testable import MapboxNavigationUIKit
 @testable import TestHelper
 import XCTest

@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 struct EventStep: Equatable, Codable {
     let distance: Double

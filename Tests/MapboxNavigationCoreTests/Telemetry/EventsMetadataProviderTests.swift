@@ -1,6 +1,6 @@
 import _MapboxNavigationTestHelpers
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class EventsMetadataProviderTests: TestCase {

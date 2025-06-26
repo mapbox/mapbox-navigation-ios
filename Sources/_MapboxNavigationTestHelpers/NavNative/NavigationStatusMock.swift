@@ -1,7 +1,7 @@
 import CoreLocation
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension NavigationStatus {
     public static func mock(
@@ -24,10 +24,10 @@ extension NavigationStatus {
         intersectionIndex: UInt32 = 0,
         turnLanes: [TurnLane] = [],
         alternativeRouteIndices: [RouteIndices] = [],
-        roads: [MapboxNavigationNative.RoadName] = [.mock()],
+        roads: [MapboxNavigationNative_Private.RoadName] = [.mock()],
         voiceInstruction: VoiceInstruction? = nil,
         bannerInstruction: BannerInstruction? = nil,
-        speedLimit: MapboxNavigationNative.SpeedLimit = .init(
+        speedLimit: MapboxNavigationNative_Private.SpeedLimit = .init(
             speed: nil,
             localeUnit: .milesPerHour,
             localeSign: .mutcd
@@ -142,7 +142,7 @@ extension ActiveGuidanceProgress {
     }
 }
 
-extension MapboxNavigationNative.RoadName {
+extension MapboxNavigationNative_Private.RoadName {
     public static func mock(
         text: String = "name",
         language: String = "lang",

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Road information, like Route number, street name, shield information, etc.
 ///
@@ -32,7 +32,7 @@ public struct RoadName: Equatable, Sendable {
         self.shield = shield
     }
 
-    init?(_ native: MapboxNavigationNative.RoadName) {
+    init?(_ native: MapboxNavigationNative_Private.RoadName) {
         guard native.text != "/" else { return nil }
 
         self.shield = native.shield.map(RoadShield.init)

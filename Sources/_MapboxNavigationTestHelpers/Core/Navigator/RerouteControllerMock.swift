@@ -1,7 +1,6 @@
 import Foundation
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 extension RerouteController {
     @MainActor

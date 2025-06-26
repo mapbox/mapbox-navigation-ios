@@ -1,4 +1,4 @@
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension ConfigHandle {
     public static func mock(

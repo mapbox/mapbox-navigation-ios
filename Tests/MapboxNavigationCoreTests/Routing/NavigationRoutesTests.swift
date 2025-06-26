@@ -2,7 +2,7 @@ import _MapboxNavigationTestHelpers
 import CoreLocation
 import MapboxCommon_Private.MBXExpected
 import MapboxDirections
-import MapboxNavigationNative.MBNNRouteParser
+import MapboxNavigationNative_Private
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
 import XCTest
 

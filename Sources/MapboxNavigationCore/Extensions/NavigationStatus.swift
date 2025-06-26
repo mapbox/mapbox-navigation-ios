@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension NavigationStatus {
     private static let nameSeparator = " / "
@@ -13,7 +13,7 @@ extension NavigationStatus {
         return .init(text: name.text, language: name.language, shield: shield)
     }
 
-    private var nonLocalizedRoadName: MapboxNavigationNative.RoadName {
+    private var nonLocalizedRoadName: MapboxNavigationNative_Private.RoadName {
         let text = roads
             .filter { $0.shield == nil }
             .map(\.text)
@@ -26,7 +26,7 @@ extension NavigationStatus {
         return roadNames.compactMap(\.shield).first ?? shield
     }
 
-    private func localizedRoadNames(locale: Locale) -> [MapboxNavigationNative.RoadName] {
+    private func localizedRoadNames(locale: Locale) -> [MapboxNavigationNative_Private.RoadName] {
         roads.filter { $0.language == locale.languageCode }
     }
 

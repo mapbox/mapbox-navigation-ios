@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadObject {
     /// Type of the road object.
@@ -49,7 +49,7 @@ extension RoadObject {
         /// Undefined.
         case undefined
 
-        init(_ native: MapboxNavigationNative.RoadObjectType) {
+        init(_ native: MapboxNavigationNative_Private.RoadObjectType) {
             switch native {
             case .incident:
                 self = .incident(nil)
@@ -82,7 +82,10 @@ extension RoadObject {
             }
         }
 
-        init(type: MapboxNavigationNative.RoadObjectType, metadata: MapboxNavigationNative.RoadObjectMetadata) {
+        init(
+            type: MapboxNavigationNative_Private.RoadObjectType,
+            metadata: MapboxNavigationNative_Private.RoadObjectMetadata
+        ) {
             switch type {
             case .incident:
                 self = .incident(metadata.isIncidentInfo() ? Incident(metadata.getIncidentInfo()) : nil)

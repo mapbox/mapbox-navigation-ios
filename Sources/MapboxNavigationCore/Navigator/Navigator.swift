@@ -1,7 +1,7 @@
 import Combine
 import CoreLocation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 // MARK: - NavigationEvent
 

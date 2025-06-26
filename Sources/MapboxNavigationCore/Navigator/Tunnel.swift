@@ -1,6 +1,6 @@
 
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// ``Tunnel`` is used for naming incoming tunnels, together with route alerts.
 public struct Tunnel: Equatable {

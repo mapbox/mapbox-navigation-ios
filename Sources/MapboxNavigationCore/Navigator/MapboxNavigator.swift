@@ -2,7 +2,7 @@ import _MapboxNavigationHelpers
 import Combine
 import Foundation
 import MapboxDirections
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 
 final class MapboxNavigator: @unchecked Sendable {
     struct Configuration: @unchecked Sendable {
@@ -1602,7 +1602,7 @@ extension MapboxNavigator {
 }
 
 extension MapboxNavigator.SetRouteReason {
-    var navNativeValue: MapboxNavigationNative.SetRoutesReason {
+    var navNativeValue: MapboxNavigationNative_Private.SetRoutesReason {
         switch self {
         case .newRoute:
             return .newRoute

@@ -1,5 +1,5 @@
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Specifies the content that a predictive cache fetches and how it fetches the content.
 public struct PredictiveCacheConfig: Equatable, Sendable {

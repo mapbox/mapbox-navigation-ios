@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Contains information about distance to the road object of a concrete type/shape (gantry, polygon, line, point etc.).
 public enum DistancedRoadObject: Sendable, Equatable {
@@ -103,7 +103,7 @@ public enum DistancedRoadObject: Sendable, Equatable {
         }
     }
 
-    init(_ native: MapboxNavigationNative.RoadObjectDistance) {
+    init(_ native: MapboxNavigationNative_Private.RoadObjectDistance) {
         switch native.distanceInfo.type {
         case .pointDistanceInfo:
             let info = native.distanceInfo.getPointDistanceInfo()

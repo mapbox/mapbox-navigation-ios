@@ -3,7 +3,7 @@ import CoreLocation
 import Foundation
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 import XCTest
 

@@ -1,6 +1,6 @@
 import Foundation
 import MapboxCommon
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 extension Turf.Geometry {

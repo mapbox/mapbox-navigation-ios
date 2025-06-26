@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Coordinating routes update to NavNative Navigator to rule out some edge scenarios.
 final class RoutesCoordinator {

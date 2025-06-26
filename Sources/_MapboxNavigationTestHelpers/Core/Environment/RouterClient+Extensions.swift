@@ -1,5 +1,5 @@
 @testable import MapboxNavigationCore
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 extension RouterClient {
     public static var noopValue: RouterClient {

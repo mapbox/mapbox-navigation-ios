@@ -1,7 +1,7 @@
 
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension TollCollection {
     init?(_ tollInfo: TollCollectionInfo) {

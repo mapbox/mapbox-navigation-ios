@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 /// Additional reasonable routes besides the main roure that visit waypoints.

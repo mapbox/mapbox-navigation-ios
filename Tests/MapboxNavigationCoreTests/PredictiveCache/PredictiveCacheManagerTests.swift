@@ -2,7 +2,7 @@ import _MapboxNavigationTestHelpers
 import MapboxCommon
 import MapboxMaps
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class PredictiveCacheManagerTests: XCTestCase {

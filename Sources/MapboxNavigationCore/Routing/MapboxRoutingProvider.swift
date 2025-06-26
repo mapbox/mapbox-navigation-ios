@@ -1,7 +1,6 @@
 import _MapboxNavigationHelpers
 import MapboxCommon_Private
 import MapboxDirections
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 struct RoutingProviderConfiguration: Sendable {
@@ -191,7 +190,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
     private func parseResponse<ResponseType: Codable>(
         userInfo: [CodingUserInfoKey: Any],
-        result: Expected<NSString, MapboxNavigationNative.RouterError>
+        result: Expected<NSString, MapboxNavigationNative_Private.RouterError>
     ) async -> Result<ResponseType, DirectionsError> {
         let json = result.value as String?
         guard let data = json?.data(using: .utf8) else {

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadGraph {
     /// The position of a point object in the road graph.

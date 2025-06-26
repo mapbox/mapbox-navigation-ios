@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Road object information, like interchange name.
 public struct LocalizedRoadObjectName: Equatable {

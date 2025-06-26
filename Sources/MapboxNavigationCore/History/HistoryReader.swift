@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Digest of history file contents produced by ``HistoryReader``.
 public struct History {
@@ -56,10 +56,10 @@ public struct HistoryReader: AsyncSequence, Sendable {
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
-        private let historyReader: MapboxNavigationNative.HistoryReader
+        private let historyReader: MapboxNavigationNative_Private.HistoryReader
         private let readOptions: ReadOptions?
 
-        init(historyReader: MapboxNavigationNative.HistoryReader, readOptions: ReadOptions? = nil) {
+        init(historyReader: MapboxNavigationNative_Private.HistoryReader, readOptions: ReadOptions? = nil) {
             self.historyReader = historyReader
             self.readOptions = readOptions
         }
@@ -151,7 +151,7 @@ public struct HistoryReader: AsyncSequence, Sendable {
 
     public func makeAsyncIterator() -> AsyncIterator {
         return AsyncIterator(
-            historyReader: MapboxNavigationNative.HistoryReader(path: fileUrl.path),
+            historyReader: MapboxNavigationNative_Private.HistoryReader(path: fileUrl.path),
             readOptions: readOptions
         )
     }

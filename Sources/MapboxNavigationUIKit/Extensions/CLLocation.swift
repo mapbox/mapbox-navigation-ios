@@ -1,7 +1,7 @@
 import CoreLocation
 import MapboxDirections
 import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 extension CLLocation {

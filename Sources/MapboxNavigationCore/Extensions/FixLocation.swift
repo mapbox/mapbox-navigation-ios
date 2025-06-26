@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension FixLocation {
     convenience init(_ location: CLLocation, isMock: Bool = false) {

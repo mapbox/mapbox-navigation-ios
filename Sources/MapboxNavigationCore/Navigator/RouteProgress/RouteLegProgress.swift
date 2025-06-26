@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// ``RouteLegProgress`` stores the user’s progress along a route leg.
 public struct RouteLegProgress: Equatable, Sendable {

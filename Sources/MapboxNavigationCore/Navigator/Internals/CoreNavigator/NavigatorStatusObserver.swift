@@ -1,7 +1,11 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 class NavigatorStatusObserver: NavigatorObserver {
+    func onRoutesChanged(for info: RoutesChangeInfo) {
+        /// empty
+    }
+
     func onPrimaryRouteChanged(
         forPrimaryRoute primaryRoute: (any RouteInterface)?,
         reason: PrimaryRouteChangeReason

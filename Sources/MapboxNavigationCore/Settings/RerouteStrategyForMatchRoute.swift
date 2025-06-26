@@ -1,4 +1,4 @@
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Reroute strategy for Map Matching API routes.
 public struct RerouteStrategyForMatchRoute: Hashable, Sendable {
@@ -23,7 +23,7 @@ public struct RerouteStrategyForMatchRoute: Hashable, Sendable {
 }
 
 extension RerouteStrategyForMatchRoute {
-    var nativeValue: MapboxNavigationNative.RerouteStrategyForMatchRoute {
+    var nativeValue: MapboxNavigationNative_Private.RerouteStrategyForMatchRoute {
         switch kind {
         case .rerouteDisabled: .rerouteDisabled
         case .navigateToFinalDestination: .navigateToFinalDestination

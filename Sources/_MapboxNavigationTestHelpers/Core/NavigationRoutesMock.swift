@@ -1,6 +1,6 @@
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension NavigationRoutes {
     public static func mock(

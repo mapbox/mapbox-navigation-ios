@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 
 public struct RoadObjectAhead: Equatable, Sendable {
     public var roadObject: RoadObject
@@ -37,7 +37,7 @@ public struct RoadObject: Equatable, Sendable {
     /// ``RoadObject/Location/point(position:)``.
     public let isUrban: Bool?
 
-    let native: MapboxNavigationNative.RoadObject?
+    let native: MapboxNavigationNative_Private.RoadObject?
 
     ///  Initializes a new `RoadObject` object.
     public init(
@@ -66,7 +66,7 @@ public struct RoadObject: Equatable, Sendable {
         self.init(identifier: identifier, length: length, location: location, kind: kind, isUrban: nil)
     }
 
-    public init(_ native: MapboxNavigationNative.RoadObject) {
+    public init(_ native: MapboxNavigationNative_Private.RoadObject) {
         self.identifier = native.id
         self.length = native.length?.doubleValue
         self.location = RoadObject.Location(native.location)

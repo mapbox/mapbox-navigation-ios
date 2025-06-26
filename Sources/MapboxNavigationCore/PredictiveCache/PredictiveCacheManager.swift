@@ -1,7 +1,7 @@
 import Foundation
 import MapboxCommon
 import MapboxMaps
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Proactively fetches tiles which may become necessary if the device loses its Internet connection at some point
 /// during passive or active turn-by-turn navigation.

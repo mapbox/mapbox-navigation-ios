@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// ``RouteAlert`` encapsulates information about various incoming events. Common attributes like location, distance to
 /// the event, length and other is provided for each POI, while specific meta data is supplied via ``roadObject``

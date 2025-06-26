@@ -1,6 +1,6 @@
 import Foundation
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class JunctionTests: XCTestCase {

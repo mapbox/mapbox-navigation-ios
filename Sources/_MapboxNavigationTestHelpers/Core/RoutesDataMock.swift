@@ -1,4 +1,4 @@
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 
 public final class RoutesDataMock: RoutesData {
     let _primaryRoute: any RouteInterface

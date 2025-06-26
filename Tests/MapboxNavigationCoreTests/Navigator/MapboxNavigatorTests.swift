@@ -3,7 +3,7 @@ import Combine
 import CoreLocation
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class MapboxNavigatorTests: TestCase {

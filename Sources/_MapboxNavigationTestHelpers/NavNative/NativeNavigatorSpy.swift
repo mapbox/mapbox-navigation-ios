@@ -1,7 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 extension NavigationNativeNavigator {
     @MainActor
@@ -10,7 +9,7 @@ extension NavigationNativeNavigator {
     }
 }
 
-public class NativeNavigatorSpy: MapboxNavigationNative.Navigator {
+public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedTileStore: TileStore?
     public var passedDescriptors: [TilesetDescriptor]?
     public var passedCacheOptions: PredictiveCacheControllerOptions?

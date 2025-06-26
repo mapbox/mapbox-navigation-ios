@@ -1,8 +1,7 @@
 import Foundation
 import MapboxMaps
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 public final class CoreNavigatorMock: CoreNavigator {
     public var rawLocation: CLLocation?
@@ -39,15 +38,15 @@ public final class CoreNavigatorMock: CoreNavigator {
             historyRecorder: nil,
             frameworkTypeForSKU: .CF
         )
-        let nativeNavigator = MapboxNavigationNative.Navigator(
+        let nativeNavigator = MapboxNavigationNative_Private.Navigator(
             config: configHandle,
             cache: cacheHandle,
             historyRecorder: nil
         )
         self.rerouteController = .mock(navigator: .mock())
-        self.roadObjectMatcher = .init(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
+        self.roadObjectMatcher = .init(MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle))
         self.roadObjectStore = .init(nativeNavigator.roadObjectStore())
-        self.roadGraph = .init(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
+        self.roadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(cache: cacheHandle))
         self.tileStore = .__create(forPath: "")
     }
 

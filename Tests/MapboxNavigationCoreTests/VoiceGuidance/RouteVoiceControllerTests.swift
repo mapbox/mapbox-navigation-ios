@@ -2,7 +2,7 @@ import _MapboxNavigationTestHelpers
 import Combine
 import MapboxDirections
 @testable import MapboxNavigationCore
-@testable import MapboxNavigationNative
+@testable import MapboxNavigationNative_Private
 import XCTest
 
 final class RouteVoiceControllerTests: BaseTestCase {

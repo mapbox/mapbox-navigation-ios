@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadObject {
     /// Represents location of road object on road graph.
@@ -30,7 +30,7 @@ extension RoadObject {
             self.fractionToEnd = fractionToEnd
         }
 
-        init(_ native: MapboxNavigationNative.RoadObjectEdgeLocation) {
+        init(_ native: MapboxNavigationNative_Private.RoadObjectEdgeLocation) {
             self.fractionFromStart = native.percentAlongBegin
             self.fractionToEnd = native.percentAlongEnd
         }

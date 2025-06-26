@@ -2,7 +2,7 @@ import CoreLocation
 import Foundation
 import MapboxCommon
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 public final class RouteInterfaceMock: RouteInterface {
     public static let realRequestUri =
@@ -34,7 +34,7 @@ public final class RouteInterfaceMock: RouteInterface {
     public var requestUri: String
     public var routerOrigin: RouterOrigin
     public var routeInfo: RouteInfo
-    public var waypoints: [MapboxNavigationNative.Waypoint]
+    public var waypoints: [MapboxNavigationNative_Private.Waypoint]
     public var expirationTimeMs: NSNumber?
     public var lastRefreshTimestamp: Date?
     public var routeGeometry: [Coordinate2D]
@@ -63,7 +63,7 @@ public final class RouteInterfaceMock: RouteInterface {
         requestUri: String = RouteInterfaceMock.realRequestUri,
         routerOrigin: RouterOrigin = .online,
         routeInfo: RouteInfo = .init(alerts: []),
-        waypoints: [MapboxNavigationNative.Waypoint] = [],
+        waypoints: [MapboxNavigationNative_Private.Waypoint] = [],
         expirationTimeMs: NSNumber? = nil,
         lastRefreshTimestamp: Date? = nil,
         routeGeometry: [Coordinate2D] = [],
@@ -97,7 +97,7 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public func getRouteInfo() -> RouteInfo { routeInfo }
 
-    public func getWaypoints() -> [MapboxNavigationNative.Waypoint] { waypoints }
+    public func getWaypoints() -> [MapboxNavigationNative_Private.Waypoint] { waypoints }
 
     public func getExpirationTimeMs() -> NSNumber? { expirationTimeMs }
 

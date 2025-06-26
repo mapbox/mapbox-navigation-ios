@@ -1,7 +1,7 @@
 import _MapboxNavigationHelpers
 import Foundation
 import MapboxDirections
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 import Turf
 
 /// Contains a selection of ``NavigationRoute`` and it's related ``AlternativeRoute``'s, which can be sued for

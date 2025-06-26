@@ -1,7 +1,7 @@
 import CoreLocation
 import MapboxDirections
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 public enum TestNavigationStatusProvider {
@@ -14,7 +14,7 @@ public enum TestNavigationStatusProvider {
         geometryIndex: UInt32 = 0,
         shapeIndex: UInt32 = 0,
         intersectionIndex: UInt32 = 0,
-        roads: [MapboxNavigationNative.RoadName]? = nil,
+        roads: [MapboxNavigationNative_Private.RoadName]? = nil,
         voiceInstruction: VoiceInstruction? = nil,
         bannerInstruction: BannerInstruction? = nil,
         upcomingRouteAlertUpdates: [UpcomingRouteAlertUpdate] = []
@@ -66,7 +66,7 @@ public enum TestNavigationStatusProvider {
         shapeIndex: UInt32 = 0,
         intersectionIndex: UInt32 = 0,
         turnLanes: [TurnLane] = [],
-        roads: [MapboxNavigationNative.RoadName]? = nil,
+        roads: [MapboxNavigationNative_Private.RoadName]? = nil,
         voiceInstruction: VoiceInstruction? = nil,
         bannerInstruction: BannerInstruction? = nil,
         activeGuidanceInfo: ActiveGuidanceInfo? = nil,
@@ -76,7 +76,7 @@ public enum TestNavigationStatusProvider {
     -> NavigationStatus {
         let fixLocation = FixLocation(location ?? CLLocation(latitude: 37.788443, longitude: -122.4020258))
         let shield = Shield(baseUrl: "shield_url", displayRef: "ref", name: "shield", textColor: "")
-        let road = MapboxNavigationNative.RoadName(
+        let road = MapboxNavigationNative_Private.RoadName(
             text: "name",
             language: "lang",
             imageBaseUrl: "base_image_url",

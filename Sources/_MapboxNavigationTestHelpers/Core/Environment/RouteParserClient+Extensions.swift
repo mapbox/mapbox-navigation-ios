@@ -1,6 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RouteParserClient {
     public static var noopValue: RouteParserClient {

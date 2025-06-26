@@ -1,5 +1,5 @@
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 protocol HandlerData {
     var tileStorePath: String { get }

@@ -1,6 +1,6 @@
 
 @testable import MapboxNavigationCore
-@testable import MapboxNavigationNative
+@testable import MapboxNavigationNative_Private
 import XCTest
 
 private final class ConfigFactorySpy: ConfigFactory {

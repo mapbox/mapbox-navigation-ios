@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 /// ``RoadGraph`` provides methods to get edge shape (e.g. ``RoadGraph/Edge``) and metadata.

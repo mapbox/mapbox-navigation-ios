@@ -3,7 +3,6 @@ import Foundation
 import MapboxCommon
 import MapboxCommon_Private
 import MapboxDirections
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 public let customConfigKey = "com.mapbox.navigation.custom-config"
@@ -22,7 +21,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     let datasetProfileIdentifier: ProfileIdentifier
-    let routingProviderSource: MapboxNavigationNative.RouterType?
+    let routingProviderSource: MapboxNavigationNative_Private.RouterType?
 
     let liveIncidentsOptions: IncidentsConfig?
     let navigatorPredictionInterval: TimeInterval?
@@ -45,7 +44,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         targetVersion: String? = nil,
         configFactoryType: ConfigFactory.Type = ConfigFactory.self,
         datasetProfileIdentifier: ProfileIdentifier,
-        routingProviderSource: MapboxNavigationNative.RouterType? = nil,
+        routingProviderSource: MapboxNavigationNative_Private.RouterType? = nil,
         liveIncidentsOptions: IncidentsConfig?,
         navigatorPredictionInterval: TimeInterval?,
         statusUpdatingSettings: StatusUpdatingSettings? = nil,
@@ -118,14 +117,14 @@ final class NativeHandlersFactory: @unchecked Sendable {
             let historyRecorder = historyRecorderHandle
             let configHandle = configHandle(by: configFactoryType)
             let navigator = if let routingProviderSource {
-                MapboxNavigationNative.Navigator(
+                MapboxNavigationNative_Private.Navigator(
                     config: configHandle,
                     cache: cacheHandle,
                     historyRecorder: historyRecorder,
                     routerTypeRestriction: routingProviderSource
                 )
             } else {
-                MapboxNavigationNative.Navigator(
+                MapboxNavigationNative_Private.Navigator(
                     config: configHandle,
                     cache: cacheHandle,
                     historyRecorder: historyRecorder
@@ -147,7 +146,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         cacheData: self
     )
 
-    lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
+    lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(cache: cacheHandle))
 
     lazy var tileStore: TileStore = .__create(forPath: tileStorePath)
 
@@ -178,7 +177,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
     )
 
     var navigatorConfig: NavigatorConfig {
-        var nativeIncidentsOptions: MapboxNavigationNative.IncidentsOptions?
+        var nativeIncidentsOptions: MapboxNavigationNative_Private.IncidentsOptions?
         if let incidentsOptions = liveIncidentsOptions,
            !incidentsOptions.graph.isEmpty
         {

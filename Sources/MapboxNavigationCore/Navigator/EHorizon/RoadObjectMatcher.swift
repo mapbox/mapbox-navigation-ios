@@ -1,6 +1,5 @@
 import Foundation
 import MapboxCommon_Private
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 import Turf
 
@@ -24,7 +23,7 @@ public final class RoadObjectMatcher: @unchecked Sendable {
     ///   - location: OpenLR location of the road object, encoded in a base64 string.
     ///   - identifier: Unique identifier of the object.
     public func matchOpenLR(location: String, identifier: OpenLRIdentifier) {
-        let standard = MapboxNavigationNative.Standard(identifier: identifier)
+        let standard = MapboxNavigationNative_Private.Standard(identifier: identifier)
         let reference: RoadObject.Identifier = switch identifier {
         case .tomTom(let ref):
             ref
@@ -146,7 +145,7 @@ public final class RoadObjectMatcher: @unchecked Sendable {
         }
     }
 
-    var native: MapboxNavigationNative.RoadObjectMatcher {
+    var native: MapboxNavigationNative_Private.RoadObjectMatcher {
         didSet {
             updateListener()
         }
@@ -156,7 +155,7 @@ public final class RoadObjectMatcher: @unchecked Sendable {
     /// ``RoadObjectMatcherDelegate``.
     var internalRoadObjectMatcherListener: InternalRoadObjectMatcherListener!
 
-    init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
+    init(_ native: MapboxNavigationNative_Private.RoadObjectMatcher) {
         self.native = native
 
         self.internalRoadObjectMatcherListener = InternalRoadObjectMatcherListener(roadObjectMatcher: self)
@@ -168,7 +167,7 @@ public final class RoadObjectMatcher: @unchecked Sendable {
     }
 }
 
-extension MapboxNavigationNative.RoadObjectMatcherError: Error, @unchecked Sendable {}
+extension MapboxNavigationNative_Private.RoadObjectMatcherError: Error, @unchecked Sendable {}
 
 extension CLLocation {
     convenience init(coordinate: CLLocationCoordinate2D) {
@@ -190,15 +189,15 @@ class InternalRoadObjectMatcherListener: RoadObjectMatcherListener {
 
     public func onRoadObjectMatched(
         forRoadObject roadObject: Expected<
-            MapboxNavigationNative.RoadObject,
-            MapboxNavigationNative.RoadObjectMatcherError
+            MapboxNavigationNative_Private.RoadObject,
+            MapboxNavigationNative_Private.RoadObjectMatcherError
         >
     ) {
         guard let roadObjectMatcher else { return }
 
         let result = Result<
-            MapboxNavigationNative.RoadObject,
-            MapboxNavigationNative.RoadObjectMatcherError
+            MapboxNavigationNative_Private.RoadObject,
+            MapboxNavigationNative_Private.RoadObjectMatcherError
         >(expected: roadObject)
         switch result {
         case .success(let roadObject):

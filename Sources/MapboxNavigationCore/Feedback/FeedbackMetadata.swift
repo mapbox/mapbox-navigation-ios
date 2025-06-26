@@ -1,6 +1,5 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 public struct FeedbackMetadata: Sendable, Equatable {

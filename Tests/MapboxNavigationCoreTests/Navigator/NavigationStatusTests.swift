@@ -1,15 +1,15 @@
 import _MapboxNavigationTestHelpers
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import XCTest
 
 final class NavigationStatusTests: XCTestCase {
-    var roadNonLocalizedAndShield: MapboxNavigationNative.RoadName!
-    var roadNonLocalized: MapboxNavigationNative.RoadName!
-    var roadLocalizedRu: MapboxNavigationNative.RoadName!
-    var roadLocalizedEn: MapboxNavigationNative.RoadName!
-    var roadLocalizedRuAndShield: MapboxNavigationNative.RoadName!
-    var roadLocalizedEnAndShield: MapboxNavigationNative.RoadName!
+    var roadNonLocalizedAndShield: MapboxNavigationNative_Private.RoadName!
+    var roadNonLocalized: MapboxNavigationNative_Private.RoadName!
+    var roadLocalizedRu: MapboxNavigationNative_Private.RoadName!
+    var roadLocalizedEn: MapboxNavigationNative_Private.RoadName!
+    var roadLocalizedRuAndShield: MapboxNavigationNative_Private.RoadName!
+    var roadLocalizedEnAndShield: MapboxNavigationNative_Private.RoadName!
     var shield: Shield!
     var shieldRu: Shield!
     var shieldEn: Shield!

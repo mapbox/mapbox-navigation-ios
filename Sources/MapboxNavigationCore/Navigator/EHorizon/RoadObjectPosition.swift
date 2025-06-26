@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension RoadObject {
     /// Contains information about position of the point on the graph and it's geo-position.
@@ -21,7 +21,7 @@ extension RoadObject {
             self.coordinate = coordinate
         }
 
-        init(_ native: MapboxNavigationNative.Position) {
+        init(_ native: MapboxNavigationNative_Private.Position) {
             self.position = RoadGraph.Position(native.position)
             self.coordinate = native.coordinate
         }

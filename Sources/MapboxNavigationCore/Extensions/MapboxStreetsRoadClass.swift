@@ -1,6 +1,6 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension MapboxStreetsRoadClass {
     /// Returns a Boolean value indicating whether the road class is for a highway entrance or exit ramp (slip road).

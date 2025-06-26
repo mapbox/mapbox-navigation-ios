@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Identifies a road object according to one of two OpenLR standards.
 ///
@@ -20,7 +20,7 @@ public enum OpenLRIdentifier {
     case tpeg(reference: RoadObject.Identifier)
 }
 
-extension MapboxNavigationNative.Standard {
+extension MapboxNavigationNative_Private.Standard {
     init(identifier: OpenLRIdentifier) {
         switch identifier {
         case .tomTom:

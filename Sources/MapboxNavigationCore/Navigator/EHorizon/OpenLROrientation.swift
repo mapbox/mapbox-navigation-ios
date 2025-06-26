@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Describes the relationship between the road object and the direction of a eferenced line. The road object may be
 /// directed in the same direction as the line, against that direction, both directions, or the direction of the road
@@ -20,7 +20,7 @@ public enum OpenLROrientation: Equatable, Sendable {
     /// The road object is directed in both directions.
     case both
 
-    init(_ native: MapboxNavigationNative.Orientation) {
+    init(_ native: MapboxNavigationNative_Private.Orientation) {
         switch native {
         case .noOrientationOrUnknown:
             self = .unknown

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
     func onRouteAlternativesUpdated(

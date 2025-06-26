@@ -1,8 +1,8 @@
 import MapboxDirections
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 extension MapboxDirections.AmenityType {
-    init(_ native: MapboxNavigationNative.AmenityType) {
+    init(_ native: MapboxNavigationNative_Private.AmenityType) {
         switch native {
         case .undefined:
             self = .undefined

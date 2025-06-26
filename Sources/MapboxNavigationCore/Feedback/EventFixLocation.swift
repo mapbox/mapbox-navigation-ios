@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 struct EventFixLocation {
     let coordinate: CLLocationCoordinate2D

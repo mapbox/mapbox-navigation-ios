@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import Turf
 
 extension RoadGraph {
@@ -54,7 +54,7 @@ extension RoadGraph {
             self.shape = shape
         }
 
-        init(_ native: MapboxNavigationNative.SubgraphEdge) {
+        init(_ native: MapboxNavigationNative_Private.SubgraphEdge) {
             self.identifier = UInt(native.id)
             self.innerEdgeIds = native.innerEdgeIds.map(UInt.init(truncating:))
             self.outerEdgeIds = native.outerEdgeIds.map(UInt.init(truncating:))

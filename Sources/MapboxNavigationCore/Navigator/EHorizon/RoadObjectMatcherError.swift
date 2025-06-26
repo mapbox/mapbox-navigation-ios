@@ -1,5 +1,5 @@
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// An error that occures during road object matching.
 ///
@@ -29,7 +29,7 @@ public struct RoadObjectMatcherError: LocalizedError {
         self.roadObjectIdentifier = roadObjectIdentifier
     }
 
-    init(_ native: MapboxNavigationNative.RoadObjectMatcherError) {
+    init(_ native: MapboxNavigationNative_Private.RoadObjectMatcherError) {
         self.description = native.description
         self.roadObjectIdentifier = native.roadObjectId
     }

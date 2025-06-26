@@ -1,6 +1,5 @@
 @testable import MapboxNavigationCore
-import MapboxNavigationNative
-@_implementationOnly import MapboxNavigationNative_Private
+import MapboxNavigationNative_Private
 
 class TelemetrySpy: Telemetry {
     var postCustomEventCalled = false
@@ -11,7 +10,7 @@ class TelemetrySpy: Telemetry {
 
     var returnedUserFeedbackHandle: UserFeedbackHandle
     var passedAction: OuterDeviceAction?
-    var passedUserFeedback: MapboxNavigationNative.UserFeedback?
+    var passedUserFeedback: MapboxNavigationNative_Private.UserFeedback?
     var passedUserFeedbackCallback: UserFeedbackCallback?
     var passedFeedbackMetadata: UserFeedbackMetadata?
 
@@ -37,7 +36,7 @@ class TelemetrySpy: Telemetry {
 
     func postUserFeedback(
         for feedbackMetadata: UserFeedbackMetadata,
-        userFeedback: MapboxNavigationNative.UserFeedback,
+        userFeedback: MapboxNavigationNative_Private.UserFeedback,
         callback: @escaping UserFeedbackCallback
     ) {
         postUserFeedbackCalled = true

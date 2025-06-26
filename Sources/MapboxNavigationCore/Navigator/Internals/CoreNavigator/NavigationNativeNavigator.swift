@@ -1,13 +1,13 @@
 import Combine
 import Foundation
 import MapboxCommon
-@preconcurrency import MapboxNavigationNative
+@preconcurrency import MapboxNavigationNative_Private
 @preconcurrency import MapboxNavigationNative_Private
 
 final class NavigationNativeNavigator: @unchecked Sendable {
     typealias Completion = @Sendable () -> Void
     @MainActor
-    let native: MapboxNavigationNative.Navigator
+    let native: MapboxNavigationNative_Private.Navigator
     var locale: Locale {
         didSet {
             Task { @MainActor in
@@ -18,7 +18,7 @@ final class NavigationNativeNavigator: @unchecked Sendable {
 
     private var subscriptions: Set<AnyCancellable> = []
 
-    private func withNavigator(_ callback: @escaping @Sendable (MapboxNavigationNative.Navigator) -> Void) {
+    private func withNavigator(_ callback: @escaping @Sendable (MapboxNavigationNative_Private.Navigator) -> Void) {
         Task { @MainActor in
             callback(native)
         }
@@ -26,7 +26,7 @@ final class NavigationNativeNavigator: @unchecked Sendable {
 
     @MainActor
     init(
-        navigator: MapboxNavigationNative.Navigator,
+        navigator: MapboxNavigationNative_Private.Navigator,
         locale: Locale
     ) {
         self.native = navigator
@@ -70,7 +70,7 @@ final class NavigationNativeNavigator: @unchecked Sendable {
     }
 
     func setElectronicHorizonOptionsFor(
-        _ options: MapboxNavigationNative.ElectronicHorizonOptions?,
+        _ options: MapboxNavigationNative_Private.ElectronicHorizonOptions?,
         completion: Completion? = nil
     ) {
         withNavigator {
@@ -140,4 +140,4 @@ final class NavigationNativeNavigator: @unchecked Sendable {
     }
 }
 
-extension MapboxNavigationNative.ElectronicHorizonOptions: @unchecked Sendable {}
+extension MapboxNavigationNative_Private.ElectronicHorizonOptions: @unchecked Sendable {}

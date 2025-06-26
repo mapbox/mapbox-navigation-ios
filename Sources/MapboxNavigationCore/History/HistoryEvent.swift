@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 
 /// Describes history events produced by ``HistoryReader``
 public protocol HistoryEvent: Equatable, Sendable {

@@ -1,6 +1,6 @@
 import _MapboxNavigationHelpers
 import AVFoundation
-import MapboxNavigationNative
+import MapboxNavigationNative_Private
 import UIKit
 
 protocol AudioSessionInfoProvider {
