@@ -53,11 +53,11 @@ let package = Package(
         // Add explicit pins for Common and CoreMaps snapshots
         .package(
             url: "https://github.com/mapbox/mapbox-common-ios.git",
-            .exact(snapshotCommon)
+            .exact(Version(stringLiteral: snapshotCommon))
         ),
         .package(
             url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
-            .exact(snapshotCoreMaps)
+            .exact(Version(stringLiteral: snapshotCoreMaps))
         ),
     
         // everything below stays exactly the same
