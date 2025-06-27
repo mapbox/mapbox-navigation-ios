@@ -39,26 +39,18 @@ let package = Package(
     ],
     dependencies: [
         // keep NavNative the way it already is
-        .package(
-            url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
-            exact: Version(stringLiteral: navNativeVersion)
-        ),
-    
-        // MapboxMaps pinned to the commit already in your project
-        .package(
-            url: "https://github.com/mapbox/mapbox-maps-ios.git",
-            .revision(snapshotMapsRev)
-        ),
-    
-        // Add explicit pins for Common and CoreMaps snapshots
-        .package(
-            url: "https://github.com/mapbox/mapbox-common-ios.git",
-            .exact(Version(stringLiteral: snapshotCommon))
-        ),
-        .package(
-            url: "https://github.com/mapbox/mapbox-maps-ios.git",
-            .branch("main")
-        ),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
+                 exact: Version(stringLiteral: navNativeVersion)),
+        
+        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git",
+                .branch("main")
+        
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git",
+                 .exact(snapshotCommon)),
+        
+        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
+                 .exact(snapshotCoreMaps)),
+
     
         // everything below stays exactly the same
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
