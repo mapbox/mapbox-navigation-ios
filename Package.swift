@@ -1,45 +1,42 @@
-// swift-tools-version:5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.8
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.14.0-alpha.1", "b1767c0e0bd354c56007aae75843aca409e7ab0bb21384947e03d390a14366fc", "4b34fea46345862730d6e35709d693d1c3d36c50")
-let mapsVersion: Version = "11.14.0-alpha.1"
+let navNativeVersion = "324.14.0-alpha.1"
 
 let package = Package(
     name: "MapboxNavigation",
     defaultLocalization: "en",
-    // The Nav SDK doesn't support macOS but declared the minimum macOS requirement with downstream deps to enable `swift run` cli tools
     platforms: [.iOS(.v14), .macOS(.v10_15)],
+
     products: [
-        .library(
-            name: "MapboxNavigationUIKit",
-            targets: ["MapboxNavigationUIKit"]
-        ),
-        .library(
-            name: "MapboxNavigationCore",
-            targets: ["MapboxNavigationCore"]
-        ),
-        .library(
-            name: "_MapboxNavigationLocalization",
-            targets: ["_MapboxNavigationLocalization"]
-        ),
-        .library(
-            name: "_MapboxNavigationTestKit",
-            targets: ["_MapboxNavigationTestKit"]
-        ),
-        .executable(
-            name: "mapbox-directions-swift",
-            targets: ["MapboxDirectionsCLI"]),
+        .library(name: "MapboxNavigationUIKit", targets: ["MapboxNavigationUIKit"]),
+        .library(name: "MapboxNavigationCore",   targets: ["MapboxNavigationCore"]),
+        .library(name: "_MapboxNavigationLocalization", targets: ["_MapboxNavigationLocalization"]),
+        .library(name: "_MapboxNavigationTestKit",      targets: ["_MapboxNavigationTestKit"]),
+        .executable(name: "mapbox-directions-swift", targets: ["MapboxDirectionsCLI"]),
     ],
+
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
-        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+        // NavNative stays pinned
+        .package(
+            url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
+            branch: "main"
+        ),
+
+        // All Mapbox packages follow the SAME branch as your app
+        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git",
+                 branch: "main"),
+        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
+                 branch: "main"),
+
+        // Third-party deps untouched
+        .package(url: "https://github.com/mapbox/turf-swift.git",               exact: "4.0.0"),
+        .package(url: "https://github.com/AliSoftware/OHHTTPStubs",             from: "9.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
+                 from: "1.18.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser",         from: "1.0.0"),
     ],
+
     targets: [
         .target(
             name: "MapboxNavigationUIKit",
