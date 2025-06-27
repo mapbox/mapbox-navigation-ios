@@ -1,9 +1,11 @@
-// swift-tools-version:5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.8          // 5.8 compiles on every recent Xcode
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.14.0-alpha.1", "b1767c0e0bd354c56007aae75843aca409e7ab0bb21384947e03d390a14366fc", "4b34fea46345862730d6e35709d693d1c3d36c50")
+let (navNativeVersion, navNativeChecksum, navNativeRevision) =
+    ("324.14.0-alpha.1",
+     "b1767c0e0bd354c56007aae75843aca409e7ab0bb21384947e03d390a14366fc",
+     "4b34fea46345862730d6e35709d693d1c3d36c50")
+
 let mapsVersion: Version = "11.14.0-alpha.1"
 // Snapshot versions that your app already uses
 let snapshotCommon   = "24.14.0-SNAPSHOT-06-06--04-30.git-ae7b59c"
@@ -38,26 +40,33 @@ let package = Package(
             targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
-        // keep NavNative the way it already is
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
-                 exact: Version(stringLiteral: navNativeVersion)),
-        
-        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git",
-                .branch("main")
-        
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git",
-                 .exact(snapshotCommon)),
-        
-        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
-                 .exact(snapshotCoreMaps)),
+    // NavNative stays version-locked
+    .package(
+        url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
+        exact: Version(stringLiteral: navNativeVersion)
+    ),
 
-    
-        // everything below stays exactly the same
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+    // Mapbox packages all track branch “main” — same as your app target
+    .package(
+        url: "https://github.com/mapbox/mapbox-maps-ios.git",
+        branch: "main"
+    ),
+    .package(
+        url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
+        branch: "main"
+    ),
+    .package(
+        url: "https://github.com/mapbox/mapbox-common-ios.git",
+        branch: "main"
+    ),
+
+    // Unchanged third-party deps
+    .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
+    .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
+    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
 ],
+
 
     targets: [
         .target(
