@@ -20,7 +20,7 @@ let package = Package(
         // NavNative stays pinned
         .package(
             url: "https://github.com/mapbox/mapbox-navigation-native-ios.git",
-            exact: Version(stringLiteral: navNativeVersion)
+            branch: "main"
         ),
 
         // All Mapbox packages follow the SAME branch as your app
