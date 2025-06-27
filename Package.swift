@@ -56,8 +56,8 @@ let package = Package(
             .exact(Version(stringLiteral: snapshotCommon))
         ),
         .package(
-            url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
-            .exact(Version(stringLiteral: snapshotCoreMaps))
+            url: "https://github.com/mapbox/mapbox-maps-ios.git",
+            .branch("main")
         ),
     
         // everything below stays exactly the same
