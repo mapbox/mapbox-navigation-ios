@@ -8,7 +8,7 @@ let mapsVersion: Version = "11.14.0-alpha.1"
 // Snapshot versions that your app already uses
 let snapshotCommon   = "24.14.0-SNAPSHOT-06-06--04-30.git-ae7b59c"
 let snapshotCoreMaps = "11.14.0-SNAPSHOT-06-06--04-30.git-ae7b59c"
-let snapshotMapsRev  = "bd848edd449d4d244ba4a38c12964ac8b9e43f9b" // full 40-char hash
+let snapshotMapsRev  = "de09f0f4bd20db55bf7e87fb7274135371281b6c" // full 40-char hash
 
 
 let package = Package(
