@@ -28,7 +28,6 @@ let package = Package(
                  branch: "main"),
         .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git",
                  branch: "main"),
-),
 
         // Third-party deps untouched
         .package(url: "https://github.com/mapbox/turf-swift.git",               exact: "4.0.0"),
