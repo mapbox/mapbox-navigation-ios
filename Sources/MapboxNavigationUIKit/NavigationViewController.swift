@@ -662,7 +662,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if let currentStyle = styleManager.currentStyle {
             updateMapStyle(currentStyle)
         }
-        if usesNightStyleInDarkMode, traitCollection.userInterfaceStyle == .dark {
+        if automaticallyAdjustsStyleForTimeOfDay {
+            styleManager.applyStyle()
+        } else if usesNightStyleInDarkMode, traitCollection.userInterfaceStyle == .dark {
             styleManager.applyStyle(type: .night)
         } else {
             styleManager.applyStyle(type: .day)
