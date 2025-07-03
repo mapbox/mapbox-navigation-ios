@@ -22,8 +22,13 @@ class ExampleTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "TableToExampleSegue", sender: self)
+        let example = listOfExamples[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
+        if let exactController = example.exactController {
+            navigationController?.pushViewController(exactController, animated: true)
+            return
+        }
+        performSegue(withIdentifier: "TableToExampleSegue", sender: self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

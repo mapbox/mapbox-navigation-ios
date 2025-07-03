@@ -10,6 +10,8 @@
 		2C27B0F72C9DC20D005B1484 /* Custom-Road-Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */; };
 		2C27B0FA2C9DD386005B1484 /* RoadObjectKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27B0F92C9DD386005B1484 /* RoadObjectKind.swift */; };
 		2C305FB32C385111000710D7 /* Upcoming-Intersection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */; };
+		2C383AD42E168C520035C5C8 /* SwiftUIExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C383AD32E168C500035C5C8 /* SwiftUIExamples.swift */; };
+		2C383AD62E16BBA90035C5C8 /* SwiftUIWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C383AD52E16BBA60035C5C8 /* SwiftUIWrapper.swift */; };
 		2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */; };
 		2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */; };
 		2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */; };
@@ -20,6 +22,12 @@
 		2C72A2CC2BC99C050097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CB2BC99C050097715C /* MapboxNavigationCore */; };
 		2C72A2CE2BC99C090097715C /* MapboxNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CD2BC99C090097715C /* MapboxNavigationCore */; };
 		2C72A2D02BC99C090097715C /* MapboxNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2C72A2CF2BC99C090097715C /* MapboxNavigationUIKit */; };
+		2C9AE2432E16C34B007E1078 /* ReuseNavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE2422E16C33E007E1078 /* ReuseNavigationMapView.swift */; };
+		2C9AE2452E16C3C0007E1078 /* TransitionNavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE2442E16C3BF007E1078 /* TransitionNavigationMapView.swift */; };
+		2C9AE2482E16CEDC007E1078 /* NavigationMapViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE2472E16CED2007E1078 /* NavigationMapViewWrapper.swift */; };
+		2C9AE24A2E16CF87007E1078 /* NavigationMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE2492E16CF7E007E1078 /* NavigationMapViewController.swift */; };
+		2C9AE24C2E16D474007E1078 /* NavigationLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE24B2E16D469007E1078 /* NavigationLoader.swift */; };
+		2C9AE24E2E16D9BF007E1078 /* UIView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9AE24D2E16D9BC007E1078 /* UIView++.swift */; };
 		2CA319EF2BC986EA0071176E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		2CA31A112BC9878A0071176E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F82BC9878A0071176E /* Constants.swift */; };
 		2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */; };
@@ -158,6 +166,8 @@
 		2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom-Road-Objects.swift"; sourceTree = "<group>"; };
 		2C27B0F92C9DD386005B1484 /* RoadObjectKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadObjectKind.swift; sourceTree = "<group>"; };
 		2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Upcoming-Intersection.swift"; sourceTree = "<group>"; };
+		2C383AD32E168C500035C5C8 /* SwiftUIExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExamples.swift; sourceTree = "<group>"; };
+		2C383AD52E16BBA60035C5C8 /* SwiftUIWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIWrapper.swift; sourceTree = "<group>"; };
 		2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Final-Waypoint.swift"; sourceTree = "<group>"; };
 		2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Custom-Waypoints.swift"; sourceTree = "<group>"; };
 		2C5D23DD2BF7B3FF00194158 /* Route-Lines-Styling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route-Lines-Styling.swift"; sourceTree = "<group>"; };
@@ -168,6 +178,12 @@
 		2C6E1A6F2C7CEAC90015E1FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C6E1A702C7CEB250015E1FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2C9AE2422E16C33E007E1078 /* ReuseNavigationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseNavigationMapView.swift; sourceTree = "<group>"; };
+		2C9AE2442E16C3BF007E1078 /* TransitionNavigationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionNavigationMapView.swift; sourceTree = "<group>"; };
+		2C9AE2472E16CED2007E1078 /* NavigationMapViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewWrapper.swift; sourceTree = "<group>"; };
+		2C9AE2492E16CF7E007E1078 /* NavigationMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewController.swift; sourceTree = "<group>"; };
+		2C9AE24B2E16D469007E1078 /* NavigationLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLoader.swift; sourceTree = "<group>"; };
+		2C9AE24D2E16D9BC007E1078 /* UIView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView++.swift"; sourceTree = "<group>"; };
 		2CA319F52BC986EA0071176E /* AdditionalExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdditionalExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA319F82BC9878A0071176E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2CA319F92BC9878A0071176E /* ExampleContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleContainerViewController.swift; sourceTree = "<group>"; };
@@ -318,6 +334,19 @@
 			path = RoadObjects;
 			sourceTree = "<group>";
 		};
+		2C383AD22E168C420035C5C8 /* SwiftUIExample */ = {
+			isa = PBXGroup;
+			children = (
+				2C9AE24B2E16D469007E1078 /* NavigationLoader.swift */,
+				2C9AE2462E16CECB007E1078 /* Views */,
+				2C9AE2442E16C3BF007E1078 /* TransitionNavigationMapView.swift */,
+				2C9AE2422E16C33E007E1078 /* ReuseNavigationMapView.swift */,
+				2C383AD52E16BBA60035C5C8 /* SwiftUIWrapper.swift */,
+				2C383AD32E168C500035C5C8 /* SwiftUIExamples.swift */,
+			);
+			path = SwiftUIExample;
+			sourceTree = "<group>";
+		};
 		2C6A3C762BA389D90039BBC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +376,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		2C9AE2462E16CECB007E1078 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2C9AE24D2E16D9BC007E1078 /* UIView++.swift */,
+				2C9AE2492E16CF7E007E1078 /* NavigationMapViewController.swift */,
+				2C9AE2472E16CED2007E1078 /* NavigationMapViewWrapper.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2CA319F72BC9878A0071176E /* AdditionalExamples */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,6 +407,7 @@
 		2CA319FF2BC9878A0071176E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				2C383AD22E168C420035C5C8 /* SwiftUIExample */,
 				2C27B0F82C9DD359005B1484 /* RoadObjects */,
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
@@ -883,26 +923,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C9AE24C2E16D474007E1078 /* NavigationLoader.swift in Sources */,
 				2CA31A222BC9878A0071176E /* ExampleTableViewController.swift in Sources */,
 				2CA31A1B2BC9878A0071176E /* Embedded-Navigation.swift in Sources */,
 				2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */,
 				2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */,
+				2C9AE2432E16C34B007E1078 /* ReuseNavigationMapView.swift in Sources */,
 				DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
+				2C383AD42E168C520035C5C8 /* SwiftUIExamples.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
 				2CB91B412DA7FAFB00FD65DF /* Declarative-Map.swift in Sources */,
+				2C9AE24A2E16CF87007E1078 /* NavigationMapViewController.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */,
+				2C383AD62E16BBA90035C5C8 /* SwiftUIWrapper.swift in Sources */,
 				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
 				2C27B0FA2C9DD386005B1484 /* RoadObjectKind.swift in Sources */,
 				2C305FB32C385111000710D7 /* Upcoming-Intersection.swift in Sources */,
 				2C5D23DF2BF7B3FF00194158 /* Custom-Waypoints.swift in Sources */,
+				2C9AE2482E16CEDC007E1078 /* NavigationMapViewWrapper.swift in Sources */,
 				2C5D23E02BF7B3FF00194158 /* Route-Lines-Styling.swift in Sources */,
+				2C9AE2452E16C3C0007E1078 /* TransitionNavigationMapView.swift in Sources */,
 				2CA31A1E2BC9878A0071176E /* Beta-Query-Parameters.swift in Sources */,
+				2C9AE24E2E16D9BF007E1078 /* UIView++.swift in Sources */,
 				2C27B0F72C9DC20D005B1484 /* Custom-Road-Objects.swift in Sources */,
 				2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */,
 				2CA31A112BC9878A0071176E /* Constants.swift in Sources */,
