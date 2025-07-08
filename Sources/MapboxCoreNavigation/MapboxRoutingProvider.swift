@@ -468,21 +468,29 @@ public class MapboxRoutingProvider: RoutingProvider {
 }
 
 extension ProfileIdentifier {
-    var nativeProfile: RoutingProfile {
-        var mode: RoutingMode
+    var isCycling: Bool {
+        rawValue.hasSuffix("cycling")
+    }
+
+    var mode: RoutingMode {
         switch self {
-        case .automobile:
-            mode = .driving
-        case .automobileAvoidingTraffic:
-            mode = .drivingTraffic
-        case .cycling:
-            mode = .cycling
-        case .walking:
-            mode = .walking
+        case _ where isAutomobile:
+            return .driving
+        case _ where isAutomobileAvoidingTraffic:
+            return .drivingTraffic
+        case _ where isCycling:
+            return .cycling
+        case _ where isWalking:
+            return .walking
         default:
-            mode = .driving
+            return .driving
         }
-        return RoutingProfile(mode: mode, account: "mapbox")
+    }
+
+    var nativeProfile: RoutingProfile {
+        let accountComponent = rawValue.split(separator: "/").first.map(String.init) ?? ""
+        let account = accountComponent.isEmpty ? "mapbox" : accountComponent
+        return RoutingProfile(mode: mode, account: account)
     }
 }
 
