@@ -272,7 +272,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()

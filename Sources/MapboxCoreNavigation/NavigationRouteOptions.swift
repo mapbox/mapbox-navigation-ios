@@ -26,11 +26,9 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
                    queryItems: queryItems)
         includesAlternativeRoutes = true
         attributeOptions = [.expectedTravelTime, .maximumSpeedLimit]
-        if profileIdentifier == .automobileAvoidingTraffic {
-            attributeOptions.update(with: .numericCongestionLevel)
-        }
         includesExitRoundaboutManeuver = true
-        if profileIdentifier == .automobileAvoidingTraffic {
+        if let profileIdentifier, profileIdentifier.isAutomobileAvoidingTraffic {
+            attributeOptions.update(with: .numericCongestionLevel)
             refreshingEnabled = true
         }
 
@@ -89,11 +87,13 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
                    profileIdentifier: profileIdentifier,
                    queryItems: queryItems)
         attributeOptions = [.expectedTravelTime]
-        if profileIdentifier == .automobileAvoidingTraffic {
-            attributeOptions.update(with: .numericCongestionLevel)
-        }
-        if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
-            attributeOptions.insert(.maximumSpeedLimit)
+        if let profileIdentifier {
+            if profileIdentifier.isAutomobileAvoidingTraffic {
+                attributeOptions.update(with: .numericCongestionLevel)
+            }
+            if profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic {
+                attributeOptions.insert(.maximumSpeedLimit)
+            }
         }
 
         optimizeForNavigation()
