@@ -297,17 +297,18 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         }
 
         let refreshObserver = NavigatorRouteRefreshObserver(
-            refreshCallback: { [weak self] routeIdPrefix, routeIndex, _ in
+            refreshCallback: { [weak self] routeId in
                 guard let self else { return nil }
 
                 guard let primaryRoute = navigator.native.getPrimaryRoute() else { return nil }
                 let alternativeRoutes = navigator.native.getAlternativeRoutes()
 
-                if primaryRoute.matching(routeIdPrefix: routeIdPrefix, routeIndex: routeIndex) {
+                if primaryRoute.getRouteId() == routeId {
                     return .mainRoute(primaryRoute)
                 }
+
                 if let refreshedAlternative = alternativeRoutes.first(where: {
-                    $0.route.matching(routeIdPrefix: routeIdPrefix, routeIndex: routeIndex)
+                    $0.route.getRouteId() == routeId
                 }) {
                     return .alternativeRoute(alternative: refreshedAlternative)
                 }
@@ -521,11 +522,4 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 enum NativeNavigatorError: Swift.Error {
     case failedToUpdateRoutes(reason: String)
     case failedToUpdateAlternativeRoutes(reason: String)
-}
-
-extension RouteInterface {
-    fileprivate func matching(routeIdPrefix: String, routeIndex: UInt32) -> Bool {
-        // TODO: (NN-3674) use full routeId instead of just prefix.
-        getRouteId().starts(with: routeIdPrefix) && getRouteIndex() == routeIndex
-    }
 }

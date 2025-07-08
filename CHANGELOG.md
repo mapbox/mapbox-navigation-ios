@@ -2,6 +2,11 @@
 
 ## 3.11.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.14.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.14.0-beta.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.14.0-beta.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.14.0-beta.1)
+
 ### Map
 
 * Added experimental custom route callouts API accessible when importing MapboxNavigationCore with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationCore`. Enable it by setting `NavigationMapView.apiRouteCalloutViewProviderEnabled` to `true`, then configure using `NavigationMapView.routeCalloutViewProvider` property. New `NavigationMapView.showRoutes(_:)` and `NavigationMapView.showcaseRoutes(_:routesPresentationStyle:animated:duration:)` methods are available without `routeAnnotationKinds` parameter but original methods `NavigationMapView.show(_:routeAnnotationKinds:)` and `NavigationMapView.showcase(_:routesPresentationStyle:routeAnnotationKinds:animated:duration:)` also work and their `routeAnnotationKinds` parameter is ignored when `NavigationMapView.apiRouteCalloutViewProviderEnabled` is set to `true`.
@@ -11,6 +16,8 @@
 ### Routing
 
 * Added the ability to disable the server-side control on refreshed route expiration.
+* Dead Reckoning is improved - more robust models for GNSS trust, road calibration, and wheel speed trust.
+* Improved main thread utilization by removing unintended locks (visible on systems with the overloaded CPU).
 
 ### Other changes
 
