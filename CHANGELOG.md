@@ -1,5 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.20.1
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxDirections v2.14.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.14.1). ([#4776](https://github.com/mapbox/mapbox-navigation-ios/pull/4776))
+
+### Other changes
+
+* Fixed `ProfileIdentifier` comparison for the custom profile identifiers, so that route refresh is enabled for custom `automobileAvoidingTraffic` profiles.
+
 ## v2.20.0
 
 * MapboxNavigation now requires minimim [MapboxMaps v10.19.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.19.0). ([#4750](https://github.com/mapbox/mapbox-navigation-ios/pull/4750))
