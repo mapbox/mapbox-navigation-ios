@@ -8,7 +8,7 @@ enum RouteRefreshResult: @unchecked Sendable {
 }
 
 class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
-    typealias RefreshCallback = (String, UInt32, UInt32) -> RouteRefreshResult?
+    typealias RefreshCallback = (String) -> RouteRefreshResult?
     private var refreshCallback: RefreshCallback
 
     init(refreshCallback: @escaping RefreshCallback) {
@@ -16,13 +16,14 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
     }
 
     func onRouteRefreshAnnotationsUpdated(
-        forRouteId routeId: String,
+        for routeIdentifier: RouteIdentifier,
         routeRefreshResponse: String,
-        routeIndex: UInt32,
         legIndex: UInt32,
         routeGeometryIndex: UInt32
     ) {
-        guard let routeRefreshResult = refreshCallback(routeId, routeIndex, legIndex) else {
+        let routeId = routeIdentifier.getRouteId()
+        let routeIndex = routeIdentifier.index
+        guard let routeRefreshResult = refreshCallback(routeId) else {
             return
         }
 
@@ -41,19 +42,19 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         }
     }
 
-    func onRouteRefreshCancelled(forRouteId routeId: String) {
+    func onRouteRefreshCancelled(for routeIdentifier: RouteIdentifier) {
         let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
-            .refreshRequestIdKey: routeId,
+            .refreshRequestIdKey: routeIdentifier.getRouteId(),
         ]
         onMainAsync {
             NotificationCenter.default.post(name: .routeRefreshDidCancelRefresh, object: nil, userInfo: userInfo)
         }
     }
 
-    func onRouteRefreshFailed(forRouteId routeId: String, error: RouteRefreshError) {
+    func onRouteRefreshFailed(for routeIdentifier: RouteIdentifier, error: RouteRefreshError) {
         let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
             .refreshRequestErrorKey: error,
-            .refreshRequestIdKey: routeId,
+            .refreshRequestIdKey: routeIdentifier.getRouteId(),
         ]
         onMainAsync {
             NotificationCenter.default.post(name: .routeRefreshDidFailRefresh, object: nil, userInfo: userInfo)
