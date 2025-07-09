@@ -3,12 +3,10 @@ import MapboxDirections
 
 extension RouteOptions {
     internal var activityType: CLActivityType {
-        switch self.profileIdentifier {
-        case .cycling, .walking:
+        if profileIdentifier.isCycling || profileIdentifier.isWalking {
             return .fitness
-        default:
-            return .otherNavigation
         }
+        return .otherNavigation
     }
     
     /**

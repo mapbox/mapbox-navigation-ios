@@ -676,7 +676,7 @@ open class RouteController: NSObject {
         let options = indexedRouteResponse.validatedRouteOptions
 
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
-        self.refreshesRoute = isRouteOptions && options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = isRouteOptions && options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
 
         super.init()
 
