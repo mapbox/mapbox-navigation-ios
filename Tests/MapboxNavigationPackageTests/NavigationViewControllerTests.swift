@@ -134,7 +134,10 @@ class NavigationViewControllerTests: TestCase {
         bottomBanner: ContainerViewController? = nil,
         navigationMapView: NavigationMapView? = nil,
         styleManagerDelegate: StyleManagerDelegate? = nil,
-        delegate: NavigationViewControllerDelegate? = nil
+        delegate: NavigationViewControllerDelegate? = nil,
+        automaticallyAdjustsStyleForTimeOfDay: Bool = true,
+        usesNightStyleInDarkMode: Bool = false,
+        usesNightStyleWhileInTunnel: Bool = true
     ) -> NavigationViewController {
         return {
             let options = NavigationOptions(
@@ -150,6 +153,10 @@ class NavigationViewControllerTests: TestCase {
                 navigationRoutes: initialRoutes,
                 navigationOptions: options
             )
+
+            navigationViewController.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
+            navigationViewController.usesNightStyleInDarkMode = usesNightStyleInDarkMode
+            navigationViewController.usesNightStyleWhileInTunnel = usesNightStyleWhileInTunnel
 
             navigationViewController.delegate = delegate ?? self
             _ = navigationViewController.view // trigger view load
@@ -355,13 +362,17 @@ class NavigationViewControllerTests: TestCase {
         isInTunnel = true
         let navigationViewController = createViewController(
             styles: [DayStyle(), NightStyle()],
-            styleManagerDelegate: self
+            styleManagerDelegate: self,
+            automaticallyAdjustsStyleForTimeOfDay: false,
+            usesNightStyleInDarkMode: false,
+            usesNightStyleWhileInTunnel: true
         )
-        _ = navigationViewController.view
+
+        _ = navigationViewController
 
         let someLocation = poi.first!
 
-        let test: (Any) -> Void = { _ in
+        let test: () -> Void = {
             self.locationPublisher.send(someLocation)
             let status = TestNavigationStatusProvider.createNavigationStatus(
                 location: someLocation
@@ -383,7 +394,7 @@ class NavigationViewControllerTests: TestCase {
             }
             .store(in: &subscriptions)
         await fulfillment(of: [navigationStartedExpectation], timeout: 1)
-        (0...2).forEach(test)
+        (0...2).forEach { _ in test() }
 
         XCTAssertEqual(updatedStyleNumberOfTimes, 1, "The style should be updated once.")
     }
