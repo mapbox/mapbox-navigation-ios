@@ -72,7 +72,7 @@ open class MatchOptions: DirectionsOptions, @unchecked Sendable {
         case resamplesTraces = "tidy"
     }
 
-    override public func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(resamplesTraces, forKey: .resamplesTraces)
         try super.encode(to: encoder)

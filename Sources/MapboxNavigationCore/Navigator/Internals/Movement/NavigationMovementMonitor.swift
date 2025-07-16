@@ -71,11 +71,11 @@ extension MovementInfo: @unchecked Sendable {}
 extension ProfileIdentifier {
     var movementMode: MovementMode? {
         switch self {
-        case .automobile, .automobileAvoidingTraffic:
+        case _ where isAutomobile, _ where isAutomobileAvoidingTraffic:
             .inVehicle
-        case .cycling:
+        case _ where isCycling:
             .cycling
-        case .walking:
+        case _ where isWalking:
             .onFoot
         default:
             nil

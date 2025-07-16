@@ -1,5 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.11.0-rc.1
+
+### Routing
+
+* Fixed `ProfileIdentifier` comparison for the custom profile identifiers, so that route refresh is enabled for custom `automobileAvoidingTraffic` profiles
+
+### Other changes
+
+* The `encode(to:)` methods in `DirectionsOptions`, `MatchOptions`, `RouteOptions`, and others open classes are now declared as open instead of public.
+
 ## 3.11.0-beta.1
 
 ### Packaging
