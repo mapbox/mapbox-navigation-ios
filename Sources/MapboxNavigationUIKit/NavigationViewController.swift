@@ -336,7 +336,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 
     private var isWalkingProfile: Bool {
-        _navigationRoutes?.mainRoute.routeOptions?.profileIdentifier == .walking
+        _navigationRoutes?.mainRoute.routeOptions?.profileIdentifier.isWalking ?? false
     }
 
     // Array of initialization hooks to be called at `NavigationViewController.viewDidLoad`.

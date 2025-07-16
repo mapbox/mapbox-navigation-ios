@@ -25,8 +25,9 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         profileIdentifier: ProfileIdentifier? = nil,
         queryItems: [URLQueryItem]? = nil
     ) {
-        let profilesDisallowingUTurns: [ProfileIdentifier] = [.automobile, .automobileAvoidingTraffic]
-        self.allowsUTurnAtWaypoint = !profilesDisallowingUTurns.contains(profileIdentifier ?? .automobile)
+        let profile = profileIdentifier ?? .automobile
+        let disallowsUTurns = profile.isAutomobileAvoidingTraffic || profile.isAutomobile
+        self.allowsUTurnAtWaypoint = !disallowsUTurns
         super.init(waypoints: waypoints, profileIdentifier: profileIdentifier, queryItems: queryItems)
 
         guard let queryItems else {
@@ -74,9 +75,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         {
             self.roadClassesToAllow = roadClassesToAllow
         }
-        if mappedQueryItems[CodingKeys.refreshingEnabled.stringValue] == "true", profileIdentifier ==
-            .automobileAvoidingTraffic
-        {
+        if mappedQueryItems[CodingKeys.refreshingEnabled.stringValue] == "true", profile.isAutomobileAvoidingTraffic {
             self.refreshingEnabled = true
         }
 
@@ -226,7 +225,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         case includesTollPrices = "compute_toll_cost"
     }
 
-    override public func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(allowsUTurnAtWaypoint, forKey: .allowsUTurnAtWaypoint)
@@ -552,7 +551,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             params.append(URLQueryItem(name: CodingKeys.roadClassesToAllow.stringValue, value: parameterValue))
         }
 
-        if refreshingEnabled, profileIdentifier == .automobileAvoidingTraffic {
+        if refreshingEnabled, profileIdentifier.isAutomobileAvoidingTraffic {
             params.append(URLQueryItem(
                 name: CodingKeys.refreshingEnabled.stringValue,
                 value: refreshingEnabled.queryString
@@ -592,7 +591,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             params.append(URLQueryItem(name: CodingKeys.maximumWeight.stringValue, value: String(weightInTonnes)))
         }
 
-        if [ProfileIdentifier.automobile, .automobileAvoidingTraffic].contains(profileIdentifier) {
+        if profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic {
             let formatter = DateFormatter.ISO8601DirectionsFormatter()
 
             if let departAt {
@@ -602,7 +601,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
                 ))
             }
 
-            if profileIdentifier == .automobile,
+            if profileIdentifier.isAutomobile,
                let arriveBy
             {
                 params.append(URLQueryItem(

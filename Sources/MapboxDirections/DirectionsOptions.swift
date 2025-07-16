@@ -282,7 +282,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         case includesVisualInstructions = "banner_instructions"
     }
 
-    public func encode(to encoder: Encoder) throws {
+    open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(waypoints, forKey: .waypoints)
         try container.encode(profileIdentifier, forKey: .profileIdentifier)

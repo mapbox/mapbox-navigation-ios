@@ -129,7 +129,7 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
 
         // https://github.com/mapbox/mapbox-navigation-ios/issues/3966
         if isRerouting,
-           options.profileIdentifier == .automobile || options.profileIdentifier == .automobileAvoidingTraffic
+           options.profileIdentifier.isAutomobile || options.profileIdentifier.isAutomobileAvoidingTraffic
         {
             options.initialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius * origin.speed
         }

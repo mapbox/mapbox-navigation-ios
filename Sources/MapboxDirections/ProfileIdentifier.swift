@@ -46,3 +46,21 @@ public typealias MBDirectionsProfileIdentifier = ProfileIdentifier
 /// Options determining the primary mode of transportation for the routes.
 @available(*, deprecated, renamed: "ProfileIdentifier")
 public typealias DirectionsProfileIdentifier = ProfileIdentifier
+
+extension ProfileIdentifier {
+    public var isAutomobileAvoidingTraffic: Bool {
+        rawValue.hasSuffix("driving-traffic")
+    }
+
+    public var isAutomobile: Bool {
+        rawValue.hasSuffix("driving")
+    }
+
+    public var isWalking: Bool {
+        rawValue.hasSuffix("walking")
+    }
+
+    public var isCycling: Bool {
+        rawValue.hasSuffix("cycling")
+    }
+}
