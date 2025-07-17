@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v3.7.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.10.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.10.3).
+* MapboxNavigationCore now requires [MapboxNavigationNative v323.0.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/323.0.3).
+
+### Other changes
+
+* Fixed code signing validation issues for multiple .xcframework binaries "The signature of "*.xcframework" cannot be validated and may have been compromised".
+
 ## v3.7.1
 
 ### Packaging
