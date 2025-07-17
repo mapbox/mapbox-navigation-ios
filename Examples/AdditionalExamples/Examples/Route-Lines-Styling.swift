@@ -6,7 +6,7 @@
 
 import MapboxDirections
 import MapboxMaps
-import MapboxNavigationCore
+@_spi(ExperimentalMapboxAPI) import MapboxNavigationCore
 import MapboxNavigationUIKit
 import Turf
 import UIKit
@@ -22,6 +22,8 @@ final class RouteLinesStylingViewController: UIViewController {
     private var mapboxNavigation: MapboxNavigation {
         mapboxNavigationProvider.mapboxNavigation
     }
+
+    private var cancellable = [AnyCancelable]()
 
     private var navigationMapView: NavigationMapView! {
         didSet {
@@ -73,6 +75,14 @@ final class RouteLinesStylingViewController: UIViewController {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationMapView.delegate = self
 
+        navigationMapView.useLegacyManualLayersOrderApproach = true
+        navigationMapView.mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
+            guard let self else { return }
+            print(self)
+            print(">>> Outer")
+        }.store(in: &cancellable)
+
+
         view.addSubview(navigationMapView)
 
         startButton = UIButton()
@@ -117,6 +127,21 @@ final class RouteLinesStylingViewController: UIViewController {
         )
         navigationViewController.delegate = self
         navigationViewController.modalPresentationStyle = .fullScreen
+        navigationViewController
+            .navigationView
+            .navigationMapView
+            .mapView
+            .mapboxMap
+            .onStyleLoaded
+            .observe { _ in
+                // Customize style
+                try! navigationViewController
+                    .navigationMapView?
+                    .mapView
+                    .mapboxMap
+                    .addImage(UIImage(named: "cat")!, id: "cat")
+            }
+            .store(in: &cancellable)
 
         startButton.isHidden = true
         present(navigationViewController, animated: true)
@@ -224,6 +249,39 @@ extension RouteLinesStylingViewController: NavigationMapViewDelegate {
         sourceIdentifier: String
     ) -> LineLayer? {
         customRouteCasingLineLayer(with: identifier, sourceIdentifier: sourceIdentifier)
+    }
+
+    func navigationViewController(
+        _ navigationViewController: NavigationViewController,
+        willAdd layer: any Layer
+    ) -> (any Layer)? {
+        if layer.id.starts(with: "com.mapbox.navigation.arrow") {
+            
+            print("\(layer.id) | \(layer.type)")
+            switch layer.type {
+            case .symbol:
+                // to hide the layer return empty layer (the nil value is discarded downstream)
+//                if let layer = layer as? SymbolLayer {
+//                    return SymbolLayer(id: layer.id, source: "")
+//                }
+
+                if var layer = layer as? SymbolLayer {
+                    // to customize layer (the style should be configured beforehand)
+                    layer.iconImage = .constant(.name("cat"))
+                    return layer
+                }
+
+            case .line:
+                return nil
+//                if let layer = layer as? LineLayer {
+//                    return LineLayer(id: layer.id, source: "")
+//                }
+            default:
+                return nil
+            }
+        }
+
+        return nil
     }
 }
 
