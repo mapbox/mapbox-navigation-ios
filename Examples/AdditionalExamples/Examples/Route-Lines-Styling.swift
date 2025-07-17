@@ -76,12 +76,6 @@ final class RouteLinesStylingViewController: UIViewController {
         navigationMapView.delegate = self
 
         navigationMapView.useLegacyManualLayersOrderApproach = true
-        navigationMapView.mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
-            guard let self else { return }
-            print(self)
-            print(">>> Outer")
-        }.store(in: &cancellable)
-
 
         view.addSubview(navigationMapView)
 
