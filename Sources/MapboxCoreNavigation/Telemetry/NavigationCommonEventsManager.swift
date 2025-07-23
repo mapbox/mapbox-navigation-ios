@@ -330,7 +330,6 @@ class NavigationCommonEventsManager: NavigationTelemetryManager {
         event.newDistanceRemaining = -1
         event.newDurationRemaining = -1
         event.newGeometry = nil
-        event.screenshot = captureScreen(scaledToFit: 250)?.jpegData(compressionQuality: 0.2)?.base64EncodedString()
         
         return event
     }
