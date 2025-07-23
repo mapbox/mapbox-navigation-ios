@@ -2,6 +2,11 @@
 
 ## 3.11.0-rc.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.14.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.14.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.14.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.14.0-rc.1)
+
 ### Routing
 
 * Fixed `ProfileIdentifier` comparison for the custom profile identifiers, so that route refresh is enabled for custom `automobileAvoidingTraffic` profiles
