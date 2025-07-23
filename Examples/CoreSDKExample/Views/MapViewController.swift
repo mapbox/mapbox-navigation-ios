@@ -36,6 +36,8 @@ final class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigation.navigationMapView = navigationMapView
+
         Task {
             navigation.cameraState = .following
             navigation.startFreeDrive()

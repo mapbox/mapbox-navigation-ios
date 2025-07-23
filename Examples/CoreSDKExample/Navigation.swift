@@ -73,13 +73,39 @@ final class Navigation: ObservableObject {
         guard let previewRoutes = currentPreviewRoutes else { return }
         core.tripSession().startActiveGuidance(with: previewRoutes, startLegIndex: 0)
         cameraState = .following
-        currentPreviewRoutes = nil
+//        currentPreviewRoutes = nil
         waypoints = []
     }
 
+    private var cancellable: AnyCancellable?
+
     func stopActiveNavigation() {
-        core.tripSession().startFreeDrive()
-        cameraState = .following
+        let mapboxNavigation = core
+
+
+        mapboxNavigation.tripSession().setToIdle()
+        if mapboxNavigation.tripSession().currentSession.state == .idle {
+            showcaseCurrentRoute()
+        } else {
+            cancellable = mapboxNavigation.tripSession().session
+                .filter { $0.state == .idle }
+                .first()
+                .sink { [weak self] session in
+                    self?.showcaseCurrentRoute()
+                }
+        }
+    }
+
+    weak var navigationMapView: NavigationMapView?
+
+    func showcaseCurrentRoute() {
+        if let previewRoute = currentPreviewRoutes {
+            navigationMapView?.showcase(
+                previewRoute,
+                routeAnnotationKinds: [.routeDurations],
+                animated: true
+            )
+        }
     }
 
     func selectAlternativeRoute(_ alternativeRoute: AlternativeRoute) async {
