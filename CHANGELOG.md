@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.18.6
+
+### Other changes
+
+* Updated the parameters for the reroute Telemetry events.
+
 ## v2.18.5
 
 ### Packaging
