@@ -9,6 +9,7 @@
 ### Other changes
 
 * Fixed `ProfileIdentifier` comparison for the custom profile identifiers, so that route refresh is enabled for custom `automobileAvoidingTraffic` profiles.
+* Updated the parameters for the reroute Telemetry events.
 
 ## v2.20.0
 
