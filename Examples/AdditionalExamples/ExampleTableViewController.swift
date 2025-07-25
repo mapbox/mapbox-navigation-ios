@@ -38,5 +38,6 @@ class ExampleTableViewController: UITableViewController {
         controller.exampleDescription = example.description
         controller.exampleStoryboard = example.storyboard
         controller.pushExampleToViewController = example.pushExampleToViewController
+        controller.hideOptions = example.hideOptions
     }
 }
