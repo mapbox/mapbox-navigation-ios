@@ -7,7 +7,10 @@ struct NavigationControlsView: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            NextInstructionView(visualInstruction: navigation.visualInstruction)
+            NextInstructionView(
+                routeProgress: navigation.routeProgress,
+                visualInstruction: navigation.visualInstruction
+            )
 
             HStack {
                 Spacer()
@@ -25,6 +28,7 @@ struct NavigationControlsView: View {
 }
 
 struct NextInstructionView: View {
+    let routeProgress: RouteProgress?
     let visualInstruction: VisualInstructionBanner?
 
     var body: some View {
@@ -47,7 +51,7 @@ struct NextInstructionView: View {
     }
 
     private var distanceRemaining: CLLocationDistance? {
-        visualInstruction?.distanceAlongStep
+        routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining
     }
 
     private let distanceFormatter: LengthFormatter = {
