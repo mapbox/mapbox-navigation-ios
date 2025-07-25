@@ -119,6 +119,9 @@
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
+		F60DFC812E28EEBA00C37E6E /* CustomRouteCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60DFC7E2E28EEBA00C37E6E /* CustomRouteCalloutView.swift */; };
+		F60DFC822E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60DFC7F2E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift */; };
+		F60DFC842E2E3B1100C37E6E /* CustomRouteCallouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60DFC832E2E3B0200C37E6E /* CustomRouteCallouts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -267,6 +270,9 @@
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
 		DF92974F2BBD4A910047329A /* mapbox-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-navigation-ios"; path = ..; sourceTree = "<group>"; };
+		F60DFC7E2E28EEBA00C37E6E /* CustomRouteCalloutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRouteCalloutView.swift; sourceTree = "<group>"; };
+		F60DFC7F2E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRouteCalloutViewProvider.swift; sourceTree = "<group>"; };
+		F60DFC832E2E3B0200C37E6E /* CustomRouteCallouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRouteCallouts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -375,6 +381,7 @@
 				2C5D23DB2BF7B3FF00194158 /* Custom-Final-Waypoint.swift */,
 				2CC92CF52C33171000A94834 /* Custom-Navigation-Camera.swift */,
 				2C27B0F62C9DC20D005B1484 /* Custom-Road-Objects.swift */,
+				F60DFC802E28EEBA00C37E6E /* CustomRouteCallouts */,
 				2CA31A032BC9878A0071176E /* Custom-Voice-Controller.swift */,
 				2C5D23DC2BF7B3FF00194158 /* Custom-Waypoints.swift */,
 				2CB91B402DA7FAFB00FD65DF /* Declarative-Map.swift */,
@@ -543,6 +550,16 @@
 				2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */,
 			);
 			path = CoreSDKExample;
+			sourceTree = "<group>";
+		};
+		F60DFC802E28EEBA00C37E6E /* CustomRouteCallouts */ = {
+			isa = PBXGroup;
+			children = (
+				F60DFC832E2E3B0200C37E6E /* CustomRouteCallouts.swift */,
+				F60DFC7E2E28EEBA00C37E6E /* CustomRouteCalloutView.swift */,
+				F60DFC7F2E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift */,
+			);
+			path = CustomRouteCallouts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -888,6 +905,9 @@
 				2CA31A162BC9878A0071176E /* Styled-UI-Elements.swift in Sources */,
 				2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */,
 				DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */,
+				F60DFC842E2E3B1100C37E6E /* CustomRouteCallouts.swift in Sources */,
+				F60DFC812E28EEBA00C37E6E /* CustomRouteCalloutView.swift in Sources */,
+				F60DFC822E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,

@@ -13,6 +13,7 @@ class ExampleContainerViewController: UITableViewController {
     var exampleStoryboard: UIStoryboard?
     var hasEnteredExample = false
     var pushExampleToViewController = false
+    var hideOptions = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,10 @@ class ExampleContainerViewController: UITableViewController {
             beginNavigation.setTitle("Example Not Found", for: .normal)
             beginNavigation.isEnabled = false
             simulateNavigation.isEnabled = false
+        }
+
+        if hideOptions {
+            tableView.sectionHeaderHeight = 0.0
         }
     }
 
@@ -58,6 +63,20 @@ class ExampleContainerViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         guard let exampleDescription else { return nil }
         return section == tableView.numberOfSections - 1 ? exampleDescription : nil
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard hideOptions, section == 0 else {
+            return super.tableView(tableView, numberOfRowsInSection: section)
+        }
+        return 0
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard hideOptions, section == 0 else {
+            return super.tableView(tableView, titleForHeaderInSection: section)
+        }
+        return nil
     }
 
     @IBAction
