@@ -29,7 +29,8 @@ final class BasicViewController: UIViewController {
         super.viewDidLoad()
 
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
-        let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
+        //let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
+        let destination = CLLocationCoordinate2DMake(37.775819410596604, -122.43792867114355)
         let options = NavigationRouteOptions(coordinates: [origin, destination])
 
         let request = mapboxNavigation.routingProvider().calculateRoutes(options: options)
@@ -46,17 +47,36 @@ final class BasicViewController: UIViewController {
                     voiceController: mapboxNavigationProvider.routeVoiceController,
                     eventsManager: mapboxNavigationProvider.eventsManager()
                 )
+                #if false
                 let navigationViewController = NavigationViewController(
                     navigationRoutes: navigationRoutes,
                     navigationOptions: navigationOptions
                 )
+                #else
+                let navigationViewController = CustomMapboxNavigationViewController(
+                    navigationRoutes: navigationRoutes,
+                    navigationOptions: navigationOptions
+                )
+                #endif
                 navigationViewController.modalPresentationStyle = .fullScreen
                 // Render part of the route that has been traversed with full transparency, to give the illusion of a
                 // disappearing route.
                 navigationViewController.routeLineTracksTraversal = true
+                
+                navigationViewController.showsEndOfRouteFeedback = false
+                //navigationViewController.showsReportFeedback = true
+                navigationViewController.delegate = self
 
                 present(navigationViewController, animated: true, completion: nil)
             }
         }
     }
 }
+
+extension BasicViewController: NavigationViewControllerDelegate {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
+        print("Arrived at \(String(describing: waypoint.name))")
+    }
+    
+}
+

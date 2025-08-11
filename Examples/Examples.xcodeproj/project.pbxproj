@@ -117,6 +117,7 @@
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
+		BDEA21532E49B35900EECF46 /* CustomMapboxNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEA21522E49B35900EECF46 /* CustomMapboxNavigationViewController.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
 		F60DFC812E28EEBA00C37E6E /* CustomRouteCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60DFC7E2E28EEBA00C37E6E /* CustomRouteCalloutView.swift */; };
@@ -267,6 +268,7 @@
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
+		BDEA21522E49B35900EECF46 /* CustomMapboxNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapboxNavigationViewController.swift; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
 		DF92974F2BBD4A910047329A /* mapbox-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-navigation-ios"; path = ..; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 		2CA319FF2BC9878A0071176E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				BDEA21522E49B35900EECF46 /* CustomMapboxNavigationViewController.swift */,
 				2C27B0F82C9DD359005B1484 /* RoadObjects */,
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
@@ -915,6 +918,7 @@
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
 				2CB91B412DA7FAFB00FD65DF /* Declarative-Map.swift in Sources */,
+				BDEA21532E49B35900EECF46 /* CustomMapboxNavigationViewController.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */,
 				2CA31A172BC9878A0071176E /* History-Recording.swift in Sources */,
