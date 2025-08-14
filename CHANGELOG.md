@@ -1,10 +1,14 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 3.12.0
+## 3.12.0-beta.1
 
 ### Other
 
 * Fixed `NavigationController.bannerInstructions`. Now a new event is published only when a new banner instruction is available and not with every route progress update.
+
+### User interface
+
+* Removed an initial hardcoded call to `StandardDayStyle().apply()`. The `StandardDayStyle` and `StandardNightStyle` are still default values when initializing `NavigationViewController` and can be changed by setting `NavigationOptions.styles` value.
 
 ## 3.11.1
 

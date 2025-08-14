@@ -240,7 +240,6 @@ open class NavigationView: UIView {
     }
 
     func commonInit() {
-        StandardDayStyle().apply()
         setupViews()
         setupConstraints()
     }
