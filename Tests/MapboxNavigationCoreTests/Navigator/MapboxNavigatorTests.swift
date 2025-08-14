@@ -621,6 +621,50 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertEqual(eventsCounter, 2)
     }
 
+    @MainActor
+    func testSendBannerInstructionWithoutDuplication() async {
+        let bannerInstruction1 = VisualInstructionBanner.mock(primaryInstructionText: "first")
+        let bannerInstruction2 = VisualInstructionBanner.mock(primaryInstructionText: "second")
+        let bannerInstructions = [bannerInstruction1, bannerInstruction2]
+
+        var eventsCounter = 0
+        var cancellables = Set<AnyCancellable>()
+
+        navigator.bannerInstructions
+            .sink { instruction in
+                XCTAssertEqual(instruction.visualInstruction, bannerInstructions[eventsCounter])
+                eventsCounter += 1
+            }
+            .store(in: &cancellables)
+
+        XCTAssertEqual(eventsCounter, 0)
+
+        let step = RouteStep.mock(instructionsDisplayedAlongStep: bannerInstructions)
+        let route = Route.mock(legs: [.mock(steps: [step, .mock(maneuverType: .arrive)])])
+        var routeProgress = await RouteProgress.mock(
+            navigationRoutes: .mock(mainRoute: .mock(route: route))
+        )
+        var status = NavigationStatus.mock()
+
+        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+        XCTAssertEqual(eventsCounter, 1)
+
+        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+        XCTAssertEqual(eventsCounter, 1)
+
+        status = .mock(bannerInstruction: .mock(index: 1))
+        routeProgress.update(using: status)
+        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+
+        XCTAssertEqual(eventsCounter, 2)
+
+        status = .mock(stepIndex: 1, bannerInstruction: .mock(index: 0))
+        routeProgress.update(using: status)
+        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+
+        XCTAssertEqual(eventsCounter, 2, "Don't send an update if no new banner instruction")
+    }
+
     // MARK: - Helpers
 
     private var refreshedLeg: RouteLeg {

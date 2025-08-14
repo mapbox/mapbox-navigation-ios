@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.12.0
+
+### Other
+
+* Fixed `NavigationController.bannerInstructions`. Now a new event is published only when a new banner instruction is available and not with every route progress update.
+
 ## 3.11.1
 
 ### Packaging

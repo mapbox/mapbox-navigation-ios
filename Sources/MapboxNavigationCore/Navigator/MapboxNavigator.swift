@@ -67,7 +67,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     @EventPublisher<SpokenInstructionState> var voiceInstructions
 
-    @EventPublisher<VisualInstructionState> var bannerInstructions
+    @CurrentValuePublisher var bannerInstruction: AnyPublisher<VisualInstructionState?, Never>
 
     @EventPublisher<WaypointArrivalStatus> var waypointsArrival
 
@@ -626,7 +626,7 @@ final class MapboxNavigator: @unchecked Sendable {
         self._mapMatching = .init(nil)
         self._offlineFallbacks = .init()
         self._voiceInstructions = .init()
-        self._bannerInstructions = .init()
+        self._bannerInstruction = .init(nil)
         self._waypointsArrival = .init()
         self._rerouting = .init()
         self._continuousAlternatives = .init()
@@ -1507,7 +1507,9 @@ extension MapboxNavigator {
 
     @MainActor
     private func send(_ details: VisualInstructionState) {
-        _bannerInstructions.emit(details)
+        if _bannerInstruction.value != details {
+            _bannerInstruction.emit(details)
+        }
     }
 
     @MainActor

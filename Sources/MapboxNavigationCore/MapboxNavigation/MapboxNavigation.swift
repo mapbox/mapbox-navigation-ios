@@ -35,6 +35,12 @@ extension MapboxNavigator:
     ElectronicHorizonController,
     NavigationController
 {
+    public var bannerInstructions: AnyPublisher<VisualInstructionState, Never> {
+        bannerInstruction
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
+
     public var locationMatching: AnyPublisher<MapMatchingState, Never> {
         mapMatching
             .compactMap { $0 }
