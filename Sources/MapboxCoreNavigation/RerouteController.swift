@@ -54,7 +54,7 @@ class RerouteController {
             defaultRerouteController.requestConfig = { [weak self] in
                 guard let self,
                       let delegate = self.delegate,
-                      let routeOptions = options(with: $0) else {
+                      let routeOptions = self.options(with: $0) else {
                     return $0
                 }
                 return NavigationSettings.shared.directions.url(forCalculating: delegate.rerouteControllerWillModify(options: routeOptions)).absoluteString
