@@ -1720,8 +1720,11 @@ class RouteControllerTests: TestCase {
     }
 
     private func makeSingleDecodedRoute(with routeInterface: RouteInterface) -> Route {
-        let decoded = RerouteController.decode(routeRequest: routeInterface.getRequestUri(),
-                                               routeResponse: routeInterface.getResponseJsonRef())!
+        let decoded = RerouteController.decode(
+            routeRequest: routeInterface.getRequestUri(),
+            routeResponse: routeInterface.getResponseJsonRef(),
+            type: RouteOptions.self
+        )!
         return decoded.routeResponse.routes![0]
     }
 
