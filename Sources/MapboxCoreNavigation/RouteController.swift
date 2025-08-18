@@ -291,6 +291,7 @@ open class RouteController: NSObject {
             completion?(.failure(RouteControllerError.failedToSerializeRoute))
             return
         }
+        let routeOptionsType = indexedRouteResponse.routeOptionsType
         sharedNavigator.setRoutes(routesData,
                                   uuid: sessionUUID,
                                   legIndex: UInt32(legIndex),
@@ -302,7 +303,8 @@ open class RouteController: NSObject {
             case .success(let info):
                 let alternativeRoutes = info.1.compactMap {
                     AlternativeRoute(mainRoute: newMainRoute,
-                                     alternativeRoute: $0)
+                                     alternativeRoute: $0,
+                                     routeOptionsType: routeOptionsType)
                 }
                 let alerts = routesData.primaryRoute().getRouteInfo().alerts
                 self.routeAlerts = alerts.reduce(into: [:]) { dictionary, alert in
@@ -711,6 +713,7 @@ open class RouteController: NSObject {
     private func commonInit(customRoutingProvider: RoutingProvider?, options: RouteOptions) {
         UIDevice.current.isBatteryMonitoringEnabled = true
         navigatorType.datasetProfileIdentifier = options.profileIdentifier
+        rerouteController.set(initialOptions: options)
 
         if let customRoutingProvider = customRoutingProvider {
             self.customRoutingProvider = customRoutingProvider
@@ -1088,7 +1091,8 @@ extension RouteController {
         var removedRoutes = continuousAlternatives.filter {
             removedIds.contains($0.id)
         }
-        
+
+        let routeOptionsType = indexedRouteResponse.routeOptionsType
         self.sharedNavigator.setAlternativeRoutes(with: alternatives.map(\.route),
                                                   completion: { [weak self] result in
             guard let self = self else { return }
@@ -1097,7 +1101,8 @@ extension RouteController {
             case .success(let routeAlternatives):
                 let alternativeRoutes = routeAlternatives.compactMap {
                     AlternativeRoute(mainRoute: self.route,
-                                     alternativeRoute: $0)
+                                     alternativeRoute: $0,
+                                     routeOptionsType: routeOptionsType)
                 }
                 
                 removedRoutes.append(contentsOf: alternatives.filter { alternative in
@@ -1106,7 +1111,8 @@ extension RouteController {
                     })
                 }.compactMap {
                     AlternativeRoute(mainRoute: self.route,
-                                     alternativeRoute: $0)
+                                     alternativeRoute: $0,
+                                     routeOptionsType: routeOptionsType)
                 })
                 self.continuousAlternatives = alternativeRoutes
                 self.report(newAlternativeRoutes: alternativeRoutes,
@@ -1162,7 +1168,7 @@ extension RouteController {
               let onlineRoute = userInfo[Navigator.NotificationUserInfoKey.coincideOnlineRouteKey] as? RouteInterface else {
             return
         }
-        guard let decoded = RerouteController.decode(routeRequest: onlineRoute.getRequestUri(),
+        guard let decoded = rerouteController.decode(routeRequest: onlineRoute.getRequestUri(),
                                                      routeResponse: onlineRoute.getResponseJsonRef()) else {
             return
         }

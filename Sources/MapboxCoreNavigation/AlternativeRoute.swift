@@ -43,10 +43,17 @@ public struct AlternativeRoute: Identifiable {
     /// The difference of expected travel time between alternative and the main routes
     public let expectedTravelTimeDelta: TimeInterval
     
-    init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) {
+    init?(
+        mainRoute: Route,
+        alternativeRoute nativeRouteAlternative: RouteAlternative,
+        routeOptionsType: RouteOptions.Type
+    ) {
         self.id = nativeRouteAlternative.id
-        guard let decoded = RerouteController.decode(routeRequest: nativeRouteAlternative.route.getRequestUri(),
-                                                     routeResponse: nativeRouteAlternative.route.getResponseJsonRef()) else {
+        guard let decoded = RerouteController.decode(
+            routeRequest: nativeRouteAlternative.route.getRequestUri(),
+            routeResponse: nativeRouteAlternative.route.getResponseJsonRef(),
+            type: routeOptionsType
+        ) else {
             return nil
         }
 

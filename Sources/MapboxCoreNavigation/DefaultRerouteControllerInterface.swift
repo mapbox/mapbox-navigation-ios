@@ -14,7 +14,8 @@ class DefaultRerouteControllerInterface: RerouteControllerInterface {
     }
     
     func reroute(forUrl url: String, callback: @escaping RerouteCallback) {
-        nativeInterface.reroute(forUrl: requestConfig?(url) ?? url, callback: callback)
+        let rerouteUrl = requestConfig?(url) ?? url
+        nativeInterface.reroute(forUrl: rerouteUrl, callback: callback)
     }
     
     func cancel() {
