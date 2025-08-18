@@ -21,6 +21,10 @@ let package = Package(
             targets: ["MapboxNavigationCore"]
         ),
         .library(
+            name: "MapboxDirections",
+            targets: ["MapboxDirections"]
+        ),
+        .library(
             name: "_MapboxNavigationLocalization",
             targets: ["_MapboxNavigationLocalization"]
         ),
