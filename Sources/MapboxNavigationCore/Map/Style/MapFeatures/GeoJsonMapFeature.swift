@@ -122,7 +122,8 @@ struct GeoJsonMapFeature: MapFeature {
     @MainActor
     func update(oldValue: any MapFeature, in mapView: MapView, order: inout MapLayersOrder) {
         guard let oldValue = oldValue as? Self else {
-            preconditionFailure("Incorrect type passed for oldValue")
+            Log.info("Incorrect type passed for oldValue to MapFeature", category: .navigationUI)
+            return
         }
 
         for (_, source) in sources {

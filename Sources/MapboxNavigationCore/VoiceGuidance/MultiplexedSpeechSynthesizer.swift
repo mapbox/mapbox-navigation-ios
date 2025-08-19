@@ -134,7 +134,7 @@ public final class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
             return true
         }
 
-        precondition(
+        assert(
             duplicate == nil,
             "Single `SpeechSynthesizing` object passed to `MultiplexedSpeechSynthesizer` multiple times!"
         )

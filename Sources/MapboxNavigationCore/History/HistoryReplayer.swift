@@ -32,8 +32,11 @@ public final class HistoryReplayController: Sendable {
     public var speedMultiplier: Double {
         get { _state.read().speedMultiplier }
         set {
-            precondition(newValue > 0.0, "HistoryReplayController.speedMultiplier must be greater than 0!")
-            _state.mutate { $0.speedMultiplier = newValue }
+            if newValue <= 0.0 {
+                Log.warning("HistoryReplayController.speedMultiplier must be greater than 0!", category: .navigation)
+            }
+            let value = max(newValue, 0.0)
+            _state.mutate { $0.speedMultiplier = value }
         }
     }
 

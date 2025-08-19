@@ -823,7 +823,10 @@ open class NavigationMapView: UIView {
             return layer
         }
         guard let customizedLayer = customizedLayer as? T else {
-            preconditionFailure("The customized layer should have the same layer type as the default layer.")
+            let message = "The customized layer should have the same layer type as the default layer."
+            assertionFailure(message)
+            Log.error(message, category: .navigationUI)
+            return layer
         }
         return customizedLayer
     }
@@ -944,7 +947,10 @@ extension NavigationMapView: NavigationMapStyleManagerDelegate {
             return layer
         }
         guard let customizedLayer = customizedLayer as? T else {
-            preconditionFailure("The customized layer should have the same layer type as the default layer.")
+            let message = "The customized layer should have the same layer type as the default layer."
+            assertionFailure(message)
+            Log.error(message, category: .navigationUI)
+            return layer
         }
         return customizedLayer
     }

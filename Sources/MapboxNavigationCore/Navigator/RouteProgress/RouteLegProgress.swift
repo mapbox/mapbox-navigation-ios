@@ -153,7 +153,7 @@ public struct RouteLegProgress: Equatable, Sendable {
     ///
     /// Speed limit data is available in [a number of countries and territories
     /// worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
-    public private(set) var currentSpeedLimit: Measurement<UnitSpeed>? = nil
+    public private(set) var currentSpeedLimit: Measurement<UnitSpeed>?
 
     /// Index relative to leg shape, representing the point the user is currently located at.
     public private(set) var shapeIndex: Int = 0
@@ -172,6 +172,11 @@ public struct RouteLegProgress: Equatable, Sendable {
     }
 
     func refreshingLeg(with leg: RouteLeg) -> RouteLegProgress {
+        guard leg.steps.indices.contains(stepIndex) else {
+            Self.logStepIndexError(stepIndex, stepsCount: leg.steps.count)
+            return self
+        }
+
         var refreshedProgress = self
 
         refreshedProgress.leg = leg
@@ -227,5 +232,12 @@ public struct RouteLegProgress: Equatable, Sendable {
             slice = newSlice
             return accumulatedCoordinates <= userCoordinateIndex
         })
+    }
+
+    private static func logStepIndexError(_ stepIndex: Int, stepsCount: Int) {
+        let message =
+            "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(stepsCount) or not included."
+        Log.info(message, category: .navigation)
+        assertionFailure(message)
     }
 }

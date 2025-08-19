@@ -12,9 +12,10 @@ public struct ApiConfiguration: Sendable, Equatable {
     /// The default configuration. The SDK will attempt to find an access token from your app's `Info.plist`.
     public static var `default`: Self {
         guard let defaultAccessToken, !defaultAccessToken.isEmpty else {
-            preconditionFailure(
+            assertionFailure(
                 "A Mapbox access token is required. Go to <https://account.mapbox.com/access-tokens/>. In Info.plist, set the MBXAccessToken key to your access token."
             )
+            return .init(accessToken: "", endPoint: .mapboxApiEndpoint())
         }
 
         return .init(accessToken: defaultAccessToken, endPoint: .mapboxApiEndpoint())

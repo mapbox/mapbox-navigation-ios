@@ -195,13 +195,16 @@ class InternalRoadObjectMatcherListener: RoadObjectMatcherListener {
     ) {
         guard let roadObjectMatcher else { return }
 
-        let result = Result<
+        guard let result = Result<
             MapboxNavigationNative_Private.RoadObject,
             MapboxNavigationNative_Private.RoadObjectMatcherError
-        >(expected: roadObject)
+        >(expected: roadObject) else {
+            return
+        }
         switch result {
         case .success(let roadObject):
-            delegate?.roadObjectMatcher(roadObjectMatcher, didMatch: RoadObject(roadObject))
+            guard let matchedRoadObject = RoadObject(roadObject) else { return }
+            delegate?.roadObjectMatcher(roadObjectMatcher, didMatch: matchedRoadObject)
         case .failure(let error):
             delegate?.roadObjectMatcher(roadObjectMatcher, didFailToMatchWith: RoadObjectMatcherError(error))
         }

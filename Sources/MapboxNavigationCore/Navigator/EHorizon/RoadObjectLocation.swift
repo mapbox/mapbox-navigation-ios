@@ -68,14 +68,12 @@ extension RoadObject {
         /// - Parameter shape: Shape of an object.
         case routeAlert(shape: Turf.Geometry)
 
-        init(_ native: MapboxNavigationNative_Private.MatchedRoadObjectLocation) {
+        init?(_ native: MapboxNavigationNative_Private.MatchedRoadObjectLocation) {
             switch native.type {
             case .openLRLineLocation:
                 let location = native.getOpenLRLineLocation()
-                self = .openLRLine(
-                    path: RoadGraph.Path(location.getPath()),
-                    shape: Geometry(location.getShape())
-                )
+                guard let shape = Geometry(location.getShape()) else { return nil }
+                self = .openLRLine(path: RoadGraph.Path(location.getPath()), shape: shape)
             case .openLRPointAlongLineLocation:
                 let location = native.getOpenLRPointAlongLineLocation()
                 self = .openLRPoint(
@@ -86,41 +84,47 @@ extension RoadObject {
                 )
             case .matchedPolylineLocation:
                 let location = native.getMatchedPolylineLocation()
-                self = .polyline(
-                    path: RoadGraph.Path(location.getPath()),
-                    shape: Geometry(location.getShape())
-                )
+                guard let shape = Geometry(location.getShape()) else { return nil }
+                self = .polyline(path: RoadGraph.Path(location.getPath()), shape: shape)
             case .matchedGantryLocation:
                 let location = native.getMatchedGantryLocation()
+                guard let shape = Geometry(location.getShape()) else { return nil }
                 self = .gantry(
                     positions: location.getPositions().map(RoadObject.Position.init),
-                    shape: Geometry(location.getShape())
+                    shape: shape
                 )
             case .matchedPolygonLocation:
                 let location = native.getMatchedPolygonLocation()
+                guard let shape = Geometry(location.getShape()) else { return nil }
                 self = .polygon(
                     entries: location.getEntries().map(RoadObject.Position.init),
                     exits: location.getExits().map(RoadObject.Position.init),
-                    shape: Geometry(location.getShape())
+                    shape: shape
                 )
             case .matchedPointLocation:
                 let location = native.getMatchedPointLocation()
                 self = .point(position: RoadObject.Position(location.getPosition()))
             case .matchedSubgraphLocation:
                 let location = native.getMatchedSubgraphLocation()
-                let edges = location.getEdges()
-                    .map { id, edge in (UInt(truncating: id), RoadGraph.SubgraphEdge(edge)) }
+                let edges: [(UInt, RoadGraph.SubgraphEdge)] = location.getEdges().compactMap { id, edge in
+                    guard let subgraphEdge = RoadGraph.SubgraphEdge(edge) else { return nil }
+                    return (UInt(truncating: id), subgraphEdge)
+                }
+                guard let shape = Geometry(location.getShape()) else { return nil }
+
                 self = .subgraph(
                     enters: location.getEnters().map(RoadObject.Position.init),
                     exits: location.getExits().map(RoadObject.Position.init),
-                    shape: Geometry(location.getShape()),
+                    shape: shape,
                     edges: .init(uniqueKeysWithValues: edges)
                 )
             case .routeAlertLocation:
                 let routeAlertLocation = native.getRouteAlert()
-                self = .routeAlert(shape: Geometry(routeAlertLocation.getShape()))
+                guard let shape = Geometry(routeAlertLocation.getShape()) else { return nil }
+                self = .routeAlert(shape: shape)
             @unknown default:
-                preconditionFailure("RoadObjectLocation can't be constructed. Unknown type.")
+                Log.info("RoadObjectLocation can't be constructed. Unknown type.", category: .parsing)
+                return nil
             }
         }
     }

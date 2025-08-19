@@ -1,4 +1,5 @@
 import MapboxDirections
+import MapboxNavigationCore
 import UIKit
 
 protocol InstructionPresenterDataSource: AnyObject {
@@ -156,7 +157,7 @@ class InstructionPresenter {
             .font: dataSource.font as Any,
             .foregroundColor: dataSource.textColor as Any,
         ]
-        let attributedTextRepresentations = components.map { component -> NSAttributedString in
+        let attributedTextRepresentations = components.compactMap { component -> NSAttributedString? in
             switch component {
             case .delimiter(let text):
                 return NSAttributedString(string: text.text, attributes: defaultAttributes)
@@ -190,7 +191,8 @@ class InstructionPresenter {
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
                     ?? NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
             case .exit:
-                preconditionFailure("Exit components should have been removed above")
+                assertionFailure("Exit components should have been removed above")
+                return nil
             case .exitCode(let text):
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
                 return exitShield(
@@ -202,7 +204,8 @@ class InstructionPresenter {
                 )
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
             case .lane:
-                preconditionFailure("Lane component has no attributed string representation.")
+                assertionFailure("Lane component has no attributed string representation.")
+                return nil
             case .guidanceView(_, let alternativeText):
                 return NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
             }

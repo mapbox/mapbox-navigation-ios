@@ -45,7 +45,7 @@ public struct Credentials: Equatable, Sendable {
     public init(accessToken token: String? = nil, host: URL? = nil) {
         let accessToken = token ?? defaultAccessToken
 
-        precondition(
+        assert(
             accessToken != nil && !accessToken!.isEmpty,
             "A Mapbox access token is required. Go to <https://account.mapbox.com/access-tokens/>. In Info.plist, set the MBXAccessToken key to your access token, or use the Directions(accessToken:host:) initializer."
         )

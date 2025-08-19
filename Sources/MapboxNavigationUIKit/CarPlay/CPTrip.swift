@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxNavigationCore
 
 extension CPTrip {
-    convenience init(
+    convenience init?(
         routes: NavigationRoutes,
         locale: Locale,
         distanceMeasurementSystem: MeasurementSystem
@@ -29,7 +29,8 @@ extension CPTrip {
         guard let originCoordinate = waypoints.first?.coordinate,
               let destinationCoordinate = waypoints.last?.coordinate
         else {
-            preconditionFailure("Origin and destination coordinates should be valid.")
+            Log.error("Origin and destination coordinates should be valid.", category: .carPlay)
+            return nil
         }
 
         let originMapItem = MKMapItem(placemark: MKPlacemark(coordinate: originCoordinate))

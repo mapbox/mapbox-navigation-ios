@@ -54,12 +54,14 @@ extension RoadGraph {
             self.shape = shape
         }
 
-        init(_ native: MapboxNavigationNative_Private.SubgraphEdge) {
+        init?(_ native: MapboxNavigationNative_Private.SubgraphEdge) {
+            guard let shape = Turf.Geometry(native.shape) else { return nil }
+
             self.identifier = UInt(native.id)
             self.innerEdgeIds = native.innerEdgeIds.map(UInt.init(truncating:))
             self.outerEdgeIds = native.outerEdgeIds.map(UInt.init(truncating:))
             self.length = native.length
-            self.shape = Turf.Geometry(native.shape)
+            self.shape = shape
         }
     }
 }

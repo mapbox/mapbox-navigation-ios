@@ -4,55 +4,67 @@ import MapboxNavigationNative_Private
 import Turf
 
 extension Turf.Geometry {
-    init(_ native: MapboxCommon.Geometry) {
+    init?(_ native: MapboxCommon.Geometry) {
         switch native.geometryType {
         case GeometryType_Point:
             if let point = native.extractLocations()?.locationValue {
                 self = .point(Point(point))
             } else {
-                preconditionFailure("Point can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "Point")
+                return nil
             }
         case GeometryType_Line:
             if let coordinates = native.extractLocationsArray()?.map(\.locationValue) {
                 self = .lineString(LineString(coordinates))
             } else {
-                preconditionFailure("LineString can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "LineString")
+                return nil
             }
         case GeometryType_Polygon:
             if let coordinates = native.extractLocations2DArray()?.map({ $0.map(\.locationValue) }) {
                 self = .polygon(Polygon(coordinates))
             } else {
-                preconditionFailure("Polygon can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "Polygon")
+                return nil
             }
         case GeometryType_MultiPoint:
             if let coordinates = native.extractLocationsArray()?.map(\.locationValue) {
                 self = .multiPoint(MultiPoint(coordinates))
             } else {
-                preconditionFailure("MultiPoint can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "MultiPoint")
+                return nil
             }
         case GeometryType_MultiLine:
             if let coordinates = native.extractLocations2DArray()?.map({ $0.map(\.locationValue) }) {
                 self = .multiLineString(MultiLineString(coordinates))
             } else {
-                preconditionFailure("MultiLineString can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "MultiLineString")
+                return nil
             }
         case GeometryType_MultiPolygon:
             if let coordinates = native.extractLocations3DArray()?.map({ $0.map { $0.map(\.locationValue) } }) {
                 self = .multiPolygon(MultiPolygon(coordinates))
             } else {
-                preconditionFailure("MultiPolygon can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "MultiPolygon")
+                return nil
             }
         case GeometryType_GeometryCollection:
             if let geometries = native.extractGeometriesArray()?.compactMap(Geometry.init) {
                 self = .geometryCollection(GeometryCollection(geometries: geometries))
             } else {
-                preconditionFailure("GeometryCollection can't be constructed. Geometry wasn't extracted.")
+                Self.logInconsistentValue(for: "GeometryCollection")
+                return nil
             }
         case GeometryType_Empty:
             fallthrough
         default:
-            preconditionFailure("Geometry can't be constructed. Unknown type.")
+            Log.info("Geometry can't be constructed. Unknown type.", category: .parsing)
+            return nil
         }
+    }
+
+    private static func logInconsistentValue(for type: String) {
+        Log.info("\(type) can't be constructed. Geometry wasn't extracted.", category: .parsing)
     }
 }
 

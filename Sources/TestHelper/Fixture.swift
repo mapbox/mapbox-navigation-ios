@@ -240,7 +240,7 @@ public class Fixture: NSObject {
         profileIdentifier: ProfileIdentifier = .automobile,
         transportType: TransportType = .automobile
     ) -> (response: RouteResponse, route: Route) {
-        precondition(waypoints.count >= 2)
+        assert(waypoints.count >= 2)
         func routeDistance(between waypoints: [CLLocationCoordinate2D]) -> CLLocationDistance {
             var routeDistance: CLLocationDistance = 0
             var origin = waypoints[0]
@@ -312,7 +312,7 @@ public class Fixture: NSObject {
         profileIdentifier: ProfileIdentifier = .automobile,
         transportType: TransportType = .automobile
     ) -> (response: RouteResponse, route: Route) {
-        precondition(legsCount > 0)
+        assert(legsCount > 0)
         var waypoints: [CLLocationCoordinate2D] = [origin]
         let routeDistance = origin.distance(to: destination)
         let direction = origin.direction(to: destination)
@@ -333,7 +333,7 @@ public class Fixture: NSObject {
         and end: CLLocationCoordinate2D,
         count: Int
     ) -> [CLLocationCoordinate2D] {
-        precondition(count > 0)
+        assert(count > 0)
 
         let directionToEnd = start.direction(to: end)
         let distance = start.distance(to: end)

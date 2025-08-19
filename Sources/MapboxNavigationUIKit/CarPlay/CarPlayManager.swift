@@ -65,17 +65,19 @@ public class CarPlayManager: NSObject {
     /// location icon.
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D) {
         Task { @MainActor in
-            if let routes = core.tripSession().currentNavigationRoutes {
-                var trip = await CPTrip(
-                    routes: routes,
-                    locale: locale,
-                    distanceMeasurementSystem: distanceMeasurementSystem
-                )
-                trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
+            guard let routes = core.tripSession().currentNavigationRoutes,
+                  var trip = await CPTrip(
+                      routes: routes,
+                      locale: locale,
+                      distanceMeasurementSystem: distanceMeasurementSystem
+                  )
+            else {
+                return
+            }
+            trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
-                if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
-                    self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
-                }
+            if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
+                self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
             }
         }
     }
@@ -642,7 +644,13 @@ extension CarPlayManager {
     /// - Parameter routes: `NavigationRoutes` object, containing all information of routes that will be previewed.
     public func previewRoutes(for routes: NavigationRoutes) async {
         guard shouldPreviewRoutes(for: routes) else { return }
-        let trip = await CPTrip(routes: routes, locale: locale, distanceMeasurementSystem: distanceMeasurementSystem)
+        guard let trip = await CPTrip(
+            routes: routes,
+            locale: locale,
+            distanceMeasurementSystem: distanceMeasurementSystem
+        ) else {
+            return
+        }
         try? await previewRoutes(for: trip)
     }
 
@@ -843,7 +851,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         } else if let navigationRoutes = routeChoice.navigationRoutes {
             startTrip(mapTemplate: mapTemplate, trip: trip, navigationRoutes: navigationRoutes)
         } else {
-            preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+            Log.info("CPRouteChoice should contain `NavigationRoutes` struct.", category: .carPlay)
         }
     }
 
@@ -927,7 +935,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
                 selectedResult: searchResult
             )
         } else {
-            preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+            Log.info("CPRouteChoice should contain `NavigationRoutes` or `SearchResultRecord`.", category: .carPlay)
         }
     }
 

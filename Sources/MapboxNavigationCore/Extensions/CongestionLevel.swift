@@ -21,25 +21,25 @@ public struct CongestionRangesConfiguration: Equatable, Sendable {
 
     /// Creates a new ``CongestionRangesConfiguration`` instance.
     public init(low: CongestionRange, moderate: CongestionRange, heavy: CongestionRange, severe: CongestionRange) {
-        precondition(low.lowerBound >= 0, "Congestion level ranges can't include negative values.")
-        precondition(
+        assert(low.lowerBound >= 0, "Congestion level ranges can't include negative values.")
+        assert(
             low.upperBound <= moderate.lowerBound,
             "Values from the moderate congestion level range can't intersect with or be lower than ones from the low congestion level range."
         )
-        precondition(
+        assert(
             moderate.upperBound <= heavy.lowerBound,
             "Values from the heavy congestion level range can't intersect with or be lower than ones from the moderate congestion level range."
         )
-        precondition(
+        assert(
             heavy.upperBound <= severe.lowerBound,
             "Values from the severe congestion level range can't intersect with or be lower than ones from the heavy congestion level range."
         )
-        precondition(severe.upperBound <= 101, "Congestion level ranges can't include values greater than 100.")
+        assert(severe.upperBound <= 101, "Congestion level ranges can't include values greater than 100.")
 
-        self.low = low
-        self.moderate = moderate
-        self.heavy = heavy
-        self.severe = severe
+        self.low = max(0, low.lowerBound)..<min(low.upperBound, moderate.lowerBound)
+        self.moderate = moderate.lowerBound..<min(moderate.upperBound, heavy.lowerBound)
+        self.heavy = heavy.lowerBound..<min(heavy.upperBound, severe.lowerBound)
+        self.severe = severe.lowerBound..<min(severe.upperBound, 101)
     }
 
     /// Default congestion ranges configuration.

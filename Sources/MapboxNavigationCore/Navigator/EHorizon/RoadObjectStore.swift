@@ -68,7 +68,10 @@ public final class RoadObjectStore: @unchecked Sendable {
     /// - Parameter roadObject: Custom road object, acquired from ``RoadObjectMatcher``.
     public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
         guard let nativeObject = roadObject.native else {
-            preconditionFailure("You can only add matched a custom road object, acquired from RoadObjectMatcher.")
+            let message = "You can only add matched a custom road object, acquired from RoadObjectMatcher."
+            assertionFailure(message)
+            Log.error(message, category: .navigation)
+            return
         }
         native.addCustomRoadObject(for: nativeObject)
     }

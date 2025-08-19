@@ -1,4 +1,5 @@
 import MapboxDirections
+import MapboxNavigationCore
 import UIKit
 
 /// A workaround for the fact that `LaneIndication` is an `OptionSet` and thus cannot be exhaustively switched on.
@@ -133,7 +134,7 @@ extension LanesStyleKit {
         lane: LaneIndication,
         maneuverDirection: ManeuverDirection?,
         drivingSide: DrivingSide
-    ) -> LanesStyleKit.Method {
+    ) -> LanesStyleKit.Method? {
         // https://github.com/mapbox/navigation-ui-resources/blob/4a287b92ddeeec502bca9da849e505dcdf73e1ef/docs/lanes.md
         let favoredIndication = maneuverDirection.flatMap { SingularLaneIndication($0) }
         var laneIndications = lane.singularLaneIndications
@@ -160,7 +161,8 @@ extension LanesStyleKit {
             ) }) ??
             styleKitMethod(turnClassifications: [.straightAhead], favoredTurnClassification: nil)
         else {
-            preconditionFailure("No StyleKit method for straight ahead.")
+            Log.info("No StyleKit method for straight ahead.", category: .navigationUI)
+            return nil
         }
         return method
     }
@@ -470,11 +472,13 @@ open class LaneView: UIView {
 
         let isFlipped = indications
             .dominantSide(maneuverDirection: maneuverDirection, drivingSide: drivingSide) == .left
-        let styleKitMethod = LanesStyleKit.styleKitMethod(
+        guard let styleKitMethod = LanesStyleKit.styleKitMethod(
             lane: indications,
             maneuverDirection: maneuverDirection,
             drivingSide: drivingSide
-        )
+        ) else {
+            return
+        }
 
         switch styleKitMethod {
         case .symmetricOff(let method):

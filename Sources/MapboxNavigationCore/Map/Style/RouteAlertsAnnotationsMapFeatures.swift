@@ -25,11 +25,11 @@ extension NavigationRoutes {
         customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>,
         excludedRouteAlertTypes: RoadAlertType
     ) -> (RouteAlertsStyleContent, MapFeature)? {
-        let convertedRouteAlerts = mainRoute.nativeRoute.getRouteInfo().alerts.map {
-            RoadObjectAhead(
-                roadObject: RoadObject($0.roadObject),
-                distance: $0.distanceToStart
-            )
+        let convertedRouteAlerts: [RoadObjectAhead] = mainRoute.nativeRoute.getRouteInfo().alerts.compactMap {
+            guard let roadObject = RoadObject($0.roadObject) else {
+                return nil
+            }
+            return RoadObjectAhead(roadObject: roadObject, distance: $0.distanceToStart)
         }
 
         return convertedRouteAlerts.routeAlertsAnnotationsMapFeatures(

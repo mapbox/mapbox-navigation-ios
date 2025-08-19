@@ -103,7 +103,7 @@ public enum DistancedRoadObject: Sendable, Equatable {
         }
     }
 
-    init(_ native: MapboxNavigationNative_Private.RoadObjectDistance) {
+    init?(_ native: MapboxNavigationNative_Private.RoadObjectDistance) {
         switch native.distanceInfo.type {
         case .pointDistanceInfo:
             let info = native.distanceInfo.getPointDistanceInfo()
@@ -149,7 +149,8 @@ public enum DistancedRoadObject: Sendable, Equatable {
                 length: info.length
             )
         @unknown default:
-            preconditionFailure("DistancedRoadObject can't be constructed. Unknown type.")
+            Log.info("DistancedRoadObject can't be constructed. Unknown type.", category: .parsing)
+            return nil
         }
     }
 }

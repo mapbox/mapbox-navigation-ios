@@ -192,7 +192,7 @@ final class BillingHandler: @unchecked Sendable {
     }
 
     static func createInstance(with accessToken: String?) -> BillingHandler {
-        precondition(
+        assert(
             accessToken != nil,
             "A Mapbox access token is required. Go to <https://account.mapbox.com/access-tokens/>. In Info.plist, set the MBXAccessToken key to your access token."
         )
@@ -302,9 +302,9 @@ final class BillingHandler: @unchecked Sendable {
 
                 switch error {
                 case .tokenValidationFailed:
-                    assertionFailure(
-                        "Token validation failed. Please check that you have the correct Mapbox Access Token."
-                    )
+                    let message = "Token validation failed. Please check that you have the correct Mapbox Access Token."
+                    Log.error(message, category: .billing)
+                    assertionFailure(message)
                 case .resumeFailed, .unknown:
                     break
                 }

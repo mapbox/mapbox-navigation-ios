@@ -1063,160 +1063,151 @@ class LaneViewTests: TestCase {
 
     func testStyleKitMethodByLaneIndication() {
         XCTAssertTrue(
-            LanesStyleKit.styleKitMethod(lane: [.straightAhead], maneuverDirection: nil, drivingSide: .right)
+            LanesStyleKit.styleKitMethod(lane: [.straightAhead], maneuverDirection: nil, drivingSide: .right)!
                 .isSymmetric
         )
         XCTAssertTrue(
-            LanesStyleKit.styleKitMethod(lane: [.straightAhead], maneuverDirection: nil, drivingSide: .right)
+            LanesStyleKit.styleKitMethod(lane: [.straightAhead], maneuverDirection: nil, drivingSide: .right)!
                 .isOff
         )
         XCTAssertTrue(
             LanesStyleKit
-                .styleKitMethod(lane: [.straightAhead], maneuverDirection: .left, drivingSide: .right).isOff
+                .styleKitMethod(lane: [.straightAhead], maneuverDirection: .left, drivingSide: .right)!.isOff
         )
         XCTAssertTrue(LanesStyleKit.styleKitMethod(
             lane: [.straightAhead],
             maneuverDirection: .straightAhead,
             drivingSide: .right
-        ).isOn)
+        )!.isOn)
 
         XCTAssertFalse(
             LanesStyleKit
-                .styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: .sharpLeft, drivingSide: .right)
+                .styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: .sharpLeft, drivingSide: .right)!
                 .isSymmetric,
             "Unsupported configuration should fall back to maneuver direction"
         )
         XCTAssertTrue(
             LanesStyleKit
-                .styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: .sharpLeft, drivingSide: .right)
+                .styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: .sharpLeft, drivingSide: .right)!
                 .isOn,
             "Unsupported configuration should fall back to maneuver direction"
         )
 
         XCTAssertFalse(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: nil,
-                    drivingSide: .right
-                ).isSymmetric,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: nil,
+                drivingSide: .right
+            )!.isSymmetric,
             "Quadruple use should be simplified"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: nil,
-                    drivingSide: .right
-                ).isOff,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: nil,
+                drivingSide: .right
+            )!.isOff,
             "Quadruple use should be simplified"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: .left,
-                    drivingSide: .right
-                ).isMixed,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: .left,
+                drivingSide: .right
+            )!.isMixed,
             "Quadruple use should be simplified"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: .straightAhead,
-                    drivingSide: .right
-                ).isMixed,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: .straightAhead,
+                drivingSide: .right
+            )!.isMixed,
             "Quadruple use should be simplified"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: .right,
-                    drivingSide: .right
-                ).isMixed,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: .right,
+                drivingSide: .right
+            )!.isMixed,
             "Quadruple use should be simplified"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.left, .straightAhead, .right, .uTurn],
-                    maneuverDirection: .uTurn,
-                    drivingSide: .right
-                ).isMixed,
+            LanesStyleKit.styleKitMethod(
+                lane: [.left, .straightAhead, .right, .uTurn],
+                maneuverDirection: .uTurn,
+                drivingSide: .right
+            )!.isMixed,
             "Quadruple use should be simplified"
         )
 
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: nil,
-                    drivingSide: .right
-                ).isSymmetric,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: nil,
+                drivingSide: .right
+            )!.isSymmetric,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: nil,
-                    drivingSide: .right
-                ).isOff,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: nil,
+                drivingSide: .right
+            )!.isOff,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: .straightAhead,
-                    drivingSide: .right
-                ).isOn,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: .straightAhead,
+                drivingSide: .right
+            )!.isOn,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: .slightLeft,
-                    drivingSide: .right
-                ).isOn,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: .slightLeft,
+                drivingSide: .right
+            )!.isOn,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: .left,
-                    drivingSide: .right
-                ).isOn,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: .left,
+                drivingSide: .right
+            )!.isOn,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
         XCTAssertTrue(
-            LanesStyleKit
-                .styleKitMethod(
-                    lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
-                    maneuverDirection: .sharpLeft,
-                    drivingSide: .right
-                ).isOn,
+            LanesStyleKit.styleKitMethod(
+                lane: [.straightAhead, .slightLeft, .left, .sharpLeft],
+                maneuverDirection: .sharpLeft,
+                drivingSide: .right
+            )!.isOn,
             "Quadruple use should be simplified and fall back to maneuver direction"
         )
 
         XCTAssertTrue(
-            LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right)
+            LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right)!
                 .isSymmetric,
             "Unsupported configuration should fall back to straight ahead"
         )
         XCTAssertTrue(
-            LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right)
+            LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right)!
                 .isOff,
             "Unsupported configuration should fall back to straight ahead"
         )
 
         // Unrecognized turn indications show up as empty lanes in the Directions API response.
         // https://github.com/mapbox/mapbox-navigation-ios/issues/3596
-        XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right).isSymmetric)
-        XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right).isOff)
+        XCTAssertTrue(
+            LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right)!
+                .isSymmetric
+        )
+        XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right)!.isOff)
     }
 }

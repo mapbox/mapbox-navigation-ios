@@ -47,7 +47,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
         set {
             guard let validNavigationMapView = newValue else {
-                preconditionFailure("Invalid NavigationMapView instance.")
+                let message = "Invalid NavigationMapView instance."
+                assertionFailure(message)
+                Log.error(message, category: .navigationUI)
+                return
             }
 
             validNavigationMapView.delegate = self

@@ -66,10 +66,13 @@ public struct RoadObject: Equatable, Sendable {
         self.init(identifier: identifier, length: length, location: location, kind: kind, isUrban: nil)
     }
 
-    public init(_ native: MapboxNavigationNative_Private.RoadObject) {
+    public init?(_ native: MapboxNavigationNative_Private.RoadObject) {
+        guard let location = RoadObject.Location(native.location) else {
+            return nil
+        }
         self.identifier = native.id
         self.length = native.length?.doubleValue
-        self.location = RoadObject.Location(native.location)
+        self.location = location
         self.kind = RoadObject.Kind(type: native.type, metadata: native.metadata)
         self.isUserDefined = native.provider == .custom
         self.isUrban = native.isUrban?.boolValue

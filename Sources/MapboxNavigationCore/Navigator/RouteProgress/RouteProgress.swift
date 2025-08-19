@@ -87,10 +87,9 @@ public struct RouteProgress: Equatable, Sendable {
             currentLegProgress = leg
         }
 
-        upcomingRouteAlerts = status.upcomingRouteAlertUpdates.compactMap { routeAlert in
-            routeAlerts[routeAlert.id].map {
-                RouteAlert($0, distanceToStart: routeAlert.distanceToStart)
-            }
+        upcomingRouteAlerts = status.upcomingRouteAlertUpdates.compactMap { nativeRouteAlert in
+            guard let upcomingRouteAlert = routeAlerts[nativeRouteAlert.id] else { return nil }
+            return RouteAlert(upcomingRouteAlert, distanceToStart: nativeRouteAlert.distanceToStart)
         }
         shapeIndex = Int(status.geometryIndex)
         legIndex = Int(status.legIndex)

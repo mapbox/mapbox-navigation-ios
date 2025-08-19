@@ -15,8 +15,11 @@ public struct RouteAlert: Equatable, Sendable {
     /// This value can be negative if it is a spanned alert and we are somewhere in the middle of it.
     public let distanceToStart: CLLocationDistance
 
-    init(_ native: UpcomingRouteAlert, distanceToStart: CLLocationDistance) {
-        self.roadObject = RoadObject(native.roadObject)
+    init?(_ native: UpcomingRouteAlert, distanceToStart: CLLocationDistance) {
+        guard let roadObject = RoadObject(native.roadObject) else {
+            return nil
+        }
+        self.roadObject = roadObject
         self.distanceToStart = distanceToStart
     }
 }
