@@ -4,6 +4,8 @@
 
 ### Packaging
 
+* MapboxNavigationCore now requires [MapboxMaps v11.15.0-beta.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.15.0-beta.3)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.15.0-beta.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.15.0-beta.3)
 * Added a separate MapboxDirections product for independent usage of Mapbox Directions API.
 
 ### Electronic horizon
