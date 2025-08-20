@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v2.20.1
+## v2.20.2
 
 ### Routing
 

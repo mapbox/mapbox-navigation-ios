@@ -127,6 +127,7 @@
 		2C856451297AE0A6006EFCBB /* NavigationEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C856450297AE0A6006EFCBB /* NavigationEventsManager.swift */; };
 		2C856454297B1884006EFCBB /* NavigationCommonEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C856453297B1884006EFCBB /* NavigationCommonEventsManagerTests.swift */; };
 		2C856456297B3862006EFCBB /* EventsDatasourceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C856455297B3862006EFCBB /* EventsDatasourceSpy.swift */; };
+		2C88591D2E5611C8009A72E5 /* CustomRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88591C2E5611C8009A72E5 /* CustomRouteOptions.swift */; };
 		2C8BF7AE2D6C99FC00C60BD4 /* NavigationMovementMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8BF7AD2D6C99FC00C60BD4 /* NavigationMovementMonitor.swift */; };
 		2C8BF7B02D6C9A0900C60BD4 /* NavigationMovementMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8BF7AF2D6C9A0900C60BD4 /* NavigationMovementMonitorTests.swift */; };
 		2C9006CA291927850012CCEA /* RoutingProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */; };
@@ -822,6 +823,7 @@
 		2C856450297AE0A6006EFCBB /* NavigationEventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationEventsManager.swift; sourceTree = "<group>"; };
 		2C856453297B1884006EFCBB /* NavigationCommonEventsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCommonEventsManagerTests.swift; sourceTree = "<group>"; };
 		2C856455297B3862006EFCBB /* EventsDatasourceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsDatasourceSpy.swift; sourceTree = "<group>"; };
+		2C88591C2E5611C8009A72E5 /* CustomRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRouteOptions.swift; sourceTree = "<group>"; };
 		2C8BF7AD2D6C99FC00C60BD4 /* NavigationMovementMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMovementMonitor.swift; sourceTree = "<group>"; };
 		2C8BF7AF2D6C9A0900C60BD4 /* NavigationMovementMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMovementMonitorTests.swift; sourceTree = "<group>"; };
 		2C9006C7291927850012CCEA /* RoutingProviderSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingProviderSpy.swift; sourceTree = "<group>"; };
@@ -2208,6 +2210,7 @@
 		B47C1ACE261FD0A30078546C /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
+				2C88591C2E5611C8009A72E5 /* CustomRouteOptions.swift */,
 				2CEC5C5529F71714001B5EC2 /* NavigationSessionManagerSpy.swift */,
 				2CA61049297EF6D9003E49A7 /* System */,
 				2C2880A2291AB7240063E5B7 /* NavNative */,
@@ -3447,6 +3450,7 @@
 				2CA61044297E9E60003E49A7 /* TelemetrySpy.swift in Sources */,
 				B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */,
 				E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */,
+				2C88591D2E5611C8009A72E5 /* CustomRouteOptions.swift in Sources */,
 				2C7FAF96291ABE62000217A7 /* TestRouteProvider.swift in Sources */,
 				2CAEABD32930D87B00DE851A /* RouterSpy.swift in Sources */,
 				E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */,
