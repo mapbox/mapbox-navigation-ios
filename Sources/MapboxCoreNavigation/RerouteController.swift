@@ -324,40 +324,12 @@ extension RerouteController: RerouteControllerInterface {
 }
 
 extension URL {
-    var requestWaypoints: [MapboxDirections.Waypoint]? {
-        guard pathComponents.count >= 3 else {
-            return nil
-        }
-
-        let waypointsString = lastPathComponent.replacingOccurrences(of: ".json", with: "")
-        let waypoints: [MapboxDirections.Waypoint] = waypointsString.components(separatedBy: ";").compactMap {
-            let coordinates = $0.components(separatedBy: ",")
-            guard coordinates.count == 2,
-                  let latitudeString = coordinates.last,
-                  let longitudeString = coordinates.first,
-                  let latitude = CLLocationDegrees(latitudeString),
-                  let longitude = CLLocationDegrees(longitudeString) else {
-                return nil
-            }
-            return Waypoint(coordinate: .init(latitude: latitude,
-                                              longitude: longitude))
-        }
-
-        guard waypoints.count >= 2 else {
-            return nil
-        }
-        return waypoints
-    }
-
-    var profileIdentifier: ProfileIdentifier? {
-        ProfileIdentifier(rawValue: pathComponents.dropLast().suffix(2).joined(separator: "/"))
-    }
-
     func routeOptions(with type: RouteOptions.Type) -> RouteOptions? {
-        guard let profileIdentifier = self.profileIdentifier,
-              let waypoints = self.requestWaypoints else {
+        guard let baseOptions = RouteOptions(url: self) else {
             return nil
         }
+        let profileIdentifier = baseOptions.profileIdentifier
+        let waypoints = baseOptions.waypoints
         let queryItems = URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems
         return type.init(waypoints: waypoints, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
