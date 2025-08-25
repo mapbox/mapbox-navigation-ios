@@ -49,10 +49,12 @@ public struct IndexedRouteResponse {
               let routesData = routesData(routeParserType: RouteParser.self) else {
             return []
         }
-        
+
+        let routeOptionsType = self.routeOptionsType
         let alternatives = routesData.alternativeRoutes().compactMap {
             AlternativeRoute(mainRoute: mainRoute,
-                             alternativeRoute: $0)
+                             alternativeRoute: $0,
+                             routeOptionsType: routeOptionsType)
         }
         return alternatives
     }
@@ -115,6 +117,10 @@ public struct IndexedRouteResponse {
         case let .route(options):
             return options
         }
+    }
+
+    var routeOptionsType: RouteOptions.Type {
+        type(of: validatedRouteOptions)
     }
 }
 

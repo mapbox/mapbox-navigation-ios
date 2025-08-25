@@ -850,7 +850,28 @@ class RouteControllerTests: TestCase {
         XCTAssertEqual(rerouteOptions, routeOptions)
         waitForExpectations(timeout: expectationsTimeout)
     }
-    
+
+    func testHandleWillModifyCustomOptionsEvent() {
+        let coordinates = [
+            CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
+            CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268)
+        ]
+        let initialOptions = CustomRouteOptions(coordinates: coordinates)
+        initialOptions.custom = "initial"
+        let modifiedRouteOptions = CustomRouteOptions(coordinates: coordinates)
+        modifiedRouteOptions.custom = "modified"
+        let callbackExpectation = expectation(description: "Did fail to reroute call on delegate")
+        delegate.onModifiedOptionsForReroute = { passedOptions in
+            XCTAssertEqual(passedOptions, initialOptions)
+            callbackExpectation.fulfill()
+            return modifiedRouteOptions
+        }
+
+        let rerouteOptions = routeController.rerouteControllerWillModify(options: initialOptions)
+        XCTAssertEqual(rerouteOptions, modifiedRouteOptions)
+        waitForExpectations(timeout: expectationsTimeout)
+    }
+
     func testHandleDidFailToRerouteEvent() {
         let didFailToReroutExpectation = expectation(description: "Did fail to reroute call on delegate")
         delegate.onDidFailToRerouteWith = { error in
@@ -1720,8 +1741,11 @@ class RouteControllerTests: TestCase {
     }
 
     private func makeSingleDecodedRoute(with routeInterface: RouteInterface) -> Route {
-        let decoded = RerouteController.decode(routeRequest: routeInterface.getRequestUri(),
-                                               routeResponse: routeInterface.getResponseJsonRef())!
+        let decoded = RerouteController.decode(
+            routeRequest: routeInterface.getRequestUri(),
+            routeResponse: routeInterface.getResponseJsonRef(),
+            type: RouteOptions.self
+        )!
         return decoded.routeResponse.routes![0]
     }
 
