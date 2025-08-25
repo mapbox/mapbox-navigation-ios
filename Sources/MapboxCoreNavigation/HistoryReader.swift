@@ -1,4 +1,5 @@
 import Foundation
+import MapboxDirections
 import MapboxNavigationNative
 
 /// Digest of history file contents produced by `HistoryReader`.
@@ -106,7 +107,11 @@ public struct HistoryReader: Sequence {
                 return nil
             }
             guard let responseData = routeResponse.data(using: .utf8),
-                  let decodedInfo = RerouteController.decode(routeRequest: routeRequest, routeResponse: responseData),
+                  let decodedInfo = RerouteController.decode(
+                    routeRequest: routeRequest,
+                    routeResponse: responseData,
+                    type: RouteOptions.self
+                  ),
                   let routes = decodedInfo.routeResponse.routes,
                   routes.indices.contains(Int(setRoute.routeIndex))
             else {

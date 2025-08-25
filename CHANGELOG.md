@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.20.2
+
+### Routing
+
+* Fixed the usage of the `RouteOptions` type from the initial route request instead of a hardcoded type, ensuring additional parameters are preserved on reroutes. ([#4789](https://github.com/mapbox/mapbox-navigation-ios/pull/4789))
+
 ## v2.20.1
 
 ### Packaging

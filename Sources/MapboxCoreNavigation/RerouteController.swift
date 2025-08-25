@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import MapboxDirections
 import MapboxCommon
@@ -50,13 +51,13 @@ class RerouteController {
                 return
             }
 
-            defaultRerouteController.requestConfig = { [weak delegate] in
-                guard let delegate = delegate,
-                      let url = URL(string: $0),
-                      let options = RouteOptions(url: url) else {
+            defaultRerouteController.requestConfig = { [weak self] in
+                guard let self,
+                      let delegate = self.delegate,
+                      let routeOptions = self.options(with: $0) else {
                     return $0
                 }
-                return NavigationSettings.shared.directions.url(forCalculating: delegate.rerouteControllerWillModify(options: options)).absoluteString
+                return NavigationSettings.shared.directions.url(forCalculating: delegate.rerouteControllerWillModify(options: routeOptions)).absoluteString
             }
         }
     }
@@ -75,6 +76,7 @@ class RerouteController {
     private let rerouteDetector: RerouteDetectorInterface
     
     private var reroutingRequest: NavigationProviderRequest?
+    private var initialOptions: RouteOptions?
     private var latestRouteResponse: (response: RouteResponse, options: RouteOptions)?
     private var isCancelled = false
 
@@ -83,7 +85,12 @@ class RerouteController {
     
     private weak var navigator: MapboxNavigationNative.Navigator?
 
+    func set(initialOptions: RouteOptions?) {
+        self.initialOptions = initialOptions
+    }
+
     func resetToDefaultSettings() {
+        initialOptions = nil
         reroutesProactively = true
         isCancelled = false
         config.setAvoidManeuverSecondsForSeconds(NSNumber(value: Self.DefaultManeuverAvoidanceRadius))
@@ -117,12 +124,21 @@ class RerouteController {
     deinit {
         invalidate()
     }
+
+    fileprivate var optionsType: RouteOptions.Type {
+        initialOptions.map { Swift.type(of: $0) } ?? RouteOptions.self
+    }
+
+    fileprivate func options(with url: String) -> RouteOptions? {
+        Self.decodeRouteOptions(with: url, type: optionsType)
+    }
 }
 
 extension RerouteController: RerouteObserver {
     func onSwitchToAlternative(forRoute route: RouteInterface) {
         guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
-                                        routeResponse: route.getResponseJsonRef()) else {
+                                        routeResponse: route.getResponseJsonRef(),
+                                        type: optionsType) else {
             return
         }
         
@@ -143,7 +159,7 @@ extension RerouteController: RerouteObserver {
     func onRerouteReceived(forRouteResponse routeResponse: String, routeRequest: String, origin: RouterOrigin) {
         guard reroutesProactively else { return }
         
-        guard let decodedRequest = Self.decode(routeRequest: routeRequest) else {
+        guard let decodedRequest = Self.decode(routeRequest: routeRequest, type: optionsType) else {
             delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
             return
         }
@@ -191,17 +207,31 @@ extension RerouteController: RerouteObserver {
 }
 
 extension RerouteController {
-    static internal func decode(routeRequest: String, routeResponse: DataRef) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+    internal func decode(routeRequest: String, routeResponse: DataRef)
+    -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+        Self.decode(routeRequest: routeRequest, routeResponse: routeResponse, type: optionsType)
+    }
+
+    static internal func decode(
+        routeRequest: String,
+        routeResponse: DataRef,
+        type: RouteOptions.Type
+    ) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
         var result: (routeOptions: RouteOptions, routeResponse: RouteResponse)?
         routeResponse.withData { responseData in
             result = decode(routeRequest: routeRequest,
-                            routeResponse: responseData)
+                            routeResponse: responseData,
+                            type: type)
         }
         return result
     }
     
-    static internal func decode(routeRequest: String, routeResponse: Data) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
-        guard let decodedRequest = decode(routeRequest: routeRequest),
+    static internal func decode(
+        routeRequest: String,
+        routeResponse: Data,
+        type: RouteOptions.Type
+    ) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+        guard let decodedRequest = decode(routeRequest: routeRequest, type: type),
               let decodedResponse = decode(routeResponse: routeResponse,
                                            routeOptions: decodedRequest.routeOptions,
                                            credentials: decodedRequest.credentials) else {
@@ -211,9 +241,12 @@ extension RerouteController {
         return (decodedRequest.routeOptions, decodedResponse)
     }
 
-    static internal func decode(routeRequest: String) -> (routeOptions: RouteOptions, credentials: Credentials)? {
+    static internal func decode(
+        routeRequest: String,
+        type: RouteOptions.Type
+    ) -> (routeOptions: RouteOptions, credentials: Credentials)? {
         guard let requestURL = URL(string: routeRequest),
-              let routeOptions = RouteOptions(url: requestURL) else {
+              let routeOptions = decodeRouteOptions(with: routeRequest, type: type) else {
                   return nil
         }
 
@@ -231,6 +264,14 @@ extension RerouteController {
         return try? decoder.decode(RouteResponse.self,
                                    from: routeResponse)
     }
+
+    static func decodeRouteOptions(
+        with routeRequest: String,
+        type: RouteOptions.Type
+    ) -> RouteOptions? {
+        let url = URL(string: routeRequest)
+        return url?.routeOptions(with: type)
+    }
 }
 
 extension RerouteController: RerouteControllerInterface {
@@ -246,13 +287,13 @@ extension RerouteController: RerouteControllerInterface {
                                                type: .routerError)))
             return
         }
-        
-        guard let routeOptions = RouteOptions(url: URL(string: url)!) else {
+
+        guard let routeOptions = options(with: url) else {
             callback(.init(error: RerouteError(message: "Unable to decode route request for rerouting.",
                                                type: .routerError)))
             return
         }
-        
+
         reroutingRequest = customRoutingProvider.calculateRoutes(options: routeOptions) { [weak self] result in
             guard let self = self else { return }
 
@@ -279,5 +320,17 @@ extension RerouteController: RerouteControllerInterface {
         isCancelled = true
         defaultRerouteController.cancel()
         reroutingRequest?.cancel()
+    }
+}
+
+extension URL {
+    func routeOptions(with type: RouteOptions.Type) -> RouteOptions? {
+        guard let baseOptions = RouteOptions(url: self) else {
+            return nil
+        }
+        let profileIdentifier = baseOptions.profileIdentifier
+        let waypoints = baseOptions.waypoints
+        let queryItems = URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems
+        return type.init(waypoints: waypoints, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
 }
