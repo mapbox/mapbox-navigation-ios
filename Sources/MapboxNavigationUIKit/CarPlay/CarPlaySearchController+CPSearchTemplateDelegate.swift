@@ -5,8 +5,8 @@ import MapboxDirections
 extension CarPlaySearchController: CPSearchTemplateDelegate {
     public static let CarPlayGeocodedPlacemarkKey: String = "NavigationGeocodedPlacemark"
 
-    static var MaximumInitialSearchResults: UInt = 5
-    static var MaximumExtendedSearchResults: UInt = 10
+    @_spi(MapboxInternal)
+    public static let CarPlayPlaceAutocompleteSuggestionKey: String = "PlaceAutocompleteSuggestion"
 
     // MARK: CPSearchTemplateDelegate Implementation
 
@@ -14,7 +14,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         guard let recentSearchItems = delegate?.recentSearchItems,
               let extendedItems = delegate?.searchResults(
                   with: recentSearchItems,
-                  limit: CarPlaySearchController.MaximumExtendedSearchResults
+                  limit: searchResultsLimit
               )
         else { return }
 
@@ -28,7 +28,14 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                     completion()
                     return
                 }
-                handleSelection(location: placemark.location, completionHandler: completion)
+
+                if userInfo[CarPlaySearchController.CarPlayPlaceAutocompleteSuggestionKey] != nil,
+                   let delegate = delegate as? CarPlaySearchControllerInternalDelegate
+                {
+                    delegate.selectSuggestion(item: item, completion: completion)
+                } else {
+                    handleSelection(location: placemark.location, name: placemark.title, completionHandler: completion)
+                }
             }
         }
 
@@ -86,6 +93,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
 extension CarPlaySearchController {
     func handleSelection(
         location: CLLocation?,
+        name: String?,
         completionHandler: @escaping () -> Void
     ) {
         guard let location else {
@@ -93,7 +101,7 @@ extension CarPlaySearchController {
             return
         }
 
-        let destinationWaypoint = Waypoint(location: location)
+        let destinationWaypoint = Waypoint(location: location, name: name)
         delegate?.popTemplate(animated: false)
         delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
@@ -112,6 +120,6 @@ extension CarPlaySearchController: CPListTemplateDelegate {
         let userInfo = item.userInfo as? CarPlayUserInfo
         let placemark = userInfo?[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark
 
-        handleSelection(location: placemark?.location, completionHandler: completionHandler)
+        handleSelection(location: placemark?.location, name: placemark?.title, completionHandler: completionHandler)
     }
 }
