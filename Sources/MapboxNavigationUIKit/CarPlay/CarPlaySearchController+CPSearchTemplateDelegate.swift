@@ -6,7 +6,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     public static let CarPlayGeocodedPlacemarkKey: String = "NavigationGeocodedPlacemark"
 
     @_spi(MapboxInternal)
-    public static let CarPlayPlaceAutocompleteSuggestionKey: String = "PlaceAutocompleteSuggestion"
+    public static let CarPlaySearchSuggestionRecordKey: String = "SearchSuggestionRecord"
 
     // MARK: CPSearchTemplateDelegate Implementation
 
@@ -29,7 +29,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                     return
                 }
 
-                if userInfo[CarPlaySearchController.CarPlayPlaceAutocompleteSuggestionKey] != nil,
+                if userInfo[CarPlaySearchController.CarPlaySearchSuggestionRecordKey] != nil,
                    let delegate = delegate as? CarPlaySearchControllerInternalDelegate
                 {
                     delegate.selectSuggestion(item: item, completion: completion)
