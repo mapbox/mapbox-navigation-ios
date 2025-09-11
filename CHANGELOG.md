@@ -4,7 +4,7 @@
 
 ### Routing
 
-* `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`. ([#4789](https://github.com/mapbox/mapbox-navigation-ios/pull/4789))
+* `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`. ([#4794](https://github.com/mapbox/mapbox-navigation-ios/pull/4794))
 
 ## v2.20.2
 
