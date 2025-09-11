@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other
+
+* Updated default route line traffic colors to match the Mapbox Standard style.
+
 ## 3.12.0-rc.1
 
 ### Packaging

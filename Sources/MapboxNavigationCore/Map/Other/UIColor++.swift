@@ -14,15 +14,15 @@ extension UIColor {
 
     public class var trafficUnknown: UIColor { defaultRouteLayer }
     public class var trafficLow: UIColor { defaultRouteLayer }
-    public class var trafficModerate: UIColor { #colorLiteral(red: 1, green: 0.5843137255, blue: 0, alpha: 1) }
-    public class var trafficHeavy: UIColor { #colorLiteral(red: 1, green: 0.3019607843, blue: 0.3019607843, alpha: 1) }
-    public class var trafficSevere: UIColor { #colorLiteral(red: 0.5607843137, green: 0.1411764706, blue: 0.2784313725, alpha: 1) }
+    public class var trafficModerate: UIColor { #colorLiteral(red: 0.9607843137, green: 0.7647058824, blue: 0.1803921569, alpha: 1) }
+    public class var trafficHeavy: UIColor { #colorLiteral(red: 0.9607843137, green: 0.2784313725, blue: 0.1411764706, alpha: 1) }
+    public class var trafficSevere: UIColor { #colorLiteral(red: 0.7647058824, green: 0.1568627451, blue: 0.1568627451, alpha: 1) }
 
     public class var alternativeTrafficUnknown: UIColor { defaultAlternateLine }
     public class var alternativeTrafficLow: UIColor { defaultAlternateLine }
-    public class var alternativeTrafficModerate: UIColor { #colorLiteral(red: 0.75, green: 0.63, blue: 0.53, alpha: 1.0) }
-    public class var alternativeTrafficHeavy: UIColor { #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) }
-    public class var alternativeTrafficSevere: UIColor { #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) }
+    public class var alternativeTrafficModerate: UIColor { #colorLiteral(red: 0.8588235294, green: 0.8274509804, blue: 0.7725490196, alpha: 1) }
+    public class var alternativeTrafficHeavy: UIColor { #colorLiteral(red: 0.8588235294, green: 0.7019607843, blue: 0.7882352941, alpha: 1) }
+    public class var alternativeTrafficSevere: UIColor { #colorLiteral(red: 0.7058823529, green: 0.6196078431, blue: 0.7490196078, alpha: 1) }
 
     public class var defaultRouteRestrictedAreaColor: UIColor { #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) }
 
