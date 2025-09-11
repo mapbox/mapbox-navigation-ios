@@ -32,7 +32,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
             refreshingEnabled = true
         }
 
-        optimizeForNavigation()
+        optimizeForNavigation(queryItems: queryItems)
     }
 
     /**
@@ -96,7 +96,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
             }
         }
 
-        optimizeForNavigation()
+        optimizeForNavigation(queryItems: queryItems)
     }
     
     
@@ -123,6 +123,16 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
     }
 }
 
+fileprivate enum OptimizedForNavigationKey: String {
+    case includesSteps = "steps"
+    case shapeFormat = "geometries"
+    case routeShapeResolution = "overview"
+    case locale = "language"
+    case includesSpokenInstructions = "voice_instructions"
+    case distanceMeasurementSystem = "voice_units"
+    case includesVisualInstructions = "banner_instructions"
+}
+
 protocol OptimizedForNavigation: AnyObject {
     var includesSteps: Bool { get set }
     var routeShapeResolution: RouteShapeResolution { get set }
@@ -133,17 +143,33 @@ protocol OptimizedForNavigation: AnyObject {
     var includesSpokenInstructions: Bool { get set }
     var includesVisualInstructions: Bool { get set }
     
-    func optimizeForNavigation()
+    func optimizeForNavigation(queryItems: [URLQueryItem]?)
 }
 
 extension OptimizedForNavigation {
-    func optimizeForNavigation() {
-        shapeFormat = .polyline6
-        includesSteps = true
-        routeShapeResolution = .full
-        includesSpokenInstructions = true
-        locale = Locale.nationalizedCurrent
-        distanceMeasurementSystem = .init(NavigationSettings.shared.distanceUnit)
-        includesVisualInstructions = true
+    func optimizeForNavigation(queryItems: [URLQueryItem]?) {
+        let names = Set(queryItems?.map { $0.name } ?? [])
+
+        if !names.contains(OptimizedForNavigationKey.shapeFormat.rawValue) {
+            shapeFormat = .polyline6
+        }
+        if !names.contains(OptimizedForNavigationKey.includesSteps.rawValue) {
+            includesSteps = true
+        }
+        if !names.contains(OptimizedForNavigationKey.routeShapeResolution.rawValue) {
+            routeShapeResolution = .full
+        }
+        if !names.contains(OptimizedForNavigationKey.includesSpokenInstructions.rawValue) {
+            includesSpokenInstructions = true
+        }
+        if !names.contains(OptimizedForNavigationKey.locale.rawValue) {
+            locale = .nationalizedCurrent
+        }
+        if !names.contains(OptimizedForNavigationKey.distanceMeasurementSystem.rawValue) {
+            distanceMeasurementSystem = .init(NavigationSettings.shared.distanceUnit)
+        }
+        if !names.contains(OptimizedForNavigationKey.includesVisualInstructions.rawValue) {
+            includesVisualInstructions = true
+        }
     }
 }
