@@ -3,7 +3,7 @@ import MapboxDirections
 @testable import MapboxNavigationCore
 import XCTest
 
-final class NavigationRouteOptionsTests: XCTestCase {
+final class NavigationMatchOptionsTests: XCTestCase {
     let coordinates = [
         CLLocationCoordinate2D(latitude: 0, longitude: 1),
         CLLocationCoordinate2D(latitude: 2, longitude: 3),
@@ -13,8 +13,8 @@ final class NavigationRouteOptionsTests: XCTestCase {
         coordinates.map { Waypoint(coordinate: $0) }
     }
 
-    func testNavigationRouteOptions() {
-        let options = NavigationRouteOptions(coordinates: coordinates)
+    func testNavigationMatchOptions() {
+        let options = NavigationMatchOptions(coordinates: coordinates)
         navigationPrerequisitesAssertions(options: options)
     }
 
@@ -33,86 +33,76 @@ final class NavigationRouteOptionsTests: XCTestCase {
 
     func testDefaultAttributeOptions() {
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates).attributeOptions,
+            NavigationMatchOptions(coordinates: coordinates).attributeOptions,
             [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         )
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile).attributeOptions,
+            NavigationMatchOptions(coordinates: coordinates, profileIdentifier: .automobile).attributeOptions,
             [.expectedTravelTime, .maximumSpeedLimit]
         )
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
+            NavigationMatchOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
                 .attributeOptions,
             [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         )
-        // https://github.com/mapbox/mapbox-navigation-ios/issues/3495
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .cycling).attributeOptions,
-            [.expectedTravelTime, .maximumSpeedLimit]
+            NavigationMatchOptions(coordinates: coordinates, profileIdentifier: .cycling).attributeOptions,
+            [.expectedTravelTime]
         )
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .walking).attributeOptions,
-            [.expectedTravelTime, .maximumSpeedLimit]
+            NavigationMatchOptions(coordinates: coordinates, profileIdentifier: .walking).attributeOptions,
+            [.expectedTravelTime]
         )
         XCTAssertEqual(
-            NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .init(rawValue: "mapbox/unicycling"))
+            NavigationMatchOptions(coordinates: coordinates, profileIdentifier: .init(rawValue: "mapbox/unicycling"))
                 .attributeOptions,
-            [.expectedTravelTime, .maximumSpeedLimit]
+            [.expectedTravelTime]
         )
     }
 
-    func testSetDistanceMeasurementSystemToRouteOptions() {
-        let locale = Locale(identifier: "en_US")
+    func testSetDistanceMeasurementSystemToMatchOptions() {
         let waypoints = coordinates.map { Waypoint(coordinate: $0) }
 
-        let options1 = NavigationRouteOptions(
-            waypoints: waypoints,
-            locale: locale,
-            distanceUnit: .meter
-        )
+        let options1 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .meter)
         XCTAssertEqual(options1.distanceMeasurementSystem, .metric)
 
-        let options2 = NavigationRouteOptions(
-            waypoints: waypoints,
-            locale: locale,
-            distanceUnit: .mile
-        )
+        let options2 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .mile)
         XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
     }
 
     func testSetShapeFormat() {
         let queryItems: [URLQueryItem] = [.init(name: "geometries", value: "geojson")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertEqual(options.shapeFormat, .geoJSON)
     }
 
     func testSetIncludesSteps() {
         let queryItems: [URLQueryItem] = [.init(name: "steps", value: "false")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertFalse(options.includesSteps)
     }
 
     func testSetIncludesSpokenInstructions() {
         let queryItems: [URLQueryItem] = [.init(name: "voice_instructions", value: "false")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertFalse(options.includesSpokenInstructions)
     }
 
     func testSetIncludesVisualInstructions() {
         let queryItems: [URLQueryItem] = [.init(name: "banner_instructions", value: "false")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertFalse(options.includesVisualInstructions)
     }
 
     func testSetRouteShapeResolution() {
         let queryItems: [URLQueryItem] = [.init(name: "overview", value: "low")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertEqual(options.routeShapeResolution, .low)
     }
 
     func testSetLocale() {
         let queryItems: [URLQueryItem] = [.init(name: "language", value: "ja_JP")]
-        let options = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems)
+        let options = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems)
         XCTAssertEqual(options.locale, .init(identifier: "ja_JP"))
     }
 
@@ -121,14 +111,14 @@ final class NavigationRouteOptionsTests: XCTestCase {
             .init(name: "voice_units", value: "metric"),
             .init(name: "language", value: "ja_JP"),
         ]
-        let options1 = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems1)
+        let options1 = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems1)
         XCTAssertEqual(options1.distanceMeasurementSystem, .metric)
 
         let queryItems2: [URLQueryItem] = [
             .init(name: "voice_units", value: "imperial"),
             .init(name: "language", value: "ja_JP"),
         ]
-        let options2 = NavigationRouteOptions(waypoints: waypoints, queryItems: queryItems2)
+        let options2 = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems2)
         XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
     }
 }

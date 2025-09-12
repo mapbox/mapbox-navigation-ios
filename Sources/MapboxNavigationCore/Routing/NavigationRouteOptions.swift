@@ -65,7 +65,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
         }
         includesExitRoundaboutManeuver = true
 
-        optimizeForNavigation()
+        optimizeForNavigation(queryItems: queryItems)
     }
 
     /// Initializes an equivalent `RouteOptions` object from a ``NavigationMatchOptions``.
@@ -111,8 +111,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
 /// A ``NavigationMatchOptions`` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Map
 /// Matching API.
 ///
-/// `NavigationMatchOptions`` is a subclass of `MatchOptions` that has been optimized for navigation. Pass an instance
-/// of this class into the `Directions.calculateRoutes(matching:completionHandler:).` method.
+/// ``NavigationMatchOptions`` is a subclass of `MatchOptions` that has been optimized for navigation. Pass an instance
+/// of this class into the ``RoutingProvider/calculateRoutes(options:)`` method.
 ///
 /// - Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this
 /// `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered
@@ -166,7 +166,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchec
             attributeOptions.insert(.maximumSpeedLimit)
         }
 
-        optimizeForNavigation()
+        optimizeForNavigation(queryItems: queryItems)
     }
 
     /// Initializes a navigation match options object for routes between the given locations and an optional profile
@@ -202,6 +202,16 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchec
     }
 }
 
+private enum OptimizedForNavigationKey: String {
+    case includesSteps = "steps"
+    case shapeFormat = "geometries"
+    case routeShapeResolution = "overview"
+    case locale = "language"
+    case includesSpokenInstructions = "voice_instructions"
+    case distanceMeasurementSystem = "voice_units"
+    case includesVisualInstructions = "banner_instructions"
+}
+
 protocol OptimizedForNavigation: AnyObject {
     var includesSteps: Bool { get set }
     var routeShapeResolution: RouteShapeResolution { get set }
@@ -213,17 +223,33 @@ protocol OptimizedForNavigation: AnyObject {
     var includesVisualInstructions: Bool { get set }
     var distanceUnit: LengthFormatter.Unit { get }
 
-    func optimizeForNavigation()
+    func optimizeForNavigation(queryItems: [URLQueryItem]?)
 }
 
 extension OptimizedForNavigation {
-    func optimizeForNavigation() {
-        shapeFormat = .polyline6
-        includesSteps = true
-        routeShapeResolution = .full
-        includesSpokenInstructions = true
-        locale = Locale.nationalizedCurrent
-        distanceMeasurementSystem = .init(distanceUnit)
-        includesVisualInstructions = true
+    func optimizeForNavigation(queryItems: [URLQueryItem]?) {
+        let names = Set(queryItems?.map { $0.name } ?? [])
+
+        if !names.contains(OptimizedForNavigationKey.shapeFormat.rawValue) {
+            shapeFormat = .polyline6
+        }
+        if !names.contains(OptimizedForNavigationKey.includesSteps.rawValue) {
+            includesSteps = true
+        }
+        if !names.contains(OptimizedForNavigationKey.routeShapeResolution.rawValue) {
+            routeShapeResolution = .full
+        }
+        if !names.contains(OptimizedForNavigationKey.includesSpokenInstructions.rawValue) {
+            includesSpokenInstructions = true
+        }
+        if !names.contains(OptimizedForNavigationKey.locale.rawValue) {
+            locale = .nationalizedCurrent
+        }
+        if !names.contains(OptimizedForNavigationKey.distanceMeasurementSystem.rawValue) {
+            distanceMeasurementSystem = .init(distanceUnit)
+        }
+        if !names.contains(OptimizedForNavigationKey.includesVisualInstructions.rawValue) {
+            includesVisualInstructions = true
+        }
     }
 }

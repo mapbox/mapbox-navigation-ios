@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.12.0-beta.1
+
+### Routing
+
+* `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`.
+
 ## 3.12.0
 
 ### Packaging
