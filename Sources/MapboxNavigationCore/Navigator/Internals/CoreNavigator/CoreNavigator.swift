@@ -81,7 +81,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     @MainActor
     private lazy var routeCoordinator: RoutesCoordinator = .init(
         routesSetupHandler: { @MainActor [weak self] routesData, legIndex, reason, completion in
-
             let dataParams = routesData.map { SetRoutesDataParams(
                 routes: $0,
                 legIndex: legIndex

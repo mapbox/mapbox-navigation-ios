@@ -4,7 +4,7 @@ import Turf
 import FoundationNetworking
 #endif
 
-public enum ResponseOptions: Sendable {
+public enum ResponseOptions: Sendable, Equatable {
     case route(RouteOptions)
     case match(MatchOptions)
 }
@@ -211,7 +211,7 @@ extension RouteResponse: Codable {
 
             self.waypoints = waypoints
         } else {
-            self.waypoints = decodedWaypoints
+            self.waypoints = optionsWaypoints
         }
 
         if var routes = try container.decodeIfPresent([Route].self, forKey: .routes) {

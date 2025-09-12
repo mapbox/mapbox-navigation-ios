@@ -44,9 +44,7 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
         self._fasterRoutes = .init()
     }
 
-    func checkForFasterRoute(
-        from routeProgress: RouteProgress
-    ) {
+    func checkForFasterRoute(from routeProgress: RouteProgress) {
         Task {
             guard let routeOptions = navigationRoute?.routeOptions,
                   let location = currentLocation else { return }

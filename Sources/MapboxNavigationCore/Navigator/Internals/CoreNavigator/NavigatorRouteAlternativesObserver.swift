@@ -18,7 +18,7 @@ class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
         NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
     }
 
-    public func onError(forMessage message: String) {
+    func onError(forMessage message: String) {
         let userInfo: [NativeNavigator.NotificationUserInfoKey: Any] = [
             .messageKey: message,
         ]

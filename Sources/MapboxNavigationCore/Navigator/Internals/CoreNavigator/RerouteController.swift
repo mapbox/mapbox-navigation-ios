@@ -42,7 +42,7 @@ class RerouteController {
 
     // MARK: Internal State Management
 
-    private let defaultRerouteController: DefaultRerouteControllerInterface
+    private var defaultRerouteController: DefaultRerouteControllerInterface?
     private let rerouteDetector: RerouteDetectorInterface?
 
     private weak var navigator: NavigationNativeNavigator?
@@ -53,9 +53,11 @@ class RerouteController {
         self.navigator = configuration.navigator
         self.config = configuration.configHandle
         self.defaultInitialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
-        self.defaultRerouteController = Self.makeDefaultRerouteController(configuration: configuration)
-        navigator?.native.setRerouteControllerForController(defaultRerouteController)
         self.rerouteDetector = configuration.navigator.native.getRerouteDetector()
+
+        let defaultRerouteController = makeDefaultRerouteController(configuration: configuration)
+        self.defaultRerouteController = defaultRerouteController
+        navigator?.native.setRerouteControllerForController(defaultRerouteController)
         navigator?.native.addRerouteObserver(for: self)
 
         defer {
@@ -70,8 +72,9 @@ class RerouteController {
 
 extension RerouteController {
     @MainActor
-    private static func makeDefaultRerouteController(configuration: Configuration)
-    -> DefaultRerouteControllerInterface {
+    private func makeDefaultRerouteController(
+        configuration: Configuration
+    ) -> DefaultRerouteControllerInterface {
         let nativeRerouteController = configuration.navigator.native.getRerouteController()
 
         if let urlOptionsCustomization = configuration.rerouteConfig.urlOptionsCustomization {
@@ -82,19 +85,19 @@ extension RerouteController {
         } else if let optionsCustomization = configuration.rerouteConfig.optionsCustomization {
             return DefaultRerouteControllerInterface(
                 nativeInterface: nativeRerouteController,
-                requestConfig: {
-                    guard let url = URL(string: $0),
-                          let options = RouteOptions(url: url)
+                requestConfig: { [weak self] in
+                    guard let self else { return $0 }
+
+                    guard let options = delegate?.rerouteController(self, willModify: $0),
+                          let customizedOptions = optionsCustomization(options)
                     else {
                         return $0
                     }
 
-                    return Directions
-                        .url(
-                            forCalculating: optionsCustomization(options) ?? options,
-                            credentials: .init(configuration.credentials)
-                        )
-                        .absoluteString
+                    return Directions.url(
+                        forCalculating: customizedOptions,
+                        credentials: .init(configuration.credentials)
+                    ).absoluteString
                 }
             )
         } else {

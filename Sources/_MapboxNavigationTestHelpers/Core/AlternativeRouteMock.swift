@@ -10,13 +10,17 @@ extension AlternativeRoute {
             shape: mockShape
         ),
         alternativeRoute: Route = .mock(),
-        nativeRouteAlternative: RouteAlternative? = nil
+        nativeRouteAlternative: RouteAlternative? = nil,
+        requestOptions: ResponseOptions? = nil
     ) -> Self {
         let nativeAlternative = nativeRouteAlternative ?? .mock(route: alternativeRoute)
+        let urlString = nativeAlternative.route.getRequestUri()
+        let requestOptions = requestOptions ?? .mock(routeOptions: .mock(string: urlString))
         return self.init(
             mainRoute: mainRoute,
             alternativeRoute: alternativeRoute,
-            nativeRouteAlternative: nativeAlternative
+            nativeRouteAlternative: nativeAlternative,
+            requestOptions: requestOptions
         )!
     }
 

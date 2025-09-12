@@ -1,4 +1,5 @@
 import Foundation
+import MapboxDirections
 import MapboxNavigationNative_Private
 
 /// Digest of history file contents produced by ``HistoryReader``.
@@ -93,12 +94,10 @@ public struct HistoryReader: AsyncSequence, Sendable {
                 )
             case .getStatus:
                 guard let event = record.getStatus else { break }
+                let monotonicTimestamp = TimeInterval(Double(event.monotonicTimestampNanoseconds) / 1e9)
                 return StatusUpdateHistoryEvent(
                     timestamp: timestamp,
-                    monotonicTimestamp: TimeInterval(Double(
-                        event
-                            .monotonicTimestampNanoseconds
-                    ) / 1e9),
+                    monotonicTimestamp: monotonicTimestamp,
                     status: event.result
                 )
             case .pushHistory:
@@ -118,7 +117,9 @@ public struct HistoryReader: AsyncSequence, Sendable {
             guard let routeRequest = setRoute.routeRequest,
                   let routeResponse = setRoute.routeResponse,
                   routeRequest != "{}", routeResponse != "{}",
-                  let responseData = routeResponse.data(using: .utf8)
+                  let responseData = routeResponse.data(using: .utf8),
+                  let requestUrl = URL(string: routeRequest),
+                  let routeOptions = RouteOptions(url: requestUrl)
             else {
                 // Route reset
                 return nil
@@ -141,7 +142,9 @@ public struct HistoryReader: AsyncSequence, Sendable {
                 forPrimaryRoute: nativeRoutes.remove(at: routeIndex),
                 alternativeRoutes: nativeRoutes
             )
-            return try? await NavigationRoutes(routesData: routesData)
+
+            let requestOptions = ResponseOptions.route(routeOptions)
+            return try? await NavigationRoutes(routesData: routesData, options: requestOptions)
         }
 
         private func process(updateLocation: UpdateLocationHistoryRecord) -> CLLocation {

@@ -183,7 +183,7 @@ public struct RouteProgress: Equatable, Sendable {
     private(set) var routeAlerts: [String: UpcomingRouteAlert] = [:]
 
     private func routeAlerts(from navigationRoute: NavigationRoute) -> [String: UpcomingRouteAlert] {
-        return navigationRoute.nativeRoute.getRouteInfo().alerts.reduce(into: [:]) { partialResult, alert in
+        return navigationRoute.nativeRouteInterface.getRouteInfo().alerts.reduce(into: [:]) { partialResult, alert in
             partialResult[alert.roadObject.id] = alert
         }
     }

@@ -67,6 +67,10 @@ final class MapboxNavigatorTests: TestCase {
         super.tearDown()
     }
 
+    var rerouteController: RerouteController {
+        coreNavigator.rerouteController!
+    }
+
     @MainActor
     func testStartActiveGuidanceAndRefresh() async {
         XCTAssertFalse(navigator.currentSession.state.isTripSessionActive)
@@ -523,7 +527,7 @@ final class MapboxNavigatorTests: TestCase {
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
         let refreshedRoute = RouteInterfaceMock(
             route: refreshedDirectionsRoute,
-            routeId: originalRoutes.mainRoute.nativeRoute.getRouteId()
+            routeId: originalRoutes.mainRoute.nativeRouteInterface.getRouteId()
         )
         let routeRefreshResult = RouteRefreshResult.mainRoute(refreshedRoute)
         let notification = makeRefreshNotification(routeRefreshResult: routeRefreshResult)
@@ -665,6 +669,36 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertEqual(eventsCounter, 2, "Don't send an update if no new banner instruction")
     }
 
+    func testRerouteControllerWantsSwitchToAlternativeIfDefaultOptions() async {
+        await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
+        let route = RouteInterfaceMock()
+        navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
+        await waitForRouteProgress()
+
+        XCTAssertTrue(coreNavigator.setRoutesCalled)
+        XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
+
+        let currentRoutes = navigator.currentNavigationRoutes!
+        let expectedOptions = route.getResponseOptions(NavigationRouteOptions.self)!
+        XCTAssertEqual(currentRoutes.mainRoute.nativeRouteInterface.getRouteId(), route.getRouteId())
+        XCTAssertEqual(currentRoutes.mainRoute.requestOptions, expectedOptions)
+    }
+
+    func testRerouteControllerWantsSwitchToAlternativeIfCustomOptions() async {
+        let initialRoutes = await oneLegNavigationRoutes(directionsOptionsType: GolfCartRouteOptions.self)
+        await startActiveGuidanceAndWaitForRouteProgress(with: initialRoutes)
+        let route = RouteInterfaceMock()
+        navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
+        await waitForRouteProgress()
+
+        XCTAssertTrue(coreNavigator.setRoutesCalled)
+        XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
+
+        let currentRoutes = navigator.currentNavigationRoutes!
+        XCTAssertEqual(currentRoutes.mainRoute.nativeRouteInterface.getRouteId(), route.getRouteId())
+        XCTAssertTrue(type(of: currentRoutes.mainRoute.directionOptions) == GolfCartRouteOptions.self)
+    }
+
     // MARK: - Helpers
 
     private var refreshedLeg: RouteLeg {
@@ -674,7 +708,11 @@ final class MapboxNavigatorTests: TestCase {
             .mock(maneuverType: .turnAtRoundabout),
             .mock(maneuverType: .arrive),
         ]
-        return .mock(steps: steps)
+        var leg = RouteLeg.mock(steps: steps)
+        // Set `-1` as coordinateAccuracy to simulate NavigationRouteOptions logic.
+        leg.source?.coordinateAccuracy = -1
+        leg.destination?.coordinateAccuracy = -1
+        return leg
     }
 
     private func refresh(with notification: Notification) async {
@@ -753,33 +791,39 @@ final class MapboxNavigatorTests: TestCase {
     private let coordinateC = CLLocationCoordinate2D(latitude: 37.78927, longitude: -122.430577)
 
     private func oneLegNavigationRoutes(
-        mapboxApi: MapboxAPI = .directions
+        mapboxApi: MapboxAPI = .directions,
+        directionsOptionsType: DirectionsOptions.Type = NavigationRouteOptions.self
     ) async -> NavigationRoutes {
         await mockNavigationRoutes(
             with: [mockLeg(from: coordinateA, to: coordinateC)],
-            mapboxApi: mapboxApi
+            mapboxApi: mapboxApi,
+            directionsOptionsType: directionsOptionsType
         )
     }
 
     private func twoLegNavigationRoutes(
-        mapboxApi: MapboxAPI = .directions
+        mapboxApi: MapboxAPI = .directions,
+        directionsOptionsType: DirectionsOptions.Type = NavigationRouteOptions.self
     ) async -> NavigationRoutes {
         await mockNavigationRoutes(
             with: [
                 mockLeg(from: coordinateA, to: coordinateB),
                 mockLeg(from: coordinateB, to: coordinateC),
             ],
-            mapboxApi: mapboxApi
+            mapboxApi: mapboxApi,
+            directionsOptionsType: directionsOptionsType
         )
     }
 
     private func mockNavigationRoutes(
         with legs: [RouteLeg],
-        mapboxApi: MapboxAPI = .directions
+        mapboxApi: MapboxAPI = .directions,
+        directionsOptionsType: DirectionsOptions.Type
     ) async -> NavigationRoutes {
         await NavigationRoutes.mock(mainRoute: .mock(
             route: .mock(legs: legs),
-            nativeRoute: RouteInterfaceMock(mapboxApi: mapboxApi)
+            nativeRoute: RouteInterfaceMock(mapboxApi: mapboxApi),
+            directionsOptionsType: directionsOptionsType
         ))
     }
 

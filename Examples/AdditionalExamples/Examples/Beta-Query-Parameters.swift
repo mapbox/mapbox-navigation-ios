@@ -35,9 +35,6 @@ final class BetaQueryViewController: UIViewController {
     }
 
     private var startButton: UIButton!
-    private var datePicker: UIDatePicker!
-    private var dateTextField: UITextField!
-    private var departureTime: Date!
 
     // MARK: - UIViewController lifecycle methods
 
@@ -79,8 +76,6 @@ final class BetaQueryViewController: UIViewController {
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.setNeedsLayout()
 
-        setupDateProperties()
-
         mapboxNavigation.tripSession().startFreeDrive()
     }
 
@@ -91,41 +86,6 @@ final class BetaQueryViewController: UIViewController {
         startButton.layer.cornerRadius = startButton.bounds.midY
         startButton.clipsToBounds = true
         startButton.setNeedsDisplay()
-    }
-
-    private func setupDateProperties() {
-        dateTextField = UITextField(frame: CGRect(x: 75, y: 100, width: 200, height: 35))
-        dateTextField.placeholder = "Select departure time"
-        dateTextField.backgroundColor = UIColor.white
-        dateTextField.borderStyle = .roundedRect
-        dateTextField.center.x = view.center.x
-        dateTextField.isHidden = false
-        showDatePicker()
-        view.addSubview(dateTextField)
-    }
-
-    private func showDatePicker() {
-        datePicker = UIDatePicker()
-        datePicker.datePickerMode = .time
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.minimumDate = Date()
-
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtonPressed))
-        toolbar.setItems([doneButton], animated: true)
-
-        dateTextField?.inputAccessoryView = toolbar
-        dateTextField?.inputView = datePicker
-    }
-
-    @objc
-    private func doneButtonPressed() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm" // format date correctly
-        dateTextField.text = dateFormatter.string(from: datePicker.date)
-        view.endEditing(true)
     }
 
     @objc
@@ -162,7 +122,8 @@ final class BetaQueryViewController: UIViewController {
         let destinationWaypoint = Waypoint(coordinate: destination)
         let navigationRouteOptions = MopedRouteOptions(
             waypoints: [userWaypoint, destinationWaypoint],
-            departTime: dateTextField.text!
+            // Pass your custom parameter value here.
+            customParam: "custom_value"
         )
 
         let request = mapboxNavigation.routingProvider().calculateRoutes(options: navigationRouteOptions)
@@ -174,7 +135,6 @@ final class BetaQueryViewController: UIViewController {
             case .success(let response):
                 self.navigationRoutes = response
                 self.startButton?.isHidden = false
-                self.dateTextField?.isHidden = true
             }
         }
     }
@@ -191,40 +151,64 @@ extension BetaQueryViewController: NavigationViewControllerDelegate {
 
 extension BetaQueryViewController: NavigationMapViewDelegate {
     func navigationMapView(_ navigationMapView: NavigationMapView, userDidLongTap mapPoint: MapPoint) {
-        guard dateTextField?.text != nil else { return }
         requestRoute(destination: mapPoint.coordinate)
+    }
+
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect alternativeRoute: AlternativeRoute) {
+        Task {
+            guard let selectedRoutes = await self.navigationRoutes?.selecting(alternativeRoute: alternativeRoute)
+            else { return }
+            self.navigationRoutes = selectedRoutes
+        }
     }
 }
 
 final class MopedRouteOptions: NavigationRouteOptions, @unchecked Sendable {
-    var departureTime: String!
+    enum CodingKeys: String, CodingKey {
+        case customParam = "custom_param"
+    }
 
-    // add departureTime to URLQueryItems
+    var customParam: String?
+
+    // Add departureTime to URLQueryItems
     override var urlQueryItems: [URLQueryItem] {
         var items = super.urlQueryItems
-        items.append(URLQueryItem(name: "depart_at", value: departureTime))
+        let parameter = URLQueryItem(name: CodingKeys.customParam.rawValue, value: customParam)
+        items.append(parameter)
         return items
     }
 
-    // create initializer to take in the departure time
-    public init(waypoints: [Waypoint], departTime: String) {
-        self.departureTime = departTime
+    // Create initializer to take in the custom request parameter.
+    init(waypoints: [Waypoint], customParam: String) {
+        self.customParam = customParam
         super.init(waypoints: waypoints)
     }
 
-    required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+    // Implement decoding, so the custom parameter is preserved when copying the options
+    required init(from decoder: any Decoder) throws {
+        try super.init(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.customParam = try container.decodeIfPresent(String.self, forKey: .customParam)
     }
 
-    required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
-        fatalError("init(waypoints:profileIdentifier:) has not been implemented")
+    // Implement encoding, so the custom parameter is preserved when copying the options
+    override func encode(to encoder: any Encoder) throws {
+        try super.encode(to: encoder)
+
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(customParam, forKey: .customParam)
     }
 
+    // Set the custom parameter value from the queryItems parameter, so it is preserved on reroute requests
     required init(
         waypoints: [Waypoint],
         profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic,
         queryItems: [URLQueryItem]? = nil
     ) {
-        fatalError("init(waypoints:profileIdentifier:queryItems:) has not been implemented")
+        let mappedUrlItem = queryItems?.first(where: { $0.name == CodingKeys.customParam.stringValue })
+        self.customParam = mappedUrlItem?.value
+
+        super.init(waypoints: waypoints, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
 }

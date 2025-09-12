@@ -266,7 +266,7 @@ final class MapboxNavigator: @unchecked Sendable {
                     var navigationRoutes = navigationRoutes
                     let alternativeRoutes = await AlternativeRoute.fromNative(
                         alternativeRoutes: info.alternativeRoutes,
-                        relateveTo: navigationRoutes.mainRoute
+                        initialRoutes: navigationRoutes
                     )
 
                     guard !Task.isCancelled else { return }
@@ -278,9 +278,7 @@ final class MapboxNavigator: @unchecked Sendable {
                         // Do nothing, routes updates are already sent
                         break
                     case .reroute:
-                        await send(
-                            ReroutingStatus(event: ReroutingStatus.Events.Fetched())
-                        )
+                        await send(ReroutingStatus(event: ReroutingStatus.Events.Fetched()))
                     case .alternatives:
                         let event = AlternativesStatus.Events.SwitchedToAlternative(navigationRoutes: navigationRoutes)
                         await send(AlternativesStatus(event: event))
@@ -1091,7 +1089,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     private func navigatorDidChangeAlternativeRoutes(_ notification: Notification) {
         guard let alternativesAcceptionPolicy = configuration.alternativesAcceptionPolicy,
-              let mainRoute = currentNavigationRoutes?.mainRoute,
+              let currentNavigationRoutes,
               let userInfo = notification.userInfo,
               let alternatives =
               userInfo[NativeNavigator.NotificationUserInfoKey.alternativesListKey] as? [RouteAlternative]
@@ -1113,10 +1111,10 @@ final class MapboxNavigator: @unchecked Sendable {
                         case .success(let routeAlternatives):
                             let alternativeRoutes = await AlternativeRoute.fromNative(
                                 alternativeRoutes: routeAlternatives,
-                                relateveTo: mainRoute
+                                initialRoutes: currentNavigationRoutes
                             )
 
-                            guard var navigationRoutes = currentNavigationRoutes else { return }
+                            var navigationRoutes = currentNavigationRoutes
                             navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
                                 .filter { alternativeRoute in
                                     if alternativesAcceptionPolicy.contains(.unfiltered) {
@@ -1177,19 +1175,24 @@ final class MapboxNavigator: @unchecked Sendable {
         guard configuration.prefersOnlineRoute,
               let userInfo = notification.userInfo,
               let onlineRoute =
-              userInfo[NativeNavigator.NotificationUserInfoKey.coincideOnlineRouteKey] as? RouteInterface
+              userInfo[NativeNavigator.NotificationUserInfoKey.coincideOnlineRouteKey] as? RouteInterface,
+              let requestOptions = currentNavigationRoutes?.mainRoute.requestOptions
         else {
             return
         }
 
         Task {
-            guard let route = await NavigationRoute(nativeRoute: onlineRoute) else {
+            guard let route = await NavigationRoute(
+                nativeRoute: onlineRoute,
+                directionsOptionsType: requestOptions.directionsOptionsType
+            ) else {
                 return
             }
 
             let navigationRoutes = await NavigationRoutes(
                 mainRoute: route,
-                alternativeRoutes: []
+                alternativeRoutes: [],
+                waypoints: route.route.legSeparators.compactMap { $0 }
             )
 
             taskManager.cancellableTask { [weak self] in
@@ -1294,10 +1297,14 @@ final class MapboxNavigator: @unchecked Sendable {
             await send(RefreshingStatus(event: event))
 
             var refreshedNavigationRoutes = currentNavigationRoutes
+            let directionsOptionsType = currentNavigationRoutes.mainRoute.requestOptions.directionsOptionsType
 
             switch refreshRouteResult {
             case .mainRoute(let refreshedMainRoute):
-                guard let updatedMainRoute = await NavigationRoute(nativeRoute: refreshedMainRoute)
+                guard let updatedMainRoute = await NavigationRoute(
+                    nativeRoute: refreshedMainRoute,
+                    directionsOptionsType: directionsOptionsType
+                )
                 else {
                     await sendFailedToRefreshEvent()
                     return
@@ -1305,11 +1312,15 @@ final class MapboxNavigator: @unchecked Sendable {
                 refreshedNavigationRoutes.mainRoute = updatedMainRoute
 
             case .alternativeRoute(alternative: let refreshedAlternative):
-                guard let newAlternative = await AlternativeRoute(
-                    mainRoute: currentNavigationRoutes.mainRoute.route,
-                    alternativeRoute: refreshedAlternative
-                ), let index = currentNavigationRoutes.allAlternativeRoutesWithIgnored
-                    .firstIndex(where: { $0.nativeRoute.getRouteId() == refreshedAlternative.route.getRouteId() })
+                let nativeRoute = refreshedAlternative.route
+                guard let requestOptions = nativeRoute.getResponseOptions(directionsOptionsType) ??
+                    nativeRoute.getResponseOptions(RouteOptions.self),
+                    let newAlternative = await AlternativeRoute(
+                        mainRoute: currentNavigationRoutes.mainRoute.route,
+                        nativeRouteAlternative: refreshedAlternative,
+                        requestOptions: requestOptions
+                    ), let index = currentNavigationRoutes.allAlternativeRoutesWithIgnored
+                        .firstIndex(where: { $0.nativeRoute.getRouteId() == refreshedAlternative.route.getRouteId() })
                 else {
                     await sendFailedToRefreshEvent()
                     return
@@ -1378,7 +1389,9 @@ extension MapboxNavigator: ReroutingControllerDelegate {
         legIndex: Int
     ) {
         Task {
-            guard let navigationRoute = await NavigationRoute(nativeRoute: route) else {
+            guard let optionsType = currentNavigationRoutes?.mainRoute.requestOptions.directionsOptionsType,
+                  let navigationRoute = await NavigationRoute(nativeRoute: route, directionsOptionsType: optionsType)
+            else {
                 return
             }
 
@@ -1389,7 +1402,8 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 await setRoutes(
                     navigationRoutes: NavigationRoutes(
                         mainRoute: navigationRoute,
-                        alternativeRoutes: []
+                        alternativeRoutes: [],
+                        waypoints: navigationRoute.route.legSeparators.compactMap { $0 }
                     ),
                     startLegIndex: legIndex,
                     reason: .alternatives,
@@ -1403,9 +1417,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
         Log.debug("Reroute was detected.", category: .navigation)
         Task { @MainActor in
             send(
-                ReroutingStatus(
-                    event: ReroutingStatus.Events.FetchingRoute()
-                )
+                ReroutingStatus(event: ReroutingStatus.Events.FetchingRoute())
             )
         }
     }
@@ -1416,7 +1428,12 @@ extension MapboxNavigator: ReroutingControllerDelegate {
             category: .navigation
         )
         Task {
-            guard let navigationRoutes = try? await NavigationRoutes(routesData: routesData) else {
+            guard let requestOptions = currentNavigationRoutes?.mainRoute.requestOptions,
+                  let navigationRoutes = try? await NavigationRoutes(
+                      routesData: routesData,
+                      options: requestOptions
+                  )
+            else {
                 Log.error(
                     "Reroute was fetched but could not convert it to `NavigationRoutes`.",
                     category: .navigation
@@ -1440,11 +1457,8 @@ extension MapboxNavigator: ReroutingControllerDelegate {
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController) {
         Log.warning("Reroute was cancelled.", category: .navigation)
         Task { @MainActor in
-            send(
-                ReroutingStatus(
-                    event: ReroutingStatus.Events.Interrupted()
-                )
-            )
+            let event = ReroutingStatus.Events.Interrupted()
+            send(ReroutingStatus(event: event))
             send(NavigatorErrors.InterruptedReroute(underlyingError: nil))
         }
     }
@@ -1452,13 +1466,19 @@ extension MapboxNavigator: ReroutingControllerDelegate {
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError) {
         Log.error("Failed to reroute, error: \(error)", category: .navigation)
         Task { @MainActor in
-            send(
-                ReroutingStatus(
-                    event: ReroutingStatus.Events.Failed(error: error)
-                )
-            )
+            let event = ReroutingStatus.Events.Failed(error: error)
+            send(ReroutingStatus(event: event))
             send(NavigatorErrors.InterruptedReroute(underlyingError: error))
         }
+    }
+
+    func rerouteController(_ rerouteController: RerouteController, willModify requestString: String) -> RouteOptions? {
+        if let directionsOptionsType = currentNavigationRoutes?.mainRoute.requestOptions.directionsOptionsType,
+           let options = directionsOptionsType.from(requestString: requestString) as? RouteOptions
+        {
+            return options
+        }
+        return RouteOptions.from(requestString: requestString)
     }
 }
 

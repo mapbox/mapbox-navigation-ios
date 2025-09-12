@@ -1,4 +1,6 @@
 import _MapboxNavigationTestHelpers
+@_implementationOnly import MapboxCommon_Private
+import MapboxDirections
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 import XCTest
@@ -9,6 +11,9 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
     var passedLegIndex: Int?
     var passedRoutesData: (any RoutesData)?
     var passedError: DirectionsError?
+    var passedRequestString: String?
+
+    var returnedRouteOptions: RouteOptions?
 
     var wantsSwitchToAlternativeCalled = false
     var didDetectRerouteCalled = false
@@ -47,6 +52,15 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
         didFailToRerouteCalled = true
         passedRerouteController = rerouteController
         passedError = error
+    }
+
+    func rerouteController(
+        _ rerouteController: MapboxNavigationCore.RerouteController,
+        willModify requestString: String
+    ) -> RouteOptions? {
+        passedRerouteController = rerouteController
+        passedRequestString = requestString
+        return returnedRouteOptions
     }
 }
 
@@ -162,14 +176,42 @@ final class RerouteControllerTests: XCTestCase {
         rerouteController = rerouteController(with: .init(
             urlOptionsCustomization: customization
         ))
-        let url = directionsUrl + customQueryParam
 
         XCTAssertTrue(nativeRerouteController.setOptionsAdapterCalled)
-        XCTAssertEqual(
-            customization(url),
-            nativeRerouteController.passedRouteOptionsAdapter?
-                .modifyRouteRequestOptions(forUrl: url)
-        )
+
+        let url = directionsUrl + customQueryParam
+        let modifiedUrl = nativeRerouteController.passedRouteOptionsAdapter?
+            .modifyRouteRequestOptions(forUrl: url)
+        XCTAssertEqual(modifiedUrl, customization(url))
+        XCTAssertNil(delegate.passedRequestString)
+    }
+
+    @available(*, deprecated)
+    @MainActor
+    func testHandleRouteOptionsAdapterIfOptionsCustomizationSet() {
+        let delegateReturnedOptions = NavigationRouteOptions.mock()
+        delegate.returnedRouteOptions = delegateReturnedOptions
+
+        let modifiedUrl = URL(string: directionsUrl + customQueryParam2)!
+        let modifiedOptions = NavigationRouteOptions(url: modifiedUrl)!
+        let customization = EquatableClosure<RouteOptions, RouteOptions> {
+            XCTAssertEqual($0, delegateReturnedOptions)
+            return modifiedOptions
+        }
+        rerouteController = rerouteController(with: .init(
+            optionsCustomization: customization
+        ))
+        XCTAssertFalse(nativeRerouteController.setOptionsAdapterCalled)
+
+        let url = directionsUrl + customQueryParam
+        let passedRerouteController = navNavigator.passedRerouteController!
+        passedRerouteController.reroute(forUrl: url) { _ in }
+        let modifiedOptionsString = Directions.url(
+            forCalculating: modifiedOptions,
+            credentials: .init(configuration.credentials)
+        ).absoluteString
+        XCTAssertEqual(nativeRerouteController.passedRerouteUrl, modifiedOptionsString)
+        XCTAssertEqual(delegate.passedRequestString, url)
     }
 }
 

@@ -339,7 +339,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 
     private var isWalkingProfile: Bool {
-        _navigationRoutes?.mainRoute.routeOptions?.profileIdentifier.isWalking ?? false
+        _navigationRoutes?.mainRoute.directionsOptions.profileIdentifier.isWalking ?? false
     }
 
     // Array of initialization hooks to be called at `NavigationViewController.viewDidLoad`.
@@ -568,7 +568,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                 action: #selector(NavigationViewController.didChangeSpeed(_:)),
                 for: .valueChanged
             )
-            if let options = _navigationRoutes?.mainRoute.routeOptions {
+            if let options = _navigationRoutes?.mainRoute.directionsOptions {
                 viewController.instructionsBannerView.distanceFormatter.measurementSystem =
                     options.distanceMeasurementSystem
             }
@@ -585,7 +585,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         let bottomBanner = navigationOptions?.bottomBanner ?? {
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
-            if let options = _navigationRoutes?.mainRoute.routeOptions {
+            if let options = _navigationRoutes?.mainRoute.directionsOptions {
                 viewController.distanceFormatter.measurementSystem = options.distanceMeasurementSystem
             }
 

@@ -91,16 +91,16 @@ public class CarPlayManager: NSObject {
         navigationProvider.coreConfig
     }
 
-    private var routeOptions: RouteOptions? {
-        routes?.mainRoute.routeOptions
+    private var directionsOptions: DirectionsOptions? {
+        routes?.mainRoute.directionsOptions
     }
 
     private var locale: Locale {
-        routeOptions?.locale ?? coreConfig.locale
+        directionsOptions?.locale ?? coreConfig.locale
     }
 
     var distanceMeasurementSystem: MeasurementSystem {
-        routes?.mainRoute.routeOptions?.distanceMeasurementSystem ?? coreConfig.distanceMeasurementSystem
+        directionsOptions?.distanceMeasurementSystem ?? coreConfig.distanceMeasurementSystem
     }
 
     /// Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
@@ -1344,7 +1344,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
             rootTemplate: mapTemplate,
             animated: true
         ) { [self] _, _ in
-
             carPlayMapViewController?.subscribeForFreeDriveNotifications()
 
             self.carPlayNavigationViewController = nil
@@ -1629,4 +1628,15 @@ extension CarPlayManager {
 
 extension CarPlayManager {
     static let currentActivityKey = "com.mapbox.navigation.currentActivity"
+}
+
+extension NavigationRoute {
+    var directionsOptions: DirectionsOptions {
+        switch requestOptions {
+        case .route(let options):
+            options
+        case .match(let options):
+            options
+        }
+    }
 }

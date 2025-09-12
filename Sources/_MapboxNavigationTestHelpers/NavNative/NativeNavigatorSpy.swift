@@ -14,7 +14,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedDescriptors: [TilesetDescriptor]?
     public var passedCacheOptions: PredictiveCacheControllerOptions?
     public var passedRerouteController: RerouteControllerInterface?
-    public var passedLeg: UInt32? = nil
+    public var passedLeg: UInt32?
     public var returnedChangeLegResult = true
 
     public var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?

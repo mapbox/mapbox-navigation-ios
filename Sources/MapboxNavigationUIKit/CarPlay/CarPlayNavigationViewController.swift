@@ -664,16 +664,16 @@ open class CarPlayNavigationViewController: UIViewController {
         self.navigationMapView = navigationMapView
     }
 
-    private var routeOptions: RouteOptions? {
-        navigationRoutes.mainRoute.routeOptions
+    private var directionsOptions: DirectionsOptions? {
+        navigationRoutes.mainRoute.directionsOptions
     }
 
     private var locale: Locale {
-        routeOptions?.locale ?? carPlayManager.coreConfig.locale
+        directionsOptions?.locale ?? carPlayManager.coreConfig.locale
     }
 
     private var distanceMeasurementSystem: MeasurementSystem {
-        routeOptions?.distanceMeasurementSystem ?? carPlayManager.coreConfig.distanceMeasurementSystem
+        directionsOptions?.distanceMeasurementSystem ?? carPlayManager.coreConfig.distanceMeasurementSystem
     }
 
     private func localized(measurement: Measurement<UnitLength>) -> Measurement<UnitLength> {

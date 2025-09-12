@@ -18,12 +18,12 @@ class RouteResponseTests: XCTestCase {
 
         let waypoints = [originWaypoint, destinationWaypoint]
         let routeOptions = RouteOptions(waypoints: waypoints)
-        let responseOptions = ResponseOptions.route(routeOptions)
+        let requestOptions = ResponseOptions.route(routeOptions)
 
         let routeResponse = RouteResponse(
             httpResponse: nil,
             waypoints: waypoints,
-            options: responseOptions,
+            options: requestOptions,
             credentials: BogusCredentials,
             refreshTTL: 123.4
         )

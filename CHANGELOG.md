@@ -2,8 +2,13 @@
 
 ## 3.12.0-beta.1
 
+### API Deprecations
+
+* `NavigationRoute.nativeRoute`, `NavigationRoute.init?(nativeRoute:)`, and `AlternativeRoute.init?(mainRoute:alternativeRoute:)` are deprecated and should no longer be used.
+
 ### Routing
 
+* Fixed an issue where request parameters could be lost on reroutes when using a custom `RouteOptions` subclass. If you subclass `RouteOptions`, make sure to implement `urlQueryItems`, `init(from:)`, `encode(to:)`, and `init(waypoints:profileIdentifier:queryItems:)`.
 * `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`.
 
 ## 3.12.0

@@ -30,15 +30,15 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     var allAlternativeRoutesWithIgnored: [AlternativeRoute]
 
     var isCustomExternalRoute: Bool {
-        mainRoute.nativeRoute.getRouterOrigin() == .customExternal
+        mainRoute.nativeRouteInterface.getRouterOrigin() == .customExternal
     }
 
     var mapboxApi: MapboxAPI {
-        mainRoute.nativeRoute.getMapboxAPI()
+        mainRoute.nativeRouteInterface.getMapboxAPI()
     }
 
-    init(routesData: RoutesData) async throws {
-        let routeResponse = try await routesData.primaryRoute().convertToDirectionsRouteResponse()
+    init(routesData: RoutesData, options: ResponseOptions) async throws {
+        let routeResponse = try await routesData.primaryRoute().convertToDirectionsRouteResponse(options)
         try self.init(routesData: routesData, routeResponse: routeResponse)
     }
 
@@ -55,6 +55,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         }
 
         let mainRoute = routes[mainRouteIndex]
+        let requestOptions = routeResponse.options
 
         var alternativeRoutes = [AlternativeRoute]()
         for routeAlternative in routesData.alternativeRoutes() {
@@ -63,7 +64,8 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
                   let alternativeRoute = AlternativeRoute(
                       mainRoute: mainRoute,
                       alternativeRoute: routes[index],
-                      nativeRouteAlternative: routeAlternative
+                      nativeRouteAlternative: routeAlternative,
+                      requestOptions: requestOptions
                   )
             else {
                 Log.error("Unable to convert alternative route with id: \(routeAlternative.id)", category: .navigation)
@@ -73,23 +75,29 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             alternativeRoutes.append(alternativeRoute)
         }
 
-        self.mainRoute = NavigationRoute(route: mainRoute, nativeRoute: routesData.primaryRoute())
+        self.mainRoute = NavigationRoute(
+            route: mainRoute,
+            nativeRoute: routesData.primaryRoute(),
+            requestOptions: requestOptions
+        )
         self.allAlternativeRoutesWithIgnored = alternativeRoutes
         self.waypoints = routeResponse.waypoints ?? []
         self.refreshInvalidationDate = routeResponse.refreshInvalidationDate
         self.foreignMembers = routeResponse.foreignMembers
     }
 
-    init(mainRoute: NavigationRoute, alternativeRoutes: [AlternativeRoute]) async {
+    init(
+        mainRoute: NavigationRoute,
+        alternativeRoutes: [AlternativeRoute],
+        waypoints: [Waypoint],
+        refreshInvalidationDate: Date? = nil,
+        foreignMembers: JSONObject = [:]
+    ) async {
         self.mainRoute = mainRoute
         self.allAlternativeRoutesWithIgnored = alternativeRoutes
-
-        let response = try? await mainRoute.nativeRoute.convertToDirectionsRouteResponse()
-        self.waypoints = response?.waypoints ?? []
-        self.refreshInvalidationDate = response?.refreshInvalidationDate
-        if let foreignMembers = response?.foreignMembers {
-            self.foreignMembers = foreignMembers
-        }
+        self.waypoints = waypoints
+        self.refreshInvalidationDate = refreshInvalidationDate
+        self.foreignMembers = foreignMembers
     }
 
     @_spi(MapboxInternal)
@@ -155,6 +163,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             request,
             responseOrigin
         )
+        let requestOptions: ResponseOptions = .match(options)
 
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
@@ -195,7 +204,8 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
                       let alternativeRoute = AlternativeRoute(
                           mainRoute: mainRoute,
                           alternativeRoute: routes[index],
-                          nativeRouteAlternative: routeAlternative
+                          nativeRouteAlternative: routeAlternative,
+                          requestOptions: requestOptions
                       )
                 else {
                     Log.error(
@@ -207,7 +217,11 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
                 alternativeRoutes.append(alternativeRoute)
             }
 
-            self.mainRoute = NavigationRoute(route: mainRoute, nativeRoute: routesData.primaryRoute())
+            self.mainRoute = NavigationRoute(
+                route: mainRoute,
+                nativeRoute: routesData.primaryRoute(),
+                requestOptions: requestOptions
+            )
             self.waypoints = waypoints
             self.allAlternativeRoutesWithIgnored = alternativeRoutes
             self.foreignMembers = mapMatchingResponse.foreignMembers
@@ -226,7 +240,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     func asRoutesData() -> RoutesData {
         let routeParserClient = Environment.shared.routeParserClient
         return routeParserClient.createRoutesData(
-            mainRoute.nativeRoute,
+            mainRoute.nativeRouteInterface,
             alternativeRoutes.map(\.nativeRoute)
         )
     }
@@ -276,10 +290,14 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
 
         let routesData = Environment.shared.routeParserClient.createRoutesData(
             alternativeRoute.nativeRoute,
-            alternativeRoutes.map(\.nativeRoute) + [mainRoute.nativeRoute]
+            alternativeRoutes.map(\.nativeRoute) + [mainRoute.nativeRouteInterface]
         )
 
-        let newMainRoute = NavigationRoute(route: alternativeRoute.route, nativeRoute: alternativeRoute.nativeRoute)
+        let newMainRoute = NavigationRoute(
+            route: alternativeRoute.route,
+            nativeRoute: alternativeRoute.nativeRoute,
+            requestOptions: alternativeRoute.requestOptions
+        )
 
         var newAlternativeRoutes = alternativeRoutes.compactMap { oldAlternative -> AlternativeRoute? in
             guard let nativeRouteAlternative = routesData.alternativeRoutes()
@@ -294,7 +312,8 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             return AlternativeRoute(
                 mainRoute: newMainRoute.route,
                 alternativeRoute: oldAlternative.route,
-                nativeRouteAlternative: nativeRouteAlternative
+                nativeRouteAlternative: nativeRouteAlternative,
+                requestOptions: oldAlternative.requestOptions
             )
         }
 
@@ -303,7 +322,8 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             let newAlternativeRoute = AlternativeRoute(
                 mainRoute: newMainRoute.route,
                 alternativeRoute: mainRoute.route,
-                nativeRouteAlternative: nativeRouteAlternative
+                nativeRouteAlternative: nativeRouteAlternative,
+                requestOptions: mainRoute.requestOptions
             )
         {
             newAlternativeRoutes.append(newAlternativeRoute)
@@ -314,7 +334,13 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
             )
         }
 
-        return await .init(mainRoute: newMainRoute, alternativeRoutes: newAlternativeRoutes)
+        return await .init(
+            mainRoute: newMainRoute,
+            alternativeRoutes: newAlternativeRoutes,
+            waypoints: waypoints,
+            refreshInvalidationDate: refreshInvalidationDate,
+            foreignMembers: foreignMembers
+        )
     }
 
     /// Returns a new ``NavigationRoutes`` instance, wich has corresponding ``AlternativeRoute`` set as the main one.
@@ -373,49 +399,45 @@ public struct NavigationRoute: Sendable {
     public let route: Route
     /// Unique route id.
     public let routeId: RouteId
+    /// Options used to request this route.
+    public let requestOptions: ResponseOptions
 
-    public let nativeRoute: RouteInterface
+    let nativeRouteInterface: RouteInterface
 
+    @available(*, deprecated, message: "This property is no longer supported.")
+    public var nativeRoute: RouteInterface {
+        nativeRouteInterface
+    }
+
+    @available(*, deprecated, message: "This initializer is no longer supported.")
     public init?(nativeRoute: RouteInterface) async {
-        self.nativeRoute = nativeRoute
-        self.routeId = .init(rawValue: nativeRoute.getRouteId())
+        await self.init(nativeRoute: nativeRoute, directionsOptionsType: RouteOptions.self)
+    }
 
-        guard let route = try? await nativeRoute.convertToDirectionsRoute() else {
+    init?(nativeRoute: RouteInterface, directionsOptionsType: DirectionsOptions.Type) async {
+        guard let requestOptions = nativeRoute.getResponseOptions(directionsOptionsType),
+              let route = try? await nativeRoute.convertToDirectionsRoute(requestOptions)
+        else {
             return nil
         }
 
-        self.route = route
+        self.init(route: route, nativeRoute: nativeRoute, requestOptions: requestOptions)
     }
 
-    init(route: Route, nativeRoute: RouteInterface) {
-        self.nativeRoute = nativeRoute
+    init(route: Route, nativeRoute: RouteInterface, requestOptions: ResponseOptions) {
+        self.nativeRouteInterface = nativeRoute
         self.route = route
         self.routeId = .init(rawValue: nativeRoute.getRouteId())
+        self.requestOptions = requestOptions
     }
 
-    private let _routeOptions: NSLocked<(initialized: Bool, options: RouteOptions?)> = .init((false, nil))
     public var routeOptions: RouteOptions? {
-        _routeOptions.mutate { state in
-            if state.initialized {
-                return state.options
-            } else {
-                state.initialized = true
-                if let newOptions = getRouteOptions() {
-                    state.options = newOptions
-                    return newOptions
-                } else {
-                    return nil
-                }
-            }
+        switch requestOptions {
+        case .route(let options):
+            return options
+        case .match(let matchOptions):
+            return RouteOptions(matchOptions: matchOptions)
         }
-    }
-
-    private func getRouteOptions() -> RouteOptions? {
-        guard let url = URL(string: nativeRoute.getRequestUri()) else {
-            return nil
-        }
-
-        return RouteOptions(url: url)
     }
 }
 
@@ -424,13 +446,27 @@ extension NavigationRoute: Equatable {
         return lhs.routeId == rhs.routeId &&
             lhs.route == rhs.route
     }
+
+    var directionOptions: DirectionsOptions {
+        requestOptions.directionsOptions
+    }
 }
 
 extension RouteInterface {
-    func convertToDirectionsRouteResponse() async throws -> RouteResponse {
-        guard let requestURL = URL(string: getRequestUri()),
-              let routeOptions = RouteOptions(url: requestURL)
-        else {
+    func getResponseOptions(_ type: DirectionsOptions.Type) -> ResponseOptions? {
+        type.requestOptions(from: getRequestUri())
+    }
+
+    fileprivate func convertToDirectionsRouteResponse(_ type: DirectionsOptions.Type) async throws -> RouteResponse {
+        guard let requestOptions = getResponseOptions(type) else {
+            throw NavigationRoutesError.noRequestData
+        }
+        return try await convertToDirectionsRouteResponse(requestOptions)
+    }
+
+    fileprivate func convertToDirectionsRouteResponse(_ requestOptions: ResponseOptions) async throws
+    -> RouteResponse {
+        guard let requestURL = URL(string: getRequestUri()) else {
             Log.error(
                 "Couldn't extract response and request data to parse `RouteInterface` into `RouteResponse`",
                 category: .navigation
@@ -440,7 +476,12 @@ extension RouteInterface {
 
         let credentials = Credentials(requestURL: requestURL)
         let decoder = JSONDecoder()
-        decoder.userInfo[.options] = routeOptions
+        switch requestOptions {
+        case .route(let routeOptions):
+            decoder.userInfo[.options] = routeOptions
+        case .match(let matchOptions):
+            decoder.userInfo[.options] = matchOptions
+        }
         decoder.userInfo[.credentials] = credentials
 
         do {
@@ -455,9 +496,16 @@ extension RouteInterface {
         }
     }
 
-    func convertToDirectionsRoute() async throws -> Route {
+    func convertToDirectionsRoute(_ type: DirectionsOptions.Type) async throws -> Route {
+        guard let requestOptions = getResponseOptions(type) else {
+            throw NavigationRoutesError.noRequestData
+        }
+        return try await convertToDirectionsRoute(requestOptions)
+    }
+
+    func convertToDirectionsRoute(_ requestOptions: ResponseOptions) async throws -> Route {
         do {
-            guard let routes = try await convertToDirectionsRouteResponse().routes else {
+            guard let routes = try await convertToDirectionsRouteResponse(requestOptions).routes else {
                 Log.error("Converting to directions route yielded no routes.", category: .navigation)
                 throw NavigationRoutesError.emptyRoutes
             }

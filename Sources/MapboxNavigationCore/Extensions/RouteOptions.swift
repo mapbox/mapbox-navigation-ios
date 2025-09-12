@@ -29,7 +29,7 @@ extension RouteOptions {
     }
 }
 
-extension RouteOptions {
+extension DirectionsOptions {
     /// Returns a copy of the route options by roundtripping through JSON.
     ///
     /// - Throws: An `EncodingError` or `DecodingError` if the route options could not be roundtripped through JSON.

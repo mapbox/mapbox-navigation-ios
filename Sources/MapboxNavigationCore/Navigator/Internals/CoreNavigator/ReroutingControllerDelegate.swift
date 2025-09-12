@@ -12,6 +12,7 @@ protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: RoutesData)
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
+    func rerouteController(_ rerouteController: RerouteController, willModify requestString: String) -> RouteOptions?
 }
 
 /// Error type, describing rerouting process malfunction.

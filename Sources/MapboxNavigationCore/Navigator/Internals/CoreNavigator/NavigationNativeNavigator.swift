@@ -2,7 +2,6 @@ import Combine
 import Foundation
 import MapboxCommon
 @preconcurrency import MapboxNavigationNative_Private
-@preconcurrency import MapboxNavigationNative_Private
 
 final class NavigationNativeNavigator: @unchecked Sendable {
     typealias Completion = @Sendable () -> Void

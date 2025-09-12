@@ -6,6 +6,8 @@ import Turf
 /// Additional reasonable routes besides the main roure that visit waypoints.
 public struct AlternativeRoute: @unchecked Sendable {
     let nativeRoute: RouteInterface
+    let requestOptions: ResponseOptions
+
     var isForkPointPassed: Bool = false
 
     /// A `Route` object that the current alternative route represents.
@@ -59,17 +61,43 @@ public struct AlternativeRoute: @unchecked Sendable {
     /// The difference of expected travel time between alternative and the main routes
     public let expectedTravelTimeDelta: TimeInterval
 
+    @available(*, deprecated, message: "This method is no longer supported.")
     public init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) async {
-        guard let route = try? await nativeRouteAlternative.route.convertToDirectionsRoute() else {
+        guard let requestOptions = nativeRouteAlternative.route.getResponseOptions(RouteOptions.self) else {
             return nil
         }
-
-        self.init(mainRoute: mainRoute, alternativeRoute: route, nativeRouteAlternative: nativeRouteAlternative)
+        await self.init(
+            mainRoute: mainRoute,
+            nativeRouteAlternative: nativeRouteAlternative,
+            requestOptions: requestOptions
+        )
     }
 
-    init?(mainRoute: Route, alternativeRoute: Route, nativeRouteAlternative: RouteAlternative) {
+    init?(
+        mainRoute: Route,
+        nativeRouteAlternative: RouteAlternative,
+        requestOptions: ResponseOptions
+    ) async {
+        guard let route = try? await nativeRouteAlternative.route.convertToDirectionsRoute(requestOptions) else {
+            return nil
+        }
+        self.init(
+            mainRoute: mainRoute,
+            alternativeRoute: route,
+            nativeRouteAlternative: nativeRouteAlternative,
+            requestOptions: requestOptions
+        )
+    }
+
+    init?(
+        mainRoute: Route,
+        alternativeRoute: Route,
+        nativeRouteAlternative: RouteAlternative,
+        requestOptions: ResponseOptions
+    ) {
         self.nativeRoute = nativeRouteAlternative.route
         self.route = alternativeRoute
+        self.requestOptions = requestOptions
 
         self.id = nativeRouteAlternative.id
         self.routeId = .init(rawValue: nativeRouteAlternative.route.getRouteId())
@@ -116,15 +144,20 @@ public struct AlternativeRoute: @unchecked Sendable {
 
     static func fromNative(
         alternativeRoutes: [RouteAlternative],
-        relateveTo mainRoute: NavigationRoute
+        initialRoutes: NavigationRoutes
     ) async -> [AlternativeRoute] {
+        let mainRoute = initialRoutes.mainRoute
         var converted = [AlternativeRoute?](repeating: nil, count: alternativeRoutes.count)
         await withTaskGroup(of: (Int, AlternativeRoute?).self) { group in
-            for (index, alternativeRoute) in alternativeRoutes.enumerated() {
+            for (index, nativeRouteAlternative) in alternativeRoutes.enumerated() {
                 group.addTask {
+                    let matchingAlternative = initialRoutes.allAlternativeRoutesWithIgnored
+                        .first { $0.routeId.rawValue == nativeRouteAlternative.route.getRouteId() }
+                    let requestOptions = matchingAlternative?.requestOptions ?? mainRoute.requestOptions
                     let alternativeRoute = await AlternativeRoute(
                         mainRoute: mainRoute.route,
-                        alternativeRoute: alternativeRoute
+                        nativeRouteAlternative: nativeRouteAlternative,
+                        requestOptions: requestOptions
                     )
                     return (index, alternativeRoute)
                 }

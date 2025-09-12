@@ -134,8 +134,8 @@ public struct CoreConfig: Equatable {
         ///   - roadClassesToAvoid: The route classes that the calculated routes will avoid.
         ///   - roadClassesToAllow: The route classes that the calculated routes will allow.
         ///   - allowsUTurnAtWaypoint: A Boolean value that indicates whether a returned route may require a point
-        ///   - customQueryParameters: URL query items to be parsed and applied as configuration to the route request.
         /// U-turn at an intermediate waypoint.
+        ///   - customQueryParameters: URL query items to be parsed and applied as configuration to the route request.
         public init(
             profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic,
             roadClassesToAvoid: RoadClasses = [],

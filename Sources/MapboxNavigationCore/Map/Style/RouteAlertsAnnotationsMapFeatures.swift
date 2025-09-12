@@ -24,7 +24,7 @@ extension NavigationRoutes {
         customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>,
         excludedRouteAlertTypes: RoadAlertType
     ) -> (RouteAlertsStyleContent, MapFeature)? {
-        let convertedRouteAlerts: [RoadObjectAhead] = mainRoute.nativeRoute.getRouteInfo().alerts.compactMap {
+        let convertedRouteAlerts: [RoadObjectAhead] = mainRoute.nativeRouteInterface.getRouteInfo().alerts.compactMap {
             guard let roadObject = RoadObject($0.roadObject) else {
                 return nil
             }
