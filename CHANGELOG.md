@@ -1,8 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.12.0
 
-### Other
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.15.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.15.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.15.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.15.0)
+
+### Other changes
 
 * Updated default route line traffic colors to match the Mapbox Standard style.
 
