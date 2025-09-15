@@ -16,6 +16,7 @@ import MapboxDirections
 ///
 /// ``NavigationRouteOptions`` is designed to be used with the ``MapboxRoutingProvider`` class for specifying routing
 /// criteria.
+/// - Note: Make sure to set the same `profileIdentifier` to ``RoutingConfig/datasetProfileIdentifier``.
 open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchecked Sendable {
     /// Specifies the preferred distance measurement unit.
     ///
@@ -117,6 +118,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
 /// - Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this
 /// `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered
 /// waypoints.
+/// - Note: Make sure to set the same `profileIdentifier` to ``RoutingConfig/datasetProfileIdentifier``.
 open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchecked Sendable {
     /// Specifies the preferred distance measurement unit.
     ///

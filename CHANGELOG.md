@@ -5,11 +5,13 @@
 ### API Deprecations
 
 * `NavigationRoute.nativeRoute`, `NavigationRoute.init?(nativeRoute:)`, and `AlternativeRoute.init?(mainRoute:alternativeRoute:)` are deprecated and should no longer be used.
+* `CoreConfig.routeRequestConfig` is deprecated. Configure request options directly using `RouteOptions` and `MatchOptions`.
 
 ### Routing
 
 * Fixed an issue where request parameters could be lost on reroutes when using a custom `RouteOptions` subclass. If you subclass `RouteOptions`, make sure to implement `urlQueryItems`, `init(from:)`, `encode(to:)`, and `init(waypoints:profileIdentifier:queryItems:)`.
 * `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`.
+* `RoutingConfig.datasetProfileIdentifier` was added to configure the dataset profile for routing tiles. It is important to set this value before initializing `MapboxNavigationProvider` and use the same value for the following `ProfileIdentifier` in route requests options.
 
 ## 3.12.0
 

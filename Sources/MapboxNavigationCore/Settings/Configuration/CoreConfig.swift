@@ -18,7 +18,10 @@ public struct CoreConfig: Equatable {
     public let credentials: NavigationCoreApiConfiguration
 
     /// Configures route request.
-    public var routeRequestConfig: RouteRequestConfig
+    @available(*, deprecated, message: """
+    Requests from `RoutingProvider` are not affected by this config. Use `RouteOptions` or `MatchOptions` to configure them instead.
+    """)
+    public var routeRequestConfig: RouteRequestConfig = .init()
 
     /// Routing Configuration.
     public var routingConfig: RoutingConfig
@@ -81,15 +84,18 @@ public struct CoreConfig: Equatable {
     public var ttsConfig: TTSConfig
 
     /// Billing handler overriding for testing purposes.
-    var __customBillingHandler: BillingHandlerProvider? = nil
+    var __customBillingHandler: BillingHandlerProvider?
 
     /// Events manager overriding for testing purposes.
-    var __customEventsManager: EventsManagerProvider? = nil
+    var __customEventsManager: EventsManagerProvider?
 
     /// Routing provider overriding for testing purposes.
-    var __customRoutingProvider: CustomRoutingProvider? = nil
+    var __customRoutingProvider: CustomRoutingProvider?
 
     /// Mutable Routing configuration.
+    @available(*, deprecated, message: """
+    Requests from `RoutingProvider` are not affected by this config. Use `RouteOptions` or `MatchOptions` to configure them instead.
+    """)
     public struct RouteRequestConfig: Equatable, Sendable {
         /// A string specifying the primary mode of transportation for the routes.
         /// `ProfileIdentifier.automobileAvoidingTraffic` is used by default.
@@ -154,10 +160,10 @@ public struct CoreConfig: Equatable {
     /// Creates a new ``CoreConfig`` instance.
     /// - Parameters:
     ///   - credentials: SDK Credentials.
-    ///   - routeRequestConfig: Route requiest configuration
     ///   - routingConfig: Routing Configuration.
     ///   - telemetryAppMetadata: Custom metadata that can be used with events in the telemetry pipeline.
     ///   - logLevel: Logging level for Mapbox SDKs.
+    ///   - locationSource: Sources for location and route drive simulation. Defaults to ``LocationSource/live``.
     ///   - isSimulationEnabled: A Boolean value that indicates whether a route simulation is enabled.
     ///   - copilotEnabled: A Boolean value that indicates whether a copilot recording is enabled.
     ///   - unitOfMeasurement: Configures default unit of measurement.
@@ -176,7 +182,6 @@ public struct CoreConfig: Equatable {
     ///   - ttsConfig: Configuration for Text-To-Speech engine used.
     public init(
         credentials: NavigationCoreApiConfiguration = .init(),
-        routeRequestConfig: RouteRequestConfig = .init(),
         routingConfig: RoutingConfig = .init(),
         telemetryAppMetadata: TelemetryAppMetadata? = nil,
         logLevel: MapboxCommon.LoggingLevel = .warning,
@@ -198,7 +203,6 @@ public struct CoreConfig: Equatable {
         ttsConfig: TTSConfig = .default
     ) {
         self.credentials = credentials
-        self.routeRequestConfig = routeRequestConfig
         self.telemetryAppMetadata = telemetryAppMetadata
         self.logLevel = logLevel
         self.locationSource = locationSource
@@ -218,5 +222,78 @@ public struct CoreConfig: Equatable {
         self.tilesVersion = tilesVersion
         self.tilestoreConfig = tilestoreConfig
         self.ttsConfig = ttsConfig
+    }
+
+    /// Creates a new ``CoreConfig`` instance.
+    /// - Parameters:
+    ///   - credentials: SDK Credentials.
+    ///   - routeRequestConfig: Route requiest configuration
+    ///   - routingConfig: Routing Configuration.
+    ///   - telemetryAppMetadata: Custom metadata that can be used with events in the telemetry pipeline.
+    ///   - logLevel: Logging level for Mapbox SDKs.
+    ///   - locationSource: Sources for location and route drive simulation. Defaults to ``LocationSource/live``.
+    ///   - isSimulationEnabled: A Boolean value that indicates whether a route simulation is enabled.
+    ///   - copilotEnabled: A Boolean value that indicates whether a copilot recording is enabled.
+    ///   - unitOfMeasurement: Configures default unit of measurement.
+    ///   - locale: A `Locale` that is used for guidance instruction and other localization features.
+    ///   - disableBackgroundTrackingLocation: Indicates if a background location tracking is enabled.
+    ///   - utilizeSensorData: A Boolean value that indicates whether a sensor data is utilized.
+    ///   - navigatorPredictionInterval: Defines approximate navigator prediction between location ticks.
+    ///   - congestionConfig: Congestion level configuration.
+    ///   - historyRecordingConfig: Configuration for navigation history recording.
+    ///   - predictiveCacheConfig: Predictive cache configuration.
+    ///   - electronicHorizonConfig: Electronic Horizon Configuration.
+    ///   - liveIncidentsConfig: Electronic Horizon incidents configuration.
+    ///   - multilegAdvancing: Multileg advancing mode.
+    ///   - tilesVersion: Tiles version.
+    ///   - tilestoreConfig: Options for configuring how map and navigation tiles are stored on the device.
+    ///   - ttsConfig: Configuration for Text-To-Speech engine used.
+    @available(*, deprecated, message: "Use the initializer without `routeRequestConfig` instead.")
+    public init(
+        credentials: NavigationCoreApiConfiguration = .init(),
+        routeRequestConfig: RouteRequestConfig,
+        routingConfig: RoutingConfig = .init(routeRefreshPeriod: 120),
+        telemetryAppMetadata: TelemetryAppMetadata? = nil,
+        logLevel: MapboxCommon.LoggingLevel = .warning,
+        locationSource: LocationSource = .live,
+        copilotEnabled: Bool = false,
+        unitOfMeasurement: UnitOfMeasurement = .auto,
+        locale: Locale = .nationalizedCurrent,
+        disableBackgroundTrackingLocation: Bool = true,
+        utilizeSensorData: Bool = false,
+        navigatorPredictionInterval: TimeInterval? = nil,
+        congestionConfig: CongestionRangesConfiguration = .default,
+        historyRecordingConfig: HistoryRecordingConfig? = nil,
+        predictiveCacheConfig: PredictiveCacheConfig? = PredictiveCacheConfig(),
+        electronicHorizonConfig: ElectronicHorizonConfig? = nil,
+        liveIncidentsConfig: IncidentsConfig? = nil,
+        multilegAdvancing: MultilegAdvanceMode = .automatically,
+        tilesVersion: String = "",
+        tilestoreConfig: TileStoreConfiguration = .default,
+        ttsConfig: TTSConfig = .default
+    ) {
+        self.init(
+            credentials: credentials,
+            routingConfig: routingConfig,
+            telemetryAppMetadata: telemetryAppMetadata,
+            logLevel: logLevel,
+            locationSource: locationSource,
+            copilotEnabled: copilotEnabled,
+            unitOfMeasurement: unitOfMeasurement,
+            locale: locale,
+            disableBackgroundTrackingLocation: disableBackgroundTrackingLocation,
+            utilizeSensorData: utilizeSensorData,
+            navigatorPredictionInterval: navigatorPredictionInterval,
+            congestionConfig: congestionConfig,
+            historyRecordingConfig: historyRecordingConfig,
+            predictiveCacheConfig: predictiveCacheConfig,
+            electronicHorizonConfig: electronicHorizonConfig,
+            liveIncidentsConfig: liveIncidentsConfig,
+            multilegAdvancing: multilegAdvancing,
+            tilesVersion: tilesVersion,
+            tilestoreConfig: tilestoreConfig,
+            ttsConfig: ttsConfig
+        )
+        self.routeRequestConfig = routeRequestConfig
     }
 }

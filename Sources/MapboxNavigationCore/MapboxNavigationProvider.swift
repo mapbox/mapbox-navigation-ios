@@ -219,7 +219,8 @@ public final class MapboxNavigationProvider {
         tilesVersion: coreConfig.tilesVersion,
         targetVersion: nil,
         configFactoryType: ConfigFactory.self,
-        datasetProfileIdentifier: coreConfig.routeRequestConfig.profileIdentifier,
+        datasetProfileIdentifier: coreConfig.routingConfig.datasetProfileIdentifier ??
+            coreConfig.routeRequestConfig.profileIdentifier,
         routingProviderSource: coreConfig.routingConfig.routingProviderSource.nativeSource,
         liveIncidentsOptions: coreConfig.liveIncidentsConfig,
         navigatorPredictionInterval: coreConfig.navigatorPredictionInterval,

@@ -2,6 +2,14 @@ import Foundation
 
 /// Routing Configuration.
 public struct RoutingConfig: Equatable {
+    /// A tile dataset used to use when querying routing tiles. This value should match the `profileIdentifier` in
+    /// `DirectionsOptions` used to request routes.
+    ///
+    /// This property can only be modified before creating ``MapboxRoutingProvider`` instance. All further changes will
+    /// have no effect.
+    /// `ProfileIdentifier.automobileAvoidingTraffic` is used by default.
+    public let datasetProfileIdentifier: ProfileIdentifier?
+
     /// Options to configure fetching, detecting, and accepting ``AlternativeRoute``s during navigation.
     ///
     /// Use `nil` value to disable the mechanism
@@ -55,7 +63,7 @@ public struct RoutingConfig: Equatable {
     @available(
         *,
         deprecated,
-        message: "Use 'init(alternativeRoutesDetectionConfig:fasterRouteDetectionConfig:rerouteConfig:initialManeuverAvoidanceRadius:routeRefreshPeriod:routingProviderSource:prefersOnlineRoute:)' instead."
+        message: "Use 'init(datasetProfileIdentifier:alternativeRoutesDetectionConfig:fasterRouteDetectionConfig:rerouteConfig:initialManeuverAvoidanceRadius:routeRefreshPeriod:routingProviderSource:prefersOnlineRoute:)' instead."
     )
     public init(
         alternativeRoutesDetectionSettings: AlternativeRoutesDetectionConfig? = .init(),
@@ -65,20 +73,24 @@ public struct RoutingConfig: Equatable {
         routeRefreshPeriod: TimeInterval? = 120,
         routingProviderSource: RoutingProviderSource = .hybrid,
         prefersOnlineRoute: Bool = true,
-        detectsReroute: Bool = true,
+        detectsReroute: Bool,
         ignoreExpirationTimeInRefresh: Bool = false
     ) {
-        self.alternativeRoutesDetectionConfig = alternativeRoutesDetectionSettings
-        self.fasterRouteDetectionConfig = fasterRouteDetectionSettings
-        self.rerouteConfig = rerouteSettings
-        self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
-        self.routeRefreshPeriod = routeRefreshPeriod
-        self.routingProviderSource = routingProviderSource
-        self.prefersOnlineRoute = prefersOnlineRoute
-        self.ignoreExpirationTimeInRefresh = ignoreExpirationTimeInRefresh
+        self.init(
+            datasetProfileIdentifier: nil,
+            alternativeRoutesDetectionConfig: alternativeRoutesDetectionSettings,
+            fasterRouteDetectionConfig: fasterRouteDetectionSettings,
+            rerouteConfig: rerouteSettings,
+            initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
+            routeRefreshPeriod: routeRefreshPeriod,
+            routingProviderSource: routingProviderSource,
+            prefersOnlineRoute: prefersOnlineRoute,
+            ignoreExpirationTimeInRefresh: ignoreExpirationTimeInRefresh
+        )
     }
 
     public init(
+        datasetProfileIdentifier: ProfileIdentifier? = nil,
         alternativeRoutesDetectionConfig: AlternativeRoutesDetectionConfig? = .init(),
         fasterRouteDetectionConfig: FasterRouteDetectionConfig? = .init(),
         rerouteConfig: RerouteConfig = .init(),
@@ -88,6 +100,7 @@ public struct RoutingConfig: Equatable {
         prefersOnlineRoute: Bool = true,
         ignoreExpirationTimeInRefresh: Bool = false
     ) {
+        self.datasetProfileIdentifier = datasetProfileIdentifier
         self.alternativeRoutesDetectionConfig = alternativeRoutesDetectionConfig
         self.fasterRouteDetectionConfig = fasterRouteDetectionConfig
         self.rerouteConfig = rerouteConfig
