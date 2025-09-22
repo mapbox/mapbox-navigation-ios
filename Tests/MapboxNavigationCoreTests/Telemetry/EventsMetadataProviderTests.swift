@@ -128,8 +128,8 @@ final class EventsMetadataProviderTests: TestCase {
         let appMetadata2 = provider.provideEventsMetadata().appMetadata
         XCTAssertEqual(appMetadata2?.name, "App Name")
         XCTAssertEqual(appMetadata2?.version, "App Version")
-        XCTAssertEqual(appMetadata2?.userId, "User ID")
-        XCTAssertEqual(appMetadata2?.sessionId, "Session ID")
+        XCTAssertNil(appMetadata2?.userId, "Should ignore user id")
+        XCTAssertNil(appMetadata2?.sessionId, "Should ignore session id")
     }
 
     func testReturnScreenBrightness() {

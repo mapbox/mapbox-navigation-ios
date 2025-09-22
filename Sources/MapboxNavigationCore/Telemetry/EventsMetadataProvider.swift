@@ -75,8 +75,8 @@ final class EventsMetadataProvider: EventsMetadataInterface, Sendable {
         return AppMetadata(
             name: appName,
             version: appVersion,
-            userId: userInfo["userId"] as? String,
-            sessionId: userInfo["sessionId"] as? String
+            userId: nil,
+            sessionId: nil
         )
     }
 

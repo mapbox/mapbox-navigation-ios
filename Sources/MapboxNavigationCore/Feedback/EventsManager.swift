@@ -4,17 +4,16 @@ import MapboxCommon
 import MapboxNavigationNative_Private
 import UIKit
 
-/// The ``NavigationEventsManager`` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox
+/// The ``NavigationEventsManager`` is responsible for being the liaison between MapboxNavigationCore and the Mapbox
 /// telemetry.
 public final class NavigationEventsManager: Sendable {
     let navNativeEventsManager: NavigationTelemetryManager?
 
     // MARK: Configuring Events
 
-    /// Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
-    /// For example, you can provide your application’s name and version, a unique identifier for the end user, and a
-    /// session identifier.
-    /// To include this information, use the following keys: "name", "version", "userId", and "sessionId".
+    /// Optional application metadata that can help Mapbox more reliably diagnose problems that occur in the SDK.
+    /// For example, you can provide your application’s name and version.
+    /// To include this information, use the following keys: "name" and "version".
     public var userInfo: [String: String?]? {
         get { navNativeEventsManager?.userInfo }
         set { navNativeEventsManager?.userInfo = newValue }

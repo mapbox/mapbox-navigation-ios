@@ -6,6 +6,7 @@
 
 * `NavigationRoute.nativeRoute`, `NavigationRoute.init?(nativeRoute:)`, and `AlternativeRoute.init?(mainRoute:alternativeRoute:)` are deprecated and should no longer be used.
 * `CoreConfig.routeRequestConfig` is deprecated. Configure request options directly using `RouteOptions` and `MatchOptions`.
+* `TelemetryAppMetadata.userId` and `TelemetryAppMetadata.sessionId` are deprecated and no longer have any effect.
 
 ### Routing
 
