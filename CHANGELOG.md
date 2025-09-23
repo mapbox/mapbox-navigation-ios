@@ -6,6 +6,10 @@
 
 * `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`. ([#4794](https://github.com/mapbox/mapbox-navigation-ios/pull/4794))
 
+### Map
+
+* Fixed an issue where the initially set CarPlay navigation camera values were being overwritten when updates to this property were disabled.
+
 ## v2.20.2
 
 ### Routing
