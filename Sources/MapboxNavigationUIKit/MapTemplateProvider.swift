@@ -3,14 +3,22 @@ import CarPlay
 class MapTemplateProvider: NSObject {
     weak var delegate: MapTemplateProviderDelegate?
 
+    func previewMapTemplate(
+        traitCollection: UITraitCollection,
+        mapDelegate: CPMapTemplateDelegate
+    ) -> CPMapTemplate {
+        mapTemplate(forActivity: .previewing, traitCollection: traitCollection, mapDelegate: mapDelegate)
+    }
+
     func mapTemplate(
+        forActivity activity: CarPlayActivity,
         traitCollection: UITraitCollection,
         mapDelegate: CPMapTemplateDelegate
     ) -> CPMapTemplate {
         let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
 
-        let currentActivity: CarPlayActivity = .previewing
+        let currentActivity: CarPlayActivity = activity
 
         if let leadingButtons = delegate?.mapTemplateProvider(
             self,
@@ -30,9 +38,7 @@ class MapTemplateProvider: NSObject {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
-        mapTemplate.userInfo = [
-            CarPlayManager.currentActivityKey: currentActivity,
-        ]
+        mapTemplate.currentActivity = activity
 
         return mapTemplate
     }

@@ -411,16 +411,75 @@ class CarPlayManagerTests: TestCase {
         XCTAssertFalse(delegate.didDismissPanningInterfaceCalled)
     }
 
-    func testDidDismissPanningInterface() async {
+    func testDidShowPanningInterfaceInBrowsingMode() async {
         let mapTemplate = CPMapTemplate()
+        mapTemplate.currentActivity = .browsing
         let task = Task { @MainActor in
-            mapTemplate.userInfo = [CarPlayManager.currentActivityKey: CarPlayActivity.browsing]
+            carPlayManager.mapTemplateDidShowPanningInterface(mapTemplate)
+        }
+        await task.value
+
+        XCTAssertEqual(carPlayManager.currentActivity, .panningInBrowsingMode)
+        XCTAssertEqual(mapTemplate.currentActivity, .panningInBrowsingMode)
+
+        XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.trailingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.didShowPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+    }
+
+    func testDidShowPanningInterfaceInNavigationMode() async {
+        let task = Task { @MainActor in
+            let navigationMapTemplate = await startNavigation()
+            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
+            return navigationMapTemplate
+        }
+        let navigationMapTemplate = await task.value
+
+        XCTAssertEqual(carPlayManager.currentActivity, .panningInNavigationMode)
+        XCTAssertEqual(navigationMapTemplate.currentActivity, .panningInNavigationMode)
+
+        XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.trailingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.didShowPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
+    }
+
+    func testDidDismissPanningInterfaceInBrowsingMode() async {
+        let mapTemplate = CPMapTemplate()
+        mapTemplate.userInfo = [
+            CarPlayManager.previousActivityKey: CarPlayActivity.browsing,
+            CarPlayManager.currentActivityKey: CarPlayActivity.panningInBrowsingMode,
+        ]
+
+        let task = Task { @MainActor in
             carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)
         }
         await task.value
+
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertEqual(mapTemplate.currentActivity, .browsing)
+
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
-        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+    }
+
+    func testDidDismissPanningInterfaceInNavigationMode() async {
+        let task = Task { @MainActor in
+            let navigationMapTemplate = await startNavigation()
+            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
+            carPlayManager.mapTemplateDidDismissPanningInterface(navigationMapTemplate)
+            return navigationMapTemplate
+        }
+        let navigationMapTemplate = await task.value
+
+        XCTAssertEqual(carPlayManager.currentActivity, .navigating)
+        XCTAssertEqual(navigationMapTemplate.currentActivity, .navigating)
+
+        XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
+        XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
     }
 
     @MainActor
@@ -444,13 +503,15 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    private func startNavigation() async {
+    @discardableResult
+    private func startNavigation() async -> CPMapTemplate {
         let routeChoice = await createValidRouteChoice()
         let trip = createTrip(routeChoice)
-        let mapTemplate = CPMapTemplate()
+        let navigationMapTemplate = CPMapTemplate()
+        navigationMapTemplate.currentActivity = .navigating
 
         let task = Task { @MainActor in
-            carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+            carPlayManager.mapTemplate(navigationMapTemplate, startedTrip: trip, using: routeChoice)
         }
         await task.value
         // TODO: handle async methods properly, remove wait
@@ -458,6 +519,8 @@ class CarPlayManagerTests: TestCase {
 
         _ = carPlayManager.carPlayNavigationViewController?.view
         carPlayManager.carPlayNavigationViewController?.loadViewIfNeeded()
+
+        return navigationMapTemplate
     }
 
     private func wait(timeout: TimeInterval = 1.0) {

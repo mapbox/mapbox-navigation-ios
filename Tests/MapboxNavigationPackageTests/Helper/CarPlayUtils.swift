@@ -100,6 +100,10 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var willDismissPanningInterfaceCalled = false
     var didDismissPanningInterfaceCalled = false
 
+    var leadingNavigationBarButtonsCompatibleWithCalled = false
+    var trailingNavigationBarButtonsCompatibleWithCalled = false
+    var mapButtonsCompatibleWithCalled = false
+
     var passedError: DirectionsError?
     var passedTemplate: CPMapTemplate?
     var passedNavigationEndedByCanceling = false
@@ -182,7 +186,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         in: CPTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
-        returnedLeadingBarButtons
+        leadingNavigationBarButtonsCompatibleWithCalled = true
+        return returnedLeadingBarButtons
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, didSetup navigationMapView: NavigationMapView) {}
@@ -193,7 +198,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         in: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
-        returnedLeadingBarButtons
+        leadingNavigationBarButtonsCompatibleWithCalled = true
+        return returnedLeadingBarButtons
     }
 
     func carPlayManager(
@@ -202,7 +208,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         in: CPTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
-        returnedTrailingBarButtons
+        trailingNavigationBarButtonsCompatibleWithCalled = true
+        return returnedTrailingBarButtons
     }
 
     func carPlayManager(
@@ -211,7 +218,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         in: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
-        returnedTrailingBarButtons
+        trailingNavigationBarButtonsCompatibleWithCalled = true
+        return returnedTrailingBarButtons
     }
 
     func carPlayManager(
@@ -220,7 +228,8 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         in template: CPTemplate,
         for activity: CarPlayActivity
     ) -> [CPMapButton]? {
-        returnedMapButtons
+        mapButtonsCompatibleWithCalled = true
+        return returnedMapButtons
     }
 
     func carPlayManager(

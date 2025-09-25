@@ -141,17 +141,18 @@ public class CarPlayManager: NSObject {
         mapTemplateProvider.delegate = self
     }
 
-    func subscribeForNotifications() {
-        Task { @MainActor in
-            cameraStateCancellable = navigationMapView?.navigationCamera.cameraStates
-                .sink { [weak self] in
-                    self?.navigationCameraStateDidChange($0)
-                }
-        }
+    @MainActor
+    func subscribeForCameraStateNotifications() {
+        let navigationMapView = activeNavigationMapView
+        cameraStateCancellable = navigationMapView?.navigationCamera.cameraStates
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.navigationCameraStateDidChange($0)
+            }
     }
 
-    func unsubscribeFromNotifications() {
-        cameraStateCancellable?.cancel()
+    func unsubscribeFromCameraStateNotifications() {
+        cameraStateCancellable = nil
     }
 
     @MainActor
@@ -213,6 +214,8 @@ public class CarPlayManager: NSObject {
         return nil
     }
 
+    // TODO: @available(*, deprecated, message: "Use browsingNavigationMapView and guidanceNavigationMapView")
+    // if browsingNavigationMapView and guidanceNavigationMapView become public
     /// The main `NavigationMapView` displayed inside CarPlay.
     @MainActor
     public var navigationMapView: NavigationMapView? {
@@ -220,16 +223,21 @@ public class CarPlayManager: NSObject {
     }
 
     @MainActor
-    var activeNavigationMapView: NavigationMapView? {
-        if let carPlayNavigationViewController,
-           let validNavigationMapView = carPlayNavigationViewController.navigationMapView
-        {
-            return validNavigationMapView
-        } else if let carPlayMapViewController {
-            return carPlayMapViewController.navigationMapView
-        } else {
-            return nil
-        }
+    @_spi(MapboxInternal)
+    public var browsingNavigationMapView: NavigationMapView? {
+        return carPlayMapViewController?.navigationMapView
+    }
+
+    @MainActor
+    @_spi(MapboxInternal)
+    public var guidanceNavigationMapView: NavigationMapView? {
+        return carPlayNavigationViewController?.navigationMapView
+    }
+
+    @MainActor
+    @_spi(MapboxInternal)
+    public var activeNavigationMapView: NavigationMapView? {
+        guidanceNavigationMapView ?? browsingNavigationMapView
     }
 
     var mapTemplateProvider: MapTemplateProvider
@@ -406,7 +414,7 @@ extension CarPlayManager {
 
         eventsManager.sendCarPlayConnectEvent()
 
-        subscribeForNotifications()
+        subscribeForCameraStateNotifications()
     }
 
     @MainActor
@@ -425,7 +433,7 @@ extension CarPlayManager {
 
         idleTimerCancellable = nil
 
-        unsubscribeFromNotifications()
+        unsubscribeFromCameraStateNotifications()
     }
 
     @MainActor
@@ -434,9 +442,7 @@ extension CarPlayManager {
         mapTemplate.mapDelegate = self
 
         let currentActivity: CarPlayActivity = .browsing
-        mapTemplate.userInfo = [
-            CarPlayManager.currentActivityKey: currentActivity,
-        ]
+        mapTemplate.currentActivity = currentActivity
 
         guard let carPlayMapViewController else { return mapTemplate }
 
@@ -658,7 +664,7 @@ extension CarPlayManager {
     @MainActor
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
-        carPlayMapViewController?.removeSearchResultsAnnotations()
+        clearMapAnnotations()
         var configuration = CarPlayManagerCancelPreviewConfiguration()
         delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
         routes = nil
@@ -666,7 +672,6 @@ extension CarPlayManager {
         if configuration.popToRoot {
             _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
         }
-        clearMapAnnotations()
         navigationMapView?.navigationCamera.update(cameraState: .following)
         delegate?.carPlayManagerDidCancelPreview(self)
     }
@@ -685,7 +690,7 @@ extension CarPlayManager {
             return
         }
 
-        let template = mapTemplateProvider.mapTemplate(
+        let template = mapTemplateProvider.previewMapTemplate(
             traitCollection: traitCollection,
             mapDelegate: self
         )
@@ -742,7 +747,7 @@ extension CarPlayManager {
 
         let modifiedTrip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
-        let previewMapTemplate = mapTemplateProvider.mapTemplate(
+        let previewMapTemplate = mapTemplateProvider.previewMapTemplate(
             traitCollection: traitCollection,
             mapDelegate: self
         )
@@ -861,13 +866,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
         trip: CPTrip,
         navigationRoutes: NavigationRoutes
     ) {
-        guard let interfaceController,
-              let carPlayMapViewController
-        else {
+        guard let interfaceController, let carPlayMapViewController else {
             return
         }
         clearMapAnnotations()
-        carPlayMapViewController.removeSearchResultsAnnotations()
 
         mapTemplate.hideTripPreviews()
 
@@ -896,6 +898,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
                 carPlayNavigationViewController.loadViewIfNeeded()
                 delegate?.carPlayManager(self, willPresent: carPlayNavigationViewController)
+                updateNavigationButtons(for: navigationMapTemplate)
+
+                subscribeForCameraStateNotifications()
 
                 carPlayMapViewController.present(carPlayNavigationViewController, animated: true) { [weak self] in
                     guard let self else { return }
@@ -912,11 +917,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.mapDelegate = self
 
         let currentActivity: CarPlayActivity = .navigating
-        mapTemplate.userInfo = [
-            CarPlayManager.currentActivityKey: currentActivity,
-        ]
-
-        updateNavigationButtons(for: mapTemplate)
+        mapTemplate.currentActivity = currentActivity
 
         return mapTemplate
     }
@@ -1013,6 +1014,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
             assertionFailure("Panning interface is only supported for free-drive or active-guidance navigation.")
             return
         }
+        mapTemplate.currentActivity = currentActivity
+        self.currentActivity = currentActivity
 
         // Whenever panning interface is shown (either in preview mode or during active navigation),
         // user should be given an opportunity to update buttons in `CPMapTemplate`.
@@ -1049,25 +1052,18 @@ extension CarPlayManager: CPMapTemplateDelegate {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
-        self.currentActivity = currentActivity
         delegate?.carPlayManager(self, didShowPanningInterface: mapTemplate)
     }
 
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
         Task { @MainActor in
-            if let carPlayMapViewController {
-                let shouldShowRecenterButton = carPlayMapViewController.navigationMapView.navigationCamera
-                    .currentCameraState == .idle
-                carPlayMapViewController.recenterButton.isHidden = !shouldShowRecenterButton
-            }
-
             delegate?.carPlayManager(self, willDismissPanningInterface: mapTemplate)
         }
     }
 
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let currentActivity = mapTemplate.currentActivity else { return }
-
+        guard let currentActivity = mapTemplate.previousActivity else { return }
+        mapTemplate.currentActivity = currentActivity
         self.currentActivity = currentActivity
 
         updateNavigationButtons(for: mapTemplate)
@@ -1343,12 +1339,16 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
             interfaceController: interfaceController,
             rootTemplate: mapTemplate,
             animated: true
-        ) { [self] _, _ in
-            carPlayMapViewController?.subscribeForFreeDriveNotifications()
+        ) { _, _ in
+            MainActor.assumingIsolated { [weak self] in
+                guard let self else { return }
+                carPlayMapViewController?.subscribeForFreeDriveNotifications()
+                subscribeForCameraStateNotifications()
 
-            self.carPlayNavigationViewController = nil
-            delegate?.carPlayManagerDidEndNavigation(self)
-            delegate?.carPlayManagerDidEndNavigation(self, byCanceling: canceled)
+                self.carPlayNavigationViewController = nil
+                delegate?.carPlayManagerDidEndNavigation(self)
+                delegate?.carPlayManagerDidEndNavigation(self, byCanceling: canceled)
+            }
         }
     }
 
@@ -1597,7 +1597,7 @@ extension CarPlayManager {
 
         eventsManager.sendCarPlayConnectEvent()
 
-        subscribeForNotifications()
+        subscribeForCameraStateNotifications()
     }
 
     public func templateApplicationScene(
@@ -1619,7 +1619,7 @@ extension CarPlayManager {
 
         idleTimerCancellable = nil
 
-        unsubscribeFromNotifications()
+        unsubscribeFromCameraStateNotifications()
         routes = nil
     }
 }
@@ -1628,6 +1628,7 @@ extension CarPlayManager {
 
 extension CarPlayManager {
     static let currentActivityKey = "com.mapbox.navigation.currentActivity"
+    static let previousActivityKey = "com.mapbox.navigation.previousActivity"
 }
 
 extension NavigationRoute {

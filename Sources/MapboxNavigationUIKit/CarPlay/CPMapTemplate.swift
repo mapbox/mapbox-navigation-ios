@@ -32,8 +32,37 @@ extension CLLocationDirection {
 }
 
 extension CPTemplate {
+    private var carPlayUserInfo: CarPlayUserInfo {
+        guard let dictionary = userInfo as? CarPlayUserInfo else {
+            let dictionary = CarPlayUserInfo()
+            userInfo = dictionary
+            return dictionary
+        }
+        return dictionary
+    }
+
     var currentActivity: CarPlayActivity? {
-        guard let userInfo = userInfo as? CarPlayUserInfo else { return nil }
-        return userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity
+        get {
+            guard let userInfo = userInfo as? CarPlayUserInfo else { return nil }
+            return userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity
+        }
+        set {
+            previousActivity = currentActivity
+            var newUserInfo = carPlayUserInfo
+            newUserInfo[CarPlayManager.currentActivityKey] = newValue
+            userInfo = newUserInfo
+        }
+    }
+
+    private(set) var previousActivity: CarPlayActivity? {
+        get {
+            guard let userInfo = userInfo as? CarPlayUserInfo else { return nil }
+            return userInfo[CarPlayManager.previousActivityKey] as? CarPlayActivity
+        }
+        set {
+            var newUserInfo = carPlayUserInfo
+            newUserInfo[CarPlayManager.previousActivityKey] = newValue
+            userInfo = newUserInfo
+        }
     }
 }

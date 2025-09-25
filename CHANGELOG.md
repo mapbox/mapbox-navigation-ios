@@ -18,6 +18,24 @@
 
 * Fixed the crash on an alternative map route annotation offset calculation when a deviation point is further than 80% of the main route.
 
+### CarPlay
+
+* Fixed an incorrect `CarPlayActivity` value passed in `CarPlayManagerDelegate` function calls:
+  * `carPlayManager(_:, leadingNavigationBarButtonsCompatibleWith traitCollection:, in:, for:)`,
+  * `carPlayManager(_:, trailingNavigationBarButtonsCompatibleWith traitCollection:, in:, for:)`,
+  * `carPlayManager(_:, mapButtonsCompatibleWith traitCollection:, in:, for:)`.
+  
+  Now `CarPlayActivity.panningInBrowsingMode` and `CarPlayActivity.panningInNavigationMode` are passed in the above delegate function calls when the map is panned after showing the panning interface. Previously, those values were only passed at the moment of initial presentation of the panning interface and immediately after performing any panning (or any action that exits the map camera's follow mode), the passed `CarPlayActivity` was reverted to `CarPlayActivity.browsing` or `CarPlayActivity.navigating` even though the panning interface was still shown.
+  
+  In addition, `CarPlayManager.currentActivity` is also updated correctly in the mentioned scenarios.
+
+* Fixed a problem that navigation bar buttons would not be updated properly for navigation mode when customized with  `CarPlayManagerDelegate` implementation, because of too early execution of calls to `CarPlayManagerDelegate` functions:
+  * `carPlayManager(_:, leadingNavigationBarButtonsCompatibleWith traitCollection:, in:, for:)`,
+  * `carPlayManager(_:, trailingNavigationBarButtonsCompatibleWith traitCollection:, in:, for:)`,
+  * `carPlayManager(_:, mapButtonsCompatibleWith traitCollection:, in:, for:)`.
+
+  Those calls were previously executed before `CarPlayNavigationViewController` instantiation. Now they are performed after  `CarPlayNavigationViewController` instantiation, right after calling `CarPlayManagerDelegate.carPlayManager(_:, willPresent:)`.
+
 ## 3.12.0
 
 ### Packaging
