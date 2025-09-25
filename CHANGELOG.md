@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 3.12.0-beta.1
+## 3.16.0-beta.1
 
 ### API Deprecations
 
@@ -13,6 +13,10 @@
 * Fixed an issue where request parameters could be lost on reroutes when using a custom `RouteOptions` subclass. If you subclass `RouteOptions`, make sure to implement `urlQueryItems`, `init(from:)`, `encode(to:)`, and `init(waypoints:profileIdentifier:queryItems:)`.
 * `NavigationRouteOptions.init(waypoints:profileIdentifier:queryItems:)` and `NavigationMatchOptions.init(waypoints:profileIdentifier:queryItems:)` set the default values for `shapeFormat`, `locale`, `distanceMeasurementSystem`, `routeShapeResolution`, `includesSpokenInstructions`, and `includesVisualInstructions` only if the values were not passed in `queryItems`.
 * `RoutingConfig.datasetProfileIdentifier` was added to configure the dataset profile for routing tiles. It is important to set this value before initializing `MapboxNavigationProvider` and use the same value for the following `ProfileIdentifier` in route requests options.
+
+### Map
+
+* Fixed the crash on an alternative map route annotation offset calculation when a deviation point is further than 80% of the main route.
 
 ## 3.12.0
 

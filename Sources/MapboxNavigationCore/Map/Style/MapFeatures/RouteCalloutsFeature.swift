@@ -84,13 +84,10 @@ struct RouteCalloutsFeature: MapFeature {
                     mapsStyleConfig: mapStyleConfig
                 )
 
-                let limit: Range<Double>
                 let deviationOffset = alternativeRoute.deviationOffset()
-                if annotateAtManeuver {
-                    limit = (deviationOffset + 0.01)..<(deviationOffset + 0.05)
-                } else {
-                    limit = (deviationOffset + 0.01)..<0.8
-                }
+                let lower = deviationOffset + 0.01
+                let upper = min(annotateAtManeuver ? deviationOffset + 0.05 : max(0.8, lower + 0.01), 1)
+                let limit = min(lower, upper - 0.01)..<upper
                 let viewAnnotation = if let geometry = alternativeRoute.route.geometryForCallout(
                     clampedTo: limit,
                     mapStyleConfig: mapStyleConfig
@@ -201,7 +198,7 @@ extension Route {
     ) -> Geometry? {
         if case .fixed(let positionModifier) = mapStyleConfig.fixedRouteCalloutPosition {
             let centerDistance = distance *
-                (range.lowerBound + (range.upperBound - range.lowerBound) * positionModifier)
+                min(range.lowerBound + (range.upperBound - range.lowerBound) * positionModifier, 1)
             let coordinate = shape?.coordinateFromStart(distance: centerDistance)
             return coordinate.map { Point($0).geometry }
         }
@@ -238,7 +235,7 @@ extension TimeInterval {
 
 extension NavigationRoute {
     var isSuggested: Bool {
-        nativeRoute.getRouteIndex() == 0
+        nativeRouteInterface.getRouteIndex() == 0
     }
 }
 

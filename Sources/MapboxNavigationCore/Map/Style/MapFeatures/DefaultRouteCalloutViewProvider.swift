@@ -140,7 +140,6 @@ public final class DefaultRouteCalloutViewProvider: RouteCalloutViewProvider {
         let session = sessionController.currentSession
         switch session.state {
         case .idle, .freeDrive:
-
             let travelTime = data.route.expectedTravelTime
 
             var isUniqueFastestRoute = false
@@ -211,7 +210,9 @@ public final class DefaultRouteCalloutViewProvider: RouteCalloutViewProvider {
 
             var allowedRouteOffsetRange = RouteCalloutViewContainer.defaultAllowedRouteOffsetRange
             if let deviationOffset = data.deviationOffset {
-                allowedRouteOffsetRange = (deviationOffset + 0.01)...(deviationOffset + 0.05)
+                let upper = min(deviationOffset + 0.05, 1.0)
+                let lower = min(deviationOffset + 0.01, upper - 0.01)
+                allowedRouteOffsetRange = lower...upper
             }
 
             let viewHolder = RouteCalloutViewContainer(

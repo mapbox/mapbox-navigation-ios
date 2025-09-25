@@ -120,7 +120,7 @@ extension Route {
     ) -> Geometry? {
         if case .fixed(let positionModifier) = mapStyleConfig.fixedRouteCalloutPosition {
             let centerDistance = distance *
-                (range.lowerBound + (range.upperBound - range.lowerBound) * positionModifier)
+                min(range.lowerBound + (range.upperBound - range.lowerBound) * positionModifier, 1)
             let coordinate = shape?.coordinateFromStart(distance: centerDistance)
             return coordinate.map { Point($0).geometry }
         }

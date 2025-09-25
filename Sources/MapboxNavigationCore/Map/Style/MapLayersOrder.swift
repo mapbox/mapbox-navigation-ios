@@ -5,6 +5,10 @@ import MapboxMaps
 struct MapLayersOrder {
     @resultBuilder
     enum Builder {
+        static func buildBlock() -> [Rule] {
+            []
+        }
+
         static func buildPartialBlock(first rule: Rule) -> [Rule] {
             [rule]
         }

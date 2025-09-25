@@ -99,7 +99,6 @@ public class CustomRouteCalloutViewProvider: RouteCalloutViewProvider {
         // Supporting 2 presentation styles of route callouts.
         switch presentationStyle {
         case .routePreview:
-
             let travelTime = data.route.expectedTravelTime
 
             let containsTolls = data.route.containsTolls
@@ -149,7 +148,9 @@ public class CustomRouteCalloutViewProvider: RouteCalloutViewProvider {
             // alternative routes.
             var allowedRouteOffsetRange = RouteCalloutViewContainer.defaultAllowedRouteOffsetRange
             if let deviationOffset = data.deviationOffset {
-                allowedRouteOffsetRange = (deviationOffset + 0.0001)...(deviationOffset + 0.1)
+                let upper = min(deviationOffset + 0.1, 1.0)
+                let lower = min(deviationOffset + 0.0001, upper - 0.0001)
+                allowedRouteOffsetRange = lower...upper
             }
 
             let viewContainer = RouteCalloutViewContainer(

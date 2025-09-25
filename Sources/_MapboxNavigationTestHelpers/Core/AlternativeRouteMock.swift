@@ -6,10 +6,8 @@ import Turf
 
 extension AlternativeRoute {
     public static func mock(
-        mainRoute: Route = .mock(
-            shape: mockShape
-        ),
-        alternativeRoute: Route = .mock(),
+        mainRoute: Route = .mock(),
+        alternativeRoute: Route = .mock(shape: .mock(delta: (0.01, -0.01))),
         nativeRouteAlternative: RouteAlternative? = nil,
         requestOptions: ResponseOptions? = nil
     ) -> Self {
@@ -22,18 +20,6 @@ extension AlternativeRoute {
             nativeRouteAlternative: nativeAlternative,
             requestOptions: requestOptions
         )!
-    }
-
-    public static var mockShape: LineString {
-        .init(
-            [CLLocationCoordinate2D](
-                repeating: .init(
-                    latitude: 1,
-                    longitude: 2
-                ),
-                count: 4
-            )
-        )
     }
 }
 

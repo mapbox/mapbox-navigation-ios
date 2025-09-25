@@ -6,12 +6,13 @@ import Turf
 extension Route {
     public static func mock(
         legs: [RouteLeg] = [.mock()],
-        shape: LineString? = nil,
-        distance: LocationDistance = 300,
+        shape: LineString? = .mock(),
+        distance: LocationDistance = -1,
         expectedTravelTime: TimeInterval = 195,
         typicalTravelTime: TimeInterval? = 200,
-        speechLocale: Locale? = .current
+        speechLocale: Locale? = Locale(identifier: "en-US")
     ) -> Self {
+        let distance = distance > 0 ? distance : shape?.distance() ?? 300
         var route = self.init(
             legs: legs,
             shape: shape,
@@ -108,5 +109,24 @@ extension Intersection {
             preferredApproachLanes: nil,
             usableLaneIndication: nil
         )
+    }
+}
+
+extension LineString {
+    public static func mock(
+        initialCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 1, longitude: 2),
+        delta: (CLLocationDistance, CLLocationDistance) = (0.01, 0.01),
+        count: Int = 25
+    ) -> Self {
+        var coordinates = [initialCoordinate]
+        for i in 0..<count {
+            let previous = coordinates[i]
+            let next = CLLocationCoordinate2D(
+                latitude: previous.latitude + delta.0,
+                longitude: previous.longitude + delta.1
+            )
+            coordinates.append(next)
+        }
+        return .init(coordinates)
     }
 }
