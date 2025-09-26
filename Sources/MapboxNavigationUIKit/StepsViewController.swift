@@ -24,7 +24,12 @@ public class StepsViewController: UIViewController, NavigationComponent {
     var previousLegIndex: Int = NSNotFound
     var previousStepIndex: Int = NSNotFound
 
-    var measurementSystem: MeasurementSystem?
+    /// The measurement system used to overwrite the measurement system used to request route.
+    public var measurementSystem: MeasurementSystem? {
+        didSet {
+            tableView?.reloadData()
+        }
+    }
 
     /// Initializes ``StepsViewController`` with a `RouteProgress` object.
     /// - Parameter routeProgress: The user's current route progress.

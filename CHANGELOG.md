@@ -36,6 +36,10 @@
 
   Those calls were previously executed before `CarPlayNavigationViewController` instantiation. Now they are performed after  `CarPlayNavigationViewController` instantiation, right after calling `CarPlayManagerDelegate.carPlayManager(_:, willPresent:)`.
 
+### Other changes
+
+* `StepsViewController.measurementSystem` is now public.
+
 ## 3.12.0
 
 ### Packaging
