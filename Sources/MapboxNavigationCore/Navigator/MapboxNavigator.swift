@@ -835,10 +835,14 @@ final class MapboxNavigator: @unchecked Sendable {
                 case .manually(let approval):
                     await approval(.init(arrivedLegIndex: routeProgress.legIndex))
                 }
-                guard !routeProgress.isFinalLeg, advancesToNextLeg else {
+                guard
+                    !routeProgress.isFinalLeg,
+                    advancesToNextLeg,
+                    let statusLegIndex = status.primaryRouteIndices?.legIndex
+                else {
                     return
                 }
-                switchLeg(newLegIndex: Int(status.legIndex) + 1)
+                switchLeg(newLegIndex: Int(statusLegIndex) + 1)
             }
         }
     }
@@ -1647,7 +1651,7 @@ extension NavigationRoutes {
     mutating func updateForkPointPassed(with status: NavigationStatus) -> Bool {
         let newPassedForkPointRouteIds = Set(
             status.alternativeRouteIndices
-                .compactMap { $0.isForkPointPassed ? $0.routeId : nil }
+                .compactMap { $0.isForkPointPassed ? $0.routeId.uuid : nil }
         )
         let oldPassedForkPointRouteIds = Set(
             allAlternativeRoutesWithIgnored

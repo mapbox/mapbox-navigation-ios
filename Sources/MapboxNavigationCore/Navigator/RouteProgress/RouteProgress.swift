@@ -70,14 +70,17 @@ public struct RouteProgress: Equatable, Sendable {
     // MARK: Route Statistics
 
     mutating func update(using status: NavigationStatus) {
-        guard let activeGuidanceInfo = status.activeGuidanceInfo else {
+        guard
+            let activeGuidanceInfo = status.activeGuidanceInfo,
+            let primaryRouteIndices = status.primaryRouteIndices
+        else {
             return
         }
 
-        if legIndex == Int(status.legIndex) {
+        if legIndex == Int(primaryRouteIndices.legIndex) {
             currentLegProgress.update(using: status)
         } else {
-            let legIndex = Int(status.legIndex)
+            let legIndex = Int(primaryRouteIndices.legIndex)
             guard route.legs.indices.contains(legIndex) else {
                 Log.info("Ignoring incorrect status update with leg index \(legIndex)", category: .navigation)
                 return
@@ -91,8 +94,8 @@ public struct RouteProgress: Equatable, Sendable {
             guard let upcomingRouteAlert = routeAlerts[nativeRouteAlert.id] else { return nil }
             return RouteAlert(upcomingRouteAlert, distanceToStart: nativeRouteAlert.distanceToStart)
         }
-        shapeIndex = Int(status.geometryIndex)
-        legIndex = Int(status.legIndex)
+        shapeIndex = Int(primaryRouteIndices.geometryIndex)
+        legIndex = Int(primaryRouteIndices.legIndex)
 
         updateDistanceToIntersection()
 

@@ -37,6 +37,12 @@ public enum TestNavigationStatusProvider {
                 fractionTraveled: 0,
                 remainingDistance: 0,
                 remainingDuration: 0
+            ),
+            linkProgress: .init(
+                distanceTraveled: 0,
+                fractionTraveled: 0,
+                remainingDistance: 0,
+                remainingDuration: 0
             )
         )
         return Self.createNavigationStatus(
@@ -83,28 +89,31 @@ public enum TestNavigationStatusProvider {
             shield: shield
         )
         let roadNames = roads ?? [road]
+        let primaryRouteIndices = RouteIndices(
+            routeId: RouteIdentifier(uuid: "", index: routeIndex),
+            legIndex: legIndex,
+            step: stepIndex,
+            geometryIndex: geometryIndex,
+            legShapeIndex: shapeIndex,
+            intersectionIndex: intersectionIndex,
+            isForkPointPassed: false
+        )
         let mapMatch = MapMatch(position: .init(edgeId: 0, percentAlong: 0), proba: 42, fetchedCandidateIndex: 0)
         let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false, totalCandidatesCount: 1)
         return .init(
             routeState: routeState,
-            locatedAlternativeRouteId: nil,
-            primaryRouteId: nil,
             stale: false,
             location: fixLocation,
-            routeIndex: routeIndex,
-            legIndex: legIndex,
-            step: stepIndex,
             isFallback: false,
             inTunnel: false,
             inParkingAisle: false,
             inRoundabout: false,
             predicted: 10,
-            geometryIndex: geometryIndex,
-            shapeIndex: shapeIndex,
-            intersectionIndex: intersectionIndex,
             turnLanes: turnLanes,
-            alternativeRouteIndices: [],
             roads: roadNames,
+            primaryRouteIndices: primaryRouteIndices,
+            alternativeRouteIndices: [],
+            locatedAlternativeRouteId: nil,
             voiceInstruction: voiceInstruction,
             bannerInstruction: bannerInstruction,
             speedLimit: .init(speed: nil, localeUnit: .kilometresPerHour, localeSign: .vienna),

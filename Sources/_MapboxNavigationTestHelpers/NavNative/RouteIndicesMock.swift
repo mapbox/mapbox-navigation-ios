@@ -2,11 +2,11 @@ import MapboxNavigationNative_Private
 
 extension RouteIndices {
     public static func mock(
-        routeId: String = "",
+        routeId: RouteIdentifier = .mock(),
         legIndex: UInt32 = 0,
         step: UInt32 = 0,
         geometryIndex: UInt32 = 0,
-        shapeIndex: UInt32 = 0,
+        legShapeIndex: UInt32 = 0,
         intersectionIndex: UInt32 = 0,
         isForkPointPassed: Bool = false
     ) -> Self {
@@ -15,7 +15,7 @@ extension RouteIndices {
             legIndex: legIndex,
             step: step,
             geometryIndex: geometryIndex,
-            shapeIndex: shapeIndex,
+            legShapeIndex: legShapeIndex,
             intersectionIndex: intersectionIndex,
             isForkPointPassed: isForkPointPassed
         )
