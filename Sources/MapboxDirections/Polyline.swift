@@ -136,7 +136,7 @@ public func encodeCoordinates(_ coordinates: [LocationCoordinate2D], precision: 
 #if canImport(CoreLocation)
 /// This function encodes an `[CLLocation]` to a `String`
 ///
-/// - parameter coordinates: The `Array` of `CLLocation` that you want to encode
+/// - parameter locations: The `Array` of `CLLocation` that you want to encode
 /// - parameter precision: The precision used to encode locations (default: `1e5`)
 ///
 /// - returns: A `String` representing the encoded Polyline

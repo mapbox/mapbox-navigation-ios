@@ -47,7 +47,7 @@ open class NavigationMapView: UIView {
 
     /// The current navigation style content being used.
     /// Returns `nil` if the declarative map style is not used.
-    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable it.
+    /// Set `NavigationMapView.useLegacyManualLayersOrderApproach` to `false` in order to enable it.
     public var currentNavigationStyleContent: NavigationStyleContent? {
         mapStyleManager.currentNavigationStyleContent
     }
@@ -56,7 +56,7 @@ open class NavigationMapView: UIView {
     /// Setting this to `false` allows manual control over the declarative map content.
     /// You would need to set the content by subscribing to the ``NavigationMapView/navigationStyleContent`` updates.
     /// This property is`true` by default.
-    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
+    /// Set `NavigationMapView.useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
     /// styling approach.
     public var automaticallySetDeclarativeMapContent: Bool {
         get { !mapStyleManager.automaticallySetDeclarativeMapContent }
@@ -66,7 +66,7 @@ open class NavigationMapView: UIView {
     /// A publisher that emits updates to the current navigation style content.
     ///
     /// Subscribers can observe this publisher to be notified when the ``NavigationStyleContent`` changes.
-    /// Set ``NavigationMapView/useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
+    /// Set `NavigationMapView.useLegacyManualLayersOrderApproach` to `false` in order to enable the declarative
     /// styling approach.
     public var navigationStyleContent: AnyPublisher<NavigationStyleContent?, Never> {
         mapStyleManager.navigationStyleContent
@@ -435,7 +435,7 @@ open class NavigationMapView: UIView {
 
     /// Enables the experimental API for custom route callouts.
     ///
-    /// When enabled, route callouts will be created using the ``routeCalloutViewProvider`` instead of
+    /// When enabled, route callouts will be created using the `routeCalloutViewProvider` instead of
     /// the default annotation approach. Must be set to `true` to use custom route callouts.
     /// Defaults to `false`.
     @_spi(ExperimentalMapboxAPI)
@@ -448,7 +448,7 @@ open class NavigationMapView: UIView {
     /// creating appropriate callout views for each route.
     ///
     /// To use custom route callouts:
-    /// 1. Set ``apiRouteCalloutViewProviderEnabled`` to `true`
+    /// 1. Set `apiRouteCalloutViewProviderEnabled` to `true`
     /// 2. Assign your custom provider or use ``DefaultRouteCalloutViewProvider``
     ///
     /// New ``showRoutes(_:)`` and ``showcaseRoutes(_:routesPresentationStyle:animated:duration:)`` methods
@@ -507,8 +507,8 @@ open class NavigationMapView: UIView {
     /// To only visualize the routes and not the waypoints, or to have more control over the camera,
     /// use the ``show(_:routeAnnotationKinds:)`` method.
     ///
-    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
-    /// then `routeAnnotationKinds` parameter is ignored and ``routeCalloutViewProvider``
+    /// If experimental route callouts API is enabled with `apiRouteCalloutViewProviderEnabled` set to `true`
+    /// then `routeAnnotationKinds` parameter is ignored and `routeCalloutViewProvider`
     /// will be used to create route callouts which will be displayed. If it is `nil` no callouts will be displayed.
     ///
     /// - parameter navigationRoutes: ``NavigationRoutes`` containing routes to visualize. The selected route by
@@ -547,10 +547,10 @@ open class NavigationMapView: UIView {
     /// To only visualize the routes and not the waypoints, or to have more control over the camera,
     /// use the ``showRoutes(_:)`` method.
     ///
-    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
-    /// ``routeCalloutViewProvider`` will be used to create route callouts which will be displayed.
+    /// If experimental route callouts API is enabled with `apiRouteCalloutViewProviderEnabled` set to `true`
+    /// `routeCalloutViewProvider` will be used to create route callouts which will be displayed.
     /// If it is `nil` no callouts will be displayed. Also no callouts are displayed in case when
-    /// ``apiRouteCalloutViewProviderEnabled`` is set to `false`.
+    /// `apiRouteCalloutViewProviderEnabled` is set to `false`.
     ///
     /// - parameter navigationRoutes: ``NavigationRoutes`` containing routes to visualize. The selected route by
     /// `routeIndex` is considered primary, while the remaining routes are displayed as if they are currently deselected
@@ -600,8 +600,8 @@ open class NavigationMapView: UIView {
     /// levels are present. To also visualize waypoints and zoom the map to fit,
     /// use the ``showcase(_:routesPresentationStyle:routeAnnotationKinds:animated:duration:)`` method.
     ///
-    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
-    /// then `routeAnnotationKinds` parameter is ignored and ``routeCalloutViewProvider``
+    /// If experimental route callouts API is enabled with `apiRouteCalloutViewProviderEnabled` set to `true`
+    /// then `routeAnnotationKinds` parameter is ignored and `routeCalloutViewProvider`
     /// will be used to create route callouts which will be displayed. If it is `nil` no callouts will be displayed.
     ///
     /// To undo the effects of this method, use ``removeRoutes()`` method.
@@ -638,10 +638,10 @@ open class NavigationMapView: UIView {
     /// levels are present. To also visualize waypoints and zoom the map to fit,
     /// use the ``showcaseRoutes(_:routesPresentationStyle:animated:duration:)`` method.
     ///
-    /// If experimental route callouts API is enabled with ``apiRouteCalloutViewProviderEnabled`` set to `true`
-    /// ``routeCalloutViewProvider`` will be used to create route callouts which will be displayed.
+    /// If experimental route callouts API is enabled with `apiRouteCalloutViewProviderEnabled` set to `true`
+    /// `routeCalloutViewProvider` will be used to create route callouts which will be displayed.
     /// If it is `nil` no callouts will be displayed. Also no callouts are displayed in case when
-    /// ``apiRouteCalloutViewProviderEnabled`` is set to `false`.
+    /// `apiRouteCalloutViewProviderEnabled` is set to `false`.
     ///
     /// To undo the effects of this method, use ``removeRoutes()`` method.
     /// - Parameters:

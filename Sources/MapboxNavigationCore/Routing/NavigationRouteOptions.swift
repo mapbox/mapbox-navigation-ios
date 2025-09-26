@@ -7,7 +7,7 @@ import MapboxDirections
 /// Directions API.
 ///
 /// ``NavigationRouteOptions`` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance
-/// of this class into the ``RoutingProvider/calculateRoutes(options:)-3d0sf`` method.
+/// of this class into the ``RoutingProvider/calculateRoutes(options:)-(RouteOptions)`` method.
 ///
 /// This class implements the `NSCopying` protocol by round-tripping the object through `JSONEncoder` and `JSONDecoder`.
 /// If you subclass ``NavigationRouteOptions``, make sure any properties you add are accounted for in `Decodable(from:)`
@@ -113,7 +113,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
 /// Matching API.
 ///
 /// ``NavigationMatchOptions`` is a subclass of `MatchOptions` that has been optimized for navigation. Pass an instance
-/// of this class into the ``RoutingProvider/calculateRoutes(options:)`` method.
+/// of this class into the ``RoutingProvider/calculateRoutes(options:)-(MatchOptions)`` method.
 ///
 /// - Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this
 /// `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered

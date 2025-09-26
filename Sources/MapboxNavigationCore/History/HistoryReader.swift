@@ -165,6 +165,7 @@ public struct HistoryReader: AsyncSequence, Sendable {
     /// Creates a new ``HistoryReader``
     ///
     /// - parameter fileUrl: History file to read through.
+    /// - parameter readOptions: Options to configure reading behavior.
     public init?(fileUrl: URL, readOptions: ReadOptions? = nil) {
         guard FileManager.default.fileExists(atPath: fileUrl.path) else {
             return nil
@@ -176,6 +177,7 @@ public struct HistoryReader: AsyncSequence, Sendable {
     /// Creates a new ``HistoryReader`` instance.
     ///
     /// - parameter data: History data to read through.
+    /// - parameter readOptions: Options to configure reading behavior.
     public init?(data: Data, readOptions: ReadOptions? = nil) {
         let temporaryURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         do {

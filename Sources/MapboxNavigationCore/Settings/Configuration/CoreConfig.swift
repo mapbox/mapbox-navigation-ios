@@ -164,7 +164,6 @@ public struct CoreConfig: Equatable {
     ///   - telemetryAppMetadata: Custom metadata that can be used with events in the telemetry pipeline.
     ///   - logLevel: Logging level for Mapbox SDKs.
     ///   - locationSource: Sources for location and route drive simulation. Defaults to ``LocationSource/live``.
-    ///   - isSimulationEnabled: A Boolean value that indicates whether a route simulation is enabled.
     ///   - copilotEnabled: A Boolean value that indicates whether a copilot recording is enabled.
     ///   - unitOfMeasurement: Configures default unit of measurement.
     ///   - locale: A `Locale` that is used for guidance instruction and other localization features.
@@ -232,7 +231,6 @@ public struct CoreConfig: Equatable {
     ///   - telemetryAppMetadata: Custom metadata that can be used with events in the telemetry pipeline.
     ///   - logLevel: Logging level for Mapbox SDKs.
     ///   - locationSource: Sources for location and route drive simulation. Defaults to ``LocationSource/live``.
-    ///   - isSimulationEnabled: A Boolean value that indicates whether a route simulation is enabled.
     ///   - copilotEnabled: A Boolean value that indicates whether a copilot recording is enabled.
     ///   - unitOfMeasurement: Configures default unit of measurement.
     ///   - locale: A `Locale` that is used for guidance instruction and other localization features.

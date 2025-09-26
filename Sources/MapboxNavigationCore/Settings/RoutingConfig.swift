@@ -31,15 +31,15 @@ public struct RoutingConfig: Equatable {
     /// A time interval in which time-dependent properties of the ``RouteLeg``s of the resulting `Route`s will be
     /// refreshed.
     ///
-    /// This property is ignored unless ``profileIdentifier`` is `ProfileIdentifier.automobileAvoidingTraffic`.
+    /// This property is ignored unless ``datasetProfileIdentifier`` is `ProfileIdentifier.automobileAvoidingTraffic`.
     /// Use `nil` value to disable the mechanism.
     public var routeRefreshPeriod: TimeInterval?
 
     /// Indicates if the expiration time of the route should be ignored during route refresh. The refresh period is
     /// controlled by server responses and may differ from the default value.
     ///
-    /// This property is ignored unless ``profileIdentifier`` is `ProfileIdentifier.automobileAvoidingTraffic` and
-    /// ``routeRefreshPeriod`` is not `nil`.
+    /// This property is ignored unless ``datasetProfileIdentifier`` is `ProfileIdentifier.automobileAvoidingTraffic`
+    /// and ``routeRefreshPeriod`` is not `nil`.
     ///
     ///  The default value of this property is `false`.
     public var ignoreExpirationTimeInRefresh: Bool

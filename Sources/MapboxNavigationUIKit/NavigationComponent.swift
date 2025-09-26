@@ -54,10 +54,10 @@ public protocol CarPlayConnectionObserver: AnyObject {
 /// This protocol defines a UI Component that is capable of presenting a status message.
 public protocol NavigationStatusPresenter: AnyObject {
     /// Shows a Status for a specified amount of time.
-    /// - Parameter _: The status to be displayed.
-    func show(_: StatusView.Status)
+    /// - Parameter status: The status to be displayed.
+    func show(_ status: StatusView.Status)
 
     /// Hides a given Status without hiding the status view.
-    /// - Parameter _:  The status to be hidden.
-    func hide(_: StatusView.Status)
+    /// - Parameter status: The status to be hidden.
+    func hide(_ status: StatusView.Status)
 }

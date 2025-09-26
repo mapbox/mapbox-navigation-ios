@@ -9,7 +9,7 @@ typealias JSONDictionary = [String: Any]
 public let MBDirectionsErrorDomain = "com.mapbox.directions.ErrorDomain"
 
 /// A `Directions` object provides you with optimal directions between different locations, or waypoints. The directions
-/// object passes your request to the [Mapbox Directions API](https://docs.mapbox.com/api/navigation/#directions) and
+/// object passes your request to the [Mapbox Directions API](https://docs.mapbox.com/api/navigation/directions/) and
 /// returns the requested information to a closure (block) that you provide. A directions object can handle multiple
 /// simultaneous requests. A ``RouteOptions`` object specifies criteria for the results, such as intermediate waypoints,
 /// a mode of transportation, or the level of detail to be returned.

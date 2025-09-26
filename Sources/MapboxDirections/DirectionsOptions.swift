@@ -95,8 +95,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
     /// Initializes an options object for routes between the given waypoints and an optional profile identifier.
     ///
     /// Do not call ``DirectionsOptions/init(waypoints:profileIdentifier:queryItems:)`` directly; instead call the
-    /// corresponding
-    /// initializer of ``RouteOptions`` or ``MatchOptions``.
+    /// corresponding initializer of ``RouteOptions`` or ``MatchOptions``.
     /// - Parameters:
     ///   - waypoints: An array of ``Waypoint`` objects representing locations that the route should visit in
     /// chronological order. The array should contain at least two waypoints (the source and destination) and at most 25

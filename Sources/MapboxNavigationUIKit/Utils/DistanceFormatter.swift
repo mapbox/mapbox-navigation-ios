@@ -78,7 +78,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     /// km” has a quantity attribute set to 5.
     ///
     /// - Parameter distance: The distance, measured in meters, to localize and format.
-    /// - Parameter defaultAttributes: The default attributes to apply to the resulting attributed string.
+    /// - Parameter attributes: The default attributes to apply to the resulting attributed string.
     /// - Returns: A localized, formatted representation of the distance.
     open func attributedString(
         from distance: CLLocationDistance,

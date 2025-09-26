@@ -17,7 +17,7 @@ open class MatchOptions: DirectionsOptions, @unchecked Sendable {
     ///   - locations: An array of `CLLocation` objects representing locations to attempt to match against the road
     /// network. The array should contain at least two locations (the source and destination) and at most 100 locations.
     /// (Some profiles, such as ``ProfileIdentifier/automobileAvoidingTraffic``, [may have lower
-    /// limits](https://docs.mapbox.com/api/navigation/#directions).)
+    /// limits](https://docs.mapbox.com/api/navigation/map-matching/).)
     ///   - profileIdentifier: A string specifying the primary mode of transportation for the routes.
     /// ``ProfileIdentifier/automobile`` is used by default.
     ///   - queryItems: URL query items to be parsed and applied as configuration to the resulting options.
@@ -37,7 +37,7 @@ open class MatchOptions: DirectionsOptions, @unchecked Sendable {
     ///   - coordinates: An array of geographic coordinates representing locations to attempt to match against the road
     /// network. The array should contain at least two locations (the source and destination) and at most 100 locations.
     /// (Some profiles, such as ``ProfileIdentifier/automobileAvoidingTraffic``, [may have lower
-    /// limits](https://docs.mapbox.com/api/navigation/#directions).) Each coordinate is converted into a ``Waypoint``
+    /// limits](https://docs.mapbox.com/api/navigation/map-matching/).) Each coordinate is converted into a ``Waypoint``
     /// object.
     ///   - profileIdentifier: A string specifying the primary mode of transportation for the routes.
     /// ``ProfileIdentifier/automobile`` is used by default.
@@ -101,8 +101,7 @@ open class MatchOptions: DirectionsOptions, @unchecked Sendable {
     /// waypoint for each coordinate in the match options.
     ///
     /// If specified, each index must correspond to a valid index in ``DirectionsOptions/waypoints``, and the index set
-    /// must contain 0
-    /// and the last index (one less than `endIndex`) of ``DirectionsOptions/waypoints``.
+    /// must contain 0 and the last index (one less than `endIndex`) of ``DirectionsOptions/waypoints``.
     @available(*, deprecated, message: "Use Waypoint.separatesLegs instead.")
     open var waypointIndices: IndexSet?
 
