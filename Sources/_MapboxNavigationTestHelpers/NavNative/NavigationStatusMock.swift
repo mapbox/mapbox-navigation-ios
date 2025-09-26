@@ -7,7 +7,7 @@ extension NavigationStatus {
     public static func mock(
         routeState: RouteState = .tracking,
         locatedAlternativeRouteId: String? = nil,
-        primaryRouteId: String? = nil,
+        primaryRouteId: String = "",
         stale: Bool = false,
         activeGuidanceInfo: ActiveGuidanceInfo? = .mock(),
         location: CLLocation = CLLocation(latitude: 37.788443, longitude: -122.4020258),
@@ -46,26 +46,29 @@ extension NavigationStatus {
         isAdasDataAvailable: NSNumber? = nil
     ) -> Self {
         let fixLocation = FixLocation(location)
-        return .init(
-            routeState: routeState,
-            locatedAlternativeRouteId: locatedAlternativeRouteId,
-            primaryRouteId: primaryRouteId,
-            stale: stale,
-            location: fixLocation,
-            routeIndex: routeIndex,
+        let primaryRouteIndices = RouteIndices(
+            routeId: RouteIdentifier(uuid: primaryRouteId, index: routeIndex),
             legIndex: legIndex,
             step: stepIndex,
+            geometryIndex: geometryIndex,
+            legShapeIndex: shapeIndex,
+            intersectionIndex: intersectionIndex,
+            isForkPointPassed: false
+        )
+        return .init(
+            routeState: routeState,
+            stale: stale,
+            location: fixLocation,
             isFallback: isFallback,
             inTunnel: inTunnel,
             inParkingAisle: inParkingAisle,
             inRoundabout: inRoundabout,
             predicted: predicted,
-            geometryIndex: geometryIndex,
-            shapeIndex: shapeIndex,
-            intersectionIndex: intersectionIndex,
             turnLanes: turnLanes,
-            alternativeRouteIndices: alternativeRouteIndices,
             roads: roads,
+            primaryRouteIndices: primaryRouteIndices,
+            alternativeRouteIndices: alternativeRouteIndices,
+            locatedAlternativeRouteId: locatedAlternativeRouteId,
             voiceInstruction: voiceInstruction,
             bannerInstruction: bannerInstruction,
             speedLimit: speedLimit,
@@ -116,12 +119,14 @@ extension ActiveGuidanceInfo {
     public static func mock(
         routeProgress: ActiveGuidanceProgress = .mock(),
         legProgress: ActiveGuidanceProgress = .mock(),
-        stepProgress: ActiveGuidanceProgress = .mock()
+        stepProgress: ActiveGuidanceProgress = .mock(),
+        linkProgress: ActiveGuidanceProgress = .mock()
     ) -> Self {
         self.init(
             routeProgress: routeProgress,
             legProgress: legProgress,
-            step: stepProgress
+            step: stepProgress,
+            linkProgress: linkProgress
         )
     }
 }

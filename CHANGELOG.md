@@ -2,6 +2,11 @@
 
 ## 3.16.0-beta.1
 
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.16.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.16.0-beta.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.16.0-beta.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.16.0-beta.1)
+
 ### API Deprecations
 
 * `NavigationRoute.nativeRoute`, `NavigationRoute.init?(nativeRoute:)`, and `AlternativeRoute.init?(mainRoute:alternativeRoute:)` are deprecated and should no longer be used.

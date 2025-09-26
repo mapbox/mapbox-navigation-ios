@@ -8,11 +8,14 @@ public struct RouteLegProgress: Equatable, Sendable {
     // MARK: Details About the Leg
 
     mutating func update(using status: NavigationStatus) {
-        guard let activeGuidanceInfo = status.activeGuidanceInfo else {
+        guard
+            let activeGuidanceInfo = status.activeGuidanceInfo,
+            let primaryRouteIndices = status.primaryRouteIndices
+        else {
             return
         }
 
-        let statusStepIndex = Int(status.stepIndex)
+        let statusStepIndex = Int(primaryRouteIndices.stepIndex)
         guard leg.steps.indices ~= statusStepIndex else {
             Log.error("Incorrect step index update: \(statusStepIndex)", category: .navigation)
             return
@@ -27,7 +30,7 @@ public struct RouteLegProgress: Equatable, Sendable {
         }
 
         stepIndex = statusStepIndex
-        shapeIndex = Int(status.shapeIndex)
+        shapeIndex = Int(primaryRouteIndices.legShapeIndex)
 
         currentSpeedLimit = nil
         if let speed = status.speedLimit.speed?.doubleValue {

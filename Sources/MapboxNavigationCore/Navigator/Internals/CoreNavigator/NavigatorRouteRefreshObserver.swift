@@ -21,7 +21,7 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         legIndex: UInt32,
         routeGeometryIndex: UInt32
     ) {
-        let routeId = routeIdentifier.getRouteId()
+        let routeId = routeIdentifier.toRouteIdString()
         let routeIndex = routeIdentifier.index
         guard let routeRefreshResult = refreshCallback(routeId) else {
             return
@@ -44,7 +44,7 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
 
     func onRouteRefreshCancelled(for routeIdentifier: RouteIdentifier) {
         let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
-            .refreshRequestIdKey: routeIdentifier.getRouteId(),
+            .refreshRequestIdKey: routeIdentifier.toRouteIdString(),
         ]
         onMainAsync {
             NotificationCenter.default.post(name: .routeRefreshDidCancelRefresh, object: nil, userInfo: userInfo)
@@ -54,7 +54,7 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
     func onRouteRefreshFailed(for routeIdentifier: RouteIdentifier, error: RouteRefreshError) {
         let userInfo: [NativeNavigator.NotificationUserInfoKey: any Sendable] = [
             .refreshRequestErrorKey: error,
-            .refreshRequestIdKey: routeIdentifier.getRouteId(),
+            .refreshRequestIdKey: routeIdentifier.toRouteIdString(),
         ]
         onMainAsync {
             NotificationCenter.default.post(name: .routeRefreshDidFailRefresh, object: nil, userInfo: userInfo)

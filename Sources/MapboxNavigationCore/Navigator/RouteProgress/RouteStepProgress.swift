@@ -23,7 +23,10 @@ public struct RouteStepProgress: Equatable, Sendable {
     // MARK: Step Stats
 
     mutating func update(using status: NavigationStatus) {
-        guard let activeGuidanceInfo = status.activeGuidanceInfo else {
+        guard
+            let activeGuidanceInfo = status.activeGuidanceInfo,
+            let primaryRouteIndices = status.primaryRouteIndices
+        else {
             return
         }
 
@@ -32,7 +35,7 @@ public struct RouteStepProgress: Equatable, Sendable {
         fractionTraveled = activeGuidanceInfo.stepProgress.fractionTraveled
         durationRemaining = activeGuidanceInfo.stepProgress.remainingDuration
 
-        intersectionIndex = Int(status.intersectionIndex)
+        intersectionIndex = Int(primaryRouteIndices.intersectionIndex)
         visualInstructionIndex = status.bannerInstruction.map { Int($0.index) } ?? visualInstructionIndex
         // TODO: ensure NN fills these only when it is really needed (mind reroutes/alternatives switch/etc)
         spokenInstructionIndex = status.voiceInstruction.map { Int($0.index) }
