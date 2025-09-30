@@ -717,7 +717,7 @@ extension CarPlayManager {
 
         let trips = dataForPreviews.map(\.trip)
 
-        var previewText = defaultTripPreviewTextConfiguration()
+        let previewText = defaultTripPreviewTextConfiguration()
 
         template.showTripPreviews(
             trips,
@@ -790,9 +790,9 @@ extension CarPlayManager {
                 return
             }
 
-            let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
+            let mapTemplate = await interfaceController?.rootTemplate as? CPMapTemplate
             _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
-            mapTemplate?.present(navigationAlert: alert, animated: true)
+            await mapTemplate?.present(navigationAlert: alert, animated: true)
         }
     }
 
@@ -1155,6 +1155,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
     }
 
+    @MainActor
     func popToRootTemplate(
         interfaceController: CPInterfaceController?,
         animated: Bool

@@ -13,11 +13,7 @@ func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
     let interfaceController = FakeCPInterfaceController(context: #function)
     let window = CPWindow()
 
-    carPlayManager.application(
-        UIApplication.shared,
-        didConnectCarInterfaceController: interfaceController,
-        to: window
-    )
+    carPlayManager.handleDidConnect(interfaceController: interfaceController, to: window)
 
     if let mapViewController = carPlayManager.carWindow?.rootViewController?.view {
         carPlayManager.carWindow?.addSubview(mapViewController)
@@ -31,11 +27,7 @@ func simulateCarPlayDisconnection(_ carPlayManager: CarPlayManager) {
     }
     let window = CPWindow()
 
-    carPlayManager.application(
-        UIApplication.shared,
-        didDisconnectCarInterfaceController: interfaceController,
-        from: window
-    )
+    carPlayManager.handleDidDisconnect(interfaceController: interfaceController, from: window)
 }
 
 func createNavigationRoutes() async -> NavigationRoutes {
@@ -300,9 +292,10 @@ class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
     }
 }
 
+@MainActor
 class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDelegate {
-    public fileprivate(set) var interfaceController: CPInterfaceController?
-    public fileprivate(set) var carPlayManager: CarPlayManager?
+    fileprivate(set) var interfaceController: CPInterfaceController?
+    fileprivate(set) var carPlayManager: CarPlayManager?
 
     func carPlaySearchController(
         _ searchController: CarPlaySearchController,
@@ -316,7 +309,6 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
         carPlayManager?.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
 
-    @MainActor
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         carPlayManager?.resetPanButtons(mapTemplate)
     }

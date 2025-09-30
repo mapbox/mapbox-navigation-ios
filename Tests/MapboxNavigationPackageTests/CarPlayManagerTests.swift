@@ -58,6 +58,7 @@ class CarPlayManagerTests: TestCase {
         super.tearDown()
     }
 
+    @available(*, deprecated)
     @MainActor
     func testEventsSentWhenCarPlayConnectedAndDisconnected() {
         guard let interfaceController = carPlayManager.interfaceController else {
@@ -106,6 +107,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(actualLayer, layer)
     }
 
+    @available(*, deprecated)
     @MainActor
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         let searchDelegate = TestCarPlaySearchControllerDelegate()
@@ -150,6 +152,7 @@ class CarPlayManagerTests: TestCase {
         )
     }
 
+    @available(*, deprecated)
     @MainActor
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
         delegate.returnedLeadingBarButtons = [
@@ -175,6 +178,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(0, mapTemplate?.trailingNavigationBarButtons.count)
     }
 
+    @available(*, deprecated)
     @MainActor
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
         delegate.returnedMapButtons = [CPMapButton()]
@@ -253,6 +257,7 @@ class CarPlayManagerTests: TestCase {
         )
     }
 
+    @MainActor
     func testPreviewRouteWithDefault() async {
         let navigationRouteOptions = await previewRoutesOptions()
         let previewExpectation = XCTestExpectation(description: "preview expectation")
@@ -272,6 +277,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, expectedStartButtonTitle)
     }
 
+    @MainActor
     func testPreviewRouteWithDefaultAsync() async {
         let navigationRouteOptions = await previewRoutesOptions()
         await carPlayManager.previewRoutes(for: navigationRouteOptions)
@@ -287,6 +293,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, expectedStartButtonTitle)
     }
 
+    @MainActor
     func testPreviewRouteWithCustomTrip() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -301,6 +308,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertNotNil(mapTemplateSpy.passedPreviewTextConfiguration)
     }
 
+    @MainActor
     func testPreviewRouteWithCustomTripAsync() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -311,6 +319,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertNotNil(mapTemplateSpy.passedPreviewTextConfiguration)
     }
 
+    @MainActor
     func testPreviewRouteWithCustomPreviewText() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -333,6 +342,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, startButtonTitle)
     }
 
+    @MainActor
     func testPreviewRouteWithCustomPreviewTextAsync() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -366,6 +376,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertTrue(delegate.didPresentCalled)
     }
 
+    @MainActor
     func testDidBeginPanGesture() async {
         let mapTemplate = CPMapTemplate()
         let task = Task { @MainActor in
@@ -411,6 +422,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertFalse(delegate.didDismissPanningInterfaceCalled)
     }
 
+    @MainActor
     func testDidShowPanningInterfaceInBrowsingMode() async {
         let mapTemplate = CPMapTemplate()
         mapTemplate.currentActivity = .browsing
@@ -429,6 +441,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
     }
 
+    @MainActor
     func testDidShowPanningInterfaceInNavigationMode() async {
         let task = Task { @MainActor in
             let navigationMapTemplate = await startNavigation()
@@ -447,6 +460,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
     }
 
+    @MainActor
     func testDidDismissPanningInterfaceInBrowsingMode() async {
         let mapTemplate = CPMapTemplate()
         mapTemplate.userInfo = [
@@ -466,6 +480,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
     }
 
+    @MainActor
     func testDidDismissPanningInterfaceInNavigationMode() async {
         let task = Task { @MainActor in
             let navigationMapTemplate = await startNavigation()
@@ -482,6 +497,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
     }
 
+    @available(*, deprecated)
     @MainActor
     func testConfigureCarPlayMapViewController() {
         let interfaceController = FakeCPInterfaceController(context: #function)
