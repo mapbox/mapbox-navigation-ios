@@ -10,6 +10,8 @@
 ### Other changes
 
 * Fixed a possible race condition in `NavigationCamera` state `CLHeading` updates.
+* Fixed memory leaks caused by `Task.detached` usage in `NavigationController`.
+* Fixed memory leaks in `NWPathMonitor` caused by a non-stopped monitor.
 
 ## 3.16.0-beta.1
 

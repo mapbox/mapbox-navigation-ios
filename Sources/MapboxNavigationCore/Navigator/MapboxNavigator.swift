@@ -609,6 +609,7 @@ final class MapboxNavigator: @unchecked Sendable {
     let state = NavigatorState()
 
     private let locationClient: LocationClient
+    private var statusTask: Task<Void, Never>?
 
     @MainActor
     init(configuration: Configuration) {
@@ -639,7 +640,7 @@ final class MapboxNavigator: @unchecked Sendable {
         let statusUpdateEvents = AsyncStreamBridge<NavigationStatus>(bufferingPolicy: .bufferingNewest(1))
         self.statusUpdateEvents = statusUpdateEvents
 
-        Task.detached { [weak self] in
+        self.statusTask = Task.detached { [weak self] in
             for await status in statusUpdateEvents {
                 guard let self else { return }
 
@@ -656,6 +657,7 @@ final class MapboxNavigator: @unchecked Sendable {
     }
 
     deinit {
+        statusTask?.cancel()
         unsubscribeNotifications()
     }
 

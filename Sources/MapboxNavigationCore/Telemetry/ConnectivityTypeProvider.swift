@@ -8,6 +8,7 @@ protocol ConnectivityTypeProvider {
 
 protocol NetworkMonitor: AnyObject, Sendable {
     func start(queue: DispatchQueue)
+    func cancel()
     var pathUpdateHandler: (@Sendable (_ newPath: NWPath) -> Void)? { get set }
 }
 
@@ -18,7 +19,6 @@ protocol NetworkPath {
 
 extension NWPathMonitor: NetworkMonitor {}
 extension NWPath: NetworkPath {}
-extension NWPathMonitor: @unchecked Sendable {}
 
 final class MonitorConnectivityTypeProvider: ConnectivityTypeProvider, Sendable {
     private let monitor: NetworkMonitor
@@ -35,6 +35,11 @@ final class MonitorConnectivityTypeProvider: ConnectivityTypeProvider, Sendable 
         self.monitor = monitor
 
         configureMonitor()
+    }
+
+    deinit {
+        monitor.pathUpdateHandler = nil
+        monitor.cancel()
     }
 
     func handleChange(to path: NetworkPath) {
