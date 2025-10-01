@@ -22,7 +22,7 @@ struct ViewportDataSourceState: Equatable, Sendable {
     }
 
     var location: CLLocation?
-    var heading: CLHeading?
+    var navigationHeading: NavigationHeading?
     var navigationState: NavigationState
     var viewportPadding: UIEdgeInsets
 }

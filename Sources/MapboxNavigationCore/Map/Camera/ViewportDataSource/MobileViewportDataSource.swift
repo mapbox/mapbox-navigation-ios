@@ -232,9 +232,10 @@ public class MobileViewportDataSource: ViewportDataSource {
                 var headingDirection: CLLocationDirection?
                 let isWalking = activeState.transportType == .walking
                 if isWalking {
-                    if let trueHeading = state.heading?.trueHeading, trueHeading >= 0 {
+                    let heading = state.navigationHeading
+                    if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
                         headingDirection = trueHeading
-                    } else if let magneticHeading = state.heading?.magneticHeading, magneticHeading >= 0 {
+                    } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
                         headingDirection = magneticHeading
                     } else {
                         headingDirection = bearing
@@ -310,9 +311,10 @@ public class MobileViewportDataSource: ViewportDataSource {
             var headingDirection: CLLocationDirection?
             let isWalking = activeState.transportType == .walking
             if isWalking {
-                if let trueHeading = state.heading?.trueHeading, trueHeading >= 0 {
+                let heading = state.navigationHeading
+                if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
                     headingDirection = trueHeading
-                } else if let magneticHeading = state.heading?.magneticHeading, magneticHeading >= 0 {
+                } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
                     headingDirection = magneticHeading
                 } else {
                     headingDirection = bearing

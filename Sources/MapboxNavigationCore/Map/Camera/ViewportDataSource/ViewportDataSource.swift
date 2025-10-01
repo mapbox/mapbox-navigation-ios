@@ -12,7 +12,25 @@ public struct ViewportState: Equatable, Sendable {
     /// The padding applied to the viewport.
     public let viewportPadding: UIEdgeInsets
     /// The current user heading.
-    public let heading: CLHeading?
+    public let navigationHeading: NavigationHeading?
+
+    /// Initializes a new ``ViewportState`` instance.
+    /// - Parameters:
+    ///   - location: The current location of the user.
+    ///   - routeProgress: The navigation route progress. Pass `nil` in case of no active navigation at the moment.
+    ///   - viewportPadding: The padding applied to the viewport.
+    ///   - navigationHeading: The current user heading.
+    public init(
+        location: CLLocation,
+        routeProgress: RouteProgress?,
+        viewportPadding: UIEdgeInsets,
+        navigationHeading: NavigationHeading?
+    ) {
+        self.location = location
+        self.routeProgress = routeProgress
+        self.viewportPadding = viewportPadding
+        self.navigationHeading = navigationHeading
+    }
 
     /// Initializes a new ``ViewportState`` instance.
     /// - Parameters:
@@ -20,6 +38,7 @@ public struct ViewportState: Equatable, Sendable {
     ///   - routeProgress: The navigation route progress. Pass `nil` in case of no active navigation at the moment.
     ///   - viewportPadding: The padding applied to the viewport.
     ///   - heading: The current user heading.
+    @available(*, deprecated, message: "Use `init(location:routeProgress:viewportPadding:navigationHeading:)` instead")
     public init(
         location: CLLocation,
         routeProgress: RouteProgress?,
@@ -29,8 +48,14 @@ public struct ViewportState: Equatable, Sendable {
         self.location = location
         self.routeProgress = routeProgress
         self.viewportPadding = viewportPadding
-        self.heading = heading
+        self.navigationHeading = heading.map(NavigationHeading.init)
     }
+}
+
+extension ViewportState {
+    /// The current user heading. Use ``navigationHeading`` instead.
+    @available(*, deprecated, message: "Use `navigationHeading` instead")
+    public var heading: CLHeading? { return nil }
 }
 
 /// The protocol, which is used to fill and store ``NavigationCameraOptions`` which will be used by ``NavigationCamera``
@@ -54,5 +79,3 @@ public protocol ViewportDataSource: AnyObject {
     ///   - viewportState: The current viewport state.
     func update(using viewportState: ViewportState)
 }
-
-extension CLHeading: @unchecked Sendable {}
