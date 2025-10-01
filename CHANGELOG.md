@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### API Deprecations
+
+* `ViewportState.heading` is deprecated and is always `nil` now. Use `ViewportState.navigationHeading` instead.
+* `ViewportState.init(location:routeProgress:viewportPadding:heading:)` is deprecated in favor of `ViewportState.init(location:routeProgress:viewportPadding:navigationHeading:)`.
+
+### Other changes
+
+* Fixed a possible race condition in `NavigationCamera` state `CLHeading` updates.
+
 ## 3.16.0-beta.1
 
 ### Packaging

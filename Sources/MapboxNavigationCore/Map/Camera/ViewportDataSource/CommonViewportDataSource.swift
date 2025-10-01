@@ -27,9 +27,8 @@ class CommonViewportDataSource {
 
     weak var mapView: MapView?
 
-    private var lifetimeSubscriptions: Set<AnyCancellable> = []
-
     private let viewportParametersProvider: ViewportParametersProvider
+    private var updateTask: Task<Void, Never>?
 
     private var previousViewportParameters: ViewportDataSourceState?
     private var workQueue: DispatchQueue = .init(
@@ -49,26 +48,36 @@ class CommonViewportDataSource {
         using viewportState: ViewportState,
         updateClosure: @escaping (ViewportDataSourceState) -> NavigationCameraOptions?
     ) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            let viewportParameters = await viewportParameters(with: viewportState)
-            guard viewportParameters != previousViewportParameters else { return }
+        updateTask?.cancel()
+        updateTask = Task { [weak self] in
+            await self?.performUpdate(using: viewportState, updateClosure: updateClosure)
+        }
+    }
 
-            previousViewportParameters = viewportParameters
-            if let newOptions = updateClosure(viewportParameters) {
-                _navigationCameraOptions.send(newOptions)
-            }
+    @MainActor
+    func performUpdate(
+        using viewportState: ViewportState,
+        updateClosure: @escaping (ViewportDataSourceState) -> NavigationCameraOptions?
+    ) async {
+        guard !Task.isCancelled else { return }
+
+        let viewportParameters = await viewportParameters(with: viewportState)
+        guard viewportParameters != previousViewportParameters else { return }
+
+        previousViewportParameters = viewportParameters
+        if let newOptions = updateClosure(viewportParameters) {
+            _navigationCameraOptions.send(newOptions)
         }
     }
 
     private func viewportParameters(with viewportState: ViewportState) async -> ViewportDataSourceState {
-        await withUnsafeContinuation { continuation in
+        await withCheckedContinuation { continuation in
             let options = options
             let provider = viewportParametersProvider
             workQueue.async {
                 let parameters = provider.parameters(
                     with: viewportState.location,
-                    heading: viewportState.heading,
+                    navigationHeading: viewportState.navigationHeading,
                     routeProgress: viewportState.routeProgress,
                     viewportPadding: viewportState.viewportPadding,
                     options: options

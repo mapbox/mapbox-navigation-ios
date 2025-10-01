@@ -15,7 +15,7 @@ public class NavigationCamera {
     struct State: Equatable {
         var cameraState: NavigationCameraState = .idle
         var location: CLLocation?
-        var heading: CLHeading?
+        var navigationHeading: NavigationHeading?
         var routeProgress: RouteProgress?
         var viewportPadding: UIEdgeInsets = .zero
     }
@@ -94,7 +94,7 @@ public class NavigationCamera {
                             location: location,
                             routeProgress: newState.routeProgress,
                             viewportPadding: viewportPadding,
-                            heading: newState.heading
+                            navigationHeading: newState.navigationHeading
                         )
                     )
                 }
@@ -131,22 +131,28 @@ public class NavigationCamera {
     }
 
     private func observe(location: AnyPublisher<CLLocation, Never>) {
-        location.sink { [weak self] in
-            self?.state.location = $0
-        }.store(in: &lifetimeSubscriptions)
+        location
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.state.location = $0
+            }.store(in: &lifetimeSubscriptions)
     }
 
     private func observe(routeProgress: AnyPublisher<RouteProgress?, Never>) {
-        routeProgress.sink { [weak self] in
-            self?.state.routeProgress = $0
-        }.store(in: &lifetimeSubscriptions)
+        routeProgress
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.state.routeProgress = $0
+            }.store(in: &lifetimeSubscriptions)
     }
 
     private func observe(heading: AnyPublisher<CLHeading, Never>?) {
         guard let heading else { return }
-        heading.sink { [weak self] in
-            self?.state.heading = $0
-        }.store(in: &lifetimeSubscriptions)
+        heading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.state.navigationHeading = $0.navigationHeading
+            }.store(in: &lifetimeSubscriptions)
     }
 
     private var viewportSubscription: [AnyCancellable] = []
@@ -156,6 +162,7 @@ public class NavigationCamera {
 
         viewportDataSource.navigationCameraOptions
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] navigationCameraOptions in
                 guard let self else { return }
                 update(using: navigationCameraOptions)
@@ -167,6 +174,7 @@ public class NavigationCamera {
         viewportDataSource.navigationCameraOptions
             .filter { $0.followingCamera.zoom != nil }
             .first()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.update(cameraState: .following)
             }.store(in: &viewportSubscription)
@@ -239,5 +247,3 @@ public class NavigationCamera {
         }
     }
 }
-
-extension CameraOptions: @unchecked Sendable {}
