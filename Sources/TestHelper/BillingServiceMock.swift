@@ -3,7 +3,7 @@ import Foundation
 import XCTest
 
 public final class BillingServiceMock: BillingService {
-    public enum Event: Equatable, CustomStringConvertible {
+    public enum Event: Equatable, CustomStringConvertible, Sendable {
         case beginBillingSession(BillingHandler.SessionType)
         case stopBillingSession(BillingHandler.SessionType)
         case pauseBillingSession(BillingHandler.SessionType)

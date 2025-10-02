@@ -343,7 +343,7 @@ open class NavigationMapView: UIView {
     }
 
     /// A custom route line layer position.
-    public var customRouteLineLayerPosition: MapboxMaps.LayerPosition? = nil {
+    public var customRouteLineLayerPosition: MapboxMaps.LayerPosition? {
         didSet {
             mapStyleManager.customRouteLineLayerPosition = customRouteLineLayerPosition
         }
@@ -384,7 +384,7 @@ open class NavigationMapView: UIView {
     /// Configures the color for the traversed part of the main route. The traversed part is rendered only if the color
     /// is not `nil`.
     /// Defaults to `nil`.
-    @objc public dynamic var traversedRouteColor: UIColor? = nil
+    @objc public dynamic var traversedRouteColor: UIColor?
     /// Configures the color of the maneuver arrow.
     @objc public dynamic var maneuverArrowColor: UIColor = .defaultManeuverArrow
     /// Configures the stroke color of the maneuver arrow.
@@ -413,7 +413,15 @@ open class NavigationMapView: UIView {
         deprecated,
         message: "Has no effect in current design. Use `routeAnnotationTextColor` and `routeAnnotationCaptionTextColor` instead."
     )
-    @objc public dynamic var routeAnnotationMoreTimeTextColor: UIColor = .defaultRouteAnnotationMoreTimeTextColor
+    @objc public dynamic var routeAnnotationMoreTimeTextColor: UIColor {
+        set { deprecatedRouteAnnotationMoreTimeTextColor = newValue }
+        get { deprecatedRouteAnnotationMoreTimeTextColor }
+    }
+
+    @_spi(MapboxInternal)
+    @objc public dynamic var deprecatedRouteAnnotationMoreTimeTextColor: UIColor =
+        .defaultRouteAnnotationMoreTimeTextColor
+
     /// Configures the text color of the route annotation for alternative routes when relative duration is lesser then
     /// the main route.
     @available(
@@ -421,7 +429,14 @@ open class NavigationMapView: UIView {
         deprecated,
         message: "Has no effect in current design. Use `routeAnnotationTextColor` and `routeAnnotationCaptionTextColor` instead."
     )
-    @objc public dynamic var routeAnnotationLessTimeTextColor: UIColor = .defaultRouteAnnotationLessTimeTextColor
+    @objc public dynamic var routeAnnotationLessTimeTextColor: UIColor {
+        set { deprecatedRouteAnnotationLessTimeTextColor = newValue }
+        get { deprecatedRouteAnnotationLessTimeTextColor }
+    }
+
+    @_spi(MapboxInternal)
+    @objc public dynamic var deprecatedRouteAnnotationLessTimeTextColor: UIColor =
+        .defaultRouteAnnotationLessTimeTextColor
     /// Configures the text font of the route annotations.
     @objc public dynamic var routeAnnotationTextFont: UIFont = .defaultRouteAnnotationTextFont
     /// Configures the secondary text font of the route annotations.
@@ -851,7 +866,7 @@ open class NavigationMapView: UIView {
 
     // MARK: Configuring Cache and Tiles Storage
 
-    private var predictiveCacheMapObserver: MapboxMaps.Cancelable? = nil
+    private var predictiveCacheMapObserver: MapboxMaps.Cancelable?
 
     /// Setups the Predictive Caching mechanism using provided Options.
     ///
@@ -917,8 +932,8 @@ open class NavigationMapView: UIView {
             routeAnnotationTextColor: routeAnnotationTextColor,
             routeAnnotationSelectedCaptionTextColor: routeAnnotationSelectedCaptionTextColor,
             routeAnnotationCaptionTextColor: routeAnnotationCaptionTextColor,
-            routeAnnotationMoreTimeTextColor: routeAnnotationMoreTimeTextColor,
-            routeAnnotationLessTimeTextColor: routeAnnotationLessTimeTextColor,
+            routeAnnotationMoreTimeTextColor: deprecatedRouteAnnotationMoreTimeTextColor,
+            routeAnnotationLessTimeTextColor: deprecatedRouteAnnotationLessTimeTextColor,
             routeAnnotationTextFont: routeAnnotationTextFont,
             routeAnnnotationCaptionTextFont: routeAnnotationCaptionTextFont,
             routeLineTracksTraversal: routeLineTracksTraversal,

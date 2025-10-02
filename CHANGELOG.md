@@ -12,6 +12,7 @@
 * Fixed a possible race condition in `NavigationCamera` state `CLHeading` updates.
 * Fixed memory leaks caused by `Task.detached` usage in `NavigationController`.
 * Fixed memory leaks in `NWPathMonitor` caused by a non-stopped monitor.
+* Removed excessive `Sendable` conformance for types from Turf and Maps.
 
 ## 3.16.0-beta.1
 

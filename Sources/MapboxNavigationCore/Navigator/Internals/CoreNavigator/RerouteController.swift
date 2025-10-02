@@ -82,7 +82,7 @@ extension RerouteController {
                 nativeInterface: nativeRerouteController,
                 routeOptionsAdapter: DefaultRouteOptionsAdapter { urlOptionsCustomization($0) ?? $0 }
             )
-        } else if let optionsCustomization = configuration.rerouteConfig.optionsCustomization {
+        } else if let optionsCustomization = configuration.rerouteConfig.deprecatedOptionsCustomization {
             return DefaultRerouteControllerInterface(
                 nativeInterface: nativeRerouteController,
                 requestConfig: { [weak self] in

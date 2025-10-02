@@ -9,9 +9,6 @@ public enum ResponseOptions: Sendable, Equatable {
     case match(MatchOptions)
 }
 
-@available(*, unavailable)
-extension ResponseOptions: @unchecked Sendable {}
-
 /// A ``RouteResponse`` object is a structure that corresponds to a directions response returned by the Mapbox
 /// Directions API.
 public struct RouteResponse: ForeignMemberContainer {

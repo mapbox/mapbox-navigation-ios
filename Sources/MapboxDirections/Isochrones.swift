@@ -163,6 +163,3 @@ open class Isochrones: @unchecked Sendable {
         return request
     }
 }
-
-@available(*, unavailable)
-extension Isochrones: @unchecked Sendable {}

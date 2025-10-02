@@ -21,7 +21,13 @@ public struct CoreConfig: Equatable {
     @available(*, deprecated, message: """
     Requests from `RoutingProvider` are not affected by this config. Use `RouteOptions` or `MatchOptions` to configure them instead.
     """)
-    public var routeRequestConfig: RouteRequestConfig = .init()
+    public var routeRequestConfig: RouteRequestConfig = .init() {
+        didSet {
+            deprecatedProfileIdentifier = routeRequestConfig.profileIdentifier
+        }
+    }
+
+    var deprecatedProfileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
 
     /// Routing Configuration.
     public var routingConfig: RoutingConfig

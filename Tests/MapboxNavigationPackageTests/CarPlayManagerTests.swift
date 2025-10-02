@@ -2,7 +2,7 @@ import CarPlay
 import CarPlayTestHelper
 import MapboxDirections
 import MapboxMaps
-@testable import MapboxNavigationCore
+@_spi(MapboxInternal) @testable import MapboxNavigationCore
 @testable import MapboxNavigationUIKit
 @testable import TestHelper
 import XCTest

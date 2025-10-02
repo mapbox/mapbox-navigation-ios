@@ -22,7 +22,6 @@ class NavigatorRouteRefreshObserver: RouteRefreshObserver, @unchecked Sendable {
         routeGeometryIndex: UInt32
     ) {
         let routeId = routeIdentifier.toRouteIdString()
-        let routeIndex = routeIdentifier.index
         guard let routeRefreshResult = refreshCallback(routeId) else {
             return
         }

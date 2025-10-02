@@ -1,5 +1,5 @@
 import _MapboxNavigationTestHelpers
-@_implementationOnly import MapboxCommon_Private
+import MapboxCommon_Private
 import MapboxDirections
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private

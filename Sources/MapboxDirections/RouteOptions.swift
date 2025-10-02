@@ -622,9 +622,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     }
 }
 
-@available(*, unavailable)
-extension RouteOptions: @unchecked Sendable {}
-
 extension Bool {
     var queryString: String {
         return self ? "true" : "false"

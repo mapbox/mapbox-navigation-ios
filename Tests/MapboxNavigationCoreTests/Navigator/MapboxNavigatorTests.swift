@@ -2,7 +2,7 @@ import _MapboxNavigationTestHelpers
 import Combine
 import CoreLocation
 import MapboxDirections
-@testable import MapboxNavigationCore
+@_spi(MapboxInternal) @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 import XCTest
 

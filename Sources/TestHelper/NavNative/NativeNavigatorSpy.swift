@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+import MapboxCommon_Private
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 
