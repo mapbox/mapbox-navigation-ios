@@ -158,9 +158,9 @@ open class DayStyle: Style {
             NavigationMapView.appearance(for: traitCollection)
                 .routeAnnotationSelectedCaptionTextColor = .defaultSelectedRouteAnnotationCaptionTextColor
             NavigationMapView.appearance(for: traitCollection)
-                .routeAnnotationMoreTimeTextColor = .defaultRouteAnnotationMoreTimeTextColor
+                .deprecatedRouteAnnotationMoreTimeTextColor = .defaultRouteAnnotationMoreTimeTextColor
             NavigationMapView.appearance(for: traitCollection)
-                .routeAnnotationLessTimeTextColor = .defaultRouteAnnotationLessTimeTextColor
+                .deprecatedRouteAnnotationLessTimeTextColor = .defaultRouteAnnotationLessTimeTextColor
             NavigationMapView.appearance(for: traitCollection)
                 .waypointColor = .defaultWaypointColor
             NavigationMapView.appearance(for: traitCollection)
@@ -546,7 +546,6 @@ open class DayStyle: Style {
         WayNameView.appearance(for: carPlayTraitCollection).borderWidth = 1.0
 
         Task { @MainActor in
-
             NavigationMapView.appearance(for: carPlayTraitCollection).maneuverArrowColor = .defaultManeuverArrow
             NavigationMapView.appearance(for: carPlayTraitCollection)
                 .maneuverArrowStrokeColor = .defaultManeuverArrowStroke

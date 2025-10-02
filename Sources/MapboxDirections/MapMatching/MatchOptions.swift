@@ -7,7 +7,7 @@ import Turf
 /// A ``MatchOptions`` object is a structure that specifies the criteria for results returned by the Mapbox Map Matching
 /// API.
 ///
-/// Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
+/// Pass an instance of this class into the ``Directions/calculate(_:completionHandler:)-(MatchOptions,_)`` method.
 open class MatchOptions: DirectionsOptions, @unchecked Sendable {
     // MARK: Creating a Match Options Object
 
@@ -139,9 +139,6 @@ private protocol MatchOptionsDeprecations {
 }
 
 extension MatchOptions: MatchOptionsDeprecations {}
-
-@available(*, unavailable)
-extension MatchOptions: @unchecked Sendable {}
 
 // MARK: - Equatable
 

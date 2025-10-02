@@ -1,4 +1,4 @@
-@_implementationOnly import MapboxCommon_Private
+import MapboxCommon_Private
 import MapboxNavigationNative_Private
 
 public class NativeRerouteControllerSpy: RerouteControllerInterface {

@@ -3,13 +3,15 @@ import Turf
 
 extension Feature {
     var featureIdentifier: Int64? {
-        guard let featureIdentifier = identifier else { return nil }
+        guard let identifier else { return nil }
 
-        switch featureIdentifier {
+        return switch identifier {
         case .string(let identifier):
-            return Int64(identifier)
+            Int64(identifier)
         case .number(let identifier):
-            return Int64(identifier)
+            Int64(identifier)
+        @unknown default:
+            nil
         }
     }
 

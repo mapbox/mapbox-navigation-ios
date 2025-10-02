@@ -33,24 +33,29 @@ public struct FeedbackMetadata: Sendable, Equatable {
 }
 
 extension FeedbackMetadata: Codable {
-    fileprivate enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case screenshot
-        case locationsBefore
-        case locationsAfter
-        case step
-        case feedbackId
+        case userFeedbackMetadata
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.screenshot = try container.decodeIfPresent(String.self, forKey: .screenshot)
-        self.userFeedbackMetadata = try? UserFeedbackMetadata(from: decoder)
+
+        if let userFeedbackMetadataModel = try? container.decodeIfPresent(
+            UserFeedbackMetadataModel.self,
+            forKey: .screenshot
+        ) {
+            self.userFeedbackMetadata = UserFeedbackMetadata(userFeedbackMetadataModel)
+        } else {
+            self.userFeedbackMetadata = nil
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
-        try userFeedbackMetadata?.encode(to: encoder)
+        try container.encodeIfPresent(userFeedbackMetadata?.model, forKey: .userFeedbackMetadata)
     }
 }
 
@@ -60,20 +65,23 @@ protocol NativeUserFeedbackHandle: Sendable {
 
 extension UserFeedbackMetadata: @unchecked Sendable {}
 
-extension UserFeedbackMetadata: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: FeedbackMetadata.CodingKeys.self)
-        let eventLocationsAfter: [EventFixLocation] = locationsAfter.map { .init($0) }
-        let eventLocationsBefore: [EventFixLocation] = locationsBefore.map { .init($0) }
-        let eventStep = step.map { EventStep($0) }
-        try container.encode(feedbackId, forKey: .feedbackId)
-        try container.encode(eventLocationsAfter, forKey: .locationsAfter)
-        try container.encode(eventLocationsBefore, forKey: .locationsBefore)
-        try container.encodeIfPresent(eventStep, forKey: .step)
+struct UserFeedbackMetadataModel {
+    var feedbackId: String
+    var locationsBefore: [FixLocation]
+    var locationsAfter: [FixLocation]
+    var step: Step?
+}
+
+extension UserFeedbackMetadataModel: Codable {
+    private enum CodingKeys: String, CodingKey {
+        case locationsBefore
+        case locationsAfter
+        case step
+        case feedbackId
     }
 
-    convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: FeedbackMetadata.CodingKeys.self)
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         let feedbackId = try container.decode(String.self, forKey: .feedbackId)
         let locationsBefore = try container.decode([EventFixLocation].self, forKey: .locationsBefore)
         let locationsAfter = try container.decode([EventFixLocation].self, forKey: .locationsAfter)
@@ -84,6 +92,35 @@ extension UserFeedbackMetadata: Encodable {
             locationsBefore: locationsBefore.map { FixLocation($0) },
             locationsAfter: locationsAfter.map { FixLocation($0) },
             step: Step(eventStep)
+        )
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        let eventStep = step.map { EventStep($0) }
+        try container.encode(feedbackId, forKey: .feedbackId)
+        try container.encode(locationsAfter.map(EventFixLocation.init), forKey: .locationsAfter)
+        try container.encode(locationsBefore.map(EventFixLocation.init), forKey: .locationsBefore)
+        try container.encodeIfPresent(eventStep, forKey: .step)
+    }
+}
+
+extension UserFeedbackMetadata {
+    convenience init(_ model: UserFeedbackMetadataModel) {
+        self.init(
+            feedbackId: model.feedbackId,
+            locationsBefore: model.locationsBefore,
+            locationsAfter: model.locationsAfter,
+            step: model.step
+        )
+    }
+
+    var model: UserFeedbackMetadataModel {
+        UserFeedbackMetadataModel(
+            feedbackId: feedbackId,
+            locationsBefore: locationsBefore,
+            locationsAfter: locationsAfter,
+            step: step
         )
     }
 }

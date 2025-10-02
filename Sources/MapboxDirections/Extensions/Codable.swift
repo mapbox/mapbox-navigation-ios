@@ -61,8 +61,9 @@ extension PolyLineString: Codable {
 struct LocationCoordinate2DCodable: Codable {
     var latitude: Turf.LocationDegrees
     var longitude: Turf.LocationDegrees
-    var decodedCoordinates: Turf.LocationCoordinate2D {
-        return Turf.LocationCoordinate2D(latitude: latitude, longitude: longitude)
+
+    var decoded: Turf.LocationCoordinate2D {
+        Turf.LocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
     func encode(to encoder: Encoder) throws {

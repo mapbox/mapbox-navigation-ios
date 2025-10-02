@@ -151,14 +151,14 @@ private final class ProductionBillingService: BillingService {
 /// State of the billing sessions can be obtained using `BillingHandler.sessionState(uuid:)`.
 final class BillingHandler: @unchecked Sendable {
     /// Parameters on an active session.
-    private struct Session {
+    private struct Session: Sendable {
         let type: SessionType
         /// Indicates whether the session is active but paused.
         var isPaused: Bool
     }
 
     /// The state of the billing session.
-    enum SessionState: Equatable {
+    enum SessionState: Equatable, Sendable {
         /// Indicates that there is no active billing session.
         case stopped
         /// There is an active paused billing session.
@@ -168,7 +168,7 @@ final class BillingHandler: @unchecked Sendable {
     }
 
     /// Supported session types.
-    enum SessionType: Equatable, CustomStringConvertible {
+    enum SessionType: Equatable, CustomStringConvertible, Sendable {
         case freeDrive
         case activeGuidance
 

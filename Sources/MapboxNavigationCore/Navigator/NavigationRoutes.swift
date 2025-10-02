@@ -402,7 +402,8 @@ public struct NavigationRoute: Sendable {
     /// Options used to request this route.
     public let requestOptions: ResponseOptions
 
-    let nativeRouteInterface: RouteInterface
+    @_spi(MapboxInternal)
+    public let nativeRouteInterface: RouteInterface
 
     @available(*, deprecated, message: "This property is no longer supported.")
     public var nativeRoute: RouteInterface {

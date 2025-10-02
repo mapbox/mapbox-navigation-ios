@@ -102,7 +102,6 @@ open class Directions: @unchecked Sendable {
         options.fetchStartDate = Date()
         let request = urlRequest(forCalculating: options)
         let requestTask = urlSession.dataTask(with: request) { possibleData, possibleResponse, possibleError in
-
             if let urlError = possibleError as? URLError {
                 completionHandler(.failure(.network(urlError)))
                 return
@@ -679,9 +678,6 @@ open class Directions: @unchecked Sendable {
         return request
     }
 }
-
-@available(*, unavailable)
-extension Directions: @unchecked Sendable {}
 
 /// Keys to pass to populate a `userInfo` dictionary, which is passed to the `JSONDecoder` upon trying to decode a
 /// ``RouteResponse``, ``MapMatchingResponse`` or ``RouteRefreshResponse``.

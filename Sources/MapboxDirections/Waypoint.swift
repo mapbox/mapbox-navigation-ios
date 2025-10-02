@@ -30,14 +30,14 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.coordinate = try container.decode(LocationCoordinate2DCodable.self, forKey: .coordinate).decodedCoordinates
+        self.coordinate = try container.decode(LocationCoordinate2DCodable.self, forKey: .coordinate).decoded
 
         self.coordinateAccuracy = try container.decodeIfPresent(LocationAccuracy.self, forKey: .coordinateAccuracy)
 
         self.targetCoordinate = try container.decodeIfPresent(
             LocationCoordinate2DCodable.self,
             forKey: .targetCoordinate
-        )?.decodedCoordinates
+        )?.decoded
 
         self.heading = try container.decodeIfPresent(LocationDirection.self, forKey: .heading)
 

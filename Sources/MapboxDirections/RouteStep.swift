@@ -457,7 +457,7 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             self.maneuverLocation = try container.decode(LocationCoordinate2DCodable.self, forKey: .location)
-                .decodedCoordinates
+                .decoded
             self.maneuverType = (try? container.decode(ManeuverType.self, forKey: .type)) ?? .default
             self.maneuverDirection = try container.decodeIfPresent(ManeuverDirection.self, forKey: .direction)
             self.exitIndex = try container.decodeIfPresent(Int.self, forKey: .exitIndex)

@@ -604,6 +604,3 @@ extension DirectionsOptions: Equatable {
             lhs.includesVisualInstructions == rhs.includesVisualInstructions
     }
 }
-
-@available(*, unavailable)
-extension DirectionsOptions: @unchecked Sendable {}

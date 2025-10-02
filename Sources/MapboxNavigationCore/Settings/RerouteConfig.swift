@@ -12,7 +12,12 @@ public struct RerouteConfig: Equatable {
     @available(*, deprecated, message: """
     Use urlOptionsCustomization instead. Using optionsCustomization may lead to losing custom query items at reroutes.
     """)
-    public var optionsCustomization: OptionsCustomization?
+    public var optionsCustomization: OptionsCustomization? {
+        set { deprecatedOptionsCustomization = newValue }
+        get { deprecatedOptionsCustomization }
+    }
+
+    var deprecatedOptionsCustomization: OptionsCustomization?
 
     /// Enables or disables rerouting mechanism.
     ///

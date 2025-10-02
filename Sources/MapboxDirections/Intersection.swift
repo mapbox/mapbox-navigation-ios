@@ -398,7 +398,7 @@ extension Intersection: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.location = try container.decode(LocationCoordinate2DCodable.self, forKey: .location).decodedCoordinates
+        self.location = try container.decode(LocationCoordinate2DCodable.self, forKey: .location).decoded
         self.headings = try container.decode([LocationDirection].self, forKey: .headings)
 
         if let lanes = try container.decodeIfPresent([Lane].self, forKey: .lanes) {

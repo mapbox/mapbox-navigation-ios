@@ -39,7 +39,7 @@ extension Match {
             self.coordinate = try container.decode(
                 LocationCoordinate2DCodable.self,
                 forKey: .coordinate
-            ).decodedCoordinates
+            ).decoded
             self.countOfAlternatives = try container.decode(Int.self, forKey: .countOfAlternatives)
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
             self.matchingIndex = try container.decode(Int.self, forKey: .matchingIndex)

@@ -2,8 +2,12 @@ import CoreLocation
 import Foundation
 import Turf
 
-/// Codable CLLocationCoordinate2D conforming to the GeoJSON standard rfc7946 ([longitude, latitude])
-extension CLLocationCoordinate2D: Codable {
+public struct LocationCoordinate2DCodable: Sendable, Equatable {
+    public var latitude: CLLocationDegrees
+    public var longitude: CLLocationDegrees
+}
+
+extension LocationCoordinate2DCodable: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(longitude)
@@ -12,9 +16,17 @@ extension CLLocationCoordinate2D: Codable {
 
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        let longitude = try container.decode(CLLocationDegrees.self)
-        let latitude = try container.decode(CLLocationDegrees.self)
-        self.init(latitude: latitude, longitude: longitude)
+        self.longitude = try container.decode(CLLocationDegrees.self)
+        self.latitude = try container.decode(CLLocationDegrees.self)
+    }
+
+    public init(_ coordinate: CLLocationCoordinate2D) {
+        self.latitude = coordinate.latitude
+        self.longitude = coordinate.longitude
+    }
+
+    public var decoded: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -71,8 +83,8 @@ public struct Location: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if let coordinate = try? container.decode(CLLocationCoordinate2D.self, forKey: .coordinate) {
-            self.coordinate = coordinate
+        if let coordinate = try? container.decode(LocationCoordinate2DCodable.self, forKey: .coordinate) {
+            self.coordinate = coordinate.decoded
         } else {
             let _latitude = try? container.decode(CLLocationDegrees.self, forKey: .latitude)
             let _lat = try? container.decode(CLLocationDegrees.self, forKey: .lat)

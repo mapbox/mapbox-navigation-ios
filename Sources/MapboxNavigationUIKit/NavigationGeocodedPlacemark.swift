@@ -47,13 +47,13 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
         self.title = try container.decode(String.self, forKey: .title)
         self.subtitle = try container.decode(String.self, forKey: .subtitle)
         if let locationHolder = try container.decodeIfPresent(CLLocationModel.self, forKey: .location) {
-            self.location = CLLocation(model: locationHolder)
+            self.location = CLLocation(locationHolder)
         }
         if let routableLocationsHolder = try container.decodeIfPresent(
             [CLLocationModel].self,
             forKey: .routableLocations
         ) {
-            self.routableLocations = routableLocationsHolder.map { CLLocation(model: $0) }
+            self.routableLocations = routableLocationsHolder.map { CLLocation($0) }
         }
     }
 
@@ -61,8 +61,8 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
         try container.encodeIfPresent(subtitle, forKey: .subtitle)
-        try container.encodeIfPresent(location, forKey: .location)
-        try container.encodeIfPresent(routableLocations, forKey: .routableLocations)
+        try container.encodeIfPresent(location?.locationModel, forKey: .location)
+        try container.encodeIfPresent(routableLocations?.map(CLLocationModel.init), forKey: .routableLocations)
     }
 
     public static func == (lhs: NavigationGeocodedPlacemark, rhs: NavigationGeocodedPlacemark) -> Bool {
@@ -89,31 +89,8 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
     }
 }
 
-extension CLLocation: Encodable {
-    public enum CodingKeys: String, CodingKey {
-        case latitude
-        case longitude
-        case altitude
-        case horizontalAccuracy
-        case verticalAccuracy
-        case speed
-        case course
-        case timestamp
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(coordinate.latitude, forKey: .latitude)
-        try container.encode(coordinate.longitude, forKey: .longitude)
-        try container.encode(altitude, forKey: .altitude)
-        try container.encode(horizontalAccuracy, forKey: .horizontalAccuracy)
-        try container.encode(verticalAccuracy, forKey: .verticalAccuracy)
-        try container.encode(speed, forKey: .speed)
-        try container.encode(course, forKey: .course)
-        try container.encode(timestamp, forKey: .timestamp)
-    }
-
-    convenience init(model: CLLocationModel) {
+extension CLLocation {
+    convenience init(_ model: CLLocationModel) {
         self.init(
             coordinate: CLLocationCoordinate2DMake(model.latitude, model.longitude),
             altitude: model.altitude,
@@ -122,6 +99,19 @@ extension CLLocation: Encodable {
             course: model.course,
             speed: model.speed,
             timestamp: model.timestamp
+        )
+    }
+
+    var locationModel: CLLocationModel {
+        CLLocationModel(
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            altitude: altitude,
+            horizontalAccuracy: horizontalAccuracy,
+            verticalAccuracy: verticalAccuracy,
+            speed: speed,
+            course: course,
+            timestamp: timestamp
         )
     }
 }
@@ -135,4 +125,10 @@ struct CLLocationModel: Codable {
     let speed: CLLocationSpeed
     let course: CLLocationDirection
     let timestamp: Date
+}
+
+extension CLLocationModel {
+    init(_ location: CLLocation) {
+        self = location.locationModel
+    }
 }

@@ -220,7 +220,7 @@ public final class MapboxNavigationProvider {
         targetVersion: nil,
         configFactoryType: ConfigFactory.self,
         datasetProfileIdentifier: coreConfig.routingConfig.datasetProfileIdentifier ??
-            coreConfig.routeRequestConfig.profileIdentifier,
+            coreConfig.deprecatedProfileIdentifier,
         routingProviderSource: coreConfig.routingConfig.routingProviderSource.nativeSource,
         liveIncidentsOptions: coreConfig.liveIncidentsConfig,
         navigatorPredictionInterval: coreConfig.navigatorPredictionInterval,
