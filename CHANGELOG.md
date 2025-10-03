@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.12.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.15.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.15.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.15.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.15.2)
+
 ## 3.12.0
 
 ### Packaging
