@@ -154,6 +154,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: true
     ),
     .init(
+        name: "Electronic Horizon Road Graph",
+        description: "Demonstrates how to visualize the electronic horizon road graph edges in real-time.",
+        controller: ElectronicHorizonRoadGraphViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: true
+    ),
+    .init(
         name: "Declarative Map Styling",
         description: "Demonstrates how to use Declarative Map Styling.",
         controller: DeclarativeMapViewController.self,

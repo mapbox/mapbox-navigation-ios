@@ -116,6 +116,7 @@
 		2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9A5D12DD7481D00069654 /* MultiWaypoint.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
+		551756072E8ED081007AA52A /* Electronic-Horizon-Road-Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551756062E8ED081007AA52A /* Electronic-Horizon-Road-Graph.swift */; };
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
@@ -266,6 +267,7 @@
 		2CE469202BA31CF20075A32B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		551756062E8ED081007AA52A /* Electronic-Horizon-Road-Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Electronic-Horizon-Road-Graph.swift"; sourceTree = "<group>"; };
 		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 				2CA31A002BC9878A0071176E /* Styled-UI-Elements.swift */,
 				2C305FB22C385111000710D7 /* Upcoming-Intersection.swift */,
 				753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */,
+				551756062E8ED081007AA52A /* Electronic-Horizon-Road-Graph.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -912,6 +915,7 @@
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
+				551756072E8ED081007AA52A /* Electronic-Horizon-Road-Graph.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
 				2CB91B412DA7FAFB00FD65DF /* Declarative-Map.swift in Sources */,
