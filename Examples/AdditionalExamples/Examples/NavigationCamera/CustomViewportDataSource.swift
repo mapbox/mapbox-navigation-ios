@@ -48,9 +48,9 @@ class CustomViewportDataSource: ViewportDataSource {
     private func newFollowingCamera(with state: MapboxNavigationCore.ViewportState) -> CameraOptions {
         var followingMobileCamera = currentNavigationCameraOptions.followingCamera
 
-        followingMobileCamera.center = state.location.coordinate
+        followingMobileCamera.center = state.navigationLocation.coordinate
         // Set the bearing of the `MapView` (measured in degrees clockwise from true north).
-        followingMobileCamera.bearing = state.location.course
+        followingMobileCamera.bearing = state.navigationLocation.course
         followingMobileCamera.padding = .zero
         followingMobileCamera.zoom = 15.0
         followingMobileCamera.pitch = 45.0

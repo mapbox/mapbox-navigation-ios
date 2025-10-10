@@ -5,7 +5,8 @@
 ### API Deprecations
 
 * `ViewportState.heading` is deprecated and is always `nil` now. Use `ViewportState.navigationHeading` instead.
-* `ViewportState.init(location:routeProgress:viewportPadding:heading:)` is deprecated in favor of `ViewportState.init(location:routeProgress:viewportPadding:navigationHeading:)`.
+* `ViewportState.location` is deprecated in favor of `ViewportState.navigationLocation` instead.
+* `ViewportState.init(location:routeProgress:viewportPadding:heading:)` is deprecated in favor of `ViewportState.init(navigationLocation:routeProgress:viewportPadding:navigationHeading:)`.
 
 ### Other changes
 

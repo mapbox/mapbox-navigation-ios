@@ -209,8 +209,8 @@ open class NavigationMapView: UIView {
         mapView.ornaments.options.scaleBar.visibility = .hidden
         mapView.preferredFramesPerSecond = 60
 
-        mapView.location.onPuckRender.sink { [unowned self] data in
-            travelAlongRouteLine(to: data.location.coordinate)
+        mapView.location.onPuckRender.sink { [weak self] data in
+            self?.travelAlongRouteLine(to: data.location.coordinate)
         }.store(in: &lifetimeSubscriptions)
         setupGestureRecognizers()
         setupUserLocation()

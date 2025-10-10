@@ -5,7 +5,7 @@ import UIKit
 
 struct ViewportParametersProvider: Sendable {
     func parameters(
-        with location: CLLocation?,
+        with navigationLocation: NavigationLocation?,
         navigationHeading: NavigationHeading?,
         routeProgress: RouteProgress?,
         viewportPadding: UIEdgeInsets,
@@ -26,7 +26,7 @@ struct ViewportParametersProvider: Sendable {
                 }
 
             return .init(
-                location: location,
+                navigationLocation: navigationLocation,
                 navigationHeading: navigationHeading,
                 navigationState: .active(
                     .init(
@@ -45,7 +45,7 @@ struct ViewportParametersProvider: Sendable {
             )
         } else {
             return .init(
-                location: location,
+                navigationLocation: navigationLocation,
                 navigationState: .passive,
                 viewportPadding: viewportPadding
             )
