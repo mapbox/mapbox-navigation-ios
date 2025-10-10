@@ -68,7 +68,7 @@ class CustomViewportDataSource: ViewportDataSource {
             pitch: 0.0
         )
 
-        if let shape = state.routeProgress?.route.shape, let cameraOptions = try? mapView.mapboxMap.camera(
+        if let shape = state.navigationProgress?.route.shape, let cameraOptions = try? mapView.mapboxMap.camera(
             for: shape.coordinates.compactMap { $0 },
             camera: initialCameraOptions,
             coordinatesPadding: UIEdgeInsets(

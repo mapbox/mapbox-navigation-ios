@@ -78,7 +78,7 @@ class CommonViewportDataSource {
                 let parameters = provider.parameters(
                     with: viewportState.navigationLocation,
                     navigationHeading: viewportState.navigationHeading,
-                    routeProgress: viewportState.routeProgress,
+                    navigationProgress: viewportState.navigationProgress,
                     viewportPadding: viewportState.viewportPadding,
                     options: options
                 )

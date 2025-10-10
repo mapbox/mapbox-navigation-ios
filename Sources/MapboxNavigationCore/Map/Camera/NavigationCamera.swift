@@ -16,7 +16,7 @@ public class NavigationCamera {
         var cameraState: NavigationCameraState = .idle
         var location: NavigationLocation?
         var navigationHeading: NavigationHeading?
-        var routeProgress: RouteProgress?
+        var navigationProgress: NavigationProgress?
         var viewportPadding: UIEdgeInsets = .zero
     }
 
@@ -92,7 +92,7 @@ public class NavigationCamera {
                     self.viewportDataSource.update(
                         using: ViewportState(
                             navigationLocation: location,
-                            routeProgress: newState.routeProgress,
+                            navigationProgress: newState.navigationProgress,
                             viewportPadding: viewportPadding,
                             navigationHeading: newState.navigationHeading
                         )
@@ -143,7 +143,7 @@ public class NavigationCamera {
         routeProgress
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.state.routeProgress = $0
+                self?.state.navigationProgress = $0.map(NavigationProgress.init)
             }.store(in: &lifetimeSubscriptions)
     }
 

@@ -8,7 +8,7 @@ public struct ViewportState: Equatable, Sendable {
     /// The current location of the user.
     public let navigationLocation: NavigationLocation
     /// The navigation route progress.
-    public let routeProgress: RouteProgress?
+    public let navigationProgress: NavigationProgress?
     /// The padding applied to the viewport.
     public let viewportPadding: UIEdgeInsets
     /// The current user heading.
@@ -17,17 +17,17 @@ public struct ViewportState: Equatable, Sendable {
     /// Initializes a new ``ViewportState`` instance.
     /// - Parameters:
     ///   - navigationLocation: The current location of the user.
-    ///   - routeProgress: The navigation route progress. Pass `nil` in case of no active navigation at the moment.
+    ///   - navigationProgress: The navigation route progress. Pass `nil` in case of no active navigation at the moment.
     ///   - viewportPadding: The padding applied to the viewport.
     ///   - navigationHeading: The current user heading.
     public init(
         navigationLocation: NavigationLocation,
-        routeProgress: RouteProgress?,
+        navigationProgress: NavigationProgress?,
         viewportPadding: UIEdgeInsets,
         navigationHeading: NavigationHeading?
     ) {
         self.navigationLocation = navigationLocation
-        self.routeProgress = routeProgress
+        self.navigationProgress = navigationProgress
         self.viewportPadding = viewportPadding
         self.navigationHeading = navigationHeading
     }
@@ -41,7 +41,7 @@ public struct ViewportState: Equatable, Sendable {
     @available(
         *,
         deprecated,
-        message: "Use `init(navigationLocation:routeProgress:viewportPadding:navigationHeading:)` instead"
+        message: "Use `init(navigationLocation:navigationProgress:viewportPadding:navigationHeading:)` instead"
     )
     public init(
         location: CLLocation,
@@ -50,7 +50,7 @@ public struct ViewportState: Equatable, Sendable {
         heading: CLHeading?
     ) {
         self.navigationLocation = NavigationLocation(location)
-        self.routeProgress = routeProgress
+        self.navigationProgress = routeProgress.map(NavigationProgress.init)
         self.viewportPadding = viewportPadding
         self.navigationHeading = heading.map(NavigationHeading.init)
     }
@@ -66,6 +66,10 @@ extension ViewportState {
     public var location: CLLocation {
         navigationLocation.clLocation
     }
+
+    /// The navigation route progress. Use ``navigationProgress`` instead. Always returns `nil`.
+    @available(*, deprecated, message: "Use `navigationProgress` instead")
+    public var routeProgress: RouteProgress? { return nil }
 }
 
 /// The protocol, which is used to fill and store ``NavigationCameraOptions`` which will be used by ``NavigationCamera``
