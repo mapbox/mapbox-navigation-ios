@@ -7,18 +7,18 @@ struct ViewportParametersProvider: Sendable {
     func parameters(
         with navigationLocation: NavigationLocation?,
         navigationHeading: NavigationHeading?,
-        routeProgress: RouteProgress?,
+        navigationProgress: NavigationProgress?,
         viewportPadding: UIEdgeInsets,
         options: NavigationViewportDataSourceOptions
     ) -> ViewportDataSourceState {
-        if let routeProgress {
+        if let navigationProgress {
             let intersectionDensity = options.followingCameraOptions.intersectionDensity
-            let stepIndex = routeProgress.currentLegProgress.stepIndex
-            let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
+            let stepIndex = navigationProgress.currentLegProgress.stepIndex
+            let nextStepIndex = min(stepIndex + 1, navigationProgress.currentLeg.steps.count - 1)
 
-            var remainingCoordinatesOnRoute = routeProgress.currentLegProgress.currentStepProgress
+            var remainingCoordinatesOnRoute = navigationProgress.currentLegProgress.currentStepProgress
                 .remainingStepCoordinates()
-            routeProgress.currentLeg.steps[nextStepIndex...]
+            navigationProgress.currentLeg.steps[nextStepIndex...]
                 .lazy
                 .compactMap { $0.shape?.coordinates }
                 .forEach { stepCoordinates in
@@ -30,15 +30,19 @@ struct ViewportParametersProvider: Sendable {
                 navigationHeading: navigationHeading,
                 navigationState: .active(
                     .init(
-                        coordinatesToManeuver: routeProgress.currentLegProgress.currentStepProgress
+                        coordinatesToManeuver: navigationProgress.currentLegProgress.currentStepProgress
                             .remainingStepCoordinates(),
-                        lookaheadDistance: lookaheadDistance(routeProgress, intersectionDensity: intersectionDensity),
-                        currentLegStepIndex: routeProgress.currentLegProgress.stepIndex,
-                        currentLegSteps: routeProgress.currentLeg.steps,
-                        isRouteComplete: routeProgress.routeIsComplete == true,
+                        lookaheadDistance: lookaheadDistance(
+                            navigationProgress,
+                            intersectionDensity: intersectionDensity
+                        ),
+                        currentLegStepIndex: navigationProgress.currentLegProgress.stepIndex,
+                        currentLegSteps: navigationProgress.currentLeg.steps,
+                        isRouteComplete: navigationProgress.routeIsComplete == true,
                         remainingCoordinatesOnRoute: remainingCoordinatesOnRoute,
-                        transportType: routeProgress.currentLegProgress.currentStep.transportType,
-                        distanceRemainingOnStep: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
+                        transportType: navigationProgress.currentLegProgress.currentStep.transportType,
+                        distanceRemainingOnStep: navigationProgress.currentLegProgress.currentStepProgress
+                            .distanceRemaining
                     )
                 ),
                 viewportPadding: viewportPadding
@@ -60,10 +64,10 @@ struct ViewportParametersProvider: Sendable {
     ///   - intersectionDensity: Lookahead distance
     /// - Returns: The lookahead distance.
     private func lookaheadDistance(
-        _ routeProgress: RouteProgress,
+        _ navigationProgress: NavigationProgress,
         intersectionDensity: IntersectionDensity
     ) -> CLLocationDistance {
-        let averageIntersectionDistances = routeProgress.route.legs.map { leg -> [CLLocationDistance] in
+        let averageIntersectionDistances = navigationProgress.route.legs.map { leg -> [CLLocationDistance] in
             return leg.steps.map { step -> CLLocationDistance in
                 if let firstStepCoordinate = step.shape?.coordinates.first,
                    let lastStepCoordinate = step.shape?.coordinates.last
@@ -90,8 +94,8 @@ struct ViewportParametersProvider: Sendable {
 
         let averageDistanceMultiplier = intersectionDensity.enabled ? intersectionDensity
             .averageDistanceMultiplier : 1.0
-        let currentRouteLegIndex = routeProgress.legIndex
-        let currentRouteStepIndex = routeProgress.currentLegProgress.stepIndex
+        let currentRouteLegIndex = navigationProgress.legIndex
+        let currentRouteStepIndex = navigationProgress.currentLegProgress.stepIndex
         let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] *
             averageDistanceMultiplier
 

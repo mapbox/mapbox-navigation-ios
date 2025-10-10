@@ -6,7 +6,7 @@ import class MapboxNavigationNative_Private.UpcomingRouteAlert
 import Turf
 
 /// ``RouteProgress`` stores the user’s progress along a route.
-public struct RouteProgress: Equatable, Sendable {
+public struct RouteProgress: RouteProgressRepresentable, Equatable, Sendable {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
 
     /// Initializes a new ``RouteProgress``.
@@ -135,6 +135,7 @@ public struct RouteProgress: Equatable, Sendable {
         return refreshedRouteProgress
     }
 
+    /// The waypoints of the route.
     public let waypoints: [Waypoint]
 
     /// Total distance traveled by user along all legs.
@@ -148,33 +149,6 @@ public struct RouteProgress: Equatable, Sendable {
 
     /// Total distance remaining in meters along route.
     public private(set) var distanceRemaining: CLLocationDistance = 0
-
-    /// The waypoints remaining on the current route.
-    ///
-    /// This property does not include waypoints whose `Waypoint.separatesLegs` property is set to `false`.
-    public var remainingWaypoints: [Waypoint] {
-        return route.legs.suffix(from: legIndex).compactMap(\.destination)
-    }
-
-    func waypoints(fromLegAt legIndex: Int) -> ([Waypoint], [Waypoint]) {
-        // The first and last waypoints always separate legs. Make exceptions for these waypoints instead of modifying
-        // them by side effect.
-        let legSeparators = waypoints.filterKeepingFirstAndLast { $0.separatesLegs }
-        let viaPointsByLeg = waypoints.splitExceptAtStartAndEnd(omittingEmptySubsequences: false) { $0.separatesLegs }
-            .dropFirst() // No leg precedes first separator.
-
-        let reconstitutedWaypoints = zip(legSeparators, viaPointsByLeg).dropFirst(legIndex).map { [$0.0] + $0.1 }
-        let legWaypoints = reconstitutedWaypoints.first ?? []
-        let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
-        return (legWaypoints, subsequentWaypoints.flatMap { $0 })
-    }
-
-    /// The waypoints remaining on the current route, including any waypoints that do not separate legs.
-    func remainingWaypointsForCalculatingRoute() -> [Waypoint] {
-        let (currentLegViaPoints, remainingWaypoints) = waypoints(fromLegAt: legIndex)
-        let currentLegRemainingViaPoints = currentLegProgress.remainingWaypoints(among: currentLegViaPoints)
-        return currentLegRemainingViaPoints + remainingWaypoints
-    }
 
     /// Upcoming ``RouteAlert``s as reported by the navigation engine.
     ///
@@ -191,19 +165,6 @@ public struct RouteProgress: Equatable, Sendable {
         }
     }
 
-    /// Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
-    ///
-    ///  - Important: The adjacent steps may be part of legs other than the current leg.
-    public var nearbyShape: LineString {
-        let priorCoordinates = priorStep?.shape?.coordinates.dropLast() ?? []
-        let currentShape = currentLegProgress.currentStep.shape
-        let upcomingCoordinates = upcomingStep?.shape?.coordinates.dropFirst() ?? []
-        if let currentShape, priorCoordinates.isEmpty, upcomingCoordinates.isEmpty {
-            return currentShape
-        }
-        return LineString(priorCoordinates + (currentShape?.coordinates ?? []) + upcomingCoordinates)
-    }
-
     // MARK: Updating the RouteProgress
 
     /// Returns the current ``NavigationRoutes``.
@@ -214,6 +175,7 @@ public struct RouteProgress: Equatable, Sendable {
         navigationRoutes.mainRoute.route
     }
 
+    /// Returns the id of the current main `Route`.
     public var routeId: RouteId {
         navigationRoutes.mainRoute.routeId
     }
@@ -249,59 +211,8 @@ public struct RouteProgress: Equatable, Sendable {
     /// Index representing current ``RouteLeg``.
     public private(set) var legIndex: Int = 0
 
-    /// If waypoints are provided in the `Route`, this will contain which leg the user is on.
-    public var currentLeg: RouteLeg {
-        return route.legs[legIndex]
-    }
-
-    /// Returns the remaining legs left on the current route
-    public var remainingLegs: [RouteLeg] {
-        return Array(route.legs.suffix(from: legIndex + 1))
-    }
-
-    /// Returns true if ``currentLeg`` is the last leg.
-    public var isFinalLeg: Bool {
-        guard let lastLeg = route.legs.last else { return false }
-        return currentLeg == lastLeg
-    }
-
     /// Returns the progress along the current ``RouteLeg``.
     public var currentLegProgress: RouteLegProgress
-
-    /// The previous leg.
-    public var priorLeg: RouteLeg? {
-        return legIndex > 0 ? route.legs[legIndex - 1] : nil
-    }
-
-    /// The leg following the current leg along this route.
-    ///
-    /// If this leg is the last leg of the route, this property is set to nil.
-    public var upcomingLeg: RouteLeg? {
-        return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
-    }
-
-    // MARK: Step Statistics
-
-    /// Returns the remaining steps left on the current route
-    public var remainingSteps: [RouteStep] {
-        return currentLegProgress.remainingSteps + remainingLegs.flatMap(\.steps)
-    }
-
-    /// The step prior to the current step along this route.
-    ///
-    /// The prior step may be part of a different RouteLeg than the current step. If the current step is the first step
-    /// along the route, this property is set to nil.
-    public var priorStep: RouteStep? {
-        return currentLegProgress.priorStep ?? priorLeg?.steps.last
-    }
-
-    /// The step following the current step along this route.
-    ///
-    /// The upcoming step may be part of a different ``RouteLeg`` than the current step. If it is the last step along
-    /// the route, this property is set to nil.
-    public var upcomingStep: RouteStep? {
-        return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
-    }
 
     // MARK: Leg Attributes
 
@@ -420,11 +331,129 @@ public struct RouteProgress: Equatable, Sendable {
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
-
-    public var routeIsComplete: Bool {
-        return isFinalLeg && currentLegProgress
-            .userHasArrivedAtWaypoint && currentLegProgress.distanceRemaining <= 3
-    }
 }
 
 extension UpcomingRouteAlert: @unchecked Sendable {}
+
+/// Stores the user’s progress along a route.
+public protocol RouteProgressRepresentable {
+    // Returns the current main `Route`.
+    var route: Route { get }
+    /// Returns the id of the current main `Route`.
+    var routeId: RouteId { get }
+    /// Returns the progress along the current ``RouteLeg``
+    var currentLegProgress: RouteLegProgress { get }
+    /// Total distance traveled by user along all legs.
+    var distanceTraveled: CLLocationDistance { get }
+    /// Number between 0 and 1 representing how far along the `Route` the user has traveled.
+    var fractionTraveled: Double { get }
+    /// Total seconds remaining on all legs.
+    var durationRemaining: TimeInterval { get }
+    /// Index representing current ``RouteLeg``.
+    var legIndex: Int { get }
+    /// Index relative to route shape, representing the point the user is currently located at.
+    var shapeIndex: Int { get }
+    /// The waypoints of the route.
+    var waypoints: [Waypoint] { get }
+}
+
+extension RouteProgressRepresentable {
+    /// Returns true if the user has arrived at the final destination of the route.
+    public var routeIsComplete: Bool {
+        isFinalLeg && currentLegProgress
+            .userHasArrivedAtWaypoint && currentLegProgress.distanceRemaining <= 3
+    }
+
+    /// If waypoints are provided in the `Route`, this will contain which leg the user is on.
+    public var currentLeg: RouteLeg {
+        route.legs[legIndex]
+    }
+
+    /// Returns the remaining legs left on the current route
+    public var remainingLegs: [RouteLeg] {
+        Array(route.legs.suffix(from: legIndex + 1))
+    }
+
+    /// Returns true if ``currentLeg`` is the last leg.
+    public var isFinalLeg: Bool {
+        guard let lastLeg = route.legs.last else { return false }
+        return currentLeg == lastLeg
+    }
+
+    /// The waypoints remaining on the current route.
+    ///
+    /// This property does not include waypoints whose `Waypoint.separatesLegs` property is set to `false`.
+    public var remainingWaypoints: [Waypoint] {
+        route.legs.suffix(from: legIndex).compactMap(\.destination)
+    }
+
+    func waypoints(fromLegAt legIndex: Int) -> ([Waypoint], [Waypoint]) {
+        // The first and last waypoints always separate legs. Make exceptions for these waypoints instead of modifying
+        // them by side effect.
+        let legSeparators = waypoints.filterKeepingFirstAndLast { $0.separatesLegs }
+        let viaPointsByLeg = waypoints.splitExceptAtStartAndEnd(omittingEmptySubsequences: false) { $0.separatesLegs }
+            .dropFirst() // No leg precedes first separator.
+
+        let reconstitutedWaypoints = zip(legSeparators, viaPointsByLeg).dropFirst(legIndex).map { [$0.0] + $0.1 }
+        let legWaypoints = reconstitutedWaypoints.first ?? []
+        let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
+        return (legWaypoints, subsequentWaypoints.flatMap { $0 })
+    }
+
+    /// The waypoints remaining on the current route, including any waypoints that do not separate legs.
+    func remainingWaypointsForCalculatingRoute() -> [Waypoint] {
+        let (currentLegViaPoints, remainingWaypoints) = waypoints(fromLegAt: legIndex)
+        let currentLegRemainingViaPoints = currentLegProgress.remainingWaypoints(among: currentLegViaPoints)
+        return currentLegRemainingViaPoints + remainingWaypoints
+    }
+
+    /// Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
+    ///
+    ///  - Important: The adjacent steps may be part of legs other than the current leg.
+    public var nearbyShape: LineString {
+        let priorCoordinates = priorStep?.shape?.coordinates.dropLast() ?? []
+        let currentShape = currentLegProgress.currentStep.shape
+        let upcomingCoordinates = upcomingStep?.shape?.coordinates.dropFirst() ?? []
+        if let currentShape, priorCoordinates.isEmpty, upcomingCoordinates.isEmpty {
+            return currentShape
+        }
+        return LineString(priorCoordinates + (currentShape?.coordinates ?? []) + upcomingCoordinates)
+    }
+
+    // MARK: Step Statistics
+
+    /// Returns the remaining steps left on the current route
+    public var remainingSteps: [RouteStep] {
+        currentLegProgress.remainingSteps + remainingLegs.flatMap(\.steps)
+    }
+
+    /// The step prior to the current step along this route.
+    ///
+    /// The prior step may be part of a different RouteLeg than the current step. If the current step is the first step
+    /// along the route, this property is set to nil.
+    public var priorStep: RouteStep? {
+        currentLegProgress.priorStep ?? priorLeg?.steps.last
+    }
+
+    /// The step following the current step along this route.
+    ///
+    /// The upcoming step may be part of a different ``RouteLeg`` than the current step. If it is the last step along
+    /// the route, this property is set to nil.
+    public var upcomingStep: RouteStep? {
+        currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
+    }
+
+    // MARK: Leg Statistics
+
+    /// The previous leg.
+    public var priorLeg: RouteLeg? {
+        legIndex > 0 ? route.legs[legIndex - 1] : nil
+    }
+
+    /// The leg following the current leg along this route.
+    ///
+    /// If this leg is the last leg of the route, this property is set to nil.
+    public var upcomingLeg: RouteLeg? {
+        legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
+    }
+}

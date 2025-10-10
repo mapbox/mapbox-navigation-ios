@@ -9,13 +9,18 @@
 
 ### API Deprecations
 
+* `ViewportState.routeProgress` is deprecated and is always `nil` now. Use `ViewportState.navigationProgress` instead.
 * `ViewportState.heading` is deprecated and is always `nil` now. Use `ViewportState.navigationHeading` instead.
 * `ViewportState.location` is deprecated in favor of `ViewportState.navigationLocation` instead.
-* `ViewportState.init(location:routeProgress:viewportPadding:heading:)` is deprecated in favor of `ViewportState.init(navigationLocation:routeProgress:viewportPadding:navigationHeading:)`.
+* `ViewportState.init(location:routeProgress:viewportPadding:heading:)` is deprecated in favor of `ViewportState.init(navigationLocation:navigationProgress:viewportPadding:navigationHeading:)`.
+
+### Navigation Camera
+
+* When implementing a custom `ViewportDataSource` for the navigation camera, migrate to `viewportState.navigationProgress` for tracking active guidance progress.
 
 ### Other changes
 
-* Fixed a possible race condition in `NavigationCamera` state `CLHeading` updates.
+* Fixed a possible race condition in `NavigationCamera` state updates.
 * Fixed memory leaks caused by `Task.detached` usage in `NavigationController`.
 * Fixed memory leaks in `NWPathMonitor` caused by a non-stopped monitor.
 * Removed excessive `Sendable` conformance for types from Turf and Maps.
