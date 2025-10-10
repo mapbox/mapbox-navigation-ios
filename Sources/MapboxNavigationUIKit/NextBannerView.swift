@@ -61,7 +61,8 @@ open class NextBannerView: UIView, NavigationComponent {
         addSubview(instructionLabel)
         self.instructionLabel = instructionLabel
 
-        instructionLabel.availableBounds = { [unowned self] in
+        instructionLabel.availableBounds = { [weak self] in
+            guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = bounds.width - BaseInstructionsBannerView.maneuverViewSize
                 .width - BaseInstructionsBannerView.padding * 3

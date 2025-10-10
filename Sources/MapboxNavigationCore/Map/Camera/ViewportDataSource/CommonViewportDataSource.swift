@@ -76,7 +76,7 @@ class CommonViewportDataSource {
             let provider = viewportParametersProvider
             workQueue.async {
                 let parameters = provider.parameters(
-                    with: viewportState.location,
+                    with: viewportState.navigationLocation,
                     navigationHeading: viewportState.navigationHeading,
                     routeProgress: viewportState.routeProgress,
                     viewportPadding: viewportState.viewportPadding,

@@ -14,7 +14,7 @@ import UIKit
 public class NavigationCamera {
     struct State: Equatable {
         var cameraState: NavigationCameraState = .idle
-        var location: CLLocation?
+        var location: NavigationLocation?
         var navigationHeading: NavigationHeading?
         var routeProgress: RouteProgress?
         var viewportPadding: UIEdgeInsets = .zero
@@ -91,7 +91,7 @@ public class NavigationCamera {
                 if let location = newState.location {
                     self.viewportDataSource.update(
                         using: ViewportState(
-                            location: location,
+                            navigationLocation: location,
                             routeProgress: newState.routeProgress,
                             viewportPadding: viewportPadding,
                             navigationHeading: newState.navigationHeading
@@ -132,6 +132,7 @@ public class NavigationCamera {
 
     private func observe(location: AnyPublisher<CLLocation, Never>) {
         location
+            .map(NavigationLocation.init)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.state.location = $0

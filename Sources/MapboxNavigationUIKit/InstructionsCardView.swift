@@ -151,14 +151,16 @@ public class InstructionsCardView: BaseInstructionsBannerView {
 
     override func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
-        primaryLabel.availableBounds = { [unowned self] in
+        primaryLabel.availableBounds = { [weak self] in
+            guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = bounds.width - BaseInstructionsBannerView.maneuverViewSize
                 .width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: primaryLabel.font.lineHeight)
         }
 
-        secondaryLabel.availableBounds = { [unowned self] in
+        secondaryLabel.availableBounds = { [weak self] in
+            guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = bounds.width - BaseInstructionsBannerView.maneuverViewSize
                 .width - BaseInstructionsBannerView.padding * 3

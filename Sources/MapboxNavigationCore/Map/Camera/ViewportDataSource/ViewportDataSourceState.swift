@@ -21,7 +21,7 @@ struct ViewportDataSourceState: Equatable, Sendable {
         var distanceRemainingOnStep: CLLocationDistance
     }
 
-    var location: CLLocation?
+    var navigationLocation: NavigationLocation?
     var navigationHeading: NavigationHeading?
     var navigationState: NavigationState
     var viewportPadding: UIEdgeInsets

@@ -71,7 +71,7 @@ public class MobileViewportDataSource: ViewportDataSource {
         let viewportPadding = state.viewportPadding
         var newOptions = currentNavigationCameraOptions.followingCamera
 
-        if let location = state.location, state.navigationState.isInPassiveNavigationOrCompletedActive {
+        if let location = state.navigationLocation, state.navigationState.isInPassiveNavigationOrCompletedActive {
             if followingCameraOptions.centerUpdatesAllowed || followingCamera.center == nil {
                 newOptions.center = location.coordinate
             }
@@ -109,7 +109,7 @@ public class MobileViewportDataSource: ViewportDataSource {
             return newOptions
         }
 
-        if let location = state.location, case .active(let activeState) = state.navigationState,
+        if let location = state.navigationLocation, case .active(let activeState) = state.navigationState,
            !activeState.isRouteComplete
         {
             let coordinatesToManeuver = activeState.coordinatesToManeuver
