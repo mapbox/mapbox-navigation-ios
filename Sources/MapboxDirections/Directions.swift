@@ -644,7 +644,7 @@ open class Directions: @unchecked Sendable {
     ) -> URL {
         let includesQuery = httpMethod != "POST"
         var params = (includesQuery ? options.urlQueryItems : [])
-        params.append(contentsOf: credentials.authenticationParams)
+        params.override(with: credentials.authenticationParams)
 
         let unparameterizedURL = URL(path: includesQuery ? options.path : options.abridgedPath, host: credentials.host)
         var components = URLComponents(url: unparameterizedURL, resolvingAgainstBaseURL: true)!
