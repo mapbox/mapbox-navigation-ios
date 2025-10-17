@@ -106,7 +106,6 @@ class RouteRefreshTests: XCTestCase {
         let refreshResponseExpectation = expectation(description: "Refresh response with incorrect parameters failed.")
 
         fetchStubbedRoute { routeResponse in
-
             Directions(credentials: BogusCredentials).refreshRoute(
                 responseIdentifier: routeResponse.identifier!,
                 routeIndex: 10,

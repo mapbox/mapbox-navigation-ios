@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* Fixed an issue where authentication route request parameters could be duplicated when using a custom `DirectionsOptions` subclass.
+
 ## 3.16.0-rc.1
 
 ### Packaging

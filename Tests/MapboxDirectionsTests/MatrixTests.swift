@@ -272,6 +272,38 @@ class MatrixTests: XCTestCase {
         })
         wait(for: [expectation], timeout: 2.0)
     }
+
+    func testUrlWithCustomParametersWithAccessToken() {
+        let customParameterKey = "custom_parameter"
+        let customParameterValue = "custom_value"
+        let queryItems = requestQueryItems(with: [
+            URLQueryItem(name: "access_token", value: "invalid_token"),
+            URLQueryItem(name: customParameterKey, value: customParameterValue),
+        ])
+        let accessTokenItems = queryItems.filter { $0.name == "access_token" }
+        XCTAssertEqual(accessTokenItems.count, 1)
+        XCTAssert(queryItems.contains(where: { $0.name == "access_token" && $0.value == BogusToken }))
+        XCTAssert(queryItems.contains(where: { $0.name == customParameterKey && $0.value == customParameterValue }))
+    }
+
+    private func requestQueryItems(with customParameters: [URLQueryItem]) -> [URLQueryItem] {
+        let coordinate = LocationCoordinate2D(latitude: 0, longitude: 0)
+        let waypoint = Waypoint(coordinate: coordinate)
+        let options = CustomMatrixOptions(
+            sources: [waypoint],
+            destinations: [waypoint],
+            profileIdentifier: .automobileAvoidingTraffic,
+            customParameters: customParameters
+        )
+
+        let matrix = Matrix(credentials: MatrixBogusCredentials)
+        let url = matrix.url(forCalculating: options)
+        guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
+            XCTFail("Unexpected nil queryItems")
+            return []
+        }
+        return queryItems
+    }
 }
 #endif
 

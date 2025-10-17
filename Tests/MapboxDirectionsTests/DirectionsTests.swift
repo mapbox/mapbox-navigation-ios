@@ -13,6 +13,8 @@ import Turf
 
 let BogusToken = "pk.feedCafeDadeDeadBeef-BadeBede.FadeCafeDadeDeed-BadeBede"
 let BogusCredentials = Credentials(accessToken: BogusToken)
+private let accessTokenKey = "access_token"
+private let skuKey = "sku"
 let BadResponse = """
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
@@ -142,7 +144,6 @@ class DirectionsTests: XCTestCase {
         let directions = Directions(credentials: BogusCredentials)
         let opts = RouteOptions(locations: [one, two])
         directions.calculate(opts, completionHandler: { result in
-
             guard case .failure(let error) = result else {
                 XCTFail("Expecting error, none returned.")
                 return
@@ -263,6 +264,79 @@ class DirectionsTests: XCTestCase {
         XCTAssertEqual(queryItems.count, 2)
         XCTAssertTrue(queryItems.contains(where: { $0.name == "sku" && $0.value == skuToken }))
         XCTAssertTrue(queryItems.contains(where: { $0.name == "access_token" && $0.value == BogusToken }))
+    }
+
+    func testUrlWithCustomParametersWithAccessToken() {
+        let customParameterKey = "custom_parameter"
+        let customParameterValue = "custom_value"
+
+        let queryItems = requestQueryItems(with: [
+            URLQueryItem(name: accessTokenKey, value: "invalid"),
+            URLQueryItem(name: customParameterKey, value: customParameterValue),
+        ])
+
+        let accessTokenItems = queryItems.filter { $0.name == accessTokenKey }
+        XCTAssertEqual(accessTokenItems.count, 1)
+        let skuItems = queryItems.filter { $0.name == skuKey }
+        XCTAssertEqual(skuItems.count, 1)
+        XCTAssertTrue(queryItems.contains(where: { $0.name == skuKey && $0.value == skuToken }))
+        XCTAssert(queryItems.contains(where: { $0.name == accessTokenKey && $0.value == BogusToken }))
+
+        XCTAssert(queryItems.contains(where: { $0.name == customParameterKey && $0.value == customParameterValue }))
+    }
+
+    func testUrlWithCustomParametersWithSkuToken() {
+        let skuKey = "sku"
+        let customParameterKey = "custom_parameter"
+        let customParameterValue = "custom_value"
+
+        let queryItems = requestQueryItems(with: [
+            URLQueryItem(name: skuKey, value: "invalid"),
+            URLQueryItem(name: customParameterKey, value: customParameterValue),
+        ])
+
+        let accessTokenItems = queryItems.filter { $0.name == accessTokenKey }
+        XCTAssertEqual(accessTokenItems.count, 1)
+        let skuItems = queryItems.filter { $0.name == skuKey }
+        XCTAssertEqual(skuItems.count, 1)
+        XCTAssertTrue(queryItems.contains(where: { $0.name == skuKey && $0.value == skuToken }))
+        XCTAssert(queryItems.contains(where: { $0.name == accessTokenKey && $0.value == BogusToken }))
+
+        XCTAssert(queryItems.contains(where: { $0.name == customParameterKey && $0.value == customParameterValue }))
+    }
+
+    func testUrlWithCustomParametersWithSkuAndAccessToken() {
+        let customParameterKey = "custom_parameter"
+        let customParameterValue = "custom_value"
+        let queryItems = requestQueryItems(with: [
+            URLQueryItem(name: accessTokenKey, value: "invalid_token"),
+            URLQueryItem(name: skuKey, value: "invalid_sku"),
+            URLQueryItem(name: customParameterKey, value: customParameterValue),
+        ])
+        let accessTokenItems = queryItems.filter { $0.name == accessTokenKey }
+        XCTAssertEqual(accessTokenItems.count, 1)
+        let skuItems = queryItems.filter { $0.name == skuKey }
+        XCTAssertEqual(skuItems.count, 1)
+        XCTAssertTrue(queryItems.contains(where: { $0.name == skuKey && $0.value == skuToken }))
+        XCTAssert(queryItems.contains(where: { $0.name == accessTokenKey && $0.value == BogusToken }))
+
+        XCTAssert(queryItems.contains(where: { $0.name == customParameterKey && $0.value == customParameterValue }))
+    }
+
+    private func requestQueryItems(with customParameters: [URLQueryItem]) -> [URLQueryItem] {
+        let coordinate = LocationCoordinate2D(latitude: 0, longitude: 0)
+        let options = CustomRouteOptions(waypoints: [
+            Waypoint(coordinate: coordinate),
+            Waypoint(coordinate: coordinate),
+        ], customParameters: customParameters)
+
+        let directions = Directions(credentials: BogusCredentials)
+        let url = directions.url(forCalculating: options, httpMethod: "GET")
+        guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
+            XCTFail("Unexpected nil queryItems")
+            return []
+        }
+        return queryItems
     }
 }
 #endif
