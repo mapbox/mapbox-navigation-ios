@@ -100,5 +100,19 @@ let package = Package(
                 "__Snapshots__", // Ignore snapshots folder
             ]
         ),
+        .testTarget(
+            name: "MapboxCoreNavigationIntegrationTests",
+            dependencies: [
+                "MapboxNavigation",
+                "MapboxCoreNavigation",
+                "TestHelper",
+                "OHHTTPStubs",
+                "CarPlayTestHelper",
+                "SnapshotTesting",
+            ],
+            exclude: [
+                "Info.plist",
+            ]
+        ),
     ]
 )

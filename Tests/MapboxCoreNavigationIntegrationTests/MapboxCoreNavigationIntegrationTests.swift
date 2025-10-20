@@ -668,4 +668,58 @@ class MapboxCoreNavigationIntegrationTests: TestCase {
         
         wait(for: [routeControllerProgressExpectation], timeout: waitForInterval)
     }
+
+    func testRouteRefreshWithDefaultDrivingTrafficProfile() {
+        RouteControllerProactiveReroutingInterval = 1
+        
+        navigation = MapboxNavigationService(
+            indexedRouteResponse: indexedRouteResponse,
+            customRoutingProvider: MapboxRoutingProvider(.offline),
+            credentials: Fixture.credentials,
+            locationSource: DummyLocationManager(),
+            simulating: .never
+        )
+        navigation.router.refreshesRoute = true
+        navigation.start()
+
+        expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
+            print(">>>> progress")
+            return true
+        }
+
+        expectation(forNotification: .routeControllerDidRefreshRoute, object: navigation.router) { (notification) -> Bool in
+            print(">>>> refresh")
+            return true
+        }
+
+        expectation(forNotification: .routeControllerDidUpdateAlternatives, object: navigation.router) { (notification) -> Bool in
+            print(">>>> alternatives")
+            return true
+        }
+
+        let simulationLocations = route.shape!.coordinates.simulationLocations
+        simulationLocations.forEach {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [$0])
+        }
+
+        waitForExpectations(timeout: waitForInterval) { XCTAssertNil($0) }
+    }
+}
+
+extension [CLLocationCoordinate2D] {
+    var simulationLocations: [CLLocation] {
+        let now = Date()
+        return enumerated()
+            .map {
+                CLLocation(
+                    coordinate: $0.element,
+                    altitude: -1,
+                    horizontalAccuracy: 10,
+                    verticalAccuracy: -1,
+                    course: -1,
+                    speed: 10,
+                    timestamp: now + $0.offset
+                )
+            }
+    }
 }
