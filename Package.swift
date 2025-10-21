@@ -107,8 +107,6 @@ let package = Package(
                 "MapboxCoreNavigation",
                 "TestHelper",
                 "OHHTTPStubs",
-                "CarPlayTestHelper",
-                "SnapshotTesting",
             ],
             exclude: [
                 "Info.plist",
