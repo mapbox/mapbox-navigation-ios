@@ -1,0 +1,222 @@
+{
+  "code": "Ok",
+  "route": {
+    "legs": [
+      {
+        "annotation": {
+          "maxspeed": [
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            }
+          ],
+          "congestion_numeric": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": [
+            2.814,
+            2.508,
+            3.984,
+            49.449,
+            8.276,
+            3.75,
+            7.618,
+            11.645,
+            1.27,
+            4.589,
+            4.451,
+            5.257,
+            1.886,
+            1.29,
+            3.917,
+            8.37,
+            1.03,
+            8.715,
+            2.078,
+            7.999,
+            0.678,
+            17.408,
+            1.254,
+            4.87,
+            2.253,
+            6.12,
+            5.868,
+            1.343,
+            3.608,
+            5.182,
+            17.102,
+            8.543,
+            24.137,
+            2.633
+          ]
+        }
+      }
+    ],
+    "refresh_ttl": 86282
+  }
+}
