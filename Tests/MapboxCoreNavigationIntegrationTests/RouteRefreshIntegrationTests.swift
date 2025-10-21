@@ -27,21 +27,27 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testRouteRefreshWithDefaultDrivingTrafficProfile() {
-        simulateRoute(with: .automobileAvoidingTraffic)
+        simulateRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
     }
 
     func testRouteRefreshWithCustomDrivingTrafficProfile() {
-        simulateRoute(with: .custom)
+        simulateRoute(with: .custom, shouldRefresh: true)
     }
 
-    private func simulateRoute(with profile: ProfileIdentifier) {
+    func testRouteRefreshWithWalkingProfile() {
+        simulateRoute(with: .walking, shouldRefresh: false)
+    }
+
+    private func simulateRoute(with profile: ProfileIdentifier, shouldRefresh: Bool = true) {
         let (locationManager, navigation) = navigatorAndLocationManager(with: profile)
-        expectation(
+        let refreshExpectation = expectation(
             forNotification: .routeControllerDidRefreshRoute,
             object: navigation.router
         ) { (notification) -> Bool in
             return true
         }
+
+        refreshExpectation.isInverted = shouldRefresh
 
         expectation(
             forNotification: .routeControllerDidUpdateAlternatives,
@@ -59,9 +65,10 @@ class RouteRefreshIntegrationTests: TestCase {
         with profile: ProfileIdentifier
     ) -> (ReplayLocationManager, MapboxNavigationService) {
         RouteControllerProactiveReroutingInterval = 2
-        let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse
+
+        let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse(profile: profile)
         let locationManager = ReplayLocationManager(
-            locations: RouteResponse.mockedRoute.simulationLocations
+            locations: indexedRouteResponse.routeResponse.routes![0].simulationLocations
         )
 
         locationManager.speedMultiplier = 1
@@ -72,7 +79,6 @@ class RouteRefreshIntegrationTests: TestCase {
             locationSource: locationManager,
             simulating: .never
         )
-        navigation.router.refreshesRoute = true
         return (locationManager, navigation)
     }
 }
@@ -89,7 +95,7 @@ fileprivate extension Route {
 
 fileprivate extension NavigationRouteOptions {
     static func mockedOptions(
-        _ profile: ProfileIdentifier = .automobileAvoidingTraffic
+        _ profile: ProfileIdentifier
     ) -> NavigationRouteOptions {
         NavigationRouteOptions(
             coordinates: [
@@ -102,19 +108,20 @@ fileprivate extension NavigationRouteOptions {
 }
 
 fileprivate extension RouteResponse {
-    static var mockedRoute: Route {
-        mockedResponse.routes![0]
-    }
-
-    static var mockedResponse: RouteResponse {
+    static func mockedResponse(profile: ProfileIdentifier) -> RouteResponse {
         Fixture.routeResponse(
             from: "profile-route-original",
-            options: NavigationRouteOptions.mockedOptions()
+            options: NavigationRouteOptions.mockedOptions(profile)
         )
     }
 
-    static var mockedIndexRouteResponse: IndexedRouteResponse {
-        IndexedRouteResponse(routeResponse: mockedResponse, routeIndex: 0)
+    static func mockedIndexRouteResponse(
+        profile: ProfileIdentifier
+    ) -> IndexedRouteResponse {
+        IndexedRouteResponse(
+            routeResponse: mockedResponse(profile: profile),
+            routeIndex: 0
+        )
     }
 }
 
