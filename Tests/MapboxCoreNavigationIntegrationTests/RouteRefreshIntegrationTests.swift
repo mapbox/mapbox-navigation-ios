@@ -47,7 +47,7 @@ class RouteRefreshIntegrationTests: TestCase {
             return true
         }
 
-        refreshExpectation.isInverted = shouldRefresh
+        refreshExpectation.isInverted = !shouldRefresh
 
         expectation(
             forNotification: .routeControllerDidUpdateAlternatives,
