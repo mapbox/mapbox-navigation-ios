@@ -7,8 +7,6 @@ import TestHelper
 import OHHTTPStubs
 
 class RouteRefreshIntegrationTests: TestCase {
-    var navigation: MapboxNavigationService!
-
     override func setUp() {
         super.setUp()
         HTTPStubs.stubRequests(
@@ -25,11 +23,41 @@ class RouteRefreshIntegrationTests: TestCase {
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
-        navigation = nil
         super.tearDown()
     }
 
     func testRouteRefreshWithDefaultDrivingTrafficProfile() {
+        simulateRoute(with: .automobileAvoidingTraffic)
+    }
+
+    func testRouteRefreshWithCustomDrivingTrafficProfile() {
+        simulateRoute(with: .custom)
+    }
+
+    private func simulateRoute(with profile: ProfileIdentifier) {
+        let (locationManager, navigation) = navigatorAndLocationManager(with: profile)
+        expectation(
+            forNotification: .routeControllerDidRefreshRoute,
+            object: navigation.router
+        ) { (notification) -> Bool in
+            return true
+        }
+
+        expectation(
+            forNotification: .routeControllerDidUpdateAlternatives,
+            object: navigation.router
+        ) { (notification) -> Bool in
+            return true
+        }
+
+        navigation.start()
+        locationManager.startUpdatingLocation()
+        waitForExpectations(timeout: .defaultDelay) { XCTAssertNil($0) }
+    }
+
+    private func navigatorAndLocationManager(
+        with profile: ProfileIdentifier
+    ) -> (ReplayLocationManager, MapboxNavigationService) {
         RouteControllerProactiveReroutingInterval = 2
         let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse
         let locationManager = ReplayLocationManager(
@@ -37,7 +65,7 @@ class RouteRefreshIntegrationTests: TestCase {
         )
 
         locationManager.speedMultiplier = 1
-        navigation = MapboxNavigationService(
+        let navigation = MapboxNavigationService(
             indexedRouteResponse: indexedRouteResponse,
             customRoutingProvider: MapboxRoutingProvider(.online),
             credentials: Fixture.credentials,
@@ -45,37 +73,7 @@ class RouteRefreshIntegrationTests: TestCase {
             simulating: .never
         )
         navigation.router.refreshesRoute = true
-
-        expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
-            guard
-                let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
-            else {
-                return false
-            }
-
-            guard
-                let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-            else {
-                return false
-            }
-
-            print(">>>> prog \(location.coordinate)")
-            return true
-        }
-
-        expectation(forNotification: .routeControllerDidRefreshRoute, object: navigation.router) { (notification) -> Bool in
-            print(">>>> refr")
-            return true
-        }
-
-        expectation(forNotification: .routeControllerDidUpdateAlternatives, object: navigation.router) { (notification) -> Bool in
-            print(">>>> alte")
-            return true
-        }
-
-        navigation.start()
-        locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: 100) { XCTAssertNil($0) }
+        return (locationManager, navigation)
     }
 }
 
@@ -128,4 +126,12 @@ fileprivate extension CLLocationCoordinate2D {
     static var destiantion: CLLocationCoordinate2D {
         .init(latitude: -73.98039053825985, longitude: 40.75988085727627)
     }
+}
+
+fileprivate extension TimeInterval {
+    static let defaultDelay: Self = 5
+}
+
+fileprivate extension ProfileIdentifier {
+    static let custom: ProfileIdentifier = .init(rawValue: "custom/driving-traffic")
 }
