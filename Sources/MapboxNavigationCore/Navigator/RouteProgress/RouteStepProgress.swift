@@ -85,13 +85,21 @@ public struct RouteStepProgress: Equatable, Sendable {
     /// The step must contain ``intersectionsIncludingUpcomingManeuverIntersection`` otherwise this property will be
     /// `nil`.
     public var upcomingIntersection: Intersection? {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection,
+              let upcomingIntersectionIndex
+        else {
+            return nil
+        }
+        return intersections[upcomingIntersectionIndex]
+    }
+
+    var upcomingIntersectionIndex: Int? {
         guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.count > 0,
               intersections.startIndex..<intersections.endIndex - 1 ~= intersectionIndex
         else {
             return nil
         }
-
-        return intersections[intersections.index(after: intersectionIndex)]
+        return intersections.index(after: intersectionIndex)
     }
 
     /// Index representing the current intersection.

@@ -95,6 +95,8 @@ enum FeatureIds {
         let railroadCrossingImage: String
         let trafficSignalImage: String
 
+        let debugCrossMarkImage: String
+
         init() {
             let id = "\(Self.prefix)"
             self.featureId = id
@@ -104,10 +106,26 @@ enum FeatureIds {
             self.stopSignImage = "\(id).stop_sign"
             self.railroadCrossingImage = "\(id).railroad_crossing"
             self.trafficSignalImage = "\(id).traffic_signal"
+            self.debugCrossMarkImage = "\(id).debug_cross_mark"
         }
 
         static var currentRoute: Self {
             .init()
+        }
+    }
+
+    struct IntersectionLaneGuidance {
+        private static let prefix: String = "\(globalPrefix).intersection_lane_guidance"
+
+        let featureId: String
+
+        init(instanceId: String = "default") {
+            let id = "\(Self.prefix).\(instanceId)"
+            self.featureId = id
+        }
+
+        static var nearest: Self {
+            .init(instanceId: "nearest")
         }
     }
 

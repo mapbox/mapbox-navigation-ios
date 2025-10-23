@@ -15,6 +15,8 @@ struct IntersectionAnnotationsStyleContent: MapStyleContent {
     }
 }
 
+private let imageNameKey = "imageName"
+
 extension RouteProgress {
     func intersectionAnnotationsMapFeatures(
         ids: FeatureIds.IntersectionAnnotation,
@@ -45,7 +47,7 @@ extension RouteProgress {
         let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
             $0.iconAllowOverlap = .constant(false)
             $0.iconImage = .expression(Exp(.get) {
-                "imageName"
+                imageNameKey
             })
         }
 
@@ -101,20 +103,76 @@ extension RouteProgress {
     ) -> Feature? {
         var properties: JSONObject?
         if intersection.yieldSign == true {
-            properties = ["imageName": .string(ids.yieldSignImage)]
+            properties = [imageNameKey: .string(ids.yieldSignImage)]
         }
         if intersection.stopSign == true {
-            properties = ["imageName": .string(ids.stopSignImage)]
+            properties = [imageNameKey: .string(ids.stopSignImage)]
         }
         if intersection.railroadCrossing == true {
-            properties = ["imageName": .string(ids.railroadCrossingImage)]
+            properties = [imageNameKey: .string(ids.railroadCrossingImage)]
         }
         if intersection.trafficSignal == true {
-            properties = ["imageName": .string(ids.trafficSignalImage)]
+            properties = [imageNameKey: .string(ids.trafficSignalImage)]
         }
 
         guard let properties else { return nil }
 
+        var feature = Feature(geometry: .point(Point(intersection.location)))
+        feature.properties = properties
+        return feature
+    }
+
+    func debugIntersectionAnnotationsMapStyleContent(
+        ids: FeatureIds.IntersectionAnnotation,
+        mapboxMap: MapboxMap,
+        customizedSymbolLayerProvider: CustomizedTypeLayerProvider<SymbolLayer>
+    ) -> IntersectionAnnotationsStyleContent? {
+        guard !routeIsComplete else { return nil }
+
+        var featureCollection = FeatureCollection(features: [])
+
+        let stepProgress = currentLegProgress.currentStepProgress
+        let intersectionIndex = stepProgress.intersectionIndex
+        let intersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection ?? []
+        let stepIntersections = Array(intersections.dropFirst(intersectionIndex))
+
+        for intersection in stepIntersections {
+            if let feature = debugIntersectionMarkFeature(from: intersection, ids: ids) {
+                featureCollection.features.append(feature)
+            }
+        }
+
+        let source = GeoJsonMapFeature.Source(
+            id: ids.source,
+            geoJson: .featureCollection(featureCollection)
+        )
+        guard let sourceData = source.data() else { return nil }
+
+        let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
+            $0.iconAllowOverlap = .constant(false)
+            $0.iconImage = .expression(Exp(.get) {
+                imageNameKey
+            })
+        }
+
+        Self.upsertIntersectionSymbolImages(
+            map: mapboxMap,
+            ids: ids
+        )
+
+        let customizedLayer = customizedSymbolLayerProvider.customizedLayer(layer)
+        let content = IntersectionAnnotationsStyleContent(
+            source: sourceData,
+            symbolLayer: customizedLayer
+        )
+        return content
+    }
+
+    private func debugIntersectionMarkFeature(
+        from intersection: Intersection,
+        ids: FeatureIds.IntersectionAnnotation
+    ) -> Feature? {
+        let properties: JSONObject = [imageNameKey: .string(ids.debugCrossMarkImage)]
         var feature = Feature(geometry: .point(Point(intersection.location)))
         feature.properties = properties
         return feature
@@ -150,6 +208,7 @@ extension RouteProgress {
             "RailroadCrossing": ids.railroadCrossingImage,
             "YieldSign": ids.yieldSignImage,
             "StopSign": ids.stopSignImage,
+            "debug_cross_mark": ids.debugCrossMarkImage,
         ]
     }
 }

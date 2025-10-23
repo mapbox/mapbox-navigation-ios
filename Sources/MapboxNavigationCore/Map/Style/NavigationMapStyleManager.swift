@@ -39,6 +39,7 @@ struct MapStyleConfig: Equatable {
     var showsIntermediateWaypoints: Bool
     var showsVoiceInstructionsOnMap: Bool
     var showsIntersectionAnnotations: Bool
+    var showsIntersectionLaneGuidance: Bool
     var occlusionFactor: Value<Double>?
     var congestionConfiguration: CongestionConfiguration
     var excludedRouteAlertTypes: RoadAlertType
@@ -137,8 +138,11 @@ final class NavigationMapStyleManager {
     private let intersectionAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAnnotationsFeaturesStore: MapFeaturesStore
     private let routeAlertsFeaturesStore: MapFeaturesStore
+    private let intersectionLaneGuidanceFeaturesStore: MapFeaturesStore
 
     private var redrawableFeaturesSubscriptions: [AnyHashable: AnyCancellable] = [:]
+
+    private var intersectionLaneGuidanceData: IntersectionLaneGuidanceData?
 
     init(
         mapView: MapView,
@@ -159,6 +163,8 @@ final class NavigationMapStyleManager {
         self.intersectionAnnotationsFeaturesStore = .init(mapView: mapView)
         self.routeAnnotationsFeaturesStore = .init(mapView: mapView)
         self.routeAlertsFeaturesStore = .init(mapView: mapView)
+        self.intersectionLaneGuidanceFeaturesStore = .init(mapView: mapView)
+
         self.customRouteLineLayerPosition = customRouteLineLayerPosition
         _navigationStyleContent = .init(mapContent)
 
@@ -185,10 +191,12 @@ final class NavigationMapStyleManager {
             intersectionAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
             routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
             routeAlertsFeaturesStore.styleLoaded(order: &layersOrder)
+            intersectionLaneGuidanceFeaturesStore.styleLoaded(order: &layersOrder)
         } else {
             // Until ViewAnnotations are supported in Declarative Map Styling in Maps SDK iOS,
             // we should use the old approach for route annotations.
             routeAnnotationsFeaturesStore.styleLoaded(order: &layersOrder)
+            intersectionLaneGuidanceFeaturesStore.styleLoaded(order: &layersOrder)
         }
     }
 
@@ -404,11 +412,22 @@ final class NavigationMapStyleManager {
             removeIntersectionAnnotations()
             return
         }
+
+        if config.showsIntersectionLaneGuidance, shouldUseDeclarativeApproach {
+            mapContent?.intersectionAnnotations = routeProgress.debugIntersectionAnnotationsMapStyleContent(
+                ids: .currentRoute,
+                mapboxMap: mapView.mapboxMap,
+                customizedSymbolLayerProvider: customizedSymbolLayerProvider
+            )
+            return
+        }
+
         let feature = routeProgress.intersectionAnnotationsMapFeatures(
             ids: .currentRoute,
             mapboxMap: mapView.mapboxMap,
             customizedSymbolLayerProvider: customizedSymbolLayerProvider
         )
+
         if shouldUseDeclarativeApproach {
             mapContent?.intersectionAnnotations = feature?.0
         } else {
@@ -417,6 +436,54 @@ final class NavigationMapStyleManager {
                 order: &layersOrder
             )
         }
+    }
+
+    func updateIntersectionLaneGuidance(
+        routeProgress: RouteProgress?,
+        mapStyleConfig: MapStyleConfig
+    ) {
+        guard let routeProgress, mapStyleConfig.showsIntersectionLaneGuidance else {
+            removeIntersectionLaneGuidance()
+            return
+        }
+
+        let newData = prepareIntersectionLaneGuidanceState(routeProgress: routeProgress)
+        guard newData != intersectionLaneGuidanceData else {
+            return
+        }
+
+        guard let newData else {
+            removeIntersectionLaneGuidance()
+            return
+        }
+        intersectionLaneGuidanceData = newData
+
+        let feature = IntersectionLaneGuidanceFeature(
+            state: [newData],
+            featureId: FeatureIds.IntersectionLaneGuidance.nearest.featureId,
+            mapStyleConfig: mapStyleConfig
+        )
+        intersectionLaneGuidanceFeaturesStore.update(with: feature, order: &layersOrder)
+    }
+
+    private func prepareIntersectionLaneGuidanceState(routeProgress: RouteProgress) -> IntersectionLaneGuidanceData? {
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let upcomingIntersectionIndex = stepProgress.upcomingIntersectionIndex else { return nil }
+        let intersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection ?? []
+        let stepIntersections = Array(intersections.dropFirst(upcomingIntersectionIndex))
+
+        var firstIntersectionWithLaneGuidance = stepIntersections.first { $0.approachLanes != nil }
+
+        let data = firstIntersectionWithLaneGuidance.map {
+            IntersectionLaneGuidanceData(
+                point: Point($0.location),
+                approachLanes: $0.approachLanes!,
+                preferredApproachLanes: $0.preferredApproachLanes,
+                usableApproachLanes: $0.usableApproachLanes,
+                usableLaneIndication: $0.usableLaneIndication
+            )
+        }
+        return data
     }
 
     func updateRouteAnnotations(
@@ -561,12 +628,18 @@ final class NavigationMapStyleManager {
         }
     }
 
+    private func removeIntersectionLaneGuidance() {
+        intersectionLaneGuidanceData = nil
+        intersectionLaneGuidanceFeaturesStore.update(using: nil, order: &layersOrder)
+    }
+
     private func cleanup() {
         if shouldUseDeclarativeApproach {
             mapContent = NavigationStyleContent()
             mapContent?.customRoutePosition = customRouteLineLayerPosition
             redrawableFeaturesSubscriptions.removeAll()
             routeAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
+            intersectionLaneGuidanceFeaturesStore.update(using: nil, order: &layersOrder)
         } else {
             routeFeaturesStore.update(using: nil, order: &layersOrder)
             waypointFeaturesStore.update(using: nil, order: &layersOrder)
@@ -576,6 +649,7 @@ final class NavigationMapStyleManager {
             redrawableFeaturesSubscriptions.removeAll()
             routeAnnotationsFeaturesStore.update(using: nil, order: &layersOrder)
             routeAlertsFeaturesStore.update(using: nil, order: &layersOrder)
+            intersectionLaneGuidanceFeaturesStore.update(using: nil, order: &layersOrder)
         }
     }
 

@@ -1,5 +1,5 @@
 import MapboxDirections
-@testable import MapboxNavigationCore
+import MapboxNavigationCore
 @testable import MapboxNavigationUIKit
 import SnapshotTesting
 @testable import TestHelper

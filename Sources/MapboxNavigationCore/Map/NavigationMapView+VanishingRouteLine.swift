@@ -32,6 +32,7 @@ extension NavigationMapView {
         if routeLineTracksTraversal, routes != nil, !routeProgress.routeIsComplete {
             updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         }
+        updateIntersectionLaneGuidance(routeProgress: routeProgress)
     }
 
     func updateAlternatives(routeProgress: RouteProgress?) {
@@ -41,6 +42,13 @@ extension NavigationMapView {
 
     func updateIntersectionAnnotations(routeProgress: RouteProgress?) {
         mapStyleManager.updateIntersectionAnnotations(routeProgress: routeProgress, config: mapStyleConfig)
+    }
+
+    func updateIntersectionLaneGuidance(routeProgress: RouteProgress?) {
+        var config = mapStyleConfig
+        config.showsIntersectionLaneGuidance =
+            config.showsIntersectionLaneGuidance && (navigationCamera.currentCameraState != .overview)
+        mapStyleManager.updateIntersectionLaneGuidance(routeProgress: routeProgress, mapStyleConfig: config)
     }
 
     /// Transform the route data into nested arrays of legs -> steps -> coordinates.

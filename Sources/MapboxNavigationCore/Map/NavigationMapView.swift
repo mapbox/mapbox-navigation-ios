@@ -220,6 +220,7 @@ open class NavigationMapView: UIView {
         navigationCamera.cameraStates
             .sink { [weak self] cameraState in
                 guard let self else { return }
+                updateIntersectionLaneGuidance(routeProgress: currentRouteProgress)
                 delegate?.navigationMapView(self, didChangeCameraState: cameraState)
             }.store(in: &lifetimeSubscriptions)
     }
@@ -261,6 +262,14 @@ open class NavigationMapView: UIView {
         didSet {
             updateIntersectionAnnotations(routeProgress: currentRouteProgress)
             mapStyleManager.mapStyleDeclarativeContentUpdate()
+        }
+    }
+
+    /// Controls whether to show lane guidance callouts on intersections. Defaults to `false`.
+    @_spi(MapboxInternal)
+    public var showsIntersectionLaneGuidance: Bool = false {
+        didSet {
+            updateIntersectionLaneGuidance(routeProgress: currentRouteProgress)
         }
     }
 
@@ -943,6 +952,7 @@ open class NavigationMapView: UIView {
             showsIntermediateWaypoints: showsIntermediateWaypoints,
             showsVoiceInstructionsOnMap: showsVoiceInstructionsOnMap,
             showsIntersectionAnnotations: showsIntersectionAnnotations,
+            showsIntersectionLaneGuidance: showsIntersectionLaneGuidance,
             occlusionFactor: .constant(routeLineOcclusionFactor),
             congestionConfiguration: congestionConfiguration,
             excludedRouteAlertTypes: excludedRouteAlertTypes,
