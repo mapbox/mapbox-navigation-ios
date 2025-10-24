@@ -10,6 +10,10 @@
 
 * Fixed an issue where the initially set CarPlay navigation camera values were being overwritten when updates to this property were disabled.
 
+### Audio
+
+* Fixed an issue that audio sessions activated by the SDK (for playback of voice instructions and reroute sound) were not interrupting spoken audio content playback from other applications (e.g. Podcasts).
+
 ## v2.20.2
 
 ### Routing
