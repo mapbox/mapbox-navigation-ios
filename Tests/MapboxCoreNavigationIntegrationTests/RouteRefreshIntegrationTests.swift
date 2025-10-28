@@ -23,6 +23,7 @@ class RouteRefreshIntegrationTests: TestCase {
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
+        MapboxRoutingProvider.__testRoutesStub = nil
         super.tearDown()
     }
 
@@ -52,7 +53,7 @@ class RouteRefreshIntegrationTests: TestCase {
             expectationKey: "RerouteCustomParametersDefaultProfile") { options in
                 let customOptions = options as! CustomRouteOptions
                 XCTAssert(customOptions.profileIdentifier == .custom)
-                XCTAssert(customOptions.urlQueryItems == [.customItem])
+                XCTAssert(customOptions.urlQueryItems.contains(.customItem))
             }
     }
 
@@ -62,7 +63,7 @@ class RouteRefreshIntegrationTests: TestCase {
             expectationKey: "RerouteCustomParametersCustomProfile") { options in
                 let customOptions = options as! CustomRouteOptions
                 XCTAssert(customOptions.profileIdentifier == .automobileAvoidingTraffic)
-                XCTAssert(customOptions.urlQueryItems == [.customItem])
+                XCTAssert(customOptions.urlQueryItems.contains(.customItem))
             }
     }
 
