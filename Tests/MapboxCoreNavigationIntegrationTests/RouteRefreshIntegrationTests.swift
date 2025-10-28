@@ -27,18 +27,46 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testRouteRefreshWithDefaultDrivingTrafficProfile() {
-        simulateRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
+        simulateOnRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
     }
 
     func testRouteRefreshWithCustomDrivingTrafficProfile() {
-        simulateRoute(with: .custom, shouldRefresh: true)
+        simulateOnRoute(with: .custom, shouldRefresh: true)
     }
 
     func testRouteRefreshWithWalkingProfile() {
-        simulateRoute(with: .walking, shouldRefresh: false)
+        simulateOnRoute(with: .walking, shouldRefresh: false)
     }
 
-    private func simulateRoute(with profile: ProfileIdentifier, shouldRefresh: Bool = true) {
+    func testReRouteDefaultParametersDefaultDrivingTrafficProfile() {
+        simulateOffRoute(
+            with: .mockedOptions(.automobileAvoidingTraffic),
+            expectationKey: "RerouteDefaultParametersDefaultProfile") { options in
+                XCTAssert(options.profileIdentifier == .automobileAvoidingTraffic)
+            }
+    }
+
+    func testReRouteCustomParametersCustomDrivingTrafficProfile() {
+        simulateOffRoute(
+            with: .mockedCustomOptions(.custom),
+            expectationKey: "RerouteCustomParametersDefaultProfile") { options in
+                let customOptions = options as! CustomRouteOptions
+                XCTAssert(customOptions.profileIdentifier == .custom)
+                XCTAssert(customOptions.urlQueryItems == [.customItem])
+            }
+    }
+
+    func testReRouteCustomParametersDefaultDrivingTrafficProfile() {
+        simulateOffRoute(
+            with: .mockedCustomOptions(.automobileAvoidingTraffic),
+            expectationKey: "RerouteCustomParametersCustomProfile") { options in
+                let customOptions = options as! CustomRouteOptions
+                XCTAssert(customOptions.profileIdentifier == .automobileAvoidingTraffic)
+                XCTAssert(customOptions.urlQueryItems == [.customItem])
+            }
+    }
+
+    private func simulateOnRoute(with profile: ProfileIdentifier, shouldRefresh: Bool = true) {
         let (locationManager, navigation) = navigatorAndLocationManager(with: profile)
         let refreshExpectation = expectation(
             forNotification: .routeControllerDidRefreshRoute,
@@ -61,14 +89,38 @@ class RouteRefreshIntegrationTests: TestCase {
         waitForExpectations(timeout: .defaultDelay) { XCTAssertNil($0) }
     }
 
+    private func simulateOffRoute(
+        with options: NavigationRouteOptions,
+        expectationKey: String,
+        validation: @escaping (NavigationRouteOptions) -> Void
+    ) {
+        let response = RouteResponse.mockedIndexRouteResponse(options: options)
+        let simulationLocations = response.routeResponse.routes![0].simulationOffRouteLocations
+        let (locationManager, navigation) = navigatorAndLocationManager(
+            with: response,
+            simulationLocations: simulationLocations
+        )
+
+        let expection = expectation(description: expectationKey)
+        MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
+            validation(options as! NavigationRouteOptions)
+            expection.fulfill()
+            return nil
+        }
+
+        navigation.start()
+        locationManager.startUpdatingLocation()
+        waitForExpectations(timeout: .defaultDelay) { XCTAssertNil($0) }
+    }
+
     private func navigatorAndLocationManager(
-        with profile: ProfileIdentifier
+        with profile: ProfileIdentifier,
     ) -> (ReplayLocationManager, MapboxNavigationService) {
         RouteControllerProactiveReroutingInterval = 2
 
         let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse(profile: profile)
         let locationManager = ReplayLocationManager(
-            locations: indexedRouteResponse.routeResponse.routes![0].simulationLocations
+            locations: indexedRouteResponse.routeResponse.routes![0].simulationOnRouteLocations
         )
 
         locationManager.speedMultiplier = 1
@@ -81,12 +133,43 @@ class RouteRefreshIntegrationTests: TestCase {
         )
         return (locationManager, navigation)
     }
+
+    private func navigatorAndLocationManager(
+        with indexedRouteResponse: IndexedRouteResponse,
+        simulationLocations: [CLLocation]
+    ) -> (ReplayLocationManager, MapboxNavigationService) {
+        RouteControllerProactiveReroutingInterval = 2
+        let locationManager = ReplayLocationManager(locations: simulationLocations)
+        locationManager.speedMultiplier = 5
+        let navigation = MapboxNavigationService(
+            indexedRouteResponse: indexedRouteResponse,
+            customRoutingProvider: MapboxRoutingProvider(.online),
+            credentials: Fixture.credentials,
+            locationSource: locationManager,
+            simulating: .never
+        )
+        return (locationManager, navigation)
+    }
 }
 
 fileprivate extension Route {
-    var simulationLocations: [CLLocation] {
+    var simulationOnRouteLocations: [CLLocation] {
         shape!
             .coordinates
+            .map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
+            .shiftedToPresent()
+            .qualified()
+    }
+
+    var simulationOffRouteLocations: [CLLocation] {
+        let stepCoordiantes = legs[0].steps[0].shape!.coordinates
+        let stepFirstLocation = stepCoordiantes.first!
+        let stepLastLocation = stepCoordiantes.last!
+        let stepDirection = stepFirstLocation.direction(to: stepLastLocation)
+
+        let offRouteCoordiantes =  [20, 30, 40].map { stepLastLocation.coordinate(at: $0, facing: stepDirection) }
+        let coordinates = stepCoordiantes + offRouteCoordiantes
+        return coordinates
             .map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
             .shiftedToPresent()
             .qualified()
@@ -105,6 +188,20 @@ fileprivate extension NavigationRouteOptions {
             profileIdentifier: profile
         )
     }
+
+    static func mockedCustomOptions(
+        _ profile: ProfileIdentifier
+    ) -> NavigationRouteOptions {
+        CustomRouteOptions(
+            waypoints: [
+                .init(coordinate: .origin),
+                .init(coordinate: .destiantion),
+            ],
+            profileIdentifier: profile,
+            customParameters: [.customItem]
+        )
+    }
+
 }
 
 fileprivate extension RouteResponse {
@@ -120,6 +217,22 @@ fileprivate extension RouteResponse {
     ) -> IndexedRouteResponse {
         IndexedRouteResponse(
             routeResponse: mockedResponse(profile: profile),
+            routeIndex: 0
+        )
+    }
+
+    static func mockedResponse(options: NavigationRouteOptions) -> RouteResponse {
+        Fixture.routeResponse(
+            from: "profile-route-original",
+            options: options
+        )
+    }
+
+    static func mockedIndexRouteResponse(
+        options: NavigationRouteOptions
+    ) -> IndexedRouteResponse {
+        IndexedRouteResponse(
+            routeResponse: mockedResponse(options: options),
             routeIndex: 0
         )
     }
@@ -141,4 +254,46 @@ fileprivate extension TimeInterval {
 
 fileprivate extension ProfileIdentifier {
     static let custom: ProfileIdentifier = .init(rawValue: "custom/driving-traffic")
+}
+
+fileprivate extension URLQueryItem {
+    static let customItem: URLQueryItem = .init(name: "foo", value: "bar")
+}
+
+fileprivate final class CustomRouteOptions: NavigationRouteOptions {
+    var customParameters: [URLQueryItem]
+
+    init(
+        waypoints: [Waypoint],
+        profileIdentifier: ProfileIdentifier? = nil,
+        customParameters: [URLQueryItem] = []
+    ) {
+        self.customParameters = customParameters
+
+        super.init(waypoints: waypoints, profileIdentifier: profileIdentifier)
+    }
+
+    required init(
+        waypoints: [Waypoint],
+        profileIdentifier: ProfileIdentifier? = nil,
+        queryItems: [URLQueryItem]? = nil
+    ) {
+        self.customParameters = []
+        super.init(
+            waypoints: waypoints,
+            profileIdentifier: profileIdentifier,
+            queryItems: queryItems
+        )
+    }
+
+    required init(from decoder: any Decoder) throws {
+        self.customParameters = []
+        try super.init(from: decoder)
+    }
+
+    override var urlQueryItems: [URLQueryItem] {
+        var combined = super.urlQueryItems
+        combined.append(contentsOf: customParameters)
+        return combined
+    }
 }
