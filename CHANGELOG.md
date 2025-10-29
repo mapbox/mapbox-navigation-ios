@@ -11,6 +11,10 @@
 
 * Fixed an issue where authentication route request parameters could be duplicated when using a custom `DirectionsOptions` subclass.
 
+### Map
+
+* Added the congestion configuration `CongestionColorsConfiguration.displaySoftGradientForTraffic` to customize if the color transition between traffic congestion changes should use a soft gradient appearance or abrupt color change. 
+
 ## 3.16.0-rc.1
 
 ### Packaging

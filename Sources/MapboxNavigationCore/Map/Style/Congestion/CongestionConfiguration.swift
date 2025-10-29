@@ -6,6 +6,9 @@ public struct CongestionConfiguration: Equatable, Sendable {
     public var colors: CongestionColorsConfiguration
     /// Range configuration for congestion.
     public var ranges: CongestionRangesConfiguration
+    /// Determines if the color transition between traffic congestion changes should use a soft gradient appearance
+    /// or abrupt color change.
+    public var displaySoftGradientForTraffic: Bool = true
 
     /// Default configuration.
     public static let `default` = CongestionConfiguration(
