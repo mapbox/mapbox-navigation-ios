@@ -279,7 +279,8 @@ fileprivate final class CustomRouteOptions: NavigationRouteOptions {
         profileIdentifier: ProfileIdentifier? = nil,
         queryItems: [URLQueryItem]? = nil
     ) {
-        self.customParameters = []
+        let mappedUrlItem = queryItems!.first(where: { $0 == .customItem })!
+        self.customParameters = [mappedUrlItem]
         super.init(
             waypoints: waypoints,
             profileIdentifier: profileIdentifier,
