@@ -596,7 +596,7 @@ final class NavigationMapStyleManager {
         let mainRouteFeature = routes.mainRoute.route.routeLineMapFeatures(
             ids: .main,
             offset: 0,
-            isSoftGradient: true,
+            isSoftGradient: config.congestionConfiguration.displaySoftGradientForTraffic,
             isAlternative: false,
             config: config,
             featureProvider: featureProvider,
@@ -613,7 +613,7 @@ final class NavigationMapStyleManager {
                 if let alternativeRouteFeature = alternativeRoute.route.routeLineMapFeatures(
                     ids: .alternative(idx: idx),
                     offset: deviationOffset,
-                    isSoftGradient: true,
+                    isSoftGradient: config.congestionConfiguration.displaySoftGradientForTraffic,
                     isAlternative: true,
                     config: config,
                     featureProvider: featureProvider,
