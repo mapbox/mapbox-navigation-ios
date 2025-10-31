@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "6512320ee7f0091a4c55abe2bc6414f078da88c8",
-          "version": "2.14.0"
+          "revision": "4b5e49ac3e980f36f5d64c8a4cba752b397a0281",
+          "version": "2.14.3"
         }
       },
       {
