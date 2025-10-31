@@ -28,19 +28,19 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testRouteRefreshWithDefaultDrivingTrafficProfile() {
-        simulateOnRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
+        simulateAndTestOnRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
     }
 
     func testRouteRefreshWithCustomDrivingTrafficProfile() {
-        simulateOnRoute(with: .custom, shouldRefresh: true)
+        simulateAndTestOnRoute(with: .custom, shouldRefresh: true)
     }
 
     func testRouteRefreshWithWalkingProfile() {
-        simulateOnRoute(with: .walking, shouldRefresh: false)
+        simulateAndTestOnRoute(with: .walking, shouldRefresh: false)
     }
 
     func testReRouteDefaultParametersDefaultDrivingTrafficProfile() {
-        simulateOffRoute(
+        simulateAndTestOffRoute(
             with: .mockedOptions(.automobileAvoidingTraffic),
             expectationKey: "RerouteDefaultParametersDefaultProfile") { options in
                 XCTAssert(options.profileIdentifier == .automobileAvoidingTraffic)
@@ -48,7 +48,7 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testReRouteCustomParametersCustomDrivingTrafficProfile() {
-        simulateOffRoute(
+        simulateAndTestOffRoute(
             with: .mockedCustomOptions(.custom),
             expectationKey: "RerouteCustomParametersDefaultProfile") { options in
                 let customOptions = options as! CustomRouteOptions
@@ -58,7 +58,7 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testReRouteCustomParametersDefaultDrivingTrafficProfile() {
-        simulateOffRoute(
+        simulateAndTestOffRoute(
             with: .mockedCustomOptions(.automobileAvoidingTraffic),
             expectationKey: "RerouteCustomParametersCustomProfile") { options in
                 let customOptions = options as! CustomRouteOptions
@@ -67,8 +67,13 @@ class RouteRefreshIntegrationTests: TestCase {
             }
     }
 
-    private func simulateOnRoute(with profile: ProfileIdentifier, shouldRefresh: Bool = true) {
-        let (locationManager, navigation) = navigatorAndLocationManager(with: profile)
+    private func simulateAndTestOnRoute(with profile: ProfileIdentifier, shouldRefresh: Bool = true) {
+        let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse(profile: profile)
+        let simulationLocations = indexedRouteResponse.routeResponse.routes![0].simulationOnRouteLocations
+        let (locationManager, navigation) = navigatorAndLocationManager(
+            with: indexedRouteResponse,
+            simulationLocations: simulationLocations
+        )
         let refreshExpectation = expectation(
             forNotification: .routeControllerDidRefreshRoute,
             object: navigation.router
@@ -90,7 +95,7 @@ class RouteRefreshIntegrationTests: TestCase {
         waitForExpectations(timeout: .defaultDelay) { XCTAssertNil($0) }
     }
 
-    private func simulateOffRoute(
+    private func simulateAndTestOffRoute(
         with options: NavigationRouteOptions,
         expectationKey: String,
         validation: @escaping (NavigationRouteOptions) -> Void
@@ -112,27 +117,6 @@ class RouteRefreshIntegrationTests: TestCase {
         navigation.start()
         locationManager.startUpdatingLocation()
         waitForExpectations(timeout: .defaultDelay) { XCTAssertNil($0) }
-    }
-
-    private func navigatorAndLocationManager(
-        with profile: ProfileIdentifier,
-    ) -> (ReplayLocationManager, MapboxNavigationService) {
-        RouteControllerProactiveReroutingInterval = 2
-
-        let indexedRouteResponse = RouteResponse.mockedIndexRouteResponse(profile: profile)
-        let locationManager = ReplayLocationManager(
-            locations: indexedRouteResponse.routeResponse.routes![0].simulationOnRouteLocations
-        )
-
-        locationManager.speedMultiplier = 1
-        let navigation = MapboxNavigationService(
-            indexedRouteResponse: indexedRouteResponse,
-            customRoutingProvider: MapboxRoutingProvider(.online),
-            credentials: Fixture.credentials,
-            locationSource: locationManager,
-            simulating: .never
-        )
-        return (locationManager, navigation)
     }
 
     private func navigatorAndLocationManager(
