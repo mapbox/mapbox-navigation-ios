@@ -32,7 +32,11 @@ class RouteRefreshIntegrationTests: TestCase {
     }
 
     func testRouteRefreshWithCustomDrivingTrafficProfile() {
-        simulateAndTestOnRoute(with: .custom, shouldRefresh: true)
+        simulateAndTestOnRoute(with: .customDrivingTraffic, shouldRefresh: true)
+    }
+
+    func testRouteRefreshWithDefaultAutomobileProfile() {
+        simulateAndTestOnRoute(with: .automobile, shouldRefresh: false)
     }
 
     func testRouteRefreshWithWalkingProfile() {
@@ -49,10 +53,10 @@ class RouteRefreshIntegrationTests: TestCase {
 
     func testReRouteCustomParametersCustomDrivingTrafficProfile() {
         simulateAndTestOffRoute(
-            with: .mockedCustomOptions(.custom),
+            with: .mockedCustomOptions(.customDrivingTraffic),
             expectationKey: "RerouteCustomParametersDefaultProfile") { options in
                 let customOptions = options as! CustomRouteOptions
-                XCTAssert(customOptions.profileIdentifier == .custom)
+                XCTAssert(customOptions.profileIdentifier == .customDrivingTraffic)
                 XCTAssert(customOptions.urlQueryItems.contains(.customItem))
             }
     }
@@ -238,7 +242,7 @@ fileprivate extension TimeInterval {
 }
 
 fileprivate extension ProfileIdentifier {
-    static let custom: ProfileIdentifier = .init(rawValue: "custom/driving-traffic")
+    static let customDrivingTraffic: ProfileIdentifier = .init(rawValue: "custom/driving-traffic")
 }
 
 fileprivate extension URLQueryItem {
@@ -263,8 +267,8 @@ fileprivate final class CustomRouteOptions: NavigationRouteOptions {
         profileIdentifier: ProfileIdentifier? = nil,
         queryItems: [URLQueryItem]? = nil
     ) {
-        let mappedUrlItem = queryItems!.first(where: { $0 == .customItem })!
-        self.customParameters = [mappedUrlItem]
+        let mappedUrlItem = queryItems?.first(where: { $0 == .customItem })
+        self.customParameters = mappedUrlItem.map { [$0] } ?? []
         super.init(
             waypoints: waypoints,
             profileIdentifier: profileIdentifier,
