@@ -2,7 +2,7 @@ import XCTest
 import CoreLocation
 import MapboxDirections
 import Turf
-import TestHelper
+@testable import TestHelper
 @testable import MapboxCoreNavigation
 import OHHTTPStubs
 
@@ -181,16 +181,16 @@ fileprivate extension NavigationRouteOptions {
     static func mockedCustomOptions(
         _ profile: ProfileIdentifier
     ) -> NavigationRouteOptions {
-        CustomRouteOptions(
+        let options = CustomRouteOptions(
             waypoints: [
                 .init(coordinate: .origin),
                 .init(coordinate: .destiantion),
             ],
-            profileIdentifier: profile,
-            customParameters: [.customItem]
+            profileIdentifier: profile
         )
+        options.custom = URLQueryItem.customItem.value
+        return options
     }
-
 }
 
 fileprivate extension RouteResponse {
@@ -246,44 +246,8 @@ fileprivate extension ProfileIdentifier {
 }
 
 fileprivate extension URLQueryItem {
-    static let customItem: URLQueryItem = .init(name: "foo", value: "bar")
-}
-
-fileprivate final class CustomRouteOptions: NavigationRouteOptions {
-    var customParameters: [URLQueryItem]
-
-    init(
-        waypoints: [Waypoint],
-        profileIdentifier: ProfileIdentifier? = nil,
-        customParameters: [URLQueryItem] = []
-    ) {
-        self.customParameters = customParameters
-
-        super.init(waypoints: waypoints, profileIdentifier: profileIdentifier)
-    }
-
-    required init(
-        waypoints: [Waypoint],
-        profileIdentifier: ProfileIdentifier? = nil,
-        queryItems: [URLQueryItem]? = nil
-    ) {
-        let mappedUrlItem = queryItems?.first(where: { $0 == .customItem })
-        self.customParameters = mappedUrlItem.map { [$0] } ?? []
-        super.init(
-            waypoints: waypoints,
-            profileIdentifier: profileIdentifier,
-            queryItems: queryItems
-        )
-    }
-
-    required init(from decoder: any Decoder) throws {
-        self.customParameters = []
-        try super.init(from: decoder)
-    }
-
-    override var urlQueryItems: [URLQueryItem] {
-        var combined = super.urlQueryItems
-        combined.append(contentsOf: customParameters)
-        return combined
-    }
+    static let customItem: URLQueryItem = .init(
+        name: CustomRouteOptions.CodingKeys.custom.stringValue,
+        value: "foobar"
+    )
 }
