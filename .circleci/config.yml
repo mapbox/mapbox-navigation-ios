@@ -374,7 +374,7 @@ jobs:
         default: "iPhone 14 Pro Max"
       iOS:
         type: string
-        default: "16.1"
+        default: "16.4"
       spm:
         type: boolean
         default: false
@@ -823,9 +823,9 @@ workflows:
   extended-workflow:
     jobs:
       - spm-test-job:
-          name: "swift test; Xcode 14.3.1; iOS 16.1"
+          name: "swift test; Xcode 14.3.1; iOS 16.4"
           xcode: "14.3.1"
-          iOS: "16.1"
+          iOS: "16.4"
           device: "iPhone 14 Pro Max"
           context: Slack Orb
           notify_success: true
@@ -878,26 +878,26 @@ workflows:
             context: Slack Orb
             scheme: "MapboxNavigation"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.1_SPM_Debug"
+            name: "Xcode_14.3.1_iOS_16.4_SPM_Debug"
             xcode: "14.3.1"
-            iOS: "16.1"
+            iOS: "16.4"
             device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: true
             context: Slack Orb
             scheme: "MapboxNavigation"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.1_Release"
+            name: "Xcode_14.3.1_iOS_16.4_Release"
             xcode: "14.3.1"
-            iOS: "16.1"
+            iOS: "16.4"
             device: "iPhone 14 Pro Max"
             codecoverage: false
             context: Slack Orb
             configuration: "Release"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.1_SPM_Release"
+            name: "Xcode_14.3.1_iOS_16.4_SPM_Release"
             xcode: "14.3.1"
-            iOS: "16.1"
+            iOS: "16.4"
             device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: false
@@ -912,9 +912,9 @@ workflows:
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.1"
+            name: "Xcode_14.3.1_iOS_16.4"
             xcode: "14.3.1"
-            iOS: "16.1"
+            iOS: "16.4"
             device: "iPhone 14 Pro Max"
             spm: true
             codecoverage: false
@@ -937,9 +937,9 @@ workflows:
         - spm-core-integration-test-job:
             name: "Xcode 14.3.1; iOS 16.4; SPM Core test"
         - build-job:
-            name: "Core integration test; Xcode 14.3.1; iOS 16.1"
+            name: "Core integration test; Xcode 14.3.1; iOS 16.4"
             xcode: "14.3.1"
-            iOS: "16.1"
+            iOS: "16.4"
             device: "iPhone 14 Pro Max"
             scheme: "MapboxCoreNavigationIntegrationTests"
             codecoverage: false
