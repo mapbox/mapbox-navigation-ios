@@ -1,0 +1,2274 @@
+{
+    "routes": [
+        {
+            "weight_typical": 299.451,
+            "duration_typical": 294.99,
+            "weight_name": "auto",
+            "weight": 324.605,
+            "duration": 321.729,
+            "distance": 1382.64,
+            "legs": [
+                {
+                    "admins": [
+                        {
+                            "iso_3166_1_alpha3": "USA",
+                            "iso_3166_1": "US"
+                        }
+                    ],
+                    "annotation": {
+                        "maxspeed": [
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            },
+                            {
+                                "speed": 40,
+                                "unit": "km/h"
+                            }
+                        ],
+                        "congestion_numeric": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            12,
+                            12,
+                            12,
+                            12,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "duration": [
+                            2.072,
+                            13.821,
+                            2.075,
+                            4.336,
+                            2.795,
+                            5.852,
+                            1.297,
+                            9.069,
+                            0.862,
+                            1.204,
+                            12.335,
+                            5.885,
+                            3.839,
+                            15.115,
+                            9.261,
+                            5.335,
+                            2.489,
+                            8.295,
+                            9.369,
+                            7.333,
+                            1.854,
+                            9.203,
+                            7.755,
+                            3.272,
+                            14.207,
+                            14.431,
+                            8.146,
+                            1.642,
+                            7.247,
+                            3.067,
+                            4.725,
+                            10.492,
+                            24.04,
+                            7.784,
+                            3.432,
+                            11.915,
+                            9.018,
+                            0.952,
+                            4.227,
+                            2.66,
+                            7.067,
+                            1.135,
+                            4.926,
+                            15.679,
+                            1.731,
+                            9.033,
+                            7.818,
+                            1.626
+                        ]
+                    },
+                    "weight_typical": 299.451,
+                    "duration_typical": 294.99,
+                    "via_waypoints": [],
+                    "route_factors": {
+                        "dive_bombs": 0,
+                        "connection_info": {
+                            "location": [
+                                -73.984676,
+                                40.759147
+                            ],
+                            "path_idx": 1,
+                            "path_distance": 9,
+                            "connection_idx": 0
+                        },
+                        "hierarchy": 4,
+                        "raw_maneuvers": 4,
+                        "hierarchy_peak_length": 0,
+                        "continuity": 0,
+                        "turn_counts": {
+                            "left": 1,
+                            "right": 3
+                        },
+                        "maneuvers": 4,
+                        "absolute ppe": 22327.2673,
+                        "hierarchy_jank": 0,
+                        "normalized ppe": 22327.2673,
+                        "road_class_info": {
+                            "secondary": 1382.434
+                        },
+                        "traffic_lights": 9,
+                        "has_ferry": false,
+                        "base_cost_maneuvers": 4,
+                        "path_integral": -0.036824,
+                        "path_integral_normalized": -0.238925
+                    },
+                    "weight": 324.605,
+                    "duration": 321.729,
+                    "steps": [
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Drive southwest on <say-as interpret-as=\"address\">7th Avenue</say-as>. Then Turn right onto <say-as interpret-as=\"address\">West 45th Street</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Drive southwest on 7th Avenue. Then Turn right onto West 45th Street.",
+                                    "distanceAlongGeometry": 159.479
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn right onto <say-as interpret-as=\"address\">West 45th Street</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn right onto West 45th Street.",
+                                    "distanceAlongGeometry": 71.111
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        210
+                                    ],
+                                    "duration": 2.076,
+                                    "traffic_signal": true,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 2.065,
+                                    "geometry_index": 0,
+                                    "location": [
+                                        -73.984622,
+                                        40.759219
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        30,
+                                        118,
+                                        209,
+                                        300
+                                    ],
+                                    "duration": 13.821,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "weight": 14.722,
+                                    "geometry_index": 1,
+                                    "location": [
+                                        -73.984676,
+                                        40.759147
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        29,
+                                        122,
+                                        209,
+                                        303
+                                    ],
+                                    "duration": 2.075,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "weight": 3.034,
+                                    "geometry_index": 2,
+                                    "location": [
+                                        -73.985027,
+                                        40.758668
+                                    ]
+                                },
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.985079,
+                                        40.758597
+                                    ],
+                                    "geometry_index": 3,
+                                    "admin_index": 0,
+                                    "weight": 2.284,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 3.046,
+                                    "turn_weight": 1,
+                                    "duration": 4.336,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "out": 2,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "location": [
+                                        -73.985132,
+                                        40.758524
+                                    ],
+                                    "geometry_index": 4,
+                                    "admin_index": 0,
+                                    "weight": 3.751,
+                                    "is_urban": true,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "turn_duration": 0.031,
+                                    "turn_weight": 1,
+                                    "duration": 2.795,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        208,
+                                        300
+                                    ],
+                                    "out": 2,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        28,
+                                        209
+                                    ],
+                                    "duration": 5.852,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 5.823,
+                                    "geometry_index": 5,
+                                    "location": [
+                                        -73.985244,
+                                        40.758367
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        208,
+                                        301
+                                    ],
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 0,
+                                    "turn_weight": 1,
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "geometry_index": 6,
+                                    "location": [
+                                        -73.985482,
+                                        40.758035
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active_direction": "right",
+                                                "active": true,
+                                                "directions": [
+                                                    "right"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "text": ""
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "West 45th Street"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "right",
+                                        "text": "West 45th Street"
+                                    },
+                                    "distanceAlongGeometry": 159.479
+                                }
+                            ],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "depart",
+                                "instruction": "Drive southwest on 7th Avenue.",
+                                "bearing_after": 210,
+                                "bearing_before": 0,
+                                "location": [
+                                    -73.984622,
+                                    40.759219
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "7th Avenue",
+                            "weight_typical": 31.124,
+                            "duration_typical": 29.279,
+                            "duration": 32.252,
+                            "distance": 159.479,
+                            "driving_side": "right",
+                            "weight": 33.938,
+                            "mode": "driving",
+                            "geometry": "ezvvlAzetblCnCjB|\\|TlCfBpChBxH~EvSzMnCdB"
+                        },
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In 300 meters, Turn right onto <say-as interpret-as=\"address\">8th Avenue</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "In 300 meters, Turn right onto 8th Avenue.",
+                                    "distanceAlongGeometry": 261.621
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn right onto <say-as interpret-as=\"address\">8th Avenue</say-as>. Then Turn right onto <say-as interpret-as=\"address\">West 46th Street</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn right onto 8th Avenue. Then Turn right onto West 46th Street.",
+                                    "distanceAlongGeometry": 84.444
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.985533,
+                                        40.757963
+                                    ],
+                                    "geometry_index": 7,
+                                    "admin_index": 0,
+                                    "weight": 6.866,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 6.188,
+                                    "turn_weight": 4,
+                                    "duration": 9.069,
+                                    "bearings": [
+                                        28,
+                                        120,
+                                        211,
+                                        299
+                                    ],
+                                    "out": 3,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        119,
+                                        298
+                                    ],
+                                    "duration": 0.862,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 0.858,
+                                    "geometry_index": 8,
+                                    "location": [
+                                        -73.985649,
+                                        40.758011
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "bearings": [
+                                        20,
+                                        118,
+                                        200,
+                                        299
+                                    ],
+                                    "duration": 1.204,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 3,
+                                    "weight": 2.188,
+                                    "geometry_index": 9,
+                                    "location": [
+                                        -73.985684,
+                                        40.758025
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        119,
+                                        299
+                                    ],
+                                    "duration": 12.335,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 12.274,
+                                    "geometry_index": 10,
+                                    "location": [
+                                        -73.985732,
+                                        40.758045
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "bearings": [
+                                        30,
+                                        119,
+                                        207,
+                                        299
+                                    ],
+                                    "duration": 9.725,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 3,
+                                    "weight": 10.646,
+                                    "geometry_index": 11,
+                                    "location": [
+                                        -73.986227,
+                                        40.758253
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        119,
+                                        210,
+                                        299
+                                    ],
+                                    "duration": 24.376,
+                                    "turn_weight": 0.1,
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 2,
+                                    "weight": 24.325,
+                                    "geometry_index": 13,
+                                    "location": [
+                                        -73.986728,
+                                        40.758462
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "bearings": [
+                                        119,
+                                        299
+                                    ],
+                                    "duration": 5.335,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 5.308,
+                                    "geometry_index": 15,
+                                    "location": [
+                                        -73.987984,
+                                        40.75899
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        30,
+                                        119,
+                                        208,
+                                        299
+                                    ],
+                                    "entry": [
+                                        false,
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.031,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 3,
+                                    "geometry_index": 16,
+                                    "location": [
+                                        -73.988259,
+                                        40.759106
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "West 46th Street"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "right",
+                                        "text": "West 46th Street"
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "8th Avenue"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "right",
+                                        "text": "8th Avenue"
+                                    },
+                                    "distanceAlongGeometry": 274.954
+                                }
+                            ],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn right onto West 45th Street.",
+                                "modifier": "right",
+                                "bearing_after": 299,
+                                "bearing_before": 208,
+                                "location": [
+                                    -73.985533,
+                                    40.757963
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "West 45th Street",
+                            "weight_typical": 67.294,
+                            "duration_typical": 66.455,
+                            "duration": 65.393,
+                            "distance": 274.954,
+                            "driving_side": "right",
+                            "weight": 65.91,
+                            "mode": "driving",
+                            "geometry": "uktvlAx~ublC_BfF[dAg@~A_L|]{F|QeDjKmSro@qKz\\gFdPiB|F"
+                        },
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn right onto <say-as interpret-as=\"address\">West 46th Street</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn right onto West 46th Street.",
+                                    "distanceAlongGeometry": 71.111
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.988386,
+                                        40.759159
+                                    ],
+                                    "geometry_index": 17,
+                                    "admin_index": 0,
+                                    "weight": 6.096,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 6.188,
+                                    "turn_weight": 4,
+                                    "duration": 8.295,
+                                    "bearings": [
+                                        29,
+                                        119,
+                                        208,
+                                        298
+                                    ],
+                                    "out": 0,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "location": [
+                                        -73.988339,
+                                        40.759223
+                                    ],
+                                    "geometry_index": 18,
+                                    "admin_index": 0,
+                                    "weight": 17.608,
+                                    "is_urban": true,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "turn_duration": 0.012,
+                                    "turn_weight": 1,
+                                    "duration": 16.702,
+                                    "bearings": [
+                                        29,
+                                        118,
+                                        209,
+                                        297
+                                    ],
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        29,
+                                        122,
+                                        209,
+                                        303
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "turn_weight": 1,
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "geometry_index": 20,
+                                    "location": [
+                                        -73.987969,
+                                        40.759731
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active_direction": "right",
+                                                "active": true,
+                                                "directions": [
+                                                    "right"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "text": ""
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "West 46th Street"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "right",
+                                        "text": "West 46th Street"
+                                    },
+                                    "distanceAlongGeometry": 79.867
+                                }
+                            ],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn right onto 8th Avenue.",
+                                "modifier": "right",
+                                "bearing_after": 29,
+                                "bearing_before": 299,
+                                "location": [
+                                    -73.988386,
+                                    40.759159
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "8th Avenue",
+                            "weight_typical": 17.058,
+                            "duration_typical": 17.24,
+                            "duration": 26.851,
+                            "distance": 79.867,
+                            "driving_side": "right",
+                            "weight": 26.537,
+                            "mode": "driving",
+                            "geometry": "mvvvlAbq{blC_C}AyP}K}LeIoBqA"
+                        },
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In 500 meters, Turn left onto <say-as interpret-as=\"address\">6th Avenue</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "In 500 meters, Turn left onto 6th Avenue.",
+                                    "distanceAlongGeometry": 534.498
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn left onto <say-as interpret-as=\"address\">6th Avenue</say-as>, <say-as interpret-as=\"address\">Avenue of the Americas</say-as>.</prosody></amazon:effect></speak>",
+                                    "announcement": "Turn left onto 6th Avenue, Avenue of the Americas.",
+                                    "distanceAlongGeometry": 84.444
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        },
+                                        {
+                                            "indications": [
+                                                "right"
+                                            ],
+                                            "valid_indication": "right",
+                                            "valid": true,
+                                            "active": true
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.987928,
+                                        40.759787
+                                    ],
+                                    "geometry_index": 21,
+                                    "admin_index": 0,
+                                    "weight": 6.686,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 6.504,
+                                    "turn_weight": 4,
+                                    "duration": 9.203,
+                                    "bearings": [
+                                        30,
+                                        119,
+                                        209,
+                                        298
+                                    ],
+                                    "out": 1,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 3,
+                                    "bearings": [
+                                        25,
+                                        119,
+                                        206,
+                                        299
+                                    ],
+                                    "duration": 7.755,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 8.705,
+                                    "geometry_index": 22,
+                                    "location": [
+                                        -73.987797,
+                                        40.759731
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        27,
+                                        119,
+                                        299
+                                    ],
+                                    "duration": 31.911,
+                                    "turn_weight": 0.1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 31.842,
+                                    "geometry_index": 23,
+                                    "location": [
+                                        -73.98742,
+                                        40.759572
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        120,
+                                        208,
+                                        299
+                                    ],
+                                    "duration": 9.788,
+                                    "turn_weight": 0.1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 9.828,
+                                    "geometry_index": 26,
+                                    "location": [
+                                        -73.98577,
+                                        40.758886
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 3,
+                                    "bearings": [
+                                        15,
+                                        119,
+                                        196,
+                                        299
+                                    ],
+                                    "duration": 7.247,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 8.199,
+                                    "geometry_index": 28,
+                                    "location": [
+                                        -73.985435,
+                                        40.758743
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 3,
+                                    "bearings": [
+                                        28,
+                                        118,
+                                        208,
+                                        299
+                                    ],
+                                    "duration": 3.067,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 4.042,
+                                    "geometry_index": 29,
+                                    "location": [
+                                        -73.985185,
+                                        40.75864
+                                    ]
+                                },
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.985079,
+                                        40.758597
+                                    ],
+                                    "geometry_index": 30,
+                                    "admin_index": 0,
+                                    "weight": 2.69,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 3.027,
+                                    "turn_weight": 1,
+                                    "duration": 4.725,
+                                    "bearings": [
+                                        30,
+                                        119,
+                                        208,
+                                        298
+                                    ],
+                                    "out": 1,
+                                    "in": 3,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        false,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 3,
+                                    "bearings": [
+                                        28,
+                                        119,
+                                        208,
+                                        299
+                                    ],
+                                    "duration": 10.492,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "weight": 11.429,
+                                    "geometry_index": 31,
+                                    "location": [
+                                        -73.984967,
+                                        40.75855
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        120,
+                                        208,
+                                        299
+                                    ],
+                                    "duration": 24.04,
+                                    "turn_weight": 0.1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 24.01,
+                                    "geometry_index": 32,
+                                    "location": [
+                                        -73.984278,
+                                        40.758257
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        119,
+                                        208,
+                                        300
+                                    ],
+                                    "duration": 7.784,
+                                    "turn_weight": 0.1,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 7.835,
+                                    "geometry_index": 33,
+                                    "location": [
+                                        -73.982703,
+                                        40.757579
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        30,
+                                        119,
+                                        208,
+                                        299
+                                    ],
+                                    "entry": [
+                                        false,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 3,
+                                    "turn_weight": 1,
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "left"
+                                            ],
+                                            "valid_indication": "left",
+                                            "valid": true,
+                                            "active": true
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        }
+                                    ],
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 1,
+                                    "geometry_index": 34,
+                                    "location": [
+                                        -73.982391,
+                                        40.757448
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "sub": {
+                                        "components": [
+                                            {
+                                                "active_direction": "left",
+                                                "active": true,
+                                                "directions": [
+                                                    "left"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            },
+                                            {
+                                                "active": false,
+                                                "directions": [
+                                                    "straight"
+                                                ],
+                                                "type": "lane",
+                                                "text": ""
+                                            }
+                                        ],
+                                        "text": ""
+                                    },
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "6th Avenue"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "/"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "Avenue of the Americas"
+                                            }
+                                        ],
+                                        "type": "turn",
+                                        "modifier": "left",
+                                        "text": "6th Avenue / Avenue of the Americas"
+                                    },
+                                    "distanceAlongGeometry": 547.832
+                                }
+                            ],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn right onto West 46th Street.",
+                                "modifier": "right",
+                                "bearing_after": 119,
+                                "bearing_before": 29,
+                                "location": [
+                                    -73.987928,
+                                    40.759787
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "West 46th Street",
+                            "weight_typical": 119.667,
+                            "duration_typical": 118.855,
+                            "duration": 119.443,
+                            "distance": 547.832,
+                            "driving_side": "right",
+                            "weight": 119.667,
+                            "mode": "driving",
+                            "geometry": "u}wvlAntzblCnBeG|HqVlCoI~Q_m@lRsm@nFkPl@qBlEsNtAsE|A_FhQaj@ji@maBdGoRrBqG"
+                        },
+                        {
+                            "voiceInstructions": [
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In 300 meters, You will arrive at your destination.</prosody></amazon:effect></speak>",
+                                    "announcement": "In 300 meters, You will arrive at your destination.",
+                                    "distanceAlongGeometry": 307.175
+                                },
+                                {
+                                    "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">You have arrived at your destination.</prosody></amazon:effect></speak>",
+                                    "announcement": "You have arrived at your destination.",
+                                    "distanceAlongGeometry": 55.556
+                                }
+                            ],
+                            "intersections": [
+                                {
+                                    "lanes": [
+                                        {
+                                            "indications": [
+                                                "left"
+                                            ],
+                                            "valid_indication": "left",
+                                            "valid": true,
+                                            "active": true
+                                        },
+                                        {
+                                            "indications": [
+                                                "straight"
+                                            ],
+                                            "valid": false,
+                                            "active": false
+                                        }
+                                    ],
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.982254,
+                                        40.75739
+                                    ],
+                                    "geometry_index": 35,
+                                    "admin_index": 0,
+                                    "weight": 11.129,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 10.781,
+                                    "turn_weight": 10,
+                                    "duration": 11.915,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        208,
+                                        299
+                                    ],
+                                    "out": 0,
+                                    "in": 3,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        118,
+                                        209,
+                                        298
+                                    ],
+                                    "duration": 9.018,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 9.962,
+                                    "geometry_index": 36,
+                                    "location": [
+                                        -73.982207,
+                                        40.757454
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        300
+                                    ],
+                                    "duration": 0.952,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 1.935,
+                                    "geometry_index": 37,
+                                    "location": [
+                                        -73.981836,
+                                        40.757963
+                                    ]
+                                },
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.981797,
+                                        40.758016
+                                    ],
+                                    "geometry_index": 38,
+                                    "admin_index": 0,
+                                    "weight": 2.196,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 3.025,
+                                    "turn_weight": 1,
+                                    "duration": 4.227,
+                                    "bearings": [
+                                        28,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        208,
+                                        300
+                                    ],
+                                    "duration": 9.727,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 10.667,
+                                    "geometry_index": 39,
+                                    "location": [
+                                        -73.981752,
+                                        40.758079
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        28,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "duration": 1.135,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 2.119,
+                                    "geometry_index": 41,
+                                    "location": [
+                                        -73.981383,
+                                        40.758586
+                                    ]
+                                },
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.981341,
+                                        40.758645
+                                    ],
+                                    "geometry_index": 42,
+                                    "admin_index": 0,
+                                    "weight": 2.89,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 3.027,
+                                    "turn_weight": 1,
+                                    "duration": 4.926,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        208,
+                                        300
+                                    ],
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        false
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "duration": 15.679,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 16.59,
+                                    "geometry_index": 43,
+                                    "location": [
+                                        -73.981296,
+                                        40.758707
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "duration": 1.731,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 2.711,
+                                    "geometry_index": 44,
+                                    "location": [
+                                        -73.980924,
+                                        40.759218
+                                    ]
+                                },
+                                {
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "location": [
+                                        -73.980883,
+                                        40.759274
+                                    ],
+                                    "geometry_index": 45,
+                                    "admin_index": 0,
+                                    "weight": 6.977,
+                                    "is_urban": true,
+                                    "traffic_signal": true,
+                                    "turn_duration": 3.027,
+                                    "turn_weight": 1,
+                                    "duration": 9.033,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        298
+                                    ],
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        true
+                                    ]
+                                },
+                                {
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "bearings": [
+                                        29,
+                                        120,
+                                        209,
+                                        300
+                                    ],
+                                    "duration": 7.818,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.012,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "weight": 8.768,
+                                    "geometry_index": 46,
+                                    "location": [
+                                        -73.980702,
+                                        40.759522
+                                    ]
+                                },
+                                {
+                                    "bearings": [
+                                        28,
+                                        120,
+                                        209,
+                                        300
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "turn_weight": 1,
+                                    "turn_duration": 0.01,
+                                    "mapbox_streets_v8": {
+                                        "class": "secondary"
+                                    },
+                                    "is_urban": true,
+                                    "admin_index": 0,
+                                    "out": 0,
+                                    "geometry_index": 47,
+                                    "location": [
+                                        -73.980466,
+                                        40.759844
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "You will arrive at your destination"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "straight",
+                                        "text": "You will arrive at your destination"
+                                    },
+                                    "distanceAlongGeometry": 320.508
+                                },
+                                {
+                                    "primary": {
+                                        "components": [
+                                            {
+                                                "type": "text",
+                                                "text": "You have arrived at your destination"
+                                            }
+                                        ],
+                                        "type": "arrive",
+                                        "modifier": "straight",
+                                        "text": "You have arrived at your destination"
+                                    },
+                                    "distanceAlongGeometry": 55.556
+                                }
+                            ],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "turn",
+                                "instruction": "Turn left onto 6th Avenue/Avenue of the Americas.",
+                                "modifier": "left",
+                                "bearing_after": 29,
+                                "bearing_before": 119,
+                                "location": [
+                                    -73.982254,
+                                    40.75739
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "6th Avenue; Avenue of the Americas",
+                            "weight_typical": 64.308,
+                            "duration_typical": 63.161,
+                            "duration": 77.79,
+                            "distance": 320.508,
+                            "driving_side": "right",
+                            "weight": 78.553,
+                            "mode": "driving",
+                            "geometry": "{gsvlAzqoblC_C}Ay^eViBmA}ByAsGiEaVwOuBsA{ByA}^gVoBqAoNiJcSwMeC_B"
+                        },
+                        {
+                            "voiceInstructions": [],
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        208
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "admin_index": 0,
+                                    "geometry_index": 48,
+                                    "location": [
+                                        -73.980418,
+                                        40.759911
+                                    ]
+                                }
+                            ],
+                            "bannerInstructions": [],
+                            "speedLimitUnit": "mph",
+                            "maneuver": {
+                                "type": "arrive",
+                                "instruction": "You have arrived at your destination.",
+                                "bearing_after": 0,
+                                "bearing_before": 28,
+                                "location": [
+                                    -73.980418,
+                                    40.759911
+                                ]
+                            },
+                            "speedLimitSign": "mutcd",
+                            "name": "6th Avenue; Avenue of the Americas",
+                            "weight_typical": 0,
+                            "duration_typical": 0,
+                            "duration": 0,
+                            "distance": 0,
+                            "driving_side": "right",
+                            "weight": 0,
+                            "mode": "driving",
+                            "geometry": "mexvlAb_lblC??"
+                        }
+                    ],
+                    "distance": 1382.64,
+                    "summary": "West 46th Street, 6th Avenue"
+                }
+            ],
+            "geometry": "ezvvlAzetblCnCjB|\\|TlCfBpChBxH~EvSzMnCdB_BfF[dAg@~A_L|]{F|QeDjKmSro@qKz\\gFdPiB|F_C}AyP}K}LeIoBqAnBeG|HqVlCoI~Q_m@lRsm@nFkPl@qBlEsNtAsE|A_FhQaj@ji@maBdGoRrBqG_C}Ay^eViBmA}ByAsGiEaVwOuBsA{ByA}^gVoBqAoNiJcSwMeC_B",
+            "voiceLocale": "en-US",
+            "refresh_ttl": 21600
+        }
+    ],
+    "waypoints": [
+        {
+            "time_zone": {
+                "abbreviation": "EST",
+                "identifier": "America/New_York",
+                "offset": "-05:00"
+            },
+            "distance": 38.857,
+            "name": "7th Avenue",
+            "location": [
+                -73.984622,
+                40.759219
+            ]
+        },
+        {
+            "time_zone": {
+                "abbreviation": "EST",
+                "identifier": "America/New_York",
+                "offset": "-05:00"
+            },
+            "distance": 0,
+            "name": "6th Avenue",
+            "location": [
+                -73.980418,
+                40.759911
+            ]
+        }
+    ],
+    "code": "Ok",
+    "uuid": "koTl8tNFGdRLIzuX-eokHyNClKyns-sZnhaj6LBK8e8QG1d9jY3gjQ==_eu-west-1"
+}

@@ -1,4 +1,4 @@
-import _MapboxNavigationTestHelpers
+@testable import _MapboxNavigationTestHelpers
 import CoreLocation
 import MapboxCommon_Private.MBXExpected
 import MapboxDirections
@@ -20,37 +20,17 @@ final class NavigationRoutesTests: TestCase {
         profileIdentifier: .automobileAvoidingTraffic
     )
 
-    private lazy var routeResponse: RouteResponse? = makeResponse(options: routeOptions, fileName: "routeResponse")
+    private lazy var routeResponse = RouteResponse.mock(
+        bundle: .module,
+        options: routeOptions,
+        fileName: "routeResponse"
+    )
 
-    private lazy var mapMatchingResponse: MapMatchingResponse? = makeResponse(
+    private lazy var mapMatchingResponse = MapMatchingResponse.mock(
+        bundle: .module,
         options: matchOptions,
         fileName: "matchResponse"
     )
-
-    private func makeResponse<ResponseType: Codable>(options: DirectionsOptions, fileName: String) -> ResponseType? {
-        guard let fixtureURL = Bundle.module.url(
-            forResource: fileName,
-            withExtension: "json",
-            subdirectory: "Fixtures"
-        ) else {
-            XCTFail("File not found")
-            return nil
-        }
-
-        guard let responseData = try? Data(contentsOf: fixtureURL) else {
-            XCTFail("File cannot be read")
-            return nil
-        }
-        do {
-            let decoder = JSONDecoder()
-            decoder.userInfo[.options] = options
-            decoder.userInfo[.credentials] = Credentials.mock()
-            return try decoder.decode(ResponseType.self, from: responseData)
-        } catch {
-            XCTFail("File cannot be decoded, error: \(error)")
-            return nil
-        }
-    }
 
     override func setUp() {
         super.setUp()
@@ -139,7 +119,8 @@ final class NavigationRoutesTests: TestCase {
     func testCreateRoutesWithLessAlternatives() async throws {
         var routeParserClient = RouteParserClient.testValue
 
-        guard let routeResponse: RouteResponse = makeResponse(
+        guard let routeResponse = RouteResponse.mock(
+            bundle: .module,
             options: routeOptions,
             fileName: "alternativesRouteResponse"
         ) else {
@@ -169,7 +150,8 @@ final class NavigationRoutesTests: TestCase {
     func testCreateRoutesWithLessAlternativesIfInvalidIndex() async throws {
         var routeParserClient = RouteParserClient.testValue
 
-        guard let routeResponse: RouteResponse = makeResponse(
+        guard let routeResponse = RouteResponse.mock(
+            bundle: .module,
             options: routeOptions,
             fileName: "alternativesRouteResponse"
         ) else {

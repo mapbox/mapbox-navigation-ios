@@ -94,6 +94,17 @@ let package = Package(
                 .process("Resources"),
             ]
         ),
+        .testTarget(
+            name: "MapboxNavigationCoreIntegrationTests",
+            dependencies: [
+                "MapboxNavigationCore",
+                "_MapboxNavigationTestHelpers",
+                .product(name:  "OHHTTPStubsSwift", package: "OHHTTPStubs"),
+            ],
+            resources: [
+                .copy("Fixtures"),
+            ]
+        ),
         .target(
             name: "_MapboxNavigationTestHelpers",
             dependencies: [

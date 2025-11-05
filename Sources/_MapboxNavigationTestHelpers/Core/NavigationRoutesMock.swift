@@ -1,5 +1,5 @@
 import MapboxDirections
-@testable import MapboxNavigationCore
+@_spi(MapboxInternal) @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 
 extension NavigationRoutes {
@@ -12,6 +12,18 @@ extension NavigationRoutes {
             mainRoute: mainRoute,
             alternativeRoutes: alternativeRoutes,
             waypoints: waypoints
+        )
+    }
+
+    static func mock(
+        routeResponse: RouteResponse,
+        routeIndex: Int = 0,
+        responseOrigin: RouterOrigin = .online
+    ) async -> NavigationRoutes? {
+        try? await NavigationRoutes(
+            routeResponse: routeResponse,
+            routeIndex: routeIndex,
+            responseOrigin: responseOrigin
         )
     }
 

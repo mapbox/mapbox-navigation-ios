@@ -33,8 +33,9 @@ open class TestCase: XCTestCase {
         coreConfig.__customBillingHandler = BillingHandlerProvider(billingHandler)
         let location = CLLocation(latitude: 9.519172, longitude: 47.210823)
         locationPublisher = .init(location)
-        coreConfig
-            .locationSource = .custom(.spyLocationManager(locationPublisher: locationPublisher.eraseToAnyPublisher()))
+        coreConfig.locationSource = .custom(
+            .spyLocationManager(locationPublisher: locationPublisher.eraseToAnyPublisher())
+        )
         eventsManagerSpy = NavigationTelemetryManagerSpy()
         eventsManagerSpy.userInfo = ["key": "value"]
         let eventsManager = NavigationEventsManager(navNativeEventsManager: eventsManagerSpy)
