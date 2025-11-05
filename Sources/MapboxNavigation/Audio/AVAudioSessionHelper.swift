@@ -15,7 +15,7 @@ final class AVAudioSessionHelper {
     let settings: Settings = Settings(
         category: .playback,
         mode: .voicePrompt,
-        options: [.duckOthers, .mixWithOthers]
+        options: [.interruptSpokenAudioAndMixWithOthers, .duckOthers]
     )
     
     private init() {}
