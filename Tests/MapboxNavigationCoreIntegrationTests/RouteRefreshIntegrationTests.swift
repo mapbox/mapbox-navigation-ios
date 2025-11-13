@@ -3,61 +3,20 @@ import Combine
 import MapboxDirections
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
-import OHHTTPStubs
 import XCTest
 
-final class RouteRefreshIntegrationTests: BaseTestCase {
+final class RouteRefreshIntegrationTests: BaseIntegrationTest {
     let origin = CLLocationCoordinate2D(latitude: -73.98778274913309, longitude: 40.76050975068355)
+    let stop = CLLocationCoordinate2D(latitude: -73.98778274913309, longitude: 40.76050975068355)
     let destiantion = CLLocationCoordinate2D(latitude: -73.98039053825985, longitude: 40.75988085727627)
-    let customDrivingTraffic = ProfileIdentifier(rawValue: "custom/driving-traffic")
-    let customDriving = ProfileIdentifier(rawValue: "custom/driving")
-    let defaultDelay: TimeInterval = 1
 
-    var navigationProvider: MapboxNavigationProvider!
-    var billingServiceMock: BillingServiceMock!
-    @MainActor
-    var locationPublisher: CurrentValueSubject<CLLocation, Never>!
-    var cancellables: Set<AnyCancellable>!
+    var navigationRoutes: NavigationRoutes!
 
     @MainActor
     override func setUp() {
         super.setUp()
 
-        cancellables = []
-        let mockData = responseJsonData(bundle: .module, fileName: "profile-route-refresh")!
-        HTTPStubs.stubRequests(
-            passingTest: { request -> Bool in
-                request.url?.absoluteString.contains("directions-refresh") ?? false
-            }
-        ) { _ -> HTTPStubsResponse in
-            HTTPStubsResponse(
-                data: mockData,
-                statusCode: 200,
-                headers: ["Content-Type": "application/json"]
-            )
-        }
-
-        Credentials.injectSharedToken()
-        billingServiceMock = .init()
-        let billingHandler = BillingHandler.__createMockedHandler(with: billingServiceMock)
-        let credentials = NavigationCoreApiConfiguration(accessToken: .mockedAccessToken)
-        var coreConfig = CoreConfig(
-            credentials: credentials,
-            routingConfig: .init(routeRefreshPeriod: 1)
-        )
-        let location = CLLocation(latitude: origin.latitude, longitude: origin.longitude)
-        locationPublisher = .init(location)
-        coreConfig.__customBillingHandler = BillingHandlerProvider(billingHandler)
-        coreConfig.locationSource = .custom(.mock(locationPublisher.eraseToAnyPublisher()))
-        navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
-    }
-
-    @MainActor
-    override func tearDown() {
-        HTTPStubs.removeAllStubs()
-        navigationProvider.tripSession().setToIdle()
-        navigationProvider = nil
-        super.tearDown()
+        stubRouteRefreshResponse("profile-route-refresh")
     }
 
     // MARK: Refresh
@@ -96,11 +55,11 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
 
     // MARK: Refresh after reroute
 
-    func disabled_testRouteRefreshAfterRerouteWithDrivingTrafficProfile() async {
+    func testRouteRefreshAfterRerouteWithDrivingTrafficProfile() async {
         await simulateAndTestOffRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
     }
 
-    func disabled_testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfile() async {
+    func testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfile() async {
         await simulateAndTestOffRoute(with: customDrivingTraffic, shouldRefresh: true)
     }
 
@@ -116,7 +75,7 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
         await simulateAndTestOffRoute(with: .cycling, shouldRefresh: false)
     }
 
-    func disabled_testRouteRefreshAfterRerouteWithDrivingTrafficProfileAndCustomParameter() async {
+    func testRouteRefreshAfterRerouteWithDrivingTrafficProfileAndCustomParameter() async {
         await simulateAndTestOffRoute(
             with: .automobileAvoidingTraffic,
             shouldRefresh: true,
@@ -124,7 +83,7 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
         )
     }
 
-    func disabled_testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfileAndCustomParameter() async {
+    func testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfileAndCustomParameter() async {
         await simulateAndTestOffRoute(
             with: customDrivingTraffic,
             shouldRefresh: true,
@@ -132,7 +91,41 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
         )
     }
 
+    // MARK: Pausing refreshes
+
+    func testPauseAndResumeRefreshes() async {
+        await simulateAndTestOnRoute(
+            with: .automobileAvoidingTraffic,
+            shouldRefresh: true,
+            skipLocationsCount: 5
+        )
+
+        cancellables = []
+        await navigationProvider.tripSession().setToIdle()
+        let idleNoRefreshExpectation = await refreshExpectation(shouldRefresh: false)
+        await waitForIdle()
+        await fulfillment(of: [idleNoRefreshExpectation], timeout: defaultDelay)
+
+        cancellables = []
+        let statusExpectation = await trackingStatusExpectation()
+        let resumedRefreshExpectation = await refreshExpectation(shouldRefresh: true)
+        await navigationProvider.tripSession().startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+        let locations = navigationRoutes.mainRoute.route.simulationOnRouteLocations
+        await simulateLocations(locations)
+        await fulfillment(of: [statusExpectation, resumedRefreshExpectation], timeout: defaultDelay)
+    }
+
     // MARK: Helpers
+
+    @MainActor
+    fileprivate func waitForIdle() async {
+        let tripSession = navigationProvider.tripSession()
+        guard tripSession.currentSession.state != .idle else {
+            return
+        }
+        let idleExpectation = await trackingStatusExpectation(state: .idle)
+        await fulfillment(of: [idleExpectation], timeout: defaultDelay)
+    }
 
     fileprivate func defaultOptions(with profile: ProfileIdentifier) -> NavigationRouteOptions {
         NavigationRouteOptions(coordinates: [origin, destiantion], profileIdentifier: profile)
@@ -150,22 +143,22 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
     private func simulateAndTestOnRoute(
         with profile: ProfileIdentifier,
         shouldRefresh: Bool,
+        skipLocationsCount: Int = 0,
         shouldUseCustomOptions: Bool = false
     ) async {
         let options = shouldUseCustomOptions ? customOptions(with: profile) : defaultOptions(with: profile)
         let routes = await NavigationRoutes.mock(options: options, fileName: "profile-route-original")
-        let expectation = await refreshExpectation(shouldRefresh: shouldRefresh)
+        navigationRoutes = routes
 
         let tripSession = await navigationProvider.tripSession()
+        let statusExpectation = await trackingStatusExpectation()
         await tripSession.startActiveGuidance(with: routes, startLegIndex: 0)
-
         let locations = routes.mainRoute.route.simulationOnRouteLocations
+        let locationsToSimulate = Array(locations.dropLast(skipLocationsCount))
+        let expectation = await refreshExpectation(shouldRefresh: shouldRefresh)
 
-        for await location in createAsyncStream(from: locations) {
-            await locationPublisher.send(location)
-        }
-
-        await fulfillment(of: [expectation], timeout: defaultDelay)
+        await simulateLocations(locationsToSimulate)
+        await fulfillment(of: [statusExpectation, expectation], timeout: defaultDelay)
     }
 
     private func simulateAndTestOffRoute(
@@ -175,113 +168,29 @@ final class RouteRefreshIntegrationTests: BaseTestCase {
     ) async {
         let options = shouldUseCustomOptions ? customOptions(with: profile) : defaultOptions(with: profile)
         let routes = await NavigationRoutes.mock(options: options, fileName: "profile-route-reroute")
+        navigationRoutes = routes
 
         let tripSession = await navigationProvider.tripSession()
         await tripSession.startActiveGuidance(with: routes, startLegIndex: 0)
         let rerouteRoutes = await NavigationRoutes.mock(options: options, fileName: "profile-route-original")
         stubRerouteResponse("profile-route-original", shouldUseCustomOptions: shouldUseCustomOptions)
 
-        let expectation1 = await rerouteExpectation()
-        expectation1.assertForOverFulfill = false
+        let statusExpectation = await trackingStatusExpectation()
         let locations = rerouteRoutes.mainRoute.route.simulationOnRouteLocations
         let firstLocations = Array(locations.prefix(10))
         let afterRerouteLocations = Array(locations.dropFirst(10))
-        for await location in createAsyncStream(from: firstLocations) {
-            await locationPublisher.send(location)
-        }
-        await fulfillment(of: [expectation1], timeout: defaultDelay)
+        let expectation1 = await rerouteExpectation()
+        await simulateLocations(firstLocations)
+        await fulfillment(of: [statusExpectation, expectation1], timeout: defaultDelay)
 
         let expectation2 = await refreshExpectation(shouldRefresh: shouldRefresh)
-        expectation2.assertForOverFulfill = false
-        for await location in createAsyncStream(from: afterRerouteLocations) {
-            await locationPublisher.send(location)
-        }
+        await simulateLocations(afterRerouteLocations)
         await fulfillment(of: [expectation2], timeout: defaultDelay)
     }
 
-    private func refreshExpectation(shouldRefresh: Bool) async -> XCTestExpectation {
-        let refreshExpectation = expectation(description: "Refresh expectation")
-        refreshExpectation.assertForOverFulfill = false
-        await navigationProvider.navigator().routeRefreshing
-            .filter {
-                shouldRefresh ? $0.event is RefreshingStatus.Events.Refreshed : true
-            }
-            .sink { _ in refreshExpectation.fulfill() }
-            .store(in: &cancellables)
-        refreshExpectation.isInverted = !shouldRefresh
-        return refreshExpectation
-    }
-
-    private func rerouteExpectation() async -> XCTestExpectation {
-        let rerouteExpectation = expectation(description: "Refresh expectation")
-        await navigationProvider.navigator().rerouting
-            .filter { $0.event is ReroutingStatus.Events.Fetched }
-            .sink { _ in rerouteExpectation.fulfill() }
-            .store(in: &cancellables)
-        return rerouteExpectation
-    }
-
     private func stubRerouteResponse(_ fileName: String, shouldUseCustomOptions: Bool) {
-        let mockData = responseJsonData(bundle: .module, fileName: fileName)!
-        HTTPStubs.stubRequests(
-            passingTest: { request -> Bool in
-                guard let url = request.url?.absoluteString,
-                      url.contains("/directions/")
-                else {
-                    return false
-                }
-                return shouldUseCustomOptions ? url.contains("custom=customValue") : true
-            }
-        ) { _ -> HTTPStubsResponse in
-            HTTPStubsResponse(
-                data: mockData,
-                statusCode: 200,
-                headers: ["Content-Type": "application/json"]
-            )
+        stubRouteResponse(fileName) {
+            shouldUseCustomOptions ? $0.contains("custom=customValue") : true
         }
-    }
-}
-
-extension Route {
-    fileprivate var simulationOnRouteLocations: [CLLocation] {
-        shape!
-            .coordinates
-            .map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
-            .shiftedToPresent()
-            .qualified()
-    }
-
-    private var simulationOffRouteLocations: [CLLocation] {
-        let stepCoordiantes = legs[0].steps[0].shape!.coordinates
-        let stepFirstLocation = stepCoordiantes.first!
-        let stepLastLocation = stepCoordiantes.last!
-        let stepDirection = stepFirstLocation.direction(to: stepLastLocation)
-
-        let offRouteCoordiantes = [20, 30, 40].map { stepLastLocation.coordinate(at: $0, facing: stepDirection) }
-        let coordinates = stepCoordiantes + offRouteCoordiantes
-        return coordinates
-            .map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
-            .shiftedToPresent()
-            .qualified()
-    }
-}
-
-extension NavigationRoutes {
-    fileprivate static func mock(options: RouteOptions, fileName: String) async -> NavigationRoutes {
-        let response = RouteResponse.mock(bundle: .module, options: options, fileName: fileName)!
-        return await NavigationRoutes.mock(routeResponse: response)!
-    }
-}
-
-func createAsyncStream<Element>(from collection: some Collection<Element>) -> AsyncStream<Element> {
-    var iterator = collection.makeIterator()
-
-    return AsyncStream {
-        guard let nextElement = iterator.next() else { return nil }
-        if #available(iOS 16.0, *) {
-            try? await Task.sleep(for: Duration.milliseconds(200))
-        }
-
-        return nextElement
     }
 }
