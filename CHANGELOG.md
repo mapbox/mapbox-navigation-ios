@@ -54,6 +54,10 @@
 
 * When implementing a custom `ViewportDataSource` for the navigation camera, migrate to `viewportState.navigationProgress` for tracking active guidance progress.
 
+### Audio
+
+* Audio playback operations (play, stop, set volume) of the `AVAudioPlayer` within the `MapboxSpeechSynthesizer` are now triggered on a background thread. This change minimizes the risk of the application hanging during voice instruction playback.
+
 ### Other changes
 
 * Fixed a possible race condition in `NavigationCamera` state updates.
