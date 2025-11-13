@@ -1,6 +1,7 @@
 import _MapboxNavigationHelpers
-import AVFoundation
+@preconcurrency import AVFoundation
 import Combine
+import Dispatch
 import MapboxDirections
 
 /// ``SpeechSynthesizing`` implementation, using Mapbox Voice API. Uses pre-caching mechanism for upcoming instructions.
@@ -29,7 +30,9 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
                 subscribeToSystemVolume()
             case .override(let volume):
                 volumeSubscribtion = nil
-                audioPlayer?.volume = volume
+                audioPlayerQueue.async { [weak audioPlayer] in
+                    audioPlayer?.volume = volume
+                }
             }
         }
     }
@@ -44,9 +47,15 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     private func subscribeToSystemVolume() {
-        audioPlayer?.volume = AVAudioSession.sharedInstance().outputVolume
+        audioPlayerQueue.async { [weak audioPlayer] in
+            guard let audioPlayer else { return }
+            let systemVolume = AVAudioSession.sharedInstance().outputVolume
+            audioPlayer.volume = systemVolume
+        }
         volumeSubscribtion = AVAudioSession.sharedInstance().publisher(for: \.outputVolume).sink { [weak self] volume in
-            self?.audioPlayer?.volume = volume
+            self?.audioPlayerQueue.async { [weak audioPlayer = self?.audioPlayer] in
+                audioPlayer?.volume = volume
+            }
         }
     }
 
@@ -60,11 +69,8 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     public var stepsAheadToCache: UInt = 3
 
     /// An `AVAudioPlayer` through which spoken instructions are played.
-    private var audioPlayer: AVAudioPlayer? {
-        _audioPlayer?.audioPlayer
-    }
+    private var audioPlayer: AVAudioPlayer?
 
-    private var _audioPlayer: SendableAudioPlayer?
     private let audioPlayerDelegate: AudioPlayerDelegate = .init()
 
     /// Controls if this speech synthesizer is allowed to manage the shared `AVAudioSession`.
@@ -80,6 +86,8 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
 
     private var cache: SyncBimodalCache
     private var audioTask: Task<Void, Error>?
+    private let audioPlayerQueue: DispatchQueue =
+        .init(label: "com.mapbox.navigation.mapbox_speech_synthesizer.audioplayer_queue", qos: .userInteractive)
 
     private var previousInstruction: SpokenInstruction?
 
@@ -107,15 +115,12 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     deinit {
-        Task { @MainActor [_audioPlayer, managesAudioSession] in
-            _audioPlayer?.stop()
-
+        Task { [managesAudioSession, audioPlayer] in
+            audioPlayer?.stop()
             if !managesAudioSession {
                 return
             }
-            Task {
-                try await AVAudioSessionHelper.shared.unduckAudio() // not deferred
-            }
+            try await AVAudioSessionHelper.shared.unduckAudio() // not deferred
         }
     }
 
@@ -210,12 +215,21 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
 
     public func stopSpeaking() {
         Log.debug("MapboxSpeechSynthesizer: Stop speaking", category: .audio)
-        audioPlayer?.stop()
+        stopAudioPlayer()
     }
 
     public func interruptSpeaking() {
         Log.debug("MapboxSpeechSynthesizer: Interrupt speaking", category: .audio)
-        audioPlayer?.stop()
+        stopAudioPlayer()
+    }
+
+    private func stopAudioPlayer(completion: (() -> Void)? = nil) {
+        // Strong capture of audioPlayer to assure that stop() is going to be invoked before deallocation if
+        // stopAudioPlayer(completion:) is invoked for the currently active audioPlayer.
+        audioPlayerQueue.async { [audioPlayer] in
+            audioPlayer?.stop()
+            completion?()
+        }
     }
 
     /// Vocalize the provided audio data.
@@ -236,8 +250,18 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
                     )
                 )
             }
-
             deinitAudioPlayer()
+        }
+
+        let playbackError: (SpeechError) -> Void = { error in
+            Task { @MainActor in
+                await self.safeDeferredUnduckAudio()
+                self._voiceInstructions.send(
+                    VoiceInstructionEvents.EncounteredError(
+                        error: error
+                    )
+                )
+            }
         }
 
         switch safeInitializeAudioPlayer(
@@ -245,20 +269,27 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
             instruction: instruction
         ) {
         case .success(let player):
-            _audioPlayer = .init(player)
+            audioPlayer = player
             previousInstruction = instruction
             Log.debug("MapboxSpeechSynthesizer: audio player Will play text: [\(instruction.text)]", category: .audio)
-            audioPlayer?.play()
+            // We are in @MainActor function, but we don't want to initiate playback
+            // via main thread to avoid potential hanging.
+            audioPlayerQueue.async { [weak audioPlayer] in
+                guard let audioPlayer else { return }
+                let prepared = audioPlayer.prepareToPlay()
+                guard prepared else {
+                    playbackError(.unableToControlAudio(instruction: instruction, action: .play, underlying: nil))
+                    return
+                }
+                let started = audioPlayer.play()
+                guard started else {
+                    playbackError(.unableToControlAudio(instruction: instruction, action: .play, underlying: nil))
+                    return
+                }
+            }
         case .failure(let error):
             Log.error("MapboxSpeechSynthesizer: audio player Failed to initialize: \(error)", category: .audio)
-            Task {
-                await safeDeferredUnduckAudio()
-                _voiceInstructions.send(
-                    VoiceInstructionEvents.EncounteredError(
-                        error: error
-                    )
-                )
-            }
+            playbackError(error)
         }
     }
 
@@ -375,7 +406,9 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     private func updatePlayerVolume(_ player: AVAudioPlayer?) {
-        player?.volume = muted ? 0.0 : currentVolume
+        audioPlayerQueue.async { [weak player, muted, currentVolume] in
+            player?.volume = muted ? 0.0 : currentVolume
+        }
     }
 
     private func safeInitializeAudioPlayer(
@@ -385,8 +418,11 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
         do {
             let player = try AVAudioPlayer(data: data)
             player.delegate = audioPlayerDelegate
-            audioPlayerDelegate.onAudioPlayerDidFinishPlaying = { [weak self] _, successfully in
+            audioPlayerDelegate.onAudioPlayerDidFinishPlaying = { [weak self] player, successfully in
                 guard let self else { return }
+                if audioPlayer === player {
+                    audioPlayer = nil
+                }
 
                 if successfully {
                     Log.debug("MapboxSpeechSynthesizer: audio player Did Finish playing Successfully", category: .audio)
@@ -427,22 +463,15 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     }
 
     private func deinitAudioPlayer() {
-        audioPlayer?.stop()
-        audioPlayer?.delegate = nil
-    }
-}
-
-@MainActor
-private final class SendableAudioPlayer: Sendable {
-    let audioPlayer: AVAudioPlayer
-
-    init(_ audioPlayer: AVAudioPlayer) {
-        self.audioPlayer = audioPlayer
-    }
-
-    nonisolated func stop() {
-        DispatchQueue.main.async {
-            self.audioPlayer.stop()
+        stopAudioPlayer { [weak audioPlayer, weak self] in
+            guard let audioPlayer else { return }
+            audioPlayer.delegate = nil
+            Task { @MainActor in // @MainActor because self.audioPlayer is @MainActor property
+                guard let self else { return }
+                if self.audioPlayer === audioPlayer {
+                    self.audioPlayer = nil
+                }
+            }
         }
     }
 }
