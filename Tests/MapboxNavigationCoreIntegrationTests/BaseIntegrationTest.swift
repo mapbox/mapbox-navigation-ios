@@ -12,6 +12,7 @@ class BaseIntegrationTest: BaseTestCase {
     let defaultDelay: TimeInterval = 5
     let locationUpdateDelay = 50
 
+    var coreConfig: CoreConfig!
     var navigationProvider: MapboxNavigationProvider!
     var billingServiceMock: BillingServiceMock!
     var locationPublisher: CurrentValueSubject<CLLocation, Never>!
@@ -25,11 +26,11 @@ class BaseIntegrationTest: BaseTestCase {
         billingServiceMock = .init()
         let billingHandler = BillingHandler.__createMockedHandler(with: billingServiceMock)
         let credentials = NavigationCoreApiConfiguration(accessToken: .mockedAccessToken)
-        var coreConfig = CoreConfig(
+        coreConfig = CoreConfig(
             credentials: credentials,
             routingConfig: .init(routeRefreshPeriod: 1)
         )
-        let origin = CLLocationCoordinate2D(latitude: -73.98778274913309, longitude: 40.76050975068355)
+        let origin = CLLocationCoordinate2D(latitude: 40.76050975068355, longitude: -73.98778274913309)
         let location = CLLocation(latitude: origin.latitude, longitude: origin.longitude)
         locationPublisher = .init(location)
         coreConfig.__customBillingHandler = BillingHandlerProvider(billingHandler)
@@ -58,9 +59,7 @@ class BaseIntegrationTest: BaseTestCase {
     func refreshExpectation(shouldRefresh: Bool) async -> XCTestExpectation {
         let refreshExpectation = expectation(description: "Refresh expectation")
         await navigationProvider.navigator().routeRefreshing
-            .filter {
-                shouldRefresh ? $0.event is RefreshingStatus.Events.Refreshed : true
-            }
+            .filter { shouldRefresh ? $0.event is RefreshingStatus.Events.Refreshed : true }
             .sink { _ in refreshExpectation.fulfill() }
             .store(in: &cancellables)
         refreshExpectation.isInverted = !shouldRefresh

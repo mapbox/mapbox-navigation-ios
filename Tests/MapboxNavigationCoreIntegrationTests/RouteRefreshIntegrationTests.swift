@@ -6,9 +6,8 @@ import MapboxNavigationNative_Private
 import XCTest
 
 final class RouteRefreshIntegrationTests: BaseIntegrationTest {
-    let origin = CLLocationCoordinate2D(latitude: -73.98778274913309, longitude: 40.76050975068355)
-    let stop = CLLocationCoordinate2D(latitude: -73.98778274913309, longitude: 40.76050975068355)
-    let destiantion = CLLocationCoordinate2D(latitude: -73.98039053825985, longitude: 40.75988085727627)
+    let origin = CLLocationCoordinate2D(latitude: 40.76050975068355, longitude: -73.98778274913309)
+    let destination = CLLocationCoordinate2D(latitude: 40.75988085727627, longitude: -73.98039053825985)
 
     var navigationRoutes: NavigationRoutes!
 
@@ -48,6 +47,14 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
     func testRouteRefreshWithDrivingTrafficProfileAndCustomParameter() async {
         await simulateAndTestOnRoute(
             with: .automobileAvoidingTraffic,
+            shouldRefresh: true,
+            shouldUseCustomOptions: true
+        )
+    }
+
+    func testRouteRefreshWithCustomDrivingTrafficProfileAndCustomParameter() async {
+        await simulateAndTestOnRoute(
+            with: customDrivingTraffic,
             shouldRefresh: true,
             shouldUseCustomOptions: true
         )
@@ -128,14 +135,14 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
     }
 
     fileprivate func defaultOptions(with profile: ProfileIdentifier) -> NavigationRouteOptions {
-        NavigationRouteOptions(coordinates: [origin, destiantion], profileIdentifier: profile)
+        NavigationRouteOptions(coordinates: [origin, destination], profileIdentifier: profile)
     }
 
     fileprivate func customOptions(
         with profile: ProfileIdentifier,
         custom: String? = "customValue"
     ) -> CustomRouteOptions {
-        let options = CustomRouteOptions(coordinates: [origin, destiantion], profileIdentifier: profile)
+        let options = CustomRouteOptions(coordinates: [origin, destination], profileIdentifier: profile)
         options.custom = custom
         return options
     }
