@@ -472,7 +472,7 @@ final class NavigationMapStyleManager {
         let intersections = stepProgress.intersectionsIncludingUpcomingManeuverIntersection ?? []
         let stepIntersections = Array(intersections.dropFirst(upcomingIntersectionIndex))
 
-        var firstIntersectionWithLaneGuidance = stepIntersections.first { $0.approachLanes != nil }
+        let firstIntersectionWithLaneGuidance = stepIntersections.first { $0.approachLanes != nil }
 
         let data = firstIntersectionWithLaneGuidance.map {
             IntersectionLaneGuidanceData(
