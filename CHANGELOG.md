@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.20.4
+
+### Other changes
+
+* Reroute notification sound now plays only after a new route is successfully retrieved.
+
 ## v2.20.3
 
 ### Routing
