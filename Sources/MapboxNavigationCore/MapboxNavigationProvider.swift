@@ -375,3 +375,11 @@ extension TTSConfig {
         return speechSynthesizer
     }
 }
+
+extension MapboxNavigationProvider {
+    @_spi(MapboxInternal)
+    @MainActor
+    public var nativeNavigator: Any {
+        nativeHandlersFactory.navigator.native
+    }
+}
