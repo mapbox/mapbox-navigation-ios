@@ -7,6 +7,10 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.17.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.17.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.17.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.17.0-rc.1)
 
+### Audio
+
+* Audio playback operations (play, stop, set volume) of the `AVAudioPlayer` within the `MapboxSpeechSynthesizer` are now triggered on a background thread. This change minimizes the risk of the application hanging during voice instruction playback.
+
 ## 3.17.0-beta.1
 
 ### Packaging
@@ -60,10 +64,6 @@
 ### Navigation Camera
 
 * When implementing a custom `ViewportDataSource` for the navigation camera, migrate to `viewportState.navigationProgress` for tracking active guidance progress.
-
-### Audio
-
-* Audio playback operations (play, stop, set volume) of the `AVAudioPlayer` within the `MapboxSpeechSynthesizer` are now triggered on a background thread. This change minimizes the risk of the application hanging during voice instruction playback.
 
 ### Other changes
 
