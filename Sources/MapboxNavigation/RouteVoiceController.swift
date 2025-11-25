@@ -85,14 +85,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     func observeNotifications(by service: NavigationService) {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
-        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSettings(notification:)), name: .navigationSettingsDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .navigationSettingsDidChange, object: nil)
     }
@@ -188,10 +186,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var rerouteSoundPlayer: AVAudioPlayer
     
     @objc func didReroute(notification: NSNotification) {
-        // Play reroute sound when a faster route is found
-        if notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as! Bool {
-            pauseSpeechAndPlayReroutingDing(notification: notification)
-        }
+        pauseSpeechAndPlayReroutingDing(notification: notification)
     }
 }
 
