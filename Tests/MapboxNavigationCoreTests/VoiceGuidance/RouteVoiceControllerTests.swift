@@ -10,8 +10,7 @@ final class RouteVoiceControllerTests: BaseTestCase {
     var speechSynthesizer: SpeechSynthesizerMock!
 
     var routeProgressPublisher: CurrentValueSubject<RouteProgressState?, Never>!
-    var rerouteStartedPublisher: CurrentValueSubject<Void, Never>!
-    var fasterRoutePublisher: CurrentValueSubject<Void, Never>!
+    var rerouteSoundTrigger: CurrentValueSubject<Void, Never>!
 
     let voiceInstruction = VoiceInstruction(
         ssmlAnnouncement: "ssml text",
@@ -27,14 +26,12 @@ final class RouteVoiceControllerTests: BaseTestCase {
         super.setUp()
 
         routeProgressPublisher = .init(nil)
-        rerouteStartedPublisher = .init(())
-        fasterRoutePublisher = .init(())
+        rerouteSoundTrigger = .init(())
 
         speechSynthesizer = SpeechSynthesizerMock()
         routeVoiceController = RouteVoiceController(
             routeProgressing: routeProgressPublisher.eraseToAnyPublisher(),
-            rerouteStarted: rerouteStartedPublisher.eraseToAnyPublisher(),
-            fasterRouteSet: fasterRoutePublisher.eraseToAnyPublisher(),
+            rerouteSoundTrigger: rerouteSoundTrigger.eraseToAnyPublisher(),
             speechSynthesizer: speechSynthesizer
         )
     }

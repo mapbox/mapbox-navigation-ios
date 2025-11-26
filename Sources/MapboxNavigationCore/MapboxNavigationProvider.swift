@@ -1,4 +1,5 @@
 import _MapboxNavigationHelpers
+import Combine
 import Foundation
 import MapboxCommon
 import MapboxCommon_Private
@@ -28,14 +29,10 @@ public final class MapboxNavigationProvider {
         } else {
             let routeVoiceController = RouteVoiceController(
                 routeProgressing: navigation().routeProgress,
-                rerouteStarted: navigation().rerouting
-                    .filter { $0.event is ReroutingStatus.Events.FetchingRoute }
-                    .map { _ in }
-                    .eraseToAnyPublisher(),
-                fasterRouteSet: navigation().fasterRoutes
-                    .filter { $0.event is FasterRoutesStatus.Events.Applied }
-                    .map { _ in }
-                    .eraseToAnyPublisher(),
+                rerouteSoundTrigger: Publishers.Merge(
+                    navigation().rerouting.compactMap { $0.event is ReroutingStatus.Events.Fetched ? () : nil },
+                    navigation().fasterRoutes.compactMap { $0.event is FasterRoutesStatus.Events.Applied ? () : nil }
+                ).eraseToAnyPublisher(),
                 speechSynthesizer: coreConfig.ttsConfig.speechSynthesizer(
                     with: coreConfig.locale,
                     apiConfiguration: coreConfig.credentials.speech,
