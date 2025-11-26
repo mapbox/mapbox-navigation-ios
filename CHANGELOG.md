@@ -1,5 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Audio
+
+* Improved reroute sound logic. The reroute sound now plays only when a new route is fetched and applied, rather than when rerouting starts. This applies to both automatic reroutes and faster route scenarios.
+
+### API Deprecations
+
+* Deprecated `RouteVoiceController.init(routeProgressing:rerouteStarted:fasterRouteSet:speechSynthesizer:)` in favor of the new `RouteVoiceController.init(routeProgressing:rerouteSoundTrigger:speechSynthesizer:)`.
+
 ## 3.17.0-rc.1
 
 ### Packaging
