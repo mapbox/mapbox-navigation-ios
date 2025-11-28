@@ -646,6 +646,12 @@ open class Directions: @unchecked Sendable {
         var params = (includesQuery ? options.urlQueryItems : [])
         params.override(with: credentials.authenticationParams)
 
+        let duplicates = params.duplicatedNames
+        if !duplicates.isEmpty {
+            let message = "Directions - duplicated parameters found: \(duplicates.joined(separator: ", "))"
+            Log.error(message, category: .request)
+        }
+
         let unparameterizedURL = URL(path: includesQuery ? options.path : options.abridgedPath, host: credentials.host)
         var components = URLComponents(url: unparameterizedURL, resolvingAgainstBaseURL: true)!
         components.queryItems = params

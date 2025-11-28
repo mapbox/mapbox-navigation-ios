@@ -238,5 +238,32 @@ class IsochroneTests: XCTestCase {
             XCTFail("Code 429 should be interpreted as a rate limiting error.")
         }
     }
+
+    func testNoDuplicatedParameters() {
+        let queryItems = requestQueryItems()
+
+        // Verify no duplicate names exist across all query items
+        let allNames = queryItems.map(\.name)
+        let uniqueNames = Set(allNames)
+        XCTAssertEqual(allNames.count, uniqueNames.count, "All query item names should be unique")
+    }
+
+    private func requestQueryItems() -> [URLQueryItem] {
+        let coordinate = LocationCoordinate2D(latitude: 0, longitude: 0)
+        let radius = Measurement(value: 99.5, unit: UnitLength.meters)
+        let options = IsochroneOptions(
+            centerCoordinate: coordinate,
+            contours: .byDistances([.init(value: radius, color: .red)]),
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+
+        let isochrones = Isochrones(credentials: IsochroneBogusCredentials)
+        let url = isochrones.url(forCalculating: options)
+        guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
+            XCTFail("Unexpected nil queryItems")
+            return []
+        }
+        return queryItems
+    }
 #endif
 }
