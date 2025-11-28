@@ -6,6 +6,10 @@
 
 * Improved reroute sound logic. The reroute sound now plays only when a new route is fetched and applied, rather than when rerouting starts. This applies to both automatic reroutes and faster route scenarios.
 
+### Directions
+
+* Added detection of duplicated URL request parameters derived from `DirectionsOptions`, `IsochroneOptions`, and `MatrixOptions` - an error is logged when duplicates are found.
+
 ### API Deprecations
 
 * Deprecated `RouteVoiceController.init(routeProgressing:rerouteStarted:fasterRouteSet:speechSynthesizer:)` in favor of the new `RouteVoiceController.init(routeProgressing:rerouteSoundTrigger:speechSynthesizer:)`.

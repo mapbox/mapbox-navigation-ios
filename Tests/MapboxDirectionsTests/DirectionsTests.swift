@@ -323,6 +323,10 @@ class DirectionsTests: XCTestCase {
         XCTAssert(queryItems.contains(where: { $0.name == customParameterKey && $0.value == customParameterValue }))
     }
 
+    func testNoDuplicatedParameters() {
+        checkForDuplicatedParameters(requestQueryItems: requestQueryItems(with:))
+    }
+
     private func requestQueryItems(with customParameters: [URLQueryItem]) -> [URLQueryItem] {
         let coordinate = LocationCoordinate2D(latitude: 0, longitude: 0)
         let options = CustomRouteOptions(waypoints: [

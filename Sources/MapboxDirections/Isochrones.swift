@@ -146,6 +146,12 @@ open class Isochrones: @unchecked Sendable {
         var params = options.urlQueryItems
         params.override(with: [URLQueryItem(name: "access_token", value: credentials.accessToken)])
 
+        let duplicates = params.duplicatedNames
+        if !duplicates.isEmpty {
+            let message = "Isochrones - duplicated parameters found: \(duplicates.joined(separator: ", "))"
+            Log.error(message, category: .request)
+        }
+
         let unparameterizedURL = URL(path: options.path, host: credentials.host)
         var components = URLComponents(url: unparameterizedURL, resolvingAgainstBaseURL: true)!
         components.queryItems = params
