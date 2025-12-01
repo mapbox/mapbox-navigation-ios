@@ -26,6 +26,7 @@ public class SpeechSynthesizerMock: SpeechSynthesizing {
 
     public var deinitExpectation: XCTestExpectation?
     public var speakExpectation: XCTestExpectation?
+    public var stopSpeakingExpectation: XCTestExpectation?
     public var speechError: SpeechError?
 
     public init() {}
@@ -48,6 +49,7 @@ public class SpeechSynthesizerMock: SpeechSynthesizing {
 
     public func stopSpeaking() {
         stopSpeakingCalled = true
+        stopSpeakingExpectation?.fulfill()
     }
 
     public func interruptSpeaking() {
