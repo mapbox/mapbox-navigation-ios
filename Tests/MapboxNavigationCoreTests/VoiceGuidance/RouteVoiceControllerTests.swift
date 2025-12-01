@@ -1,4 +1,4 @@
-import _MapboxNavigationTestHelpers
+@testable import _MapboxNavigationTestHelpers
 import Combine
 import MapboxDirections
 @testable import MapboxNavigationCore
@@ -6,47 +6,54 @@ import MapboxDirections
 import XCTest
 
 final class RouteVoiceControllerTests: BaseTestCase {
-    var routeVoiceController: RouteVoiceController!
     var speechSynthesizer: SpeechSynthesizerMock!
-
-    var routeProgressPublisher: CurrentValueSubject<RouteProgressState?, Never>!
-    var rerouteSoundTrigger: CurrentValueSubject<Void, Never>!
-
-    let voiceInstruction = VoiceInstruction(
-        ssmlAnnouncement: "ssml text",
-        announcement: "text",
-        remainingStepDistance: 5,
-        index: 0
-    )
-
-    let spokenInstruction = SpokenInstruction(distanceAlongStep: 5, text: "text", ssmlText: "ssml text")
+    var routeProgress: CurrentValueSubject<RouteProgressState?, Never>!
+    var rerouteSoundTrigger: PassthroughSubject<Void, Never>!
 
     @MainActor
-    override func setUp() {
-        super.setUp()
-
-        routeProgressPublisher = .init(nil)
-        rerouteSoundTrigger = .init(())
-
-        speechSynthesizer = SpeechSynthesizerMock()
-        routeVoiceController = RouteVoiceController(
-            routeProgressing: routeProgressPublisher.eraseToAnyPublisher(),
+    private func makeRouteVoiceController() -> RouteVoiceController {
+        RouteVoiceController(
+            routeProgressing: routeProgress.eraseToAnyPublisher(),
             rerouteSoundTrigger: rerouteSoundTrigger.eraseToAnyPublisher(),
             speechSynthesizer: speechSynthesizer
         )
     }
 
     @MainActor
+    override func setUp() {
+        super.setUp()
+
+        Environment.switchEnvironment(to: .test)
+        routeProgress = .init(nil)
+        rerouteSoundTrigger = .init()
+        speechSynthesizer = SpeechSynthesizerMock()
+    }
+
+    override func tearDown() {
+        Environment.switchEnvironment(to: .live)
+        super.tearDown()
+    }
+
+    @MainActor
+    func testRerouteSoundLoaded() async {
+        let loadExpectation = expectation(description: "Sounds loaded")
+        Environment.set(\.audioPlayerClient.load) { _ in
+            loadExpectation.fulfill()
+        }
+
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
+        await fulfillment(of: [loadExpectation], timeout: 1.0)
+    }
+
+    @MainActor
     func testDoesNotSpeakIfNoInstruction() async {
+        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
+
         speechSynthesizer.locale = .current
-        let optionsLocale = Locale(identifier: "ja_JP")
-        let voiceLocale = Locale(identifier: "en_US")
-        let progress = await routeProgress(
-            optionsLocale: optionsLocale,
-            voiceLocale: voiceLocale,
-            includesSpokenInstruction: false
-        )
-        routeProgressPublisher.send(progress)
+        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS, includesSpokenInstruction: false))
 
         XCTAssertFalse(speechSynthesizer.prepareIncomingSpokenInstructionsCalled)
         XCTAssertFalse(speechSynthesizer.speakCalled)
@@ -55,18 +62,86 @@ final class RouteVoiceControllerTests: BaseTestCase {
 
     @MainActor
     func testPassVoiceAndOptionsLocale() async {
-        let optionsLocale = Locale(identifier: "ja_JP")
-        let voiceLocale = Locale(identifier: "en_US")
-        let progress = await routeProgress(optionsLocale: optionsLocale, voiceLocale: voiceLocale)
-        routeProgressPublisher.send(progress)
+        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
 
-        XCTAssertEqual(speechSynthesizer.locale, optionsLocale)
+        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS))
+
+        XCTAssertEqual(speechSynthesizer.locale, .jaJP)
         XCTAssertTrue(speechSynthesizer.speakCalled)
-        XCTAssertEqual(speechSynthesizer.passedLocale, voiceLocale)
-        XCTAssertEqual(speechSynthesizer.passedInstruction, spokenInstruction)
+        XCTAssertEqual(speechSynthesizer.passedLocale, .enUS)
+        XCTAssertEqual(speechSynthesizer.passedInstruction, .turnLeft)
     }
 
-    private func routeProgress(
+    @MainActor
+    func testRerouteStopsSpeakingAndPlaysSound() async {
+        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
+
+        let stopSpeakingExpectation = expectation(description: "Stop speaking")
+        speechSynthesizer.stopSpeakingExpectation = stopSpeakingExpectation
+
+        let playExpectation = expectation(description: "Stop speaking")
+        Environment.set(\.audioPlayerClient.play) { _ in
+            playExpectation.fulfill()
+            return true
+        }
+
+        rerouteSoundTrigger.send(())
+        await fulfillment(of: [stopSpeakingExpectation, playExpectation], timeout: 1.0)
+    }
+
+    @MainActor
+    func testRerouteDoesNotStopSpeakingAndPlaySoundWhenDisabled() async {
+        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
+
+        routeVoiceController.playsRerouteSound = false
+
+        let stopSpeakingExpectation = expectation(description: "Stop speaking")
+        stopSpeakingExpectation.isInverted = true
+        speechSynthesizer.stopSpeakingExpectation = stopSpeakingExpectation
+
+        let playExpectation = expectation(description: "Stop speaking")
+        playExpectation.isInverted = true
+        Environment.set(\.audioPlayerClient.play) { _ in
+            playExpectation.fulfill()
+            return true
+        }
+
+        rerouteSoundTrigger.send(())
+        await fulfillment(of: [stopSpeakingExpectation, playExpectation], timeout: 1.0)
+    }
+
+    @MainActor
+    func testRerouteDoesNotStopSpeakingAndPlaySoundWhenSpeechSynthesizerIsMuted() async {
+        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+        let routeVoiceController = makeRouteVoiceController()
+        defer { _ = routeVoiceController }
+
+        routeVoiceController.speechSynthesizer.muted = true
+
+        let stopSpeakingExpectation = expectation(description: "Stop speaking")
+        stopSpeakingExpectation.isInverted = true
+        speechSynthesizer.stopSpeakingExpectation = stopSpeakingExpectation
+
+        let playExpectation = expectation(description: "Stop speaking")
+        playExpectation.isInverted = true
+        Environment.set(\.audioPlayerClient.play) { _ in
+            playExpectation.fulfill()
+            return true
+        }
+
+        rerouteSoundTrigger.send(())
+        await fulfillment(of: [stopSpeakingExpectation, playExpectation], timeout: 1.0)
+    }
+}
+
+extension RouteProgressState {
+    fileprivate static func mock(
         optionsLocale: Locale,
         voiceLocale: Locale?,
         includesSpokenInstruction: Bool = true
@@ -78,10 +153,36 @@ final class RouteVoiceControllerTests: BaseTestCase {
         )
         let navigationRoutes = await NavigationRoutes.mock(mainRoute: mainRoute)
         var progress = RouteProgress.mock(navigationRoutes: navigationRoutes)
+
         if includesSpokenInstruction {
-            let status = NavigationStatus.mock(voiceInstruction: voiceInstruction)
-            progress.update(using: status)
+            progress.update(using: .mock(voiceInstruction: .turnLeft))
         }
         return RouteProgressState(routeProgress: progress)
+    }
+}
+
+extension Locale {
+    fileprivate static var jaJP: Locale { Locale(identifier: "ja_JP") }
+    fileprivate static var enUS: Locale { Locale(identifier: "en_US") }
+}
+
+extension VoiceInstruction {
+    fileprivate static var turnLeft: VoiceInstruction {
+        VoiceInstruction(
+            ssmlAnnouncement: "turn left",
+            announcement: "turn left",
+            remainingStepDistance: 5,
+            index: 0
+        )
+    }
+}
+
+extension SpokenInstruction {
+    static var turnLeft: SpokenInstruction {
+        SpokenInstruction(
+            distanceAlongStep: 5,
+            text: "turn left",
+            ssmlText: "turn left"
+        )
     }
 }
