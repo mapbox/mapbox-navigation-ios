@@ -213,8 +213,17 @@ open class RouteController: NSObject {
         }
     }
     
-    public var refreshesRoute: Bool = true
-    
+    public var refreshesRoute: Bool = true {
+        didSet {
+            if refreshesRoute {
+                let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier
+                if !profile.isAutomobileAvoidingTraffic {
+                    Log.error("An incorrect route refresh was enabled for :\(profile.rawValue) navigation profile.", category: .navigation)
+                }
+            }
+        }
+    }
+
     var isRefreshing = false
     
     var lastRouteRefresh: Date?

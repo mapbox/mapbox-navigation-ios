@@ -111,8 +111,17 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     public var initialManeuverAvoidanceRadius: TimeInterval = RerouteController.DefaultManeuverAvoidanceRadius
     
-    public var refreshesRoute: Bool = true
-    
+    public var refreshesRoute: Bool = true {
+        didSet {
+            if refreshesRoute {
+                let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier
+                if !profile.isAutomobileAvoidingTraffic {
+                    Log.error("An incorrect route refresh was enabled for :\(profile.rawValue) navigation profile.", category: .navigation)
+                }
+            }
+        }
+    }
+
     var lastRouteRefresh: Date?
     
     var isRefreshing = false
