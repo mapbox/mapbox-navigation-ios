@@ -119,7 +119,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
      - NOTE: Route refresh is currently supported only for `driving-traffic` profiles only. Enabling this property for other profiles may result in server errors.
      */
-    public var refreshesRoute: Bool = true {
+    public var refreshesRoute: Bool {
         didSet {
             if refreshesRoute {
                 let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier

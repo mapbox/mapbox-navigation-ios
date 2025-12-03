@@ -221,7 +221,7 @@ open class RouteController: NSObject {
 
      - NOTE: Route refresh is currently supported only for `driving-traffic` profiles only. Enabling this property for other profiles may result in server errors.
      */
-    public var refreshesRoute: Bool = true {
+    public var refreshesRoute: Bool {
         didSet {
             if refreshesRoute {
                 let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier
@@ -660,7 +660,16 @@ open class RouteController: NSObject {
         guard !hasFinishedRouting else { return }
         navigationSessionManager.reportStopNavigation()
     }
-    
+
+    private static func calculatedRefreshesRoute(with indexedRouteResponse: IndexedRouteResponse) -> Bool {
+        var isRouteOptions = false
+        if case .route = indexedRouteResponse.routeResponse.options {
+            isRouteOptions = true
+        }
+        let options = indexedRouteResponse.validatedRouteOptions
+        return isRouteOptions && options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
+    }
+
     private static func checkUniqueInstance() {
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
@@ -688,14 +697,10 @@ open class RouteController: NSObject {
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
 
-        var isRouteOptions = false
-        if case .route = indexedRouteResponse.routeResponse.options {
-            isRouteOptions = true
-        }
         let options = indexedRouteResponse.validatedRouteOptions
 
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
-        self.refreshesRoute = isRouteOptions && options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = Self.calculatedRefreshesRoute(with: indexedRouteResponse)
 
         super.init()
 
@@ -719,6 +724,7 @@ open class RouteController: NSObject {
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.navigationSessionManager = navigationSessionManager
+        self.refreshesRoute = Self.calculatedRefreshesRoute(with: indexedRouteResponse)
 
         super.init()
 
