@@ -110,9 +110,27 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     var lastRerouteLocation: CLLocation?
     
     public var initialManeuverAvoidanceRadius: TimeInterval = RerouteController.DefaultManeuverAvoidanceRadius
-    
-    public var refreshesRoute: Bool = true
-    
+
+    /**
+     Controls whether the route controller automatically updates ETA and traffic congestion data.
+
+     When enabled, the route controller periodically refreshes route information at intervals defined by `RouteControllerProactiveReroutingInterval`.
+     By default, route refreshing is enabled only for routes using `.automobileAvoidingTraffic` or another `driving-traffic` profile.
+     If `reroutesProactively` is also enabled, the route controller runs the rerouting check after the route refresh completes.
+
+     - Important: Route refresh is currently supported only for `driving-traffic` profiles. Enabling this property for other profiles (such as walking, cycling, or standard driving) may result in server errors or undefined behavior.
+     */
+    public var refreshesRoute: Bool {
+        didSet {
+            if refreshesRoute {
+                let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier
+                if !profile.isAutomobileAvoidingTraffic {
+                    Log.error("An incorrect route refresh was enabled for :\(profile.rawValue) navigation profile.", category: .navigation)
+                }
+            }
+        }
+    }
+
     var lastRouteRefresh: Date?
     
     var isRefreshing = false
@@ -272,7 +290,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = indexedRouteResponse.supportsRefreshes
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()

@@ -212,9 +212,27 @@ open class RouteController: NSObject {
             rerouteController.initialManeuverAvoidanceRadius = newValue
         }
     }
-    
-    public var refreshesRoute: Bool = true
-    
+
+    /**
+     Controls whether the route controller automatically updates ETA and traffic congestion data.
+
+     When enabled, the route controller periodically refreshes route information at intervals defined by `RouteControllerProactiveReroutingInterval`.
+     By default, route refreshing is enabled only for routes using `.automobileAvoidingTraffic` or another `driving-traffic` profile.
+     If `reroutesProactively` is also enabled, the route controller runs the rerouting check after the route refresh completes.
+
+     - Important: Route refresh is currently supported only for `driving-traffic` profiles. Enabling this property for other profiles (such as walking, cycling, or standard driving) may result in server errors or undefined behavior.
+     */
+    public var refreshesRoute: Bool {
+        didSet {
+            if refreshesRoute {
+                let profile = indexedRouteResponse.validatedRouteOptions.profileIdentifier
+                if !profile.isAutomobileAvoidingTraffic {
+                    Log.error("An incorrect route refresh was enabled for :\(profile.rawValue) navigation profile.", category: .navigation)
+                }
+            }
+        }
+    }
+
     var isRefreshing = false
     
     var lastRouteRefresh: Date?
@@ -643,7 +661,7 @@ open class RouteController: NSObject {
         guard !hasFinishedRouting else { return }
         navigationSessionManager.reportStopNavigation()
     }
-    
+
     private static func checkUniqueInstance() {
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
@@ -671,14 +689,10 @@ open class RouteController: NSObject {
         self.indexedRouteResponse = indexedRouteResponse
         self.dataSource = source
 
-        var isRouteOptions = false
-        if case .route = indexedRouteResponse.routeResponse.options {
-            isRouteOptions = true
-        }
         let options = indexedRouteResponse.validatedRouteOptions
 
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
-        self.refreshesRoute = isRouteOptions && options.profileIdentifier.isAutomobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = indexedRouteResponse.supportsRefreshes
 
         super.init()
 
@@ -702,6 +716,7 @@ open class RouteController: NSObject {
         let options = indexedRouteResponse.validatedRouteOptions
         self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.navigationSessionManager = navigationSessionManager
+        self.refreshesRoute = indexedRouteResponse.supportsRefreshes
 
         super.init()
 
@@ -1208,4 +1223,14 @@ enum RouteControllerError: Error {
 public enum AlternativeRouteError: Swift.Error {
     /// The navigation engine has failed to provide alternatives.
     case failedToUpdateAlternativeRoutes(reason: String)
+}
+
+extension IndexedRouteResponse {
+    var supportsRefreshes: Bool {
+        guard case .route = routeResponse.options else {
+            return false
+        }
+        return validatedRouteOptions.profileIdentifier.isAutomobileAvoidingTraffic && validatedRouteOptions.refreshingEnabled
+
+    }
 }
