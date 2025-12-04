@@ -5,6 +5,7 @@
 ### Audio
 
 * Improved reroute sound logic. The reroute sound now plays only when a new route is fetched and applied, rather than when rerouting starts. This applies to both automatic reroutes and faster route scenarios.
+* Fixed an issue that audio sessions activated by the SDK (for playback of voice instructions and reroute sound) were not interrupting spoken audio content playback from other applications (e.g. Podcasts).
 
 ### Directions
 

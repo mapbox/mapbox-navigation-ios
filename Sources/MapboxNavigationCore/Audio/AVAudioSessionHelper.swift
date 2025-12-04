@@ -21,7 +21,7 @@ actor AVAudioSessionHelper {
     let settings = Settings(
         category: .playback,
         mode: .voicePrompt,
-        options: [.duckOthers, .mixWithOthers]
+        options: [.interruptSpokenAudioAndMixWithOthers, .duckOthers]
     )
 
     func duckAudio() async throws {
