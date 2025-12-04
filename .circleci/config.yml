@@ -709,32 +709,24 @@ jobs:
       - run:
           name: Generate docs
           command: |
-            OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
-            export OUTPUT="${OUTPUT:-documentation}"
-            echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            ./scripts/document.sh
-            cp -a "$OUTPUT" /tmp/generated-docs
+            TAG="<< pipeline.git.tag >>"
+            if [ -n "$TAG" ]; then
+              VERSION=${TAG#test_v}
+            else
+              VERSION=0.0.0
+            fi
+            OUTPUT_PATH="build/docs/$VERSION"
+            ./scripts/document.sh "$VERSION" "$OUTPUT_PATH"
+            # cp -a "$OUTPUT_PATH" /tmp/generated-docs
       - *save-cache-podmaster
       - *save-cache-gems
-      - run:
-          name: Compress Docs
-          command: tar -cvzf /tmp/docs.tar /tmp/generated-docs
-      - store_artifacts:
-          path: /tmp/docs.tar
-          destination: docs
-      - when:
-          condition: << pipeline.git.tag >>
-          steps:
-            - run:
-                name: Push docs to publisher-production
-                command: |
-                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
-                  git config user.email "release-bot@mapbox.com"
-                  git config user.name "Mapbox Releases"
-                  VERSION="${OUTPUT}" scripts/publish-docs.sh
-            - notify-build-finished:
-                notify_success: true
-      - notify-build-finished
+      # - run:
+      #     name: Compress Docs
+      #     command: tar -cvzf /tmp/docs.tar /tmp/generated-docs
+      # - store_artifacts:
+      #     path: /tmp/docs.tar
+      #     destination: docs
+      # - notify-build-finished
 
   update-version-job:
     parameters:
@@ -946,7 +938,7 @@ workflows:
             clean_build: false
             context: Slack Orb
         - generate-docs-job:
-            name: Generate / Publish Documentation
+            name: Generate Documentation
             context: Slack Orb
             filters:
               tags:

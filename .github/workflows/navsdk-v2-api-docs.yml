@@ -1,0 +1,110 @@
+name: Nav SDK v2 API Documentation
+
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - 'test_v*.*.*'
+      - 'test_v*.*.*-*'
+
+env:
+  TARGET_ENVIRONMENT: 'docs.mapbox.com-staging'
+
+jobs:
+  generate-docs:
+    name: Generate Nav SDK v2 API documentation
+    runs-on: macos-14
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Create ~/.netrc
+        run: |
+          echo "machine api.mapbox.com" >> ~/.netrc
+          echo "login mapbox" >> ~/.netrc
+          echo "password ${{ secrets.SDK_REGISTRY_TOKEN }}" >> ~/.netrc
+          chmod 0600 ~/.netrc
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.6
+
+      - name: Install Gems
+        run: |
+          bundle config set path 'vendor/bundle'
+          bundle check || bundle install
+
+      - name: Build documentation
+        run: |
+          if [[ $GITHUB_REF_TYPE == "tag" ]]; then
+            VERSION=${GITHUB_REF_NAME#test_v}
+          else
+            VERSION=0.0.0
+          fi
+          export OUTPUT_PATH="build/documentation/$VERSION"
+          echo "OUTPUT_PATH=$OUTPUT_PATH" >> $GITHUB_ENV
+          ./scripts/document.sh "$VERSION" "$OUTPUT_PATH"
+
+      - name: Store documentation artifact
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-v2-api-docs
+          path: ${{ env.OUTPUT_PATH }}
+          retention-days: 1
+
+      - name: Summary
+        run: |
+          echo "## Nav SDK v2 API Documentation Generated" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${GITHUB_REF_NAME#test_v}" >> $GITHUB_STEP_SUMMARY
+
+  publish-docs:
+    name: Publish Nav SDK v2 API documentation
+    needs: generate-docs
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download documentation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-v2-api-docs
+          path: docs_artifact
+
+      - name: Configure AWS credentials
+        uses: mapbox/configure-aws-credentials-internal@v5
+        with:
+          target-account-id: ${{ secrets.AWS_ACCOUNT_ID_DEFAULT }}
+
+      - name: Install s5cmd
+        run: |
+          curl -fsSL https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_Linux-64bit.tar.gz | tar xvz
+          sudo mv s5cmd /usr/local/bin/
+          s5cmd version
+
+      - name: Upload documentation to S3
+        id: s3-upload
+        run: |
+          VERSION="${GITHUB_REF_NAME#test_v}"
+          SOURCE_DIR="docs_artifact"
+          
+          s5cmd sync \
+            "$SOURCE_DIR/*" \
+            "s3://${{ env.TARGET_ENVIRONMENT }}/ios/navigation/api/$VERSION/"
+
+          echo "s3_url=https://${{ env.TARGET_ENVIRONMENT }}/ios/navigation/api/$VERSION/" >> $GITHUB_OUTPUT
+
+      - name: Summary
+        run: |
+          echo "## Nav SDK v2 API Documentation Published" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${GITHUB_REF_NAME#test_v}" >> $GITHUB_STEP_SUMMARY
+          echo "- **S3 URL**: ${{ steps.s3-upload.outputs.s3_url }}" >> $GITHUB_STEP_SUMMARY
+
