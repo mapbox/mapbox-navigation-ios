@@ -253,7 +253,10 @@ public protocol Router: CLLocationManagerDelegate {
     /**
      If true, the `RouteController` attempts to update ETA and route congestion on an interval defined by `RouteControllerProactiveReroutingInterval`.
      
-     Refreshing will be used only if route's mode of transportation profile is set to `.automobileAvoidingTraffic`. If `reroutesProactively` is enabled too, rerouting will be checked after route is refreshed.
+     By default, refreshing will be used only if the route's mode of transportation profile is set to `.automobileAvoidingTraffic` or another `driving-traffic` profile.
+     If `reroutesProactively` is also enabled, rerouting will be checked after the route is refreshed.
+
+     - NOTE: Route refresh is currently supported only for `driving-traffic` profiles only. Enabling this property for other profiles may result in server errors.
      */
     var refreshesRoute: Bool { get set }
     
