@@ -9,6 +9,7 @@ import MapboxMaps
 import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
+@_spi(Experimental) import MapboxMaps
 
 final class AdvancedViewController: UIViewController {
     private let mapboxNavigationProvider = MapboxNavigationProvider(
@@ -24,6 +25,7 @@ final class AdvancedViewController: UIViewController {
     }
 
     private static let styleUrl = "mapbox://styles/mapbox-dash/standard-navigation"
+    private static let buildingSelectionExpressionId: UInt = 1000
 
     private var navigationMapView: NavigationMapView! {
         didSet {
@@ -53,9 +55,31 @@ final class AdvancedViewController: UIViewController {
     private func showCurrentRoute() {
         guard let navigationRoutes else {
             navigationMapView.removeRoutes()
+            Task {
+                try? await navigationMapView.mapView.mapboxMap
+                    .removeFeatureStateExpression(expressionId: Self.buildingSelectionExpressionId)
+            }
             return
         }
         navigationMapView.showcase(navigationRoutes)
+
+        // Add a visual highlight of the destination on the map
+        guard let routeOptions = navigationRoutes.mainRoute.routeOptions,
+              let coordinate = routeOptions.waypoints.last?.coordinate
+        else {
+            return
+        }
+        Task {
+            try? await navigationMapView.mapView.mapboxMap.setFeatureStateExpression(
+                expressionId: Self.buildingSelectionExpressionId,
+                featureset: .standardBuildings,
+                expression: Exp(.lte) {
+                    Exp(.distance) { GeoJSONObject.geometry(.point(.init(coordinate))) }
+                    0
+                },
+                state: .init(select: true)
+            )
+        }
     }
 
     private var startButton: UIButton!
