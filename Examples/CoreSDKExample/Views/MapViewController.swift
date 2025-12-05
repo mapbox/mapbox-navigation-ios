@@ -1,13 +1,14 @@
 import Combine
 import CoreLocation
 import Foundation
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import MapboxNavigationCore
 import UIKit
 
 @MainActor
 final class MapViewController: UIViewController {
     private static let styleUrl = "mapbox://styles/mapbox-dash/standard-navigation"
+    private static let buildingSelectionExpressionId: UInt = 1000
 
     private let navigation: Navigation
     private let navigationMapView: NavigationMapView
@@ -72,10 +73,13 @@ final class MapViewController: UIViewController {
                         routeAnnotationKinds: [.routeDurations],
                         animated: true
                     )
+                    selectDestination(for: previewRoutes)
                 } else if let routes {
                     navigationMapView.show(routes, routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever])
+                    selectDestination(for: routes)
                 } else {
                     navigationMapView.removeRoutes()
+                    deselectDestination()
                 }
             }
             .store(in: &lifetimeSubscriptions)
@@ -87,6 +91,32 @@ final class MapViewController: UIViewController {
             .sink { [weak self] cameraState in
                 self?.navigationMapView.update(navigationCameraState: cameraState)
             }.store(in: &lifetimeSubscriptions)
+    }
+
+    private func selectDestination(for routes: NavigationRoutes) {
+        guard let routeOptions = routes.mainRoute.routeOptions,
+              let coordinate = routeOptions.waypoints.last?.coordinate
+        else {
+            return
+        }
+        Task {
+            try? await navigationMapView.mapView.mapboxMap.setFeatureStateExpression(
+                expressionId: Self.buildingSelectionExpressionId,
+                featureset: .standardBuildings,
+                expression: Exp(.lte) {
+                    Exp(.distance) { GeoJSONObject.geometry(.point(.init(coordinate))) }
+                    0
+                },
+                state: .init(select: true)
+            )
+        }
+    }
+
+    private func deselectDestination() {
+        Task {
+            try? await navigationMapView.mapView.mapboxMap
+                .removeFeatureStateExpression(expressionId: Self.buildingSelectionExpressionId)
+        }
     }
 
     private func presentAlert(_ title: String? = nil, message: String? = nil) {
