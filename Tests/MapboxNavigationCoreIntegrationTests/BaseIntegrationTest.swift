@@ -70,6 +70,7 @@ class BaseIntegrationTest: BaseTestCase {
         let rerouteExpectation = expectation(description: "Reroute expectation")
         await navigationProvider.navigator().rerouting
             .filter { $0.event is ReroutingStatus.Events.Fetched }
+            .first()
             .sink { _ in rerouteExpectation.fulfill() }
             .store(in: &cancellables)
         return rerouteExpectation
