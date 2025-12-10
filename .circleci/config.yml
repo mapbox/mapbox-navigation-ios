@@ -727,7 +727,7 @@ jobs:
           command: |
             TAG="<< pipeline.git.tag >>"
             if [ -n "$TAG" ]; then
-              VERSION=${TAG#v}
+              VERSION=${TAG#test_v}
             else
               VERSION=0.0.0
             fi
@@ -756,10 +756,10 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
       MBX_CI_DOMAIN: o619qyc20d.execute-api.us-east-1.amazonaws.com
-      TARGET_ENVIRONMENT: docs.mapbox.com
+      TARGET_ENVIRONMENT: docs.mapbox.com-staging
     steps:
       - when:
-          condition: << pipeline.git.tag >> =~ /^v2\.\d+\.\d+(-.+)?$/
+          condition: << pipeline.git.tag >> =~ /^test_v2\.\d+\.\d+(-.+)?$/
           steps:
           - checkout
           - *add-github-to-known-hosts
@@ -772,7 +772,7 @@ jobs:
               command: |
                 TAG="<< pipeline.git.tag >>"
                 if [ -n "$TAG" ]; then
-                  VERSION=${TAG#v}
+                  VERSION=${TAG#test_v}
                 else
                   echo "ERROR: No tag found"
                   exit 1
@@ -1020,7 +1020,7 @@ workflows:
             context: Slack Orb
             filters:
               tags:
-                only: /^v2\.\d+\.\d+(-.+)?$/
+                only: /^test_v2\.\d+\.\d+(-.+)?$/
         - publish-docs-job:
             name: Publish Documentation
             context: Slack Orb
@@ -1030,7 +1030,7 @@ workflows:
               branches:
                 ignore: /.*/
               tags:
-                only: /^v2\.\d+\.\d+(-.+)?$/
+                only: /^test_v2\.\d+\.\d+(-.+)?$/
         - ios-trigger-metrics:
             filters:
               branches:
