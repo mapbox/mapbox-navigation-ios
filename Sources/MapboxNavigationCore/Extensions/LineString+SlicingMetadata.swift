@@ -11,12 +11,12 @@ extension LineString {
     }
 
     func slicingMetadata(at distance: LocationDistance) -> SlicingMetadata? {
-        guard let indexedCoordiante = indexedCoordinateFromStart(distance: distance) else {
+        guard let indexedCoordinate = indexedCoordinateFromStart(distance: distance) else {
             return nil
         }
 
         var remaining = coordinates
-        remaining.replaceSubrange(0...indexedCoordiante.index, with: [indexedCoordiante.coordinate])
-        return .init(indexdCoordinate: indexedCoordiante, trailingLineString: .init(remaining))
+        remaining.replaceSubrange(0...indexedCoordinate.index, with: [indexedCoordinate.coordinate])
+        return .init(indexdCoordinate: indexedCoordinate, trailingLineString: .init(remaining))
     }
 }
