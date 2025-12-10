@@ -729,6 +729,7 @@ jobs:
             if [ -n "$TAG" ]; then
               VERSION=${TAG#v}
             else
+              # Dummy version for non-tagged builds.
               VERSION=0.0.0
             fi
             OUTPUT_PATH="build/docs/$VERSION"
@@ -771,39 +772,19 @@ jobs:
               name: Publish docs
               command: |
                 TAG="<< pipeline.git.tag >>"
-                if [ -n "$TAG" ]; then
-                  VERSION=${TAG#v}
-                else
-                  echo "ERROR: No tag found"
+                if [ -z "$TAG" ]; then
+                  echo "ERROR: Missing git tag. A tag is required to publish documentation."
                   exit 1
                 fi
-
-                SOURCE_PATH="build/docs/$VERSION"
-                if [ ! -d "$SOURCE_PATH" ]; then
-                  echo "ERROR: Docs do not exist"
-                  exit 1
-                fi
-
-                echo "########################################################"
-                echo "PUBLISHING DOCS FOR VERSION: $VERSION"
-                echo "########################################################"
-                echo "SOURCE_PATH: $SOURCE_PATH"
-                echo "TARGET_ENVIRONMENT: $TARGET_ENVIRONMENT"
-                echo "########################################################"
+                VERSION=${TAG#v}
 
                 if ! mbx-ci aws setup; then
                   echo "ERROR: Could not setup AWS credentials."
                   exit 1
                 fi
 
-                s5cmd sync \
-                  "$SOURCE_PATH/*" \
-                  "s3://${TARGET_ENVIRONMENT}/ios/navigation/api/$VERSION/"
-
-                echo "########################################################"
-                echo "DOCS PUBLISHED SUCCESSFULLY"
-                echo "URL: https://${TARGET_ENVIRONMENT}/ios/navigation/api/$VERSION/"
-                echo "########################################################"
+                SOURCE_PATH="build/docs/$VERSION"
+                ./scripts/publish-docs.sh "$VERSION" "$TARGET_ENVIRONMENT" "$SOURCE_PATH"
           - notify-build-finished
 
   update-version-job:
