@@ -734,7 +734,7 @@ jobs:
             fi
             OUTPUT_PATH="build/docs/$VERSION"
             echo "export OUTPUT_PATH=$OUTPUT_PATH" >> $BASH_ENV
-            ./scripts/document.sh "$VERSION" "$OUTPUT_PATH"
+            ./scripts/generate-docs.sh "$VERSION" "$OUTPUT_PATH"
       - *save-cache-gems
       - persist_to_workspace:
           root: ./
