@@ -7,7 +7,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedDescriptors: [TilesetDescriptor]?
     public var passedCacheOptions: PredictiveCacheControllerOptions?
     public var passedRerouteController: RerouteControllerInterface?
-    public var passedLeg: UInt32? = nil
+    public var passedLeg: UInt32?
     public var returnedChangeLegResult = true
 
     public var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?
@@ -16,7 +16,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedRemovedRerouteObserver: RerouteObserver?
 
     public var rerouteController: RerouteControllerInterface!
-    public var rerouteDetector: RerouteDetectorInterface!
+    public var rerouteDetector: RerouteDetectorInterface = RerouteDetectorSpy()
 
     public var startNavigationSessionCalled = false
     public var stopNavigationSessionCalled = false
@@ -91,12 +91,12 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
 
     @_implementationOnly
     override public func getRerouteController() -> RerouteControllerInterface? {
-        return rerouteController ?? super.getRerouteController()
+        rerouteController ?? super.getRerouteController()
     }
 
     @_implementationOnly
     override public func getRerouteDetector() -> RerouteDetectorInterface? {
-        return rerouteDetector ?? RerouteDetectorSpy()
+        rerouteDetector
     }
 
     override public func startNavigationSession() {

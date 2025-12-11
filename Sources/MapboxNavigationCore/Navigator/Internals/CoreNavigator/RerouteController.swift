@@ -36,14 +36,9 @@ class RerouteController {
 
     weak var delegate: ReroutingControllerDelegate?
 
-    func userIsOnRoute() -> Bool {
-        return !(rerouteDetector?.isReroute() ?? false)
-    }
-
     // MARK: Internal State Management
 
     private var defaultRerouteController: DefaultRerouteControllerInterface?
-    private let rerouteDetector: RerouteDetectorInterface?
 
     private weak var navigator: NavigationNativeNavigator?
 
@@ -53,7 +48,6 @@ class RerouteController {
         self.navigator = configuration.navigator
         self.config = configuration.configHandle
         self.defaultInitialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
-        self.rerouteDetector = configuration.navigator.native.getRerouteDetector()
 
         let defaultRerouteController = makeDefaultRerouteController(configuration: configuration)
         self.defaultRerouteController = defaultRerouteController

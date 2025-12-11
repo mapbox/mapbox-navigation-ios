@@ -115,25 +115,6 @@ final class RerouteControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testIsOnRouteIfNilNativeRerouteDetector() {
-        navNavigator.rerouteDetector = nil
-        let rerouteController = RerouteController(configuration: configuration)
-        XCTAssertTrue(rerouteController.userIsOnRoute())
-    }
-
-    @MainActor
-    func testIsOnRouteIfNonNilNativeRerouteDetector() {
-        let rerouteDetector = navNavigator.rerouteDetector as! RerouteDetectorSpy
-        let rerouteController = RerouteController(configuration: configuration)
-
-        rerouteDetector.returnedIsReroute = false
-        XCTAssertTrue(rerouteController.userIsOnRoute())
-
-        rerouteDetector.returnedIsReroute = true
-        XCTAssertFalse(rerouteController.userIsOnRoute())
-    }
-
-    @MainActor
     func testNoDidCancelRerouteCallIfRerouteDisabled() {
         let rerouteController = rerouteController(with: .init(detectsReroute: false))
         rerouteController.onRerouteCancelled()
