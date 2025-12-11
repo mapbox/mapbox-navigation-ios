@@ -17,6 +17,16 @@ parameters:
     default: false
 
 commands:
+  install-linux-mbx-ci:
+    steps:
+      - run:
+          name: "Install mbx-ci"
+          command: |
+            mkdir -p ./bin
+            curl -fsSL https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-linux-amd64 > mbx-ci
+            sudo mv mbx-ci /usr/local/bin/
+            chmod 755 /usr/local/bin/mbx-ci
+            echo "mbx-ci version: $(mbx-ci --version)"
   install-mbx-ci:
     steps:
       - macos/install-rosetta
@@ -25,6 +35,14 @@ commands:
           command: |
             curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > /usr/local/bin/mbx-ci
             chmod 755 /usr/local/bin/mbx-ci
+  install-linux-s5cmd:
+    steps:
+      - run:
+          name: "Install s5cmd"
+          command: |
+            curl -fsSL https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_Linux-64bit.tar.gz | tar xvz
+            sudo mv s5cmd /usr/local/bin/
+            echo "s5cmd version: $(s5cmd version)"
   notify-build-finished:
       parameters:
         notify_success:
@@ -695,46 +713,79 @@ jobs:
         default: "14.3.1"
     macos:
       xcode: << parameters.xcode >>
+    resource_class: m4pro.medium
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    resource_class: m4pro.medium
     steps:
       - checkout
       - *restore-cache-gems
-      - *restore-cache-podmaster
       - *install-gems
       - *prepare-netrc-file
       - *add-github-to-known-hosts
-      - install-mbx-ci
       - run:
           name: Generate docs
           command: |
-            OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
-            export OUTPUT="${OUTPUT:-documentation}"
-            echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            ./scripts/document.sh
-            cp -a "$OUTPUT" /tmp/generated-docs
-      - *save-cache-podmaster
+            TAG="<< pipeline.git.tag >>"
+            if [ -n "$TAG" ]; then
+              VERSION=${TAG#v}
+            else
+              # Dummy version for non-tagged builds.
+              VERSION=0.0.0
+            fi
+            OUTPUT_PATH="build/docs/$VERSION"
+            echo "export OUTPUT_PATH=$OUTPUT_PATH" >> $BASH_ENV
+            ./scripts/generate-docs.sh "$VERSION" "$OUTPUT_PATH"
       - *save-cache-gems
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build/docs
       - run:
-          name: Compress Docs
-          command: tar -cvzf /tmp/docs.tar /tmp/generated-docs
+          name: Compress docs
+          command: |
+            mkdir -p build/archives
+            tar -cvzf build/archives/navsdk-v2-docs.tar $OUTPUT_PATH
       - store_artifacts:
-          path: /tmp/docs.tar
-          destination: docs
-      - when:
-          condition: << pipeline.git.tag >>
-          steps:
-            - run:
-                name: Push docs to publisher-production
-                command: |
-                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
-                  git config user.email "release-bot@mapbox.com"
-                  git config user.name "Mapbox Releases"
-                  VERSION="${OUTPUT}" scripts/publish-docs.sh
-            - notify-build-finished:
-                notify_success: true
+          path: build/archives/navsdk-v2-docs.tar
+          destination: navsdk-v2-docs
       - notify-build-finished
+
+  publish-docs-job:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      MBX_CI_DOMAIN: o619qyc20d.execute-api.us-east-1.amazonaws.com
+      TARGET_ENVIRONMENT: docs.mapbox.com
+    steps:
+      - when:
+          condition: << pipeline.git.tag >> =~ /^v2\.\d+\.\d+(-.+)?$/
+          steps:
+          - checkout
+          - *add-github-to-known-hosts
+          - attach_workspace:
+              at: .
+          - install-linux-mbx-ci
+          - install-linux-s5cmd
+          - run:
+              name: Publish docs
+              command: |
+                TAG="<< pipeline.git.tag >>"
+                if [ -z "$TAG" ]; then
+                  echo "ERROR: Missing git tag. A tag is required to publish documentation."
+                  exit 1
+                fi
+                VERSION=${TAG#v}
+
+                if ! mbx-ci aws setup; then
+                  echo "ERROR: Could not setup AWS credentials."
+                  exit 1
+                fi
+
+                SOURCE_PATH="build/docs/$VERSION"
+                ./scripts/publish-docs.sh "$VERSION" "$TARGET_ENVIRONMENT" "$SOURCE_PATH"
+          - notify-build-finished
 
   update-version-job:
     parameters:
@@ -946,11 +997,21 @@ workflows:
             clean_build: false
             context: Slack Orb
         - generate-docs-job:
-            name: Generate / Publish Documentation
+            name: Generate Documentation
             context: Slack Orb
             filters:
               tags:
-                only: /^v\d+\.\d+\.\d+(-.+)?$/
+                only: /^v2\.\d+\.\d+(-.+)?$/
+        - publish-docs-job:
+            name: Publish Documentation
+            context: Slack Orb
+            requires:
+              - Generate Documentation
+            filters:
+              branches:
+                ignore: /.*/
+              tags:
+                only: /^v2\.\d+\.\d+(-.+)?$/
         - ios-trigger-metrics:
             filters:
               branches:
