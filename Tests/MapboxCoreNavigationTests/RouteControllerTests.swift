@@ -122,6 +122,30 @@ class RouteControllerTests: TestCase {
                                           customRoutingProvider: routingProvider,
                                           dataSource: dataSource)
         XCTAssertFalse(controller2.refreshesRoute, "Should not refresh for automobile")
+
+        indexedRouteResponse.validatedRouteOptions.profileIdentifier = .init(rawValue: "custom/driving-traffic")
+        let controller3 = RouteController(indexedRouteResponse: indexedRouteResponse,
+                                          customRoutingProvider: routingProvider,
+                                          dataSource: dataSource)
+        XCTAssertTrue(controller3.refreshesRoute, "Should refresh for custom driving traffic")
+
+        let mapMatchinOptions = NavigationMatchOptions(
+            coordinates: [
+                .init(latitude: 59.3379254707993, longitude: 18.0768391763866),
+                .init(latitude: 59.3376613543215, longitude: 18.0758977499228),
+                .init(latitude: 59.3371292341531, longitude: 18.0754779388695),
+            ],
+            profileIdentifier: .automobileAvoidingTraffic)
+        let response = Fixture.mapMatchingResponse(from: "route-doubling-back", options: mapMatchinOptions)
+        let routeResponse = try! RouteResponse(
+            matching: response,
+            options: mapMatchinOptions,
+            credentials: .mocked)
+        let indexedResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
+        let controller4 = RouteController(indexedRouteResponse: indexedResponse,
+                                          customRoutingProvider: routingProvider,
+                                          dataSource: dataSource)
+        XCTAssertFalse(controller4.refreshesRoute, "Should not refresh for map matching response")
     }
     
     func testReturnIsFirstLocation() {
