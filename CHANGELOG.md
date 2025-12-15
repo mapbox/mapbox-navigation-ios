@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* Fixed an issue where extra faster route requests could be initiated by the SDK.
+
 ## 3.17.0
 
 ### Packaging

@@ -974,11 +974,12 @@ final class MapboxNavigator: @unchecked Sendable {
         guard let fasterRouteController = configuration.fasterRouteController else { return }
 
         routeProgress
-            .compactMap { $0 }
-            .sink { currentRouteProgress in
-                fasterRouteController.checkForFasterRoute(
-                    from: currentRouteProgress.routeProgress
-                )
+            .compactMap { $0?.routeProgress }
+            .sink { routeProgress in
+                guard !routeProgress.navigationRoutes.isCustomExternalRoute else {
+                    return
+                }
+                fasterRouteController.checkForFasterRoute(from: routeProgress)
             }
             .store(in: &subscriptions)
 
