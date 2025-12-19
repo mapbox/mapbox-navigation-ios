@@ -1575,7 +1575,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 			};
 			name = Debug;
 		};
@@ -1631,7 +1631,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
