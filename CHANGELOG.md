@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Map
+
+* Maps SDK's `MapboxMaps.MapView` is now initialized by `NavigationMapView` using `MapboxMaps.MapInitOptions(locationDataModel:)`. This passes location and heading providers during initialization, rather than overriding them afterwards using `MapboxMaps.MapView.location.override(locationProvider:headingProvider:)`. This prevents `MapView` from creating a redundant `MapboxMaps.AppleLocationProvider` (which is unused by `NavigationMapView` and the Navigation SDK).
+
 ## 3.18.0-beta.1
 
 ### Packaging

@@ -118,11 +118,13 @@ open class NavigationMapView: UIView {
         predictiveCacheManager: PredictiveCacheManager? = nil,
         useLegacyManualLayersOrderApproach: Bool = false
     ) {
-        self.mapView = MapView(frame: Constants.initialMapRect).autoresizing()
-        mapView.location.override(
-            locationProvider: location.map { [Location(clLocation: $0)] }.eraseToSignal(),
-            headingProvider: heading?.map { Heading(from: $0) }.eraseToSignal()
+        let locationDataModel = LocationDataModel(
+            location: location.map { [Location(clLocation: $0)] }.eraseToAnyPublisher(),
+            heading: heading?.map { Heading(from: $0) }.eraseToAnyPublisher()
         )
+        let mapInitOptions = MapInitOptions(locationDataModel: locationDataModel)
+
+        self.mapView = MapView(frame: Constants.initialMapRect, mapInitOptions: mapInitOptions).autoresizing()
 
         self.mapStyleManager = .init(
             mapView: mapView,
