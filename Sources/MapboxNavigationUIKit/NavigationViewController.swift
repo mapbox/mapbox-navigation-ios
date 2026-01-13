@@ -34,6 +34,11 @@ public typealias ContainerViewController = NavigationComponent & UIViewControlle
 /// [Pricing Guide](https://docs.mapbox.com/ios/navigation/guides/pricing/).
 
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
+    private enum Constants {
+        static let additionalMapPadding = UIEdgeInsets(top: 20, left: 20, bottom: 40, right: 20)
+        static let initialViewportPadding = UIEdgeInsets(top: 100, left: 0, bottom: 114, right: 50)
+    }
+
     // MARK: Accessing the View Hierarchy
 
     ///  The `NavigationMapView` displayed inside the view controller.
@@ -42,7 +47,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /// ``NavigationViewControllerDelegate``.
     @objc public var navigationMapView: NavigationMapView? {
         get {
-            return navigationView.navigationMapView
+            navigationView.navigationMapView
         }
 
         set {
@@ -64,6 +69,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         // By default `NavigationCamera` in active guidance navigation should be set to
         // `NavigationCameraState.following` state.
         navigationMapView?.navigationCamera.update(cameraState: .following)
+        // Set camera padding relative to utility views to prevent a padding jump on first appearance.
+        navigationMapView?.viewportPadding = cameraPadding
     }
 
     /// ``NavigationView``, that is displayed inside the view controller.
@@ -391,6 +398,34 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
 
+    fileprivate var cameraPadding: UIEdgeInsets {
+        let insets = navigationMapView?.safeAreaInsets ?? .zero
+        let topViewPadding = if let topViewHeight = topViewController?.view.bounds.height,
+                                topViewHeight > 0
+        {
+            // Avoid duplicate safe area calculation
+            topViewHeight - insets.top
+        } else {
+            Constants.initialViewportPadding.top
+        }
+        let bottomViewPadding = if let bottomViewHeight = bottomViewController?.view.bounds.height,
+                                   bottomViewHeight > 0
+        {
+            bottomViewHeight - insets.bottom
+        } else {
+            Constants.initialViewportPadding.bottom
+        }
+        let controllerComponensPadding = UIEdgeInsets(
+            top: topViewPadding,
+            left: 0.0,
+            bottom: bottomViewPadding + navigationView.wayNameView.bounds.height,
+            right: floatingButtons?.max {
+                $0.bounds.width < $1.bounds.width
+            }?.bounds.width ?? 0.0
+        )
+        return controllerComponensPadding + Constants.additionalMapPadding
+    }
+
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -398,16 +433,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         viewObservers.forEach {
             $0?.navigationViewDidAppear(animated)
         }
-
-        let padding = UIEdgeInsets(
-            top: topViewController?.view.bounds.height ?? 0.0,
-            left: 0.0,
-            bottom: bottomViewController?.view.bounds.height ?? 0.0 + navigationView.wayNameView.bounds.height,
-            right: floatingButtons?.max {
-                $0.bounds.width < $1.bounds.width
-            }?.bounds.width ?? 0.0
-        )
-        navigationMapView?.navigationCamera.viewportPadding += padding
+        navigationMapView?.viewportPadding = cameraPadding
     }
 
     override open func viewWillDisappear(_ animated: Bool) {

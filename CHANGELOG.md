@@ -6,6 +6,11 @@
 
 * Maps SDK's `MapboxMaps.MapView` is now initialized by `NavigationMapView` using `MapboxMaps.MapInitOptions(locationDataModel:)`. This passes location and heading providers during initialization, rather than overriding them afterwards using `MapboxMaps.MapView.location.override(locationProvider:headingProvider:)`. This prevents `MapView` from creating a redundant `MapboxMaps.AppleLocationProvider` (which is unused by `NavigationMapView` and the Navigation SDK).
 
+### Navigation Camera
+
+* Fixed a long animation during the initial location update in `NavigationViewController`.
+* Fixed an issue where the camera would switch to the following state on the first location update even after `NavigationMapView.stop()` was called.
+
 ## 3.18.0-beta.1
 
 ### Packaging

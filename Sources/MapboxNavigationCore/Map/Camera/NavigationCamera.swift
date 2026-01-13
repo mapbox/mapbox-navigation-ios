@@ -12,8 +12,14 @@ import UIKit
 
 @MainActor
 public class NavigationCamera {
-    struct State: Equatable {
+    struct State: Equatable, Sendable {
+        struct TransitionState: Equatable, Sendable {
+            var targetCameraState: NavigationCameraState
+            var started: Bool
+        }
+
         var cameraState: NavigationCameraState = .idle
+        var transitionState: TransitionState?
         var location: NavigationLocation?
         var navigationHeading: NavigationHeading?
         var navigationProgress: NavigationProgress?
@@ -46,8 +52,6 @@ public class NavigationCamera {
     }
 
     private var lifetimeSubscriptions: Set<AnyCancellable> = []
-    private var isTransitioningCameraState: Bool = false
-    private var lastCameraState: NavigationCameraState = .idle
 
     /// Initializes ``NavigationCamera`` instance.
     ///  - Parameters:
@@ -98,9 +102,7 @@ public class NavigationCamera {
                         )
                     )
                 }
-                if newState.cameraState != lastCameraState {
-                    update(using: newState.cameraState)
-                }
+                attemptToStartTransitionIfNeeded()
             }.store(in: &lifetimeSubscriptions)
 
         // Uncomment to be able to see `NavigationCameraDebugView`.
@@ -110,9 +112,12 @@ public class NavigationCamera {
     /// Updates the current camera state.
     /// - Parameter cameraState: A new camera state.
     public func update(cameraState: NavigationCameraState) {
-        guard cameraState != state.cameraState else { return }
-        state.cameraState = cameraState
-        _cameraStates.send(cameraState)
+        guard (state.transitionState?.targetCameraState ?? state.cameraState) != cameraState else {
+            return
+        }
+
+        state.transitionState = .init(targetCameraState: cameraState, started: false)
+        transitionCamera()
     }
 
     /// Call to this method immediately moves ``NavigationCamera`` to ``NavigationCameraState/idle`` state and stops all
@@ -128,6 +133,12 @@ public class NavigationCamera {
         let debugView = NavigationCameraDebugView(mapView, viewportDataSource: viewportDataSource)
         self.debugView = debugView
         mapView.addSubview(debugView)
+    }
+
+    private func attemptToStartTransitionIfNeeded() {
+        if let transitionState = state.transitionState, !transitionState.started {
+            transitionCamera()
+        }
     }
 
     private func observe(location: AnyPublisher<CLLocation, Never>) {
@@ -168,30 +179,36 @@ public class NavigationCamera {
                 guard let self else { return }
                 update(using: navigationCameraOptions)
             }.store(in: &viewportSubscription)
-
-        // To prevent the lengthy animation from the Null Island to the current location use the camera to transition to
-        // the following state.
-        // The following camera options zoom should be calculated before at the moment.
-        viewportDataSource.navigationCameraOptions
-            .filter { $0.followingCamera.zoom != nil }
-            .first()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.update(cameraState: .following)
-            }.store(in: &viewportSubscription)
     }
 
-    private func update(using cameraState: NavigationCameraState) {
-        lastCameraState = cameraState
-
-        switch cameraState {
-        case .idle:
-            break
-        case .following:
-            switchToViewportDatasourceCamera(isFollowing: true)
-        case .overview:
-            switchToViewportDatasourceCamera(isFollowing: false)
+    private func transitionCamera() {
+        if state.transitionState?.targetCameraState == .idle {
+            // Finish transition for the idle state
+            finishCameraTransition()
+            return
         }
+        guard let transitionState = state.transitionState,
+              let cameraOptions = calculatedCameraOptions(for: transitionState.targetCameraState),
+              cameraOptions.hasNoNilValues || transitionState.targetCameraState == .overview
+        else {
+            return
+        }
+
+        state.transitionState?.started = true
+        cameraStateTransition.cancelPendingTransition()
+        cameraStateTransition.transitionTo(cameraOptions) { [weak self] in
+            self?.finishCameraTransition()
+        }
+    }
+
+    private func finishCameraTransition() {
+        guard let transitionState = state.transitionState else { return }
+
+        var newState = state
+        newState.transitionState = nil
+        newState.cameraState = transitionState.targetCameraState
+        state = newState
+        _cameraStates.send(transitionState.targetCameraState)
     }
 
     private func cameraOptionsForCurrentState(from navigationCameraOptions: NavigationCameraOptions) -> CameraOptions? {
@@ -205,9 +222,27 @@ public class NavigationCamera {
         }
     }
 
+    private func calculatedCameraOptions(for cameraState: NavigationCameraState) -> CameraOptions? {
+        let navigationCameraOptions = viewportDataSource.currentNavigationCameraOptions
+        switch cameraState {
+        case .following:
+            return navigationCameraOptions.followingCamera
+        case .overview:
+            return navigationCameraOptions.overviewCamera
+        case .idle:
+            return nil
+        }
+    }
+
     private func update(using navigationCameraOptions: NavigationCameraOptions) {
-        guard !isTransitioningCameraState,
-              let options = cameraOptionsForCurrentState(from: navigationCameraOptions) else { return }
+        guard state.transitionState == nil else {
+            attemptToStartTransitionIfNeeded()
+            return
+        }
+
+        guard let options = cameraOptionsForCurrentState(from: navigationCameraOptions),
+              options.hasNoNilValues
+        else { return }
 
         cameraStateTransition.update(to: options, state: state.cameraState)
     }
@@ -233,18 +268,10 @@ public class NavigationCamera {
     /// A type, which is used to execute camera transitions.
     /// By default ``NavigationMapView`` uses ``NavigationCameraStateTransition``.
     public var cameraStateTransition: CameraStateTransition
+}
 
-    private func switchToViewportDatasourceCamera(isFollowing: Bool) {
-        let cameraOptions: CameraOptions = {
-            if isFollowing {
-                return viewportDataSource.currentNavigationCameraOptions.followingCamera
-            } else {
-                return viewportDataSource.currentNavigationCameraOptions.overviewCamera
-            }
-        }()
-        isTransitioningCameraState = true
-        cameraStateTransition.transitionTo(cameraOptions) { [weak self] in
-            self?.isTransitioningCameraState = false
-        }
+extension CameraOptions {
+    fileprivate var hasNoNilValues: Bool {
+        center != nil || anchor != nil || padding != nil || zoom != nil || bearing != nil || pitch != nil
     }
 }

@@ -6,7 +6,7 @@ import Turf
 import UIKit
 
 @MainActor
-class CommonViewportDataSource {
+final class CommonViewportDataSource {
     var navigationCameraOptions: AnyPublisher<NavigationCameraOptions, Never> {
         _navigationCameraOptions.eraseToAnyPublisher()
     }
