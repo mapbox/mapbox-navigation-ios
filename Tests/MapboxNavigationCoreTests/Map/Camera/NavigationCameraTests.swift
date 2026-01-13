@@ -45,6 +45,7 @@ class CameraStateTransitionMock: CameraStateTransition {
 
     func transitionTo(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         transitionExpectation?.fulfill()
+        completion()
     }
 
     func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
@@ -83,16 +84,29 @@ class NavigationCameraTests: BaseTestCase {
     }
 
     @MainActor
+    func testNavigationCameraInitialFollowingStateWithInitialLocation() async {
+        XCTAssertEqual(navigationCamera.currentCameraState, .following)
+    }
+
+    @MainActor
     func testNavigationCameraInitialFollowingState() async {
+        let viewportDataSourceMock = ViewportDataSourceMock()
+        navigationCamera = NavigationCamera(
+            navigationMapView.mapView,
+            location: locationPublisher.eraseToAnyPublisher(),
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            viewportDataSource: viewportDataSourceMock
+        )
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
+
         let followingCameraExpectation = XCTestExpectation(description: "Camera options expectation.")
         navigationCamera.cameraStates
-            .sink { _ in
+            .sink { state in
+                XCTAssertEqual(state, .following)
                 followingCameraExpectation.fulfill()
             }.store(in: &subscriptions)
+        navigationCamera.update(cameraState: .following)
 
-        navigationCamera.stop()
-        let viewportDataSourceMock = ViewportDataSourceMock()
-        navigationCamera.viewportDataSource = viewportDataSourceMock
         let cameraOptions = NavigationCameraOptions(followingCamera: .init(zoom: 10.0))
         viewportDataSourceMock._navigationCameraOptions.send(cameraOptions)
 
@@ -105,18 +119,70 @@ class NavigationCameraTests: BaseTestCase {
     }
 
     @MainActor
-    func testNavigationCameraOverviewStateDoesntChange() async {
+    func testCancelInitialSwitingToFollowingState() async {
+        let idleCameraExpectation = XCTestExpectation(description: "Camera options expectation.")
+        navigationCamera.cameraStates
+            .sink { state in
+                XCTAssertEqual(state, .idle)
+                idleCameraExpectation.fulfill()
+            }.store(in: &subscriptions)
+
+        navigationCamera.stop()
+        let viewportDataSourceMock = ViewportDataSourceMock()
+        navigationCamera.viewportDataSource = viewportDataSourceMock
+        let cameraOptions = NavigationCameraOptions(followingCamera: .init(zoom: 10.0))
+        viewportDataSourceMock._navigationCameraOptions.send(cameraOptions)
+        navigationCamera.stop()
+        // Navigation Camera does not move to the following state if it was cancelled.
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        locationPublisher.send(location)
+
+        await fulfillment(of: [idleCameraExpectation], timeout: 3)
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
+    }
+
+    @MainActor
+    func testCameraStateChangeToOverview() async {
+        navigationMapView.navigationCamera.update(cameraState: .overview)
+        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
+    }
+
+    @MainActor
+    func testCameraStateChangeToOverviewInActiveGuidance() async {
+        let progress = await RouteProgress.mock()
+        routeProgressPublisher.send(progress)
+        navigationMapView.navigationCamera.update(cameraState: .overview)
+        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
+    }
+
+    @MainActor
+    func testCameraDoesNotChangeAutomaticallyToFollowingIfSwitchedToOverview() async {
+        let mock = CameraStateTransitionMock(navigationMapView.mapView)
+        navigationCamera.cameraStateTransition = mock
+        navigationMapView.navigationCamera.update(cameraState: .overview)
+
+        let expectation = expectation(description: "No transition expectation.")
+        expectation.isInverted = true
+        mock.transitionExpectation = expectation
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        await waitForLocationUpdate(location)
+
+        await fulfillment(of: [expectation], timeout: 2.0)
+        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
+    }
+
+    @MainActor
+    func testNavigationCameraOverviewStateDoesntChangeSecondTime() async {
         let mock = CameraStateTransitionMock(navigationMapView.mapView)
         navigationCamera.cameraStateTransition = mock
         let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
         await waitForLocationUpdate(location)
-        XCTAssertEqual(navigationCamera.currentCameraState, .following)
 
         let overviewExpectation = expectation(description: "Overview camera expectation.")
         mock.transitionExpectation = overviewExpectation
+        await waitForLocationUpdate(location)
 
         navigationMapView.navigationCamera.update(cameraState: .overview)
-        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
 
         await fulfillment(of: [overviewExpectation], timeout: 1.0)
 
@@ -136,16 +202,27 @@ class NavigationCameraTests: BaseTestCase {
     @MainActor
     func testCustomTransition() async {
         let cameraStateTransitionMock = CameraStateTransitionMock(navigationMapView.mapView)
-        navigationCamera.cameraStateTransition = cameraStateTransitionMock
+        navigationCamera = NavigationCamera(
+            navigationMapView.mapView,
+            location: locationPublisher.eraseToAnyPublisher(),
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            cameraStateTransition: cameraStateTransitionMock
+        )
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
         XCTAssertTrue(
-            navigationMapView.navigationCamera.cameraStateTransition is CameraStateTransitionMock,
+            navigationCamera.cameraStateTransition is CameraStateTransitionMock,
             "cameraStateTransition should have correct type."
         )
-
-        navigationCamera.update(cameraState: .following)
         let expectation = XCTestExpectation(description: "Custom transition expectation.")
         cameraStateTransitionMock.transitionExpectation = expectation
+
+        navigationCamera.update(cameraState: .following)
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        locationPublisher.send(location)
+
         await fulfillment(of: [expectation], timeout: 1)
+
+        XCTAssertEqual(navigationCamera.currentCameraState, .following)
     }
 
     @MainActor
@@ -153,14 +230,35 @@ class NavigationCameraTests: BaseTestCase {
         let viewportDataSourceMock = ViewportDataSourceMock()
         let cameraStateTransitionMock = CameraStateTransitionMock(navigationMapView.mapView)
 
-        navigationCamera.viewportDataSource = viewportDataSourceMock
-        navigationCamera.cameraStateTransition = cameraStateTransitionMock
+        navigationCamera = NavigationCamera(
+            navigationMapView.mapView,
+            location: locationPublisher.eraseToAnyPublisher(),
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            viewportDataSource: viewportDataSourceMock,
+            cameraStateTransition: cameraStateTransitionMock
+        )
         XCTAssertTrue(
-            navigationMapView.navigationCamera.viewportDataSource is ViewportDataSourceMock,
+            navigationCamera.viewportDataSource is ViewportDataSourceMock,
             "viewportDataSource should have correct type."
         )
 
+        let transitionExpectation = XCTestExpectation(description: "Custom transition expectation.")
+        cameraStateTransitionMock.transitionExpectation = transitionExpectation
+        let followingCameraExpectation = XCTestExpectation(description: "Camera options expectation.")
+        navigationCamera.cameraStates
+            .sink { state in
+                XCTAssertEqual(state, .following)
+                followingCameraExpectation.fulfill()
+            }.store(in: &subscriptions)
+
         navigationCamera.update(cameraState: .following)
+        let cameraCoordinate = CLLocationCoordinate2D(latitude: 37.765469, longitude: -122.415279)
+        viewportDataSourceMock._navigationCameraOptions.send(.init(
+            followingCamera: .init(center: cameraCoordinate)
+        ))
+        locationPublisher.send(.init(coordinate: cameraCoordinate))
+        await fulfillment(of: [transitionExpectation, followingCameraExpectation], timeout: 1)
+
         let coordinate = CLLocationCoordinate2D(latitude: 37.788443, longitude: -122.4020258)
         let cameraOptions = CameraOptions(
             center: coordinate,
@@ -177,6 +275,24 @@ class NavigationCameraTests: BaseTestCase {
         await fulfillment(of: [expectation], timeout: 1)
 
         XCTAssertEqual(cameraStateTransitionMock.passedUpdateCameraOptions, cameraOptions)
+    }
+
+    @MainActor
+    func testCustomViewportDataSourceWithEmptyCameraOptions() async {
+        let viewportDataSourceMock = ViewportDataSourceMock()
+        let cameraStateTransitionMock = CameraStateTransitionMock(navigationMapView.mapView)
+
+        navigationCamera.viewportDataSource = viewportDataSourceMock
+        navigationCamera.cameraStateTransition = cameraStateTransitionMock
+
+        let transitionExpectation = XCTestExpectation(description: "Custom transition expectation.")
+        transitionExpectation.isInverted = true
+        cameraStateTransitionMock.transitionExpectation = transitionExpectation
+
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        locationPublisher.send(location)
+
+        await fulfillment(of: [transitionExpectation], timeout: 1)
     }
 
     @MainActor

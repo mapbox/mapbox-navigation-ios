@@ -138,6 +138,7 @@ open class NavigationMapView: UIView {
             heading: heading,
             navigationCameraType: navigationCameraType
         )
+        navigationCamera.update(cameraState: .following)
         super.init(frame: Constants.initialMapRect)
 
         mapStyleManager.customizedLayerProvider = customizedLayerProvider
@@ -508,7 +509,6 @@ open class NavigationMapView: UIView {
     /// - Parameter navigationCameraState: The navigation camera state. See ``NavigationCameraState`` for the
     /// possible values.
     public func update(navigationCameraState: NavigationCameraState) {
-        guard navigationCameraState != navigationCamera.currentCameraState else { return }
         navigationCamera.update(cameraState: navigationCameraState)
     }
 
