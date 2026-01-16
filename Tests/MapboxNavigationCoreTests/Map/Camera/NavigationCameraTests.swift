@@ -84,8 +84,24 @@ class NavigationCameraTests: BaseTestCase {
     }
 
     @MainActor
-    func testNavigationCameraInitialFollowingStateWithInitialLocation() async {
-        XCTAssertEqual(navigationCamera.currentCameraState, .following)
+    func testNavigationMapInitialFollowingStateWithInitialLocation() async {
+        navigationMapView = .init(
+            location: locationPublisher.eraseToAnyPublisher(),
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher()
+        )
+        // Testing the default navigation map
+        if navigationCamera.currentCameraState == .idle {
+            let followingCameraExpectation = XCTestExpectation(description: "Camera options expectation.")
+            navigationCamera.cameraStates
+                .sink { state in
+                    XCTAssertEqual(state, .following)
+                    followingCameraExpectation.fulfill()
+                }.store(in: &subscriptions)
+            await fulfillment(of: [followingCameraExpectation], timeout: 1)
+            XCTAssertEqual(navigationCamera.currentCameraState, .following)
+        } else {
+            XCTAssertEqual(navigationCamera.currentCameraState, .following)
+        }
     }
 
     @MainActor
