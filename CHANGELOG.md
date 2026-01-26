@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* The `bearings` parameter is not included by default in Map Matching API requests because it is not supported. Along with `snapping_include_closures` and `snapping_include_static_closures`, this parameter is supported only by the Directions API.
+* Fixed missing `Waypoint.snapping_include_closures` and `Waypoint.snapping_include_static_closures` after encoding and decoding.
+
 ## 3.18.0
 
 ### Packaging

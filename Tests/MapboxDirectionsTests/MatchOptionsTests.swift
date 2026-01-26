@@ -84,7 +84,9 @@ class MatchOptionsTests: XCTestCase {
     }
 
     func testWaypointSerialization() {
-        let origin = Waypoint(coordinate: LocationCoordinate2D(latitude: 39.15031, longitude: -84.47182), name: "XU")
+        var origin = Waypoint(coordinate: LocationCoordinate2D(latitude: 39.15031, longitude: -84.47182), name: "XU")
+        origin.allowsSnappingToClosedRoad = true
+        origin.allowsSnappingToStaticallyClosedRoad = true
         let destination = Waypoint(
             coordinate: LocationCoordinate2D(latitude: 39.12971, longitude: -84.51638),
             name: "UC"
@@ -92,19 +94,28 @@ class MatchOptionsTests: XCTestCase {
         let options = MatchOptions(waypoints: [origin, destination])
         XCTAssertEqual(options.coordinates, "-84.47182,39.15031;-84.51638,39.12971")
         XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(name: "waypoint_names", value: "XU;UC")))
+
+        options.waypoints[0].heading = 90.0
+        options.waypoints[0].headingAccuracy = 1.0
+        XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains("bearings"))
+        XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains("snapping_include_static_closures"))
+        XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains("snapping_include_closures"))
     }
 
     func testRouteOptionsConvertedFromMatchOptions() {
-        let matchOpts = testMatchOptions
-        let subject = RouteOptions(matchOptions: matchOpts)
+        let matchOptions = testMatchOptions
+        matchOptions.waypoints[0].heading = 90.0
+        matchOptions.waypoints[0].headingAccuracy = 1.0
+        let subject = RouteOptions(matchOptions: matchOptions)
 
-        XCTAssertEqual(subject.includesSteps, matchOpts.includesSteps)
-        XCTAssertEqual(subject.shapeFormat, matchOpts.shapeFormat)
-        XCTAssertEqual(subject.attributeOptions, matchOpts.attributeOptions)
-        XCTAssertEqual(subject.routeShapeResolution, matchOpts.routeShapeResolution)
-        XCTAssertEqual(subject.locale, matchOpts.locale)
-        XCTAssertEqual(subject.includesSpokenInstructions, matchOpts.includesSpokenInstructions)
-        XCTAssertEqual(subject.includesVisualInstructions, matchOpts.includesVisualInstructions)
+        XCTAssertEqual(subject.includesSteps, matchOptions.includesSteps)
+        XCTAssertEqual(subject.shapeFormat, matchOptions.shapeFormat)
+        XCTAssertEqual(subject.attributeOptions, matchOptions.attributeOptions)
+        XCTAssertEqual(subject.routeShapeResolution, matchOptions.routeShapeResolution)
+        XCTAssertEqual(subject.locale, matchOptions.locale)
+        XCTAssertEqual(subject.includesSpokenInstructions, matchOptions.includesSpokenInstructions)
+        XCTAssertEqual(subject.includesVisualInstructions, matchOptions.includesVisualInstructions)
+        XCTAssertEqual(subject.bearings, "90.0,1.0;;")
     }
 }
 

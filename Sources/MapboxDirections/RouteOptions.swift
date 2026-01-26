@@ -223,6 +223,9 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         case departAt = "depart_at"
         case layers
         case includesTollPrices = "compute_toll_cost"
+        case bearings
+        case closureSnapping = "snapping_include_closures"
+        case staticClosureSnapping = "snapping_include_static_closures"
     }
 
     override open func encode(to encoder: Encoder) throws {
@@ -509,6 +512,26 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     /// Default value is `false`.
     open var includesTollPrices = false
 
+    var bearings: String? {
+        guard waypoints.contains(where: { $0.heading ?? -1 >= 0 }) else {
+            return nil
+        }
+        return waypoints.map(\.headingDescription).joined(separator: ";")
+    }
+
+    var closureSnapping: String? {
+        makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToClosedRoad)
+    }
+
+    var staticClosureSnapping: String? {
+        makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToStaticallyClosedRoad)
+    }
+
+    private func makeStringFromBoolProperties<T>(of elements: [T], for keyPath: KeyPath<T, Bool>) -> String? {
+        guard elements.contains(where: { $0[keyPath: keyPath] }) else { return nil }
+        return elements.map { $0[keyPath: keyPath] ? "true" : "" }.joined(separator: ";")
+    }
+
     // MARK: Getting the Request URL
 
     override open var urlQueryItems: [URLQueryItem] {
@@ -615,6 +638,25 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             params.append(URLQueryItem(
                 name: CodingKeys.includesTollPrices.stringValue,
                 value: includesTollPrices.queryString
+            ))
+        }
+
+        // Include headings and heading accuracies if any waypoint has a nonnegative heading.
+        if let bearings {
+            params.append(URLQueryItem(name: CodingKeys.bearings.stringValue, value: bearings))
+        }
+
+        if let closureSnapping {
+            params.append(URLQueryItem(
+                name: CodingKeys.closureSnapping.stringValue,
+                value: closureSnapping
+            ))
+        }
+
+        if let staticClosureSnapping {
+            params.append(URLQueryItem(
+                name: CodingKeys.staticClosureSnapping.stringValue,
+                value: staticClosureSnapping
             ))
         }
 

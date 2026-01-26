@@ -331,7 +331,9 @@ class RouteOptionsTests: XCTestCase {
     }
 
     func testWaypointSerialization() {
-        let origin = Waypoint(coordinate: LocationCoordinate2D(latitude: 39.15031, longitude: -84.47182), name: "XU")
+        var origin = Waypoint(coordinate: LocationCoordinate2D(latitude: 39.15031, longitude: -84.47182), name: "XU")
+        origin.allowsSnappingToClosedRoad = true
+        origin.allowsSnappingToStaticallyClosedRoad = true
         var destination = Waypoint(
             coordinate: LocationCoordinate2D(latitude: 39.12971, longitude: -84.51638),
             name: "UC"
@@ -344,6 +346,11 @@ class RouteOptionsTests: XCTestCase {
             name: "waypoint_targets",
             value: ";-84.51619,39.13115"
         )))
+        XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(
+            name: "snapping_include_static_closures",
+            value: "true;"
+        )))
+        XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(name: "snapping_include_closures", value: "true;")))
     }
 
     func testWaypointLayers() {
@@ -534,6 +541,37 @@ class RouteOptionsTests: XCTestCase {
 
         options.profileIdentifier = .walking
         XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains("depart_at"))
+    }
+
+    func testBearingsQueryItem() {
+        let bearingsKey = "bearings"
+
+        let options = RouteOptions(coordinates: testCoordinates)
+        XCTAssertNil(options.bearings)
+        XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains(bearingsKey))
+
+        options.waypoints[0].heading = -1
+        XCTAssertNil(options.bearings)
+        XCTAssertFalse(options.urlQueryItems.map { $0.name }.contains(bearingsKey))
+
+        options.waypoints[0].heading = 90.0
+        let expectedBearings1 = ";;"
+        XCTAssertEqual(options.bearings, expectedBearings1)
+        XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(name: bearingsKey, value: expectedBearings1)))
+
+        options.waypoints[0].heading = 90.0
+        options.waypoints[0].headingAccuracy = 1.0
+        let expectedBearings2 = "90.0,1.0;;"
+        XCTAssertEqual(options.bearings, expectedBearings2)
+        XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(name: bearingsKey, value: expectedBearings2)))
+
+        options.waypoints[1].heading = 180.0
+        options.waypoints[1].headingAccuracy = 99.0
+        options.waypoints[2].heading = 181.55
+        options.waypoints[2].headingAccuracy = 100.0
+        let expectedBearings3 = "90.0,1.0;180.0,99.0;181.55,100.0"
+        XCTAssertEqual(options.bearings, expectedBearings3)
+        XCTAssertTrue(options.urlQueryItems.contains(URLQueryItem(name: bearingsKey, value: expectedBearings3)))
     }
 }
 

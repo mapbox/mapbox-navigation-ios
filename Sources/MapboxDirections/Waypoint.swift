@@ -23,6 +23,8 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         case snappedDistance = "distance"
         case layer
         case timeZone = "time_zone"
+        case allowsSnappingToClosedRoad = "snapping_include_closures"
+        case allowsSnappingToStaticallyClosedRoad = "snapping_include_static_closures"
     }
 
     // MARK: Creating a Waypoint
@@ -40,8 +42,13 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         )?.decoded
 
         self.heading = try container.decodeIfPresent(LocationDirection.self, forKey: .heading)
-
         self.headingAccuracy = try container.decodeIfPresent(LocationDirection.self, forKey: .headingAccuracy)
+        self.allowsSnappingToClosedRoad = try container
+            .decodeIfPresent(Bool.self, forKey: .allowsSnappingToClosedRoad) ?? false
+        self.allowsSnappingToStaticallyClosedRoad = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .allowsSnappingToStaticallyClosedRoad
+        ) ?? false
 
         if let separates = try container.decodeIfPresent(Bool.self, forKey: .separatesLegs) {
             self.separatesLegs = separates
@@ -83,6 +90,15 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         try container.encodeIfPresent(snappedDistance, forKey: .snappedDistance)
         try container.encodeIfPresent(layer, forKey: .layer)
         try container.encodeIfPresent(timeZone, forKey: .timeZone)
+        if allowsSnappingToClosedRoad {
+            try container.encode(allowsSnappingToClosedRoad, forKey: .allowsSnappingToClosedRoad)
+        }
+        if allowsSnappingToStaticallyClosedRoad {
+            try container.encode(
+                allowsSnappingToStaticallyClosedRoad,
+                forKey: .allowsSnappingToStaticallyClosedRoad
+            )
+        }
 
         try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
     }

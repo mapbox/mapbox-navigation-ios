@@ -477,11 +477,6 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
             queryItems.append(URLQueryItem(name: "banner_instructions", value: String(includesVisualInstructions)))
         }
 
-        // Include headings and heading accuracies if any waypoint has a nonnegative heading.
-        if let bearings {
-            queryItems.append(URLQueryItem(name: "bearings", value: bearings))
-        }
-
         // Include location accuracies if any waypoint has a nonnegative coordinate accuracy.
         if let radiuses {
             queryItems.append(URLQueryItem(name: "radiuses", value: radiuses))
@@ -499,22 +494,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
             queryItems.append(URLQueryItem(name: "waypoint_names", value: names))
         }
 
-        if let snapping = closureSnapping {
-            queryItems.append(URLQueryItem(name: "snapping_include_closures", value: snapping))
-        }
-
-        if let staticClosureSnapping {
-            queryItems.append(URLQueryItem(name: "snapping_include_static_closures", value: staticClosureSnapping))
-        }
-
         return queryItems
-    }
-
-    var bearings: String? {
-        guard waypoints.contains(where: { $0.heading ?? -1 >= 0 }) else {
-            return nil
-        }
-        return waypoints.map(\.headingDescription).joined(separator: ";")
     }
 
     var radiuses: String? {
@@ -565,19 +545,6 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
 
     var coordinates: String? {
         return waypoints.map(\.coordinate.requestDescription).joined(separator: ";")
-    }
-
-    var closureSnapping: String? {
-        makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToClosedRoad)
-    }
-
-    var staticClosureSnapping: String? {
-        makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToStaticallyClosedRoad)
-    }
-
-    private func makeStringFromBoolProperties<T>(of elements: [T], for keyPath: KeyPath<T, Bool>) -> String? {
-        guard elements.contains(where: { $0[keyPath: keyPath] }) else { return nil }
-        return elements.map { $0[keyPath: keyPath] ? "true" : "" }.joined(separator: ";")
     }
 
     var httpBody: String {

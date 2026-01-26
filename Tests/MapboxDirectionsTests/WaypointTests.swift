@@ -40,6 +40,8 @@ class WaypointTests: XCTestCase {
             XCTAssertEqual(waypoint.timeZone, timeZoneRepresentation)
             XCTAssertNotNil(waypoint.timeZone?.timeZone)
             XCTAssertNil(waypoint.layer)
+            XCTAssertFalse(waypoint.allowsSnappingToClosedRoad)
+            XCTAssertFalse(waypoint.allowsSnappingToStaticallyClosedRoad)
         }
 
         waypoint = Waypoint(
@@ -97,6 +99,44 @@ class WaypointTests: XCTestCase {
 
             XCTAssert(JSONSerialization.objectsAreEqual(waypointJSON, encodedWaypointJSON, approximate: true))
         }
+    }
+
+    func testEncodingAllowsSnappingToStaticallyClosedRoad() {
+        var waypoint = Waypoint(coordinate: LocationCoordinate2D(latitude: 1, longitude: 1))
+        waypoint.allowsSnappingToStaticallyClosedRoad = true
+        let encoder = JSONEncoder()
+        var encodedData: Data!
+        XCTAssertNoThrow(encodedData = try encoder.encode(waypoint))
+
+        var encodedJSON: [String: Any?]?
+        XCTAssertNoThrow(
+            encodedJSON = try JSONSerialization.jsonObject(with: encodedData, options: []) as? [String: Any?]
+        )
+        XCTAssertNotNil(encodedJSON)
+        XCTAssertEqual(encodedJSON?["snapping_include_static_closures"] as? Bool, true)
+
+        let decoder = JSONDecoder()
+        let decoded = try! decoder.decode(Waypoint.self, from: encodedData)
+        XCTAssertTrue(decoded.allowsSnappingToStaticallyClosedRoad)
+    }
+
+    func testEncodingAllowsSnappingToClosedRoad() {
+        var waypoint = Waypoint(coordinate: LocationCoordinate2D(latitude: 1, longitude: 1))
+        waypoint.allowsSnappingToClosedRoad = true
+        let encoder = JSONEncoder()
+        var encodedData: Data!
+        XCTAssertNoThrow(encodedData = try encoder.encode(waypoint))
+
+        var encodedJSON: [String: Any?]?
+        XCTAssertNoThrow(
+            encodedJSON = try JSONSerialization.jsonObject(with: encodedData, options: []) as? [String: Any?]
+        )
+        XCTAssertNotNil(encodedJSON)
+        XCTAssertEqual(encodedJSON?["snapping_include_closures"] as? Bool, true)
+
+        let decoder = JSONDecoder()
+        let decoded = try! decoder.decode(Waypoint.self, from: encodedData)
+        XCTAssertTrue(decoded.allowsSnappingToClosedRoad)
     }
 
     @available(*, deprecated, message: "To test deprecated waypointIndices")
@@ -248,15 +288,12 @@ class WaypointTests: XCTestCase {
         matchOptions.waypoints[1].allowsSnappingToStaticallyClosedRoad = true
 
         XCTAssertEqual(routeOptions.urlQueryItems.first { $0.name == "snapping_include_closures" }?.value, ";true;")
-        XCTAssertEqual(matchOptions.urlQueryItems.first { $0.name == "snapping_include_closures" }?.value, ";true;")
+        XCTAssertFalse(matchOptions.urlQueryItems.map { $0.name }.contains("snapping_include_closures"))
         XCTAssertEqual(
             routeOptions.urlQueryItems.first { $0.name == "snapping_include_static_closures" }?.value,
             ";true;"
         )
-        XCTAssertEqual(
-            matchOptions.urlQueryItems.first { $0.name == "snapping_include_static_closures" }?.value,
-            ";true;"
-        )
+        XCTAssertFalse(matchOptions.urlQueryItems.map { $0.name }.contains("snapping_include_static_closures"))
     }
 
     func testClosedRoadSnappingNotSet() {
