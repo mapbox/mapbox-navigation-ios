@@ -34,6 +34,13 @@ let listOfExamples: [NamedController] = [
         pushExampleToViewController: false
     ),
     .init(
+        name: "Building Annotation",
+        description: "Demonstrates building annotation with a multi-waypoint route in San Francisco.",
+        controller: BuildingAnnotationViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
+    .init(
         name: "Multiple Waypoints",
         description: "Demonstrates how to create a route with multiple waypoints.",
         controller: MultiWaypointViewController.self,

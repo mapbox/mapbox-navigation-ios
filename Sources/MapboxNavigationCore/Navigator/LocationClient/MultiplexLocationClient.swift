@@ -83,11 +83,12 @@ public final class MultiplexLocationClient: @unchecked Sendable {
         Task { @MainActor in
             let newLocationClient: LocationClient
             switch source {
-            case .simulation(let location):
+            case .simulation(let location, let speedMultiplier):
                 newLocationClient = .simulatedLocationManager(
                     routeProgress: routeProgress,
                     rerouteEvents: rerouteEvents,
-                    initialLocation: location
+                    initialLocation: location,
+                    speedMultiplier: speedMultiplier
                 )
                 if let location {
                     locations.send(location)

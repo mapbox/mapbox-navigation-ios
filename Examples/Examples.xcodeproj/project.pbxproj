@@ -116,6 +116,10 @@
 		2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9A5D12DD7481D00069654 /* MultiWaypoint.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
+		66E296D72F2BD15800EF1F51 /* BuildingAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296D52F2BD15800EF1F51 /* BuildingAnnotationViewController.swift */; };
+		66E296D92F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */; };
+		66E296DB2F2BF2D400EF1F51 /* BuildingAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */; };
+		66E296DD2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */; };
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
@@ -266,6 +270,10 @@
 		2CE469202BA31CF20075A32B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		66E296D52F2BD15800EF1F51 /* BuildingAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotationViewController.swift; sourceTree = "<group>"; };
+		66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+BuildingQuery.swift"; sourceTree = "<group>"; };
+		66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotation.swift; sourceTree = "<group>"; };
+		66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotationManager.swift; sourceTree = "<group>"; };
 		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
@@ -374,6 +382,7 @@
 		2CA319FF2BC9878A0071176E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				66E296D62F2BD15800EF1F51 /* BuildingAnnotation */,
 				2C27B0F82C9DD359005B1484 /* RoadObjects */,
 				2CA31A022BC9878A0071176E /* Advanced.swift */,
 				2CA31A062BC9878A0071176E /* Basic.swift */,
@@ -550,6 +559,17 @@
 				2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */,
 			);
 			path = CoreSDKExample;
+			sourceTree = "<group>";
+		};
+		66E296D62F2BD15800EF1F51 /* BuildingAnnotation */ = {
+			isa = PBXGroup;
+			children = (
+				66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */,
+				66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */,
+				66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */,
+				66E296D52F2BD15800EF1F51 /* BuildingAnnotationViewController.swift */,
+			);
+			path = BuildingAnnotation;
 			sourceTree = "<group>";
 		};
 		F60DFC802E28EEBA00C37E6E /* CustomRouteCallouts */ = {
@@ -906,11 +926,14 @@
 				2C5D23DE2BF7B3FF00194158 /* Custom-Final-Waypoint.swift in Sources */,
 				DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */,
 				F60DFC842E2E3B1100C37E6E /* CustomRouteCallouts.swift in Sources */,
+				66E296DD2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift in Sources */,
 				F60DFC812E28EEBA00C37E6E /* CustomRouteCalloutView.swift in Sources */,
+				66E296D72F2BD15800EF1F51 /* BuildingAnnotationViewController.swift in Sources */,
 				F60DFC822E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
+				66E296DB2F2BF2D400EF1F51 /* BuildingAnnotation.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
@@ -925,6 +948,7 @@
 				2CA31A1E2BC9878A0071176E /* Beta-Query-Parameters.swift in Sources */,
 				2C27B0F72C9DC20D005B1484 /* Custom-Road-Objects.swift in Sources */,
 				2CA31A122BC9878A0071176E /* ExampleContainerViewController.swift in Sources */,
+				66E296D92F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift in Sources */,
 				2CA31A112BC9878A0071176E /* Constants.swift in Sources */,
 				2CA31A182BC9878A0071176E /* Advanced.swift in Sources */,
 				2CA31A232BC9878A0071176E /* AppDelegate.swift in Sources */,

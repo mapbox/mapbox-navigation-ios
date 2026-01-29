@@ -28,6 +28,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
     @MainActor
     init(
         initialLocation: CLLocation?,
+        speedMultiplier: Double = 1,
         queue: DispatchQueue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
     ) {
         self.simulatedLocation = initialLocation
@@ -35,6 +36,7 @@ final class SimulatedLocationManager: NavigationLocationManager, @unchecked Send
 
         super.init()
 
+        self.speedMultiplier = speedMultiplier
         restartTimer()
     }
 

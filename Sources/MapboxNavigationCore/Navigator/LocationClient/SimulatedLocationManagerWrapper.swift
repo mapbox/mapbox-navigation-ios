@@ -6,12 +6,14 @@ extension LocationClient {
     static func simulatedLocationManager(
         routeProgress: AnyPublisher<RouteProgressState?, Never>,
         rerouteEvents: AnyPublisher<RouteProgress?, Never>,
-        initialLocation: CLLocation?
+        initialLocation: CLLocation?,
+        speedMultiplier: Double = 1
     ) -> Self {
         let wrapper = SimulatedLocationManagerWrapper(
             routeProgress: routeProgress,
             rerouteEvents: rerouteEvents,
-            initialLocation: initialLocation
+            initialLocation: initialLocation,
+            speedMultiplier: speedMultiplier
         )
         return Self(
             locations: wrapper.locations,
@@ -40,9 +42,10 @@ private class SimulatedLocationManagerWrapper: NavigationLocationManagerDelegate
     init(
         routeProgress: AnyPublisher<RouteProgressState?, Never>,
         rerouteEvents: AnyPublisher<RouteProgress?, Never>,
-        initialLocation: CLLocation?
+        initialLocation: CLLocation?,
+        speedMultiplier: Double = 1
     ) {
-        self.manager = SimulatedLocationManager(initialLocation: initialLocation)
+        self.manager = SimulatedLocationManager(initialLocation: initialLocation, speedMultiplier: speedMultiplier)
         manager.locationDelegate = self
 
         routeProgress.sink { [weak self] in
