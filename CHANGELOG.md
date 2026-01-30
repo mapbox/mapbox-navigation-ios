@@ -12,6 +12,10 @@
 * The `bearings` parameter is not included by default in Map Matching API requests because it is not supported. Along with `snapping_include_closures` and `snapping_include_static_closures`, this parameter is supported only by the Directions API.
 * Fixed missing `Waypoint.snapping_include_closures` and `Waypoint.snapping_include_static_closures` after encoding and decoding.
 
+### Map
+
+* Fixed an issue where the puck appeared beneath road names and map annotations.
+
 ## 3.18.0
 
 ### Packaging
