@@ -30,7 +30,7 @@ public final class RouteInterfaceMock: RouteInterface {
     public var routeId: String
     public var responseUuid: String
     public var routeIndex: UInt32
-    public var responseJsonRef: MapboxCommon.DataRef
+    public var responseJsonRef: DataRef
     public var requestUri: String
     public var routerOrigin: RouterOrigin
     public var routeInfo: RouteInfo
@@ -39,6 +39,7 @@ public final class RouteInterfaceMock: RouteInterface {
     public var lastRefreshTimestamp: Date?
     public var routeGeometry: [Coordinate2D]
     public var mapboxApi: MapboxAPI
+    public var directionsRouteContextRef: DataRef
 
     public convenience init(
         route: Route,
@@ -67,7 +68,8 @@ public final class RouteInterfaceMock: RouteInterface {
         expirationTimeMs: NSNumber? = nil,
         lastRefreshTimestamp: Date? = nil,
         routeGeometry: [Coordinate2D] = [],
-        mapboxApi: MapboxAPI = .directions
+        mapboxApi: MapboxAPI = .directions,
+        directionsRouteContextRef: DataRef = DataRef(data: Data())
     ) {
         self.routeId = routeId
         self.responseUuid = responseUuid
@@ -81,6 +83,7 @@ public final class RouteInterfaceMock: RouteInterface {
         self.lastRefreshTimestamp = lastRefreshTimestamp
         self.routeGeometry = routeGeometry
         self.mapboxApi = mapboxApi
+        self.directionsRouteContextRef = directionsRouteContextRef
     }
 
     public func getRouteId() -> String { routeId }
@@ -89,7 +92,7 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public func getRouteIndex() -> UInt32 { routeIndex }
 
-    public func getResponseJsonRef() -> MapboxCommon.DataRef { responseJsonRef }
+    public func getResponseJsonRef() -> DataRef { responseJsonRef }
 
     public func getRequestUri() -> String { requestUri }
 
@@ -106,4 +109,6 @@ public final class RouteInterfaceMock: RouteInterface {
     public func getRouteGeometry() -> [Coordinate2D] { routeGeometry }
 
     public func getMapboxAPI() -> MapboxAPI { mapboxApi }
+
+    public func getDirectionsRouteContextRef() -> DataRef { directionsRouteContextRef }
 }
