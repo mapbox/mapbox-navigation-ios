@@ -149,6 +149,7 @@ extension BuildingAnnotationViewController: NavigationViewControllerDelegate {
                         }
 
                         // Create and add building annotation with extracted height
+                        // Color and opacity will use manager defaults
                         let annotation = BuildingAnnotation(
                             coordinates: points,
                             fillExtrusionHeight: extractHeight(from: building)

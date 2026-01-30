@@ -11,26 +11,32 @@ import UIKit
 
 /// Manages a collection of building annotations on the map.
 ///
+/// The manager provides default values for all fill extrusion properties. Individual annotations
+/// can override these defaults by specifying their own values.
+///
 /// **Note:** Due to FillExtrusionLayer limitations, `fillExtrusionOpacity` is applied uniformly
-/// to all buildings (default: 0.8). Individual annotation opacity values are ignored.
-/// Color, height, and base elevation can be customized per-building.
+/// to all buildings. Individual annotation opacity values are ignored.
 ///
 /// ## Example Usage
 /// ```swift
 /// let manager = BuildingAnnotationManager(mapView: mapView)
-/// manager.fillExtrusionOpacity = 0.9  // Optional: adjust opacity for all buildings
+/// // Set defaults for all annotations
+/// manager.fillExtrusionColor = .green
+/// manager.fillExtrusionOpacity = 0.9
+/// manager.fillExtrusionHeight = 50.0
 ///
-/// let annotation = BuildingAnnotation(
-///     coordinates: points,
-///     fillExtrusionHeight: 50.0
-/// )
-/// manager.annotations = [annotation]
+/// manager.annotations = [
+///     BuildingAnnotation(coordinates: building1Points),  // Uses manager defaults
+///     BuildingAnnotation(coordinates: building2Points, fillExtrusionHeight: 75.0)  // Overrides height
+/// ]
 /// ```
 @MainActor
 public final class BuildingAnnotationManager {
+    private static var idGenerator: Int = 0
+
     private let mapView: MapView
-    private let sourceId = "building-annotation-source"
-    private let layerId = "building-annotation-layer"
+    private let sourceId: String
+    private let layerId: String
     private var isInitialized = false
 
     /// Setting this property updates the map with the new annotations.
@@ -41,11 +47,16 @@ public final class BuildingAnnotationManager {
         }
     }
 
-    // MARK: - Layer-Level Properties
+    /// The default fillExtrusionColor for all annotations if not overwritten by individual annotation settings.
+    /// Default value: blue (hsl(214, 94%, 59%) = #3489F9)
+    public var fillExtrusionColor: UIColor = UIColor(red: 0.204, green: 0.537, blue: 0.976, alpha: 1.0) {
+        didSet {
+            updateAnnotations()
+        }
+    }
 
-    /// The opacity at which all building extrusions will be drawn.
-    ///
-    /// This is a layer-level property that applies to all annotations uniformly.
+    /// The default fillExtrusionOpacity for all annotations.
+    /// This is a layer-level property that applies uniformly to all annotations.
     /// Individual annotation `fillExtrusionOpacity` values are ignored.
     /// Value range: [0, 1], where 0 is fully transparent and 1 is fully opaque.
     /// Default value: 0.8
@@ -55,11 +66,34 @@ public final class BuildingAnnotationManager {
         }
     }
 
+    /// The default fillExtrusionHeight for all annotations if not overwritten by individual annotation settings.
+    /// Default value: 50.0 meters
+    public var fillExtrusionHeight: Double = 50.0 {
+        didSet {
+            updateAnnotations()
+        }
+    }
+
+    /// The default fillExtrusionBase for all annotations if not overwritten by individual annotation settings.
+    /// Default value: 0.0 meters
+    public var fillExtrusionBase: Double = 0.0 {
+        didSet {
+            updateAnnotations()
+        }
+    }
+
     /// Creates a new building annotation manager.
     ///
     /// - Parameter mapView: The map view to add annotations to
     public init(mapView: MapView) {
         self.mapView = mapView
+
+        // Generate unique IDs for this manager instance
+        Self.idGenerator += 1
+        let id = Self.idGenerator
+        self.sourceId = "building-annotation-source-\(id)"
+        self.layerId = "building-annotation-layer-\(id)"
+
         setupLayer()
     }
 
@@ -88,16 +122,8 @@ public final class BuildingAnnotationManager {
         guard isInitialized else { return }
 
         // Convert annotations to GeoJSON features with properties
-        // Note: opacity is set as constant on the layer, not per-feature
-        let features: [Feature] = annotations.map { annotation in
-            var feature = Feature(geometry: .polygon(Polygon([annotation.coordinates])))
-            feature.properties = [
-                "color": .string(StyleColor(annotation.fillExtrusionColor).rawValue),
-                "height": .number(annotation.fillExtrusionHeight),
-                "base": .number(annotation.fillExtrusionBase)
-            ]
-            return feature
-        }
+        // Use manager defaults for properties not specified by individual annotations
+        let features: [Feature] = annotations.map { createFeature(from: $0) }
 
         // Update source with new FeatureCollection
         let featureCollection = FeatureCollection(features: features)
@@ -105,6 +131,16 @@ public final class BuildingAnnotationManager {
             withId: sourceId,
             geoJSON: .featureCollection(featureCollection)
         )
+    }
+
+    private func createFeature(from annotation: BuildingAnnotation) -> Feature {
+        var feature = Feature(geometry: .polygon(Polygon([annotation.coordinates])))
+        feature.properties = [
+            "color": .string(StyleColor(annotation.fillExtrusionColor ?? fillExtrusionColor).rawValue),
+            "height": .number(annotation.fillExtrusionHeight ?? fillExtrusionHeight),
+            "base": .number(annotation.fillExtrusionBase ?? fillExtrusionBase)
+        ]
+        return feature
     }
 
     private func updateLayerOpacity() {
@@ -120,11 +156,6 @@ public final class BuildingAnnotationManager {
 
 extension BuildingAnnotation: Equatable {
     public static func == (lhs: BuildingAnnotation, rhs: BuildingAnnotation) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.coordinates.count == rhs.coordinates.count &&
-        lhs.fillExtrusionColor == rhs.fillExtrusionColor &&
-        lhs.fillExtrusionOpacity == rhs.fillExtrusionOpacity &&
-        lhs.fillExtrusionHeight == rhs.fillExtrusionHeight &&
-        lhs.fillExtrusionBase == rhs.fillExtrusionBase
+        lhs.id == rhs.id
     }
 }

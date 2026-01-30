@@ -40,27 +40,27 @@ public struct BuildingAnnotation {
     public let id: String
 
     public var coordinates: [CLLocationCoordinate2D]
-    public var fillExtrusionColor: UIColor
-    public var fillExtrusionOpacity: Double
-    public var fillExtrusionHeight: Double
-    public var fillExtrusionBase: Double
+    public var fillExtrusionColor: UIColor?
+    public var fillExtrusionOpacity: Double?
+    public var fillExtrusionHeight: Double?
+    public var fillExtrusionBase: Double?
 
     /// Creates a new building annotation.
     ///
     /// - Parameters:
     ///   - id: Unique identifier for this annotation (default: auto-generated UUID)
     ///   - coordinates: The list of coordinates for the building footprint polygon
-    ///   - fillExtrusionColor: The color of the building extrusion (default: blue hsl(214, 94%, 59%) = #3489F9)
-    ///   - fillExtrusionOpacity: The opacity of the building extrusion (0.0-1.0, default: 0.8)
-    ///   - fillExtrusionHeight: The height of the building extrusion in meters (default: 50.0)
-    ///   - fillExtrusionBase: The base elevation of the building extrusion in meters (default: 0.0)
+    ///   - fillExtrusionColor: The color of the building extrusion (default: nil, inherits from manager)
+    ///   - fillExtrusionOpacity: The opacity of the building extrusion (default: nil, inherits from manager)
+    ///   - fillExtrusionHeight: The height of the building extrusion in meters (default: nil, inherits from manager)
+    ///   - fillExtrusionBase: The base elevation of the building extrusion in meters (default: nil, inherits from manager)
     public init(
         id: String = UUID().uuidString,
         coordinates: [CLLocationCoordinate2D],
-        fillExtrusionColor: UIColor = UIColor(red: 0.204, green: 0.537, blue: 0.976, alpha: 1.0),
-        fillExtrusionOpacity: Double = 0.8,
-        fillExtrusionHeight: Double = 50.0,
-        fillExtrusionBase: Double = 0.0
+        fillExtrusionColor: UIColor? = nil,
+        fillExtrusionOpacity: Double? = nil,
+        fillExtrusionHeight: Double? = nil,
+        fillExtrusionBase: Double? = nil
     ) {
         self.id = id
         self.coordinates = coordinates
@@ -118,10 +118,10 @@ extension BuildingAnnotation: MapStyleContent {
             .data(.geometry(.polygon(Polygon([coordinates]))))
 
         FillExtrusionLayer(id: layerId, source: sourceId)
-            .fillExtrusionColor(fillExtrusionColor)
-            .fillExtrusionHeight(fillExtrusionHeight)
-            .fillExtrusionBase(fillExtrusionBase)
-            .fillExtrusionOpacity(fillExtrusionOpacity)
+            .fillExtrusionColor(fillExtrusionColor ?? UIColor(red: 0.204, green: 0.537, blue: 0.976, alpha: 1.0))
+            .fillExtrusionHeight(fillExtrusionHeight ?? 50.0)
+            .fillExtrusionBase(fillExtrusionBase ?? 0.0)
+            .fillExtrusionOpacity(fillExtrusionOpacity ?? 0.8)
     }
 }
 #endif

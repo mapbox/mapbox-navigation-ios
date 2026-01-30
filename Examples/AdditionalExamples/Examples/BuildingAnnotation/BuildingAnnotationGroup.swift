@@ -16,6 +16,9 @@ import Turf
 /// When displaying multiple annotations, `BuildingAnnotationGroup` is more performant than
 /// individual annotations since only one underlying source and layer is used.
 ///
+/// The group provides default values for all fill extrusion properties. Individual annotations
+/// can override these defaults by specifying their own values.
+///
 /// **Note:** Due to FillExtrusionLayer limitations, `fillExtrusionOpacity` is applied uniformly
 /// to all buildings in the group. Individual annotation opacity values are ignored.
 ///
@@ -25,16 +28,16 @@ import Turf
 ///     BuildingAnnotationGroup(buildings, id: \.id) { building in
 ///         BuildingAnnotation(coordinates: building.coordinates)
 ///             .fillExtrusionHeight(building.height)
-///             .fillExtrusionColor(building.color)
 ///     }
-///     .fillExtrusionOpacity(0.9)  // Optional: group-level opacity
+///     .fillExtrusionColor(.green)  // Default color for all
+///     .fillExtrusionOpacity(0.9)   // Group-level opacity
 /// }
 /// ```
 @available(iOS 14.0, *)
 public struct BuildingAnnotationGroup<Data: RandomAccessCollection, ID: Hashable> {
     let annotations: [(ID, BuildingAnnotation)]
 
-    // Group-level property overrides
+    // Group-level property defaults
     private var fillExtrusionColor: UIColor?
     private var fillExtrusionOpacity: Double?
     private var fillExtrusionHeight: Double?
@@ -116,26 +119,23 @@ public struct BuildingAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private func buildFeatureCollection() -> FeatureCollection {
-        let features: [Feature] = annotations.map { (_, annotation) in
-            var annotation = annotation
+        // Default values matching BuildingAnnotationManager
+        let defaultColor = UIColor(red: 0.204, green: 0.537, blue: 0.976, alpha: 1.0)
+        let defaultHeight = 50.0
+        let defaultBase = 0.0
 
-            // Apply group-level property overrides
-            if let color = fillExtrusionColor {
-                annotation = annotation.fillExtrusionColor(color)
-            }
-            if let height = fillExtrusionHeight {
-                annotation = annotation.fillExtrusionHeight(height)
-            }
-            if let base = fillExtrusionBase {
-                annotation = annotation.fillExtrusionBase(base)
-            }
+        let features: [Feature] = annotations.map { (_, annotation) in
+            // Use annotation values, fallback to group-level overrides, then to defaults
+            let color = annotation.fillExtrusionColor ?? fillExtrusionColor ?? defaultColor
+            let height = annotation.fillExtrusionHeight ?? fillExtrusionHeight ?? defaultHeight
+            let base = annotation.fillExtrusionBase ?? fillExtrusionBase ?? defaultBase
 
             // Create feature with polygon geometry
             var feature = Feature(geometry: .polygon(Polygon([annotation.coordinates])))
             feature.properties = [
-                "color": .string(StyleColor(annotation.fillExtrusionColor).rawValue),
-                "height": .number(annotation.fillExtrusionHeight),
-                "base": .number(annotation.fillExtrusionBase)
+                "color": .string(StyleColor(color).rawValue),
+                "height": .number(height),
+                "base": .number(base)
             ]
             return feature
         }
