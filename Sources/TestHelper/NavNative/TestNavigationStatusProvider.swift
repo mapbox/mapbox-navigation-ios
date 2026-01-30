@@ -105,6 +105,7 @@ public enum TestNavigationStatusProvider {
             stale: false,
             location: fixLocation,
             isFallback: false,
+            fallbackReason: .none,
             inTunnel: false,
             inParkingAisle: false,
             inRoundabout: false,
