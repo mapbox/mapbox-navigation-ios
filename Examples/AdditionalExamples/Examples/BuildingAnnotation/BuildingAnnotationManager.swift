@@ -11,24 +11,47 @@ import UIKit
 
 /// Manages a collection of building annotations on the map.
 ///
+/// **Note:** Due to FillExtrusionLayer limitations, `fillExtrusionOpacity` is applied uniformly
+/// to all buildings (default: 0.8). Individual annotation opacity values are ignored.
+/// Color, height, and base elevation can be customized per-building.
+///
 /// ## Example Usage
 /// ```swift
 /// let manager = BuildingAnnotationManager(mapView: mapView)
-/// var annotation = BuildingAnnotation(
-///     id: "building-1",
-///     coordinates: points
+/// manager.fillExtrusionOpacity = 0.9  // Optional: adjust opacity for all buildings
+///
+/// let annotation = BuildingAnnotation(
+///     coordinates: points,
+///     fillExtrusionHeight: 50.0
 /// )
-/// annotation.fillExtrusionColor = .red
 /// manager.annotations = [annotation]
 /// ```
 @MainActor
 public final class BuildingAnnotationManager {
     private let mapView: MapView
+    private let sourceId = "building-annotation-source"
+    private let layerId = "building-annotation-layer"
+    private var isInitialized = false
 
-    /// Setting this property updates the map by removing old annotations and adding new ones.
+    /// Setting this property updates the map with the new annotations.
+    /// Uses a single source and layer with data-driven styling for efficient batch updates.
     public var annotations: [BuildingAnnotation] = [] {
         didSet {
-            syncAnnotations(oldAnnotations: oldValue, newAnnotations: annotations)
+            updateAnnotations()
+        }
+    }
+
+    // MARK: - Layer-Level Properties
+
+    /// The opacity at which all building extrusions will be drawn.
+    ///
+    /// This is a layer-level property that applies to all annotations uniformly.
+    /// Individual annotation `fillExtrusionOpacity` values are ignored.
+    /// Value range: [0, 1], where 0 is fully transparent and 1 is fully opaque.
+    /// Default value: 0.8
+    public var fillExtrusionOpacity: Double = 0.8 {
+        didSet {
+            updateLayerOpacity()
         }
     }
 
@@ -37,57 +60,63 @@ public final class BuildingAnnotationManager {
     /// - Parameter mapView: The map view to add annotations to
     public init(mapView: MapView) {
         self.mapView = mapView
+        setupLayer()
     }
 
-    private func syncAnnotations(oldAnnotations: [BuildingAnnotation], newAnnotations: [BuildingAnnotation]) {
-        // Create lookup sets for efficient comparison
-        let oldIds = Set(oldAnnotations.map { $0.id })
-        let newIds = Set(newAnnotations.map { $0.id })
+    private func setupLayer() {
+        guard !isInitialized else { return }
 
-        // Remove annotations that are no longer in the array
-        let idsToRemove = oldIds.subtracting(newIds)
-        for annotation in oldAnnotations where idsToRemove.contains(annotation.id) {
-            removeAnnotation(annotation)
-        }
+        // Create source with empty FeatureCollection
+        var source = GeoJSONSource(id: sourceId)
+        source.data = .featureCollection(FeatureCollection(features: []))
 
-        // Add or update annotations
-        for annotation in newAnnotations {
-            if oldIds.contains(annotation.id) {
-                let oldAnnotation = oldAnnotations.first { $0.id == annotation.id }
-                if oldAnnotation != annotation {
-                    removeAnnotation(annotation)
-                    addAnnotation(annotation)
-                }
-            } else {
-                // Add new annotation
-                addAnnotation(annotation)
-            }
-        }
-    }
-
-    private func addAnnotation(_ annotation: BuildingAnnotation) {
-        let polygon = Polygon([annotation.coordinates])
-
-        var source = GeoJSONSource(id: annotation.sourceId)
-        source.data = .geometry(.polygon(polygon))
-
-        var layer = FillExtrusionLayer(id: annotation.layerId, source: annotation.sourceId)
-        layer.fillExtrusionColor = .constant(StyleColor(annotation.fillExtrusionColor))
-        layer.fillExtrusionOpacity = .constant(annotation.fillExtrusionOpacity)
-        layer.fillExtrusionHeight = .constant(annotation.fillExtrusionHeight)
-        layer.fillExtrusionBase = .constant(annotation.fillExtrusionBase)
+        // Create layer with data-driven styling using expressions
+        // Note: fillExtrusionOpacity must be constant (doesn't support data-driven expressions)
+        var layer = FillExtrusionLayer(id: layerId, source: sourceId)
+        layer.fillExtrusionColor = .expression(Exp(.get) { "color" })
+        layer.fillExtrusionHeight = .expression(Exp(.get) { "height" })
+        layer.fillExtrusionBase = .expression(Exp(.get) { "base" })
+        layer.fillExtrusionOpacity = .constant(fillExtrusionOpacity)
 
         try? mapView.mapboxMap.addSource(source)
         try? mapView.mapboxMap.addLayer(layer)
+
+        isInitialized = true
     }
 
-    private func removeAnnotation(_ annotation: BuildingAnnotation) {
-        try? mapView.mapboxMap.removeLayer(withId: annotation.layerId)
-        try? mapView.mapboxMap.removeSource(withId: annotation.sourceId)
+    private func updateAnnotations() {
+        guard isInitialized else { return }
+
+        // Convert annotations to GeoJSON features with properties
+        // Note: opacity is set as constant on the layer, not per-feature
+        let features: [Feature] = annotations.map { annotation in
+            var feature = Feature(geometry: .polygon(Polygon([annotation.coordinates])))
+            feature.properties = [
+                "color": .string(StyleColor(annotation.fillExtrusionColor).rawValue),
+                "height": .number(annotation.fillExtrusionHeight),
+                "base": .number(annotation.fillExtrusionBase)
+            ]
+            return feature
+        }
+
+        // Update source with new FeatureCollection
+        let featureCollection = FeatureCollection(features: features)
+        mapView.mapboxMap.updateGeoJSONSource(
+            withId: sourceId,
+            geoJSON: .featureCollection(featureCollection)
+        )
+    }
+
+    private func updateLayerOpacity() {
+        guard isInitialized else { return }
+
+        try? mapView.mapboxMap.setLayerProperty(
+            for: layerId,
+            property: "fill-extrusion-opacity",
+            value: fillExtrusionOpacity
+        )
     }
 }
-
-// MARK: - Equatable conformance for BuildingAnnotation
 
 extension BuildingAnnotation: Equatable {
     public static func == (lhs: BuildingAnnotation, rhs: BuildingAnnotation) -> Bool {

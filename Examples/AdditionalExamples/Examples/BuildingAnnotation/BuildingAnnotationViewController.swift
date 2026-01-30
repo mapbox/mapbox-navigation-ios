@@ -7,6 +7,7 @@
 import CoreLocation
 import Foundation
 import MapboxDirections
+@_spi(Experimental) import MapboxMaps
 import MapboxNavigationCore
 import MapboxNavigationUIKit
 import Turf
@@ -51,10 +52,12 @@ final class BuildingAnnotationViewController: UIViewController {
             case .success(let navigationRoutes):
 
                 // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                let customStyle = BuildingAnnotationCustomStyle()
                 let navigationOptions = NavigationOptions(
                     mapboxNavigation: mapboxNavigation,
                     voiceController: mapboxNavigationProvider.routeVoiceController,
-                    eventsManager: mapboxNavigationProvider.eventsManager()
+                    eventsManager: mapboxNavigationProvider.eventsManager(),
+                    styles: [customStyle]
                 )
 
                 let navigationViewController = NavigationViewController(
@@ -64,7 +67,6 @@ final class BuildingAnnotationViewController: UIViewController {
                 
                 if let navMapView = navigationViewController.navigationMapView {
                     cancellable = navMapView.mapView.mapboxMap.onStyleLoaded.observe { _ in
-                        print("in onStyleLoaded")
                         try? navMapView.mapView.mapboxMap
                             .setStyleImportConfigProperty(
                                 for: "basemap",
@@ -107,6 +109,24 @@ final class BuildingAnnotationViewController: UIViewController {
             return nil
         }
     }
+
+    /// Extracts building height from StandardBuildingsFeature properties.
+    /// - Parameter building: The building feature to extract height from
+    /// - Returns: The building height in meters, with fallback logic: est_height → height → 50.0
+    private func extractHeight(from building: StandardBuildingsFeature) -> Double {
+        // Try est_height first (estimated height)
+        if case .number(let estHeight) = building.properties["est_height"] {
+            return estHeight
+        }
+
+        // Fall back to height property
+        if case .number(let height) = building.properties["height"] {
+            return height
+        }
+
+        // Default to 50.0 meters
+        return 50.0
+    }
 }
 
 extension BuildingAnnotationViewController: NavigationViewControllerDelegate {
@@ -128,14 +148,12 @@ extension BuildingAnnotationViewController: NavigationViewControllerDelegate {
                             buildingAnnotationManager = BuildingAnnotationManager(mapView: navMapView.mapView)
                         }
 
-                        // Create and add building annotation
+                        // Create and add building annotation with extracted height
                         let annotation = BuildingAnnotation(
                             coordinates: points,
-                            fillExtrusionColor: .red,
-                            fillExtrusionOpacity: 0.8,
-                            fillExtrusionHeight: 50.0,
-                            fillExtrusionBase: 0.0
+                            fillExtrusionHeight: extractHeight(from: building)
                         )
+
                         buildingAnnotationManager?.annotations = [annotation]
                     }
                 }

@@ -120,6 +120,8 @@
 		66E296D92F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */; };
 		66E296DB2F2BF2D400EF1F51 /* BuildingAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */; };
 		66E296DD2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */; };
+		66E296EF2F2C615C00EF1F51 /* BuildingAnnotationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296EE2F2C615C00EF1F51 /* BuildingAnnotationGroup.swift */; };
+		66E296F12F2C638900EF1F51 /* BuildingAnnotationCustomStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E296F02F2C638900EF1F51 /* BuildingAnnotationCustomStyle.swift */; };
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
@@ -274,6 +276,8 @@
 		66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+BuildingQuery.swift"; sourceTree = "<group>"; };
 		66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotation.swift; sourceTree = "<group>"; };
 		66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotationManager.swift; sourceTree = "<group>"; };
+		66E296EE2F2C615C00EF1F51 /* BuildingAnnotationGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotationGroup.swift; sourceTree = "<group>"; };
+		66E296F02F2C638900EF1F51 /* BuildingAnnotationCustomStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingAnnotationCustomStyle.swift; sourceTree = "<group>"; };
 		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
@@ -564,6 +568,8 @@
 		66E296D62F2BD15800EF1F51 /* BuildingAnnotation */ = {
 			isa = PBXGroup;
 			children = (
+				66E296F02F2C638900EF1F51 /* BuildingAnnotationCustomStyle.swift */,
+				66E296EE2F2C615C00EF1F51 /* BuildingAnnotationGroup.swift */,
 				66E296DC2F2BFA5C00EF1F51 /* BuildingAnnotationManager.swift */,
 				66E296DA2F2BF2D400EF1F51 /* BuildingAnnotation.swift */,
 				66E296D82F2BE00A00EF1F51 /* NavigationMapView+BuildingQuery.swift */,
@@ -931,12 +937,14 @@
 				66E296D72F2BD15800EF1F51 /* BuildingAnnotationViewController.swift in Sources */,
 				F60DFC822E28EEBA00C37E6E /* CustomRouteCalloutViewProvider.swift in Sources */,
 				2CA31A252BC9878A0071176E /* SceneDelegate.swift in Sources */,
+				66E296F12F2C638900EF1F51 /* BuildingAnnotationCustomStyle.swift in Sources */,
 				2CA31A1C2BC9878A0071176E /* Basic.swift in Sources */,
 				2CC92CED2C33164D00A94834 /* CustomViewportDataSource.swift in Sources */,
 				66E296DB2F2BF2D400EF1F51 /* BuildingAnnotation.swift in Sources */,
 				2CA31A192BC9878A0071176E /* Custom-Voice-Controller.swift in Sources */,
 				2CC3469B2C2AD8ED005BD000 /* Route-Alerts.swift in Sources */,
 				753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */,
+				66E296EF2F2C615C00EF1F51 /* BuildingAnnotationGroup.swift in Sources */,
 				2CB91B412DA7FAFB00FD65DF /* Declarative-Map.swift in Sources */,
 				2CA31A212BC9878A0071176E /* CustomBottomBannerView.swift in Sources */,
 				2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */,
