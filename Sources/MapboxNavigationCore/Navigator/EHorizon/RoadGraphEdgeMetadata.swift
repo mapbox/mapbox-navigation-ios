@@ -39,6 +39,12 @@ extension RoadGraph.Edge {
         /// Is the edge a bridge?
         public let isBridge: Bool
 
+        /// Is the edge a ferry?
+        public let isFerry: Bool
+
+        /// Is the edge a roundabout?
+        public let isRoundabout: Bool
+
         /// The edge’s general road classes.
         public let roadClasses: RoadClasses
 
@@ -54,6 +60,9 @@ extension RoadGraph.Edge {
         /// The ISO 3166-1 alpha-2 code of the country where this edge is located.
         public let countryCode: String?
 
+        /// The ISO 3166-1 alpha-3 code of the country where this edge is located.
+        public let countryCodeISO3: String?
+
         /// The ISO 3166-2 code of the country subdivision where this edge is located.
         public let regionCode: String?
 
@@ -68,6 +77,14 @@ extension RoadGraph.Edge {
         /// The user’s expected average speed along the edge, measured in meters per second.
         public let speed: CLLocationSpeed
 
+        /// The expected average speed along the edge when there is no traffic.
+        /// Measured in meters per second. `nil` if unknown.
+        public let freeFlowSpeed: CLLocationSpeed?
+
+        /// The expected average speed along the edge when there is traffic.
+        /// Measured in meters per second. `nil` if unknown.
+        public let constrainedFlowSpeed: CLLocationSpeed?
+
         /// Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the
         /// rule of the road.
         public let drivingSide: DrivingSide
@@ -78,6 +95,12 @@ extension RoadGraph.Edge {
         /// `true` if edge is considered to be in an urban area, `false` otherwise.
         public let isUrban: Bool
 
+        /// Edge's surface type.
+        public let surface: RoadGraph.RoadSurface
+
+        /// Whether the edge is a part of service area or rest area or none.
+        public let sapaType: RoadGraph.SapaType
+
         /// Initializes a new edge ``RoadGraph/Edge/Metadata`` object.
         public init(
             heading: CLLocationDegrees,
@@ -86,16 +109,23 @@ extension RoadGraph.Edge {
             mapboxStreetsRoadClass: MapboxStreetsRoadClass,
             speedLimit: Measurement<UnitSpeed>?,
             speed: CLLocationSpeed,
+            freeFlowSpeed: CLLocationSpeed?,
+            constrainedFlowSpeed: CLLocationSpeed?,
             isBridge: Bool,
+            isFerry: Bool,
+            isRoundabout: Bool,
             names: [RoadName],
             laneCount: UInt?,
             altitude: CLLocationDistance?,
             curvature: UInt,
             countryCode: String?,
+            countryCodeISO3: String?,
             regionCode: String?,
             drivingSide: DrivingSide,
             directionality: Directionality,
-            isUrban: Bool
+            isUrban: Bool,
+            surface: RoadGraph.RoadSurface,
+            sapaType: RoadGraph.SapaType
         ) {
             self.heading = heading
             self.length = length
@@ -103,16 +133,23 @@ extension RoadGraph.Edge {
             self.mapboxStreetsRoadClass = mapboxStreetsRoadClass
             self.speedLimit = speedLimit
             self.speed = speed
+            self.freeFlowSpeed = freeFlowSpeed
+            self.constrainedFlowSpeed = constrainedFlowSpeed
             self.isBridge = isBridge
+            self.isFerry = isFerry
+            self.isRoundabout = isRoundabout
             self.names = names
             self.laneCount = laneCount
             self.altitude = altitude
             self.curvature = curvature
             self.countryCode = countryCode
+            self.countryCodeISO3 = countryCodeISO3
             self.regionCode = regionCode
             self.drivingSide = drivingSide
             self.directionality = directionality
             self.isUrban = isUrban
+            self.surface = surface
+            self.sapaType = sapaType
         }
 
         /// Initializes a new edge ``RoadGraph/Edge/Metadata`` object.
@@ -123,15 +160,22 @@ extension RoadGraph.Edge {
             mapboxStreetsRoadClass: MapboxStreetsRoadClass,
             speedLimit: Measurement<UnitSpeed>?,
             speed: CLLocationSpeed,
+            freeFlowSpeed: CLLocationSpeed?,
+            constrainedFlowSpeed: CLLocationSpeed?,
             isBridge: Bool,
+            isFerry: Bool,
+            isRoundabout: Bool,
             names: [RoadName],
             laneCount: UInt?,
             altitude: CLLocationDistance?,
             curvature: UInt,
             countryCode: String?,
+            countryCodeISO3: String?,
             regionCode: String?,
             drivingSide: DrivingSide,
-            directionality: Directionality
+            directionality: Directionality,
+            surface: RoadGraph.RoadSurface,
+            sapaType: RoadGraph.SapaType
         ) {
             self.init(
                 heading: heading,
@@ -140,16 +184,23 @@ extension RoadGraph.Edge {
                 mapboxStreetsRoadClass: mapboxStreetsRoadClass,
                 speedLimit: speedLimit,
                 speed: speed,
+                freeFlowSpeed: freeFlowSpeed,
+                constrainedFlowSpeed: constrainedFlowSpeed,
                 isBridge: isBridge,
+                isFerry: isFerry,
+                isRoundabout: isRoundabout,
                 names: names,
                 laneCount: laneCount,
                 altitude: altitude,
                 curvature: curvature,
                 countryCode: countryCode,
+                countryCodeISO3: countryCodeISO3,
                 regionCode: regionCode,
                 drivingSide: drivingSide,
                 directionality: directionality,
-                isUrban: false
+                isUrban: false,
+                surface: surface,
+                sapaType: sapaType
             )
         }
 
@@ -167,6 +218,8 @@ extension RoadGraph.Edge {
                 self.speedLimit = nil
             }
             self.speed = native.speed
+            self.freeFlowSpeed = native.freeFlowSpeed.map(\.doubleValue)
+            self.constrainedFlowSpeed = native.constrainedFlowSpeed.map(\.doubleValue)
 
             var roadClasses: RoadClasses = []
             if native.motorway {
@@ -181,15 +234,20 @@ extension RoadGraph.Edge {
             self.roadClasses = roadClasses
 
             self.isBridge = native.bridge
+            self.isFerry = native.ferry
+            self.isRoundabout = native.roundabout
             self.names = native.names.compactMap(RoadName.init)
             self.laneCount = native.laneCount as? UInt
             self.altitude = native.meanElevation as? Double
             self.curvature = UInt(native.curvature)
             self.countryCode = native.countryCodeIso2
+            self.countryCodeISO3 = native.countryCodeIso3
             self.regionCode = native.stateCode
             self.drivingSide = native.isRightHandTraffic ? .right : .left
             self.directionality = native.isOneway ? .oneWay : .bothWays
             self.isUrban = native.isUrban
+            self.surface = .init(native.surface)
+            self.sapaType = .init(native.sapaType)
         }
     }
 }
