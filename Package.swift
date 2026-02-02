@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.18.0", "8d307cdaddeaf6727284811ddc81e186ca59db32ce3d3b5ba5e37bbb98ff3f33", "1fd3f181928e069d3666476f3e4f7ec5fb6b71b9")
-let mapsVersion: Version = "11.18.0"
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.18.1", "2d0e440876a0bd1738cf4945ed8ea08ef0bd8d7f177a8cf9b8329e6a66e0e97b", "7ed3dceea61271caa478174a484d70c200f866cb")
+let mapsVersion: Version = "11.18.1"
 
 let package = Package(
     name: "MapboxNavigation",

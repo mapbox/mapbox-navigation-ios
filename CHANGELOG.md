@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.18.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.18.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.18.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.18.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.18.1)
+
+### Map
+
+* Fixed an issue where the puck appeared beneath road names and map annotations.
+
 ## 3.18.0
 
 ### Packaging
