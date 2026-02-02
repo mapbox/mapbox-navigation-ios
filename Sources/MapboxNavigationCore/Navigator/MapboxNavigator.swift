@@ -321,10 +321,14 @@ final class MapboxNavigator: @unchecked Sendable {
                 await send(NavigatorErrors.FailedToSelectAlternativeRoute())
                 return
             }
-
+            let alternativeLegIndex = Int(
+                navigator.mostRecentNavigationStatus?.alternativeRouteIndices.first {
+                    $0.routeId.toRouteIdString() == alternativeRoutes.mainRoute.nativeRouteInterface.getRouteId()
+                }?.legIndex ?? 0
+            )
             await setRoutes(
                 navigationRoutes: alternativeRoutes,
-                startLegIndex: 0,
+                startLegIndex: alternativeLegIndex,
                 reason: .alternatives,
                 previousRouteProgress: currentRouteProgress?.routeProgress
             )

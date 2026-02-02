@@ -67,6 +67,42 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
         await simulateAndTestOnRoute(with: customDriving, shouldRefresh: false)
     }
 
+    func testSwitchingToAlternative() async throws {
+        var cancellables = Set<AnyCancellable>()
+        let options = makeDefaultOptions(with: .automobileAvoidingTraffic)
+        let navigationRoutes = await NavigationRoutes.mock(options: options, fileName: "alternatives-route-1")
+
+        let navigator = await navigationProvider.mapboxNavigation.navigation()
+
+        // Start AG
+        let activeGuidanceExpectation = expectation(description: "Active guidance started.")
+        await navigationProvider.mapboxNavigation.tripSession().session
+            .sink(receiveValue: { session in
+                if case .activeGuidance = session.state {
+                    activeGuidanceExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
+        await navigationProvider.mapboxNavigation.tripSession()
+            .startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
+
+        await fulfillment(of: [activeGuidanceExpectation], timeout: defaultDelay)
+
+        // Pick an alternative
+        let alternativesSwitchExpectation = expectation(description: "Alternative is switched")
+        await navigator.selectAlternativeRoute(at: 0)
+        await navigator.continuousAlternatives.sink { status in
+            XCTAssertTrue(
+                status.event is AlternativesStatus.Events.SwitchedToAlternative,
+                "Did not switch to the alternative."
+            )
+            alternativesSwitchExpectation.fulfill()
+        }
+        .store(in: &cancellables)
+
+        await fulfillment(of: [alternativesSwitchExpectation], timeout: defaultDelay)
+    }
+
     private func simulateAndTestOnRoute(
         with profile: ProfileIdentifier,
         shouldRefresh: Bool,
