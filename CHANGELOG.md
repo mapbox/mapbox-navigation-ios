@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* Fixed an issue where the passed alternative route was not hidden immediately after the deviation fork was passed.
+
 ## 3.18.1
 
 ### Packaging

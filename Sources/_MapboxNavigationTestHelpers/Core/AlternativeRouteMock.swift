@@ -9,9 +9,10 @@ extension AlternativeRoute {
         mainRoute: Route = .mock(),
         alternativeRoute: Route = .mock(shape: .mock(delta: (0.01, -0.01))),
         nativeRouteAlternative: RouteAlternative? = nil,
-        requestOptions: ResponseOptions? = nil
+        requestOptions: ResponseOptions? = nil,
+        routeIndex: Int = 0
     ) -> Self {
-        let nativeAlternative = nativeRouteAlternative ?? .mock(route: alternativeRoute)
+        let nativeAlternative = nativeRouteAlternative ?? .mock(route: alternativeRoute, routeIndex: routeIndex)
         let urlString = nativeAlternative.route.getRequestUri()
         let requestOptions = requestOptions ?? .mock(routeOptions: .mock(string: urlString))
         return self.init(
