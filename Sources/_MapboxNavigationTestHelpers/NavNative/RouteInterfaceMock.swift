@@ -43,7 +43,7 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public convenience init(
         route: Route,
-        routeId: String = UUID().uuidString,
+        routeId: String? = nil,
         routeIndex: Int = 0
     ) {
         let json = RouteInterfaceMock.makeRoutesJson(with: [route])
@@ -57,7 +57,7 @@ public final class RouteInterfaceMock: RouteInterface {
     }
 
     public init(
-        routeId: String = UUID().uuidString,
+        routeId: String? = nil,
         responseUuid: String = UUID().uuidString,
         routeIndex: UInt32 = 0,
         responseJsonRef: DataRef = .init(data: RouteInterfaceMock.realRouteJson.data(using: .utf8)!),
@@ -71,7 +71,7 @@ public final class RouteInterfaceMock: RouteInterface {
         mapboxApi: MapboxAPI = .directions,
         directionsRouteContextRef: DataRef = DataRef(data: Data())
     ) {
-        self.routeId = routeId
+        self.routeId = routeId ?? "\(responseUuid)#\(routeIndex)"
         self.responseUuid = responseUuid
         self.routeIndex = routeIndex
         self.responseJsonRef = responseJsonRef
