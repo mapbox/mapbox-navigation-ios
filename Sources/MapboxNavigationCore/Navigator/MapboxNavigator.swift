@@ -1658,7 +1658,7 @@ extension NavigationRoutes {
     mutating func updateForkPointPassed(with status: NavigationStatus) -> Bool {
         let newPassedForkPointRouteIds = Set(
             status.alternativeRouteIndices
-                .compactMap { $0.isForkPointPassed ? $0.routeId.uuid : nil }
+                .compactMap { $0.isForkPointPassed ? $0.routeId.toRouteIdString() : nil }
         )
         let oldPassedForkPointRouteIds = Set(
             allAlternativeRoutesWithIgnored

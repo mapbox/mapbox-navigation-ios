@@ -6,9 +6,10 @@
 
 * Extended `RoadGraph.Edge.Metadata` properties by adding `freeFlowSpeed`, `constrainedFlowSpeed`, `isFerry`, `isRoundabout`, `countryCodeISO3`, `surface` and `sapaType` members.
 
-### Navigation
+### Routing
 
-* Fixed an issue, where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
+* Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
+* Fixed an issue where the passed alternative route was not hidden immediately after the deviation fork was passed.
 
 ## 3.19.0-beta.1
 
