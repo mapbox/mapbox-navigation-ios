@@ -11,6 +11,11 @@
 * Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
 * Fixed an issue where the passed alternative route was not hidden immediately after the deviation fork was passed.
 
+### CarPlay
+
+* Adjusted the CarPlay speed limit view.
+* Fixed an issue where the CarPlay compass view was hidden by the speed limit view.
+
 ## 3.19.0-beta.1
 
 ### Packaging
