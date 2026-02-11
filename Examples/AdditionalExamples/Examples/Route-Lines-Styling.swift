@@ -117,6 +117,7 @@ final class RouteLinesStylingViewController: UIViewController {
         )
         navigationViewController.delegate = self
         navigationViewController.modalPresentationStyle = .fullScreen
+        navigationViewController.navigationView.navigationMapView.traversedRouteColor = .lightGray
 
         startButton.isHidden = true
         present(navigationViewController, animated: true)

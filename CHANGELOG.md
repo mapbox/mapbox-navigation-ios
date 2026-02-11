@@ -16,6 +16,10 @@
 * Adjusted the CarPlay speed limit view.
 * Fixed an issue where the CarPlay compass view was hidden by the speed limit view.
 
+### Map
+
+* Fixed an issue causing the traversed route line to be hidden after route completion when `NavigationMapView.traversedRouteColor` was provided.
+
 ## 3.19.0-beta.1
 
 ### Packaging

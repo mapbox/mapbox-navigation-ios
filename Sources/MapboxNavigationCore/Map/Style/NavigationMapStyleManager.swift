@@ -287,8 +287,10 @@ final class NavigationMapStyleManager {
             distanceTraveled: routeProgress.distanceTraveled
         )
 
-        if routeProgress.routeIsComplete, config.routeLineTracksTraversal {
-            removeRouteLines()
+        if routeProgress.routeIsComplete {
+            if config.routeLineTracksTraversal, config.traversedRouteColor == nil {
+                removeRouteLines()
+            }
             removeArrows()
         } else {
             updateArrows(routeProgress: routeProgress, config: config)
