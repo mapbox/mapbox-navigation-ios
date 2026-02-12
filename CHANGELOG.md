@@ -9,7 +9,6 @@
 ### Routing
 
 * Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
-* Fixed an issue where the passed alternative route was not hidden immediately after the deviation fork was passed.
 
 ### CarPlay
 
@@ -31,6 +30,28 @@
 
 * The `bearings` parameter is not included by default in Map Matching API requests because it is not supported. Along with `snapping_include_closures` and `snapping_include_static_closures`, this parameter is supported only by the Directions API.
 * Fixed missing `Waypoint.snapping_include_closures` and `Waypoint.snapping_include_static_closures` after encoding and decoding.
+
+### Map
+
+* Fixed an issue where the puck appeared beneath road names and map annotations.
+
+## 3.18.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.18.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.18.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.18.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.18.2)
+
+### Routing
+
+* Fixed an issue where the passed alternative route was not hidden immediately after the deviation fork was passed.
+
+## 3.18.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.18.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.18.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.18.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.18.1)
 
 ### Map
 
