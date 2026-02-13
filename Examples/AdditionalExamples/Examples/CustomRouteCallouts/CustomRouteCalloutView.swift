@@ -47,12 +47,17 @@ final class CustomRouteCalloutView: UIView {
     private let outlineColor: UIColor
     private let contentPadding = UIEdgeInsets(top: 6.0, left: 10.0, bottom: 6.0, right: 10.0)
     private let tollIconSize: CGSize = .init(width: 18.0, height: 18.0)
-    private static let tailPadding = UIEdgeInsets(allEdges: tailLineLength + 2 * tailAnchorCircleRadius)
     private static let cornerRadius: CGFloat = 3.0
     static let tailLineLength: CGFloat = 14.0
     static let tailAnchorCircleRadius: CGFloat = 3.0
+    private static let tailPaddingValue: CGFloat = tailLineLength + 2 * tailAnchorCircleRadius
     static let cornerTailHorizontalOffset: CGFloat = 12.0
     private static let iconViewHorizontalPadding: CGFloat = 4.0
+
+    private var contentHStackLeadingConstraint: NSLayoutConstraint?
+    private var contentHStackTrailingConstraint: NSLayoutConstraint?
+    private var contentHStackTopConstraint: NSLayoutConstraint?
+    private var contentHStackBottomConstraint: NSLayoutConstraint?
 
     private static var calloutTextFont: UIFont = .systemFont(ofSize: 18, weight: .semibold)
     private static var calloutSelectedOutlineColor: UIColor = #colorLiteral(red: 0.01960784314, green: 0.02745098039, blue: 0.03921568627, alpha: 1)
@@ -89,7 +94,12 @@ final class CustomRouteCalloutView: UIView {
 
     /// Change of this property triggers layout update, so that correct anchor is rendered.
     var anchor: ViewAnnotationAnchor? {
-        didSet { setNeedsLayout() }
+        didSet {
+            guard oldValue != anchor else { return }
+            updateContentPaddingConstraints()
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+        }
     }
 
     convenience init(
@@ -194,7 +204,7 @@ final class CustomRouteCalloutView: UIView {
             iconView?.tintColor = textColor
         }
 
-        setupPersistentConstraints()
+        setupContentConstraints()
         initSizeConstraints() // required becaause didSet observers are not called in init
         configureStack()
     }
@@ -204,14 +214,20 @@ final class CustomRouteCalloutView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupPersistentConstraints() {
-        let totalPadding = contentPadding + Self.tailPadding
-        NSLayoutConstraint.activate([
-            contentHStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left),
-            contentHStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right),
-            contentHStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top),
-            contentHStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom),
-        ])
+    private func setupContentConstraints() {
+        let totalPadding = contentPadding + tailInsets
+
+        let leading = contentHStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left)
+        let trailing = contentHStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right)
+        let top = contentHStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top)
+        let bottom = contentHStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom)
+
+        NSLayoutConstraint.activate([leading, trailing, top, bottom])
+
+        contentHStackLeadingConstraint = leading
+        contentHStackTrailingConstraint = trailing
+        contentHStackTopConstraint = top
+        contentHStackBottomConstraint = bottom
     }
 
     func initSizeConstraints() {
@@ -236,7 +252,9 @@ final class CustomRouteCalloutView: UIView {
         // UIStackView can calculate size correctly with systemLayoutSizeFitting(_:)
         // however in case of custom constructed auto-layout views the correct
         // size calculation might need implementation from scratch.
-        contentHStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + contentPadding + Self.tailPadding
+        let maxTailPadding = CGSize(width: Self.tailPaddingValue, height: Self.tailPaddingValue)
+        let totalPadding = maxTailPadding + contentPadding
+        return contentHStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + totalPadding
     }
 
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
@@ -268,8 +286,8 @@ final class CustomRouteCalloutView: UIView {
 
         let mainCalloutPath = UIBezierPath.mainCalloutPath(
             size: bounds.size,
-            padding: Self.tailLineLength + 2 * Self.tailAnchorCircleRadius,
-            cornerRadius: Self.cornerRadius
+            cornerRadius: Self.cornerRadius,
+            tailInsets: tailInsets
         )
         mainCalloutShapeLayer.path = mainCalloutPath.cgPath
         mainCalloutShapeLayer.frame = bounds
@@ -279,10 +297,46 @@ final class CustomRouteCalloutView: UIView {
             tailLineLength: Self.tailLineLength,
             tailAnchorCircleRadius: Self.tailAnchorCircleRadius,
             cornerTailHorizontalOffset: Self.cornerTailHorizontalOffset,
-            anchor: anchor ?? .bottom
+            anchor: resolvedAnchor
         )
         calloutTailShapeLayer.path = calloutTailPath.cgPath
         calloutTailShapeLayer.frame = bounds
+    }
+
+    private var resolvedAnchor: ViewAnnotationAnchor {
+        anchor ?? .bottom
+    }
+
+    private var tailInsets: UIEdgeInsets {
+        let p = Self.tailPaddingValue
+        return switch resolvedAnchor {
+        case .top:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: 0)
+        case .bottom:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: 0)
+        case .left:
+            UIEdgeInsets(top: 0, left: p, bottom: 0, right: 0)
+        case .right:
+            UIEdgeInsets(top: 0, left: 0, bottom: 0, right: p)
+        case .topLeft:
+            UIEdgeInsets(top: p, left: p, bottom: 0, right: 0)
+        case .topRight:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: p)
+        case .bottomLeft:
+            UIEdgeInsets(top: 0, left: p, bottom: p, right: 0)
+        case .bottomRight:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: p)
+        default:
+            UIEdgeInsets.zero
+        }
+    }
+
+    private func updateContentPaddingConstraints() {
+        let totalPadding = contentPadding + tailInsets
+        contentHStackLeadingConstraint?.constant = totalPadding.left
+        contentHStackTrailingConstraint?.constant = -totalPadding.right
+        contentHStackTopConstraint?.constant = totalPadding.top
+        contentHStackBottomConstraint?.constant = -totalPadding.bottom
     }
 }
 
@@ -323,6 +377,10 @@ extension CGSize {
     }
 }
 
+private func + (lhs: CGSize, rhs: CGSize) -> CGSize {
+    CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+}
+
 private func + (lhs: CGSize, rhs: UIEdgeInsets) -> CGSize {
     return CGSize(width: lhs.width + rhs.left + rhs.right, height: lhs.height + rhs.top + rhs.bottom)
 }
@@ -334,11 +392,11 @@ private func - (lhs: CGSize, rhs: UIEdgeInsets) -> CGSize {
 extension UIBezierPath {
     fileprivate static func mainCalloutPath(
         size: CGSize,
-        padding: CGFloat,
-        cornerRadius: CGFloat
+        cornerRadius: CGFloat,
+        tailInsets: UIEdgeInsets
     ) -> UIBezierPath {
         let rect = CGRect(origin: .init(x: 0, y: 0), size: size)
-        let bubbleRect = rect.insetBy(dx: padding, dy: padding)
+        let bubbleRect = rect.inset(by: tailInsets)
 
         let path = UIBezierPath(
             roundedRect: bubbleRect,
@@ -355,6 +413,8 @@ extension UIBezierPath {
         cornerTailHorizontalOffset: CGFloat,
         anchor: ViewAnnotationAnchor
     ) -> UIBezierPath {
+        guard anchor != .center else { return UIBezierPath() }
+
         let tailPath = UIBezierPath()
         let p = tailLineLength + 2 * tailAnchorCircleRadius // padding
         let l = tailLineLength
@@ -391,7 +451,9 @@ extension UIBezierPath {
                 tailPath.addLine(to: point)
             }
         }
-        tailPath.close()
+        if !tailPoints.isEmpty {
+            tailPath.close()
+        }
 
         let circleCenterPoint: CGPoint? = switch anchor {
         case .topLeft:

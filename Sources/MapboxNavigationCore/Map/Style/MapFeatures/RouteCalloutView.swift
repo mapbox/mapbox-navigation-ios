@@ -69,11 +69,15 @@ final class RouteCalloutView: UIView {
     private let baloonColor: UIColor
     private let contentPadding = UIEdgeInsets(top: 6.0, left: 10.0, bottom: 6.0, right: 10.0)
     private let tollIconSize: CGSize = .init(width: 18.0, height: 18.0)
-    private let tailPadding = UIEdgeInsets(allEdges: tailSize)
     private static let cornerRadius: CGFloat = 10.0
     private static let tailSize: CGFloat = 7.0
     private static let captionLabelVerticalPadding: CGFloat = 2.0
     private static let iconViewHorizontalPadding: CGFloat = 4.0
+
+    private var contentVStackLeadingConstraint: NSLayoutConstraint?
+    private var contentVStackTrailingConstraint: NSLayoutConstraint?
+    private var contentVStackTopConstraint: NSLayoutConstraint?
+    private var contentVStackBottomConstraint: NSLayoutConstraint?
 
     private var text: String {
         didSet {
@@ -83,6 +87,7 @@ final class RouteCalloutView: UIView {
                 label.widthAnchor.constraint(equalToConstant: label.textSize.width),
                 label.heightAnchor.constraint(equalToConstant: label.textSize.height),
             ])
+            invalidateIntrinsicContentSize()
             setNeedsLayout()
         }
     }
@@ -101,6 +106,7 @@ final class RouteCalloutView: UIView {
                 NSLayoutConstraint.deactivate(constraints)
             }
             configureStacks()
+            invalidateIntrinsicContentSize()
             setNeedsLayout()
         }
     }
@@ -116,12 +122,18 @@ final class RouteCalloutView: UIView {
                 iconView = nil
             }
             configureStacks()
+            invalidateIntrinsicContentSize()
             setNeedsLayout()
         }
     }
 
     var anchor: ViewAnnotationAnchor? {
-        didSet { setNeedsLayout() }
+        didSet {
+            guard oldValue != anchor else { return }
+            updateContentPaddingConstraints()
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+        }
     }
 
     convenience init(
@@ -216,7 +228,7 @@ final class RouteCalloutView: UIView {
             self.iconView = UIImageView(image: tollImage).autoresizing()
         }
 
-        setupPersistentConstraints()
+        setupContentConstraints()
         initSizeConstraints() // required becaause didSet observers are not called in init
         configureStacks()
     }
@@ -226,14 +238,20 @@ final class RouteCalloutView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupPersistentConstraints() {
-        let totalPadding = contentPadding + tailPadding
-        NSLayoutConstraint.activate([
-            contentVStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left),
-            contentVStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right),
-            contentVStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top),
-            contentVStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom),
-        ])
+    private func setupContentConstraints() {
+        let totalPadding = contentPadding.adding(tailInsets)
+
+        let leading = contentVStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left)
+        let trailing = contentVStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right)
+        let top = contentVStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top)
+        let bottom = contentVStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom)
+
+        NSLayoutConstraint.activate([leading, trailing, top, bottom])
+
+        contentVStackLeadingConstraint = leading
+        contentVStackTrailingConstraint = trailing
+        contentVStackTopConstraint = top
+        contentVStackBottomConstraint = bottom
     }
 
     func initSizeConstraints() {
@@ -282,7 +300,10 @@ final class RouteCalloutView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        contentVStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + contentPadding + tailPadding
+        let maxTailPadding = CGSize(width: Self.tailSize, height: Self.tailSize)
+        let totalPadding = maxTailPadding + contentPadding
+
+        return contentVStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + totalPadding
     }
 
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
@@ -323,12 +344,48 @@ final class RouteCalloutView: UIView {
 
         let calloutPath = UIBezierPath.calloutPath(
             size: bounds.size,
-            tailSize: Self.tailSize,
+            tailSize: tailInsets.isZero ? 0 : Self.tailSize,
             cornerRadius: Self.cornerRadius,
-            anchor: anchor ?? .center
+            anchor: anchor ?? .center,
+            tailInsets: tailInsets
         )
         backgroundShapeLayer.path = calloutPath.cgPath
         backgroundShapeLayer.frame = bounds
+    }
+
+    private var tailInsets: UIEdgeInsets {
+        guard let anchor else { return .zero }
+
+        let p = Self.tailSize
+        return switch anchor {
+        case .top:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: 0)
+        case .bottom:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: 0)
+        case .left:
+            UIEdgeInsets(top: 0, left: p, bottom: 0, right: 0)
+        case .right:
+            UIEdgeInsets(top: 0, left: 0, bottom: 0, right: p)
+        case .topLeft:
+            UIEdgeInsets(top: p, left: p, bottom: 0, right: 0)
+        case .topRight:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: p)
+        case .bottomLeft:
+            UIEdgeInsets(top: 0, left: p, bottom: p, right: 0)
+        case .bottomRight:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: p)
+        default:
+            .zero
+        }
+    }
+
+    private func updateContentPaddingConstraints() {
+        let totalPadding = contentPadding.adding(tailInsets)
+
+        contentVStackLeadingConstraint?.constant = totalPadding.left
+        contentVStackTrailingConstraint?.constant = -totalPadding.right
+        contentVStackTopConstraint?.constant = totalPadding.top
+        contentVStackBottomConstraint?.constant = -totalPadding.bottom
     }
 }
 
@@ -362,6 +419,19 @@ extension UIEdgeInsets {
     fileprivate init(allEdges value: CGFloat) {
         self.init(top: value, left: value, bottom: value, right: value)
     }
+
+    fileprivate func adding(_ other: UIEdgeInsets) -> UIEdgeInsets {
+        UIEdgeInsets(
+            top: top + other.top,
+            left: left + other.left,
+            bottom: bottom + other.bottom,
+            right: right + other.right
+        )
+    }
+
+    fileprivate var isZero: Bool {
+        top == 0 && left == 0 && bottom == 0 && right == 0
+    }
 }
 
 extension String {
@@ -390,20 +460,8 @@ extension CGSize {
     }
 }
 
-extension CGSize {
-    private func addHeightAndMaximizeWidth(
-        _ operand: CGSize,
-        withVerticalPadding verticalPadding: CGFloat = 0
-    ) -> CGSize {
-        CGSize(width: max(width, operand.width), height: height + operand.height + verticalPadding)
-    }
-
-    private func addWidthAndMaximizeHeight(
-        _ operand: CGSize,
-        withHorizontalPadding horizontalPadding: CGFloat = 0
-    ) -> CGSize {
-        CGSize(width: width + operand.width + horizontalPadding, height: max(height, operand.height))
-    }
+private func + (lhs: CGSize, rhs: CGSize) -> CGSize {
+    CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
 private func + (lhs: CGSize, rhs: UIEdgeInsets) -> CGSize {
@@ -419,15 +477,18 @@ extension UIBezierPath {
         size: CGSize,
         tailSize: CGFloat,
         cornerRadius: CGFloat,
-        anchor: ViewAnnotationAnchor
+        anchor: ViewAnnotationAnchor,
+        tailInsets: UIEdgeInsets
     ) -> UIBezierPath {
         let rect = CGRect(origin: .init(x: 0, y: 0), size: size)
-        let bubbleRect = rect.insetBy(dx: tailSize, dy: tailSize)
+        let bubbleRect = rect.inset(by: tailInsets)
 
         let path = UIBezierPath(
             roundedRect: bubbleRect,
             cornerRadius: cornerRadius
         )
+
+        guard tailSize > 0 else { return path }
 
         let tailPath = UIBezierPath()
         let p = tailSize
@@ -462,7 +523,9 @@ extension UIBezierPath {
                 tailPath.addLine(to: point)
             }
         }
-        tailPath.close()
+        if !tailPoints.isEmpty {
+            tailPath.close()
+        }
         path.append(tailPath)
         return path
     }

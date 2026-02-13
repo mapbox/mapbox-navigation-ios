@@ -14,7 +14,6 @@ final class LaneGuidanceCalloutView: UIView {
     private let baloonColor: UIColor
     private let contentPadding = UIEdgeInsets(top: 6.0, left: 10.0, bottom: 6.0, right: 10.0)
     private static let tailSize: CGFloat = 7.0
-    private let tailPadding = UIEdgeInsets(allEdges: tailSize)
     private static let laneViewSizeNormal: CGFloat = 20.0
     private static let laneViewSizeCompact: CGFloat = 16.0
     private let laneViewSize: CGFloat
@@ -23,8 +22,18 @@ final class LaneGuidanceCalloutView: UIView {
     private let cornerRadius: CGFloat
     private static let compactSizeLanesCountThreshold: Int = 6
 
+    private var contentHStackLeadingConstraint: NSLayoutConstraint?
+    private var contentHStackTrailingConstraint: NSLayoutConstraint?
+    private var contentHStackTopConstraint: NSLayoutConstraint?
+    private var contentHStackBottomConstraint: NSLayoutConstraint?
+
     var anchor: ViewAnnotationAnchor? {
-        didSet { setNeedsLayout() }
+        didSet {
+            guard oldValue != anchor else { return }
+            updateContentPaddingConstraints()
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+        }
     }
 
     init(laneGuidanceData: IntersectionLaneGuidanceData, mapStyleConfig: MapStyleConfig) {
@@ -44,7 +53,7 @@ final class LaneGuidanceCalloutView: UIView {
 
         addSubview(contentHStack)
 
-        setupPersistentConstraints()
+        setupContentConstraints()
         configureStack(laneGuidanceData: laneGuidanceData)
     }
 
@@ -53,18 +62,26 @@ final class LaneGuidanceCalloutView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupPersistentConstraints() {
-        let totalPadding = contentPadding + tailPadding
-        NSLayoutConstraint.activate([
-            contentHStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left),
-            contentHStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right),
-            contentHStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top),
-            contentHStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom),
-        ])
+    private func setupContentConstraints() {
+        let totalPadding = contentPadding.adding(tailInsets)
+
+        let leading = contentHStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: totalPadding.left)
+        let trailing = contentHStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -totalPadding.right)
+        let top = contentHStack.topAnchor.constraint(equalTo: topAnchor, constant: totalPadding.top)
+        let bottom = contentHStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -totalPadding.bottom)
+
+        NSLayoutConstraint.activate([leading, trailing, top, bottom])
+
+        contentHStackLeadingConstraint = leading
+        contentHStackTrailingConstraint = trailing
+        contentHStackTopConstraint = top
+        contentHStackBottomConstraint = bottom
     }
 
     override var intrinsicContentSize: CGSize {
-        contentHStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + contentPadding + tailPadding
+        let maxTailPadding = CGSize(width: Self.tailSize, height: Self.tailSize)
+        let totalPadding = maxTailPadding + contentPadding
+        return contentHStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) + totalPadding
     }
 
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
@@ -100,18 +117,66 @@ final class LaneGuidanceCalloutView: UIView {
 
         let calloutPath = UIBezierPath.calloutPath(
             size: bounds.size,
-            tailSize: Self.tailSize,
+            tailSize: tailInsets.isZero ? 0 : Self.tailSize,
             cornerRadius: cornerRadius,
-            anchor: anchor ?? .center
+            anchor: anchor ?? .center,
+            tailInsets: tailInsets
         )
         backgroundShapeLayer.path = calloutPath.cgPath
         backgroundShapeLayer.frame = bounds
+    }
+
+    private var tailInsets: UIEdgeInsets {
+        guard let anchor else { return .zero }
+
+        let p = Self.tailSize
+        return switch anchor {
+        case .top:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: 0)
+        case .bottom:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: 0)
+        case .left:
+            UIEdgeInsets(top: 0, left: p, bottom: 0, right: 0)
+        case .right:
+            UIEdgeInsets(top: 0, left: 0, bottom: 0, right: p)
+        case .topLeft:
+            UIEdgeInsets(top: p, left: p, bottom: 0, right: 0)
+        case .topRight:
+            UIEdgeInsets(top: p, left: 0, bottom: 0, right: p)
+        case .bottomLeft:
+            UIEdgeInsets(top: 0, left: p, bottom: p, right: 0)
+        case .bottomRight:
+            UIEdgeInsets(top: 0, left: 0, bottom: p, right: p)
+        default:
+            .zero
+        }
+    }
+
+    private func updateContentPaddingConstraints() {
+        let totalPadding = contentPadding.adding(tailInsets)
+        contentHStackLeadingConstraint?.constant = totalPadding.left
+        contentHStackTrailingConstraint?.constant = -totalPadding.right
+        contentHStackTopConstraint?.constant = totalPadding.top
+        contentHStackBottomConstraint?.constant = -totalPadding.bottom
     }
 }
 
 extension UIEdgeInsets {
     fileprivate init(allEdges value: CGFloat) {
         self.init(top: value, left: value, bottom: value, right: value)
+    }
+
+    fileprivate func adding(_ other: UIEdgeInsets) -> UIEdgeInsets {
+        UIEdgeInsets(
+            top: top + other.top,
+            left: left + other.left,
+            bottom: bottom + other.bottom,
+            right: right + other.right
+        )
+    }
+
+    fileprivate var isZero: Bool {
+        top == 0 && left == 0 && bottom == 0 && right == 0
     }
 }
 
@@ -157,6 +222,10 @@ extension CGSize {
     }
 }
 
+private func + (lhs: CGSize, rhs: CGSize) -> CGSize {
+    CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+}
+
 private func + (lhs: CGSize, rhs: UIEdgeInsets) -> CGSize {
     return CGSize(width: lhs.width + rhs.left + rhs.right, height: lhs.height + rhs.top + rhs.bottom)
 }
@@ -170,15 +239,18 @@ extension UIBezierPath {
         size: CGSize,
         tailSize: CGFloat,
         cornerRadius: CGFloat,
-        anchor: ViewAnnotationAnchor
+        anchor: ViewAnnotationAnchor,
+        tailInsets: UIEdgeInsets
     ) -> UIBezierPath {
         let rect = CGRect(origin: .init(x: 0, y: 0), size: size)
-        let bubbleRect = rect.insetBy(dx: tailSize, dy: tailSize)
+        let bubbleRect = rect.inset(by: tailInsets)
 
         let path = UIBezierPath(
             roundedRect: bubbleRect,
             cornerRadius: cornerRadius
         )
+
+        guard tailSize > 0 else { return path }
 
         let tailPath = UIBezierPath()
         let p = tailSize
@@ -213,7 +285,9 @@ extension UIBezierPath {
                 tailPath.addLine(to: point)
             }
         }
-        tailPath.close()
+        if !tailPoints.isEmpty {
+            tailPath.close()
+        }
         path.append(tailPath)
         return path
     }
