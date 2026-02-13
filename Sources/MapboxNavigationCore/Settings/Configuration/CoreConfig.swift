@@ -45,6 +45,11 @@ public struct CoreConfig: Equatable {
     public let copilotEnabled: Bool
 
     /// Configures default unit of measurement.
+    @available(
+        *,
+        deprecated,
+        message: "Use `DirectionsOptions.unitMeasurementSystem` to set the unit system for a navigation session."
+    )
     public var unitOfMeasurement: UnitOfMeasurement = .auto
 
     /// A `Locale` that is used for guidance instruction and other localization features.
@@ -171,7 +176,6 @@ public struct CoreConfig: Equatable {
     ///   - logLevel: Logging level for Mapbox SDKs.
     ///   - locationSource: Sources for location and route drive simulation. Defaults to ``LocationSource/live``.
     ///   - copilotEnabled: A Boolean value that indicates whether a copilot recording is enabled.
-    ///   - unitOfMeasurement: Configures default unit of measurement.
     ///   - locale: A `Locale` that is used for guidance instruction and other localization features.
     ///   - disableBackgroundTrackingLocation: Indicates if a background location tracking is enabled.
     ///   - utilizeSensorData: A Boolean value that indicates whether a sensor data is utilized.
@@ -192,7 +196,6 @@ public struct CoreConfig: Equatable {
         logLevel: MapboxCommon.LoggingLevel = .warning,
         locationSource: LocationSource = .live,
         copilotEnabled: Bool = false,
-        unitOfMeasurement: UnitOfMeasurement = .auto,
         locale: Locale = .nationalizedCurrent,
         disableBackgroundTrackingLocation: Bool = true,
         utilizeSensorData: Bool = false,
@@ -212,7 +215,6 @@ public struct CoreConfig: Equatable {
         self.logLevel = logLevel
         self.locationSource = locationSource
         self.copilotEnabled = copilotEnabled
-        self.unitOfMeasurement = unitOfMeasurement
         self.locale = locale
         self.disableBackgroundTrackingLocation = disableBackgroundTrackingLocation
         self.utilizeSensorData = utilizeSensorData
@@ -252,7 +254,11 @@ public struct CoreConfig: Equatable {
     ///   - tilesVersion: Tiles version.
     ///   - tilestoreConfig: Options for configuring how map and navigation tiles are stored on the device.
     ///   - ttsConfig: Configuration for Text-To-Speech engine used.
-    @available(*, deprecated, message: "Use the initializer without `routeRequestConfig` instead.")
+    @available(
+        *,
+        deprecated,
+        message: "Use the initializer without `routeRequestConfig` and `unitOfMeasurement` instead."
+    )
     public init(
         credentials: NavigationCoreApiConfiguration = .init(),
         routeRequestConfig: RouteRequestConfig,
@@ -283,7 +289,6 @@ public struct CoreConfig: Equatable {
             logLevel: logLevel,
             locationSource: locationSource,
             copilotEnabled: copilotEnabled,
-            unitOfMeasurement: unitOfMeasurement,
             locale: locale,
             disableBackgroundTrackingLocation: disableBackgroundTrackingLocation,
             utilizeSensorData: utilizeSensorData,

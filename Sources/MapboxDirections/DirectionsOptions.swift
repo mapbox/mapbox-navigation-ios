@@ -52,6 +52,7 @@ public enum RouteShapeResolution: String, Codable, Equatable, Sendable {
 }
 
 /// A system of units of measuring distances and other quantities.
+@available(*, deprecated, message: "Use `UnitMeasurementSystem` instead.")
 public enum MeasurementSystem: String, Codable, Equatable, Sendable {
     /// U.S. customary and British imperial units.
     ///
@@ -62,6 +63,58 @@ public enum MeasurementSystem: String, Codable, Equatable, Sendable {
     ///
     /// Distances are measured in kilometers and meters.
     case metric
+}
+
+/// A system of units of measuring distances and other quantities.
+public struct UnitMeasurementSystem: Codable, Equatable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    /// The U.S. customary units.
+    ///
+    /// Distances are measured in miles and feet.
+    public static let imperial = UnitMeasurementSystem(rawValue: "imperial")
+
+    /// The metric system.
+    ///
+    /// Distances are measured in kilometers and meters.
+    public static let metric = UnitMeasurementSystem(rawValue: "metric")
+
+    /// The British imperial units.
+    ///
+    /// Distances are measured in miles and yards.
+    public static let britishImperial = UnitMeasurementSystem(rawValue: "british_imperial")
+}
+
+extension UnitMeasurementSystem {
+    public init(locale: Locale) {
+        if #available(iOS 16.0, *) {
+            switch locale.measurementSystem {
+            case .metric:
+                self = .metric
+            case .uk:
+                self = .britishImperial
+            case .us:
+                self = .imperial
+            default:
+                self = .imperial
+            }
+        } else {
+            if locale.usesMetricSystem {
+                self = .metric
+            } else {
+                switch locale.regionCode {
+                case "GB":
+                    self = .britishImperial
+                default:
+                    self = .imperial
+                }
+            }
+        }
+    }
 }
 
 @available(*, deprecated, renamed: "DirectionsPriority")
@@ -146,10 +199,8 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         if mappedQueryItems[CodingKeys.includesSpokenInstructions.stringValue] == "true" {
             self.includesSpokenInstructions = true
         }
-        if let mappedValue = mappedQueryItems[CodingKeys.distanceMeasurementSystem.stringValue],
-           let measurementSystem = MeasurementSystem(rawValue: mappedValue)
-        {
-            self.distanceMeasurementSystem = measurementSystem
+        if let mappedValue = mappedQueryItems[CodingKeys.unitMeasurementSystem.stringValue] {
+            self.unitMeasurementSystem = UnitMeasurementSystem(rawValue: mappedValue)
         }
         if mappedQueryItems[CodingKeys.includesVisualInstructions.stringValue] == "true" {
             self.includesVisualInstructions = true
@@ -277,7 +328,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         case attributeOptions = "annotations"
         case locale = "language"
         case includesSpokenInstructions = "voice_instructions"
-        case distanceMeasurementSystem = "voice_units"
+        case unitMeasurementSystem = "voice_units"
         case includesVisualInstructions = "banner_instructions"
     }
 
@@ -291,7 +342,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         try container.encode(attributeOptions, forKey: .attributeOptions)
         try container.encode(locale.identifier, forKey: .locale)
         try container.encode(includesSpokenInstructions, forKey: .includesSpokenInstructions)
-        try container.encode(distanceMeasurementSystem, forKey: .distanceMeasurementSystem)
+        try container.encode(unitMeasurementSystem.rawValue, forKey: .unitMeasurementSystem)
         try container.encode(includesVisualInstructions, forKey: .includesVisualInstructions)
     }
 
@@ -306,10 +357,8 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         let identifier = try container.decode(String.self, forKey: .locale)
         self.locale = Locale(identifier: identifier)
         self.includesSpokenInstructions = try container.decode(Bool.self, forKey: .includesSpokenInstructions)
-        self.distanceMeasurementSystem = try container.decode(
-            MeasurementSystem.self,
-            forKey: .distanceMeasurementSystem
-        )
+        let unitMeasurementSystemString = try container.decode(String.self, forKey: .unitMeasurementSystem)
+        self.unitMeasurementSystem = UnitMeasurementSystem(rawValue: unitMeasurementSystemString)
         self.includesVisualInstructions = try container.decode(Bool.self, forKey: .includesVisualInstructions)
     }
 
@@ -390,7 +439,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
     /// By default, this property is set to the current system locale.
     public var locale = Locale.current {
         didSet {
-            distanceMeasurementSystem = locale.usesMetricSystem ? .metric : .imperial
+            unitMeasurementSystem = .init(locale: locale)
         }
     }
 
@@ -408,7 +457,21 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
     ///
     /// You should choose a measurement system appropriate for the current region. You can also allow the user to
     /// indicate their preferred measurement system via a setting.
-    public var distanceMeasurementSystem: MeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
+    @available(*, deprecated, message: "Use `unitMeasurementSystem` instead.")
+    public var distanceMeasurementSystem: MeasurementSystem {
+        set { unitMeasurementSystem = newValue == .metric ? .metric : .imperial }
+        get { unitMeasurementSystem == .metric ? .metric : .imperial }
+    }
+
+    /// The measurement system used in spoken instructions included in route steps.
+    ///
+    /// If the ``includesSpokenInstructions`` property is set to `true`, this property determines the units used for
+    /// measuring the distance remaining until an upcoming maneuver. If the ``includesSpokenInstructions`` property is
+    /// set to `false`, this property has no effect.
+    ///
+    /// You should choose a measurement system appropriate for the current region. You can also allow the user to
+    /// indicate their preferred measurement system via a setting.
+    public var unitMeasurementSystem: UnitMeasurementSystem = .init(locale: Locale.current)
 
     /// If true, each ``RouteStep`` will contain the property ``RouteStep/instructionsDisplayedAlongStep``.
     ///
@@ -470,7 +533,10 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
 
         if includesSpokenInstructions {
             queryItems.append(URLQueryItem(name: "voice_instructions", value: String(includesSpokenInstructions)))
-            queryItems.append(URLQueryItem(name: "voice_units", value: distanceMeasurementSystem.rawValue))
+            queryItems.append(URLQueryItem(
+                name: CodingKeys.unitMeasurementSystem.stringValue,
+                value: unitMeasurementSystem.rawValue
+            ))
         }
 
         if includesVisualInstructions {
@@ -567,7 +633,7 @@ extension DirectionsOptions: Equatable {
             lhs.attributeOptions == rhs.attributeOptions &&
             lhs.locale.identifier == rhs.locale.identifier &&
             lhs.includesSpokenInstructions == rhs.includesSpokenInstructions &&
-            lhs.distanceMeasurementSystem == rhs.distanceMeasurementSystem &&
+            lhs.unitMeasurementSystem == rhs.unitMeasurementSystem &&
             lhs.includesVisualInstructions == rhs.includesVisualInstructions
     }
 }

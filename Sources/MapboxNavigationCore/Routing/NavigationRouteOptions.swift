@@ -22,7 +22,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
     ///
     /// Meters and feet will be used when the presented distances are small enough.
     /// See `DistanceFormatter` for more information.
-    public var distanceUnit: LengthFormatter.Unit = Locale.current.usesMetricSystem ? .kilometer : .mile
+    public var distanceUnit: LengthFormatter.Unit = Locale.current.calculatedDistanceUnit
 
     public convenience init(
         waypoints: [Waypoint],
@@ -38,7 +38,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation, @unchec
         )
         self.locale = locale
         self.distanceUnit = distanceUnit
-        distanceMeasurementSystem = .init(distanceUnit)
+        unitMeasurementSystem = .init(distanceUnit)
     }
 
     /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
@@ -124,7 +124,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchec
     ///
     /// Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more
     /// information.
-    public var distanceUnit: LengthFormatter.Unit = Locale.current.usesMetricSystem ? .kilometer : .mile
+    public var distanceUnit: LengthFormatter.Unit = Locale.current.calculatedDistanceUnit
 
     public convenience init(
         waypoints: [Waypoint],
@@ -138,7 +138,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation, @unchec
             queryItems: queryItems
         )
         self.distanceUnit = distanceUnit
-        distanceMeasurementSystem = .init(distanceUnit)
+        unitMeasurementSystem = .init(distanceUnit)
     }
 
     /// Initializes a navigation route options object for routes between the given waypoints and an optional profile
@@ -210,7 +210,7 @@ private enum OptimizedForNavigationKey: String {
     case routeShapeResolution = "overview"
     case locale = "language"
     case includesSpokenInstructions = "voice_instructions"
-    case distanceMeasurementSystem = "voice_units"
+    case unitMeasurementSystem = "voice_units"
     case includesVisualInstructions = "banner_instructions"
 }
 
@@ -220,7 +220,7 @@ protocol OptimizedForNavigation: AnyObject {
     var shapeFormat: RouteShapeFormat { get set }
     var attributeOptions: AttributeOptions { get set }
     var locale: Locale { get set }
-    var distanceMeasurementSystem: MeasurementSystem { get set }
+    var unitMeasurementSystem: UnitMeasurementSystem { get set }
     var includesSpokenInstructions: Bool { get set }
     var includesVisualInstructions: Bool { get set }
     var distanceUnit: LengthFormatter.Unit { get }
@@ -247,8 +247,8 @@ extension OptimizedForNavigation {
         if !names.contains(OptimizedForNavigationKey.locale.rawValue) {
             locale = .nationalizedCurrent
         }
-        if !names.contains(OptimizedForNavigationKey.distanceMeasurementSystem.rawValue) {
-            distanceMeasurementSystem = .init(distanceUnit)
+        if !names.contains(OptimizedForNavigationKey.unitMeasurementSystem.rawValue) {
+            unitMeasurementSystem = .init(distanceUnit)
         }
         if !names.contains(OptimizedForNavigationKey.includesVisualInstructions.rawValue) {
             includesVisualInstructions = true

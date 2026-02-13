@@ -69,7 +69,7 @@ public class CarPlayManager: NSObject {
                   var trip = await CPTrip(
                       routes: routes,
                       locale: locale,
-                      distanceMeasurementSystem: distanceMeasurementSystem
+                      unitMeasurementSystem: unitMeasurementSystem
                   )
             else {
                 return
@@ -99,8 +99,8 @@ public class CarPlayManager: NSObject {
         directionsOptions?.locale ?? coreConfig.locale
     }
 
-    var distanceMeasurementSystem: MeasurementSystem {
-        directionsOptions?.distanceMeasurementSystem ?? coreConfig.distanceMeasurementSystem
+    var unitMeasurementSystem: UnitMeasurementSystem {
+        directionsOptions?.unitMeasurementSystem ?? locale.unitMeasurementSystem
     }
 
     /// Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
@@ -653,7 +653,7 @@ extension CarPlayManager {
         guard let trip = await CPTrip(
             routes: routes,
             locale: locale,
-            distanceMeasurementSystem: distanceMeasurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         ) else {
             return
         }
@@ -948,7 +948,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     private func localized(measurement: Measurement<UnitLength>) -> Measurement<UnitLength> {
-        measurement.localized(into: locale, measurementSystem: distanceMeasurementSystem)
+        measurement.localized(into: locale, unitMeasurementSystem: unitMeasurementSystem)
     }
 
     @MainActor

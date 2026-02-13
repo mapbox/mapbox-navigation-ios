@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### API Deprecations
+
+* Deprecated `DirectionsOptions.distanceMeasurementSystem` in favor of the new `DirectionsOptions.unitMeasurementSystem`.
+* Deprecated `DistanceFormatter.measurementSystem` in favor of the new `DistanceFormatter.unitMeasurementSystem`.
+* Deprecated `CoreConfig.unitOfMeasurement`. Use `DirectionsOptions.unitMeasurementSystem` to set the unit system for a navigation session.
+* Deprecated `MeasurementSystem` and `UnitOfMeasurement` in favor of the new `UnitMeasurementSystem`.
+
+### Routing
+
+* Added support for British imperial measurement units.
+
 ### Electronic horizon
 
 * Extended `RoadGraph.Edge.Metadata` properties by adding `freeFlowSpeed`, `constrainedFlowSpeed`, `isFerry`, `isRoundabout`, `countryCodeISO3`, `surface` and `sapaType` members.

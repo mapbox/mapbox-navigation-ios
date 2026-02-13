@@ -44,7 +44,23 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     }
 
     /// The measurement system used to overwrite the measurement system of locale.
-    open var measurementSystem: MeasurementSystem?
+    @available(*, deprecated, message: "Use `unitMeasurementSystem` instead.")
+    open var measurementSystem: MeasurementSystem? {
+        set {
+            guard let newValue else {
+                unitMeasurementSystem = nil
+                return
+            }
+            unitMeasurementSystem = newValue == .metric ? .metric : .imperial
+        }
+        get {
+            guard let unitMeasurementSystem else { return nil }
+            return unitMeasurementSystem == .metric ? .metric : .imperial
+        }
+    }
+
+    /// The measurement system used to overwrite the measurement system of locale.
+    open var unitMeasurementSystem: UnitMeasurementSystem?
 
     /// The underlying measurement formatter.
     @NSCopying open var measurementFormatter = MeasurementFormatter()
@@ -84,7 +100,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         from distance: CLLocationDistance,
         defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil
     ) -> NSAttributedString {
-        return attributedString(from: Measurement(distance: distance), defaultAttributes: attributes)
+        attributedString(from: Measurement(distance: distance), defaultAttributes: attributes)
     }
 
     /// Creates and returns a localized, formatted string representation of the given measurement.
@@ -92,9 +108,9 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     /// - Parameter measurement: The measurement to localize and format.
     /// - Returns: A localized, formatted representation of the measurement.
     open func string(from measurement: Measurement<UnitLength>) -> String {
-        return measurementFormatter.string(from: measurement.localized(
+        measurementFormatter.string(from: measurement.localized(
             into: locale,
-            measurementSystem: measurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         ))
     }
 
@@ -113,7 +129,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         let string = string(from: measurement)
         let localizedMeasurement = measurement.localized(
             into: locale,
-            measurementSystem: measurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         )
 
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
@@ -193,15 +209,19 @@ extension Measurement where UnitType == UnitLength {
         return threshold.threshold(for: distance).measurement(of: distance)
     }
 
-    func localized(into locale: Locale, measurementSystem: MeasurementSystem?) -> Measurement<UnitLength> {
-        guard let measurementSystem else {
+    func localized(into locale: Locale, unitMeasurementSystem: UnitMeasurementSystem?) -> Measurement<UnitLength> {
+        guard let unitMeasurementSystem else {
             return localized(into: locale)
         }
-        let threshold: RoundingTable = switch measurementSystem {
+        let threshold: RoundingTable = switch unitMeasurementSystem {
+        case .britishImperial:
+            .uk
         case .imperial:
             locale.languageCode == "en" && locale.regionCode == "GB" ? .uk : .us
         case .metric:
             .metric
+        default:
+            .us
         }
         return threshold.threshold(for: distance).measurement(of: distance)
     }

@@ -429,6 +429,23 @@ class InstructionsBannerViewSnapshotTests: InstructionBannerTest {
         assertImageSnapshot(matching: view, as: .image(precision: 0.99))
     }
 
+    func testBritishImperialDistance() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+
+        view.distanceFormatter.locale = Locale(identifier: "en-GB")
+        view.distance = 55
+
+        let primary = [VisualInstruction.Component.text(text: .init(
+            text: "Lorem Ipsum / Dolor Sit Amet",
+            abbreviation: nil,
+            abbreviationPriority: nil
+        ))]
+        view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+
+        assertImageSnapshot(matching: view, as: .image(precision: 0.99))
+    }
+
     func testUkrainianLongDistance() {
         let view = instructionsView(size: .iPhoneX)
         styleInstructionsView(view)

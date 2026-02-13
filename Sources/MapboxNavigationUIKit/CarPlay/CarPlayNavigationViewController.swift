@@ -97,7 +97,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let distanceFormatter = DistanceFormatter()
         continuousAlternatives.forEach { alternative in
             let title = alternative.route.description
-            distanceFormatter.measurementSystem = distanceMeasurementSystem
+            distanceFormatter.unitMeasurementSystem = unitMeasurementSystem
             distanceFormatter.measurementFormatter.numberFormatter.negativePrefix = ""
             let distanceDeltaText = distanceFormatter.string(from: alternative.distanceDelta)
             let distanceDelta = format(
@@ -672,12 +672,12 @@ open class CarPlayNavigationViewController: UIViewController {
         directionsOptions?.locale ?? carPlayManager.coreConfig.locale
     }
 
-    private var distanceMeasurementSystem: MeasurementSystem {
-        directionsOptions?.distanceMeasurementSystem ?? carPlayManager.coreConfig.distanceMeasurementSystem
+    private var unitMeasurementSystem: UnitMeasurementSystem {
+        directionsOptions?.unitMeasurementSystem ?? locale.unitMeasurementSystem
     }
 
     private func localized(measurement: Measurement<UnitLength>) -> Measurement<UnitLength> {
-        measurement.localized(into: locale, measurementSystem: distanceMeasurementSystem)
+        measurement.localized(into: locale, unitMeasurementSystem: unitMeasurementSystem)
     }
 
     // MARK: Notifications Observer Methods

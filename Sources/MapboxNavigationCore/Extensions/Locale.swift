@@ -44,4 +44,33 @@ extension Locale {
         }
         return codes
     }
+
+    var calculatedDistanceUnit: LengthFormatter.Unit {
+        if #available(iOS 16.0, *) {
+            return switch measurementSystem {
+            case .metric:
+                .kilometer
+            case .us:
+                .mile
+            case .uk:
+                .yard
+            default:
+                .mile
+            }
+        }
+        return fallbackDistanceUnit
+    }
+
+    var fallbackDistanceUnit: LengthFormatter.Unit {
+        return if usesMetricSystem {
+            .kilometer
+        } else {
+            switch regionCode {
+            case "GB":
+                .yard
+            default:
+                .mile
+            }
+        }
+    }
 }

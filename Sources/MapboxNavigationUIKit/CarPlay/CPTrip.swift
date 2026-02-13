@@ -6,7 +6,7 @@ extension CPTrip {
     convenience init?(
         routes: NavigationRoutes,
         locale: Locale,
-        distanceMeasurementSystem: MeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem
     ) async {
         let waypoints: [Waypoint] = routes.waypoints
 
@@ -14,14 +14,14 @@ extension CPTrip {
             Self.makeMainRouteChoice(
                 routes: routes,
                 locale: locale,
-                distanceMeasurementSystem: distanceMeasurementSystem
+                unitMeasurementSystem: unitMeasurementSystem
             ),
         ]
 
         for alternativeRoute in routes.alternativeRoutes {
             let choice = await Self.makeRouteChoice(
                 routes: routes, alternateRoute: alternativeRoute, locale: locale,
-                distanceMeasurementSystem: distanceMeasurementSystem
+                unitMeasurementSystem: unitMeasurementSystem
             )
             routeChoices.append(choice)
         }
@@ -52,12 +52,12 @@ extension CPTrip {
         routes: NavigationRoutes,
         alternateRoute: AlternativeRoute,
         locale: Locale,
-        distanceMeasurementSystem: MeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem
     ) async -> CPRouteChoice {
         let routeChoice = prepareRouteChoiceModel(
             for: alternateRoute.route,
             locale: locale,
-            distanceMeasurementSystem: distanceMeasurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         )
 
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
@@ -72,12 +72,12 @@ extension CPTrip {
     private static func makeMainRouteChoice(
         routes: NavigationRoutes,
         locale: Locale,
-        distanceMeasurementSystem: MeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem
     ) -> CPRouteChoice {
         let routeChoice = prepareRouteChoiceModel(
             for: routes.mainRoute.route,
             locale: locale,
-            distanceMeasurementSystem: distanceMeasurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         )
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
         let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes, searchResultRecord: nil)
@@ -89,7 +89,7 @@ extension CPTrip {
     private static func prepareRouteChoiceModel(
         for route: Route,
         locale: Locale,
-        distanceMeasurementSystem: MeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem
     ) -> CPRouteChoice {
         let summaryVariants = [
             DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime),
@@ -99,7 +99,7 @@ extension CPTrip {
         let measurement = Measurement(distance: route.distance)
         let localizedMeasurement = measurement.localized(
             into: locale,
-            measurementSystem: distanceMeasurementSystem
+            unitMeasurementSystem: unitMeasurementSystem
         )
         return CPRouteChoice(
             summaryVariants: summaryVariants.compactMap { $0 },

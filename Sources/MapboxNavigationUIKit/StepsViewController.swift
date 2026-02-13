@@ -25,7 +25,20 @@ public class StepsViewController: UIViewController, NavigationComponent {
     var previousStepIndex: Int = NSNotFound
 
     /// The measurement system used to overwrite the measurement system used to request route.
+    @available(*, deprecated, message: "Use `unitMeasurementSystem` instead.")
     public var measurementSystem: MeasurementSystem? {
+        set {
+            guard let newValue else {
+                unitMeasurementSystem = nil
+                return
+            }
+            unitMeasurementSystem = newValue == .metric ? .metric : .imperial
+        }
+        get { unitMeasurementSystem == .metric ? .metric : .imperial }
+    }
+
+    /// The measurement system used to overwrite the measurement system used to request route.
+    public var unitMeasurementSystem: UnitMeasurementSystem? {
         didSet {
             tableView?.reloadData()
         }
@@ -213,8 +226,8 @@ extension StepsViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        if let measurementSystem {
-            cell.instructionsView.distanceFormatter.measurementSystem = measurementSystem
+        if let unitMeasurementSystem {
+            cell.instructionsView.distanceFormatter.unitMeasurementSystem = unitMeasurementSystem
         }
         return cell
     }

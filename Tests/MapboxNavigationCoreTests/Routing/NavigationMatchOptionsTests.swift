@@ -18,7 +18,7 @@ final class NavigationMatchOptionsTests: XCTestCase {
         navigationPrerequisitesAssertions(options: options)
     }
 
-    func navigationPrerequisitesAssertions(options: DirectionsOptions) {
+    func navigationPrerequisitesAssertions(options: NavigationMatchOptions) {
         XCTAssertEqual(options.profileIdentifier, .automobileAvoidingTraffic)
         XCTAssertEqual(options.routeShapeResolution, .full)
         XCTAssertEqual(options.shapeFormat, .polyline6)
@@ -27,8 +27,8 @@ final class NavigationMatchOptionsTests: XCTestCase {
         XCTAssertTrue(options.includesSpokenInstructions)
         XCTAssertTrue(options.includesSteps)
         XCTAssertEqual(options.locale, Locale.nationalizedCurrent)
-        let distanceMeasurementSystem: MeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
-        XCTAssertEqual(options.distanceMeasurementSystem, distanceMeasurementSystem)
+        let unitMeasurementSystem: UnitMeasurementSystem = .init(options.distanceUnit)
+        XCTAssertEqual(options.unitMeasurementSystem, unitMeasurementSystem)
     }
 
     func testDefaultAttributeOptions() {
@@ -60,7 +60,8 @@ final class NavigationMatchOptionsTests: XCTestCase {
         )
     }
 
-    func testSetDistanceMeasurementSystemToMatchOptions() {
+    @available(*, deprecated)
+    func testSetDistanceMeasurementSystem() {
         let waypoints = coordinates.map { Waypoint(coordinate: $0) }
 
         let options1 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .meter)
@@ -68,6 +69,25 @@ final class NavigationMatchOptionsTests: XCTestCase {
 
         let options2 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .mile)
         XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
+
+        let options3 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .yard)
+        XCTAssertEqual(options3.distanceMeasurementSystem, .imperial)
+    }
+
+    func testSetUnitMeasurementSystem() {
+        let waypoints = coordinates.map { Waypoint(coordinate: $0) }
+
+        let options1 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .meter)
+        XCTAssertEqual(options1.unitMeasurementSystem, .metric)
+
+        let options2 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .mile)
+        XCTAssertEqual(options2.unitMeasurementSystem, .imperial)
+
+        let options3 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .yard)
+        XCTAssertEqual(options3.unitMeasurementSystem, .britishImperial)
+
+        let options4 = NavigationMatchOptions(waypoints: waypoints, distanceUnit: .foot)
+        XCTAssertEqual(options4.unitMeasurementSystem, .imperial)
     }
 
     func testSetShapeFormat() {
@@ -106,19 +126,26 @@ final class NavigationMatchOptionsTests: XCTestCase {
         XCTAssertEqual(options.locale, .init(identifier: "ja_JP"))
     }
 
-    func testSetDistanceMeasurementSystem() {
+    func testSetUnitMeasurementSystemFromQueryItems() {
         let queryItems1: [URLQueryItem] = [
             .init(name: "voice_units", value: "metric"),
             .init(name: "language", value: "ja_JP"),
         ]
         let options1 = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems1)
-        XCTAssertEqual(options1.distanceMeasurementSystem, .metric)
+        XCTAssertEqual(options1.unitMeasurementSystem, .metric)
 
         let queryItems2: [URLQueryItem] = [
             .init(name: "voice_units", value: "imperial"),
             .init(name: "language", value: "ja_JP"),
         ]
         let options2 = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems2)
-        XCTAssertEqual(options2.distanceMeasurementSystem, .imperial)
+        XCTAssertEqual(options2.unitMeasurementSystem, .imperial)
+
+        let queryItems3: [URLQueryItem] = [
+            .init(name: "voice_units", value: "british_imperial"),
+            .init(name: "language", value: "ja_JP"),
+        ]
+        let options3 = NavigationMatchOptions(waypoints: waypoints, queryItems: queryItems3)
+        XCTAssertEqual(options3.unitMeasurementSystem, .britishImperial)
     }
 }

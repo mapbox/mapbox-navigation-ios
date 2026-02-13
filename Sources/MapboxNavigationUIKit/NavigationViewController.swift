@@ -595,8 +595,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                 for: .valueChanged
             )
             if let options = _navigationRoutes?.mainRoute.directionsOptions {
-                viewController.instructionsBannerView.distanceFormatter.measurementSystem =
-                    options.distanceMeasurementSystem
+                viewController.instructionsBannerView.distanceFormatter.unitMeasurementSystem =
+                    options.unitMeasurementSystem
             }
 
             return viewController
@@ -612,7 +612,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
             if let options = _navigationRoutes?.mainRoute.directionsOptions {
-                viewController.distanceFormatter.measurementSystem = options.distanceMeasurementSystem
+                viewController.distanceFormatter.unitMeasurementSystem = options.unitMeasurementSystem
             }
 
             return viewController
