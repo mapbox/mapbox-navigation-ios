@@ -30,16 +30,25 @@ public struct ElectronicHorizonConfig: Equatable, Sendable {
     /// If `nil` we update electronic horizon on each navigation status.
     public let minimumTimeIntervalBetweenUpdates: TimeInterval?
 
+    /// Enables access to enhanced data attributes (from ADAS data layer) in the ``RoadGraph``.
+    /// - Important: Using enhanced data will require additional resources: bandwidth, disk space, and RAM.
+    /// Do not enable it if you are not sure what that is.
+    ///
+    /// Defaults to `false`.
+    public let enableEnhancedDataAlongEH: Bool
+
     public init(
         length: CLLocationDistance,
         expansionLevel: UInt,
         branchLength: CLLocationDistance,
-        minTimeDeltaBetweenUpdates: TimeInterval?
+        minTimeDeltaBetweenUpdates: TimeInterval?,
+        enableEnhancedDataAlongEH: Bool = false
     ) {
         self.length = length
         self.expansionLevel = expansionLevel
         self.branchLength = branchLength
         self.minimumTimeIntervalBetweenUpdates = minTimeDeltaBetweenUpdates
+        self.enableEnhancedDataAlongEH = enableEnhancedDataAlongEH
     }
 }
 
@@ -52,7 +61,7 @@ extension MapboxNavigationNative_Private.ElectronicHorizonOptions {
             doNotRecalculateInUncertainState: true,
             minTimeDeltaBetweenUpdates: options.minimumTimeIntervalBetweenUpdates as NSNumber?,
             alertsService: nil,
-            enableEnhancedDataAlongEH: false // TODO: (NAVIOS-2147) Expose to public if needed
+            enableEnhancedDataAlongEH: options.enableEnhancedDataAlongEH
         )
     }
 }

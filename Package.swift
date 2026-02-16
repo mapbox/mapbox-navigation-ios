@@ -103,6 +103,7 @@ let package = Package(
             ],
             resources: [
                 .copy("Fixtures"),
+                .copy("AdasTilestore"),
             ]
         ),
         .target(

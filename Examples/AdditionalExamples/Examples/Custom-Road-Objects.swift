@@ -20,7 +20,8 @@ final class CustomRoadObjectsViewController: UIViewController {
                 length: 500,
                 expansionLevel: 0,
                 branchLength: 50,
-                minTimeDeltaBetweenUpdates: nil
+                minTimeDeltaBetweenUpdates: nil,
+                enableEnhancedDataAlongEH: false
             )
         )
     )

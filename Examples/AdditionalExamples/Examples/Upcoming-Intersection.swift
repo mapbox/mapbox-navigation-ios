@@ -25,7 +25,8 @@ final class ElectronicHorizonEventsViewController: UIViewController {
             length: 500,
             expansionLevel: 1,
             branchLength: 50,
-            minTimeDeltaBetweenUpdates: nil
+            minTimeDeltaBetweenUpdates: nil,
+            enableEnhancedDataAlongEH: false
         )
         return MapboxNavigationProvider(coreConfig: coreConfig)
     }()

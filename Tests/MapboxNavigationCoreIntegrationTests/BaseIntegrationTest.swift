@@ -26,16 +26,27 @@ class BaseIntegrationTest: BaseTestCase {
         billingServiceMock = .init()
         let billingHandler = BillingHandler.__createMockedHandler(with: billingServiceMock)
         let credentials = NavigationCoreApiConfiguration(accessToken: .mockedAccessToken)
-        coreConfig = CoreConfig(
-            credentials: credentials,
-            routingConfig: .init(routeRefreshPeriod: 1)
-        )
-        let origin = CLLocationCoordinate2D(latitude: 40.76050975068355, longitude: -73.98778274913309)
-        let location = CLLocation(latitude: origin.latitude, longitude: origin.longitude)
-        locationPublisher = .init(location)
+        coreConfig = makeBaseCoreConfig(credentials: credentials)
+        locationPublisher = .init(makeInitialLocation())
         coreConfig.__customBillingHandler = BillingHandlerProvider(billingHandler)
         coreConfig.locationSource = .custom(.mock(locationPublisher.eraseToAnyPublisher()))
         navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
+    }
+
+    /// Creates the base CoreConfig. Subclasses can override this method to customize the configuration.
+    @MainActor
+    func makeBaseCoreConfig(credentials: NavigationCoreApiConfiguration) -> CoreConfig {
+        CoreConfig(
+            credentials: credentials,
+            routingConfig: .init(routeRefreshPeriod: 1)
+        )
+    }
+
+    /// Creates the initial location for the location publisher.
+    /// Subclasses can override this method to provide a different starting location.
+    func makeInitialLocation() -> CLLocation {
+        let origin = CLLocationCoordinate2D(latitude: 40.76050975068355, longitude: -73.98778274913309)
+        return CLLocation(latitude: origin.latitude, longitude: origin.longitude)
     }
 
     @MainActor

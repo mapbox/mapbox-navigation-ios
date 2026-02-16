@@ -19,10 +19,7 @@ public final class RoadGraph: Sendable {
     /// - Parameter edgeIdentifier: The identifier of the edge to query.
     /// - Returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is not in the cache.
     public func edgeMetadata(edgeIdentifier: Edge.Identifier) -> Edge.Metadata? {
-        if let edgeMetadata = native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
-            return Edge.Metadata(edgeMetadata)
-        }
-        return nil
+        native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)).map { Edge.Metadata($0) }
     }
 
     /// Returns a line string geometry corresponding to the given edge identifier.
@@ -30,10 +27,22 @@ public final class RoadGraph: Sendable {
     /// - Parameter edgeIdentifier: The identifier of the edge to query.
     /// - Returns: A line string corresponding to the given edge identifier, or `nil` if the edge is not in the cache.
     public func edgeShape(edgeIdentifier: Edge.Identifier) -> LineString? {
-        guard let locations = native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)) else {
-            return nil
+        native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)).map {
+            LineString($0.map(\.value))
         }
-        return LineString(locations.map(\.value))
+    }
+
+    /// Returns ``RoadGraph/Edge/ADASAttributes`` corresponding to the given edge identifier.
+    /// - Note: For this method to work, ``ElectronicHorizonConfig/enableEnhancedDataAlongEH``
+    /// flag should be enabled during config.
+    ///
+    /// - Parameter edgeIdentifier: The identifier of the edge to query.
+    /// - Returns: ``Edge/ADASAttributes`` corresponding to the given edge identifier,
+    /// or `nil` if the edge is not in the cache.
+    public func adasAttributes(edgeIdentifier: Edge.Identifier) -> Edge.ADASAttributes? {
+        native.getAdasAttributes(forEdgeId: UInt64(edgeIdentifier)).map {
+            Edge.ADASAttributes($0, edgeIdentifier: edgeIdentifier)
+        }
     }
 
     // MARK: Retrieving the Shape of an Object
@@ -43,10 +52,9 @@ public final class RoadGraph: Sendable {
     /// - Parameter path: The path of the geometry.
     /// - Returns: A line string corresponding to the given path, or `nil` if any of path edges are not in the cache.
     public func shape(of path: Path) -> LineString? {
-        guard let locations = native.getPathShape(for: GraphPath(path)) else {
-            return nil
+        native.getPathShape(for: GraphPath(path)).map {
+            LineString($0.map(\.value))
         }
-        return LineString(locations.map(\.value))
     }
 
     /// Returns a point corresponding to the given position.
@@ -54,10 +62,9 @@ public final class RoadGraph: Sendable {
     /// - Parameter position: The position of the point.
     /// - Returns: A point corresponding to the given position, or `nil` if the edge is not in the cache.
     public func shape(of position: Position) -> Point? {
-        guard let location = native.getPositionCoordinate(for: GraphPosition(position)) else {
-            return nil
+        native.getPositionCoordinate(for: GraphPosition(position)).map {
+            Point($0.value)
         }
-        return Point(location.value)
     }
 
     init(_ native: GraphAccessor) {

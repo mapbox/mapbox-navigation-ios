@@ -8,7 +8,7 @@ extension RoadGraph {
     /// Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and
     /// require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level
     /// of use of the feature.
-    public struct Position: Equatable, Sendable {
+    public struct Position: Hashable, Sendable {
         /// The edge identifier along which the point object lies.
         public let edgeIdentifier: Edge.Identifier
 
