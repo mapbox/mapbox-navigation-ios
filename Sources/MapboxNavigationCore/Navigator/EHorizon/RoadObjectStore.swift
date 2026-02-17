@@ -126,4 +126,10 @@ extension RoadObjectStore: RoadObjectsStoreObserver {
     public func onRoadObjectRemoved(forId id: String) {
         delegate?.didRemoveRoadObject(identifier: id)
     }
+
+    public func onCustomRoadObjectMatched(forId id: String) {}
+
+    public func onCustomRoadObjectAddingCancelled(forId id: String) {}
+
+    public func onCustomRoadObjectMatchingFailed(forId id: String) {}
 }

@@ -145,7 +145,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         self.roadGraph = factory.roadGraph
         self.navigator = factory.navigator
         self.telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator)
-        self.roadObjectStore = RoadObjectStore(navigator.native.roadObjectStore())
+        self.roadObjectStore = RoadObjectStore(navigator.native.roadObjectsStore())
         self.roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle))
         self.rerouteController = RerouteController(
             configuration: .init(
@@ -186,7 +186,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
         navigator.native.restoreNavigationSession(for: previousNavigationSessionState)
         telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator, previousSession: previousSession)
-        roadObjectStore.native = navigator.native.roadObjectStore()
+        roadObjectStore.native = navigator.native.roadObjectsStore()
         roadObjectMatcher.native = MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle)
         rerouteController = RerouteController(
             configuration: .init(

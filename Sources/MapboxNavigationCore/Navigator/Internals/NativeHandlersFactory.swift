@@ -218,7 +218,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
             incidentsOptions: nativeIncidentsOptions,
             noSignalSimulationEnabled: nil,
             useSensors: NSNumber(booleanLiteral: utilizeSensorData),
-            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute.nativeValue
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute.nativeValue,
+            roadObjectsMatcherOptions: nil
         )
     }
 
