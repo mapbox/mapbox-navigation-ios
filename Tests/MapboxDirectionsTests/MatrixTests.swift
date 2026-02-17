@@ -28,21 +28,9 @@ class MatrixTests: XCTestCase {
     }
 
     func testRequest() {
-        let waypoints = [
-            Waypoint(
-                coordinate: CLLocationCoordinate2D(latitude: 37.751668, longitude: -122.418408),
-                name: "Mission Street"
-            ),
-            Waypoint(
-                coordinate: CLLocationCoordinate2D(latitude: 37.755184, longitude: -122.422959),
-                name: "22nd Street"
-            ),
-            Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.759695, longitude: -122.426911)),
-        ]
-
         let options = MatrixOptions(
-            sources: waypoints,
-            destinations: waypoints,
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
             profileIdentifier: .automobile
         )
         options.attributeOptions = [.distance, .expectedTravelTime]
@@ -57,7 +45,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(queryItems.count, 2)
         XCTAssertTrue(
             components.path
-                .contains(waypoints.map(\.coordinate.requestDescription).joined(separator: ";"))
+                .contains(testMatrixWaypoints.map(\.coordinate.requestDescription).joined(separator: ";"))
         )
         XCTAssertTrue(queryItems.contains(where: { $0.name == "access_token" && $0.value == BogusToken }))
         XCTAssertTrue(queryItems.contains(where: {
@@ -71,17 +59,7 @@ class MatrixTests: XCTestCase {
     }
 
     func testWaypointParameters() {
-        var waypoints = [
-            Waypoint(
-                coordinate: CLLocationCoordinate2D(latitude: 37.751668, longitude: -122.418408),
-                name: "Mission Street"
-            ),
-            Waypoint(
-                coordinate: CLLocationCoordinate2D(latitude: 37.755184, longitude: -122.422959),
-                name: "22nd Street"
-            ),
-            Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.759695, longitude: -122.426911)),
-        ]
+        var waypoints = testMatrixWaypoints
 
         waypoints[1].allowsArrivingOnOppositeSide = false
 
@@ -307,6 +285,225 @@ class MatrixTests: XCTestCase {
             return []
         }
         return queryItems
+    }
+
+    // MARK: Attribute Options URL Query Item Tests
+
+    private var testMatrixWaypoints: [Waypoint] {
+        [
+            Waypoint(
+                coordinate: CLLocationCoordinate2D(latitude: 37.751668, longitude: -122.418408),
+                name: "Mission Street"
+            ),
+            Waypoint(
+                coordinate: CLLocationCoordinate2D(latitude: 37.755184, longitude: -122.422959),
+                name: "22nd Street"
+            ),
+            Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.759695, longitude: -122.426911)),
+        ]
+    }
+
+    func testAttributeOptionsWithSupportedAttributes() {
+        // Happy path: MatrixOptions only supports distance and expectedTravelTime
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        options.attributeOptions = [.distance, .expectedTravelTime]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration (expectedTravelTime)")
+    }
+
+    func testAttributeOptionsFiltersUnsupportedAttributes() {
+        // Test that unsupported attributes are filtered out for MatrixOptions
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        // Try to set attributes that MatrixOptions doesn't support
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .congestionLevel,
+            .maximumSpeedLimit,
+            .numericCongestionLevel,
+            .closures,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        // Only distance and duration should be included
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+
+        // All other attributes should be filtered out
+        XCTAssertFalse(annotationsValue.contains("speed"), "Should NOT contain speed")
+        XCTAssertFalse(annotationsValue.contains("congestion"), "Should NOT contain congestion")
+        XCTAssertFalse(annotationsValue.contains("maxspeed"), "Should NOT contain maxspeed")
+        XCTAssertFalse(annotationsValue.contains("congestion_numeric"), "Should NOT contain congestion_numeric")
+        XCTAssertFalse(annotationsValue.contains("closure"), "Should NOT contain closure")
+    }
+
+    func testAttributeOptionsWithAutomobileProfile() {
+        // Test that profile identifier doesn't affect filtering for MatrixOptions
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobile
+        )
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .maximumSpeedLimit, // Not supported even for automobile profile
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertFalse(annotationsValue.contains("maxspeed"), "Should NOT contain maxspeed for MatrixOptions")
+    }
+
+    func testAttributeOptionsWithWalkingProfile() {
+        // Test that MatrixOptions behavior is the same regardless of profile
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .walking
+        )
+        options.attributeOptions = [.distance, .expectedTravelTime, .speed]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertFalse(annotationsValue.contains("speed"), "Should NOT contain speed for MatrixOptions")
+    }
+
+    func testAttributeOptionsEmpty() {
+        // Test that no annotations query item is present when attributeOptions is empty
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        options.attributeOptions = []
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNil(annotationsItem, "Annotations query item should be nil when attributeOptions is empty")
+    }
+
+    func testAttributeOptionsWithOnlyDistance() {
+        // Test with only distance attribute
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        options.attributeOptions = [.distance]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertFalse(annotationsValue.contains("duration"), "Should NOT contain duration when not requested")
+    }
+
+    func testAttributeOptionsWithOnlyTravelTime() {
+        // Test with only expectedTravelTime attribute
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        options.attributeOptions = [.expectedTravelTime]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertFalse(annotationsValue.contains("distance"), "Should NOT contain distance when not requested")
+    }
+
+    func testAttributeOptionsWithCustomOption() {
+        // Test that custom attributes are preserved
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        var customAttributeOptions = AttributeOptions(rawValue: 1 << 30)
+        customAttributeOptions.customOptionsByRawValue[1 << 30] = "customOption"
+        options.attributeOptions = customAttributeOptions
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        // Custom options should be included even if not in the supported list
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+    }
+
+    func testAttributeOptionsCombinedSupportedAndCustom() {
+        // Test that custom attributes are preserved alongside supported ones
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+        var customAttributeOption = AttributeOptions(rawValue: 1 << 30)
+        customAttributeOption.customOptionsByRawValue[1 << 30] = "customOption"
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            customAttributeOption,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        // Custom option should be included
+        XCTAssertTrue(annotationsValue.contains("customOption"), "Should contain customOption")
+    }
+
+    func testAttributeOptionsWithCustomProfile() {
+        // Test that custom profiles don't change filtering behavior
+        let customProfile = ProfileIdentifier(rawValue: "custom/driving-traffic")
+        let options = MatrixOptions(
+            sources: testMatrixWaypoints,
+            destinations: testMatrixWaypoints,
+            profileIdentifier: customProfile
+        )
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .congestionLevel, // Should still be filtered out
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        // Even with traffic profile, congestion should be filtered for MatrixOptions
+        XCTAssertFalse(annotationsValue.contains("congestion"), "Should NOT contain congestion for MatrixOptions")
     }
 }
 #endif

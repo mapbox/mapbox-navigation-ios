@@ -47,9 +47,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         if mappedQueryItems[CodingKeys.includesAlternativeRoutes.stringValue] == "true" {
             self.includesAlternativeRoutes = true
         }
-        if mappedQueryItems[CodingKeys.includesExitRoundaboutManeuver.stringValue] == "true" {
-            self.includesExitRoundaboutManeuver = true
-        }
         if let mappedValue = mappedQueryItems[CodingKeys.alleyPriority.stringValue],
            let alleyPriority = Double(mappedValue)
         {
@@ -143,11 +140,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         }
 
         let formatter = DateFormatter.ISO8601DirectionsFormatter()
-        if let mappedValue = mappedQueryItems[CodingKeys.departAt.stringValue],
-           let departAt = formatter.date(from: mappedValue)
-        {
-            self.departAt = departAt
-        }
         if let mappedValue = mappedQueryItems[CodingKeys.arriveBy.stringValue],
            let arriveBy = formatter.date(from: mappedValue)
         {
@@ -207,7 +199,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     private enum CodingKeys: String, CodingKey {
         case allowsUTurnAtWaypoint = "continue_straight"
         case includesAlternativeRoutes = "alternatives"
-        case includesExitRoundaboutManeuver = "roundabout_exits"
         case roadClassesToAvoid = "exclude"
         case roadClassesToAllow = "include"
         case refreshingEnabled = "enable_refresh"
@@ -220,7 +211,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         case speed = "walking_speed"
         case waypointTargets = "waypoint_targets"
         case arriveBy = "arrive_by"
-        case departAt = "depart_at"
         case layers
         case includesTollPrices = "compute_toll_cost"
         case bearings
@@ -233,7 +223,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(allowsUTurnAtWaypoint, forKey: .allowsUTurnAtWaypoint)
         try container.encode(includesAlternativeRoutes, forKey: .includesAlternativeRoutes)
-        try container.encode(includesExitRoundaboutManeuver, forKey: .includesExitRoundaboutManeuver)
         try container.encode(roadClassesToAvoid, forKey: .roadClassesToAvoid)
         try container.encode(roadClassesToAllow, forKey: .roadClassesToAllow)
         try container.encode(refreshingEnabled, forKey: .refreshingEnabled)
@@ -245,12 +234,9 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         try container.encodeIfPresent(walkwayPriority, forKey: .walkwayPriority)
         try container.encodeIfPresent(speed, forKey: .speed)
 
-        let formatter = DateFormatter.ISO8601DirectionsFormatter()
         if let arriveBy {
+            let formatter = DateFormatter.ISO8601DirectionsFormatter()
             try container.encode(formatter.string(from: arriveBy), forKey: .arriveBy)
-        }
-        if let departAt {
-            try container.encode(formatter.string(from: departAt), forKey: .departAt)
         }
 
         if includesTollPrices {
@@ -263,8 +249,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         self.allowsUTurnAtWaypoint = try container.decode(Bool.self, forKey: .allowsUTurnAtWaypoint)
 
         self.includesAlternativeRoutes = try container.decode(Bool.self, forKey: .includesAlternativeRoutes)
-
-        self.includesExitRoundaboutManeuver = try container.decode(Bool.self, forKey: .includesExitRoundaboutManeuver)
 
         self.roadClassesToAvoid = try container.decode(RoadClasses.self, forKey: .roadClassesToAvoid)
 
@@ -294,12 +278,8 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
 
         self.speed = try container.decodeIfPresent(LocationSpeed.self, forKey: .speed)
 
-        let formatter = DateFormatter.ISO8601DirectionsFormatter()
-        if let dateString = try container.decodeIfPresent(String.self, forKey: .departAt) {
-            self.departAt = formatter.date(from: dateString)
-        }
-
         if let dateString = try container.decodeIfPresent(String.self, forKey: .arriveBy) {
+            let formatter = DateFormatter.ISO8601DirectionsFormatter()
             self.arriveBy = formatter.date(from: dateString)
         }
 
@@ -407,12 +387,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     /// This property has no effect unless the profile identifier is set to ``ProfileIdentifier/automobile``.
     open var arriveBy: Date?
 
-    /// The desired departure time, ignoring seconds precision, in the local time at the route origin
-    ///
-    /// This property has no effect unless the profile identifier is set to ``ProfileIdentifier/automobile`` or
-    /// ``ProfileIdentifier/automobileAvoidingTraffic``.
-    open var departAt: Date?
-
     // MARK: Specifying the Response Format
 
     /// A Boolean value indicating whether alternative routes should be included in the response.
@@ -430,16 +404,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     ///
     /// The default value of this property is `false`.
     open var includesAlternativeRoutes = false
-
-    /// A Boolean value indicating whether the route includes a ``ManeuverType/exitRoundabout`` or
-    /// ``ManeuverType/exitRotary`` step when traversing a roundabout or rotary, respectively.
-    ///
-    /// If this option is set to `true`, a route that traverses a roundabout includes both a
-    /// ``ManeuverType/takeRoundabout`` step and a ``ManeuverType/exitRoundabout`` step; likewise, a route that
-    /// traverses a large, named roundabout includes both a ``ManeuverType/takeRotary`` step and a
-    /// ``ManeuverType/exitRotary`` step. Otherwise, it only includes a ``ManeuverType/takeRoundabout`` or
-    /// ``ManeuverType/takeRotary`` step. This option is set to `false` by default.
-    open var includesExitRoundaboutManeuver = false
 
     /// A Boolean value indicating whether `Directions` can refresh time-dependent properties of the ``RouteLeg``s of
     /// the resulting ``Route``s.
@@ -546,17 +510,15 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             ),
         ]
 
-        if includesExitRoundaboutManeuver {
-            params.append(URLQueryItem(
-                name: CodingKeys.includesExitRoundaboutManeuver.stringValue,
-                value: includesExitRoundaboutManeuver.queryString
-            ))
-        }
-        if let alleyPriority = alleyPriority?.rawValue {
+        if let alleyPriority = alleyPriority?.rawValue,
+           profileIdentifier.isAutomobile
+        {
             params.append(URLQueryItem(name: CodingKeys.alleyPriority.stringValue, value: String(alleyPriority)))
         }
 
-        if let walkwayPriority = walkwayPriority?.rawValue {
+        if let walkwayPriority = walkwayPriority?.rawValue,
+           profileIdentifier.isWalking
+        {
             params.append(URLQueryItem(name: CodingKeys.walkwayPriority.stringValue, value: String(walkwayPriority)))
         }
 
@@ -599,39 +561,38 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             ))
         }
 
-        if let maximumHeight {
-            let heightInMeters = maximumHeight.converted(to: .meters).value
+        if let maximumHeight,
+           profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic
+        {
+            var heightInMeters = maximumHeight.converted(to: .meters).value
+            heightInMeters = max(0, min(10, heightInMeters))
             params.append(URLQueryItem(name: CodingKeys.maximumHeight.stringValue, value: String(heightInMeters)))
         }
 
-        if let maximumWidth {
-            let widthInMeters = maximumWidth.converted(to: .meters).value
+        if let maximumWidth,
+           profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic
+        {
+            var widthInMeters = maximumWidth.converted(to: .meters).value
+            widthInMeters = max(0, min(10, widthInMeters))
             params.append(URLQueryItem(name: CodingKeys.maximumWidth.stringValue, value: String(widthInMeters)))
         }
 
-        if let maximumWeight {
-            let weightInTonnes = maximumWeight.converted(to: .metricTons).value
+        if let maximumWeight,
+           profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic
+        {
+            var weightInTonnes = maximumWeight.converted(to: .metricTons).value
+            weightInTonnes = max(0, min(100, weightInTonnes))
             params.append(URLQueryItem(name: CodingKeys.maximumWeight.stringValue, value: String(weightInTonnes)))
         }
 
-        if profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic {
+        if profileIdentifier.isAutomobile,
+           let arriveBy
+        {
             let formatter = DateFormatter.ISO8601DirectionsFormatter()
-
-            if let departAt {
-                params.append(URLQueryItem(
-                    name: CodingKeys.departAt.stringValue,
-                    value: String(formatter.string(from: departAt))
-                ))
-            }
-
-            if profileIdentifier.isAutomobile,
-               let arriveBy
-            {
-                params.append(URLQueryItem(
-                    name: CodingKeys.arriveBy.stringValue,
-                    value: String(formatter.string(from: arriveBy))
-                ))
-            }
+            params.append(URLQueryItem(
+                name: CodingKeys.arriveBy.stringValue,
+                value: String(formatter.string(from: arriveBy))
+            ))
         }
 
         if includesTollPrices {
@@ -646,14 +607,18 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             params.append(URLQueryItem(name: CodingKeys.bearings.stringValue, value: bearings))
         }
 
-        if let closureSnapping {
+        if let closureSnapping,
+           profileIdentifier.isAutomobileAvoidingTraffic
+        {
             params.append(URLQueryItem(
                 name: CodingKeys.closureSnapping.stringValue,
                 value: closureSnapping
             ))
         }
 
-        if let staticClosureSnapping {
+        if let staticClosureSnapping,
+           profileIdentifier.isAutomobileAvoidingTraffic
+        {
             params.append(URLQueryItem(
                 name: CodingKeys.staticClosureSnapping.stringValue,
                 value: staticClosureSnapping
@@ -695,7 +660,7 @@ extension LocationDistance {
 extension DateFormatter {
     /// Special ISO8601 date converter for `depart_at` and `arrive_by` parameters, as Directions API explicitly require
     /// no seconds bit.
-    fileprivate static func ISO8601DirectionsFormatter() -> DateFormatter {
+    static func ISO8601DirectionsFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
         formatter.timeZone = TimeZone(secondsFromGMT: 0)

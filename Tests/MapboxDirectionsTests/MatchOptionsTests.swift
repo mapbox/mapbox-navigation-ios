@@ -117,6 +117,256 @@ class MatchOptionsTests: XCTestCase {
         XCTAssertEqual(subject.includesVisualInstructions, matchOptions.includesVisualInstructions)
         XCTAssertEqual(subject.bearings, "90.0,1.0;;")
     }
+
+    // MARK: Attribute Options URL Query Item Tests
+
+    func testAttributeOptionsWithFullResolutionAndTrafficProfile() {
+        // Happy path: full resolution with automobileAvoidingTraffic profile should include all supported attributes
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .congestionLevel,
+            .maximumSpeedLimit,
+            .numericCongestionLevel,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration (expectedTravelTime)")
+        XCTAssertTrue(annotationsValue.contains("speed"), "Should contain speed")
+        XCTAssertTrue(annotationsValue.contains("congestion"), "Should contain congestion")
+        XCTAssertTrue(annotationsValue.contains("maxspeed"), "Should contain maxspeed")
+        XCTAssertTrue(annotationsValue.contains("congestion_numeric"), "Should contain congestion_numeric")
+    }
+
+    func testAttributeOptionsDoesNotIncludeClosures() {
+        // MatchOptions should NOT support closures attribute (unlike RouteOptions)
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .closures, // This should be filtered out for MatchOptions
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertFalse(annotationsValue.contains("closure"), "Should NOT contain closure for MatchOptions")
+    }
+
+    func testAttributeOptionsFilteredForNonTrafficProfile() {
+        // Test that traffic-specific attributes are filtered out for non-traffic profiles
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobile)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .congestionLevel,
+            .maximumSpeedLimit,
+            .numericCongestionLevel,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        // These should be included for automobile profile
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertTrue(annotationsValue.contains("speed"), "Should contain speed")
+        XCTAssertTrue(annotationsValue.contains("maxspeed"), "Should contain maxspeed for automobile profile")
+
+        // These should be filtered out for non-traffic profiles
+        XCTAssertFalse(annotationsValue.contains("congestion"), "Should NOT contain congestion")
+        XCTAssertFalse(annotationsValue.contains("congestion_numeric"), "Should NOT contain congestion_numeric")
+    }
+
+    func testAttributeOptionsFilteredForNonAutomobileProfile() {
+        // Test that automobile-specific attributes are filtered out for non-automobile profiles
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .walking)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .maximumSpeedLimit,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        // These should be included for walking profile
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertTrue(annotationsValue.contains("speed"), "Should contain speed")
+
+        // maximumSpeedLimit should be filtered out for non-automobile profiles
+        XCTAssertFalse(annotationsValue.contains("maxspeed"), "Should NOT contain maxspeed for walking profile")
+    }
+
+    func testAttributeOptionsWithLowResolution() {
+        // Test that annotations are omitted when routeShapeResolution is not .full
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .low
+        options.attributeOptions = [
+            .congestionLevel,
+            .distance,
+            .expectedTravelTime,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNil(annotationsItem, "Annotations query item should be nil for low resolution")
+    }
+
+    func testAttributeOptionsWithSimplifiedResolution() {
+        // Test that annotations are omitted when routeShapeResolution is .low (simplified)
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .low
+        options.attributeOptions = [.congestionLevel, .distance]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNil(annotationsItem, "Annotations should be omitted for simplified resolution")
+    }
+
+    func testAttributeOptionsWithNoResolution() {
+        // Test that annotations are omitted when routeShapeResolution is .none
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .none
+        options.attributeOptions = [.congestionLevel]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNil(annotationsItem, "Annotations should be omitted when resolution is none")
+    }
+
+    func testAttributeOptionsEmpty() {
+        // Test that no annotations query item is present when attributeOptions is empty
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .full
+        options.attributeOptions = []
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNil(annotationsItem, "Annotations query item should be nil when attributeOptions is empty")
+    }
+
+    func testAttributeOptionsWithCyclingProfile() {
+        // Test attribute options for cycling profile
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .cycling)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .maximumSpeedLimit,
+            .congestionLevel,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        // Basic attributes should be included
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertTrue(annotationsValue.contains("speed"), "Should contain speed")
+
+        // Automobile-specific attributes should be filtered out
+        XCTAssertFalse(annotationsValue.contains("maxspeed"), "Should NOT contain maxspeed for cycling")
+        XCTAssertFalse(annotationsValue.contains("congestion"), "Should NOT contain congestion for cycling")
+    }
+
+    func testAttributeOptionsWithCustomProfile() {
+        // Test that custom profiles behave correctly
+        let customAutomobileProfile = ProfileIdentifier(rawValue: "custom/driving")
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: customAutomobileProfile)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .expectedTravelTime,
+            .speed,
+            .maximumSpeedLimit,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("duration"), "Should contain duration")
+        XCTAssertTrue(annotationsValue.contains("speed"), "Should contain speed")
+        XCTAssertTrue(annotationsValue.contains("maxspeed"), "Should contain maxspeed for custom automobile profile")
+    }
+
+    func testAttributeOptionsWithCustomOption() {
+        // Test that custom attributes are handled correctly
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .full
+        var customAttributeOptions = AttributeOptions(rawValue: 1 << 30)
+        customAttributeOptions.customOptionsByRawValue[1 << 30] = "customOption"
+        options.attributeOptions = customAttributeOptions
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        // customOption is not in the supported options list for MatchOptions, so it should fall through
+        // to the default case and be included as-is
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+    }
+
+    func testAttributeOptionsCombinedSupportedAndCustom() {
+        // Test that custom (unsupported) attributes are preserved alongside supported ones
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.routeShapeResolution = .full
+        var customAttributeOption = AttributeOptions(rawValue: 1 << 30)
+        customAttributeOption.customOptionsByRawValue[1 << 30] = "customOption"
+        options.attributeOptions = [
+            .distance,
+            .congestionLevel,
+            customAttributeOption, // Not in the standard supported list for MatchOptions
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("congestion"), "Should contain congestion")
+        // customOption should be included as a custom option
+        XCTAssertTrue(annotationsValue.contains("customOption"), "Should contain customOption")
+    }
+
+    func testAttributeOptionsWithCustomTrafficProfile() {
+        // Test custom traffic profiles filter attributes correctly
+        let customTrafficProfile = ProfileIdentifier(rawValue: "custom/driving-traffic")
+        let options = MatchOptions(coordinates: testCoordinates, profileIdentifier: customTrafficProfile)
+        options.routeShapeResolution = .full
+        options.attributeOptions = [
+            .distance,
+            .congestionLevel,
+            .numericCongestionLevel,
+            .maximumSpeedLimit,
+        ]
+
+        let annotationsItem = options.urlQueryItems.first { $0.name == "annotations" }
+        XCTAssertNotNil(annotationsItem, "Annotations query item should be present")
+
+        let annotationsValue = annotationsItem?.value ?? ""
+        // All traffic-related attributes should be included for custom traffic profile
+        XCTAssertTrue(annotationsValue.contains("distance"), "Should contain distance")
+        XCTAssertTrue(annotationsValue.contains("congestion"), "Should contain congestion for traffic profile")
+        XCTAssertTrue(
+            annotationsValue.contains("congestion_numeric"),
+            "Should contain congestion_numeric for traffic profile"
+        )
+        XCTAssertTrue(annotationsValue.contains("maxspeed"), "Should contain maxspeed for traffic profile")
+    }
 }
 
 private let testCoordinates = [

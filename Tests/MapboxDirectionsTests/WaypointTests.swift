@@ -279,7 +279,7 @@ class WaypointTests: XCTestCase {
         let to = Waypoint(coordinate: LocationCoordinate2D(latitude: 0, longitude: 0))
         let through = Waypoint(coordinate: LocationCoordinate2D(latitude: 0, longitude: 0))
 
-        let routeOptions = RouteOptions(waypoints: [from, through, to])
+        let routeOptions = RouteOptions(waypoints: [from, through, to], profileIdentifier: .automobileAvoidingTraffic)
         let matchOptions = MatchOptions(waypoints: [from, through, to], profileIdentifier: nil)
 
         routeOptions.waypoints[1].allowsSnappingToClosedRoad = true

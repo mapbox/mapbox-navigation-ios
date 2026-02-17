@@ -12,16 +12,14 @@
 ### Routing
 
 * Added support for British imperial measurement units.
+* Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
+* Fixed composing `RouteOptions`, `MatchOptions`, and `MatrixOptions` URL request parameters so that it only contains the supported variants.
 
 ### Electronic horizon
 
 * Extended `RoadGraph.Edge.Metadata` properties by adding `freeFlowSpeed`, `constrainedFlowSpeed`, `isFerry`, `isRoundabout`, `countryCodeISO3`, `surface` and `sapaType` members.
 * Added `ElectronicHorizonConfig.enableEnhancedDataAlongEH` option to allow requesting additional data from ADAS layer.
 * Added `RoadGraph.adasAttributes(edgeIdentifier:)` to fetch `ADASAttributes` on a given edge.
-
-### Routing
-
-* Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
 
 ### CarPlay
 

@@ -116,8 +116,8 @@ public class MatrixOptions: Codable {
     public var urlQueryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
 
-        if !attributeOptions.isEmpty {
-            queryItems.append(URLQueryItem(name: "annotations", value: attributeOptions.description))
+        attributeOptions.urlQueryItem(for: self, key: "annotations").map {
+            queryItems.append($0)
         }
 
         let mustArriveOnDrivingSide = !waypoints.filter { !$0.allowsArrivingOnOppositeSide }.isEmpty

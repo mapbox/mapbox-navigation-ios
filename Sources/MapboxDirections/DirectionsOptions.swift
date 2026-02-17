@@ -218,6 +218,15 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
                 }
             }
         }
+        if mappedQueryItems[CodingKeys.includesExitRoundaboutManeuver.stringValue] == "true" {
+            self.includesExitRoundaboutManeuver = true
+        }
+        let formatter = DateFormatter.ISO8601DirectionsFormatter()
+        if let mappedValue = mappedQueryItems[CodingKeys.departAt.stringValue],
+           let departAt = formatter.date(from: mappedValue)
+        {
+            self.departAt = departAt
+        }
 
         let waypointsData = [
             mappedQueryItems["approaches"]?.components(separatedBy: ";"),
@@ -330,6 +339,8 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         case includesSpokenInstructions = "voice_instructions"
         case unitMeasurementSystem = "voice_units"
         case includesVisualInstructions = "banner_instructions"
+        case includesExitRoundaboutManeuver = "roundabout_exits"
+        case departAt = "depart_at"
     }
 
     open func encode(to encoder: Encoder) throws {
@@ -344,6 +355,11 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         try container.encode(includesSpokenInstructions, forKey: .includesSpokenInstructions)
         try container.encode(unitMeasurementSystem.rawValue, forKey: .unitMeasurementSystem)
         try container.encode(includesVisualInstructions, forKey: .includesVisualInstructions)
+        try container.encode(includesExitRoundaboutManeuver, forKey: .includesExitRoundaboutManeuver)
+        if let departAt {
+            let formatter = DateFormatter.ISO8601DirectionsFormatter()
+            try container.encode(formatter.string(from: departAt), forKey: .departAt)
+        }
     }
 
     public required init(from decoder: Decoder) throws {
@@ -360,6 +376,12 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         let unitMeasurementSystemString = try container.decode(String.self, forKey: .unitMeasurementSystem)
         self.unitMeasurementSystem = UnitMeasurementSystem(rawValue: unitMeasurementSystemString)
         self.includesVisualInstructions = try container.decode(Bool.self, forKey: .includesVisualInstructions)
+
+        self.includesExitRoundaboutManeuver = try container.decode(Bool.self, forKey: .includesExitRoundaboutManeuver)
+        if let dateString = try container.decodeIfPresent(String.self, forKey: .departAt) {
+            let formatter = DateFormatter.ISO8601DirectionsFormatter()
+            self.departAt = formatter.date(from: dateString)
+        }
     }
 
     // MARK: Specifying the Path of the Route
@@ -489,6 +511,22 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
     /// This property does not persist after encoding and decoding.
     public var fetchStartDate: Date?
 
+    /// A Boolean value indicating whether the route includes a ``ManeuverType/exitRoundabout`` or
+    /// ``ManeuverType/exitRotary`` step when traversing a roundabout or rotary, respectively.
+    ///
+    /// If this option is set to `true`, a route that traverses a roundabout includes both a
+    /// ``ManeuverType/takeRoundabout`` step and a ``ManeuverType/exitRoundabout`` step; likewise, a route that
+    /// traverses a large, named roundabout includes both a ``ManeuverType/takeRotary`` step and a
+    /// ``ManeuverType/exitRotary`` step. Otherwise, it only includes a ``ManeuverType/takeRoundabout`` or
+    /// ``ManeuverType/takeRotary`` step. This option is set to `false` by default.
+    open var includesExitRoundaboutManeuver = false
+
+    /// The desired departure time, ignoring seconds precision, in the local time at the route origin
+    ///
+    /// This property has no effect unless the profile identifier is set to ``ProfileIdentifier/automobile`` or
+    /// ``ProfileIdentifier/automobileAvoidingTraffic``.
+    open var departAt: Date?
+
     // MARK: Getting the Request URL
 
     /// The path of the request URL, specifying service name, version and profile.
@@ -548,8 +586,8 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
             queryItems.append(URLQueryItem(name: "radiuses", value: radiuses))
         }
 
-        if let annotations {
-            queryItems.append(URLQueryItem(name: "annotations", value: annotations))
+        attributeOptions.urlQueryItem(for: self, key: "annotations").map {
+            queryItems.append($0)
         }
 
         if let waypointIndices {
@@ -558,6 +596,24 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
 
         if let names = waypointNames {
             queryItems.append(URLQueryItem(name: "waypoint_names", value: names))
+        }
+
+        if includesExitRoundaboutManeuver && includesSteps {
+            queryItems.append(URLQueryItem(
+                name: CodingKeys.includesExitRoundaboutManeuver.stringValue,
+                value: includesExitRoundaboutManeuver.queryString
+            ))
+        }
+
+        if let departAt,
+           profileIdentifier.isAutomobile || profileIdentifier.isAutomobileAvoidingTraffic
+        {
+            let formatter = DateFormatter.ISO8601DirectionsFormatter()
+
+            queryItems.append(URLQueryItem(
+                name: CodingKeys.departAt.stringValue,
+                value: String(formatter.string(from: departAt))
+            ))
         }
 
         return queryItems
