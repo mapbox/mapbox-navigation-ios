@@ -9,6 +9,7 @@
 ### Other changes
 
 * Added `RouteControllerNotificationUserInfoKey.shouldPlayRerouteSoundKey` to the user info dictionary of `Notification.Name.routeControllerDidReroute` notification. ([#4822](https://github.com/mapbox/mapbox-navigation-ios/pull/4822))
+* Fixed a bug with excessive `VisualInstructionDelegate.label(_:willPresent:as:)` delegate method call during initialization.
 
 ## v2.20.4
 
