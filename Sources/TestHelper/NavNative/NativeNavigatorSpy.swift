@@ -16,6 +16,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedRemovedRerouteObserver: RerouteObserver?
 
     public var rerouteController: RerouteControllerInterface!
+    @available(*, deprecated)
     public var rerouteDetector: RerouteDetectorInterface = RerouteDetectorSpy()
 
     public var startNavigationSessionCalled = false
@@ -94,6 +95,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
         rerouteController ?? super.getRerouteController()
     }
 
+    @available(*, deprecated)
     @_implementationOnly
     override public func getRerouteDetector() -> RerouteDetectorInterface? {
         rerouteDetector

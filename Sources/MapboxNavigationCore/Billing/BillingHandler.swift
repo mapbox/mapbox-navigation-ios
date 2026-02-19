@@ -430,7 +430,7 @@ final class BillingHandler: @unchecked Sendable {
         // as long as the final destination stays the same
         let oldApi = previousRouteProgress?.navigationRoutes.mapboxApi
         let newApi = newNavigationRoutes.mapboxApi
-        let checkOnlyLastWaypoint = reason == .reroute
+        let checkOnlyLastWaypoint = reason.isReroute
             && oldApi == .mapMatching
             && newApi == .directions
 

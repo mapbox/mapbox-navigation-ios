@@ -12,6 +12,7 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
     var passedRoutesData: (any RoutesData)?
     var passedError: DirectionsError?
     var passedRequestString: String?
+    var passedRerouteReason: RerouteReason?
 
     var returnedRouteOptions: RouteOptions?
 
@@ -20,6 +21,9 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
     var didReceiveRerouteCalled = false
     var didCancelRerouteCalled = false
     var didFailToRerouteCalled = false
+
+    var didFailToRerouteExpectation: XCTestExpectation?
+    var didReceiveRerouteExpectation: XCTestExpectation?
 
     func rerouteControllerWantsSwitchToAlternative(
         _ rerouteController: RerouteController,
@@ -37,10 +41,16 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
         passedRerouteController = rerouteController
     }
 
-    func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: any RoutesData) {
+    func rerouteControllerDidReceiveReroute(
+        _ rerouteController: RerouteController,
+        routesData: RoutesData,
+        reason: RerouteReason?
+    ) {
         didReceiveRerouteCalled = true
         passedRerouteController = rerouteController
         passedRoutesData = routesData
+        passedRerouteReason = reason
+        didReceiveRerouteExpectation?.fulfill()
     }
 
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController) {
@@ -52,6 +62,7 @@ final class ReroutingControllerDelegateSpy: ReroutingControllerDelegate {
         didFailToRerouteCalled = true
         passedRerouteController = rerouteController
         passedError = error
+        didFailToRerouteExpectation?.fulfill()
     }
 
     func rerouteController(
@@ -89,6 +100,12 @@ final class RerouteControllerTests: XCTestCase {
             initialManeuverAvoidanceRadius: 45.0
         )
         rerouteController = await rerouteController(with: configuration)
+        Environment.switchEnvironment(to: .test)
+    }
+
+    override func tearDown() {
+        Environment.switchEnvironment(to: .live)
+        super.tearDown()
     }
 
     @MainActor
@@ -193,6 +210,85 @@ final class RerouteControllerTests: XCTestCase {
         ).absoluteString
         XCTAssertEqual(nativeRerouteController.passedRerouteUrl, modifiedOptionsString)
         XCTAssertEqual(delegate.passedRequestString, url)
+    }
+
+    func testOnRerouteReceivedIfDetectsRerouteDisabled() async {
+        configuration = RerouteController.Configuration(
+            credentials: .mock(),
+            navigator: navigator,
+            configHandle: .mock(),
+            rerouteConfig: .init(detectsReroute: false),
+            initialManeuverAvoidanceRadius: 45.0
+        )
+        rerouteController = await rerouteController(with: configuration)
+
+        let mock = RouteInterfaceMock()
+        rerouteController.onRerouteReceived(
+            forRouteResponse: mock.responseJsonRef,
+            routeRequest: directionsUrl,
+            origin: .online
+        )
+        XCTAssertFalse(delegate.didReceiveRerouteCalled)
+        XCTAssertFalse(delegate.didFailToRerouteCalled)
+    }
+
+    func testOnRerouteReceivedIfIncorrectRoute() async {
+        let delegateExpectation = expectation(description: "didFailToRerouteCalled")
+        delegate.didFailToRerouteExpectation = delegateExpectation
+
+        let callExpectation = expectation(description: "parseDirectionsResponse")
+        var routeParserClient = RouteParserClient.testValue
+        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback = { _, _, _, callback in
+            callExpectation.fulfill()
+            callback(Expected<NSArray, NSString>(error: "error"))
+        }
+        Environment.set(\.routeParserClient, routeParserClient)
+
+        let data = RouteInterfaceMock().responseJsonRef
+        rerouteController.onRerouteReceived(
+            forRouteResponse: data,
+            routeRequest: directionsUrl,
+            origin: .online
+        )
+
+        await fulfillment(of: [callExpectation, delegateExpectation], timeout: 0.5)
+    }
+
+    func testOnRerouteReceivedIfCorrectRoute() async {
+        await onRerouteReceivedIfCorrectRoute(with: "&reason=deviation")
+
+        XCTAssertEqual(delegate.passedRerouteReason, .deviation)
+    }
+
+    func testOnRerouteReceivedIfCorrectRouteWithReasonRouteInvalidated() async {
+        await onRerouteReceivedIfCorrectRoute(with: "&reason=route_invalidated")
+
+        XCTAssertEqual(delegate.passedRerouteReason, .routeInvalidated)
+    }
+
+    private func onRerouteReceivedIfCorrectRoute(with rerouteReason: String) async {
+        let delegateExpectation = expectation(description: "didReceiveRerouteExpectation")
+        delegate.didReceiveRerouteExpectation = delegateExpectation
+
+        let url = directionsUrl + rerouteReason
+        let mock = RouteInterfaceMock()
+        let callExpectation = expectation(description: "parseDirectionsResponse")
+        var routeParserClient = RouteParserClient.testValue
+        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback = { data, request, _, callback in
+            XCTAssertEqual(data, mock.responseJsonRef)
+            XCTAssertEqual(request, url)
+            callExpectation.fulfill()
+            callback(Expected<NSArray, NSString>(value: [mock]))
+        }
+        Environment.set(\.routeParserClient, routeParserClient)
+
+        rerouteController.onRerouteReceived(
+            forRouteResponse: mock.responseJsonRef,
+            routeRequest: url,
+            origin: .online
+        )
+
+        await fulfillment(of: [callExpectation, delegateExpectation], timeout: 0.5)
     }
 }
 

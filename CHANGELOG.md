@@ -15,6 +15,10 @@
 * Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
 * Fixed composing `RouteOptions`, `MatchOptions`, and `MatrixOptions` URL request parameters so that it only contains the supported variants.
 
+### Audio
+
+* Improved reroute sound logic. The reroute sound does not play for reroutes caused by an internal route invalidation.
+
 ### Electronic horizon
 
 * Extended `RoadGraph.Edge.Metadata` properties by adding `freeFlowSpeed`, `constrainedFlowSpeed`, `isFerry`, `isRoundabout`, `countryCodeISO3`, `surface` and `sapaType` members.

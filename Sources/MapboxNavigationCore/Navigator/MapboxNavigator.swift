@@ -214,15 +214,6 @@ final class MapboxNavigator: @unchecked Sendable {
 
     private let statusUpdateEvents: AsyncStreamBridge<NavigationStatus>
 
-    enum SetRouteReason {
-        case newRoute
-        case reroute
-        case alternatives
-        case fasterRoute
-        case fallbackToOffline
-        case restoreToOnline
-    }
-
     @MainActor
     func setRoutes(
         navigationRoutes: NavigationRoutes,
@@ -277,8 +268,9 @@ final class MapboxNavigator: @unchecked Sendable {
                     case .newRoute:
                         // Do nothing, routes updates are already sent
                         break
-                    case .reroute:
-                        await send(ReroutingStatus(event: ReroutingStatus.Events.Fetched()))
+                    case .reroute(let rerouteReason):
+                        let event = ReroutingStatus.Events.Fetched(reason: rerouteReason)
+                        await send(ReroutingStatus(event: event))
                     case .alternatives:
                         let event = AlternativesStatus.Events.SwitchedToAlternative(navigationRoutes: navigationRoutes)
                         await send(AlternativesStatus(event: event))
@@ -1433,7 +1425,11 @@ extension MapboxNavigator: ReroutingControllerDelegate {
         }
     }
 
-    func rerouteControllerDidReceiveReroute(_ rerouteController: RerouteController, routesData: RoutesData) {
+    func rerouteControllerDidReceiveReroute(
+        _ rerouteController: RerouteController,
+        routesData: RoutesData,
+        reason: RerouteReason?
+    ) {
         Log.debug(
             "Reroute was fetched with primary route id '\(routesData.primaryRoute().getRouteId())' and \(routesData.alternativeRoutes().count) alternative route(s).",
             category: .navigation
@@ -1458,7 +1454,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
-                    reason: .reroute,
+                    reason: .reroute(reason),
                     previousRouteProgress: currentRouteProgress?.routeProgress
                 )
             }
@@ -1549,7 +1545,7 @@ extension MapboxNavigator {
     }
 
     @MainActor
-    private func send(_ details: ReroutingStatus) {
+    func send(_ details: ReroutingStatus) {
         _rerouting.emit(details)
     }
 
@@ -1559,7 +1555,7 @@ extension MapboxNavigator {
     }
 
     @MainActor
-    private func send(_ details: FasterRoutesStatus) {
+    func send(_ details: FasterRoutesStatus) {
         _fasterRoutes.emit(details)
     }
 
@@ -1630,25 +1626,6 @@ extension MapboxNavigator {
             cancelTasks()
             await operation()
             barrier.update(false)
-        }
-    }
-}
-
-extension MapboxNavigator.SetRouteReason {
-    var navNativeValue: MapboxNavigationNative_Private.SetRoutesReason {
-        switch self {
-        case .newRoute:
-            return .newRoute
-        case .alternatives:
-            return .alternative
-        case .reroute:
-            return .reroute
-        case .fallbackToOffline:
-            return .fallbackToOffline
-        case .restoreToOnline:
-            return .restoreToOnline
-        case .fasterRoute:
-            return .fastestRoute
         }
     }
 }

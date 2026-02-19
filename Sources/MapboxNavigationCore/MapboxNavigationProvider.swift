@@ -30,7 +30,10 @@ public final class MapboxNavigationProvider {
             let routeVoiceController = RouteVoiceController(
                 routeProgressing: navigation().routeProgress,
                 rerouteSoundTrigger: Publishers.Merge(
-                    navigation().rerouting.compactMap { $0.event is ReroutingStatus.Events.Fetched ? () : nil },
+                    navigation().rerouting.compactMap {
+                        guard let fetched = $0.event as? ReroutingStatus.Events.Fetched else { return nil }
+                        return fetched.reason == .routeInvalidated ? nil : ()
+                    },
                     navigation().fasterRoutes.compactMap { $0.event is FasterRoutesStatus.Events.Applied ? () : nil }
                 ).eraseToAnyPublisher(),
                 speechSynthesizer: coreConfig.ttsConfig.speechSynthesizer(

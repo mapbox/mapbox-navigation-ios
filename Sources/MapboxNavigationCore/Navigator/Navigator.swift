@@ -211,7 +211,10 @@ public struct ReroutingStatus: Equatable, Sendable {
         }
 
         /// The reroute process has successfully fetched a route and completed the process.
-        public struct Fetched: ReroutingEvent, Sendable {}
+        public struct Fetched: ReroutingEvent, Sendable {
+            /// The reason for the reroute.
+            let reason: RerouteReason?
+        }
     }
 }
 

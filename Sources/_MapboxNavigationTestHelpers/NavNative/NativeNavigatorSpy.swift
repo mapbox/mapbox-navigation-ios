@@ -23,6 +23,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedRemovedRerouteObserver: RerouteObserver?
 
     public var rerouteController: RerouteControllerInterface? = NativeRerouteControllerSpy()
+    @available(*, deprecated)
     public var rerouteDetector: RerouteDetectorInterface? = RerouteDetectorSpy()
 
     public var startNavigationSessionCalled = false

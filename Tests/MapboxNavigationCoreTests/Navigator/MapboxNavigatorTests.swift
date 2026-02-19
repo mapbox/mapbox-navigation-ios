@@ -150,7 +150,7 @@ final class MapboxNavigatorTests: TestCase {
                 await navigator.setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
-                    reason: .reroute,
+                    reason: .reroute(.deviation),
                     previousRouteProgress: routeProgress
                 )
             }
@@ -476,7 +476,7 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetRoutesSimilarRerouteKeepsSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: oneLegNavigationRoutes())
-        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute(.deviation))
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }
@@ -496,7 +496,7 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetRoutesDifferentRerouteBeginsNewSession() async {
         await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes())
-        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute)
+        await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute(.deviation))
 
         billingServiceMock.assertEvents([
             .beginBillingSession(.activeGuidance),
@@ -510,7 +510,8 @@ final class MapboxNavigatorTests: TestCase {
         // This scenario happens with RerouteStrategyForMatchRoute.navigateToFinalDestination
         // when there were more than one waypoint remaining before reroute
         await startActiveGuidanceAndWaitForRouteProgress(with: twoLegNavigationRoutes(mapboxApi: .mapMatching))
-        await setRoutes(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: .reroute)
+        let reason = MapboxNavigator.SetRouteReason.reroute(.deviation)
+        await setRoutes(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: reason)
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
     }

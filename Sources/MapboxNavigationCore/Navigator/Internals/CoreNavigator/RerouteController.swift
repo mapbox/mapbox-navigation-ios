@@ -123,10 +123,12 @@ extension RerouteController: RerouteObserver {
             return
         }
 
-        RouteParser.parseDirectionsResponse(
-            forResponseDataRef: routeResponse,
-            request: routeRequest,
-            routeOrigin: origin
+        let reason = RerouteReason(routeRequest: routeRequest)
+        let routeParserClient = Environment.shared.routeParserClient
+        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback(
+            routeResponse,
+            routeRequest,
+            origin
         ) { [weak self] result in
             guard let self else { return }
 
@@ -138,7 +140,7 @@ extension RerouteController: RerouteObserver {
                     forPrimaryRoute: routes.remove(at: 0),
                     alternativeRoutes: routes
                 )
-                delegate?.rerouteControllerDidReceiveReroute(self, routesData: routesData)
+                delegate?.rerouteControllerDidReceiveReroute(self, routesData: routesData, reason: reason)
             } else {
                 delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
             }
