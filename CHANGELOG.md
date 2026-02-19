@@ -10,6 +10,7 @@
 
 * Added `RouteControllerNotificationUserInfoKey.shouldPlayRerouteSoundKey` to the user info dictionary of `Notification.Name.routeControllerDidReroute` notification. ([#4822](https://github.com/mapbox/mapbox-navigation-ios/pull/4822))
 * Fixed a bug with excessive `VisualInstructionDelegate.label(_:willPresent:as:)` delegate method call during initialization.
+* Fixed a randomly occuring race condition related to the usage of `URLCache` that could cause a crash.
 
 ## v2.20.4
 
@@ -17,6 +18,7 @@
 
 * Reroute notification sound now plays only after a new route is successfully retrieved.
 * Fixed a bug with excessive `VisualInstructionDelegate.label(_:willPresent:as:)` delegate method call during initialization.
+* Fixed a randomly occuring race condition related to the usage of `URLCache` that could cause a crash.
 
 ## v2.20.3
 

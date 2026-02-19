@@ -867,10 +867,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         styleManager = StyleManager()
         styleManager.delegate = self
         styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
-        
-        if let currentStyle = styleManager.currentStyle {
-            updateMapStyle(currentStyle)
-        }
     }
     
     var currentStatusBarStyle: UIStatusBarStyle = .default

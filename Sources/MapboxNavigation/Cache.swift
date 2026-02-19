@@ -47,6 +47,7 @@ internal class URLDataCache: URLCaching {
     
     let urlCache: URLCache
     let defaultCapacity = 5 * 1024 * 1024
+    let cacheLock = NSLock()
     
     init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
         let memoryCapacity = memoryCapacity ?? defaultCapacity
@@ -60,18 +61,34 @@ internal class URLDataCache: URLCaching {
     }
     
     func store(_ cachedResponse: CachedURLResponse, for url: URL) {
+        cacheLock.lock()
+        defer {
+            cacheLock.unlock()
+        }
         urlCache.storeCachedResponse(cachedResponse, for: URLRequest(url))
     }
     
     func response(for url: URL) -> CachedURLResponse? {
+        cacheLock.lock()
+        defer {
+            cacheLock.unlock()
+        }
         return urlCache.cachedResponse(for: URLRequest(url))
     }
     
     func clearCache() {
+        cacheLock.lock()
+        defer {
+            cacheLock.unlock()
+        }
         urlCache.removeAllCachedResponses()
     }
     
     func removeCache(for url: URL) {
+        cacheLock.lock()
+        defer {
+            cacheLock.unlock()
+        }
         urlCache.removeCachedResponse(for: URLRequest(url))
     }
 }
