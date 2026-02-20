@@ -186,7 +186,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var rerouteSoundPlayer: AVAudioPlayer
     
     @objc func didReroute(notification: NSNotification) {
-        pauseSpeechAndPlayReroutingDing(notification: notification)
+        if let shouldPlayRerouteSound = notification.userInfo?[RouteController.NotificationUserInfoKey.shouldPlayRerouteSoundKey] as? Bool,
+           shouldPlayRerouteSound {
+            pauseSpeechAndPlayReroutingDing(notification: notification)
+        }
     }
 }
 

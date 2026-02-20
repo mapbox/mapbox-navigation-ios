@@ -168,16 +168,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         guard !hasFinishedRouting else { return }
         updateRoute(with: indexedRouteResponse,
                     routeOptions: routeOptions,
-                    isProactive: false,
-                    isAlternative: false) { result in
+                    reason: .undefined) { result in
             completion?(result.isSuccess)
         }
     }
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
-                     isProactive: Bool,
-                     isAlternative: Bool,
+                     reason: UpdateRouteReason,
                      completion: ((Result<Void, Error>) -> Void)?) {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
@@ -185,10 +183,9 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         routeProgress = RouteProgress(route: route, options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
-        announce(reroute: route, at: location, proactive: isProactive)
+        announce(reroute: route, at: location, reason: reason)
         completion?(.success(()))
     }
-
     
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
         guard !hasFinishedRouting else { return }
@@ -528,8 +525,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard case let .route(options) = response.options else { return }
                 self.updateRoute(with: indexedResponse,
                                  routeOptions: options,
-                                 isProactive: false,
-                                 isAlternative: false) { success in
+                                 reason: .reroute) { success in
                     self.isRerouting = false
                 }
             }

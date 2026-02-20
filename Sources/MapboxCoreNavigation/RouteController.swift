@@ -891,8 +891,7 @@ extension RouteController: Router {
                 }
                 self.updateRoute(with: indexedResponse,
                                  routeOptions: routeOptions,
-                                 isProactive: false,
-                                 isAlternative: false) { [weak self] result in
+                                 reason: .reroute) { [weak self] result in
                     self?.isRerouting = false
                     if case let .failure(error) = result {
                         self?.announceReroutingError(with: error)
@@ -911,16 +910,14 @@ extension RouteController: Router {
         guard !hasFinishedRouting else { return }
         updateRoute(with: indexedRouteResponse,
                     routeOptions: routeOptions,
-                    isProactive: false,
-                    isAlternative: false) { result in
+                    reason: .undefined) { result in
             completion?(result.isSuccess)
         }
     }
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
-                     isProactive: Bool,
-                     isAlternative: Bool,
+                     reason: UpdateRouteReason,
                      completion: ((Result<Void, Error>) -> Void)?) {
         guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
@@ -933,12 +930,11 @@ extension RouteController: Router {
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         let routeProgress = RouteProgress(route: route, options: routeOptions)
-        let reason = routeChangeReason(shouldStartNewBillingSession: shouldStartNewBillingSession,
-                                       isProactiveRerouting: isProactive,
-                                       isSwitchingToAlternative: isAlternative)
+        let changeReason = routeChangeReason(shouldStartNewBillingSession: shouldStartNewBillingSession,
+                                             updateReason: reason)
         updateNavigator(with: indexedRouteResponse,
                         fromLegIndex: routeProgress.legIndex,
-                        reason: reason) { [weak self] result in
+                        reason: changeReason) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
@@ -946,9 +942,9 @@ extension RouteController: Router {
                     routeProgress.updateDistanceTraveled(with: location)
                 }
                 self.routeProgress = routeProgress
-                self.announce(reroute: route, at: self.location, proactive: isProactive)
+                self.announce(reroute: route, at: self.location, reason: reason)
                 self.indexedRouteResponse = indexedRouteResponse
-                self.didProactiveReroute = isProactive
+                self.didProactiveReroute = reason.isProactive
                 completion?(.success(()))
             case .failure(let error):
                 completion?(.failure(error))
@@ -957,12 +953,11 @@ extension RouteController: Router {
     }
 
     private func routeChangeReason(shouldStartNewBillingSession: Bool,
-                                   isProactiveRerouting: Bool,
-                                   isSwitchingToAlternative: Bool) -> RouteChangeReason {
+                                   updateReason: UpdateRouteReason) -> RouteChangeReason {
         let reason: RouteChangeReason
-        if isProactiveRerouting {
+        if updateReason == .fastestRoute {
             reason = .fastestRouteAvailable
-        } else if isSwitchingToAlternative {
+        } else if updateReason == .alternative {
             reason = .switchToAlternative
         } else if shouldStartNewBillingSession {
             reason = .startNewRoute
@@ -1035,8 +1030,7 @@ extension RouteController: ReroutingControllerDelegate {
                          at: location)
         updateRoute(with: newRouteResponse,
                     routeOptions: options,
-                    isProactive: false,
-                    isAlternative: true,
+                    reason: .alternative,
                     completion: { [weak self] result in
             guard let self = self else { return }
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
@@ -1074,8 +1068,7 @@ extension RouteController: ReroutingControllerDelegate {
                                                         responseOrigin: routeOrigin)
         updateRoute(with: indexedRouteResponse,
                     routeOptions: options,
-                    isProactive: false,
-                    isAlternative: false) { [weak self] _ in
+                    reason: .reroute) { [weak self] _ in
             self?.isRerouting = false
         }
     }

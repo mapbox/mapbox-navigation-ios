@@ -1,5 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.21.0
+
+### Audio
+
+* Fixed an issue where the reroute notification sound played when switching to an alternative route. ([#4822](https://github.com/mapbox/mapbox-navigation-ios/pull/4822))
+
+### Other changes
+
+* Added `RouteControllerNotificationUserInfoKey.shouldPlayRerouteSoundKey` to the user info dictionary of `Notification.Name.routeControllerDidReroute` notification. ([#4822](https://github.com/mapbox/mapbox-navigation-ios/pull/4822))
+
 ## v2.20.4
 
 ### Other changes

@@ -736,8 +736,7 @@ class RouteControllerTests: TestCase {
         navigationSessionManagerSpy.reset()
         routeController.updateRoute(with: response,
                                     routeOptions: routeOptions,
-                                    isProactive: false,
-                                    isAlternative: false,
+                                    reason: .undefined,
                                     completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
@@ -759,8 +758,7 @@ class RouteControllerTests: TestCase {
         routingProvider.returnedRoutesResult = .success(response)
         routeController.updateRoute(with: response,
                                     routeOptions: options,
-                                    isProactive: false,
-                                    isAlternative: false,
+                                    reason: .undefined,
                                     completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
@@ -781,8 +779,7 @@ class RouteControllerTests: TestCase {
         routingProvider.returnedRoutesResult = .success(response)
         routeController.updateRoute(with: response,
                                     routeOptions: options,
-                                    isProactive: true,
-                                    isAlternative: false,
+                                    reason: .fastestRoute,
                                     completion: nil)
 
         XCTAssertTrue(navigatorSpy.setRoutesCalled)
