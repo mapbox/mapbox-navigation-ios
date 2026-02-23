@@ -7,24 +7,28 @@ open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR.
     @objc dynamic open var normalTextColor: UIColor = .black {
         didSet {
+            guard normalTextColor != oldValue else { return }
             update()
         }
     }
     
     @objc dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
         didSet {
+            guard normalFont != oldValue else { return }
             update()
         }
     }
     
     @objc dynamic public var textColorHighlighted: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
         didSet {
+            guard textColorHighlighted != oldValue else { return }
             update()
         }
     }
     
     @objc public var showHighlightedTextColor: Bool = false {
         didSet {
+            guard showHighlightedTextColor != oldValue else { return }
             update()
         }
     }
