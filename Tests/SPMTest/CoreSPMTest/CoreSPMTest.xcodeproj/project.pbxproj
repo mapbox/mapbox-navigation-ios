@@ -12,6 +12,7 @@
 		11BB92D226F3824900FA9B68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11BB92D126F3824900FA9B68 /* Assets.xcassets */; };
 		11BB92D526F3824900FA9B68 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11BB92D426F3824900FA9B68 /* Preview Assets.xcassets */; };
 		11D7BDBE26F3844200AB275C /* MapboxCoreNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 11D7BDBD26F3844200AB275C /* MapboxCoreNavigation */; };
+		2C224FD02F48BEB500E013D4 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 2C224FCF2F48BEB500E013D4 /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C224FD02F48BEB500E013D4 /* ArgumentParser in Frameworks */,
 				11D7BDBE26F3844200AB275C /* MapboxCoreNavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,6 +102,7 @@
 			name = CoreSPMTest;
 			packageProductDependencies = (
 				11D7BDBD26F3844200AB275C /* MapboxCoreNavigation */,
+				2C224FCF2F48BEB500E013D4 /* ArgumentParser */,
 			);
 			productName = CoreSPMTest;
 			productReference = 11BB92CA26F3824800FA9B68 /* CoreSPMTest.app */;
@@ -128,6 +131,9 @@
 				Base,
 			);
 			mainGroup = 11BB92C126F3824800FA9B68;
+			packageReferences = (
+				2C224FCE2F48BEB500E013D4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = 11BB92CB26F3824800FA9B68 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -365,10 +371,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		2C224FCE2F48BEB500E013D4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		11D7BDBD26F3844200AB275C /* MapboxCoreNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxCoreNavigation;
+		};
+		2C224FCF2F48BEB500E013D4 /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C224FCE2F48BEB500E013D4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

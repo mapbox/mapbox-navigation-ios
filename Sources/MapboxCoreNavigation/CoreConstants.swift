@@ -193,7 +193,7 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey`, `RouteController.NotificationUserInfoKey.isProactiveKey`, and `RouteController.NotificationUserInfoKey.headingKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey`, `RouteController.NotificationUserInfoKey.isProactiveKey`, `RouteController.NotificationUserInfoKey.shouldPlayRerouteSoundKey`, and `RouteController.NotificationUserInfoKey.headingKey`.
      */
     static let routeControllerDidReroute: Notification.Name = .init(rawValue: "RouteControllerDidReroute")
     
@@ -370,6 +370,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
          */
         public static let isProactiveKey: NotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether the reroute should play a sound notification. This is typically `true` for proactive reroutes initiated because of route deviation.
+         */
+        public static let shouldPlayRerouteSoundKey: NotificationUserInfoKey = .init(rawValue: "shouldPlayRerouteSound")
         
         /**
          A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.

@@ -326,8 +326,7 @@ protocol InternalRouter: AnyObject {
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
-                     isProactive: Bool,
-                     isAlternative: Bool,
+                     reason: UpdateRouteReason,
                      completion: ((Result<Void, Error>) -> Void)?)
 }
 
@@ -478,8 +477,7 @@ extension InternalRouter where Self: Router {
                     // Prefer the most optimal route (the first one) over the route that matched the original choice.
                     self.updateRoute(with: indexedResponse,
                                      routeOptions: routeOptions ?? self.routeProgress.routeOptions,
-                                     isProactive: true,
-                                     isAlternative: false) { [weak self] success in
+                                     reason: .fastestRoute) { [weak self] success in
                         self?.isRerouting = false
                     }
                 }
@@ -545,13 +543,14 @@ extension InternalRouter where Self: Router {
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: userInfo)
     }
     
-    func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
+    func announce(reroute newRoute: Route, at location: CLLocation?, reason: UpdateRouteReason) {
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
         userInfo[.locationKey] = location
         userInfo[.headingKey] = heading
-        userInfo[.isProactiveKey] = proactive
+        userInfo[.isProactiveKey] = reason.isProactive
+        userInfo[.shouldPlayRerouteSoundKey] = reason.shouldPlayRerouteSound
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
+        delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: reason.isProactive)
     }
 }
 

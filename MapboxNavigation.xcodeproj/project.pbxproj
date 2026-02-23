@@ -92,6 +92,9 @@
 		2C18A12E2988729C00750CEE /* EventStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C18A12D2988729C00750CEE /* EventStep.swift */; };
 		2C193C31290A9BC30050A57F /* PredictiveCacheManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46D290A8CA10067FDCF /* PredictiveCacheManagerTests.swift */; };
 		2C193C32290A9BC30050A57F /* PredictiveCacheOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C04E46C290A8CA10067FDCF /* PredictiveCacheOptionsTests.swift */; };
+		2C224FC92F4895B600E013D4 /* UpdateRouteReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C224FC82F4895B600E013D4 /* UpdateRouteReason.swift */; };
+		2C224FCB2F4895E200E013D4 /* UpdateRouteReasonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C224FCA2F4895E200E013D4 /* UpdateRouteReasonTests.swift */; };
+		2C224FCD2F48960A00E013D4 /* RouteVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C224FCC2F48960A00E013D4 /* RouteVoiceControllerTests.swift */; };
 		2C257377292B836B00941307 /* ReentrantImageDownloaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */; };
 		2C2880A1291A82630063E5B7 /* RerouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */; };
 		2C2880A6291AB7A10063E5B7 /* RerouteDetectorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */; };
@@ -792,6 +795,9 @@
 		2C18A1292988528000750CEE /* FeedbackMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackMetadataTests.swift; sourceTree = "<group>"; };
 		2C18A12B29886F8C00750CEE /* EventFixLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventFixLocation.swift; sourceTree = "<group>"; };
 		2C18A12D2988729C00750CEE /* EventStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventStep.swift; sourceTree = "<group>"; };
+		2C224FC82F4895B600E013D4 /* UpdateRouteReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateRouteReason.swift; sourceTree = "<group>"; };
+		2C224FCA2F4895E200E013D4 /* UpdateRouteReasonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateRouteReasonTests.swift; sourceTree = "<group>"; };
+		2C224FCC2F48960A00E013D4 /* RouteVoiceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteVoiceControllerTests.swift; sourceTree = "<group>"; };
 		2C257376292B836B00941307 /* ReentrantImageDownloaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReentrantImageDownloaderSpy.swift; sourceTree = "<group>"; };
 		2C2880A0291A82630063E5B7 /* RerouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RerouteControllerTests.swift; sourceTree = "<group>"; };
 		2C2880A5291AB7A10063E5B7 /* RerouteDetectorSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteDetectorSpy.swift; sourceTree = "<group>"; };
@@ -2030,6 +2036,7 @@
 		8AB316C526BCA0DA00C3AC76 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				2C224FCC2F48960A00E013D4 /* RouteVoiceControllerTests.swift */,
 				2CE2512E291A56CE00C0FA15 /* IdleTimerManagerTests.swift */,
 				8A3474F3269F8B9D00BCF135 /* MapViewTests.swift */,
 				C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */,
@@ -2490,6 +2497,7 @@
 				8D4CF9C521349FFB009C3FEE /* NavigationServiceDelegate.swift */,
 				41E8E2B1278ED1B6006990F3 /* NavigationStatus.swift */,
 				4303A3982332CD6200B5737D /* UnimplementedLogging.swift */,
+				2C224FC82F4895B600E013D4 /* UpdateRouteReason.swift */,
 				8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */,
 				2B42586B2657BF9000B487C3 /* TilesetDescriptorFactory.swift */,
 				2B42586C2657BF9100B487C3 /* TileStore.swift */,
@@ -2548,6 +2556,7 @@
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */,
 				E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */,
+				2C224FCA2F4895E200E013D4 /* UpdateRouteReasonTests.swift */,
 				E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */,
 				E2814D972693412E000AD987 /* BillingHandlerTests.swift */,
 				8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */,
@@ -3373,6 +3382,7 @@
 			files = (
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				8A75A85D26C44612009CFE83 /* RecentItemTests.swift in Sources */,
+				2C224FCD2F48960A00E013D4 /* RouteVoiceControllerTests.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
 				E2D14983265CFD3C008135A3 /* StatusViewTests.swift in Sources */,
 				8AB8F30026DD7C30003FF4EE /* CGPointTests.swift in Sources */,
@@ -3534,6 +3544,7 @@
 				DA4A8EC02704FF950071C85C /* EventLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				2C295ACB299BF76000FC74E8 /* Interchange.swift in Sources */,
+				2C224FC92F4895B600E013D4 /* UpdateRouteReason.swift in Sources */,
 				8AFF2D2326F137CB008267BF /* RoadObjectKind.swift in Sources */,
 				41E8E2B2278ED1B6006990F3 /* NavigationStatus.swift in Sources */,
 				118D883426F8CA0700B2ED7B /* FeedbackEvent.swift in Sources */,
@@ -3637,6 +3648,7 @@
 				2C9006D5291927D80012CCEA /* MeasurementSystemTests.swift in Sources */,
 				162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */,
 				2C14C97C298BCF4F0052D122 /* DeviceTest.swift in Sources */,
+				2C224FCB2F4895E200E013D4 /* UpdateRouteReasonTests.swift in Sources */,
 				2C9DDBE22934C006007F8CFD /* MapboxCoreNavigationTests.swift in Sources */,
 				2C8BF7B02D6C9A0900C60BD4 /* NavigationMovementMonitorTests.swift in Sources */,
 				2C9006D9291927EE0012CCEA /* Dictionary+Equality.swift in Sources */,
