@@ -5,13 +5,25 @@ import TestHelper
 class URLDataCacheTest: TestCase {
     let url = ShieldImage.i280.baseURL
     var cache: URLDataCache!
+    
+    private static var cacheURL: URL {
+        let fileManager = FileManager.default
+        let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let identifier = Bundle.main.bundleIdentifier!
+        return basePath.appendingPathComponent(identifier).appendingPathComponent("TestURLDataCache")
+    }
 
     override func setUp() {
         super.setUp()
 
         self.continueAfterFailure = false
-        cache = URLDataCache()
-        cache.urlCache.diskCapacity = 0
+        cache = URLDataCache(diskCapacity: 0, diskCacheURL: Self.cacheURL)
+        cache.clearCache()
+    }
+    
+    override func tearDown() {
+        cache.clearCache()
+        super.tearDown()
     }
 
     private func exampleResponse(with storagePolicy: URLCache.StoragePolicy) -> CachedURLResponse {
@@ -39,7 +51,7 @@ class URLDataCacheTest: TestCase {
 
         cache.clearCache()
         XCTAssertNil(cache.response(for: url)?.data)
-        XCTAssertEqual(cache.urlCache.currentMemoryUsage, 0)
+        XCTAssertEqual(cache.currentMemoryUsage, 0)
     }
     
     func testRemoveRequestCache() {
@@ -59,7 +71,7 @@ class URLDataCacheTest: TestCase {
         
         let cachedResponse = cache.response(for: url)
         XCTAssertEqual(cachedResponse, response)
-        XCTAssertEqual(cache.urlCache.currentMemoryUsage, response.data.count)
+        XCTAssertEqual(cache.currentMemoryUsage, response.data.count)
     }
     
     func testStoreCacheWithMemoryWarning() {
@@ -76,15 +88,19 @@ class URLDataCacheTest: TestCase {
         let response = exampleResponse(with: .allowedInMemoryOnly)
         
         let limitCapacity = 1
-        let limitCache = URLDataCache(memoryCapacity: limitCapacity, diskCapacity: limitCapacity)
         XCTAssertTrue(response.data.count > limitCapacity)
+        
+        let limitCache = URLDataCache(
+            memoryCapacity: limitCapacity,
+            diskCapacity: limitCapacity,
+            diskCacheURL: Self.cacheURL
+        )
+        limitCache.clearCache()
         
         limitCache.store(response, for: url)
         XCTAssertNil(cache.response(for: url))
-        XCTAssertEqual(limitCache.urlCache.currentMemoryUsage, 0)
-        
-        limitCache.urlCache.diskCapacity = 0
-        limitCache.clearCache()
+        XCTAssertEqual(limitCache.currentMemoryUsage, 0)
+        // not checking disk usage as it is always non-zero
     }
 }
 
