@@ -49,6 +49,14 @@ internal class URLDataCache: URLCaching {
     private static let defaultCapacity = 5 * 1024 * 1024
     private let cacheLock = NSLock()
     
+    var currentMemoryUsage: Int {
+        urlCache.currentMemoryUsage
+    }
+    
+    var currentDiskUsage: Int {
+        urlCache.currentDiskUsage
+    }
+    
     init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
         let memoryCapacity = memoryCapacity ?? Self.defaultCapacity
         let diskCapacity = diskCapacity ?? Self.defaultCapacity
