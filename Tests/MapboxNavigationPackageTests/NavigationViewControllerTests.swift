@@ -70,7 +70,7 @@ class NavigationViewControllerTests: TestCase {
         }
     }
 
-    var updatedStyleNumberOfTimes: Int!
+    var styleRefreshedAppearanceExpectation: XCTestExpectation!
 
     var initialRoutes: NavigationRoutes!
     var newRoutes: NavigationRoutes!
@@ -99,7 +99,6 @@ class NavigationViewControllerTests: TestCase {
         routeProgressPublisher = .init(nil)
         UNUserNotificationCenter.replaceWithMock()
         customRoadName = [:]
-        updatedStyleNumberOfTimes = 0
         isInTunnel = false
         tunnelAuthority = TunnelAuthority(isInTunnel: { _, _ in
             self.isInTunnel
@@ -210,9 +209,12 @@ class NavigationViewControllerTests: TestCase {
         _ = navigationViewController.view
         let someLocation = poi.first!
         let test: (Any) -> Void = { _ in self.locationPublisher.send(someLocation) }
+
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
+        styleRefreshedAppearanceExpectation.isInverted = true
         (0...2).forEach(test)
 
-        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)
     }
 
     @MainActor
@@ -352,9 +354,11 @@ class NavigationViewControllerTests: TestCase {
             }
             .store(in: &subscriptions)
         await fulfillment(of: [navigationStartedExpectation], timeout: 1)
-        (0...2).forEach(test)
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
+        styleRefreshedAppearanceExpectation.isInverted = true
 
-        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        (0...2).forEach(test)
+        await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)
     }
 
     @MainActor
@@ -393,10 +397,12 @@ class NavigationViewControllerTests: TestCase {
                 navigationStartedExpectation.fulfill()
             }
             .store(in: &subscriptions)
-        await fulfillment(of: [navigationStartedExpectation], timeout: 1)
+        await fulfillment(of: [navigationStartedExpectation], timeout: 0.5)
+
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
         (0...2).forEach { _ in test() }
 
-        XCTAssertEqual(updatedStyleNumberOfTimes, 1, "The style should be updated once.")
+        await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)
     }
 
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
@@ -807,16 +813,15 @@ class NavigationViewControllerTests: TestCase {
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
     func location(for styleManager: MapboxNavigationUIKit.StyleManager) -> CLLocation? {
-        return poi.first!
+        poi.first
     }
 
     func styleManagerDidRefreshAppearance(_ styleManager: MapboxNavigationUIKit.StyleManager) {
-        updatedStyleNumberOfTimes += 1
+        styleRefreshedAppearanceExpectation?.fulfill()
     }
 
     func navigationViewController(
         _ navigationViewController: NavigationViewController,
-
         roadNameAt location: CLLocation
     ) -> String? {
         customRoadName[location.coordinate] ?? nil

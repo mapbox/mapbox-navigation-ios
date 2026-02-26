@@ -6,9 +6,17 @@ struct NavigationControlsView: View {
     @ObservedObject var navigation: Navigation
 
     var body: some View {
+        if let routeProgress = navigation.routeProgress {
+            routeProgressView(with: routeProgress)
+        } else {
+            EmptyView()
+        }
+    }
+
+    private func routeProgressView(with routeProgress: RouteProgress) -> some View {
         VStack(spacing: 12) {
             NextInstructionView(
-                routeProgress: navigation.routeProgress,
+                routeProgress: routeProgress,
                 visualInstruction: navigation.visualInstruction
             )
 
@@ -19,7 +27,7 @@ struct NavigationControlsView: View {
 
             Spacer()
 
-            NavigationProgressView(routeProgress: navigation.routeProgress) {
+            NavigationProgressView(routeProgress: routeProgress) {
                 navigation.stopActiveNavigation()
             }
         }
@@ -28,7 +36,7 @@ struct NavigationControlsView: View {
 }
 
 struct NextInstructionView: View {
-    let routeProgress: RouteProgress?
+    let routeProgress: RouteProgress
     let visualInstruction: VisualInstructionBanner?
 
     var body: some View {
@@ -51,7 +59,7 @@ struct NextInstructionView: View {
     }
 
     private var distanceRemaining: CLLocationDistance? {
-        routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining
+        routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
     }
 
     private let distanceFormatter: LengthFormatter = {
@@ -104,7 +112,7 @@ struct CameraButtonView: View {
 }
 
 struct NavigationProgressView: View {
-    let routeProgress: RouteProgress?
+    let routeProgress: RouteProgress
     let onStopNavigation: () -> Void
 
     var body: some View {
@@ -161,11 +169,11 @@ struct NavigationProgressView: View {
     }
 
     private var durationRemaining: TimeInterval? {
-        routeProgress?.currentLegProgress.durationRemaining
+        routeProgress.currentLegProgress.durationRemaining
     }
 
     private var distanceRemaining: CLLocationDistance? {
-        routeProgress?.currentLegProgress.distanceRemaining
+        routeProgress.currentLegProgress.distanceRemaining
     }
 
     private let timeFormatter: DateFormatter = {

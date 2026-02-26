@@ -67,16 +67,16 @@ final class MapViewController: UIViewController {
             .dropFirst()
             .sink { [weak self] previewRoutes, routes in
                 guard let self else { return }
-                if let previewRoutes {
+                if let routes {
+                    navigationMapView.show(routes, routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever])
+                    selectDestination(for: routes)
+                } else if let previewRoutes {
                     navigationMapView.showcase(
                         previewRoutes,
                         routeAnnotationKinds: [.routeDurations],
                         animated: true
                     )
                     selectDestination(for: previewRoutes)
-                } else if let routes {
-                    navigationMapView.show(routes, routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever])
-                    selectDestination(for: routes)
                 } else {
                     navigationMapView.removeRoutes()
                     deselectDestination()
@@ -87,7 +87,6 @@ final class MapViewController: UIViewController {
 
     func observeCamera() {
         navigation.$cameraState
-            .removeDuplicates()
             .sink { [weak self] cameraState in
                 self?.navigationMapView.update(navigationCameraState: cameraState)
             }.store(in: &lifetimeSubscriptions)

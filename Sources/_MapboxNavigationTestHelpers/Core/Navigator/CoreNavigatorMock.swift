@@ -67,6 +67,11 @@ public final class CoreNavigatorMock: CoreNavigator {
         NavigatorErrors
             .UnexpectedNavigationStatus()
     )
+    public var unsetRoutesResult: Result<RoutesCoordinator.RoutesResult, any Error> = .success((
+        mainRouteInfo: nil,
+        alternativeRoutes: []
+    ))
+
     public func setRoutes(
         _ routesData: any RoutesData,
         uuid: UUID,
@@ -108,6 +113,7 @@ public final class CoreNavigatorMock: CoreNavigator {
     ) {
         unsetRoutesCalled = true
         passedUuid = uuid
+        completion(unsetRoutesResult)
     }
 
     public func unsetRoutes(uuid: UUID) async throws {

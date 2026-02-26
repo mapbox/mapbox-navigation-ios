@@ -14,6 +14,7 @@
 * Added support for British imperial measurement units.
 * Fixed an issue where switching Continuous Alternative routes on a multileg route could result in restoring previous waypoints.
 * Fixed composing `RouteOptions`, `MatchOptions`, and `MatrixOptions` URL request parameters so that it only contains the supported variants.
+* Fixed an issue where the first route progress update reported zero `distanceRemaining` and `durationRemaining` when starting active guidance.
 
 ### Audio
 

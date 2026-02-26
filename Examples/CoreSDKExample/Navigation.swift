@@ -16,9 +16,13 @@ final class Navigation: ObservableObject {
     @Published var cameraState: NavigationCameraState = .idle
     @Published var profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
     @Published var shouldRequestMapMatching = false
+    @Published var shouldShowSessionButton = false
+    @Published var state: Session.State
 
     private var waypoints: [Waypoint] = []
+    private var previousLegIndex: Int?
     private let core: MapboxNavigation
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         let config = CoreConfig(
@@ -28,6 +32,7 @@ final class Navigation: ObservableObject {
         let navigationProvider = MapboxNavigationProvider(coreConfig: config)
         self.core = navigationProvider.mapboxNavigation
         self.predictiveCacheManager = navigationProvider.predictiveCacheManager
+        self.state = core.tripSession().currentSession.state
         observeNavigation()
 
         // Provide custom localization.
@@ -35,6 +40,10 @@ final class Navigation: ObservableObject {
     }
 
     private func observeNavigation() {
+        core.tripSession().session
+            .map { $0.state }
+            .assign(to: &$state)
+
         core.tripSession().session
             .map {
                 if case .activeGuidance = $0.state { return true }
@@ -73,13 +82,33 @@ final class Navigation: ObservableObject {
         guard let previewRoutes = currentPreviewRoutes else { return }
         core.tripSession().startActiveGuidance(with: previewRoutes, startLegIndex: 0)
         cameraState = .following
-        currentPreviewRoutes = nil
         waypoints = []
+    }
+
+    func toggleNavigationSession() {
+        let tripSession = core.tripSession()
+        switch tripSession.currentSession.state {
+        case .freeDrive, .activeGuidance:
+            let progress = core.navigation().currentRouteProgress?.routeProgress
+            previousLegIndex = progress?.legIndex
+            currentPreviewRoutes = progress?.navigationRoutes
+            tripSession.setToIdle()
+        case .idle:
+            if let currentPreviewRoutes {
+                tripSession.startActiveGuidance(with: currentPreviewRoutes, startLegIndex: previousLegIndex ?? 0)
+            } else {
+                tripSession.startFreeDrive()
+            }
+            previousLegIndex = nil
+            cameraState = .following
+        }
     }
 
     func stopActiveNavigation() {
         core.tripSession().startFreeDrive()
         cameraState = .following
+        previousLegIndex = nil
+        currentPreviewRoutes = nil
     }
 
     func selectAlternativeRoute(_ alternativeRoute: AlternativeRoute) async {

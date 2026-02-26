@@ -116,6 +116,7 @@
 		2CD9A5D22DD7481D00069654 /* MultiWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9A5D12DD7481D00069654 /* MultiWaypoint.swift */; };
 		2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE469112BA31C1F0075A32B /* CoreSDKExampleApp.swift */; };
 		2CE469162BA31C200075A32B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE469152BA31C200075A32B /* Assets.xcassets */; };
+		2CF6047E2F4F1450002256C9 /* SessionControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF6047D2F4F1450002256C9 /* SessionControlsView.swift */; };
 		753A5EB92D412F3F0065FBAE /* NavigationMapView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */; };
 		DF3D8C302C04B4E300BB715C /* History-Replaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */; };
 		DF592B6B2C19EA2C0047835E /* history_replay.gz in Resources */ = {isa = PBXBuildFile; fileRef = DF592B6A2C19EA2C0047835E /* history_replay.gz */; };
@@ -266,6 +267,7 @@
 		2CE469202BA31CF20075A32B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE469262BA31FE30075A32B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2CE469282BA31FF00075A32B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		2CF6047D2F4F1450002256C9 /* SessionControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionControlsView.swift; sourceTree = "<group>"; };
 		753A5EB82D412F3F0065FBAE /* NavigationMapView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+Extensions.swift"; sourceTree = "<group>"; };
 		DF3D8C2F2C04B4E300BB715C /* History-Replaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History-Replaying.swift"; sourceTree = "<group>"; };
 		DF592B6A2C19EA2C0047835E /* history_replay.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = history_replay.gz; sourceTree = "<group>"; };
@@ -344,10 +346,11 @@
 		2C6A3C7E2BA478FC0039BBC9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2CE469262BA31FE30075A32B /* MapView.swift */,
-				2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */,
-				2CE469282BA31FF00075A32B /* MapViewController.swift */,
 				2CE469132BA31C1F0075A32B /* ContentView.swift */,
+				2CE469262BA31FE30075A32B /* MapView.swift */,
+				2CE469282BA31FF00075A32B /* MapViewController.swift */,
+				2C6A3C7B2BA466AA0039BBC9 /* NavigationControlsView.swift */,
+				2CF6047D2F4F1450002256C9 /* SessionControlsView.swift */,
 				2C8586BD2BB4902500A6E5C5 /* SettingsView.swift */,
 			);
 			path = Views;
@@ -977,6 +980,7 @@
 				2CE469122BA31C1F0075A32B /* CoreSDKExampleApp.swift in Sources */,
 				2CA31A782BC9925B0071176E /* NavigationControlsView.swift in Sources */,
 				2CA31A752BC9925B0071176E /* MapViewController.swift in Sources */,
+				2CF6047E2F4F1450002256C9 /* SessionControlsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

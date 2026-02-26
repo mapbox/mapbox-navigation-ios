@@ -94,7 +94,7 @@ public struct Session: Equatable, Sendable {
 // MARK: - RouteProgressState
 
 /// Route progress update event details.
-public struct RouteProgressState: Sendable {
+public struct RouteProgressState: Sendable, Equatable {
     /// Actual ``RouteProgress``.
     public let routeProgress: RouteProgress
 }

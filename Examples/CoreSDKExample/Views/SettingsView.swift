@@ -7,6 +7,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
+                Toggle("Enable navigation pausing", isOn: $navigation.shouldShowSessionButton)
                 Toggle("Map Matching Request", isOn: $navigation.shouldRequestMapMatching)
                 Picker("Navigation Profile", selection: $navigation.profileIdentifier) {
                     ForEach(SettingsView.profiles, id: \.self) { profile in

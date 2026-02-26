@@ -25,10 +25,17 @@ struct ContentView: View {
                 .padding()
                 .frame(maxWidth: .infinity, minHeight: 45)
             }
-            if navigation.isInActiveNavigation {
-                NavigationControlsView(navigation: navigation)
-            } else {
-                SettingsControlsView(navigation: navigation)
+
+            VStack {
+                if navigation.shouldShowSessionButton {
+                    SessionControlsView(navigation: navigation)
+                }
+                Spacer()
+                if navigation.isInActiveNavigation {
+                    NavigationControlsView(navigation: navigation)
+                } else {
+                    SettingsControlsView(navigation: navigation)
+                }
             }
         }
     }

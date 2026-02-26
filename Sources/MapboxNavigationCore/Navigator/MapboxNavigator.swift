@@ -115,7 +115,7 @@ final class MapboxNavigator: @unchecked Sendable {
 
     func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
         await send(navigationRoutes)
-        let previousRouteProgress = await currentRouteProgress?.routeProgress
+        let previousRouteProgress = await state.privateRouteProgress
         await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
 
         await taskManager.withAsyncBarrier {
@@ -145,7 +145,7 @@ final class MapboxNavigator: @unchecked Sendable {
                 return
             }
 
-            let waypoints = await currentRouteProgress?.routeProgress.remainingWaypoints
+            let waypoints = await state.privateRouteProgress?.remainingWaypoints
             await update(previousSessionWaypoints: waypoints)
             await send(NavigationRoutes?.none)
             await send(RouteProgressState?.none)
@@ -318,11 +318,12 @@ final class MapboxNavigator: @unchecked Sendable {
                     $0.routeId.toRouteIdString() == alternativeRoutes.mainRoute.nativeRouteInterface.getRouteId()
                 }?.legIndex ?? 0
             )
+            let progress = await state.privateRouteProgress
             await setRoutes(
                 navigationRoutes: alternativeRoutes,
                 startLegIndex: alternativeLegIndex,
                 reason: .alternatives,
-                previousRouteProgress: currentRouteProgress?.routeProgress
+                previousRouteProgress: progress
             )
         }
     }
@@ -678,9 +679,9 @@ final class MapboxNavigator: @unchecked Sendable {
                 legIndex: startLegIndex
             )
             await state.update(privateRouteProgress: routeProgress)
-            await send(RouteProgressState(routeProgress: routeProgress))
         } else {
             await state.update(privateRouteProgress: nil)
+            // This is required to not miss the last route progress update when switching to the idle state.
             await send(RouteProgressState?.none)
         }
     }
@@ -1045,7 +1046,6 @@ final class MapboxNavigator: @unchecked Sendable {
             rerouteController?.delegate = self
 
             let routeProgress = await state.privateRouteProgress
-
             guard let navigationRoutes = currentNavigationRoutes,
                   let routeProgress else { return }
             taskManager.cancellableTask { [weak self] in
@@ -1202,11 +1202,12 @@ final class MapboxNavigator: @unchecked Sendable {
                 guard let self else { return }
 
                 guard !Task.isCancelled else { return }
+                let routeProgress = await state.privateRouteProgress
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
                     reason: .restoreToOnline,
-                    previousRouteProgress: currentRouteProgress?.routeProgress
+                    previousRouteProgress: routeProgress
                 )
             }
         }
@@ -1402,6 +1403,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 guard let self else { return }
 
                 guard !Task.isCancelled else { return }
+                let routeProgress = await state.privateRouteProgress
                 await setRoutes(
                     navigationRoutes: NavigationRoutes(
                         mainRoute: navigationRoute,
@@ -1410,7 +1412,7 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                     ),
                     startLegIndex: legIndex,
                     reason: .alternatives,
-                    previousRouteProgress: currentRouteProgress?.routeProgress
+                    previousRouteProgress: routeProgress
                 )
             }
         }
@@ -1451,11 +1453,12 @@ extension MapboxNavigator: ReroutingControllerDelegate {
                 guard let self else { return }
 
                 guard !Task.isCancelled else { return }
+                let routeProgress = await state.privateRouteProgress
                 await setRoutes(
                     navigationRoutes: navigationRoutes,
                     startLegIndex: 0,
                     reason: .reroute(reason),
-                    previousRouteProgress: currentRouteProgress?.routeProgress
+                    previousRouteProgress: routeProgress
                 )
             }
         }
