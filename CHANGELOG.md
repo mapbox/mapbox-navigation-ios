@@ -34,6 +34,7 @@
 ### Map
 
 * Fixed an issue causing the traversed route line to be hidden after route completion when `NavigationMapView.traversedRouteColor` was provided.
+* Fixed an issue causing the traversed route line to reappear when switching to an alternative route and back.
 
 ## 3.19.0
 
