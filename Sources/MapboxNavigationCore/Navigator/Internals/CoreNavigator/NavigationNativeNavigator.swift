@@ -15,6 +15,11 @@ final class NavigationNativeNavigator: @unchecked Sendable {
         }
     }
 
+    @MainActor
+    var navigationStatus: NavigationStatus {
+        native.getNavigationStatus()
+    }
+
     private var subscriptions: Set<AnyCancellable> = []
 
     private func withNavigator(_ callback: @escaping @Sendable (MapboxNavigationNative_Private.Navigator) -> Void) {

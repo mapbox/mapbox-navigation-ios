@@ -14,6 +14,9 @@ protocol CoreNavigator {
     var rerouteController: RerouteController? { get }
 
     @MainActor
+    var navigationStatus: NavigationStatus { get }
+
+    @MainActor
     func startUpdatingElectronicHorizon(with options: ElectronicHorizonConfig?)
     @MainActor
     func stopUpdatingElectronicHorizon()
@@ -201,6 +204,11 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
         setupPredictiveCacheIfNeeded()
+    }
+
+    @MainActor
+    var navigationStatus: NavigationStatus {
+        navigator.navigationStatus
     }
 
     // MARK: - Subscriptions

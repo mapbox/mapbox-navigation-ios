@@ -8,6 +8,9 @@ public final class CoreNavigatorMock: CoreNavigator {
 
     public var mostRecentNavigationStatus: NavigationStatus?
 
+    @MainActor
+    public var navigationStatus: NavigationStatus
+
     public var tileStore: TileStore
 
     var cacheHandle: CacheHandle
@@ -48,6 +51,7 @@ public final class CoreNavigatorMock: CoreNavigator {
         self.roadObjectStore = .init(nativeNavigator.roadObjectStore())
         self.roadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(cache: cacheHandle))
         self.tileStore = .__create(forPath: "")
+        self.navigationStatus = .mock(primaryRouteId: nil)
     }
 
     public func startUpdatingElectronicHorizon(with config: ElectronicHorizonConfig?) {
@@ -58,6 +62,11 @@ public final class CoreNavigatorMock: CoreNavigator {
     public func stopUpdatingElectronicHorizon() {
         stopUpdatingElectronicHorizonCalled = true
     }
+
+    var returnedNavigationStatus: @Sendable (any RoutesData, UInt32) async
+        -> NavigationStatus = { routesData, legIndex in
+            await .mockStartOfNavigation(routesDate: routesData, legIndex: legIndex)
+        }
 
     public var setRoutesCalled = false
     public var passedRoutesData: (any RoutesData)?
@@ -84,7 +93,16 @@ public final class CoreNavigatorMock: CoreNavigator {
         passedUuid = uuid
         passedLegIndex = legIndex
         passedSetReason = reason
-        completion(setRoutesResult)
+        if case .success = setRoutesResult {
+            let result = setRoutesResult
+            let provider = returnedNavigationStatus
+            Task { @MainActor in
+                self.navigationStatus = await provider(routesData, legIndex)
+                completion(result)
+            }
+        } else {
+            completion(setRoutesResult)
+        }
     }
 
     public var setAlternativeRoutesCalled = false
@@ -103,6 +121,16 @@ public final class CoreNavigatorMock: CoreNavigator {
     public var updateRouteLegCalled = false
     public func updateRouteLeg(to index: UInt32, completion: @escaping @Sendable (Bool) -> Void) {
         updateRouteLegCalled = true
+        if let passedRoutesData {
+            let provider = returnedNavigationStatus
+            Task { @MainActor in
+                self.navigationStatus = await provider(passedRoutesData, index)
+                completion(true)
+            }
+        } else {
+            navigationStatus = .mock(legIndex: index)
+            completion(true)
+        }
     }
 
     public var unsetRoutesCalled = false
@@ -113,6 +141,7 @@ public final class CoreNavigatorMock: CoreNavigator {
     ) {
         unsetRoutesCalled = true
         passedUuid = uuid
+        navigationStatus = .mock(primaryRouteId: nil)
         completion(unsetRoutesResult)
     }
 

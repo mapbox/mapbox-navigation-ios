@@ -10,6 +10,8 @@ public struct RouteStepProgress: Equatable, Sendable {
     /// - Parameter step: Step on a ``RouteLeg``.
     public init(step: RouteStep) {
         self.step = step
+        self.distanceRemaining = step.distance
+        self.durationRemaining = step.expectedTravelTime
     }
 
     func refreshingStep(with step: RouteStep) -> RouteStepProgress {

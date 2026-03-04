@@ -172,6 +172,8 @@ public struct RouteLegProgress: Equatable, Sendable {
         self.leg = leg
 
         self.currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
+        self.durationRemaining = leg.expectedTravelTime
+        self.distanceRemaining = leg.distance
     }
 
     func refreshingLeg(with leg: RouteLeg) -> RouteLegProgress {

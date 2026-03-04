@@ -33,6 +33,8 @@ public struct RouteProgress: RouteProgressRepresentable, Equatable, Sendable {
         self.currentLegProgress = RouteLegProgress(leg: legs[self.legIndex])
 
         self.routeAlerts = routeAlerts(from: navigationRoutes.mainRoute)
+        self.durationRemaining = navigationRoutes.mainRoute.route.expectedTravelTime
+        self.distanceRemaining = navigationRoutes.mainRoute.route.distance
         calculateLegsCongestion(configuration: congestionConfiguration)
     }
 

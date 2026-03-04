@@ -2,27 +2,64 @@ import CoreLocation
 import MapboxDirections
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
+import XCTest
 
 extension NavigationStatus {
+    static func mockStartOfNavigation(
+        routesDate: RoutesData,
+        legIndex: UInt32 = 0,
+        stepIndex: UInt32 = 0
+    ) async -> Self {
+        let mainRoute = routesDate.primaryRoute()
+        guard let route = try? await mainRoute.convertToDirectionsRoute(RouteOptions.self) else {
+            XCTFail("Incorrect route")
+            return .mock()
+        }
+        let leg = route.legs[Int(legIndex)]
+        let step = leg.steps[Int(stepIndex)]
+        let activeGuidanceInfo = ActiveGuidanceInfo.mock(
+            routeProgress: .mock(
+                remainingDistance: route.distance,
+                remainingDuration: route.expectedTravelTime
+            ),
+            legProgress: .mock(
+                remainingDistance: leg.distance,
+                remainingDuration: leg.expectedTravelTime
+            ),
+            stepProgress: .mock(
+                remainingDistance: step.distance,
+                remainingDuration: step.expectedTravelTime
+            )
+        )
+        let coordinate = leg.source!.coordinate
+        return Self.mock(
+            primaryRouteId: mainRoute.getRouteId(),
+            activeGuidanceInfo: activeGuidanceInfo,
+            location: CLLocation(coordinate: coordinate),
+            routeIndex: mainRoute.getRouteIndex(),
+            legIndex: legIndex
+        )
+    }
+
     public static func mock(
         routeState: RouteState = .tracking,
         locatedAlternativeRouteId: String? = nil,
-        primaryRouteId: String = "",
+        primaryRouteId: String? = "",
         stale: Bool = false,
         activeGuidanceInfo: ActiveGuidanceInfo? = .mock(),
         location: CLLocation = CLLocation(latitude: 37.788443, longitude: -122.4020258),
-        routeIndex: UInt32 = 0,
-        legIndex: UInt32 = 0,
-        stepIndex: UInt32 = 0,
+        routeIndex: UInt32? = 0,
+        legIndex: UInt32? = 0,
+        stepIndex: UInt32? = 0,
         isFallback: Bool = false,
         fallbackReason: FallbackReason = .none,
         inTunnel: Bool = false,
         inParkingAisle: Bool = false,
         inRoundabout: Bool = false,
         predicted: TimeInterval = 10,
-        geometryIndex: UInt32 = 0,
-        shapeIndex: UInt32 = 0,
-        intersectionIndex: UInt32 = 0,
+        geometryIndex: UInt32? = 0,
+        shapeIndex: UInt32? = 0,
+        intersectionIndex: UInt32? = 0,
         turnLanes: [TurnLane] = [],
         alternativeRouteIndices: [RouteIndices] = [],
         roads: [MapboxNavigationNative_Private.RoadName] = [.mock()],
@@ -38,7 +75,7 @@ extension NavigationStatus {
         offRoadProba: Float = 0,
         offRoadStateProvider: OffRoadStateProvider = .unknown,
         upcomingRouteAlertUpdates: [UpcomingRouteAlertUpdate] = [],
-        nextWaypointIndex: UInt32 = 0,
+        nextWaypointIndex: UInt32 = 1,
         layer: NSNumber? = nil,
         isSyntheticLocation: Bool = false,
         correctedLocationData: CorrectedLocationData? = nil,
@@ -47,15 +84,17 @@ extension NavigationStatus {
         isAdasDataAvailable: NSNumber? = nil
     ) -> Self {
         let fixLocation = FixLocation(location)
-        let primaryRouteIndices = RouteIndices(
-            routeId: RouteIdentifier(uuid: primaryRouteId, index: routeIndex),
-            legIndex: legIndex,
-            step: stepIndex,
-            geometryIndex: geometryIndex,
-            legShapeIndex: shapeIndex,
-            intersectionIndex: intersectionIndex,
-            isForkPointPassed: false
-        )
+        let primaryRouteIndices = primaryRouteId.map {
+            RouteIndices(
+                routeId: RouteIdentifier(uuid: $0, index: routeIndex ?? 0),
+                legIndex: legIndex ?? 0,
+                step: stepIndex ?? 0,
+                geometryIndex: geometryIndex ?? 0,
+                legShapeIndex: shapeIndex ?? 0,
+                intersectionIndex: intersectionIndex ?? 0,
+                isForkPointPassed: false
+            )
+        }
         return .init(
             routeState: routeState,
             stale: stale,

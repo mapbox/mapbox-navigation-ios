@@ -73,10 +73,11 @@ final class RouteStepProgressTests: XCTestCase {
     }
 
     func testInitialProgressValues() {
+        let step = stepProgress.step
         XCTAssertEqual(stepProgress.fractionTraveled, 0)
-        XCTAssertEqual(stepProgress.distanceRemaining, 0)
+        XCTAssertEqual(stepProgress.distanceRemaining, step.distance)
         XCTAssertEqual(stepProgress.distanceTraveled, 0)
-        XCTAssertEqual(stepProgress.durationRemaining, 0)
+        XCTAssertEqual(stepProgress.durationRemaining, step.expectedTravelTime)
     }
 
     func testReturnDistanceTraveled() {

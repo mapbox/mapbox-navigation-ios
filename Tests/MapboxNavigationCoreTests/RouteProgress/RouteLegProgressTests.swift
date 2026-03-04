@@ -18,9 +18,9 @@ final class RouteLegProgressTests: XCTestCase {
 
     func testInitialProgressValues() {
         XCTAssertEqual(legProgress.fractionTraveled, 0)
-        XCTAssertEqual(legProgress.distanceRemaining, 0)
+        XCTAssertEqual(legProgress.distanceRemaining, leg.distance)
         XCTAssertEqual(legProgress.distanceTraveled, 0)
-        XCTAssertEqual(legProgress.durationRemaining, 0)
+        XCTAssertEqual(legProgress.durationRemaining, leg.expectedTravelTime)
         XCTAssertEqual(legProgress.stepIndex, 0)
         XCTAssertEqual(legProgress.currentStepProgress.step, leg.steps.first)
     }

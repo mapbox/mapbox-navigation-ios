@@ -202,6 +202,8 @@ class NavigationViewControllerTests: TestCase {
 
     @MainActor
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() async {
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
+        styleRefreshedAppearanceExpectation.isInverted = true
         let navigationViewController = createViewController(
             styles: [DayStyle()],
             styleManagerDelegate: self
@@ -209,9 +211,6 @@ class NavigationViewControllerTests: TestCase {
         _ = navigationViewController.view
         let someLocation = poi.first!
         let test: (Any) -> Void = { _ in self.locationPublisher.send(someLocation) }
-
-        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
-        styleRefreshedAppearanceExpectation.isInverted = true
         (0...2).forEach(test)
 
         await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)
@@ -219,8 +218,6 @@ class NavigationViewControllerTests: TestCase {
 
     @MainActor
     func testCompleteRoute() async {
-        let navigationProvider = navigationProvider!
-
         final class NavigationViewControllerDelegateMock: NavigationViewControllerDelegate {
             let didArriveExpectation = XCTestExpectation(description: "Navigation finished expectation.")
 
@@ -323,6 +320,8 @@ class NavigationViewControllerTests: TestCase {
     // have only 1 style.
     @MainActor
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() async {
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
+        styleRefreshedAppearanceExpectation.isInverted = true
         isInTunnel = true
         let navigationViewController = createViewController(
             styles: [StandardNightStyle()],
@@ -354,8 +353,6 @@ class NavigationViewControllerTests: TestCase {
             }
             .store(in: &subscriptions)
         await fulfillment(of: [navigationStartedExpectation], timeout: 1)
-        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
-        styleRefreshedAppearanceExpectation.isInverted = true
 
         (0...2).forEach(test)
         await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)
@@ -364,6 +361,7 @@ class NavigationViewControllerTests: TestCase {
     @MainActor
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() async {
         isInTunnel = true
+        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
         let navigationViewController = createViewController(
             styles: [DayStyle(), NightStyle()],
             styleManagerDelegate: self,
@@ -399,7 +397,6 @@ class NavigationViewControllerTests: TestCase {
             .store(in: &subscriptions)
         await fulfillment(of: [navigationStartedExpectation], timeout: 0.5)
 
-        styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
         (0...2).forEach { _ in test() }
 
         await fulfillment(of: [styleRefreshedAppearanceExpectation], timeout: 0.5)

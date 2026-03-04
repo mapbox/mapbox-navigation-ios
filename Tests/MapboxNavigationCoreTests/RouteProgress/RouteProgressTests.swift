@@ -28,10 +28,11 @@ class RouteProgressTests: BaseTestCase {
     }
 
     func testInitialProgressValues() {
+        let mainRoute = twoLegsRoutes.mainRoute.route
         XCTAssertEqual(routeProgress.fractionTraveled, 0)
-        XCTAssertEqual(routeProgress.distanceRemaining, 0)
+        XCTAssertEqual(routeProgress.distanceRemaining, mainRoute.distance)
         XCTAssertEqual(routeProgress.distanceTraveled, 0)
-        XCTAssertEqual(routeProgress.durationRemaining, 0)
+        XCTAssertEqual(routeProgress.durationRemaining, mainRoute.expectedTravelTime)
     }
 
     func testSetLegIndex() {

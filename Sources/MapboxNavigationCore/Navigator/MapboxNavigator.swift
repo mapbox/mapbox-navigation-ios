@@ -99,7 +99,7 @@ final class MapboxNavigator: @unchecked Sendable {
         let previousRouteProgress = currentRouteProgress?.routeProgress
         send(navigationRoutes)
         Task {
-            await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
+            await updatePrivateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
         }
         taskManager.withBarrier {
             setRoutes(
@@ -116,7 +116,7 @@ final class MapboxNavigator: @unchecked Sendable {
     func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
         await send(navigationRoutes)
         let previousRouteProgress = await state.privateRouteProgress
-        await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
+        await updatePrivateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
 
         await taskManager.withAsyncBarrier {
             await setRoutes(
@@ -262,7 +262,13 @@ final class MapboxNavigator: @unchecked Sendable {
 
                     guard !Task.isCancelled else { return }
                     navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
-                    await updateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
+                    await updatePrivateRouteProgress(
+                        with: navigationRoutes,
+                        startLegIndex: startLegIndex,
+                        updateWithNavigationStatus: true
+                    )
+                    let newProgress = await state.privateRouteProgress
+                    await send(newProgress.map(RouteProgressState.init(routeProgress:)))
                     await send(navigationRoutes)
                     switch reason {
                     case .newRoute:
@@ -660,29 +666,47 @@ final class MapboxNavigator: @unchecked Sendable {
 
     // MARK: - NavigationStatus processing
 
-    private func updateRouteProgress(
-        with routes: NavigationRoutes?,
+    private func updatePrivateRouteProgress(
+        with routes: NavigationRoutes,
+        startLegIndex: Int,
+        updateWithNavigationStatus: Bool = false
+    ) async {
+        let mainRoute = routes.mainRoute
+        let waypoints = mainRoute.route.legs.enumerated()
+            .reduce(into: [MapboxDirections.Waypoint]()) { partialResult, element in
+                if element.offset == 0 {
+                    element.element.source.map { partialResult.append($0) }
+                }
+                element.element.destination.map { partialResult.append($0) }
+            }
+        var routeProgress = RouteProgress(
+            navigationRoutes: routes,
+            waypoints: waypoints,
+            congestionConfiguration: configuration.congestionConfig,
+            legIndex: startLegIndex
+        )
+
+        if updateWithNavigationStatus {
+            await updateRouteProgressWithNavigationStatus(
+                routeProgress: &routeProgress,
+                mainRoute: mainRoute,
+                startLegIndex: startLegIndex
+            )
+        }
+        await state.update(privateRouteProgress: routeProgress)
+    }
+
+    private func updateRouteProgressWithNavigationStatus(
+        routeProgress: inout RouteProgress,
+        mainRoute: NavigationRoute,
         startLegIndex: Int
     ) async {
-        if let routes {
-            let waypoints = routes.mainRoute.route.legs.enumerated()
-                .reduce(into: [MapboxDirections.Waypoint]()) { partialResult, element in
-                    if element.offset == 0 {
-                        element.element.source.map { partialResult.append($0) }
-                    }
-                    element.element.destination.map { partialResult.append($0) }
-                }
-            let routeProgress = RouteProgress(
-                navigationRoutes: routes,
-                waypoints: waypoints,
-                congestionConfiguration: configuration.congestionConfig,
-                legIndex: startLegIndex
-            )
-            await state.update(privateRouteProgress: routeProgress)
-        } else {
-            await state.update(privateRouteProgress: nil)
-            // This is required to not miss the last route progress update when switching to the idle state.
-            await send(RouteProgressState?.none)
+        let status = await navigator.navigationStatus
+        if let primaryRouteIndices = status.primaryRouteIndices,
+           primaryRouteIndices.routeId.toRouteIdString() == mainRoute.routeId.rawValue,
+           primaryRouteIndices.legIndex == startLegIndex
+        {
+            routeProgress.update(using: status)
         }
     }
 
@@ -1015,7 +1039,7 @@ final class MapboxNavigator: @unchecked Sendable {
                             navigationRoutes: fasterRoutes,
                             startLegIndex: 0,
                             reason: .fasterRoute,
-                            previousRouteProgress: currentRouteProgress?.routeProgress
+                            previousRouteProgress: await state.privateRouteProgress
                         )
                     }
                 }

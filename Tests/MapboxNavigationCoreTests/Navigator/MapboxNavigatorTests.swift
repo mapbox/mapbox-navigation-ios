@@ -1,4 +1,4 @@
-import _MapboxNavigationTestHelpers
+@testable import _MapboxNavigationTestHelpers
 import Combine
 import CoreLocation
 import MapboxDirections
@@ -16,7 +16,7 @@ final class MapboxNavigatorTests: TestCase {
     var locationClientState: MockLocationClientState!
     var routeProgress: RouteProgress!
 
-    var navigationRoutesUpdateExpectation: XCTestExpectation?
+    var routeProgressUpdateExpectation: XCTestExpectation?
 
     override func setUp() async throws {
         try? await super.setUp()
@@ -53,12 +53,10 @@ final class MapboxNavigatorTests: TestCase {
         )
         navigator = await MapboxNavigator(configuration: coonfiguration)
 
-        navigationRoutesUpdateExpectation = nil
-        navigator.navigationRoutes
+        navigator.routeProgress
             .compactMap { $0 }
-            .dropFirst()
             .sink(receiveValue: { [weak self] _ in
-                self?.navigationRoutesUpdateExpectation?.fulfill()
+                self?.routeProgressUpdateExpectation?.fulfill()
             })
             .store(in: &subscriptions)
     }
@@ -320,6 +318,8 @@ final class MapboxNavigatorTests: TestCase {
     @MainActor
     func testSetStateToIdleAsyncAfterActiveGuidance() async {
         await navigator.startActiveGuidanceAsync(with: .mock(), startLegIndex: 0)
+        // TODO: (NAVIOS-2155) fix async state change
+        await waitForRouteProgressUpdate()
         await navigator.setToIdleAsync()
         let state = navigator.currentSession.state
         XCTAssertEqual(state, .idle)
@@ -470,7 +470,7 @@ final class MapboxNavigatorTests: TestCase {
 
     @MainActor
     func testSetRoutesSimilarNewRouteKeepsSession() async {
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: oneLegNavigationRoutes())
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: oneLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
@@ -478,7 +478,7 @@ final class MapboxNavigatorTests: TestCase {
 
     @MainActor
     func testSetRoutesSimilarRerouteKeepsSession() async {
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: oneLegNavigationRoutes())
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: oneLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute(.deviation))
 
         billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
@@ -486,7 +486,7 @@ final class MapboxNavigatorTests: TestCase {
 
     @MainActor
     func testSetRoutesDifferentNewRouteBeginsNewSession() async {
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: twoLegNavigationRoutes())
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: twoLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
         billingServiceMock.assertEvents([
@@ -498,7 +498,7 @@ final class MapboxNavigatorTests: TestCase {
 
     @MainActor
     func testSetRoutesDifferentRerouteBeginsNewSession() async {
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: twoLegNavigationRoutes())
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: twoLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .reroute(.deviation))
 
         billingServiceMock.assertEvents([
@@ -512,7 +512,7 @@ final class MapboxNavigatorTests: TestCase {
     func testSetRoutesMapMatchingRerouteToDirectionsWithSameDestinationKeepsSession() async {
         // This scenario happens with RerouteStrategyForMatchRoute.navigateToFinalDestination
         // when there were more than one waypoint remaining before reroute
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: twoLegNavigationRoutes(mapboxApi: .mapMatching))
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: twoLegNavigationRoutes(mapboxApi: .mapMatching))
         let reason = MapboxNavigator.SetRouteReason.reroute(.deviation)
         await setRoutes(with: oneLegNavigationRoutes(mapboxApi: .directions), reason: reason)
 
@@ -526,7 +526,7 @@ final class MapboxNavigatorTests: TestCase {
         )
         mockAlternativesRoutesDataParser()
         await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 0)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
         let refreshedRoute = RouteInterfaceMock(
@@ -552,7 +552,7 @@ final class MapboxNavigatorTests: TestCase {
         )
         mockAlternativesRoutesDataParser()
         await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 0)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
         let refreshedRoute = RouteInterfaceMock(
@@ -584,7 +584,7 @@ final class MapboxNavigatorTests: TestCase {
         )
         mockAlternativesRoutesDataParser()
         await navigator.startActiveGuidanceAsync(with: originalRoutes, startLegIndex: 1)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
         Environment.switchEnvironment(to: .live)
 
         let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
@@ -674,10 +674,10 @@ final class MapboxNavigatorTests: TestCase {
     }
 
     func testRerouteControllerWantsSwitchToAlternativeIfDefaultOptions() async {
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: oneLegNavigationRoutes())
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: oneLegNavigationRoutes())
         let route = RouteInterfaceMock()
         navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
 
         XCTAssertTrue(coreNavigator.setRoutesCalled)
         XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
@@ -690,10 +690,10 @@ final class MapboxNavigatorTests: TestCase {
 
     func testRerouteControllerWantsSwitchToAlternativeIfCustomOptions() async {
         let initialRoutes = await oneLegNavigationRoutes(directionsOptionsType: GolfCartRouteOptions.self)
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: initialRoutes)
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: initialRoutes)
         let route = RouteInterfaceMock()
         navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
 
         XCTAssertTrue(coreNavigator.setRoutesCalled)
         XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
@@ -708,13 +708,67 @@ final class MapboxNavigatorTests: TestCase {
         let routes = await oneLegNavigationRoutes()
         let expectation = setupRouteProgressExpectation(for: routes.mainRoute.route)
 
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: routes)
-        XCTAssertNil(
-            navigator.currentRouteProgress,
-            "Route progress should not be sent immediately after starting active guidance without a status update"
-        )
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: routes)
+        let progress = navigator.currentRouteProgress?.routeProgress
+        XCTAssertEqual(progress?.navigationRoutes, routes)
+        await fulfillment(of: [expectation], timeout: timeout)
+    }
 
-        await postStatusUpdateAndVerifyRouteProgress(for: routes.mainRoute.route, expectation: expectation)
+    @MainActor
+    func testStartActiveGuidanceIfValidNNStatus() async {
+        let navigationRoutes = await twoLegNavigationRoutes()
+        let nativeRoute = navigationRoutes.mainRoute.nativeRouteInterface
+        let routeId = nativeRoute.getRouteId()
+
+        coreNavigator.returnedNavigationStatus = { _, _ in
+            .mock(
+                primaryRouteId: nativeRoute.getResponseUuid(),
+                legIndex: 1,
+                stepIndex: 3
+            )
+        }
+
+        await navigator.startActiveGuidanceAsync(with: navigationRoutes, startLegIndex: 1)
+        await waitForRouteProgressUpdate()
+        let progress = navigator.currentRouteProgress?.routeProgress
+        XCTAssertEqual(progress?.legIndex, 1)
+        XCTAssertEqual(progress?.routeId.rawValue, routeId)
+        XCTAssertEqual(progress?.currentLegProgress.stepIndex, 3)
+    }
+
+    @MainActor
+    func testStartActiveGuidanceIfInvalidNNStatus() async {
+        let navigationRoutes = await twoLegNavigationRoutes()
+        let nativeRoute = navigationRoutes.mainRoute.nativeRouteInterface
+        let routeId = nativeRoute.getRouteId()
+
+        coreNavigator.returnedNavigationStatus = { _, _ in
+            .mock(
+                primaryRouteId: nativeRoute.getResponseUuid(),
+                legIndex: 0, // different legIndex
+                stepIndex: 3
+            )
+        }
+        await navigator.startActiveGuidanceAsync(with: navigationRoutes, startLegIndex: 1)
+        await waitForRouteProgressUpdate()
+        let progress = navigator.currentRouteProgress?.routeProgress
+        XCTAssertEqual(progress?.legIndex, 1)
+        XCTAssertEqual(progress?.routeId.rawValue, routeId)
+        XCTAssertEqual(progress?.currentLegProgress.stepIndex, 0)
+
+        coreNavigator.returnedNavigationStatus = { _, _ in
+            .mock(
+                primaryRouteId: "incorrect", // different primaryRouteId
+                legIndex: 1,
+                stepIndex: 3
+            )
+        }
+        await navigator.startActiveGuidanceAsync(with: navigationRoutes, startLegIndex: 1)
+        await waitForRouteProgressUpdate()
+        let progress2 = navigator.currentRouteProgress?.routeProgress
+        XCTAssertEqual(progress2?.legIndex, 1)
+        XCTAssertEqual(progress2?.routeId.rawValue, routeId)
+        XCTAssertEqual(progress2?.currentLegProgress.stepIndex, 0)
     }
 
     @MainActor
@@ -722,8 +776,8 @@ final class MapboxNavigatorTests: TestCase {
         let routes = await oneLegNavigationRoutes()
         let expectation = setupRouteProgressExpectation(for: routes.mainRoute.route)
 
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: routes)
-        await postStatusUpdateAndVerifyRouteProgress(for: routes.mainRoute.route, expectation: expectation)
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: routes)
+        await fulfillment(of: [expectation], timeout: timeout)
 
         let idleExpectation = trackingStatusExpectation(state: .idle)
         let nilRouteProgressExpectation = setupNilRouteProgressExpectation(for: routes.mainRoute.route)
@@ -741,8 +795,8 @@ final class MapboxNavigatorTests: TestCase {
         let routes = await oneLegNavigationRoutes()
         let expectation = setupRouteProgressExpectation(for: routes.mainRoute.route)
 
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: routes)
-        await postStatusUpdateAndVerifyRouteProgress(for: routes.mainRoute.route, expectation: expectation)
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: routes)
+        await fulfillment(of: [expectation], timeout: timeout)
 
         let idleExpectation = trackingStatusExpectation(state: .freeDrive(.active))
         let nilRouteProgressExpectation = setupNilRouteProgressExpectation(for: routes.mainRoute.route)
@@ -757,11 +811,13 @@ final class MapboxNavigatorTests: TestCase {
 
     @MainActor
     func testRouteProgressEventsActiveGuidanceAfterFreeDrive() async {
+        navigator.startFreeDrive()
+
         let routes = await oneLegNavigationRoutes()
         let expectation = setupRouteProgressExpectation(for: routes.mainRoute.route)
 
-        await startActiveGuidanceAndWaitForNavigationRoutesUpdate(with: routes)
-        await postStatusUpdateAndVerifyRouteProgress(for: routes.mainRoute.route, expectation: expectation)
+        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: routes)
+        await fulfillment(of: [expectation], timeout: timeout)
     }
 
     // MARK: - Helpers
@@ -773,6 +829,7 @@ final class MapboxNavigatorTests: TestCase {
         let routeProgressExpectation = XCTestExpectation(description: "Nil route progress event")
         navigator.routeProgress
             .dropFirst()
+            .filter { $0 == nil }
             .sink {
                 XCTAssertNil($0)
                 routeProgressExpectation.fulfill()
@@ -786,6 +843,7 @@ final class MapboxNavigatorTests: TestCase {
     private func setupRouteProgressExpectation(
         for route: Route
     ) -> XCTestExpectation {
+        coreNavigator.navigationStatus = initialNavigationStatus(route: route)
         let routeProgressExpectation = XCTestExpectation(description: "Non-nil route progress event")
         navigator.routeProgress
             .compactMap { $0 }
@@ -806,14 +864,7 @@ final class MapboxNavigatorTests: TestCase {
         for route: Route,
         expectation: XCTestExpectation
     ) async {
-        let status = NavigationStatus.mock(
-            activeGuidanceInfo: .mock(
-                routeProgress: .mock(
-                    remainingDistance: route.distance,
-                    remainingDuration: route.expectedTravelTime
-                )
-            )
-        )
+        let status = initialNavigationStatus(route: route)
         let userInfo: [AnyHashable: Any] = [
             NativeNavigator.NotificationUserInfoKey.statusKey: status,
         ]
@@ -821,6 +872,17 @@ final class MapboxNavigatorTests: TestCase {
         NotificationCenter.default.post(statusNotification)
 
         await fulfillment(of: [expectation], timeout: timeout)
+    }
+
+    private func initialNavigationStatus(route: Route) -> NavigationStatus {
+        NavigationStatus.mock(
+            activeGuidanceInfo: .mock(
+                routeProgress: .mock(
+                    remainingDistance: route.distance,
+                    remainingDuration: route.expectedTravelTime
+                )
+            )
+        )
     }
 
     private func trackingStatusExpectation(
@@ -882,17 +944,17 @@ final class MapboxNavigatorTests: TestCase {
         return Notification(name: .routeRefreshDidUpdateAnnotations, userInfo: userInfo)
     }
 
-    private func startActiveGuidanceAndWaitForNavigationRoutesUpdate(
+    private func startActiveGuidanceAndWaitForRouteProgressUpdate(
         with navigationRoutes: NavigationRoutes,
         startLegIndex: Int = 0
     ) async {
         await navigator.startActiveGuidance(with: navigationRoutes, startLegIndex: startLegIndex)
-        await waitForNavigationRoutesUpdate()
+        await waitForRouteProgressUpdate()
     }
 
-    private func waitForNavigationRoutesUpdate() async {
-        navigationRoutesUpdateExpectation = XCTestExpectation(description: "navigator callback startActiveGuidance")
-        await fulfillment(of: [navigationRoutesUpdateExpectation!], timeout: timeout)
+    private func waitForRouteProgressUpdate() async {
+        routeProgressUpdateExpectation = XCTestExpectation(description: "navigator callback startActiveGuidance")
+        await fulfillment(of: [routeProgressUpdateExpectation!], timeout: timeout)
     }
 
     private func mockAlternativesRoutesDataParser() {

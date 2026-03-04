@@ -144,6 +144,7 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
             shouldRefresh: shouldRefresh
         )
 
+        let routeProgressExpectation = await routeProgressExpectation(for: routes.mainRoute.route)
         await tripSession.startActiveGuidance(with: routes, startLegIndex: 0)
         await simulateLocations(locationsToSimulate)
 
@@ -151,6 +152,7 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
             shouldUseCustomOptions ? $0.contains("custom=customValue") : true
         }
         let expectations1 = [
+            routeProgressExpectation,
             statusExpectation, refreshExpectation1,
             refreshExpectation0, refreshExpectation2,
             refreshEventExpectation1,
@@ -206,5 +208,22 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
         let options = CustomRouteOptions(coordinates: [origin, destination], profileIdentifier: profile)
         options.custom = custom
         return options
+    }
+
+    fileprivate func routeProgressExpectation(
+        for route: Route
+    ) async -> XCTestExpectation {
+        let routeProgressExpectation = XCTestExpectation(description: "Non-nil route progress event")
+        await navigationProvider.navigator().routeProgress
+            .compactMap { $0 }
+            .first()
+            .sink { state in
+                let routeProgress = state.routeProgress
+                XCTAssertTrue(routeProgress.distanceRemaining > 0)
+                XCTAssertTrue(routeProgress.durationRemaining > 0)
+                routeProgressExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+        return routeProgressExpectation
     }
 }
