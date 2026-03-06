@@ -99,7 +99,7 @@ public struct AttributeOptions: CustomValueOptionSet, CustomStringConvertible, E
             case "":
                 continue
             default:
-                return nil
+                continue
             }
         }
         self.init(rawValue: attributeOptions.rawValue)
@@ -149,6 +149,6 @@ extension AttributeOptions: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let descriptions = try container.decode([String].self)
-        self = AttributeOptions(descriptions: descriptions)!
+        self = AttributeOptions(descriptions: descriptions) ?? .init()
     }
 }
