@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.20.0-rc.1", "dd39c77a51b10ff63c3fbb55824b62e4f3da179b81d88721ab120202f1cf3e31", "a0b5f1c15dcb2e3193ceb3fd18007dc0f6feab22")
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.20.0-rc.1", "dd39c77a51b10ff63c3fbb55824b62e4f3da179b81d88721ab120202f1cf3e31", "74928b3aadc1d0c7c3677ff8e2730e8f10a99778")
 let mapsVersion: Version = "11.20.0-rc.1"
 
 let package = Package(
