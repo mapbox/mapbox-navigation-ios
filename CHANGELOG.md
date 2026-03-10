@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Known issues
+
+* Alternative routes, diverging on certain intersections, may be unexpectedly discarded. This is related to geometrical configuration of the underlying intersection, which does not satisfy the fork point detection mechanism.
+
 ### API Deprecations
 
 * Deprecated `DirectionsOptions.distanceMeasurementSystem` in favor of the new `DirectionsOptions.unitMeasurementSystem`.
@@ -25,6 +29,7 @@
 * Extended `RoadGraph.Edge.Metadata` properties by adding `freeFlowSpeed`, `constrainedFlowSpeed`, `isFerry`, `isRoundabout`, `countryCodeISO3`, `surface` and `sapaType` members.
 * Added `ElectronicHorizonConfig.enableEnhancedDataAlongEH` option to allow requesting additional data from ADAS layer.
 * Added `RoadGraph.adasAttributes(edgeIdentifier:)` to fetch `ADASAttributes` on a given edge.
+* `RoadObjectMatcher` is removed. `RoadObjectStore` is extended to cover it's functionality instead. (Note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes)
 
 ### CarPlay
 

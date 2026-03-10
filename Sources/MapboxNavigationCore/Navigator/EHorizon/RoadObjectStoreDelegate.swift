@@ -18,4 +18,16 @@ public protocol RoadObjectStoreDelegate: AnyObject {
     /// This method is called when a road object with the given identifier has been removed from the road objects store.
     /// - Parameter identifier: The identifier of the road object.
     func didRemoveRoadObject(identifier: RoadObject.Identifier)
+
+    /// This method is called with a road object when the matching is successfully finished.
+    /// - Parameter identifier: The identifier of the road object.
+    func didMatchCustomRoadObject(identifier: RoadObject.Identifier)
+
+    /// This method is called when the matching is canceled.
+    /// - Parameter identifier: The identifier of the road object.
+    func didCancelCustomRoadObjectAdding(identifier: RoadObject.Identifier)
+
+    /// This method is called when the matching is finished with error.
+    /// - Parameter identifier: The identifier of the road object.
+    func didFailCustomRoadObjectMatching(identifier: RoadObject.Identifier)
 }

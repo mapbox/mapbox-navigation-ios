@@ -1,5 +1,7 @@
 import Foundation
+import MapboxCommon_Private
 import MapboxNavigationNative_Private
+import Turf
 
 extension RoadObject {
     /// Identifies a road object in an electronic horizon. A road object represents a notable transition point along a
@@ -62,18 +64,128 @@ public final class RoadObjectStore: @unchecked Sendable {
 
     // MARK: Managing Custom Road Objects
 
-    /// Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already
-    /// exists, updates it.
-    /// - Note: a road object obtained from route alerts cannot be added via this API.
-    /// - Parameter roadObject: Custom road object, acquired from ``RoadObjectMatcher``.
-    public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
-        guard let nativeObject = roadObject.native else {
-            let message = "You can only add matched a custom road object, acquired from RoadObjectMatcher."
-            assertionFailure(message)
-            Log.error(message, category: .navigation)
-            return
+    /// Matches given OpenLR object to the graph.
+    /// - Parameters:
+    ///   - location: OpenLR location of the road object, encoded in a base64 string.
+    ///   - identifier: Unique identifier of the object.
+    public func matchOpenLR(location: String, identifier: OpenLRIdentifier) {
+        let standard = MapboxNavigationNative_Private.Standard(identifier: identifier)
+        let reference: RoadObject.Identifier = switch identifier {
+        case .tomTom(let ref):
+            ref
+        case .tpeg(let ref):
+            ref
         }
-        native.addCustomRoadObject(for: nativeObject)
+
+        let openlr = OpenLR(base64Encoded: location, standard: standard)
+        native.addCustomRoadObject(
+            for: UnmatchedRoadObject(
+                id: reference,
+                geometry: UnmatchedRoadObjectGeometry.fromOpenLR(openlr),
+                geometryKind: UnmatchedRoadObjectGeometryKind.openLR,
+                heading: nil
+            ),
+            options: MatchingOptions(
+                useOnlyPreloadedTiles: false,
+                allowPartialMatching: false,
+                partialPolylineDistanceCalculationStrategy: .onlyMatched
+            )
+        )
+    }
+
+    /// Matches given polyline to the graph.
+    /// Polyline should define a valid path on the graph, i.e. it should be possible to drive this path according to
+    /// traffic rules.
+    /// - Parameters:
+    ///   - polyline: Polyline representing the object.
+    ///   - identifier: Unique identifier of the object.
+    public func match(polyline: LineString, identifier: RoadObject.Identifier) {
+        native.addCustomRoadObject(
+            for: UnmatchedRoadObject(
+                id: identifier,
+                geometry: UnmatchedRoadObjectGeometry
+                    .fromNSArray(polyline.coordinates.map(Coordinate2D.init)),
+                geometryKind: UnmatchedRoadObjectGeometryKind.polyline,
+                heading: nil
+            ),
+            options: MatchingOptions(
+                useOnlyPreloadedTiles: false,
+                allowPartialMatching: false,
+                partialPolylineDistanceCalculationStrategy: .onlyMatched
+            )
+        )
+    }
+
+    /// Matches a given polygon to the graph.
+    /// "Matching" here means we try to find all intersections of the polygon with the road graph and track distances to
+    /// those intersections as distance to the polygon.
+    /// - Parameters:
+    ///   -  polygon: Polygon representing the object.
+    ///   -  identifier: Unique identifier of the object.
+    public func match(polygon: Polygon, identifier: RoadObject.Identifier) {
+        native.addCustomRoadObject(
+            for: UnmatchedRoadObject(
+                id: identifier,
+                geometry: UnmatchedRoadObjectGeometry
+                    .fromNSArray(polygon.outerRing.coordinates.map(Coordinate2D.init)),
+                geometryKind: UnmatchedRoadObjectGeometryKind.polygon,
+                heading: nil
+            ),
+            options: MatchingOptions(
+                useOnlyPreloadedTiles: false,
+                allowPartialMatching: false,
+                partialPolylineDistanceCalculationStrategy: .onlyMatched
+            )
+        )
+    }
+
+    /// Matches given gantry (i.e. polyline orthogonal to the road) to the graph.
+    /// "Matching" here means we try to find all intersections of the gantry with the road graph and track distances to
+    /// those intersections as distance to the gantry.
+    /// - Parameters:
+    ///   - gantry: Gantry representing the object.
+    ///   - identifier: Unique identifier of the object.
+    public func match(gantry: MultiPoint, identifier: RoadObject.Identifier) {
+        native.addCustomRoadObject(
+            for: UnmatchedRoadObject(
+                id: identifier,
+                geometry: UnmatchedRoadObjectGeometry
+                    .fromNSArray(gantry.coordinates.map(Coordinate2D.init)),
+                geometryKind: UnmatchedRoadObjectGeometryKind.gantry,
+                heading: nil
+            ),
+            options: MatchingOptions(
+                useOnlyPreloadedTiles: false,
+                allowPartialMatching: false,
+                partialPolylineDistanceCalculationStrategy: .onlyMatched
+            )
+        )
+    }
+
+    /// Matches given point to road graph.
+    /// - Parameters:
+    ///   - point: Point representing the object.
+    ///   - identifier: Unique identifier of the object.
+    ///   - heading: Heading of the provided point, which is going to be matched.
+    public func match(point: CLLocationCoordinate2D, identifier: RoadObject.Identifier, heading: CLHeading? = nil) {
+        var trueHeading: NSNumber?
+        if let heading, heading.trueHeading >= 0.0 {
+            trueHeading = NSNumber(value: heading.trueHeading)
+        }
+
+        native.addCustomRoadObject(
+            for: UnmatchedRoadObject(
+                id: identifier,
+                geometry: UnmatchedRoadObjectGeometry.fromCLLocationCoordinate2D(point),
+                geometryKind: UnmatchedRoadObjectGeometryKind.point,
+                heading: trueHeading
+            ),
+            options: MatchingOptions(
+                useOnlyPreloadedTiles: false,
+                allowPartialMatching: false,
+                partialPolylineDistanceCalculationStrategy: .onlyMatched
+            )
+        )
     }
 
     /// Removes road object and stops tracking it in the electronic horizon.
@@ -125,5 +237,17 @@ extension RoadObjectStore: RoadObjectsStoreObserver {
 
     public func onRoadObjectRemoved(forId id: String) {
         delegate?.didRemoveRoadObject(identifier: id)
+    }
+
+    public func onCustomRoadObjectMatched(forId id: String) {
+        delegate?.didMatchCustomRoadObject(identifier: id)
+    }
+
+    public func onCustomRoadObjectAddingCancelled(forId id: String) {
+        delegate?.didCancelCustomRoadObjectAdding(identifier: id)
+    }
+
+    public func onCustomRoadObjectMatchingFailed(forId id: String) {
+        delegate?.didFailCustomRoadObjectMatching(identifier: id)
     }
 }

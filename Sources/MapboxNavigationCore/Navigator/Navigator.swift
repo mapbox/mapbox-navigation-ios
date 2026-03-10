@@ -403,6 +403,4 @@ public struct RoadMatching: Sendable {
     public let roadGraph: RoadGraph
     /// Provides access to metadata about road objects.
     public let roadObjectStore: RoadObjectStore
-    /// Provides methods for road object matching.
-    public let roadObjectMatcher: RoadObjectMatcher
 }

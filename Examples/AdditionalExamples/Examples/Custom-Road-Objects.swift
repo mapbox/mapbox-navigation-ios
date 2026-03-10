@@ -50,7 +50,7 @@ final class CustomRoadObjectsViewController: UIViewController {
     }
 
     private func addUserDefinedRoadObject() {
-        let matcher = electronicHorizon.roadMatching.roadObjectMatcher
+        let matcher = electronicHorizon.roadMatching.roadObjectStore
         matcher.delegate = self
 
         let data = pointFeatureJson.data(using: .utf8)!
@@ -238,23 +238,6 @@ private final class TopBannerView: UIControl {
     }
 }
 
-extension CustomRoadObjectsViewController: RoadObjectMatcherDelegate {
-    func roadObjectMatcher(_ matcher: RoadObjectMatcher, didMatch roadObject: RoadObject) {
-        guard roadObject.isUserDefined else { return }
-
-        let store = electronicHorizon.roadMatching.roadObjectStore
-        store.delegate = self
-        store.addUserDefinedRoadObject(roadObject)
-    }
-
-    func roadObjectMatcher(
-        _ matcher: RoadObjectMatcher,
-        didFailToMatchWith error: MapboxNavigationCore.RoadObjectMatcherError
-    ) {}
-
-    func roadObjectMatcher(_ matcher: RoadObjectMatcher, didCancelMatchingFor id: String) {}
-}
-
 extension CustomRoadObjectsViewController: RoadObjectStoreDelegate {
     func didAddRoadObject(identifier: RoadObject.Identifier) {
         guard identifier == "unique-id-user-defined" else { return }
@@ -265,4 +248,10 @@ extension CustomRoadObjectsViewController: RoadObjectStoreDelegate {
     func didUpdateRoadObject(identifier: RoadObject.Identifier) {}
 
     func didRemoveRoadObject(identifier: RoadObject.Identifier) {}
+
+    func didMatchCustomRoadObject(identifier: MapboxNavigationCore.RoadObject.Identifier) {}
+
+    func didCancelCustomRoadObjectAdding(identifier: MapboxNavigationCore.RoadObject.Identifier) {}
+
+    func didFailCustomRoadObjectMatching(identifier: MapboxNavigationCore.RoadObject.Identifier) {}
 }

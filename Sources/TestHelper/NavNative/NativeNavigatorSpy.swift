@@ -39,7 +39,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
 
         super.init(
             config: factory.configHandle(),
-            cache: factory.cacheHandle,
+            tilesManager: factory.tilesManager,
             historyRecorder: nil
         )
     }

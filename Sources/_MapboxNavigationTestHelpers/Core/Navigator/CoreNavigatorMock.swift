@@ -13,13 +13,11 @@ public final class CoreNavigatorMock: CoreNavigator {
 
     public var tileStore: TileStore
 
-    var cacheHandle: CacheHandle
+    var tilesManager: TilesManagerHandle
 
     public var roadGraph: RoadGraph
 
     public var roadObjectStore: RoadObjectStore
-
-    public var roadObjectMatcher: MapboxNavigationCore.RoadObjectMatcher
 
     public var rerouteController: RerouteController?
 
@@ -28,7 +26,7 @@ public final class CoreNavigatorMock: CoreNavigator {
     @MainActor
     public init() {
         let configHandle = ConfigHandle.mock()
-        self.cacheHandle = CacheFactory.build(
+        self.tilesManager = TilesManagerHandle.build(
             for: .init(
                 tilesPath: "",
                 tileStore: nil,
@@ -43,13 +41,12 @@ public final class CoreNavigatorMock: CoreNavigator {
         )
         let nativeNavigator = MapboxNavigationNative_Private.Navigator(
             config: configHandle,
-            cache: cacheHandle,
+            tilesManager: tilesManager,
             historyRecorder: nil
         )
         self.rerouteController = .mock(navigator: .mock())
-        self.roadObjectMatcher = .init(MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle))
-        self.roadObjectStore = .init(nativeNavigator.roadObjectStore())
-        self.roadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(cache: cacheHandle))
+        self.roadObjectStore = .init(nativeNavigator.roadObjectsStore())
+        self.roadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(tilesManager: tilesManager))
         self.tileStore = .__create(forPath: "")
         self.navigationStatus = .mock(primaryRouteId: nil)
     }

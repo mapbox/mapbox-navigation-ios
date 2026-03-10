@@ -31,7 +31,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
         let factory = configuration.nativeHandlersFactory
         let router = RouterFactory.build(
             for: configuration.source.nativeSource,
-            cache: factory.cacheHandle,
+            tilesManager: factory.tilesManager,
             config: factory.configHandle(),
             historyRecorder: factory.historyRecorderHandle
         )

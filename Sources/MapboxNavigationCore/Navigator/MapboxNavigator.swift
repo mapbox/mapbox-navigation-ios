@@ -620,8 +620,7 @@ final class MapboxNavigator: @unchecked Sendable {
         self.locationClient = configuration.locationClient
         self.roadMatching = .init(
             roadGraph: configuration.navigator.roadGraph,
-            roadObjectStore: configuration.navigator.roadObjectStore,
-            roadObjectMatcher: configuration.navigator.roadObjectMatcher
+            roadObjectStore: configuration.navigator.roadObjectStore
         )
 
         self._session = .init(.init(state: .idle))

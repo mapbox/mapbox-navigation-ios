@@ -197,12 +197,28 @@ extension Route {
             return nil
         }
 
-        guard let intersectionIndex = leg.steps[stepindex].segmentIndicesByIntersection?
-            .firstIndex(where: { $0 == segmentIndex })
-        else {
-            return nil
+        // TODO: revert back when updating to stable NN v324.20.0
+//        guard let intersectionIndex = leg.steps[stepindex].segmentIndicesByIntersection?
+//            .firstIndex(where: { $0 == segmentIndex })
+//        else {
+//            return nil
+//        }
+        let indices = leg.steps[stepindex].segmentIndicesByIntersection
+        var closest = (-1, Int.max)
+        let threshold = 3
+        for (offset, index) in (indices ?? []).enumerated() {
+            guard let index,
+                  index <= segmentIndex else { break }
+            let distance = segmentIndex - index
+            if distance < threshold,
+               distance < closest.1
+            {
+                closest = (offset, distance)
+                guard distance != 0 else { break }
+            }
         }
+        guard closest.0 != -1 else { return nil }
 
-        return leg.steps[stepindex].intersections?[intersectionIndex]
+        return leg.steps[stepindex].intersections?[closest.0]
     }
 }

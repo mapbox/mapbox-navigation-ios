@@ -119,14 +119,14 @@ final class NativeHandlersFactory: @unchecked Sendable {
             let navigator = if let routingProviderSource {
                 MapboxNavigationNative_Private.Navigator(
                     config: configHandle,
-                    cache: cacheHandle,
+                    tilesManager: tilesManager,
                     historyRecorder: historyRecorder,
                     routerTypeRestriction: routingProviderSource
                 )
             } else {
                 MapboxNavigationNative_Private.Navigator(
                     config: configHandle,
-                    cache: cacheHandle,
+                    tilesManager: tilesManager,
                     historyRecorder: historyRecorder
                 )
             }
@@ -137,18 +137,22 @@ final class NativeHandlersFactory: @unchecked Sendable {
         }
     }
 
-    lazy var cacheHandle: CacheHandle = cacheHandlerFactory.getHandler(
-        with: (
-            tilesConfig: tilesConfig,
-            configHandle: configHandle(by: configFactoryType),
-            historyRecorder: historyRecorderHandle
-        ),
-        cacheData: self
-    )
+    lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(tilesManager: tilesManager))
 
-    lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(cache: cacheHandle))
-
+    // TODO: To replace with TileStore.setRootPath(tileStorePath) (NAVIOS-2531)
     lazy var tileStore: TileStore = .__create(forPath: tileStorePath)
+
+    lazy var tilesManager: TilesManagerHandle = {
+        let isUX = SdkInfoRegistryFactory.getInstance().getSdkInformation().contains {
+            $0.packageName == SdkInfo.navigationUX.packageName
+        }
+        return TilesManagerHandle.build(
+            for: tilesConfig,
+            config: configHandle(),
+            historyRecorder: historyRecorderHandle,
+            frameworkTypeForSKU: isUX ? .UXF : .CF
+        )
+    }()
 
     // MARK: - Support Objects
 
@@ -159,6 +163,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         )
     }
 
+    // TODO: To be replaced with NavigationTilesConfig (NAVIOS-2531)
     lazy var endpointConfig: TileEndpointConfiguration = .init(
         apiConfiguration: apiConfiguration,
         tilesVersion: tilesVersion,
@@ -167,6 +172,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         datasetProfileIdentifier: datasetProfileIdentifier
     )
 
+    // TODO: To be replaced with NavigationTilesConfig (NAVIOS-2531)
     lazy var tilesConfig: TilesConfig = .init(
         tilesPath: tileStorePath,
         tileStore: tileStore,
@@ -218,7 +224,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
             incidentsOptions: nativeIncidentsOptions,
             noSignalSimulationEnabled: nil,
             useSensors: NSNumber(booleanLiteral: utilizeSensorData),
-            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute.nativeValue
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute.nativeValue,
+            roadObjectsMatcherOptions: nil // TODO: add RoadObjectsMatcherOptions configuration (NAVIOS-2531)
         )
     }
 

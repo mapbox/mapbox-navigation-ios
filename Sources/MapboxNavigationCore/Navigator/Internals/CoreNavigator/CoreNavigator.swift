@@ -10,7 +10,6 @@ protocol CoreNavigator {
     var tileStore: TileStore { get }
     var roadGraph: RoadGraph { get }
     var roadObjectStore: RoadObjectStore { get }
-    var roadObjectMatcher: RoadObjectMatcher { get }
     var rerouteController: RerouteController? { get }
 
     @MainActor
@@ -65,8 +64,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     private(set) var navigator: NavigationNativeNavigator
     private(set) var telemetrySessionManager: NavigationSessionManager
-
-    private(set) var cacheHandle: CacheHandle
 
     var mostRecentNavigationStatus: NavigationStatus? {
         navigatorStatusObserver?.mostRecentNavigationStatus
@@ -144,12 +141,11 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
         let factory = configuration.nativeHandlersFactory
         self.tileStore = factory.tileStore
-        self.cacheHandle = factory.cacheHandle
         self.roadGraph = factory.roadGraph
         self.navigator = factory.navigator
         self.telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator)
-        self.roadObjectStore = RoadObjectStore(navigator.native.roadObjectStore())
-        self.roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle))
+        self.roadObjectStore = RoadObjectStore(navigator.native.roadObjectsStore())
+        navigator.native.config()
         self.rerouteController = RerouteController(
             configuration: .init(
                 credentials: configuration.credentials,
@@ -183,14 +179,12 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         let factory = configuration.nativeHandlersFactory.targeting(version: version)
 
         tileStore = factory.tileStore
-        cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
 
         navigator.native.restoreNavigationSession(for: previousNavigationSessionState)
         telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator, previousSession: previousSession)
-        roadObjectStore.native = navigator.native.roadObjectStore()
-        roadObjectMatcher.native = MapboxNavigationNative_Private.RoadObjectMatcher(cache: cacheHandle)
+        roadObjectStore.native = navigator.native.roadObjectsStore()
         rerouteController = RerouteController(
             configuration: .init(
                 credentials: configuration.credentials,
@@ -384,8 +378,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private(set) var roadGraph: RoadGraph
 
     private(set) var roadObjectStore: RoadObjectStore
-
-    private(set) var roadObjectMatcher: RoadObjectMatcher
 
     private var isSubscribedToElectronicHorizon = false
 

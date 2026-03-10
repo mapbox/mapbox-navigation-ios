@@ -8,7 +8,8 @@ extension NavigatorConfig {
         incidentsOptions: IncidentsOptions? = nil,
         noSignalSimulationEnabled: NSNumber? = nil,
         useSensors: NSNumber? = nil,
-        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled
+        rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute = .rerouteDisabled,
+        roadObjectsMatcherOptions: RoadObjectsMatcherOptions? = nil
     ) -> NavigatorConfig {
         NavigatorConfig(
             voiceInstructionThreshold: voiceInstructionThreshold,
@@ -17,7 +18,8 @@ extension NavigatorConfig {
             incidentsOptions: incidentsOptions,
             noSignalSimulationEnabled: noSignalSimulationEnabled,
             useSensors: useSensors,
-            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
+            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute,
+            roadObjectsMatcherOptions: roadObjectsMatcherOptions
         )
     }
 }

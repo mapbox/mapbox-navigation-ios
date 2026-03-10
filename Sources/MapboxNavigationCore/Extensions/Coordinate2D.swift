@@ -13,3 +13,9 @@ extension CLLocation {
         self.init(latitude: coordinate.value.latitude, longitude: coordinate.value.longitude)
     }
 }
+
+extension CLLocation {
+    convenience init(coordinate: CLLocationCoordinate2D) {
+        self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+}
