@@ -1,25 +1,25 @@
 PODS:
-  - MapboxCommon (23.11.4)
+  - MapboxCommon (23.12.0)
   - MapboxCoreMaps (10.19.2):
     - MapboxCommon (~> 23.11)
-  - MapboxCoreNavigation (2.20.0-beta.1):
+  - MapboxCoreNavigation (2.21.0-rc.1):
     - MapboxDirections (~> 2.14)
     - MapboxNavigationNative (< 207.0.0, >= 206.0.1)
-  - MapboxDirections (2.14.1):
+  - MapboxDirections (2.14.3):
     - Polyline (~> 5.0)
     - Turf (~> 2.8.0)
-  - MapboxMaps (10.19.4):
-    - MapboxCommon (= 23.11.4)
+  - MapboxMaps (10.19.5):
+    - MapboxCommon (= 23.12.0)
     - MapboxCoreMaps (= 10.19.2)
     - MapboxMobileEvents (= 2.0.0)
     - Turf (= 2.8.0)
   - MapboxMobileEvents (2.0.0)
-  - MapboxNavigation (2.20.0-beta.1):
-    - MapboxCoreNavigation (= 2.20.0-beta.1)
+  - MapboxNavigation (2.21.0-rc.1):
+    - MapboxCoreNavigation (= 2.21.0-rc.1)
     - MapboxMaps (~> 10.19)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
-  - MapboxNavigationNative (206.1.1):
+  - MapboxNavigationNative (206.2.2):
     - MapboxCommon (~> 23.10)
   - MapboxSpeech (2.1.1)
   - Polyline (5.1.0)
@@ -50,14 +50,14 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
+  MapboxCommon: 9fe257ddc7385d55106345d4520a7fec3f4c0465
   MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
-  MapboxCoreNavigation: 51fd9af7a3f64e5445e04cc54acf2f710fe78924
-  MapboxDirections: 34e4b3682f1efab7b6bdf6e89c8d2f8497b9fb49
-  MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
+  MapboxCoreNavigation: d76e6971b46c8104f20979d568f69b984d631c99
+  MapboxDirections: d9ad8452e8927d95ed21e35f733834dbca7e0eb1
+  MapboxMaps: f8d239f0474c07002443dd2f424c6dba2d44ec9a
   MapboxMobileEvents: d044b9edbe0ec7df60f6c2c9634fe9a7f449266b
-  MapboxNavigation: 9b04fc0e20a687b4448c2a8db0391c69c4a61466
-  MapboxNavigationNative: d898e5882007b6caea5af158b0dffb7c75e7641d
+  MapboxNavigation: 1de04e898cd7e4d79dc7aeab07f59847199386ec
+  MapboxNavigationNative: 629e359f3d2590acd1ebbacaaf99e1a80ee57e42
   MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
@@ -65,4 +65,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bde8103af0e9b326531ee57cf1fa935cbd5f2e18
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.12.1
