@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+
+* Fixed a race condition in `URLDataCache`.
+* Removed redundant style application from `NavigationViewController` style manager setup.
+
 ## 3.20.0-rc.1
 
 ### Packaging

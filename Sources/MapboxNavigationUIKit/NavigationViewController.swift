@@ -688,16 +688,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         styleManager.delegate = self
         styleManager.styles = navigationOptions?.styles ?? [StandardDayStyle(), StandardNightStyle()]
 
-        if let currentStyle = styleManager.currentStyle {
-            updateMapStyle(currentStyle)
-        }
-        if automaticallyAdjustsStyleForTimeOfDay {
-            styleManager.applyStyle()
-        } else if usesNightStyleInDarkMode, traitCollection.userInterfaceStyle == .dark {
-            styleManager.applyStyle(type: .night)
-        } else {
-            styleManager.applyStyle(type: .day)
-        }
+        // Setting `styles` above already triggers `StyleManager.applyStyle()` via `didSet`.
+        // Only override when automatic switching is disabled.
+        guard !automaticallyAdjustsStyleForTimeOfDay else { return }
+        let targetStyleType: StyleType = usesNightStyleInDarkMode && traitCollection.userInterfaceStyle == .dark
+            ? .night
+            : .day
+        guard styleManager.currentStyleType != targetStyleType else { return }
+        styleManager.applyStyle(type: targetStyleType)
     }
 
     var currentStatusBarStyle: UIStatusBarStyle = .default
