@@ -7,11 +7,6 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.20.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.20.0)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.20.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.20.0)
 
-### Other changes
-
-* Fixed a race condition in `URLDataCache`.
-* Removed redundant style application from `NavigationViewController` style manager setup.
-
 ## 3.20.0-rc.1
 
 ### Packaging
