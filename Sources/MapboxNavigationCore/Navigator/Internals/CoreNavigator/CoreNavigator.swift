@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import CoreLocation
 import MapboxCommon_Private
 import MapboxDirections
@@ -5,7 +6,7 @@ import MapboxNavigationNative_Private
 import UIKit
 
 protocol CoreNavigator {
-    var rawLocation: CLLocation? { get }
+    var rawLocation: UnfairLocked<CLLocation?> { get }
     var mostRecentNavigationStatus: NavigationStatus? { get }
     var tileStore: TileStore { get }
     var roadGraph: RoadGraph { get }
@@ -69,7 +70,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         navigatorStatusObserver?.mostRecentNavigationStatus
     }
 
-    private(set) var rawLocation: CLLocation?
+    private(set) var rawLocation: UnfairLocked<CLLocation?> = .init(nil, lock: UnfairLock())
 
     private(set) var tileStore: TileStore
 
@@ -475,7 +476,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     @MainActor
     func updateLocation(_ rawLocation: CLLocation, completion: @escaping (Bool) -> Void) {
-        self.rawLocation = rawLocation
+        self.rawLocation.update(rawLocation)
         navigator.native.updateLocation(for: FixLocation(rawLocation), callback: completion)
     }
 

@@ -35,9 +35,9 @@ final class NativeNavigatorTests: XCTestCase {
 
     @MainActor
     func testUpdateLocation() {
-        XCTAssertNil(navigator.rawLocation)
+        XCTAssertNil(navigator.rawLocation.read())
 
         navigator.updateLocation(testLocation) { _ in }
-        XCTAssertEqual(navigator.rawLocation, testLocation)
+        XCTAssertEqual(navigator.rawLocation.read(), testLocation)
     }
 }

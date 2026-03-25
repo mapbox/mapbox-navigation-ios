@@ -801,7 +801,7 @@ final class MapboxNavigator: @unchecked Sendable {
         }()
 
         await send(MapMatchingState(
-            location: navigator.rawLocation ?? snappedLocation,
+            location: navigator.rawLocation.read() ?? snappedLocation,
             mapMatchingResult: MapMatchingResult(status: status),
             speedLimit: SpeedLimit(
                 value: speedLimit,

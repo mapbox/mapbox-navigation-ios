@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+
+* Fixed a race condition that could lead to a crash in `MapMatchingState`.
+
 ## 3.20.0
 
 ### Packaging

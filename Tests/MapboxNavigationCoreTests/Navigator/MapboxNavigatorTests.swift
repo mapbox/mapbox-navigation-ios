@@ -162,7 +162,7 @@ final class MapboxNavigatorTests: TestCase {
     func testUpdateMapMatchingResult() async {
         let enhancedLocation = CLLocation(latitude: 1.0, longitude: 2.0)
         let rawLocation = CLLocation(latitude: 3.0, longitude: 4.0)
-        coreNavigator.rawLocation = rawLocation
+        coreNavigator.rawLocation.update(rawLocation)
         let status = NavigationStatus.mock(
             location: enhancedLocation,
             offRoadProba: 0.5

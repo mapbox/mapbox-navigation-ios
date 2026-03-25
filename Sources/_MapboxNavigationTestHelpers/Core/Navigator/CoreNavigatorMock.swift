@@ -1,10 +1,11 @@
+import _MapboxNavigationHelpers
 import Foundation
 import MapboxMaps
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 
 public final class CoreNavigatorMock: CoreNavigator {
-    public var rawLocation: CLLocation?
+    public var rawLocation: UnfairLocked<CLLocation?> = .init(nil)
 
     public var mostRecentNavigationStatus: NavigationStatus?
 

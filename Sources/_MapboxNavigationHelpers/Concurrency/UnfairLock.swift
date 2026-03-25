@@ -1,7 +1,7 @@
 import Foundation
 
 public final class UnfairLock: NSLocking, Sendable {
-    private let unfairLock: UnsafeMutablePointer<os_unfair_lock> = {
+    private nonisolated(unsafe) let unfairLock: UnsafeMutablePointer<os_unfair_lock> = {
         let pointer = UnsafeMutablePointer<os_unfair_lock>.allocate(capacity: 1)
         pointer.initialize(to: os_unfair_lock())
         return pointer
@@ -22,8 +22,6 @@ public final class UnfairLock: NSLocking, Sendable {
         os_unfair_lock_unlock(unfairLock)
     }
 }
-
-extension UnsafeMutablePointer<os_unfair_lock>: @unchecked Sendable {}
 
 public typealias UnfairLocked<Value> = Locked<Value, UnfairLock>
 
