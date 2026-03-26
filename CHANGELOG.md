@@ -1,5 +1,17 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.20.1
+
+### Bug fixes
+
+* TileStore: prevent stray files after decompression failures and cancellation
+* TileStore: Fix eviction query to handle empty BLOB content
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.20.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.20.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.20.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.20.2)
+
 ## 3.20.0
 
 ### Packaging
