@@ -36,13 +36,12 @@ protocol CoreNavigator {
     )
     @MainActor
     func updateRouteLeg(to index: UInt32, completion: @escaping @Sendable (Bool) -> Void)
+
     @MainActor
     func unsetRoutes(
         uuid: UUID,
         completion: @escaping @Sendable (Result<RoutesCoordinator.RoutesResult, Error>) -> Void
     )
-
-    func unsetRoutes(uuid: UUID) async throws
 
     @MainActor
     func updateLocation(_ location: CLLocation, completion: @escaping @Sendable (Bool) -> Void)

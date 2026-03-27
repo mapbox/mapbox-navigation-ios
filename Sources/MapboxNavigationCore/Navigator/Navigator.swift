@@ -381,7 +381,11 @@ public enum NavigatorErrors {
     }
 
     /// Switching route legs has failed.
-    public struct FailedToSelectRouteLeg: NavigatorError {}
+    public struct FailedToSelectRouteLeg: NavigatorError, Equatable, Sendable {
+        /// The leg index.
+        public let legIndex: Int
+    }
+
     /// Failed to switch the navigator state to `idle`.
     public struct FailedToSetToIdle: NavigatorError {}
     /// Failed to pause the free drive session.

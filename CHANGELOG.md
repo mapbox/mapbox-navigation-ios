@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Routing
+
+* Fixed handing of the case when an incorrect `legIndex` was passed to `NavigationController.switchLeg(newLegIndex:)`.
+
 ### Other changes
 
 * Fixed a race condition that could lead to a crash in `MapMatchingState`.

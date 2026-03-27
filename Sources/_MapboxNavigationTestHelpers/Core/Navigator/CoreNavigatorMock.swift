@@ -116,18 +116,25 @@ public final class CoreNavigatorMock: CoreNavigator {
         completion(setAlternativeRoutesResult)
     }
 
-    public var updateRouteLegCalled = false
+    var updateRouteLegCalled = false
+    var passedUpdatedLegIndex: UInt32?
+    var updateRouteLegResult = true
+
     public func updateRouteLeg(to index: UInt32, completion: @escaping @Sendable (Bool) -> Void) {
         updateRouteLegCalled = true
-        if let passedRoutesData {
-            let provider = returnedNavigationStatus
-            Task { @MainActor in
-                self.navigationStatus = await provider(passedRoutesData, index)
-                completion(true)
+        passedUpdatedLegIndex = index
+
+        Task { @MainActor in
+            if updateRouteLegResult {
+                let status = if let passedRoutesData {
+                    await returnedNavigationStatus(passedRoutesData, index)
+                } else {
+                    NavigationStatus.mock(legIndex: index)
+                }
+
+                self.navigationStatus = status
             }
-        } else {
-            navigationStatus = .mock(legIndex: index)
-            completion(true)
+            completion(updateRouteLegResult)
         }
     }
 
@@ -141,11 +148,6 @@ public final class CoreNavigatorMock: CoreNavigator {
         passedUuid = uuid
         navigationStatus = .mock(primaryRouteId: nil)
         completion(unsetRoutesResult)
-    }
-
-    public func unsetRoutes(uuid: UUID) async throws {
-        unsetRoutesCalled = true
-        passedUuid = uuid
     }
 
     public var passedUpdateLocation: CLLocation?
