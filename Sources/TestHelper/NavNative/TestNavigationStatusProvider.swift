@@ -114,6 +114,7 @@ public enum TestNavigationStatusProvider {
             roads: roadNames,
             primaryRouteIndices: primaryRouteIndices,
             alternativeRouteIndices: [],
+            altRoutesRemainingInfo: [],
             locatedAlternativeRouteId: nil,
             voiceInstruction: voiceInstruction,
             bannerInstruction: bannerInstruction,

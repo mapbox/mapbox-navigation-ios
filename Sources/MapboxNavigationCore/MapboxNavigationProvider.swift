@@ -234,6 +234,7 @@ public final class MapboxNavigationProvider {
         utilizeSensorData: coreConfig.utilizeSensorData,
         historyDirectoryURL: coreConfig.historyRecordingConfig?.historyDirectoryURL,
         initialManeuverAvoidanceRadius: coreConfig.routingConfig.initialManeuverAvoidanceRadius,
+        electronicHorizonConfig: coreConfig.electronicHorizonConfig,
         locale: coreConfig.locale,
         rerouteStrategyForMatchRoute: coreConfig.routingConfig.rerouteConfig.rerouteStrategyForMatchRoute
     )

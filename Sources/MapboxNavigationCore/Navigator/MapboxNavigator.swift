@@ -113,6 +113,105 @@ final class MapboxNavigator: @unchecked Sendable {
         configuration.movementMonitor.currentProfile = profile
     }
 
+    func startActiveGuidanceAsync(with navigationRoutes: NavigationRoutes, startLegIndex: Int) async {
+        await send(navigationRoutes)
+        let previousRouteProgress = await state.privateRouteProgress
+        await updatePrivateRouteProgress(with: navigationRoutes, startLegIndex: startLegIndex)
+
+        await taskManager.withAsyncBarrier {
+            await setRoutes(
+                navigationRoutes: navigationRoutes,
+                startLegIndex: startLegIndex,
+                reason: .newRoute,
+                previousRouteProgress: previousRouteProgress
+            )
+        }
+        let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
+        configuration.movementMonitor.currentProfile = profile
+    }
+
+    func setToIdleAsync() async {
+        await taskManager.withAsyncBarrier {
+            let hadActiveGuidance = await billingSessionIsActive(withType: .activeGuidance)
+            if let sessionUUID = await sessionUUID,
+               await billingSessionIsActive()
+            {
+                billingHandler.pauseBillingSession(with: sessionUUID)
+            }
+
+            guard await currentSession.state != .idle else {
+                Log.warning("Duplicate setting to idle state attempted", category: .navigation)
+                await send(NavigatorErrors.FailedToSetToIdle())
+                return
+            }
+
+            let waypoints = await state.privateRouteProgress?.remainingWaypoints
+            await update(previousSessionWaypoints: waypoints)
+            await send(NavigationRoutes?.none)
+            await send(RouteProgressState?.none)
+            await locationClient.stopUpdatingLocation()
+            await locationClient.stopUpdatingHeading()
+            await navigator.pause()
+
+            guard hadActiveGuidance else {
+                await send(Session(state: .idle))
+                return
+            }
+            guard let sessionUUID = await sessionUUID else {
+                Log.error(
+                    "`MapboxNavigator.setToIdle` failed to reset routes due to missing session ID.",
+                    category: .billing
+                )
+                await send(NavigatorErrors.FailedToSetToIdle())
+                return
+            }
+
+            do {
+                try await navigator.unsetRoutes(uuid: sessionUUID)
+            } catch {
+                Log.warning(
+                    "`MapboxNavigator.setToIdle` failed to reset routes with error: \(error)",
+                    category: .navigation
+                )
+            }
+            await self.send(Session(state: .idle))
+        }
+        configuration.movementMonitor.currentProfile = nil
+    }
+
+    func startFreeDriveAsync() async throws {
+        await taskManager.withAsyncBarrier {
+            let activeGuidanceSession = await verifyFreeDriveBillingSession()
+
+            let sessionUUID = await sessionUUID
+            guard sessionUUID != nil else {
+                Log.error(
+                    "`MapboxNavigator.startFreeDrive` failed to start new session due to missing session ID.",
+                    category: .billing
+                )
+                return
+            }
+
+            await send(NavigationRoutes?.none)
+            await send(RouteProgressState?.none)
+            await locationClient.startUpdatingLocation()
+            await locationClient.startUpdatingHeading()
+            await navigator.resume()
+            if let activeGuidanceSession {
+                do {
+                    try await navigator.unsetRoutes(uuid: activeGuidanceSession)
+                } catch {
+                    Log.warning(
+                        "`MapboxNavigator.startFreeDrive` failed to reset routes with error: \(error)",
+                        category: .navigation
+                    )
+                }
+            }
+
+            await send(Session(state: .freeDrive(.active)))
+        }
+    }
+
     private let statusUpdateEvents: AsyncStreamBridge<NavigationStatus>
 
     @MainActor
@@ -251,17 +350,9 @@ final class MapboxNavigator: @unchecked Sendable {
         taskManager.cancellableTask { @MainActor [self] in
             guard case .activeGuidance = currentSession.state,
                   billingSessionIsActive(withType: .activeGuidance),
-                  let navigationRoutes = await state.privateRouteProgress?.navigationRoutes,
                   !Task.isCancelled
             else {
                 Log.warning("Attempt to switch route leg while not in Active Guidance.", category: .navigation)
-                send(NavigatorErrors.FailedToSelectRouteLeg(legIndex: newLegIndex))
-                return
-            }
-
-            guard navigationRoutes.mainRoute.route.legs.indices ~= newLegIndex else {
-                Log.warning("Attempt to switch to incorrect leg index \(newLegIndex)", category: .navigation)
-                send(NavigatorErrors.FailedToSelectRouteLeg(legIndex: newLegIndex))
                 return
             }
 
@@ -275,26 +366,15 @@ final class MapboxNavigator: @unchecked Sendable {
                                 "Route leg switching failed due to missing session ID.",
                                 category: .billing
                             )
-                            await send(NavigatorErrors.FailedToSelectRouteLeg(legIndex: newLegIndex))
+                            await send(NavigatorErrors.FailedToSelectRouteLeg())
                             return
                         }
                         billingHandler.beginNewBillingSessionIfExists(with: sessionUUID)
-
-                        if var routeProgress = await state.privateRouteProgress {
-                            await updateRouteProgressWithNavigationStatus(
-                                routeProgress: &routeProgress,
-                                mainRoute: navigationRoutes.mainRoute,
-                                startLegIndex: newLegIndex
-                            )
-                            await state.update(privateRouteProgress: routeProgress)
-                            await send(RouteProgressState(routeProgress: routeProgress))
-                        }
-
                         let event = WaypointArrivalStatus.Events.NextLegStarted(newLegIndex: newLegIndex)
                         await send(WaypointArrivalStatus(event: event))
                     } else {
                         Log.warning("Route leg switching failed.", category: .navigation)
-                        await send(NavigatorErrors.FailedToSelectRouteLeg(legIndex: newLegIndex))
+                        await send(NavigatorErrors.FailedToSelectRouteLeg())
                     }
                 }
             }
@@ -1563,6 +1643,14 @@ extension MapboxNavigator {
             barrier.update(true)
             cancelTasks()
             operation()
+            barrier.update(false)
+        }
+
+        @MainActor
+        func withAsyncBarrier(_ operation: () async -> Void) async {
+            barrier.update(true)
+            cancelTasks()
+            await operation()
             barrier.update(false)
         }
     }
