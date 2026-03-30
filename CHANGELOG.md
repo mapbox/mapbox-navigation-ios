@@ -1,10 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.21.0-alpha.1
 
-### Routing
+### Packaging
 
-* Fixed handing of the case when an incorrect `legIndex` was passed to `NavigationController.switchLeg(newLegIndex:)`.
+* MapboxNavigationCore now requires [MapboxMaps v11.21.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.21.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.21.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.21.0-rc.1)
 
 ### Other changes
 

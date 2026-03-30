@@ -33,7 +33,7 @@ extension NavigationStatus {
         )
         let coordinate = leg.source!.coordinate
         return Self.mock(
-            primaryRouteId: mainRoute.getResponseUuid(),
+            primaryRouteId: mainRoute.getRouteId(),
             activeGuidanceInfo: activeGuidanceInfo,
             location: CLLocation(coordinate: coordinate),
             routeIndex: mainRoute.getRouteIndex(),
@@ -109,6 +109,7 @@ extension NavigationStatus {
             roads: roads,
             primaryRouteIndices: primaryRouteIndices,
             alternativeRouteIndices: alternativeRouteIndices,
+            altRoutesRemainingInfo: [],
             locatedAlternativeRouteId: locatedAlternativeRouteId,
             voiceInstruction: voiceInstruction,
             bannerInstruction: bannerInstruction,

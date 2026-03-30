@@ -25,15 +25,7 @@ public final class RouteInterfaceMock: RouteInterface {
         return String(data: jsonData, encoding: .utf8)!
     }
 
-    public static func makeRoutesJson(route: Route, alternativeRoute: Route? = nil) -> String {
-        var routes = [route]
-        if let alternativeRoute {
-            routes.append(alternativeRoute)
-        }
-        return makeRoutesJson(with: routes)
-    }
-
-    public static let realRouteJson = RouteInterfaceMock.makeRoutesJson(route: .mock())
+    public static let realRouteJson = RouteInterfaceMock.makeRoutesJson(with: [.mock()])
 
     public var routeId: String
     public var responseUuid: String
@@ -51,19 +43,16 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public convenience init(
         route: Route,
-        alternativeRoute: Route? = nil,
         routeId: String? = nil,
-        routeIndex: Int = 0,
-        mapboxApi: MapboxAPI = .directions
+        routeIndex: Int = 0
     ) {
-        let json = RouteInterfaceMock.makeRoutesJson(route: route, alternativeRoute: alternativeRoute)
+        let json = RouteInterfaceMock.makeRoutesJson(with: [route])
         let options = RouteInterfaceMock.makeRoutesOptions(with: route)
         self.init(
             routeId: routeId,
             routeIndex: UInt32(routeIndex),
             responseJsonRef: .init(data: json.data(using: .utf8)!),
-            requestUri: Directions.url(forCalculating: options, credentials: .mock()).absoluteString,
-            mapboxApi: mapboxApi
+            requestUri: Directions.url(forCalculating: options, credentials: .mock()).absoluteString
         )
     }
 
