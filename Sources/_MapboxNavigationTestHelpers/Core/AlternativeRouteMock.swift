@@ -12,11 +12,7 @@ extension AlternativeRoute {
         requestOptions: ResponseOptions? = nil,
         routeIndex: Int = 0
     ) -> Self {
-        let nativeAlternative = nativeRouteAlternative ?? .mock(
-            mainRoute: mainRoute,
-            alternativeRoute: alternativeRoute,
-            routeIndex: routeIndex
-        )
+        let nativeAlternative = nativeRouteAlternative ?? .mock(route: alternativeRoute, routeIndex: routeIndex)
         let urlString = nativeAlternative.route.getRequestUri()
         let requestOptions = requestOptions ?? .mock(routeOptions: .mock(string: urlString))
         return self.init(
@@ -29,12 +25,8 @@ extension AlternativeRoute {
 }
 
 extension RouteAlternative {
-    public static func mock(mainRoute: Route, alternativeRoute: Route, routeIndex: Int = 0) -> Self {
-        .mock(route: RouteInterfaceMock(
-            route: mainRoute,
-            alternativeRoute: alternativeRoute,
-            routeIndex: routeIndex
-        ))
+    public static func mock(route: Route, routeIndex: Int = 0) -> Self {
+        .mock(route: RouteInterfaceMock(route: route, routeIndex: routeIndex))
     }
 
     public static func mock(
