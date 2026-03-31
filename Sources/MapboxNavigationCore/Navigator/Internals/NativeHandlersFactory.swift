@@ -29,6 +29,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let utilizeSensorData: Bool
     let historyDirectoryURL: URL?
     let initialManeuverAvoidanceRadius: TimeInterval
+    let electronicHorizonConfig: ElectronicHorizonConfig?
     var locale: Locale {
         didSet {
             _navigator?.locale = locale
@@ -51,6 +52,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         utilizeSensorData: Bool,
         historyDirectoryURL: URL?,
         initialManeuverAvoidanceRadius: TimeInterval,
+        electronicHorizonConfig: ElectronicHorizonConfig? = nil,
         locale: Locale,
         rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute
     ) {
@@ -68,6 +70,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.utilizeSensorData = utilizeSensorData
         self.historyDirectoryURL = historyDirectoryURL
         self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
+        self.electronicHorizonConfig = electronicHorizonConfig
         self.locale = locale
         self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
     }
@@ -87,6 +90,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
             utilizeSensorData: utilizeSensorData,
             historyDirectoryURL: historyDirectoryURL,
             initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
+            electronicHorizonConfig: electronicHorizonConfig,
             locale: locale,
             rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )
@@ -219,7 +223,8 @@ final class NativeHandlersFactory: @unchecked Sendable {
 
         return NavigatorConfig(
             voiceInstructionThreshold: nil,
-            electronicHorizonOptions: nil,
+            electronicHorizonOptions: electronicHorizonConfig
+                .map(MapboxNavigationNative_Private.ElectronicHorizonOptions.init),
             polling: pollingConfig,
             incidentsOptions: nativeIncidentsOptions,
             noSignalSimulationEnabled: nil,

@@ -73,16 +73,6 @@ final class NavigationNativeNavigator: @unchecked Sendable {
         }
     }
 
-    func setElectronicHorizonOptionsFor(
-        _ options: MapboxNavigationNative_Private.ElectronicHorizonOptions?,
-        completion: Completion? = nil
-    ) {
-        withNavigator {
-            $0.setElectronicHorizonOptionsFor(options)
-            completion?()
-        }
-    }
-
     func setFallbackVersionsObserverFor(
         _ observer: FallbackVersionsObserver?,
         completion: Completion? = nil

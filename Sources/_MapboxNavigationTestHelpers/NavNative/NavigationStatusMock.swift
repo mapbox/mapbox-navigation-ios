@@ -109,6 +109,7 @@ extension NavigationStatus {
             roads: roads,
             primaryRouteIndices: primaryRouteIndices,
             alternativeRouteIndices: alternativeRouteIndices,
+            altRoutesRemainingInfo: [],
             locatedAlternativeRouteId: locatedAlternativeRouteId,
             voiceInstruction: voiceInstruction,
             bannerInstruction: bannerInstruction,

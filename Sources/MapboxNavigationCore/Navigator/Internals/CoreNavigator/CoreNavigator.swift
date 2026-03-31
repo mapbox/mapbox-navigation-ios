@@ -381,15 +381,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     private var isSubscribedToElectronicHorizon = false
 
-    private var electronicHorizonConfig: ElectronicHorizonConfig? {
-        didSet {
-            let nativeOptions = electronicHorizonConfig
-                .map(MapboxNavigationNative_Private.ElectronicHorizonOptions.init)
-            navigator.setElectronicHorizonOptionsFor(
-                nativeOptions
-            )
-        }
-    }
+    private var electronicHorizonConfig: ElectronicHorizonConfig?
 
     @MainActor
     func startUpdatingElectronicHorizon(with config: ElectronicHorizonConfig?) {
