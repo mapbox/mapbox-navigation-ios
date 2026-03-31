@@ -177,10 +177,12 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         let routes = await NavigationRoutes.mock(options: options, fileName: "profile-route-reroute")
         navigationRoutes = routes
 
+        let rerouteRoutes = await NavigationRoutes.mock(options: options, fileName: "profile-route-original")
+        stubPassedAlternativeRouteResponse("alternatives-route-2", shouldUseCustomOptions: shouldUseCustomOptions)
+        stubRerouteResponse("profile-route-original", shouldUseCustomOptions: shouldUseCustomOptions)
+
         let tripSession = await navigationProvider.tripSession()
         await tripSession.startActiveGuidance(with: routes, startLegIndex: 0)
-        let rerouteRoutes = await NavigationRoutes.mock(options: options, fileName: "profile-route-original")
-        stubRerouteResponse("profile-route-original", shouldUseCustomOptions: shouldUseCustomOptions)
 
         let statusExpectation = await trackingStatusExpectation()
         let locations = rerouteRoutes.mainRoute.route.simulationOnRouteLocations
@@ -195,9 +197,20 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         await fulfillment(of: [expectation2], timeout: defaultDelay)
     }
 
+    private func stubPassedAlternativeRouteResponse(_ fileName: String, shouldUseCustomOptions: Bool) {
+        stubRouteResponse(fileName) {
+            $0
+                .contains("reason=passed_alternative") &&
+                (shouldUseCustomOptions ? $0.contains("custom=customValue") : true)
+        }
+    }
+
     private func stubRerouteResponse(_ fileName: String, shouldUseCustomOptions: Bool) {
         stubRouteResponse(fileName) {
-            shouldUseCustomOptions ? $0.contains("custom=customValue") : true
+            if $0.contains("reason=passed_alternative") {
+                return false
+            }
+            return shouldUseCustomOptions ? $0.contains("custom=customValue") : true
         }
     }
 }
