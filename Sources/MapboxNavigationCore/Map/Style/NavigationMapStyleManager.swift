@@ -312,7 +312,6 @@ final class NavigationMapStyleManager {
     ) {
         let features = routeLineMapFeatures(
             routes: routes,
-            routeProgress: routeProgress,
             config: config,
             featureProvider: featureProvider,
             customizedLayerProvider: customizedLineLayerProvider,
@@ -671,29 +670,15 @@ final class NavigationMapStyleManager {
 
     private func routeLineMapFeatures(
         routes: NavigationRoutes,
-        routeProgress: RouteProgress? = nil,
         config: MapStyleConfig,
         featureProvider: RouteLineFeatureProvider,
         customizedLayerProvider: CustomizedTypeLayerProvider<LineLayer>,
         customPosition: LayerPosition?
     ) -> [(RouteLineStyleContent, MapFeature)] {
         var features: [(RouteLineStyleContent, MapFeature)] = []
-
-        let offset = if config.routeLineTracksTraversal,
-                        let routeProgress,
-                        !routeProgress.routeIsComplete,
-                        let coordinate = mapView.location.latestLocation?.coordinate,
-                        let shape = routes.mainRoute.route.shape,
-                        let distance = shape.distance(), distance > 0,
-                        let traversedDistance = shape.distance(to: coordinate)
-        {
-            traversedDistance / distance
-        } else {
-            0.0
-        }
         let mainRouteFeature = routes.mainRoute.route.routeLineMapFeatures(
             ids: .main,
-            offset: offset,
+            offset: 0,
             isSoftGradient: config.congestionConfiguration.displaySoftGradientForTraffic,
             isAlternative: false,
             config: config,
