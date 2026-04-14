@@ -1,35 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 3.23.0-rc.1
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.23.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.23.0-rc.1)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.23.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.23.0-rc.1)
-
-
-
-## 3.22.0
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.22.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.22.0)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.22.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.22.0)
-
-### MapboxDirections
-
-* Added `RouteNotification` type representing the notification object from the Directions API. `RouteLeg` now exposes a `notifications` property (`[RouteNotification]?`) that decodes constraint violation and alert notifications returned alongside route legs.
-
 ## 3.22.0-rc.1
 
 ### Packaging
 
 * MapboxNavigationCore now requires [MapboxMaps v11.22.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.22.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.22.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.22.0-rc.1)
-
-### Map
-
-* Fixed an issue where a route could be drawn truncated when restarting a navigation session, a regression from the v3.20.0. This will cause the traversed route line to reappear when switching to an alternative route and back.
 
 ## 3.21.0
 
