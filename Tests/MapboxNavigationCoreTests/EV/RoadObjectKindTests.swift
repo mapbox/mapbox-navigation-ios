@@ -65,9 +65,6 @@ final class RoadObjectKindTests: XCTestCase {
             subType: "subtype",
             geometryIndexStart: nil,
             geometryIndexEnd: nil,
-            refreshType: nil,
-            initialTemp: nil,
-            finalTemp: nil,
             details: nil
         )
         let metadata = RoadObjectMetadata.fromNotificationInfo(notificationInfo)
