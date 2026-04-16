@@ -73,4 +73,73 @@ class RouteLegTests: XCTestCase {
         XCTAssertEqual(leg.segmentRangesByStep.last?.upperBound, leg.segmentDistances?.count)
         XCTAssertEqual(leg.typicalTravelTime, typicalTravelTime)
     }
+
+    func testDecodeNotifications() throws {
+        let json = """
+        {
+            "summary": "",
+            "distance": 100,
+            "duration": 60,
+            "steps": [],
+            "notifications": [
+                {
+                    "type": "violation",
+                    "subtype": "maxHeight",
+                    "refresh_type": "static",
+                    "geometry_index_start": 0,
+                    "geometry_index_end": 2,
+                    "details": {
+                        "actual_value": "3.0",
+                        "requested_value": "4.0",
+                        "unit": "meters",
+                        "message": "The height of the vehicle exceeds the road limit."
+                    }
+                },
+                {
+                    "type": "alert",
+                    "subtype": "stationUnavailable",
+                    "refresh_type": "dynamic",
+                    "geometry_index": 5,
+                    "station_id": "station-7",
+                    "reason": "occupied"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = RouteOptions(
+            waypoints: [
+                Waypoint(coordinate: .init(latitude: 0, longitude: 0)),
+                Waypoint(coordinate: .init(latitude: 1, longitude: 1)),
+            ],
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+
+        let leg = try decoder.decode(RouteLeg.self, from: json)
+
+        XCTAssertEqual(leg.notifications?.count, 2)
+
+        let violation = try XCTUnwrap(leg.notifications?.first)
+        XCTAssertEqual(violation.kind, .violation)
+        XCTAssertEqual(violation.subtype, .maxHeight)
+        XCTAssertEqual(violation.refreshType, .static)
+        XCTAssertEqual(violation.geometryIndexStart, 0)
+        XCTAssertEqual(violation.geometryIndexEnd, 2)
+        XCTAssertNil(violation.geometryIndex)
+        XCTAssertEqual(violation.details?.actualValue, "3.0")
+        XCTAssertEqual(violation.details?.requestedValue, "4.0")
+        XCTAssertEqual(violation.details?.unit, "meters")
+        XCTAssertEqual(violation.details?.message, "The height of the vehicle exceeds the road limit.")
+
+        let alert = try XCTUnwrap(leg.notifications?.last)
+        XCTAssertEqual(alert.kind, .alert)
+        XCTAssertEqual(alert.subtype, .stationUnavailable)
+        XCTAssertEqual(alert.refreshType, .dynamic)
+        XCTAssertEqual(alert.geometryIndex, 5)
+        XCTAssertNil(alert.geometryIndexStart)
+        XCTAssertNil(alert.geometryIndexEnd)
+        XCTAssertEqual(alert.stationId, "station-7")
+        XCTAssertEqual(alert.reason, "occupied")
+    }
 }

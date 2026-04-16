@@ -1,5 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+
+
+## Unreleased
+
+### MapboxDirections
+
+* Added `RouteNotification` type representing the notification object from the Directions API. `RouteLeg` now exposes a `notifications` property (`[RouteNotification]?`) that decodes constraint violation and alert notifications returned alongside route legs.
+
 ## 3.22.0-rc.1
 
 ### Packaging
