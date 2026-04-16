@@ -32,6 +32,7 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
         case annotation
         case administrativeRegions = "admins"
         case incidents
+        case notifications
         case viaWaypoints = "via_waypoints"
         case closures
     }
@@ -110,6 +111,10 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
             self.incidents = incidents
         }
 
+        if let notifications = try container.decodeIfPresent([RouteNotification].self, forKey: .notifications) {
+            self.notifications = notifications
+        }
+
         if let closures = try container.decodeIfPresent([Closure].self, forKey: .closures) {
             self.closures = closures
         }
@@ -144,6 +149,9 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
 
         if let incidents {
             try container.encode(incidents, forKey: .incidents)
+        }
+        if let notifications {
+            try container.encode(notifications, forKey: .notifications)
         }
         if let closures {
             try container.encode(closures, forKey: .closures)
@@ -417,6 +425,13 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
     /// This property is set to `nil` if incidents data is not available.
     public var incidents: [Incident]?
 
+    /// An array of ``RouteNotification`` objects describing warnings or constraint violations along the route.
+    ///
+    /// Notifications are available on `driving` and `driving-traffic` profiles when
+    /// the `notifications` parameter is included in the request. This property is `nil` if no
+    /// notification data is available.
+    public var notifications: [RouteNotification]?
+
     /// Describes where a particular ``Waypoint`` passed to ``RouteOptions`` matches to the route along a ``RouteLeg``.
     ///
     /// The property is non-nil when for one or several ``Waypoint`` objects passed to ``RouteOptions`` have
@@ -542,6 +557,7 @@ extension RouteLeg {
             lhs.expectedTravelTime == rhs.expectedTravelTime &&
             lhs.administrativeRegions == rhs.administrativeRegions &&
             lhs.incidents == rhs.incidents &&
+            lhs.notifications == rhs.notifications &&
             lhs.viaWaypoints == rhs.viaWaypoints &&
             lhs.typicalTravelTime == rhs.typicalTravelTime &&
             lhs.profileIdentifier == rhs.profileIdentifier
