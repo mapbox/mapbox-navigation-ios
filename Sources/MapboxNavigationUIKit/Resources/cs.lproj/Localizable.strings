@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Zpět";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternativy";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Nebyly nalezeny žádné alternativní trasy.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Dorazili jste";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Co byste chtěli udělat?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Pokračovat";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Aktuální poloha";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Zavřít";
+/* Title for end navigation button */
+"CARPLAY_END" = "Konec";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Ukončit navigaci";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Zpětná vazba";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Jít";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Další trasy";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Ztlumit";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Přehled";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Zpět";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Ohodnoťte svou jízdu";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Ohodnoťte svou cestu";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Odesláno";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Zapnout zvuk";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Zavřít";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Dorazili jste";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Jak to můžeme zlepšit?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ rychlejší";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Byla nalezena rychlejší trasa";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Děkujeme za vaši zprávu!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Nahlásit problém";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Nesprávný rychlostní limit";
+/* General route feedback. */
+"OTHER" = "Ostatní";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ a %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ delší";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Zrušit";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Hodnocení není nastaveno.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Špatný GPS";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Nesprávná data mapy";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Nehoda";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Špatný rychlostní limit";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Kamera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Doprava";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Ostatní";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Klepněte pro resetování hodnocení na nulu.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Přepočítávání trasy…";
+/* Button title for resume tracking */
+"RESUME" = "Pokračovat";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "FP Doprava";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Doprava";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Nesprávné navádění do jízdního pruhu";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Chybějící stavba";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Chybějící rychlostní limit";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Nelegální trasa";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Nelegální odbočení";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Špatná trasa";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Uzavírka";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Silnice uzavřena";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "Stejná vzdálenost";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ kratší";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ pomalejší";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulace navigace při %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, přes %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ a %2$@";

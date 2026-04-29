@@ -1,0 +1,21 @@
+import Foundation
+
+extension Date {
+    var ISO8601: String {
+        return Date.ISO8601Formatter.string(from: self)
+    }
+
+    static let ISO8601Formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
+}
+
+extension String {
+    public var ISO8601Date: Date? {
+        return Date.ISO8601Formatter.date(from: self)
+    }
+}

@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "Kthehu";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternativa";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "Nuk u gjetën rrugë alternative.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Keni mbërritur";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Çfarë dëshironi të bëni?";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Vazhdo";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Vendndodhja Aktual";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Mbyll";
+/* Title for end navigation button */
+"CARPLAY_END" = "Përfundo";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Dil nga navigimi";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Komente";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Shko";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Më shumë Rrugë";
+/* Title for mute button */
+"CARPLAY_MUTE" = "Hesht";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Përmbledhje";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "Kthehu";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Vlerësoni udhëtimin tuaj";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Vlerëso udhëtimin tënd";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Dërguar";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Çaktivizo heshtjen";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Mbyll";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Keni mbërritur";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Si mund të përmirësohemi?";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ më shpejt";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "U gjet një rrugë më e shpejtë";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Faleminderit për raportin tuaj!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Raporto Problem";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "Kufizim i gabuar i shpejtësisë";
+/* General route feedback. */
+"OTHER" = "Tjetër";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ dhe %2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ më e gjatë";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Anulo";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Nuk ka vlerësim të vendosur.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "GPS i dobët";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "Të dhëna të pasakta të hartës";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "Aksident";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "Kufizim i gabuar i shpejtësisë";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "Kamera";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "Trafiku";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "Tjetër";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Prekni për të rivendosur vlerësimin në zero.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Ripozicionim…";
+/* Button title for resume tracking */
+"RESUME" = "Vazhdo";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "Trafik i rremë";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "FN Trafiku";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "Udhëzimi i korsisë është i pasaktë";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "Mungon Ndërtimi";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "Mungon kufiri i shpejtësisë";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Rrugë e paligjshme";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Kthesë e paligjshme";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "Rrugë e dobët";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Mbyllje";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "Rruga e mbyllur";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "E njëjta distancë";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ më e shkurtër";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ më ngadalë";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Maks";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Duke Simuluar Navigimin në %@×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, përmes %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ dhe %2$@";

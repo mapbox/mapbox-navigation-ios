@@ -1,0 +1,30 @@
+﻿
+/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
+"5HY-QD-dBq.normalTitle" = "ادامه";
+
+/* Class = "UILabel"; text = "8.3 mi"; ObjectID = "6dE-ya-mrD"; Note = "DO NOT TRANSLATE"; */
+"6dE-ya-mrD.text" = "8.3 mi";
+
+/* Class = "UILabel"; text = "22 min"; ObjectID = "82H-sg-SOL"; Note = "DO NOT TRANSLATE"; */
+"82H-sg-SOL.text" = "22 min";
+
+/* Class = "UILabel"; text = "Elm St NW"; ObjectID = "BR8-8N-Rhk"; Note = "DO NOT TRANSLATE"; */
+"BR8-8N-Rhk.text" = "Elm St NW";
+
+/* Class = "UILabel"; text = "10:09"; ObjectID = "HRl-MT-kqB"; Note = "DO NOT TRANSLATE"; */
+"HRl-MT-kqB.text" = "10:09";
+
+/* Class = "UILabel"; text = "Street Label"; ObjectID = "bcm-ca-nGv"; Note = "DO NOT TRANSLATE"; */
+"bcm-ca-nGv.text" = "برچسب خیابان";
+
+/* Class = "UILabel"; text = "titleLabel"; ObjectID = "fcw-K2-mfp"; Note = "DO NOT TRANSLATE"; */
+"fcw-K2-mfp.text" = "عنوان برچسب";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
+"l2B-fb-Dkb.normalTitle" = "لغو";
+
+/* Class = "UILabel"; text = "1 km"; ObjectID = "u1L-N9-mMS"; Note = "DO NOT TRANSLATE"; */
+"u1L-N9-mMS.text" = "1 کیلومتر";
+
+/* Class = "UILabel"; text = "subtitleLabel"; ObjectID = "w7x-Wj-c7z"; Note = "DO NOT TRANSLATE"; */
+"w7x-Wj-c7z.text" = "برچسب زیرنویس";

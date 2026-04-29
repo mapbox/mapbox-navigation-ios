@@ -1,0 +1,126 @@
+/* Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta. */
+"ALTERNATIVE_NOTES" = "%1$@ / %2$@";
+/* Title of the back button. */
+"BACK" = "خلف";
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "البدائل";
+/* Subtitle for the alternative list template empty variants */
+"CARPLAY_ALTERNATIVES_EMPTY_SUBTITLE" = "لم يتم العثور على طرق بديلة.";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "لقد وصلت";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "ماذا تريد أن تفعل؟";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "استمر";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "الموقع الحالي";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "تجاهل";
+/* Title for end navigation button */
+"CARPLAY_END" = "إنهاء";
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "الخروج من التنقل";
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "تعليق";
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "يذهب";
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "المزيد من الطرق";
+/* Title for mute button */
+"CARPLAY_MUTE" = "صامت";
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "نظرة عامة";
+/* Title for trip preview back button */
+"CARPLAY_PREVIEW_BACK" = "خلف";
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "قم بتقييم رحلتك";
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "قم بتقييم رحلتك";
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "مُقَدَّم";
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "إلغاء كتم الصوت";
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "إغلاق";
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "لقد وصلت";
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "كيف يمكننا التحسين؟";
+/* Number string with an explicit '+' sign. */
+"EXPLICITLY_POSITIVE_NUMBER" = "+%@";
+/* Alternatives selection note about a faster route time interval in any unit. */
+"FASTER_ALTERNATIVE" = "%@ أسرع";
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "العثور على مسار اسرع";
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "شكراً لك على التبليغ!";
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "أبلغ عن مشكلة";
+/* Specific route feedback that a speed limit is incorrect. */
+"WRONG_SPEED_LIMIT" = "حد السرعة خاطئ";
+/* General route feedback. */
+"OTHER" = "أخرى";
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ و%2$@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "< %@";
+/* Alternatives selection note about a longer route distance in any unit. */
+"LONGER_ALTERNATIVE" = "%@ أطول";
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "إلغاء";
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "لا يوجد تقييم.";
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "نظام تحديد المواقع العالمي (GPS) ضعيف";
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_MAP_DATA" = "بيانات الخريطة غير صحيحة";
+/* Specific feedback for an accident on the map. */
+"PASSIVE_NAVIGATION_FEEDBACK_ACCIDENT" = "حادث";
+/* Specific route feedback that a speed limit is wrong. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_SPEED_LIMIT" = "حد السرعة خاطئ";
+/* Feedback that there is a camera on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_CAMERA" = "آلة تصوير";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC" = "حركة المرور";
+/* General category of feedback for passive navigation. */
+"PASSIVE_NAVIGATION_FEEDBACK_OTHER" = "أخرى";
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "اعادة تعيين التقييم.";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "إعادة توجيه...";
+/* Button title for resume tracking */
+"RESUME" = "استأنف";
+/* False positive Traffic. */
+"ROUTE_QUALITY_FP_TRAFFIC_FEEDBACK" = "حركة مرور FP";
+/* False negative Traffic. */
+"ROUTE_QUALITY_FN_TRAFFIC_FEEDBACK" = "حركة المرور FN";
+/* Specific route feedback that the lane guidance was incorrect. */
+"ROUTE_QUALITY_INCORRECT_LANE_GUIDANCE_FEEDBACK" = "توجيه المسار غير صحيح";
+/* Specific route feedback that construction works were missing. */
+"ROUTE_QUALITY_MISSING_CONSTRUCTION_FEEDBACK" = "البناء المفقود";
+/* Specific route feedback that a speed limit was missing. */
+"ROUTE_QUALITY_MISSING_SPEED_LIMIT_FEEDBACK" = "حد السرعة مفقود";
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "مسار غير قانوني";
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "انعطاف غير قانوني";
+/* Specific route feedback that route was not good enough. */
+"ROUTE_QUALITY_POOR_ROUTE_FEEDBACK" = "طريق سيئ";
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "إنهاء";
+/* Specific route feedback that route contained road that is closed. */
+"ROUTE_QUALITY_ROAD_CLOSED_FEEDBACK" = "الطريق مغلق";
+/* Alternatives selection note about equal travel distance. */
+"SAME_DISTANCE" = "نفس المسافة";
+/* Alternatives selection note about a shorter route distance in any unit. */
+"SHORTER_ALTERNATIVE" = "%@ أقصر";
+/* Alternatives selection note about a slower route time interval in any unit. */
+"SLOWER_ALTERNATIVE" = "%@ أبطأ";
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "الأعلى";
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "محاكاة الملاحة في %@ ×";
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@، عبر %2$@";
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ و%2$@";

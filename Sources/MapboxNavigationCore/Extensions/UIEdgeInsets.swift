@@ -1,0 +1,33 @@
+import Foundation
+import UIKit
+
+extension UIEdgeInsets {
+    static func + (left: UIEdgeInsets, right: UIEdgeInsets) -> UIEdgeInsets {
+        return UIEdgeInsets(
+            top: left.top + right.top,
+            left: left.left + right.left,
+            bottom: left.bottom + right.bottom,
+            right: left.right + right.right
+        )
+    }
+
+    static func += (lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
+        lhs.top += rhs.top
+        lhs.left += rhs.left
+        lhs.bottom += rhs.bottom
+        lhs.right += rhs.right
+    }
+
+    func rectValue(_ rect: CGRect) -> CGRect {
+        return CGRect(
+            x: rect.origin.x + left,
+            y: rect.origin.y + top,
+            width: rect.size.width - left - right,
+            height: rect.size.height - top - bottom
+        )
+    }
+
+    static var centerEdgeInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+    }
+}

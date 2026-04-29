@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CustomBottomBannerView" customModule="Navigation_Examples" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelButton" destination="IGF-K7-nHE" id="NIJ-jh-16I"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="Zeg-Sq-bTP"/>
+                <outlet property="etaLabel" destination="C9n-of-NKz" id="FaR-mK-xGG"/>
+                <outlet property="progressBar" destination="UnZ-uM-cz4" id="xd1-e9-bVe"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="61"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="UnZ-uM-cz4">
+                    <rect key="frame" x="8" y="37" width="398" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="96B-Wt-sXO"/>
+                    </constraints>
+                </progressView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9n-of-NKz">
+                    <rect key="frame" x="8" y="8" width="30" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="o1n-l3-ZoX"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IGF-K7-nHE">
+                    <rect key="frame" x="340" y="8" width="66" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="88w-bm-RBi"/>
+                        <constraint firstAttribute="width" constant="66" id="VUe-Yq-vUe"/>
+                    </constraints>
+                    <state key="normal" title="Cancel"/>
+                    <connections>
+                        <action selector="onCancel:" destination="-1" eventType="touchUpInside" id="EdY-zM-Tk4"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="IGF-K7-nHE" secondAttribute="trailing" constant="8" id="0tk-rz-Q4k"/>
+                <constraint firstItem="C9n-of-NKz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="2U6-ap-wKQ"/>
+                <constraint firstItem="C9n-of-NKz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="Eb1-y2-oVw"/>
+                <constraint firstAttribute="trailing" secondItem="UnZ-uM-cz4" secondAttribute="trailing" constant="8" id="GwD-xf-Dmy"/>
+                <constraint firstAttribute="bottom" secondItem="UnZ-uM-cz4" secondAttribute="bottom" constant="8" id="aqS-RQ-DOV"/>
+                <constraint firstItem="IGF-K7-nHE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="di3-uR-0Xq"/>
+                <constraint firstItem="UnZ-uM-cz4" firstAttribute="top" secondItem="C9n-of-NKz" secondAttribute="bottom" constant="8" id="qGV-Qj-d89"/>
+                <constraint firstItem="UnZ-uM-cz4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="s32-aP-oQC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-1.4492753623188408" y="-271.54017857142856"/>
+        </view>
+    </objects>
+</document>

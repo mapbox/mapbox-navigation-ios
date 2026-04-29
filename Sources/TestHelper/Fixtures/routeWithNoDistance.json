@@ -1,0 +1,84 @@
+{
+  "routes": [
+    {
+      "weight_name": "auto",
+      "weight": 0,
+      "duration": 0,
+      "distance": 0,
+      "legs": [
+        {
+          "via_waypoints": [],
+          "admins": [{"iso_3166_1_alpha3": "JPN", "iso_3166_1": "JP"}],
+          "weight": 0,
+          "duration": 0,
+          "steps": [
+            {
+              "intersections": [
+                {
+                  "bearings": [0],
+                  "entry": [true],
+                  "mapbox_streets_v8": {"class": "street"},
+                  "is_urban": true,
+                  "admin_index": 0,
+                  "out": 0,
+                  "geometry_index": 0,
+                  "location": [139.705054, 35.675924]
+                }
+              ],
+              "maneuver": {
+                "type": "depart",
+                "instruction": "Drive north.",
+                "bearing_after": 0,
+                "bearing_before": 0,
+                "location": [139.705054, 35.675924]
+              },
+              "name": "",
+              "duration": 0,
+              "distance": 0,
+              "driving_side": "left",
+              "weight": 0,
+              "mode": "driving",
+              "geometry": "gpn`cA{l|miG??"
+            },
+            {
+              "intersections": [
+                {
+                  "bearings": [180],
+                  "entry": [true],
+                  "in": 0,
+                  "admin_index": 0,
+                  "geometry_index": 1,
+                  "location": [139.705054, 35.675924]
+                }
+              ],
+              "maneuver": {
+                "type": "arrive",
+                "instruction": "Your destination is on the left.",
+                "modifier": "left",
+                "bearing_after": 0,
+                "bearing_before": 0,
+                "location": [139.705054, 35.675924]
+              },
+              "name": "",
+              "duration": 0,
+              "distance": 0,
+              "driving_side": "left",
+              "weight": 0,
+              "mode": "driving",
+              "geometry": "gpn`cA{l|miG??"
+            }
+          ],
+          "distance": 0,
+          "summary": ""
+        }
+      ],
+      "geometry": "gpn`cA{l|miG??"
+    }
+  ],
+  "waypoints": [
+    {"distance": 2.873, "name": "", "location": [139.705054, 35.675924]},
+    {"distance": 3.667, "name": "", "location": [139.705054, 35.675924]}
+  ],
+  "code": "Ok",
+  "uuid": "y-plosY_PTDF_gC4Y3UhzpOBVkCo7Id_tj4Q9sJg8PyRr1NFr-b7tA=="
+}

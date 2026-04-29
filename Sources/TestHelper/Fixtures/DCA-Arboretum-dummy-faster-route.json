@@ -1,0 +1,153 @@
+{
+    "routes": [
+        {
+            "geometry": "g~kbiAdgj}qC_fBdh@k}@|WaaAfb@qa@vMc@Je^zJsd@dNgWvFeOdAqKR_EGwIs@cOkAyQkCkMkDePuFqZaLei@{_@ea@e]}TcU}r@k|@a|@ubAmAoAq_@k`@qXoUiGgEqJyGyFsCiN_HgCoA{DgBwEiBeEcBkEwAuD_AkEgA{EkAcF}@iEe@eFq@{Fk@qEc@}DO{F_@mFI}DIaFFuENaFT_F\\wE^wEl@cFt@kEz@qE~@wEfAuFjB_EpAoD`BqFbCuDjBgDbBgF|CaDpBiElCoEvCqOpJoDrCoIjH{IxI{OvPsPtOcFvDeKfJkb@r[cF|BwDh@}DDgHmCqCsBgSkLuzAcwA{OaO_kC_gCsdAc_AkUm^aCkE_C_F}BoFsBiF_BsFeBgGoAcGgAqFcAaHs@mGc@eG]wGYcHSyGEmPBuHBwE?gIFkGAeGAoHKcHUaG[eHg@wGm@qGu@uGy@gGkAkGwAkGsAqFkBgG_BiFgB{FoBoEiBgEqCqF{BeEgDcFsj@}s@}I{K{_@ii@iDqFsCuEwCeFiDoHuFgLqC_HwAyDuBkG_BcGwAgFsBqHkA{EiAaGqAuG_AgFy@iFq@sEQcBu@iFy@mGq@cHoBcXUwF]{GU{GIqGGsPD_b@A}dAE}PQ{XuAu}@eAs|CQqdABi_@rCys@?cEA}GFyEHkDTe\\Fs_CWgQkAsRkBaOmCmMeFsP}EwMsAkCuCmDuC{EyCiEiGmJmJsGyDmCuTuHuIkB_Hm@kHe@iJBcPb@{IAyLT_F~@uEfAcExAqEdB{E|AiEdBmBjAsLzHgM`KcQxQsOhMmJrIsNzDi`@|IuUnE{xEtAozAPyvBhBiA?oEGoFHkc@CmA@gEHiGCeREmEDaF?gE?eF?uE?iF?cE?wE?aF?wE?qE?kF?iE?mF@kE?_E?eF@sECeF?{D@qF@iE?iF@{E@cE@eFEyE@w@EwaCu@sQ|@gN`D_V`JmUvN_D`BgEdCcEbCiDrBiEdCsEjCqDvB{DzBqElCgEdCsDvBcEzB{EpCyD|B}DzBkEfC}D|BkEfCmDpBkDpByDnBqBf@_ADoD?wBc@u@YoBuG_BoGkGaW}@sDw@{C_FeS{VgdAoD{NaZokA_l@eaCkLse@yEwOyD_PeFgTgAqEo`@u_BuDiOqHcZ_AeDmEePkH}[oE{PqF}U}BiJk@gCgu@o{CuZspAiSwy@eMah@}Iw^qE}QaYyiA{C}L}DaP{Qeu@mPop@u^yxAae@qkBa@iBuIe`@kDwK{GoXiJ}_@iSgz@aY_kAcy@ogDu[{qAiRqx@o^awAwByJcBwHiAgFaAmGyAuJaAiMUiCc@aRM{Yo@ij@EgCOwXKuTIeZYu]EeGe@yr@AsC]mr@MqX?{a@?{GAag@@eRI_l@GqGMqOKqNKqLYmXeAigAv@eQ~AyWvDclCnD{tAzCyx@`SnAx^vBB|A^tAv@z@dAXhAK|@q@h@kAL}ArQvAbRdAzJl@pPbA~A`CdAvAd@x@x@pAdAlBzAtCrAdAt@b@t@N|@DbA@|@Ch@Ib@MjUqHf@MlHmCfGwBfRmGrEuAvN_F~D{AvGuBzEzFrL`On@`Aj@dAf@hAfA|CtAtMP~BPbFFxCFpHDxKBdBBlEBdB@fBD|CJdDDt@Bv@Dt@Bv@JlBXzCl@jEh@tC^pAv@hDr@lDj@nDRvAl@vF\\hDxNIf@}@|@wBbAqBhAkBdAyAzAiB~AeBdB{AfBuAjBqAfDqBv@a@lDcBtB{@|Bs@~Bq@`E_AbCe@dDg@xC]jBO",
+            "legs": [
+                {
+                    "summary": "Aviation Circle - departures, New York Avenue Northeast",
+                    "weight": 450,
+                    "duration": 500,
+                    "steps": [
+                        {
+                            "driving_side": "right",
+                            "geometry": "cv|ciAlx~|qCkUm^aCkE_C_F}BoFsBiF_BsFeBgGoAcGgAqFcAaHs@mGc@eG]wGYcHSyGEmPBuHBwE?gIFkGAeGAoHKcHUaG[eHg@wGm@qGu@uGy@gGkAkGwAkGsAqFkBgG_BiFgB{FoBoEiBgEqCqF{BeEgDcFsj@}s@}I{K{_@ii@iDqFsCuEwCeFiDoHuFgLqC_HwAyDuBkG_BcGwAgFsBqHkA{EiAaGqAuG_AgFy@iFq@sEQcBu@iFy@mGq@cHoBcXUwF]{GU{GIqGGsPD_b@A}dAE}PQ{XuAu}@eAs|CQqdABi_@",
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 46,
+                                "bearing_before": 35,
+                                "location": [
+                                    -77.037463,
+                                    38.878066
+                                ],
+                                "modifier": "slight right",
+                                "type": "fork",
+                                "instruction": "Keep right onto I-395 North"
+                            },
+                            "ref": "I-395 North",
+                            "weight": 191.8,
+                            "duration": 191.5,
+                            "name": "I-395 North",
+                            "distance": 1780.6,
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        343
+                                    ],
+                                    "location": [
+                                        -77.037463,
+                                        38.878066
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "distance": 3055.7,
+                            "name": "Center Leg Freeway (I-395 North)",
+                            "ref": "I-395 North",
+                            "maneuver": {
+                                "bearing_after": 95,
+                                "bearing_before": 90,
+                                "location": [
+                                    -77.018635,
+                                    38.882355
+                                ],
+                                "modifier": "slight right",
+                                "type": "fork",
+                                "instruction": "Keep right towards I-395 North: US Senate"
+                            },
+                            "destinations": "I-395 North: US Senate",
+                            "weight": 206.60000000000002,
+                            "mode": "driving",
+                            "geometry": "ebediAt_z{qCrCys@?cEA}GFyEHkDTe\\Fs_CWgQkAsRkBaOmCmMeFsP}EwMsAkCuCmDuC{EyCiEiGmJmJsGyDmCuTuHuIkB_Hm@kHe@iJBcPb@{IAyLT_F~@uEfAcExAqEdB{E|AiEdBmBjAsLzHgM`KcQxQsOhMmJrIsNzDi`@|IuUnE{xEtAozAPyvBhBiA?oEGoFHkc@CmA@gEHiGCeREmEDaF?gE?eF?uE?iF?cE?wE?aF?wE?qE?kF?iE?mF@kE?_E?eF@sECeF?{D@qF@iE?iF@{E@cE@eFEyE@w@EwaCu@sQ|@gN`D_V`JmUvN_D`BgEdCcEbCiDrBiEdCsEjCqDvB{DzBqElCgEdCsDvBcEzB{EpCyD|B}DzBkEfC}D|BkEfCmDpBkDpByDnBqBf@_ADoD?wBc@u@Y",
+                            "duration": 195.00000000000003,
+                            "driving_side": "right",
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        343
+                                    ],
+                                    "location": [
+                                        -77.018635,
+                                        38.882355
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                          "intersections": [
+                            {
+                              "in": 0,
+                              "entry": [
+                                true
+                              ],
+                              "bearings": [
+                                353
+                              ],
+                              "location": [
+                                -76.966906,
+                                38.910736
+                              ]
+                            }
+                          ],
+                          "driving_side": "right",
+                          "geometry": "_p|eiAr~txqC",
+                          "mode": "driving",
+                          "maneuver": {
+                            "bearing_after": 0,
+                            "bearing_before": 173,
+                            "location": [
+                              -76.966906,
+                              38.910736
+                            ],
+                            "type": "arrive",
+                            "instruction": "You have arrived at your destination"
+                          },
+                          "weight": 0,
+                          "duration": 0,
+                          "name": "Ellipse Road Northeast",
+                          "distance": 0,
+                          "voiceInstructions": [
+
+                          ],
+                          "bannerInstructions": [
+
+                          ]
+                        }
+                    ],
+                    "distance": 13651.1
+                }
+            ],
+            "weight_name": "routability",
+            "weight": 450,
+            "duration": 500,
+            "distance": 13651.1,
+            "voiceLocale": "en-US"
+        }
+    ],
+    "waypoints": [
+        {
+            "name": "Aviation Circle - departures",
+            "location": [
+                -77.037265,
+                38.878206
+            ]
+        },
+        {
+            "name": "Ellipse Road Northeast",
+            "location": [
+                -76.966906,
+                38.910736
+            ]
+        }
+    ],
+    "code": "Ok",
+    "uuid": "cjo4pxi1801m76msa4nwo6wzh"
+}

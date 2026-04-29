@@ -1,0 +1,45 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* CPBarButton title, which allows to disable location simulation */
+"CARPLAY_DISABLE_SIMULATION" = "Disable Simulation";
+
+/* CPBarButton title, which allows to enable location simulation */
+"CARPLAY_ENABLE_SIMULATION" = "Enable Simulation";
+
+/* CPListTemplate title, which shows list of favorite destinations */
+"CARPLAY_FAVORITES_LIST" = "Favorites List";
+
+/* CPAlertTemplate OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "No results";
+
+/* Title of action for dismissing waypoint removal confirmation sheet */
+"REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";
+
+/* Message of alert confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_MSG" = "Do you want to remove this waypoint?";
+
+/* Title of alert action for removing a waypoint */
+"REMOVE_WAYPOINT_CONFIRM_REMOVE" = "Remove Waypoint";
+
+/* Title of alert confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
+
+/* No comment provided by engineer. */
+"Start Cycling" = "Start Cycling";
+
+/* No comment provided by engineer. */
+"Start Driving" = "Start Driving";
+
+/* No comment provided by engineer. */
+"Start Driving Avoiding Traffic" = "Start Driving Avoiding Traffic";
+
+/* No comment provided by engineer. */
+"Start Navigation" = "Start Navigation";
+
+/* No comment provided by engineer. */
+"Start Walking" = "Start Walking";
+

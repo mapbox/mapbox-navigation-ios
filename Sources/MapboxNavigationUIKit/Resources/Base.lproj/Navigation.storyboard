@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_72" orientation="landscape" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--End Of Route View Controller-->
+        <scene sceneID="D7g-l8-Czc">
+            <objects>
+                <viewController storyboardIdentifier="EndOfRouteViewController" id="WD9-Na-hrx" customClass="EndOfRouteViewController" customModule="MapboxNavigationUIKit" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="IDF-XF-2Ta" userLabel="Root" customClass="EndOfRouteContentView" customModule="MapboxNavigationUIKit">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unQ-4I-UPo" customClass="MBSeparatorView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="JsN-yF-tXj"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4jh-bR-wXL" userLabel="Arrival Labels Container">
+                                <rect key="frame" x="0.0" y="16" width="316" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have arrived" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4A-Bp-tr5" customClass="EndOfRouteStaticLabel" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="104.66666666666669" y="0.0" width="107" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="message" size="11"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1773 Scott St" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I9w-ZT-7sx" customClass="EndOfRouteTitleLabel" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="0.0" y="17" width="316" height="43"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="message" size="11"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="top" secondItem="V4A-Bp-tr5" secondAttribute="bottom" id="GIU-NE-KVw"/>
+                                    <constraint firstAttribute="trailing" secondItem="I9w-ZT-7sx" secondAttribute="trailing" id="ID5-gY-b4l"/>
+                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="leading" secondItem="4jh-bR-wXL" secondAttribute="leading" id="Qe4-Ig-E2w"/>
+                                    <constraint firstAttribute="bottom" secondItem="I9w-ZT-7sx" secondAttribute="bottom" id="Vsr-QG-vyH"/>
+                                    <constraint firstItem="V4A-Bp-tr5" firstAttribute="centerX" secondItem="4jh-bR-wXL" secondAttribute="centerX" id="kYE-KB-M5d"/>
+                                    <constraint firstItem="V4A-Bp-tr5" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="top" id="n8N-UX-05e"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evE-dd-pMr" userLabel="Rate Your Trip Container">
+                                <rect key="frame" x="0.0" y="92" width="316" height="54"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate your trip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W5U-cV-cDO" customClass="EndOfRouteStaticLabel" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="114.33333333333331" y="0.0" width="87.666666666666686" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Izy-1z-tcx" customClass="RatingControl" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="78" y="22" width="160" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="160" placeholder="YES" id="GdR-Sf-yUf"/>
+                                            <constraint firstAttribute="height" constant="32" placeholder="YES" id="UUo-I9-X6b"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Izy-1z-tcx" firstAttribute="centerX" secondItem="evE-dd-pMr" secondAttribute="centerX" id="3Ml-0g-4rs"/>
+                                    <constraint firstAttribute="bottom" secondItem="Izy-1z-tcx" secondAttribute="bottom" id="HhD-XW-0H5"/>
+                                    <constraint firstItem="Izy-1z-tcx" firstAttribute="top" secondItem="W5U-cV-cDO" secondAttribute="bottom" constant="5" id="hJ8-ng-fFe"/>
+                                    <constraint firstItem="W5U-cV-cDO" firstAttribute="centerX" secondItem="evE-dd-pMr" secondAttribute="centerX" id="j2p-r4-eJf"/>
+                                    <constraint firstItem="W5U-cV-cDO" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="top" id="lo0-lR-l4J"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEs-GQ-xWN" userLabel="Comment Field Container">
+                                <rect key="frame" x="0.0" y="211" width="316" height="128"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ioj-wd-4G8" customClass="EndOfRouteCommentView" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="25" y="8" width="266" height="112"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="message" size="11"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <connections>
+                                            <outlet property="delegate" destination="WD9-Na-hrx" id="XeS-Fw-dv9"/>
+                                        </connections>
+                                    </textView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Ioj-wd-4G8" firstAttribute="top" secondItem="TEs-GQ-xWN" secondAttribute="topMargin" id="UY6-mY-01M"/>
+                                    <constraint firstItem="Ioj-wd-4G8" firstAttribute="leading" secondItem="TEs-GQ-xWN" secondAttribute="leading" constant="25" id="oxH-Tq-z3y"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="Ioj-wd-4G8" secondAttribute="bottom" id="srG-5D-YLI"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ioj-wd-4G8" secondAttribute="trailing" constant="25" id="vZV-3y-0bv"/>
+                                    <constraint firstAttribute="height" constant="128" id="yA0-B8-HuR"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekW-06-trL" userLabel="Safe Area Mask" customClass="EndOfRouteContentView" customModule="MapboxNavigationUIKit">
+                                <rect key="frame" x="59" y="329" width="257" height="71"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6B-Ff-n7b" userLabel="End Navigation Button Container">
+                                <rect key="frame" x="0.0" y="329" width="316" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4" customClass="EndOfRouteButton" customModule="MapboxNavigationUIKit">
+                                        <rect key="frame" x="106.66666666666669" y="10" width="103" height="30"/>
+                                        <state key="normal" title="End Navigation"/>
+                                        <connections>
+                                            <action selector="endNavigationPressed:" destination="WD9-Na-hrx" eventType="touchUpInside" id="WD3-dO-JvE"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="5f2-dT-la4" firstAttribute="centerY" secondItem="D6B-Ff-n7b" secondAttribute="centerY" id="4Wy-GC-ldH"/>
+                                    <constraint firstItem="5f2-dT-la4" firstAttribute="centerX" secondItem="D6B-Ff-n7b" secondAttribute="centerX" id="qhb-Us-z20"/>
+                                    <constraint firstAttribute="height" constant="50" id="vuG-Ow-2fA"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="unQ-4I-UPo" secondAttribute="trailing" id="1BB-nP-SYc"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="evE-dd-pMr" secondAttribute="trailing" id="3Da-jA-RLx"/>
+                            <constraint firstItem="TEs-GQ-xWN" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="bottom" constant="65" id="6IH-iM-ln5"/>
+                            <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" constant="10" id="GFJ-yQ-Cye"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="D6B-Ff-n7b" secondAttribute="trailing" id="Ljt-Gw-pXu"/>
+                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="Qjw-oe-dVe"/>
+                            <constraint firstItem="ekW-06-trL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="TeT-ls-Ns4"/>
+                            <constraint firstItem="ekW-06-trL" firstAttribute="trailing" secondItem="P8U-kf-mkb" secondAttribute="trailing" id="UUM-FL-FrV"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="TEs-GQ-xWN" secondAttribute="trailing" id="Vg9-Xi-JtV"/>
+                            <constraint firstItem="unQ-4I-UPo" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="WJ9-OZ-x1y"/>
+                            <constraint firstAttribute="bottom" secondItem="ekW-06-trL" secondAttribute="bottom" id="f1v-ju-qen"/>
+                            <constraint firstItem="unQ-4I-UPo" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" id="gVo-YH-zU7"/>
+                            <constraint firstItem="evE-dd-pMr" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="k0v-jB-TbO"/>
+                            <constraint firstItem="TEs-GQ-xWN" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="lxR-dT-lxi"/>
+                            <constraint firstItem="4jh-bR-wXL" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="muP-uc-2iF"/>
+                            <constraint firstItem="4jh-bR-wXL" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" constant="16" id="rx6-4c-WD7"/>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="4jh-bR-wXL" secondAttribute="trailing" id="s63-sP-XUC"/>
+                            <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="bottom" constant="16" id="vRY-cm-7kg"/>
+                            <constraint firstItem="D6B-Ff-n7b" firstAttribute="bottom" secondItem="P8U-kf-mkb" secondAttribute="bottom" id="xqf-EL-Wnt"/>
+                            <constraint firstItem="ekW-06-trL" firstAttribute="top" secondItem="D6B-Ff-n7b" secondAttribute="top" id="zG7-CU-Ygb"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="GFJ-yQ-Cye"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <size key="freeformSize" width="375" height="400"/>
+                    <connections>
+                        <outlet property="commentView" destination="Ioj-wd-4G8" id="Uw0-xP-mX0"/>
+                        <outlet property="commentViewContainer" destination="TEs-GQ-xWN" id="dny-Ty-ZDw"/>
+                        <outlet property="endNavigationButton" destination="5f2-dT-la4" id="4Tt-b1-Pch"/>
+                        <outlet property="hideCommentView" destination="rx6-4c-WD7" id="1wn-bP-gCg"/>
+                        <outlet property="labelContainer" destination="4jh-bR-wXL" id="FMX-A5-TdD"/>
+                        <outlet property="primary" destination="I9w-ZT-7sx" id="Wl2-Mt-kRA"/>
+                        <outlet property="ratingCommentsSpacing" destination="6IH-iM-ln5" id="c1p-PC-raO"/>
+                        <outlet property="showCommentView" destination="GFJ-yQ-Cye" id="8Xj-ri-Kda"/>
+                        <outlet property="stars" destination="Izy-1z-tcx" id="Rsy-R6-Hcs"/>
+                        <outlet property="staticYouHaveArrived" destination="V4A-Bp-tr5" id="ooO-62-TT3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A8g-0A-gn2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3832.7253218884121" y="874.88372093023258"/>
+        </scene>
+        <!--Navigation View Controller-->
+        <scene sceneID="N4b-dY-Waq">
+            <objects>
+                <viewController storyboardIdentifier="NavigationViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="skD-wE-e5x" customClass="NavigationViewController" customModule="MapboxNavigationUIKit" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2Pt-vL-Aor">
+                        <rect key="frame" x="0.0" y="0.0" width="932" height="430"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="spJ-9Q-y9C"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nff-jZ-whT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3604" y="1415"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
