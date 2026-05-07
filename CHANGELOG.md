@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Map
+
+* Fixed an issue where panning on the Mapbox map logo or info button could set the navigation camera to the idle state.
+
 ## 3.23.0
 
 ### Packaging
@@ -13,8 +19,6 @@
 
 * MapboxNavigationCore now requires [MapboxMaps v11.23.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.23.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.23.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.23.0-rc.1)
-
-
 
 ## 3.22.0
 
