@@ -3,17 +3,17 @@ import MapboxDirections
 import MapboxNavigationNative_Private
 
 extension NavigationRoutes {
-    public static func mock(
-        mainRoute: NavigationRoute = .mock(),
-        alternativeRoutes: [AlternativeRoute] = [],
-        waypoints: [MapboxDirections.Waypoint] = []
-    ) async -> Self {
-        await self.init(
-            mainRoute: mainRoute,
-            alternativeRoutes: alternativeRoutes,
-            waypoints: waypoints
-        )
-    }
+//    public static func mock(
+//        mainRoute: NavigationRoute = .mock(),
+//        alternativeRoutes: [AlternativeRoute] = [],
+//        waypoints: [MapboxDirections.Waypoint] = []
+//    ) async -> Self {
+//        await self.init(
+//            mainRoute: mainRoute,
+//            alternativeRoutes: alternativeRoutes,
+//            waypoints: waypoints
+//        )
+//    }
 
     static func mock(
         routeResponse: RouteResponse,

@@ -6,6 +6,13 @@
 
 * Fixed an issue where panning on the Mapbox map logo or info button could set the navigation camera to the idle state.
 
+## 3.24.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.24.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.24.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.24.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.24.0-rc.1)
+
 ### Routing
 
 * Fixed a race condition that could lead to a crash in `FasterRouteController`.

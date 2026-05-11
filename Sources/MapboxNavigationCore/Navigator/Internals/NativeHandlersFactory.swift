@@ -143,8 +143,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
 
     lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(tilesManager: tilesManager))
 
-    // TODO: To replace with TileStore.setRootPath(tileStorePath) (NAVIOS-2531)
-    lazy var tileStore: TileStore = .__create(forPath: tileStorePath)
+    lazy var tileStore: TileStore = .shared(for: URL(fileURLWithPath: tileStorePath))
 
     lazy var tilesManager: TilesManagerHandle = {
         let isUX = SdkInfoRegistryFactory.getInstance().getSdkInformation().contains {

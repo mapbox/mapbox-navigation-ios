@@ -27,17 +27,17 @@ extension RouteProgress {
         )
     }
 
-    public static func mock(
-        mainRoute: NavigationRoute = .mock(),
-        alternativeRoutes: [AlternativeRoute] = [],
-        waypoints: [Waypoint] = [],
-        congestionConfiguration: CongestionRangesConfiguration = .default
-    ) async -> Self {
-        let navigationRoutes = await NavigationRoutes.mock(mainRoute: mainRoute, alternativeRoutes: alternativeRoutes)
-        return self.init(
-            navigationRoutes: navigationRoutes,
-            waypoints: waypoints,
-            congestionConfiguration: congestionConfiguration
-        )
-    }
+//    public static func mock(
+//        mainRoute: NavigationRoute = .mock(),
+//        alternativeRoutes: [AlternativeRoute] = [],
+//        waypoints: [Waypoint] = [],
+//        congestionConfiguration: CongestionRangesConfiguration = .default
+//    ) async -> Self {
+//        let navigationRoutes = await NavigationRoutes.mock(mainRoute: mainRoute, alternativeRoutes: alternativeRoutes)
+//        return self.init(
+//            navigationRoutes: navigationRoutes,
+//            waypoints: waypoints,
+//            congestionConfiguration: congestionConfiguration
+//        )
+//    }
 }

@@ -3,25 +3,25 @@ import MapboxCommon_Private
 import MapboxNavigationNative_Private
 
 extension RouteParserClient {
-    public static var noopValue: RouteParserClient {
-        Self(
-            createRoutesData: { _, _ in
-                return RoutesDataMock()
-            },
-            parseDirectionsRoutesForResponse: { _, _, _ in
-                return Expected<NSArray, NSString>(value: [])
-            },
-            parseDirectionsRoutesForResponseWithCallback: { _, _, _, _ in },
-            parseDirectionsResponseForResponseDataRef: { _, _, _ in
-                return Expected<NSArray, NSString>(value: [])
-            },
-            parseDirectionsResponseForResponseDataRefWithCallback: { _, _, _, _ in },
-            parseMapMatchingResponseForResponseDataRef: { _, _, _ in
-                return Expected<NSArray, NSString>(value: [])
-            },
-            parseMapMatchingResponseForResponseDataRefWithCallback: { _, _, _, _ in }
-        )
-    }
+//    public static var noopValue: RouteParserClient {
+//        Self(
+//            createRoutesData: { _, _ in
+//                return RoutesDataMock()
+//            },
+//            parseDirectionsRoutesForResponse: { _, _, _ in
+//                return Expected<NSArray, NSString>(value: [])
+//            },
+//            parseDirectionsRoutesForResponseWithCallback: { _, _, _, _ in },
+//            parseDirectionsResponseForResponseDataRef: { _, _, _ in
+//                return Expected<NSArray, NSString>(value: [])
+//            },
+//            parseDirectionsResponseForResponseDataRefWithCallback: { _, _, _, _ in },
+//            parseMapMatchingResponseForResponseDataRef: { _, _, _ in
+//                return Expected<NSArray, NSString>(value: [])
+//            },
+//            parseMapMatchingResponseForResponseDataRefWithCallback: { _, _, _, _ in }
+//        )
+//    }
 }
 
 extension RouteParserClient {
