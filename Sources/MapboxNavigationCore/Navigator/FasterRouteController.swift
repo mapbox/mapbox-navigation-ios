@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import Combine
 import CoreLocation
 import Foundation
@@ -23,31 +24,53 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
 
     let configuration: Configuration
 
-    private var lastProactiveRerouteDate: Date?
-    private var routeTask: RoutingProvider.FetchTask?
+    private struct State {
+        var isRerouting: Bool = false
+        var navigationRoute: NavigationRoute?
+        var currentLocation: CLLocation?
+        var lastProactiveRerouteDate: Date?
+        var routeTask: RoutingProvider.FetchTask?
+    }
 
-    var isRerouting: Bool
-    var navigationRoute: NavigationRoute?
-    var currentLocation: CLLocation?
+    private let state: UnfairLocked<State>
 
-    private var _fasterRoutes: PassthroughSubject<NavigationRoutes, Never>
+    var isRerouting: Bool {
+        get { state.read(\.isRerouting) }
+        set { state.mutate { $0.isRerouting = newValue } }
+    }
+
+    var navigationRoute: NavigationRoute? {
+        get { state.read(\.navigationRoute) }
+        set { state.mutate { $0.navigationRoute = newValue } }
+    }
+
+    var currentLocation: CLLocation? {
+        get { state.read(\.currentLocation) }
+        set { state.mutate { $0.currentLocation = newValue } }
+    }
+
+    private let _fasterRoutes: PassthroughSubject<NavigationRoutes, Never>
     var fasterRoutes: AnyPublisher<NavigationRoutes, Never> {
         _fasterRoutes.eraseToAnyPublisher()
     }
 
     init(configuration: Configuration) {
         self.configuration = configuration
-
-        self.lastProactiveRerouteDate = nil
-        self.isRerouting = false
-        self.routeTask = nil
+        self.state = UnfairLocked(State())
         self._fasterRoutes = .init()
     }
 
     func checkForFasterRoute(from routeProgress: RouteProgress) {
-        Task {
-            guard let routeOptions = navigationRoute?.routeOptions,
-                  let location = currentLocation else { return }
+        Task { [state] in
+            let currentState = state.read {
+                (
+                    route: $0.navigationRoute,
+                    location: $0.currentLocation,
+                    lastProactiveRerouteDate: $0.lastProactiveRerouteDate
+                )
+            }
+            guard let routeOptions = currentState.route?.routeOptions,
+                  let location = currentState.location else { return }
 
             // Only check for faster alternatives if the user has plenty of time left on the route.
             guard routeProgress.durationRemaining > configuration.settings.minimumRouteDurationRemaining else { return }
@@ -59,8 +82,8 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
                 return
             }
 
-            guard let lastRouteValidationDate = lastProactiveRerouteDate else {
-                self.lastProactiveRerouteDate = location.timestamp
+            guard let lastRouteValidationDate = currentState.lastProactiveRerouteDate else {
+                state.mutate { $0.lastProactiveRerouteDate = location.timestamp }
                 return
             }
 
@@ -74,10 +97,14 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
             let durationRemaining = routeProgress.durationRemaining
 
             // Avoid interrupting an ongoing reroute
-            if isRerouting { return }
-            isRerouting = true
+            let didBeginReroute = state.mutate {
+                if $0.isRerouting { return false }
+                $0.isRerouting = true
+                return true
+            }
+            guard didBeginReroute else { return }
 
-            defer { self.isRerouting = false }
+            defer { state.mutate { $0.isRerouting = false } }
 
             guard let navigationRoutes = await calculateRoutes(
                 from: location,
@@ -88,7 +115,7 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
             }
             let route = navigationRoutes.mainRoute.route
 
-            self.lastProactiveRerouteDate = nil
+            state.mutate { $0.lastProactiveRerouteDate = nil }
 
             guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
                 return
@@ -121,7 +148,7 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
         along progress: RouteProgress,
         options: RouteOptions
     ) async -> NavigationRoutes? {
-        routeTask?.cancel()
+        state.mutate { $0.routeTask?.cancel() }
 
         let options = progress.reroutingOptions(from: origin, routeOptions: options)
 
@@ -133,8 +160,8 @@ final class FasterRouteController: FasterRouteProvider, @unchecked Sendable {
         }
 
         let task = configuration.routingProvider.calculateRoutes(options: options)
-        routeTask = task
-        defer { self.routeTask = nil }
+        state.mutate { $0.routeTask = task }
+        defer { state.mutate { $0.routeTask = nil } }
 
         do {
             let routes = try await task.value

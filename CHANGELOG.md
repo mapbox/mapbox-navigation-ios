@@ -6,6 +6,10 @@
 
 * Fixed an issue where panning on the Mapbox map logo or info button could set the navigation camera to the idle state.
 
+### Routing
+
+* Fixed a race condition that could lead to a crash in `FasterRouteController`.
+
 ## 3.23.0
 
 ### Packaging
