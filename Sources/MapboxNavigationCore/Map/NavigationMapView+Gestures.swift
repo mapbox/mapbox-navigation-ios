@@ -40,17 +40,14 @@ extension NavigationMapView {
     /// Modifies `MapView` gesture recognizers to disable follow mode and move `NavigationCamera` to
     /// `NavigationCameraState.idle` state.
     private func makeGestureRecognizersDisableCameraFollowing() {
-        guard let gestures = mapView.gestures else { return }
-        let gestureRecognizers = [
-            gestures.panGestureRecognizer,
-            gestures.rotateGestureRecognizer,
-            gestures.pinchGestureRecognizer,
-            gestures.pitchGestureRecognizer,
-            gestures.quickZoomGestureRecognizer,
-            gestures.doubleTapToZoomInGestureRecognizer,
-            gestures.doubleTouchToZoomOutGestureRecognizer,
-        ]
-        for gestureRecognizer in gestureRecognizers {
+        for gestureRecognizer in mapView.gestureRecognizers ?? []
+            where gestureRecognizer is UIPanGestureRecognizer
+            || gestureRecognizer is UIRotationGestureRecognizer
+            || gestureRecognizer is UIPinchGestureRecognizer
+            || gestureRecognizer == mapView.gestures.doubleTapToZoomInGestureRecognizer
+            || gestureRecognizer == mapView.gestures.doubleTouchToZoomOutGestureRecognizer
+
+        {
             gestureRecognizer.addTarget(self, action: #selector(switchToIdleCamera))
         }
     }

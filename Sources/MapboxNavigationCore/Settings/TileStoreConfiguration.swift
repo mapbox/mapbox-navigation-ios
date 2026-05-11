@@ -34,9 +34,9 @@ public struct TileStoreConfiguration: Equatable, Sendable {
         public var tileStore: TileStore {
             switch self {
             case .default:
-                return TileStore.default
+                return TileStore.__create()
             case .custom(let url):
-                return TileStore.shared(for: url)
+                return TileStore.__create(forPath: url.path)
             }
         }
     }

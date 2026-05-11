@@ -25,7 +25,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
         mapView = await MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
         predictiveCacheConfig = PredictiveCacheConfig()
         let path = NSTemporaryDirectory()
-        tileStore = TileStore.shared(for: URL(fileURLWithPath: path))
+        tileStore = TileStore.__create(forPath: path)
         tilesetDescriptor = TilesetDescriptorFactory.build(forDataset: "", version: "", includeAdas: false)
 
         predictiveCacheConfig.predictiveCacheMapsConfig.maximumConcurrentRequests = 3
