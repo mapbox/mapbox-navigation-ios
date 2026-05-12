@@ -55,7 +55,7 @@ class CarPlayNavigationViewControllerTests: TestCase {
             navigationRoutes: routes
         )
         core.tripSession().startActiveGuidance(with: routes, startLegIndex: 0)
-        await navigationProvider.navigator().updateMapMatching(status: newNavigationStatus)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: newNavigationStatus)
 
         let routeProgress = RouteProgress(
             navigationRoutes: routes,

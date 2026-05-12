@@ -17,6 +17,11 @@
 
 * Fixed a race condition that could lead to a crash in `FasterRouteController`.
 
+### Other changes
+
+* `NavigationStatus` processing is now serialized on a dedicated actor. 
+  * Fixes a race condition in `MapMatchingState` updates that could lead to a crash in `CurrentValueSubject.send`. 
+
 ## 3.23.0
 
 ### Packaging
