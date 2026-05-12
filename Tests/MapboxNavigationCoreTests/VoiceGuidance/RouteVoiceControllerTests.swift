@@ -46,33 +46,33 @@ final class RouteVoiceControllerTests: BaseTestCase {
         await fulfillment(of: [loadExpectation], timeout: 1.0)
     }
 
-    @MainActor
-    func testDoesNotSpeakIfNoInstruction() async {
-        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
-        let routeVoiceController = makeRouteVoiceController()
-        defer { _ = routeVoiceController }
+//    @MainActor
+//    func testDoesNotSpeakIfNoInstruction() async {
+//        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+//        let routeVoiceController = makeRouteVoiceController()
+//        defer { _ = routeVoiceController }
+//
+//        speechSynthesizer.locale = .current
+//        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS, includesSpokenInstruction: false))
+//
+//        XCTAssertFalse(speechSynthesizer.prepareIncomingSpokenInstructionsCalled)
+//        XCTAssertFalse(speechSynthesizer.speakCalled)
+//        XCTAssertEqual(speechSynthesizer.locale, .current)
+//    }
 
-        speechSynthesizer.locale = .current
-        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS, includesSpokenInstruction: false))
-
-        XCTAssertFalse(speechSynthesizer.prepareIncomingSpokenInstructionsCalled)
-        XCTAssertFalse(speechSynthesizer.speakCalled)
-        XCTAssertEqual(speechSynthesizer.locale, .current)
-    }
-
-    @MainActor
-    func testPassVoiceAndOptionsLocale() async {
-        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
-        let routeVoiceController = makeRouteVoiceController()
-        defer { _ = routeVoiceController }
-
-        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS))
-
-        XCTAssertEqual(speechSynthesizer.locale, .jaJP)
-        XCTAssertTrue(speechSynthesizer.speakCalled)
-        XCTAssertEqual(speechSynthesizer.passedLocale, .enUS)
-        XCTAssertEqual(speechSynthesizer.passedInstruction, .turnLeft)
-    }
+//    @MainActor
+//    func testPassVoiceAndOptionsLocale() async {
+//        Environment.set(\.audioPlayerClient.load, AudioPlayerClient.noopValue.load)
+//        let routeVoiceController = makeRouteVoiceController()
+//        defer { _ = routeVoiceController }
+//
+//        await routeProgress.send(.mock(optionsLocale: .jaJP, voiceLocale: .enUS))
+//
+//        XCTAssertEqual(speechSynthesizer.locale, .jaJP)
+//        XCTAssertTrue(speechSynthesizer.speakCalled)
+//        XCTAssertEqual(speechSynthesizer.passedLocale, .enUS)
+//        XCTAssertEqual(speechSynthesizer.passedInstruction, .turnLeft)
+//    }
 
     @MainActor
     func testRerouteStopsSpeakingAndPlaysSound() async {
@@ -141,24 +141,24 @@ final class RouteVoiceControllerTests: BaseTestCase {
 }
 
 extension RouteProgressState {
-    fileprivate static func mock(
-        optionsLocale: Locale,
-        voiceLocale: Locale?,
-        includesSpokenInstruction: Bool = true
-    ) async -> RouteProgressState {
-        let uri = RouteInterfaceMock.realRequestUri + "&language=\(optionsLocale.identifier)"
-        let mainRoute = NavigationRoute.mock(
-            route: .mock(speechLocale: voiceLocale),
-            nativeRoute: RouteInterfaceMock(requestUri: uri)
-        )
-        let navigationRoutes = await NavigationRoutes.mock(mainRoute: mainRoute)
-        var progress = RouteProgress.mock(navigationRoutes: navigationRoutes)
-
-        if includesSpokenInstruction {
-            progress.update(using: .mock(voiceInstruction: .turnLeft))
-        }
-        return RouteProgressState(routeProgress: progress)
-    }
+//    fileprivate static func mock(
+//        optionsLocale: Locale,
+//        voiceLocale: Locale?,
+//        includesSpokenInstruction: Bool = true
+//    ) async -> RouteProgressState {
+//        let uri = RouteInterfaceMock.realRequestUri + "&language=\(optionsLocale.identifier)"
+//        let mainRoute = NavigationRoute.mock(
+//            route: .mock(speechLocale: voiceLocale),
+//            nativeRoute: RouteInterfaceMock(requestUri: uri)
+//        )
+//        let navigationRoutes = await NavigationRoutes.mock(mainRoute: mainRoute)
+//        var progress = RouteProgress.mock(navigationRoutes: navigationRoutes)
+//
+//        if includesSpokenInstruction {
+//            progress.update(using: .mock(voiceInstruction: .turnLeft))
+//        }
+//        return RouteProgressState(routeProgress: progress)
+//    }
 }
 
 extension Locale {

@@ -48,7 +48,7 @@ public final class CoreNavigatorMock: CoreNavigator {
         self.rerouteController = .mock(navigator: .mock())
         self.roadObjectStore = .init(nativeNavigator.roadObjectsStore())
         self.roadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(tilesManager: tilesManager))
-        self.tileStore = .__create(forPath: "")
+        self.tileStore = .shared(for: URL(fileURLWithPath: ""))
         self.navigationStatus = .mock(primaryRouteId: nil)
     }
 
