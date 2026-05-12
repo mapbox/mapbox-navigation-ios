@@ -49,12 +49,17 @@ public final class MapboxSpeechSynthesizer: SpeechSynthesizing {
     private func subscribeToSystemVolume() {
         audioPlayerQueue.async { [weak audioPlayer] in
             guard let audioPlayer else { return }
-            let systemVolume = AVAudioSession.sharedInstance().outputVolume
+            let session = AVAudioSession.sharedInstance()
+            let systemVolume = session.outputVolume
             audioPlayer.volume = systemVolume
-        }
-        volumeSubscribtion = AVAudioSession.sharedInstance().publisher(for: \.outputVolume).sink { [weak self] volume in
-            self?.audioPlayerQueue.async { [weak audioPlayer = self?.audioPlayer] in
-                audioPlayer?.volume = volume
+
+            let subscription = session.publisher(for: \.outputVolume)
+                .receive(on: self.audioPlayerQueue)
+                .sink { [weak audioPlayer] volume in
+                    audioPlayer?.volume = volume
+                }
+            onMainAsync { [weak self] in
+                self?.volumeSubscribtion = subscription
             }
         }
     }

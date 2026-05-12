@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-### Map
+### Audio
 
-* Fixed an issue where panning on the Mapbox map logo or info button could set the navigation camera to the idle state.
+* Fixed a possible hang during `MapboxSpeechSynthesizer` initialization.
 
 ## 3.24.0-rc.1
 
@@ -12,6 +12,10 @@
 
 * MapboxNavigationCore now requires [MapboxMaps v11.24.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.24.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.24.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.24.0-rc.1)
+
+### Map
+
+* Fixed an issue where panning on the Mapbox map logo or info button could set the navigation camera to the idle state.
 
 ### Routing
 
