@@ -178,7 +178,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -198,7 +198,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -219,7 +219,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -250,7 +250,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -282,7 +282,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -297,7 +297,7 @@ import XCTest
 //            expectation.fulfill()
 //        }.store(in: &subscriptions)
 //
-//        await navigator.updateMapMatching(status: status)
+//        await navigator._statusProcessor.updateMapMatching(status: status)
 //        await fulfillment(of: [expectation], timeout: timeout)
 //    }
 //
@@ -656,21 +656,21 @@ import XCTest
 //        )
 //        var status = NavigationStatus.mock()
 //
-//        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+//        await navigator._statusProcessor.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
 //        XCTAssertEqual(eventsCounter, 1)
 //
-//        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+//        await navigator._statusProcessor.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
 //        XCTAssertEqual(eventsCounter, 1)
 //
 //        status = .mock(bannerInstruction: .mock(index: 1))
 //        routeProgress.update(using: status)
-//        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+//        await navigator._statusProcessor.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
 //
 //        XCTAssertEqual(eventsCounter, 2)
 //
 //        status = .mock(stepIndex: 1, bannerInstruction: .mock(index: 0))
 //        routeProgress.update(using: status)
-//        await navigator.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+//        await navigator._statusProcessor.handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
 //
 //        XCTAssertEqual(eventsCounter, 2, "Don't send an update if no new banner instruction")
 //    }

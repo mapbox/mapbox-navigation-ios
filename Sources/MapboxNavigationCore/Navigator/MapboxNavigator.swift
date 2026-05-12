@@ -39,6 +39,230 @@ final class MapboxNavigator: @unchecked Sendable {
         }
     }
 
+    /// Serializes `NavigationStatus` processing on a dedicated actor, off main.
+    /// Actor isolation prevents concurrent `process(_:)` calls from racing on bridged ObjC reads.
+    actor StatusProcessor {
+        private weak var navigator: MapboxNavigator?
+        private let coreNavigator: CoreNavigator
+        private let configuration: Configuration
+
+        init(
+            navigator: MapboxNavigator,
+            coreNavigator: CoreNavigator,
+            configuration: Configuration
+        ) {
+            self.navigator = navigator
+            self.coreNavigator = coreNavigator
+            self.configuration = configuration
+        }
+
+        func process(_ status: NavigationStatus) async {
+            guard let navigator else { return }
+
+            guard await navigator.currentSession.state != .idle else {
+                await navigator.send(NavigatorErrors.UnexpectedNavigationStatus())
+                Log.warning(
+                    "Received `NavigationStatus` while not in Active Guidance or Free Drive.",
+                    category: .navigation
+                )
+                return
+            }
+
+            guard await navigator.billingSessionIsActive() else {
+                Log.error(
+                    "Received `NavigationStatus` while billing session is not running.",
+                    category: .billing
+                )
+                return
+            }
+
+            guard !Task.isCancelled else { return }
+            await updateMapMatching(status: status)
+
+            guard case .activeGuidance = await navigator.currentSession.state else {
+                return
+            }
+
+            guard !Task.isCancelled else { return }
+            await navigator.send(Session(state: .activeGuidance(.init(status.routeState))))
+
+            guard !Task.isCancelled else { return }
+            await updateIndices(status: status)
+            await updateAlternativesPassingForkPoint(status: status)
+
+            let routeProgress = await navigator.state.privateRouteProgress
+            if let routeProgress, !Task.isCancelled {
+                await navigator.send(RouteProgressState(routeProgress: routeProgress))
+            }
+            await handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
+        }
+
+        // MARK: - Map matching
+
+        func updateMapMatching(status: NavigationStatus) async {
+            guard let navigator else { return }
+
+            let snappedLocation = CLLocation(status.location)
+            let roadName = status.localizedRoadName()
+
+            let localeUnit: UnitSpeed? = {
+                switch status.speedLimit.localeUnit {
+                case .kilometresPerHour:
+                    return .kilometersPerHour
+                case .milesPerHour:
+                    return .milesPerHour
+                @unknown default:
+                    Log.fault(
+                        "Unhandled speed limit locale unit: \(status.speedLimit.localeUnit)",
+                        category: .navigation
+                    )
+                    return nil
+                }
+            }()
+
+            let signStandard: SignStandard = {
+                switch status.speedLimit.localeSign {
+                case .mutcd:
+                    return .mutcd
+                case .vienna:
+                    return .viennaConvention
+                @unknown default:
+                    Log.fault(
+                        "Unknown native speed limit sign locale \(status.speedLimit.localeSign)",
+                        category: .navigation
+                    )
+                    return .viennaConvention
+                }
+            }()
+
+            let speedLimit: Measurement<UnitSpeed>? = {
+                if let speed = status.speedLimit.speed?.doubleValue, let localeUnit {
+                    return Measurement(value: speed, unit: localeUnit)
+                } else {
+                    return nil
+                }
+            }()
+
+            let currentSpeedUnit: UnitSpeed = {
+                if let localeUnit {
+                    return localeUnit
+                } else {
+                    switch signStandard {
+                    case .mutcd:
+                        return .milesPerHour
+                    case .viennaConvention:
+                        return .kilometersPerHour
+                    }
+                }
+            }()
+
+            let mapMatchingState = MapMatchingState(
+                location: coreNavigator.rawLocation.read() ?? snappedLocation,
+                mapMatchingResult: MapMatchingResult(status: status),
+                speedLimit: SpeedLimit(
+                    value: speedLimit,
+                    signStandard: signStandard
+                ),
+                currentSpeed: Measurement<UnitSpeed>(
+                    value: CLLocation(status.location).speed,
+                    unit: .metersPerSecond
+                ).converted(to: currentSpeedUnit),
+                roadName: roadName.text.isEmpty ? nil : roadName
+            )
+
+            await navigator.send(mapMatchingState)
+        }
+
+        // MARK: - Route progress indices
+
+        func updateIndices(status: NavigationStatus) async {
+            guard let navigator else { return }
+            var routeProgress = await navigator.state.privateRouteProgress
+            if let currentNavigationRoutes = navigator.currentNavigationRoutes {
+                routeProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
+            }
+            routeProgress?.update(using: status)
+            await navigator.state.update(privateRouteProgress: routeProgress)
+        }
+
+        // MARK: - Alternatives fork-point
+
+        func updateAlternativesPassingForkPoint(status: NavigationStatus) async {
+            guard let navigator else { return }
+            var routeProgress = await navigator.state.privateRouteProgress
+            guard var navigationRoutes = navigator.currentNavigationRoutes else { return }
+            guard navigationRoutes.updateForkPointPassed(with: status) else { return }
+
+            routeProgress?.updateAlternativeRoutes(using: navigationRoutes)
+            await navigator.state.update(privateRouteProgress: routeProgress)
+            await navigator.send(navigationRoutes)
+            let alternativesStatus = AlternativesStatus(
+                event: AlternativesStatus.Events.Updated(
+                    actualAlternativeRoutes: navigationRoutes.alternativeRoutes
+                )
+            )
+            await navigator.send(alternativesStatus)
+        }
+
+        // MARK: - Voice/visual/arrival
+
+        func handleRouteProgressUpdates(
+            status: NavigationStatus,
+            routeProgress: RouteProgress?
+        ) async {
+            guard let navigator else { return }
+            guard let routeProgress else { return }
+
+            if let newSpokenInstruction = routeProgress.currentLegProgress.currentStepProgress
+                .currentSpokenInstruction
+            {
+                await navigator.send(SpokenInstructionState(spokenInstruction: newSpokenInstruction))
+            }
+
+            if let newVisualInstruction = routeProgress.currentLegProgress.currentStepProgress
+                .currentVisualInstruction
+            {
+                await navigator.send(VisualInstructionState(visualInstruction: newVisualInstruction))
+            }
+
+            let legProgress = routeProgress.currentLegProgress
+
+            // We are at least at the "You will arrive" instruction
+            guard legProgress.remainingSteps.count <= 2, status.routeState == .complete else { return }
+
+            let previousArrivalWaypoint = await navigator.state.previousArrivalWaypoint
+            guard previousArrivalWaypoint != legProgress.leg.destination else { return }
+
+            if let destination = legProgress.leg.destination {
+                await navigator.state.update(previousArrivalWaypoint: destination)
+                let event: any WaypointArrivalEvent = if routeProgress.isFinalLeg {
+                    WaypointArrivalStatus.Events.ToFinalDestination(destination: destination)
+                } else {
+                    WaypointArrivalStatus.Events.ToWaypoint(
+                        waypoint: destination,
+                        legIndex: routeProgress.legIndex
+                    )
+                }
+                await navigator.send(WaypointArrivalStatus(event: event))
+            }
+
+            let advancesToNextLeg: Bool = switch configuration.multilegAdvancing {
+            case .automatically:
+                true
+            case .manually(let approval):
+                await approval(.init(arrivedLegIndex: routeProgress.legIndex))
+            }
+            guard
+                !routeProgress.isFinalLeg,
+                advancesToNextLeg,
+                let statusLegIndex = status.primaryRouteIndices?.legIndex
+            else {
+                return
+            }
+            navigator.switchLeg(newLegIndex: Int(statusLegIndex) + 1)
+        }
+    }
+
     // MARK: - Navigator Implementation
 
     @CurrentValuePublisher var session: AnyPublisher<Session, Never>
@@ -533,6 +757,8 @@ final class MapboxNavigator: @unchecked Sendable {
 
     private let locationClient: LocationClient
     private var statusTask: Task<Void, Never>?
+    /// Logically private — exposed only so tests can run individual phases via `@testable`.
+    var _statusProcessor: StatusProcessor!
 
     @MainActor
     init(configuration: Configuration) {
@@ -562,12 +788,18 @@ final class MapboxNavigator: @unchecked Sendable {
         let statusUpdateEvents = AsyncStreamBridge<NavigationStatus>(bufferingPolicy: .bufferingNewest(1))
         self.statusUpdateEvents = statusUpdateEvents
 
-        self.statusTask = Task.detached { [weak self] in
+        let statusProcessor = StatusProcessor(
+            navigator: self,
+            coreNavigator: configuration.navigator,
+            configuration: configuration
+        )
+        self._statusProcessor = statusProcessor
+
+        self.statusTask = Task { [weak self, statusProcessor] in
             for await status in statusUpdateEvents {
                 guard let self else { return }
-
                 taskManager.cancellableTask {
-                    await self.update(to: status)
+                    await statusProcessor.process(status)
                 }
             }
         }
@@ -627,192 +859,6 @@ final class MapboxNavigator: @unchecked Sendable {
         {
             routeProgress.update(using: status)
         }
-    }
-
-    private func update(to status: NavigationStatus) async {
-        guard await currentSession.state != .idle else {
-            await send(NavigatorErrors.UnexpectedNavigationStatus())
-            Log.warning(
-                "Received `NavigationStatus` while not in Active Guidance or Free Drive.",
-                category: .navigation
-            )
-            return
-        }
-
-        guard await billingSessionIsActive() else {
-            Log.error(
-                "Received `NavigationStatus` while billing session is not running.",
-                category: .billing
-            )
-            return
-        }
-
-        guard !Task.isCancelled else { return }
-        await updateMapMatching(status: status)
-
-        guard case .activeGuidance = await currentSession.state else {
-            return
-        }
-
-        guard !Task.isCancelled else { return }
-        await send(Session(state: .activeGuidance(.init(status.routeState))))
-
-        guard !Task.isCancelled else { return }
-        await updateIndices(status: status)
-        await updateAlternativesPassingForkPoint(status: status)
-
-        let routeProgress = await state.privateRouteProgress
-        if let routeProgress, !Task.isCancelled {
-            await send(RouteProgressState(routeProgress: routeProgress))
-        }
-        await handleRouteProgressUpdates(status: status, routeProgress: routeProgress)
-    }
-
-    func updateMapMatching(status: NavigationStatus) async {
-        let snappedLocation = CLLocation(status.location)
-        let roadName = status.localizedRoadName()
-
-        let localeUnit: UnitSpeed? = {
-            switch status.speedLimit.localeUnit {
-            case .kilometresPerHour:
-                return .kilometersPerHour
-            case .milesPerHour:
-                return .milesPerHour
-            @unknown default:
-                Log.fault("Unhandled speed limit locale unit: \(status.speedLimit.localeUnit)", category: .navigation)
-                return nil
-            }
-        }()
-
-        let signStandard: SignStandard = {
-            switch status.speedLimit.localeSign {
-            case .mutcd:
-                return .mutcd
-            case .vienna:
-                return .viennaConvention
-            @unknown default:
-                Log.fault(
-                    "Unknown native speed limit sign locale \(status.speedLimit.localeSign)",
-                    category: .navigation
-                )
-                return .viennaConvention
-            }
-        }()
-
-        let speedLimit: Measurement<UnitSpeed>? = {
-            if let speed = status.speedLimit.speed?.doubleValue, let localeUnit {
-                return Measurement(value: speed, unit: localeUnit)
-            } else {
-                return nil
-            }
-        }()
-
-        let currentSpeedUnit: UnitSpeed = {
-            if let localeUnit {
-                return localeUnit
-            } else {
-                switch signStandard {
-                case .mutcd:
-                    return .milesPerHour
-                case .viennaConvention:
-                    return .kilometersPerHour
-                }
-            }
-        }()
-
-        await send(MapMatchingState(
-            location: navigator.rawLocation.read() ?? snappedLocation,
-            mapMatchingResult: MapMatchingResult(status: status),
-            speedLimit: SpeedLimit(
-                value: speedLimit,
-                signStandard: signStandard
-            ),
-            currentSpeed: Measurement<UnitSpeed>(
-                value: CLLocation(status.location).speed,
-                unit: .metersPerSecond
-            ).converted(to: currentSpeedUnit),
-            roadName: roadName.text.isEmpty ? nil : roadName
-        ))
-    }
-
-    func handleRouteProgressUpdates(status: NavigationStatus, routeProgress: RouteProgress?) async {
-        guard let routeProgress else { return }
-
-        if let newSpokenInstruction = routeProgress.currentLegProgress.currentStepProgress
-            .currentSpokenInstruction
-        {
-            await send(SpokenInstructionState(spokenInstruction: newSpokenInstruction))
-        }
-
-        if let newVisualInstruction = routeProgress.currentLegProgress.currentStepProgress
-            .currentVisualInstruction
-        {
-            await send(VisualInstructionState(visualInstruction: newVisualInstruction))
-        }
-
-        let legProgress = routeProgress.currentLegProgress
-
-        // We are at least at the "You will arrive" instruction
-        if legProgress.remainingSteps.count <= 2 {
-            if status.routeState == .complete {
-                let previousArrivalWaypoint = await state.previousArrivalWaypoint
-                guard previousArrivalWaypoint != legProgress.leg.destination else {
-                    return
-                }
-                if let destination = legProgress.leg.destination {
-                    await state.update(previousArrivalWaypoint: destination)
-                    let event: any WaypointArrivalEvent = if routeProgress.isFinalLeg {
-                        WaypointArrivalStatus.Events.ToFinalDestination(destination: destination)
-                    } else {
-                        WaypointArrivalStatus.Events.ToWaypoint(
-                            waypoint: destination,
-                            legIndex: routeProgress.legIndex
-                        )
-                    }
-                    await send(WaypointArrivalStatus(event: event))
-                }
-                let advancesToNextLeg = switch configuration.multilegAdvancing {
-                case .automatically:
-                    true
-                case .manually(let approval):
-                    await approval(.init(arrivedLegIndex: routeProgress.legIndex))
-                }
-                guard
-                    !routeProgress.isFinalLeg,
-                    advancesToNextLeg,
-                    let statusLegIndex = status.primaryRouteIndices?.legIndex
-                else {
-                    return
-                }
-                switchLeg(newLegIndex: Int(statusLegIndex) + 1)
-            }
-        }
-    }
-
-    fileprivate func updateAlternativesPassingForkPoint(status: NavigationStatus) async {
-        var routeProgress = await state.privateRouteProgress
-        guard var navigationRoutes = currentNavigationRoutes else { return }
-
-        guard navigationRoutes.updateForkPointPassed(with: status) else { return }
-
-        routeProgress?.updateAlternativeRoutes(using: navigationRoutes)
-        await state.update(privateRouteProgress: routeProgress)
-        await send(navigationRoutes)
-        let alternativesStatus = AlternativesStatus(
-            event: AlternativesStatus.Events.Updated(
-                actualAlternativeRoutes: navigationRoutes.alternativeRoutes
-            )
-        )
-        await send(alternativesStatus)
-    }
-
-    func updateIndices(status: NavigationStatus) async {
-        var routeProgress = await state.privateRouteProgress
-        if let currentNavigationRoutes {
-            routeProgress?.updateAlternativeRoutes(using: currentNavigationRoutes)
-        }
-        routeProgress?.update(using: status)
-        await state.update(privateRouteProgress: routeProgress)
     }
 
     // MARK: - Notifications handling

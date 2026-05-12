@@ -108,7 +108,7 @@ class NavigationViewControllerTests: TestCase {
 
         let currentLocation = locationPublisher.value
         let status = TestNavigationStatusProvider.createNavigationStatus(location: currentLocation)
-        await navigationProvider.navigator().updateMapMatching(status: status)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
 
         let route = initialRoutes.mainRoute.route
         guard let taylorStreetIntersection = route.legs.first?.steps.first?.intersections?.first else {
@@ -181,7 +181,7 @@ class NavigationViewControllerTests: TestCase {
         let status = TestNavigationStatusProvider.createNavigationStatus(
             location: taylorStreetLocation
         )
-        await navigationProvider.navigator().updateMapMatching(status: status)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
         // Identify a location to set the custom road name.
         let roadName = "Taylor Swift Street"
         customRoadName[taylorStreetLocation.coordinate] = roadName
@@ -195,7 +195,7 @@ class NavigationViewControllerTests: TestCase {
             XCTAssertEqual(passedRoadName, .init(text: roadName, language: ""))
             expectation.fulfill()
         }
-        await navigationProvider.navigator().updateMapMatching(status: activeStatus)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: activeStatus)
 
         await fulfillment(of: [expectation], timeout: 2)
     }
@@ -293,7 +293,7 @@ class NavigationViewControllerTests: TestCase {
                 legIndex: UInt32(legIndex)
             )
             locationPublisher.send(location)
-            await navigationProvider.navigator().updateMapMatching(status: status)
+            await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
         }
         let finalStatus = TestNavigationStatusProvider.createActiveStatus(
             routeState: .complete,
@@ -302,7 +302,7 @@ class NavigationViewControllerTests: TestCase {
             legIndex: UInt32(legIndex),
             stepIndex: UInt32(leg.steps.count - 1)
         )
-        await navigationProvider.navigator().updateIndices(status: finalStatus)
+        await navigationProvider.navigator()._statusProcessor.updateIndices(status: finalStatus)
         var routeProgress = RouteProgress(
             navigationRoutes: initialRoutes,
             waypoints: routeOptions.waypoints,
@@ -310,7 +310,7 @@ class NavigationViewControllerTests: TestCase {
         )
         routeProgress.update(using: finalStatus)
 
-        await navigationProvider.navigator().handleRouteProgressUpdates(
+        await navigationProvider.navigator()._statusProcessor.handleRouteProgressUpdates(
             status: finalStatus,
             routeProgress: routeProgress
         )
@@ -411,7 +411,7 @@ class NavigationViewControllerTests: TestCase {
         let status = TestNavigationStatusProvider.createNavigationStatus(
             location: taylorStreetLocation
         )
-        await navigationProvider.navigator().updateMapMatching(status: status)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
         // Identify a location to set the custom road name.
         customRoadName[taylorStreetLocation.coordinate] = "Taylor Swift Street"
 
@@ -424,7 +424,7 @@ class NavigationViewControllerTests: TestCase {
             XCTAssertNotNil(passedRoadName)
             expectation.fulfill()
         }
-        await navigationProvider.navigator().updateMapMatching(status: activeStatus)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: activeStatus)
         await fulfillment(of: [expectation], timeout: 2)
 
         // Set empty road to make sure that it becomes hidden
@@ -442,7 +442,7 @@ class NavigationViewControllerTests: TestCase {
             roadNameIsNilExpectation.fulfill()
         }
 
-        await navigationProvider.navigator().updateMapMatching(status: newActiveStatus)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: newActiveStatus)
         await fulfillment(of: [roadNameIsNilExpectation], timeout: 2)
     }
 
@@ -461,7 +461,7 @@ class NavigationViewControllerTests: TestCase {
             XCTAssertNil(passedRoadName)
             expectation.fulfill()
         }
-        await navigationProvider.navigator().updateMapMatching(status: status)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
         await fulfillment(of: [expectation], timeout: 2)
 
         let roadName = "New street"
@@ -476,7 +476,7 @@ class NavigationViewControllerTests: TestCase {
             XCTAssertEqual(passedRoadName, .init(text: roadName, language: "en"))
             notNilxpectation.fulfill()
         }
-        await navigationProvider.navigator().updateMapMatching(status: newStatus)
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: newStatus)
         await fulfillment(of: [notNilxpectation], timeout: 2)
     }
 
@@ -487,7 +487,7 @@ class NavigationViewControllerTests: TestCase {
 //        let status = TestNavigationStatusProvider.createNavigationStatus(
 //            location: .init(coordinate: coordinate)
 //        )
-//        await navigationProvider.navigator().updateMapMatching(status: status)
+//        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
 //        let options = NavigationRouteOptions(coordinates: [
 //            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
 //            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
@@ -511,7 +511,7 @@ class NavigationViewControllerTests: TestCase {
 //            legIndex: 0,
 //            stepIndex: 0
 //        )
-//        await navigationProvider.navigator().updateMapMatching(status: activeStatus)
+//        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: activeStatus)
 //
 //        let firstInstruction = navigationViewController.route!.legs[0].steps[0].instructionsDisplayedAlongStep!.first
 //        let topViewController = navigationViewController.topViewController as! TopBannerViewController
