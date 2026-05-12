@@ -276,6 +276,15 @@ open class NavigationMapView: UIView {
         }
     }
 
+    /// Controls whether to show debug intersection marks on the route. Defaults to `false`.
+    @_spi(MapboxInternal)
+    public var showsDebugIntersectionMarks: Bool = false {
+        didSet {
+            updateIntersectionAnnotations(routeProgress: currentRouteProgress)
+            mapStyleManager.mapStyleDeclarativeContentUpdate()
+        }
+    }
+
     /// Toggles displaying alternative routes. If enabled, view will draw actual alternative route lines on the map.
     /// Defaults to `true`.
     public var showsAlternatives: Bool = true {
@@ -955,6 +964,7 @@ open class NavigationMapView: UIView {
             showsVoiceInstructionsOnMap: showsVoiceInstructionsOnMap,
             showsIntersectionAnnotations: showsIntersectionAnnotations,
             showsIntersectionLaneGuidance: showsIntersectionLaneGuidance,
+            showsDebugIntersectionMarks: showsDebugIntersectionMarks,
             occlusionFactor: .constant(routeLineOcclusionFactor),
             congestionConfiguration: congestionConfiguration,
             excludedRouteAlertTypes: excludedRouteAlertTypes,

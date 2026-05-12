@@ -41,6 +41,7 @@ struct MapStyleConfig: Equatable {
     var showsVoiceInstructionsOnMap: Bool
     var showsIntersectionAnnotations: Bool
     var showsIntersectionLaneGuidance: Bool
+    var showsDebugIntersectionMarks: Bool
     var occlusionFactor: Value<Double>?
     var congestionConfiguration: CongestionConfiguration
     var excludedRouteAlertTypes: RoadAlertType
@@ -422,7 +423,7 @@ final class NavigationMapStyleManager {
             return
         }
 
-        if config.showsIntersectionLaneGuidance, shouldUseDeclarativeApproach {
+        if config.showsDebugIntersectionMarks, shouldUseDeclarativeApproach {
             mapContent?.intersectionAnnotations = routeProgress.debugIntersectionAnnotationsMapStyleContent(
                 ids: .currentRoute,
                 mapboxMap: mapView.mapboxMap,
