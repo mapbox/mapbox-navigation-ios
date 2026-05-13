@@ -75,6 +75,12 @@ public struct AttributeOptions: CustomValueOptionSet, CustomStringConvertible, E
     /// The tendency value conveys the changing state of traffic congestion (increasing, decreasing, constant etc).
     public static let trafficTendency = AttributeOptions(rawValue: 1 << 7)
 
+    /// Road cameras along the road leg:
+    ///
+    /// When this attribute is specified, the ``RouteLeg/roadCameras`` property is filled with relevant data.
+    @_spi(ExperimentalMapboxAPI)
+    public static let roadCamera = AttributeOptions(rawValue: 1 << 8)
+
     /// Creates an ``AttributeOptions`` from the given description strings.
     public init?(descriptions: [String]) {
         var attributeOptions: AttributeOptions = []
@@ -96,6 +102,8 @@ public struct AttributeOptions: CustomValueOptionSet, CustomStringConvertible, E
                 attributeOptions.update(with: .numericCongestionLevel)
             case "traffic_tendency":
                 attributeOptions.update(with: .trafficTendency)
+            case "road_camera":
+                attributeOptions.update(with: .roadCamera)
             case "":
                 continue
             default:
@@ -131,6 +139,10 @@ public struct AttributeOptions: CustomValueOptionSet, CustomStringConvertible, E
         if contains(.trafficTendency) {
             descriptions.append("traffic_tendency")
         }
+        if contains(.roadCamera) {
+            descriptions.append("road_camera")
+        }
+
         for (key, value) in customOptionsByRawValue {
             if rawValue & key != 0 {
                 descriptions.append(value)

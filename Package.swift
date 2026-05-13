@@ -5,6 +5,7 @@ import PackageDescription
 
 let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.24.0-rc.1", "924276bf514c2cc61473ed8f93777797de5bd15563ce76890f72922e13903e73", "650e9c105d731c224d55d0cf519ffaf8f17daeea")
 let mapsVersion: Version = "11.24.0-rc.1"
+let navsdkVersion: Version = "0.24.0-rc.1"
 
 let package = Package(
     name: "MapboxNavigation",
@@ -25,6 +26,12 @@ let package = Package(
             targets: ["MapboxDirections"]
         ),
         .library(
+            name: "MapboxNavigationCppRoadCameras",
+            targets: [
+                "MapboxNavigationCppRoadCameras",
+            ]
+        ),
+        .library(
             name: "_MapboxNavigationLocalization",
             targets: ["_MapboxNavigationLocalization"]
         ),
@@ -39,6 +46,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
@@ -79,6 +87,13 @@ let package = Package(
             name: "MapboxDirections",
             dependencies: [
                 .product(name: "Turf", package: "turf-swift"),
+            ]
+        ),
+        .target(
+            name: "MapboxNavigationCppRoadCameras",
+            dependencies: [
+                .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
+                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
             ]
         ),
 

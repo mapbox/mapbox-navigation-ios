@@ -35,6 +35,7 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
         case notifications
         case viaWaypoints = "via_waypoints"
         case closures
+        case roadCameras = "road_cameras"
     }
 
     // MARK: Creating a Leg
@@ -123,6 +124,10 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
             self.viaWaypoints = viaWaypoints
         }
 
+        if let roadCameras = try container.decodeIfPresent([RoadCamera].self, forKey: .roadCameras) {
+            self.roadCameras = roadCameras
+        }
+
         try decodeForeignMembers(notKeyedBy: CodingKeys.self, with: decoder)
     }
 
@@ -159,6 +164,10 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
 
         if let viaWaypoints {
             try container.encode(viaWaypoints, forKey: .viaWaypoints)
+        }
+
+        if let roadCameras {
+            try container.encode(roadCameras, forKey: .roadCameras)
         }
 
         try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
@@ -458,6 +467,10 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
     /// ``RouteOptions`` object. This property reflects the primary mode of transportation used for the route leg.
     /// Individual steps along the route leg might use different modes of transportation as necessary.
     public let profileIdentifier: ProfileIdentifier
+
+    /// The road cameras collection along the route leg.
+    @_spi(ExperimentalMapboxAPI)
+    public var roadCameras: [RoadCamera]?
 }
 
 extension RouteLeg: CustomStringConvertible {
@@ -560,6 +573,7 @@ extension RouteLeg {
             lhs.notifications == rhs.notifications &&
             lhs.viaWaypoints == rhs.viaWaypoints &&
             lhs.typicalTravelTime == rhs.typicalTravelTime &&
-            lhs.profileIdentifier == rhs.profileIdentifier
+            lhs.profileIdentifier == rhs.profileIdentifier &&
+            lhs.roadCameras == rhs.roadCameras
     }
 }
