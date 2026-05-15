@@ -6,6 +6,10 @@
 
 * Fixed a possible hang during `MapboxSpeechSynthesizer` initialization.
 
+### Other changes
+
+* Updated API reference docs deploy script to target `production` branch instead of `publisher-production`.
+
 ## 3.24.0-rc.1
 
 ### Packaging
