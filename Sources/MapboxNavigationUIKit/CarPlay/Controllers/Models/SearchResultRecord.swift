@@ -10,7 +10,12 @@ import Foundation
 import MapKit
 
 @_spi(MapboxInternal)
-public struct SearchResultRecord {
+public struct SearchResultRecord: Sendable {
+    public enum Kind: Sendable {
+        case POI
+        case address
+    }
+
     public let id: String
     public var serverIndex: Int?
     public let coordinate: CLLocationCoordinate2D
@@ -19,6 +24,7 @@ public struct SearchResultRecord {
     public let descriptionText: String?
     public let estimatedTime: TimeInterval?
     public let estimatedDistance: CLLocationDistance?
+    public let kind: Kind?
 
     public var indexStringValue: String {
         .init((serverIndex ?? 0) + 1)
@@ -32,7 +38,8 @@ public struct SearchResultRecord {
         name: String,
         descriptionText: String?,
         estimatedTime: TimeInterval?,
-        estimatedDistance: CLLocationDistance?
+        estimatedDistance: CLLocationDistance?,
+        kind: Kind? = nil
     ) {
         self.id = id
         self.serverIndex = serverIndex
@@ -42,5 +49,17 @@ public struct SearchResultRecord {
         self.descriptionText = descriptionText
         self.estimatedTime = estimatedTime
         self.estimatedDistance = estimatedDistance
+        self.kind = kind
+    }
+}
+
+@_spi(MapboxInternal)
+extension SearchResultRecord: Equatable, Hashable {
+    public static func == (lhs: SearchResultRecord, rhs: SearchResultRecord) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

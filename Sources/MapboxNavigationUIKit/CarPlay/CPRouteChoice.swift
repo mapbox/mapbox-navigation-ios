@@ -24,7 +24,7 @@ extension CPRouteChoice {
     }
 
     @_spi(MapboxInternal)
-    public var searchResult: SearchResultRecord? {
+    public var searchResultRecord: SearchResultRecord? {
         return routeResponseUserInfo?.searchResultRecord
     }
 }

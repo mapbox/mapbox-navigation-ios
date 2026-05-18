@@ -34,7 +34,7 @@ public final class CarPlaySearchItemsListController {
 
     public weak var delegate: CarPlaySearchItemsListControllerDelegate?
     public let template: CPListTemplate
-    private let style: Style
+    private var style: Style
 
     public init(style: Style) {
         self.style = style
@@ -48,13 +48,13 @@ public final class CarPlaySearchItemsListController {
             delegate?.didSelectBackButton(self)
         }
 
-        configureSections(using: style.items)
+        updateItems(style.items)
     }
 
-    private func configureSections(using listItems: [CarPlayListItem]) {
-        var newItems: [CPListItem] = []
+    public func updateItems(_ listItems: [CarPlayListItem]) {
+        style.items = listItems
 
-        for item in listItems {
+        let newItems: [CPListItem] = listItems.map { item in
             let newItem = CPListItem(
                 text: item.text,
                 detailText: item.detailText,
@@ -67,7 +67,7 @@ public final class CarPlaySearchItemsListController {
                 guard let self else { return }
                 delegate?.didSelectItem(self, item: item, handler: completion)
             }
-            newItems.append(newItem)
+            return newItem
         }
 
         template.updateSections([

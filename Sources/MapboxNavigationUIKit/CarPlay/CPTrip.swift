@@ -6,7 +6,8 @@ extension CPTrip {
     convenience init?(
         routes: NavigationRoutes,
         locale: Locale,
-        unitMeasurementSystem: UnitMeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem,
+        searchResultRecord: SearchResultRecord? = nil
     ) async {
         let waypoints: [Waypoint] = routes.waypoints
 
@@ -14,14 +15,16 @@ extension CPTrip {
             Self.makeMainRouteChoice(
                 routes: routes,
                 locale: locale,
-                unitMeasurementSystem: unitMeasurementSystem
+                unitMeasurementSystem: unitMeasurementSystem,
+                searchResultRecord: searchResultRecord
             ),
         ]
 
         for alternativeRoute in routes.alternativeRoutes {
             let choice = await Self.makeRouteChoice(
                 routes: routes, alternateRoute: alternativeRoute, locale: locale,
-                unitMeasurementSystem: unitMeasurementSystem
+                unitMeasurementSystem: unitMeasurementSystem,
+                searchResultRecord: searchResultRecord
             )
             routeChoices.append(choice)
         }
@@ -37,7 +40,7 @@ extension CPTrip {
         originMapItem.name = waypoints.first?.name
 
         let destinationMapItem = MKMapItem(placemark: MKPlacemark(coordinate: destinationCoordinate))
-        destinationMapItem.name = waypoints.last?.name
+        destinationMapItem.name = searchResultRecord?.name ?? waypoints.last?.name
 
         self.init(
             origin: originMapItem,
@@ -52,7 +55,8 @@ extension CPTrip {
         routes: NavigationRoutes,
         alternateRoute: AlternativeRoute,
         locale: Locale,
-        unitMeasurementSystem: UnitMeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem,
+        searchResultRecord: SearchResultRecord?
     ) async -> CPRouteChoice {
         let routeChoice = prepareRouteChoiceModel(
             for: alternateRoute.route,
@@ -62,7 +66,10 @@ extension CPTrip {
 
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
         if let newRoutes = await routes.selecting(alternativeRoute: alternateRoute) {
-            let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: newRoutes, searchResultRecord: nil)
+            let value: CPRouteChoice.RouteResponseUserInfo = .init(
+                navigationRoutes: newRoutes,
+                searchResultRecord: searchResultRecord
+            )
             let userInfo: CarPlayUserInfo = [key: value]
             routeChoice.userInfo = userInfo
         }
@@ -72,7 +79,8 @@ extension CPTrip {
     private static func makeMainRouteChoice(
         routes: NavigationRoutes,
         locale: Locale,
-        unitMeasurementSystem: UnitMeasurementSystem
+        unitMeasurementSystem: UnitMeasurementSystem,
+        searchResultRecord: SearchResultRecord?
     ) -> CPRouteChoice {
         let routeChoice = prepareRouteChoiceModel(
             for: routes.mainRoute.route,
@@ -80,7 +88,10 @@ extension CPTrip {
             unitMeasurementSystem: unitMeasurementSystem
         )
         let key: String = CPRouteChoice.RouteResponseUserInfo.key
-        let value: CPRouteChoice.RouteResponseUserInfo = .init(navigationRoutes: routes, searchResultRecord: nil)
+        let value: CPRouteChoice.RouteResponseUserInfo = .init(
+            navigationRoutes: routes,
+            searchResultRecord: searchResultRecord
+        )
         let userInfo: CarPlayUserInfo = [key: value]
         routeChoice.userInfo = userInfo
         return routeChoice

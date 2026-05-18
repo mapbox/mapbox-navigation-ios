@@ -584,6 +584,14 @@ extension CarPlayManager {
     /// - Parameters:
     ///   - destination: A final destination `Waypoint`.
     public func previewRoutes(to destination: Waypoint) async {
+        await previewRoutes(to: destination, searchResultRecord: nil)
+    }
+
+    /// Same as ``previewRoutes(to:)`` but additionally attaches a ``SearchResultRecord`` to every route choice,
+    /// retrievable from `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` via
+    /// ``CPRouteChoice/searchResult``.
+    @_spi(MapboxInternal)
+    public func previewRoutes(to destination: Waypoint, searchResultRecord: SearchResultRecord?) async {
         guard let carPlayMapViewController = await carPlayMapViewController,
               let userLocation = await carPlayMapViewController.navigationMapView.mapView.location.latestLocation
         else {
@@ -602,7 +610,7 @@ extension CarPlayManager {
 
         let origin = Waypoint(location: location, name: name)
 
-        await previewRoutes(between: [origin, destination])
+        await previewRoutes(between: [origin, destination], searchResultRecord: searchResultRecord)
     }
 
     /// Allows to preview routes for a list of `Waypoint` objects.
@@ -618,8 +626,13 @@ extension CarPlayManager {
     /// - Parameters:
     ///   - waypoints: A list of `Waypoint` objects.
     public func previewRoutes(between waypoints: [Waypoint]) async {
+        await previewRoutes(between: waypoints, searchResultRecord: nil)
+    }
+
+    @_spi(MapboxInternal)
+    public func previewRoutes(between waypoints: [Waypoint], searchResultRecord: SearchResultRecord?) async {
         let options = NavigationRouteOptions(waypoints: waypoints)
-        await previewRoutes(for: options)
+        await previewRoutes(for: options, searchResultRecord: searchResultRecord)
     }
 
     /// Calculates routes satisfying the given options using the [Mapbox Directions
@@ -642,18 +655,29 @@ extension CarPlayManager {
     ///   - options: A `RouteOptions` object, which specifies the criteria for results returned by the Mapbox Directions
     /// API.
     public func previewRoutes(for options: RouteOptions) async {
+        await previewRoutes(for: options, searchResultRecord: nil)
+    }
+
+    @_spi(MapboxInternal)
+    public func previewRoutes(for options: RouteOptions, searchResultRecord: SearchResultRecord?) async {
         let task = await core.routingProvider().calculateRoutes(options: options)
-        await didCalculate(task, for: options)
+        await didCalculate(task, for: options, searchResultRecord: searchResultRecord)
     }
 
     /// Allows to preview routes for a specific `NavigationRoutes` object.
     /// - Parameter routes: `NavigationRoutes` object, containing all information of routes that will be previewed.
     public func previewRoutes(for routes: NavigationRoutes) async {
+        await previewRoutes(for: routes, searchResultRecord: nil)
+    }
+
+    @_spi(MapboxInternal)
+    public func previewRoutes(for routes: NavigationRoutes, searchResultRecord: SearchResultRecord?) async {
         guard shouldPreviewRoutes(for: routes) else { return }
         guard let trip = await CPTrip(
             routes: routes,
             locale: locale,
-            unitMeasurementSystem: unitMeasurementSystem
+            unitMeasurementSystem: unitMeasurementSystem,
+            searchResultRecord: searchResultRecord
         ) else {
             return
         }
@@ -776,10 +800,14 @@ extension CarPlayManager {
         }
     }
 
-    func didCalculate(_ task: Task<NavigationRoutes, Error>, for routeOptions: RouteOptions) async {
+    func didCalculate(
+        _ task: Task<NavigationRoutes, Error>,
+        for routeOptions: RouteOptions,
+        searchResultRecord: SearchResultRecord? = nil
+    ) async {
         do {
             let routes = try await task.value
-            await previewRoutes(for: routes)
+            await previewRoutes(for: routes, searchResultRecord: searchResultRecord)
         } catch {
             guard let delegate, let alert = delegate.carPlayManager(
                 self,
@@ -845,16 +873,20 @@ extension CarPlayManager: CPMapTemplateDelegate {
         using routeChoice: CPRouteChoice
     ) {
         clearMapAnnotations()
-        if let searchResult = routeChoice.searchResult {
+        // Check `navigationRoutes` first: if it's populated, routes have already been calculated and the user tapped
+        // "Navigate", so start the trip. Only fall back to the `searchResult`-only branch when routes haven't been
+        // calculated yet (the category-search flow) — that branch re-previews routes for the chosen search result.
+        // Both can be populated together when Dash threads a `SearchResultRecord` through `previewRoutes(to:)`.
+        if let navigationRoutes = routeChoice.navigationRoutes {
+            startTrip(mapTemplate: mapTemplate, trip: trip, navigationRoutes: navigationRoutes)
+        } else if let searchResult = routeChoice.searchResultRecord {
             Task {
                 let waypoint = Waypoint(
                     coordinate: searchResult.coordinate,
                     name: searchResult.name
                 )
-                await previewRoutes(to: waypoint)
+                await previewRoutes(to: waypoint, searchResultRecord: searchResult)
             }
-        } else if let navigationRoutes = routeChoice.navigationRoutes {
-            startTrip(mapTemplate: mapTemplate, trip: trip, navigationRoutes: navigationRoutes)
         } else {
             Log.info("CPRouteChoice should contain `NavigationRoutes` struct.", category: .carPlay)
         }
@@ -930,7 +962,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     ) {
         if let navigationRoutes = routeChoice.navigationRoutes {
             showcaseIfNeeded(routes: navigationRoutes, mapTemplate: mapTemplate, trip: trip, routeChoice: routeChoice)
-        } else if let searchResult = routeChoice.searchResult {
+        } else if let searchResult = routeChoice.searchResultRecord {
             carPlayMapViewController?.showSearchResultsAnnotations(
                 with: fetchedSearchResults,
                 selectedResult: searchResult
