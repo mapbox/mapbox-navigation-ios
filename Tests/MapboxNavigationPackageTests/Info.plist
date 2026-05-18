@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.21.4</string>
+	<string>3.21.5</string>
 	<key>CFBundleVersion</key>
 	<string>150</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
