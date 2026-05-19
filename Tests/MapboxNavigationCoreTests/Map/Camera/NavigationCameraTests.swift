@@ -163,13 +163,13 @@ class NavigationCameraTests: BaseTestCase {
         XCTAssertEqual(navigationCamera.currentCameraState, .overview)
     }
 
-//    @MainActor
-//    func testCameraStateChangeToOverviewInActiveGuidance() async {
-//        let progress = await RouteProgress.mock()
-//        routeProgressPublisher.send(progress)
-//        navigationMapView.navigationCamera.update(cameraState: .overview)
-//        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
-//    }
+    @MainActor
+    func testCameraStateChangeToOverviewInActiveGuidance() async {
+        let progress = await RouteProgress.mock()
+        routeProgressPublisher.send(progress)
+        navigationMapView.navigationCamera.update(cameraState: .overview)
+        XCTAssertEqual(navigationCamera.currentCameraState, .overview)
+    }
 
     @MainActor
     func testCameraDoesNotChangeAutomaticallyToFollowingIfSwitchedToOverview() async {
@@ -365,32 +365,32 @@ class NavigationCameraTests: BaseTestCase {
         verifyCameraOptionsAreNil(overviewMobileCameraOptions)
     }
 
-//    @MainActor
-//    func testViewportDataSourceForActiveGuidance() async throws {
-//        let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource
-//        let location = CLLocation(latitude: 37.112341, longitude: -122.1111678)
-//        await waitForLocationUpdate(location)
-//
-//        var progress = await RouteProgress.mock()
-//        let status = NavigationStatus.mock(stepIndex: 1)
-//        progress.update(using: status)
-//        routeProgressPublisher.send(progress)
-//
-//        try await Task.sleep(nanoseconds: NSEC_PER_SEC)
-//
-//        let cameraOptions = navigationViewportDataSource?.currentNavigationCameraOptions
-//        guard let temporaryPitch = cameraOptions?.followingCamera.pitch else {
-//            XCTFail("Pitch should be valid.")
-//            return
-//        }
-//
-//        let pitch = Double(temporaryPitch)
-//        XCTAssertEqual(
-//            pitch,
-//            navigationViewportDataSource?.options.followingCameraOptions.defaultPitch,
-//            "Pitches should be equal."
-//        )
-//    }
+    @MainActor
+    func testViewportDataSourceForActiveGuidance() async throws {
+        let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource
+        let location = CLLocation(latitude: 37.112341, longitude: -122.1111678)
+        await waitForLocationUpdate(location)
+
+        var progress = await RouteProgress.mock()
+        let status = NavigationStatus.mock(stepIndex: 1)
+        progress.update(using: status)
+        routeProgressPublisher.send(progress)
+
+        try await Task.sleep(nanoseconds: NSEC_PER_SEC)
+
+        let cameraOptions = navigationViewportDataSource?.currentNavigationCameraOptions
+        guard let temporaryPitch = cameraOptions?.followingCamera.pitch else {
+            XCTFail("Pitch should be valid.")
+            return
+        }
+
+        let pitch = Double(temporaryPitch)
+        XCTAssertEqual(
+            pitch,
+            navigationViewportDataSource?.options.followingCameraOptions.defaultPitch,
+            "Pitches should be equal."
+        )
+    }
 
     @MainActor
     func testViewportDataSourceForLocation() async {
@@ -422,158 +422,157 @@ class NavigationCameraTests: BaseTestCase {
         verifyCameraOptionsAreEqual(cameraOptions?.followingCamera, expectedCameraOptions: expectedCameraOptions)
     }
 
-//    @MainActor
-//    func testFollowingCameraOptions() async {
-//        let navigationViewportDataSource = MobileViewportDataSource(navigationMapView.mapView)
-//
-//        // Prevent any camera related modifications, which could be done by `NavigationViewportDataSource`.
-//        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
-//
-//        let expectedCenterCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.center = expectedCenterCoordinate
-//
-//        let expectedZoom: CGFloat = 11.1
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.zoom = expectedZoom
-//
-//        let expectedBearing = 22.2
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.bearing = expectedBearing
-//
-//        let expectedPitch: CGFloat = 33.3
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.pitch = expectedPitch
-//
-//        let expectedPadding = UIEdgeInsets(top: 1.0, left: 2.0, bottom: 3.0, right: 4.0)
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.padding = expectedPadding
-//
-//        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-//
-//        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-//        let expectation = XCTestExpectation(description: "Camera options expectation.")
-//        var options: NavigationCameraOptions?
-//        navigationViewportDataSource.navigationCameraOptions
-//            .dropFirst()
-//            .sink { navigationCameraOptions in
-//                options = navigationCameraOptions
-//                expectation.fulfill()
-//            }.store(in: &subscriptions)
-//
-//        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
-//        locationPublisher.send(location)
-//        var progress = await RouteProgress.mock()
-//        let status = NavigationStatus.mock(stepIndex: 1)
-//        progress.update(using: status)
-//        routeProgressPublisher.send(progress)
-//
-//        await fulfillment(of: [expectation], timeout: 1)
-//
-//        let cameraOptions = options?.followingCamera
-//        XCTAssertEqual(cameraOptions?.center, expectedCenterCoordinate, "Center coordinates should be equal.")
-//        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
-//        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
-//        XCTAssertEqual(cameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
-//        XCTAssertEqual(cameraOptions?.padding, expectedPadding, "Paddings should be equal.")
-//    }
+    @MainActor
+    func testFollowingCameraOptions() async {
+        let navigationViewportDataSource = MobileViewportDataSource(navigationMapView.mapView)
 
-//    @MainActor
-//    func testFollowingCameraModificationsDisabled() async {
-//        // Create new `NavigationViewportDataSource` instance, which listens to the
-//        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
-//        // active guidance navigation.
-//        let navigationViewportDataSource = MobileViewportDataSource(navigationMapView.mapView)
-//
-//        // Some camera related modifications disabled while others not. It is expected that `CameraOptions` should
-//        // still have non-nil default values after the progress update. Camera related properties with disabled
-//        // modifications should also keep default value unchanged.
-//        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = true
-//        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
-//        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = true
-//        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = true
-//
-//        let expectedZoom: CGFloat = 11.1
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.zoom = expectedZoom
-//
-//        let expectedBearing = 22.2
-//        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.bearing = expectedBearing
-//
-//        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-//        let expectation = XCTestExpectation(description: "Camera options expectation.")
-//        var options: NavigationCameraOptions?
-//        navigationViewportDataSource.navigationCameraOptions
-//            .dropFirst()
-//            .sink { navigationCameraOptions in
-//                options = navigationCameraOptions
-//                expectation.fulfill()
-//            }.store(in: &subscriptions)
-//
-//        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
-//        locationPublisher.send(location)
-//        var progress = await RouteProgress.mock()
-//        let status = NavigationStatus.mock(stepIndex: 1)
-//        progress.update(using: status)
-//        routeProgressPublisher.send(progress)
-//
-//        await fulfillment(of: [expectation], timeout: 1)
-//
-//        let cameraOptions = options?.followingCamera
-//        XCTAssertNotNil(cameraOptions?.center, "Center coordinates should be valid.")
-//        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
-//        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
-//        XCTAssertNotNil(cameraOptions?.pitch, "Pitches should be valid.")
-//        XCTAssertNotNil(cameraOptions?.padding, "Paddings should be valid.")
-//    }
+        // Prevent any camera related modifications, which could be done by `NavigationViewportDataSource`.
+        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
 
-//    @MainActor
-//    func testBearingSmoothingIsDisabled() async {
-//        guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource else
-//        {
-//            XCTFail("Should have mobile viewportDataSource")
-//            return
-//        }
-//
-//        // Make sure that bearing smoothing is enabled by default.
-//        XCTAssertTrue(
-//            navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled,
-//            "Bearing smoothing should be enabled by default."
-//        )
-//
-//        navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled = false
-//
-//        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-//
-//        let expectation = XCTestExpectation(description: "Camera options expectation.")
-//        var options: NavigationCameraOptions?
-//        navigationViewportDataSource.navigationCameraOptions
-//            .dropFirst()
-//            .sink { navigationCameraOptions in
-//                options = navigationCameraOptions
-//                expectation.fulfill()
-//            }.store(in: &subscriptions)
-//
-//        // Since bearing smoothing is disabled it is expected that `CameraOptions.bearing`, which was
-//        // returned from the `ViewportDataSourceDelegateMock` will be `123.0`.
-//        let expectedBearing = 123.0
-//        let location = CLLocation(
-//            coordinate: CLLocationCoordinate2D(latitude: 37.769595, longitude: -122.442412),
-//            altitude: 0.0,
-//            horizontalAccuracy: 0.0,
-//            verticalAccuracy: 0.0,
-//            course: expectedBearing,
-//            speed: 0.0,
-//            timestamp: Date()
-//        )
-//        locationPublisher.send(location)
-//        let progress = await RouteProgress.mock()
-//        routeProgressPublisher.send(progress)
-//
-//        await fulfillment(of: [expectation], timeout: 1)
-//
-//        let cameraOptions = options?.followingCamera
-//        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
-//    }
+        let expectedCenterCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.center = expectedCenterCoordinate
+
+        let expectedZoom: CGFloat = 11.1
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.zoom = expectedZoom
+
+        let expectedBearing = 22.2
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.bearing = expectedBearing
+
+        let expectedPitch: CGFloat = 33.3
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.pitch = expectedPitch
+
+        let expectedPadding = UIEdgeInsets(top: 1.0, left: 2.0, bottom: 3.0, right: 4.0)
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.padding = expectedPadding
+
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        let expectation = XCTestExpectation(description: "Camera options expectation.")
+        var options: NavigationCameraOptions?
+        navigationViewportDataSource.navigationCameraOptions
+            .dropFirst()
+            .sink { navigationCameraOptions in
+                options = navigationCameraOptions
+                expectation.fulfill()
+            }.store(in: &subscriptions)
+
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        locationPublisher.send(location)
+        var progress = await RouteProgress.mock()
+        let status = NavigationStatus.mock(stepIndex: 1)
+        progress.update(using: status)
+        routeProgressPublisher.send(progress)
+
+        await fulfillment(of: [expectation], timeout: 1)
+
+        let cameraOptions = options?.followingCamera
+        XCTAssertEqual(cameraOptions?.center, expectedCenterCoordinate, "Center coordinates should be equal.")
+        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
+        XCTAssertEqual(cameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
+        XCTAssertEqual(cameraOptions?.padding, expectedPadding, "Paddings should be equal.")
+    }
+
+    @MainActor
+    func testFollowingCameraModificationsDisabled() async {
+        // Create new `NavigationViewportDataSource` instance, which listens to the
+        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
+        // active guidance navigation.
+        let navigationViewportDataSource = MobileViewportDataSource(navigationMapView.mapView)
+
+        // Some camera related modifications disabled while others not. It is expected that `CameraOptions` should
+        // still have non-nil default values after the progress update. Camera related properties with disabled
+        // modifications should also keep default value unchanged.
+        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = true
+        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = true
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = true
+
+        let expectedZoom: CGFloat = 11.1
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.zoom = expectedZoom
+
+        let expectedBearing = 22.2
+        navigationViewportDataSource.currentNavigationCameraOptions.followingCamera.bearing = expectedBearing
+
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        let expectation = XCTestExpectation(description: "Camera options expectation.")
+        var options: NavigationCameraOptions?
+        navigationViewportDataSource.navigationCameraOptions
+            .dropFirst()
+            .sink { navigationCameraOptions in
+                options = navigationCameraOptions
+                expectation.fulfill()
+            }.store(in: &subscriptions)
+
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        locationPublisher.send(location)
+        var progress = await RouteProgress.mock()
+        let status = NavigationStatus.mock(stepIndex: 1)
+        progress.update(using: status)
+        routeProgressPublisher.send(progress)
+
+        await fulfillment(of: [expectation], timeout: 1)
+
+        let cameraOptions = options?.followingCamera
+        XCTAssertNotNil(cameraOptions?.center, "Center coordinates should be valid.")
+        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
+        XCTAssertNotNil(cameraOptions?.pitch, "Pitches should be valid.")
+        XCTAssertNotNil(cameraOptions?.padding, "Paddings should be valid.")
+    }
+
+    @MainActor
+    func testBearingSmoothingIsDisabled() async {
+        guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? MobileViewportDataSource else {
+            XCTFail("Should have mobile viewportDataSource")
+            return
+        }
+
+        // Make sure that bearing smoothing is enabled by default.
+        XCTAssertTrue(
+            navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled,
+            "Bearing smoothing should be enabled by default."
+        )
+
+        navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled = false
+
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+
+        let expectation = XCTestExpectation(description: "Camera options expectation.")
+        var options: NavigationCameraOptions?
+        navigationViewportDataSource.navigationCameraOptions
+            .dropFirst()
+            .sink { navigationCameraOptions in
+                options = navigationCameraOptions
+                expectation.fulfill()
+            }.store(in: &subscriptions)
+
+        // Since bearing smoothing is disabled it is expected that `CameraOptions.bearing`, which was
+        // returned from the `ViewportDataSourceDelegateMock` will be `123.0`.
+        let expectedBearing = 123.0
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 37.769595, longitude: -122.442412),
+            altitude: 0.0,
+            horizontalAccuracy: 0.0,
+            verticalAccuracy: 0.0,
+            course: expectedBearing,
+            speed: 0.0,
+            timestamp: Date()
+        )
+        locationPublisher.send(location)
+        let progress = await RouteProgress.mock()
+        routeProgressPublisher.send(progress)
+
+        await fulfillment(of: [expectation], timeout: 1)
+
+        let cameraOptions = options?.followingCamera
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
+    }
 
     @MainActor
     func testRunningAnimators() {
