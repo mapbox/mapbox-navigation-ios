@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### CarPlay
+
+* Corrected map camera state to be `.following` (re-centered) after navigation session ends.
+
 ## 3.24.1
 
 ### Packaging

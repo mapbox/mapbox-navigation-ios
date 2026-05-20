@@ -940,6 +940,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
                 }
 
                 removeRoutesFromMap()
+                // For browsing map view resetting camera state to .following so that when navigation ends
+                // (and carPlayNavigationViewController is dismissed) the camera will be already in the correct state.
+                carPlayMapViewController.navigationMapView.update(navigationCameraState: .following)
             }
         }
     }
