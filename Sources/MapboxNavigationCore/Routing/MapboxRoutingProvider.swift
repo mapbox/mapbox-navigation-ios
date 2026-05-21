@@ -134,7 +134,12 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
         let (result, origin) = await withCheckedContinuation { continuation in
             let getRouteOptions = GetRouteOptions(timeoutSeconds: nil)
-            let getRouteSignature = GetRouteSignature(reason: .newRoute, origin: .platformSDK, comment: "")
+            let getRouteSignature = GetRouteSignature(
+                reason: .newRoute,
+                origin: .platformSDK,
+                comment: "",
+                operationId: nil
+            )
 
             if options is MatchOptions {
                 _ = routerClient.getRouteMapMatchedFor(
