@@ -62,27 +62,27 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
 
     // MARK: Refresh after reroute
 
-    func DISABLED_testRouteRefreshAfterRerouteWithDrivingTrafficProfile() async {
+    func testRouteRefreshAfterRerouteWithDrivingTrafficProfile() async {
         await simulateAndTestOffRoute(with: .automobileAvoidingTraffic, shouldRefresh: true)
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfile() async {
+    func testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfile() async {
         await simulateAndTestOffRoute(with: customDrivingTraffic, shouldRefresh: true)
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithDrivingProfile() async {
+    func testRouteRefreshAfterRerouteWithDrivingProfile() async {
         await simulateAndTestOffRoute(with: .automobile, shouldRefresh: false)
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithWalkingProfile() async {
+    func testRouteRefreshAfterRerouteWithWalkingProfile() async {
         await simulateAndTestOffRoute(with: .walking, shouldRefresh: false)
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithCyclingProfile() async {
+    func testRouteRefreshAfterRerouteWithCyclingProfile() async {
         await simulateAndTestOffRoute(with: .cycling, shouldRefresh: false)
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithDrivingTrafficProfileAndCustomParameter() async {
+    func testRouteRefreshAfterRerouteWithDrivingTrafficProfileAndCustomParameter() async {
         await simulateAndTestOffRoute(
             with: .automobileAvoidingTraffic,
             shouldRefresh: true,
@@ -90,7 +90,7 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         )
     }
 
-    func DISABLED_testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfileAndCustomParameter() async {
+    func testRouteRefreshAfterRerouteWithCustomDrivingTrafficProfileAndCustomParameter() async {
         await simulateAndTestOffRoute(
             with: customDrivingTraffic,
             shouldRefresh: true,
