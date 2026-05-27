@@ -190,6 +190,22 @@ public actor MapboxCopilot {
         return await handleHistoryDump(for: immutableSession, removesHistoryDump: removesHistoryDump)
     }
 
+    @_spi(MapboxInternal)
+    @discardableResult
+    public func dumpNavigationSession() async throws -> URL? {
+        guard var session = currentSession else {
+            return nil
+        }
+        let dump = await historyProvider.dumpHistoryAsync()
+        guard case .success = dump else {
+            return nil
+        }
+        await updateSession(&session, with: dump)
+        let result = await manager.complete(session, removesHistoryDump: false)
+        await historyProvider.startRecording()
+        return result
+    }
+
     public func reportSearchResults(_ event: NavigationHistoryEvents.SearchResults) throws {
         try eventsController.reportSearchResults(event)
     }
