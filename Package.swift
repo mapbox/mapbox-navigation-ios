@@ -2,6 +2,14 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import Foundation
+
+let roadCamerasEnabled = FileManager.default
+    .fileExists(atPath: FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".mapbox-navigation-ios.navigation_sdks_private_beta")
+        .path
+    )
 
 let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.24.3", "32c52fcf87b7db5667738f4acabdf53985558ef1bed2859aa0a39a7aeef3f614", "d6afbe908c82d45b0e2d754c530497a7b6a9c015")
 let mapsVersion: Version = "11.24.3"
@@ -26,12 +34,6 @@ let package = Package(
             targets: ["MapboxDirections"]
         ),
         .library(
-            name: "MapboxNavigationCppRoadCameras",
-            targets: [
-                "MapboxNavigationCppRoadCameras",
-            ]
-        ),
-        .library(
             name: "_MapboxNavigationLocalization",
             targets: ["_MapboxNavigationLocalization"]
         ),
@@ -42,16 +44,15 @@ let package = Package(
         .executable(
             name: "mapbox-directions-swift",
             targets: ["MapboxDirectionsCLI"]),
-    ],
+    ].updatedWithBetaFeatures(),
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
-        .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
-    ],
+    ].updatedWithBetaFeatures(),
     targets: [
         .target(
             name: "MapboxNavigationUIKit",
@@ -87,13 +88,6 @@ let package = Package(
             name: "MapboxDirections",
             dependencies: [
                 .product(name: "Turf", package: "turf-swift"),
-            ]
-        ),
-        .target(
-            name: "MapboxNavigationCppRoadCameras",
-            dependencies: [
-                .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
-                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
             ]
         ),
 
@@ -181,5 +175,54 @@ let package = Package(
                 "MapboxDirections",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]),
-    ]
+    ].updatedWithBetaFeatures()
 )
+
+// MARK: - Beta
+
+extension [PackageDescription.Product] {
+    func updatedWithBetaFeatures() -> Self {
+        var products = self
+        if roadCamerasEnabled {
+            products.append(
+                .library(
+                    name: "MapboxNavigationCppRoadCameras",
+                    targets: [
+                        "MapboxNavigationCppRoadCameras",
+                    ]
+                ),
+            )
+        }
+        return products
+    }
+}
+
+extension [PackageDescription.Target] {
+    func updatedWithBetaFeatures() -> Self {
+        var targets = self
+        if roadCamerasEnabled {
+            targets.append(
+                .target(
+                    name: "MapboxNavigationCppRoadCameras",
+                    dependencies: [
+                        .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
+                        .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
+                    ]
+                )
+            )
+        }
+        return targets
+    }
+}
+
+extension [PackageDescription.Package.Dependency] {
+    func updatedWithBetaFeatures() -> Self {
+        var dependencies = self
+        if roadCamerasEnabled {
+            dependencies.append(
+                .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
+            )
+        }
+        return dependencies
+    }
+}
