@@ -221,41 +221,77 @@ open class CarPlayNavigationViewController: UIViewController {
 
     private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var safeLeadingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var topSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var widthSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var heightSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var speedLimitViewContainer: UIView!
+    private var areCarPlayControlsVisible = false {
+        didSet {
+            updateSpeedLimitViewVisibility()
+        }
+    }
+
+    private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
+    private var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
 
     private var safeTrailingCompassViewConstraint: NSLayoutConstraint!
-    private var trailingCompassViewConstraint: NSLayoutConstraint!
+    private var safeLeadingCompassViewConstraint: NSLayoutConstraint!
 
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
         view.addSubview(compassView)
 
-        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
+        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 5).isActive = true
         safeTrailingCompassViewConstraint = compassView.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
-            constant: -8
+            constant: -4
         )
-        trailingCompassViewConstraint = compassView.trailingAnchor.constraint(
-            equalTo: view.trailingAnchor,
-            constant: -8
+        safeLeadingCompassViewConstraint = compassView.leadingAnchor.constraint(
+            equalTo: view.safeLeadingAnchor,
+            constant: 4
         )
         self.compassView = compassView
 
+        let speedLimitViewContainer = UIView()
+        speedLimitViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        speedLimitViewContainer.isHidden = true
+        view.addSubview(speedLimitViewContainer)
+
         let speedLimitView = SpeedLimitView()
         speedLimitView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(speedLimitView)
+        speedLimitViewContainer.addSubview(speedLimitView)
 
-        speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
-        safeTrailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(
+        let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
+        topSpeedLimitViewConstraint = speedLimitViewContainer.topAnchor.constraint(
+            equalTo: view.safeTopAnchor,
+            constant: layout.topPadding
+        )
+        safeTrailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
-            constant: -8
+            constant: -layout.sidePadding
         )
-        trailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(
+        trailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.trailingAnchor,
-            constant: -8
+            constant: -layout.sidePadding
         )
-        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        safeLeadingSpeedLimitViewConstraint = speedLimitViewContainer.leadingAnchor.constraint(
+            equalTo: view.safeLeadingAnchor,
+            constant: layout.sidePadding
+        )
+        widthSpeedLimitViewConstraint = speedLimitViewContainer.widthAnchor
+            .constraint(equalToConstant: layout.size.width)
+        heightSpeedLimitViewConstraint = speedLimitViewContainer.heightAnchor
+            .constraint(equalToConstant: layout.size.height)
+        speedLimitView.pinInSuperview()
 
+        NSLayoutConstraint.activate([
+            topSpeedLimitViewConstraint,
+            widthSpeedLimitViewConstraint,
+            heightSpeedLimitViewConstraint,
+        ])
+
+        self.speedLimitViewContainer = speedLimitViewContainer
         self.speedLimitView = speedLimitView
 
         let wayNameView: WayNameView = .forAutoLayout()
@@ -272,6 +308,38 @@ open class CarPlayNavigationViewController: UIViewController {
         ])
 
         self.wayNameView = wayNameView
+    }
+
+    func updateSpeedLimitViewVisibility() {
+        guard isViewLoaded, let speedLimitViewContainer else { return }
+
+        speedLimitViewVisibilityCoordinator.update(speedLimitViewContainer: speedLimitViewContainer) { [weak self] in
+            guard let self, let navigationMapView else { return true }
+
+            return CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
+                activity: mapTemplate.currentActivity,
+                cameraState: navigationMapView.navigationCamera.currentCameraState,
+                areCarPlayControlsVisible: areCarPlayControlsVisible,
+                isCameraRecenterOffered: false
+            )
+        }
+    }
+
+    func updateSpeedLimitViewLayout() {
+        let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
+        topSpeedLimitViewConstraint.constant = layout.topPadding
+        safeTrailingSpeedLimitViewConstraint.constant = -layout.sidePadding
+        trailingSpeedLimitViewConstraint.constant = -layout.sidePadding
+        safeLeadingSpeedLimitViewConstraint.constant = layout.sidePadding
+        widthSpeedLimitViewConstraint.constant = layout.size.width
+        heightSpeedLimitViewConstraint.constant = layout.size.height
+    }
+
+    func updateCarPlayControlsVisibility() {
+        areCarPlayControlsVisible = CarPlayUtilities.carPlayControlsAreVisible(
+            for: view.safeAreaInsets,
+            baseline: safeAreaInsetsBaseline
+        )
     }
 
     func setupStyleManager() {
@@ -563,6 +631,7 @@ open class CarPlayNavigationViewController: UIViewController {
         setupOrnaments()
         setupNavigationMapView()
         setupStyleManager()
+        updateCarPlayControlsVisibility()
 
         observeNotifications()
         core.tripSession().startActiveGuidance(with: navigationRoutes, startLegIndex: 0)
@@ -594,6 +663,9 @@ open class CarPlayNavigationViewController: UIViewController {
         // Trigger update of view constraints to correctly position views like `SpeedLimitView` and
         // `CarPlayCompassView`.
         view.setNeedsUpdateConstraints()
+        // Learn the persistent side inset, such as the CarPlay apps panel, before detecting transient controls.
+        safeAreaInsetsBaseline.update(with: view.safeAreaInsets)
+        updateCarPlayControlsVisibility()
     }
 
     func applyStyleIfNeeded(_ contentStyle: CPContentStyle) {
@@ -605,26 +677,28 @@ open class CarPlayNavigationViewController: UIViewController {
     }
 
     override public func updateViewConstraints() {
-        // Since there is no ability to detect current driving side mode of the CarPlay head-unit,
-        // two separate `NSLayoutConstraint` objects are used to prevent `SpeedLimitView` and
-        // `CarPlayCompassView` disappearance:
-        // - first one is used when driving on the right side of the road, in this case guidance and trip
-        // estimate panels will be on the right.
-        // - second one is used when driving on the left side of the road, in this case guidance and trip
-        // estimate panels will be on the left.
-        // Similar check is performed in `CarPlayMapViewController`.
-        if view.safeAreaInsets.right > 38.0 {
+        // Place the speed-limit view with the CarPlay map buttons, and keep the compass on the opposite side.
+        // While the baseline is still settling, current asymmetric safe-area insets provide the initial side.
+        switch safeAreaInsetsBaseline.mapButtonsPlacement(for: view.safeAreaInsets) {
+        case .leading:
+            safeLeadingCompassViewConstraint.isActive = false
             safeTrailingCompassViewConstraint.isActive = true
-            trailingCompassViewConstraint.isActive = false
 
-            safeTrailingSpeedLimitViewConstraint.isActive = true
-            trailingSpeedLimitViewConstraint.isActive = false
-        } else {
-            safeTrailingCompassViewConstraint.isActive = false
-            trailingCompassViewConstraint.isActive = true
-
+            safeLeadingSpeedLimitViewConstraint.isActive = true
             safeTrailingSpeedLimitViewConstraint.isActive = false
-            trailingSpeedLimitViewConstraint.isActive = true
+            trailingSpeedLimitViewConstraint.isActive = false
+        case .trailing:
+            safeLeadingCompassViewConstraint.isActive = true
+            safeTrailingCompassViewConstraint.isActive = false
+
+            safeLeadingSpeedLimitViewConstraint.isActive = false
+            if CarPlayUtilities.usesSafeTrailingConstraint(for: view.safeAreaInsets) {
+                safeTrailingSpeedLimitViewConstraint.isActive = true
+                trailingSpeedLimitViewConstraint.isActive = false
+            } else {
+                safeTrailingSpeedLimitViewConstraint.isActive = false
+                trailingSpeedLimitViewConstraint.isActive = true
+            }
         }
 
         super.updateViewConstraints()
@@ -758,7 +832,11 @@ open class CarPlayNavigationViewController: UIViewController {
         }
 
         if let speedLimitView {
-            speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
+            let signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
+            if speedLimitView.signStandard != signStandard {
+                speedLimitView.signStandard = signStandard
+                updateSpeedLimitViewLayout()
+            }
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
             speedLimitView.currentSpeed = location.speed
         }

@@ -416,6 +416,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
     }
 
+    @MainActor
     func testDoNotDismissPanningInterfaceIfNoCurrentActivity() {
         let mapTemplate = CPMapTemplate()
         carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)

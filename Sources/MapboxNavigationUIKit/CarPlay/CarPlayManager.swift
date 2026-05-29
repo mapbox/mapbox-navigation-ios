@@ -156,6 +156,16 @@ public class CarPlayManager: NSObject {
     }
 
     @MainActor
+    private func setCurrentActivity(_ currentActivity: CarPlayActivity?) {
+        self.currentActivity = currentActivity
+        if let carPlayNavigationViewController {
+            carPlayNavigationViewController.updateSpeedLimitViewVisibility()
+            return
+        }
+        carPlayMapViewController?.currentActivity = currentActivity
+    }
+
+    @MainActor
     func navigationCameraStateDidChange(_ state: NavigationCameraState) {
         switch state {
         case .idle:
@@ -164,6 +174,12 @@ public class CarPlayManager: NSObject {
             carPlayMapViewController?.recenterButton.isHidden = true
         case .overview:
             break
+        }
+
+        if let carPlayNavigationViewController {
+            carPlayNavigationViewController.updateSpeedLimitViewVisibility()
+        } else {
+            carPlayMapViewController?.updateSpeedLimitViewVisibility()
         }
 
         let traitCollection: UITraitCollection
@@ -408,7 +424,7 @@ extension CarPlayManager {
         window.rootViewController = carPlayMapViewController
         carWindow = window
 
-        let mapTemplate = previewMapTemplate()
+        let mapTemplate = browseAndFreeDriveMapTemplate()
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)
 
@@ -437,12 +453,13 @@ extension CarPlayManager {
     }
 
     @MainActor
-    func previewMapTemplate() -> CPMapTemplate {
+    func browseAndFreeDriveMapTemplate() -> CPMapTemplate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
         let currentActivity: CarPlayActivity = .browsing
         mapTemplate.currentActivity = currentActivity
+        setCurrentActivity(currentActivity)
 
         guard let carPlayMapViewController else { return mapTemplate }
 
@@ -534,11 +551,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
                 carPlayMapViewController.recenterButton.isHidden = true
             }
 
-            if let currentActivity = template.currentActivity {
-                self.currentActivity = currentActivity
-            } else {
-                self.currentActivity = nil
-            }
+            self.setCurrentActivity(template.currentActivity)
         }
     }
 
@@ -696,6 +709,7 @@ extension CarPlayManager {
         if configuration.popToRoot {
             _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
         }
+        setCurrentActivity(mainMapTemplate?.currentActivity ?? .browsing)
         navigationMapView?.navigationCamera.update(cameraState: .following)
         delegate?.carPlayManagerDidCancelPreview(self)
     }
@@ -756,6 +770,7 @@ extension CarPlayManager {
 
         fetchedSearchResults = searchResults
         _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: false)
+        setCurrentActivity(.previewing)
         try await interfaceController.pushTemplate(template, animated: true)
 
         carPlayMapViewController?.showSearchResultsAnnotations(with: searchResults, selectedResult: searchResults.first)
@@ -784,12 +799,13 @@ extension CarPlayManager {
         previewMapTemplate.backButton = defaultTripPreviewBackButton()
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
 
-        if currentActivity == .previewing {
+        let wasPreviewing = currentActivity == .previewing
+        setCurrentActivity(.previewing)
+
+        if wasPreviewing {
             try await interfaceController.popTemplate(animated: false)
-            try await interfaceController.pushTemplate(previewMapTemplate, animated: false)
-        } else {
-            try await interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
+        try await interfaceController.pushTemplate(previewMapTemplate, animated: !wasPreviewing)
     }
 
     func removeRoutesFromMap() {
@@ -904,6 +920,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         clearMapAnnotations()
 
         mapTemplate.hideTripPreviews()
+        setCurrentActivity(.navigating)
 
         popToRootTemplate(interfaceController: interfaceController, animated: false) { [self] _, _ in
             let navigationMapTemplate = navigationMapTemplate()
@@ -1050,7 +1067,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         mapTemplate.currentActivity = currentActivity
-        self.currentActivity = currentActivity
+        setCurrentActivity(currentActivity)
 
         // Whenever panning interface is shown (either in preview mode or during active navigation),
         // user should be given an opportunity to update buttons in `CPMapTemplate`.
@@ -1097,12 +1114,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let currentActivity = mapTemplate.previousActivity else { return }
-        mapTemplate.currentActivity = currentActivity
-        self.currentActivity = currentActivity
+        Task { @MainActor in
+            guard let currentActivity = mapTemplate.previousActivity else { return }
+            mapTemplate.currentActivity = currentActivity
+            setCurrentActivity(currentActivity)
 
-        updateNavigationButtons(for: mapTemplate)
-        delegate?.carPlayManager(self, didDismissPanningInterface: mapTemplate)
+            updateNavigationButtons(for: mapTemplate)
+            delegate?.carPlayManager(self, didDismissPanningInterface: mapTemplate)
+        }
     }
 
     public func mapTemplate(
@@ -1368,7 +1387,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         mainMapTemplate = nil
 
         // Then (re-)create and assign new map template
-        let mapTemplate = previewMapTemplate()
+        let mapTemplate = browseAndFreeDriveMapTemplate()
         mainMapTemplate = mapTemplate
 
         setRootTemplate(
@@ -1627,7 +1646,7 @@ extension CarPlayManager {
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window
-        let mapTemplate = previewMapTemplate()
+        let mapTemplate = browseAndFreeDriveMapTemplate()
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)
 

@@ -92,7 +92,9 @@ public class SpeedLimitView: UIView {
     }
 
     var canDraw: Bool {
-        return !isAlwaysHidden && signStandard != nil && (speedLimit != nil || shouldShowUnknownSpeedLimit)
+        return !isAlwaysHidden
+            && signStandard != nil
+            && (speedLimit != nil || shouldShowUnknownSpeedLimit)
     }
 
     func update() {

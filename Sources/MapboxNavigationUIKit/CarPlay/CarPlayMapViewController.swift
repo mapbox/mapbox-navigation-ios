@@ -72,6 +72,7 @@ open class CarPlayMapViewController: UIViewController {
 
         let bundle = Bundle.mapboxNavigation
         recenter.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
+        recenter.isHidden = true
 
         return recenter
     }()
@@ -185,6 +186,25 @@ open class CarPlayMapViewController: UIViewController {
 
     private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var safeLeadingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var topSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var widthSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var heightSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var speedLimitViewContainer: UIView!
+    private var areCarPlayControlsVisible = false {
+        didSet {
+            updateSpeedLimitViewVisibility()
+        }
+    }
+
+    private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
+    private var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
+
+    var currentActivity: CarPlayActivity? {
+        didSet {
+            updateSpeedLimitViewVisibility()
+        }
+    }
 
     // MARK: Initialization Methods
 
@@ -269,23 +289,78 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     func setupSpeedLimitView() {
+        let speedLimitViewContainer = UIView()
+        speedLimitViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        speedLimitViewContainer.isHidden = true
+        view.addSubview(speedLimitViewContainer)
+
         let speedLimitView = SpeedLimitView()
         speedLimitView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(speedLimitView)
+        speedLimitViewContainer.addSubview(speedLimitView)
 
-        speedLimitView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
-        safeTrailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(
+        let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
+        topSpeedLimitViewConstraint = speedLimitViewContainer.topAnchor.constraint(
+            equalTo: view.safeTopAnchor,
+            constant: layout.topPadding
+        )
+        safeTrailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
-            constant: -8
+            constant: -layout.sidePadding
         )
-        trailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(
+        trailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.trailingAnchor,
-            constant: -8
+            constant: -layout.sidePadding
         )
-        speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        safeLeadingSpeedLimitViewConstraint = speedLimitViewContainer.leadingAnchor.constraint(
+            equalTo: view.safeLeadingAnchor,
+            constant: layout.sidePadding
+        )
+        widthSpeedLimitViewConstraint = speedLimitViewContainer.widthAnchor
+            .constraint(equalToConstant: layout.size.width)
+        heightSpeedLimitViewConstraint = speedLimitViewContainer.heightAnchor
+            .constraint(equalToConstant: layout.size.height)
+        speedLimitView.pinInSuperview()
 
+        NSLayoutConstraint.activate([
+            topSpeedLimitViewConstraint,
+            widthSpeedLimitViewConstraint,
+            heightSpeedLimitViewConstraint,
+        ])
+
+        self.speedLimitViewContainer = speedLimitViewContainer
         self.speedLimitView = speedLimitView
+    }
+
+    func updateSpeedLimitViewLayout() {
+        let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
+        topSpeedLimitViewConstraint.constant = layout.topPadding
+        safeTrailingSpeedLimitViewConstraint.constant = -layout.sidePadding
+        trailingSpeedLimitViewConstraint.constant = -layout.sidePadding
+        safeLeadingSpeedLimitViewConstraint.constant = layout.sidePadding
+        widthSpeedLimitViewConstraint.constant = layout.size.width
+        heightSpeedLimitViewConstraint.constant = layout.size.height
+    }
+
+    func updateSpeedLimitViewVisibility() {
+        guard isViewLoaded, let speedLimitViewContainer else { return }
+
+        speedLimitViewVisibilityCoordinator.update(speedLimitViewContainer: speedLimitViewContainer) { [weak self] in
+            guard let self else { return true }
+
+            return CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
+                activity: currentActivity,
+                cameraState: navigationMapView.navigationCamera.currentCameraState,
+                areCarPlayControlsVisible: areCarPlayControlsVisible,
+                isCameraRecenterOffered: !recenterButton.isHidden
+            )
+        }
+    }
+
+    func updateCarPlayControlsVisibility() {
+        areCarPlayControlsVisible = CarPlayUtilities.carPlayControlsAreVisible(
+            for: view.safeAreaInsets,
+            baseline: safeAreaInsetsBaseline
+        )
     }
 
     func setupWayNameView() {
@@ -330,7 +405,11 @@ open class CarPlayMapViewController: UIViewController {
 
     func didUpdatePassiveLocation(_ state: MapMatchingState) {
         if let speedLimitView {
-            speedLimitView.signStandard = state.speedLimit.signStandard
+            let signStandard = state.speedLimit.signStandard
+            if speedLimitView.signStandard != signStandard {
+                speedLimitView.signStandard = signStandard
+                updateSpeedLimitViewLayout()
+            }
             speedLimitView.speedLimit = state.speedLimit.value
 
             speedLimitView.currentSpeed = state.enhancedLocation.speed
@@ -367,6 +446,7 @@ open class CarPlayMapViewController: UIViewController {
         setupStyleManager()
         setupSpeedLimitView()
         setupWayNameView()
+        updateCarPlayControlsVisibility()
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -397,6 +477,9 @@ open class CarPlayMapViewController: UIViewController {
 
         // Trigger update of view constraints to correctly position views like `SpeedLimitView`.
         view.setNeedsUpdateConstraints()
+        // Learn the persistent side inset, such as the CarPlay apps panel, before detecting transient controls.
+        safeAreaInsetsBaseline.update(with: view.safeAreaInsets)
+        updateCarPlayControlsVisibility()
         guard let routes = core.tripSession().currentNavigationRoutes else {
             return
         }
@@ -414,12 +497,22 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     override public func updateViewConstraints() {
-        if view.safeAreaInsets.right > 38.0 {
-            safeTrailingSpeedLimitViewConstraint.isActive = true
-            trailingSpeedLimitViewConstraint.isActive = false
-        } else {
+        // Place the speed-limit view with the CarPlay map buttons, opposite the persistent apps panel.
+        // While the baseline is still settling, current asymmetric safe-area insets provide the initial side.
+        switch safeAreaInsetsBaseline.mapButtonsPlacement(for: view.safeAreaInsets) {
+        case .leading:
+            safeLeadingSpeedLimitViewConstraint.isActive = true
             safeTrailingSpeedLimitViewConstraint.isActive = false
-            trailingSpeedLimitViewConstraint.isActive = true
+            trailingSpeedLimitViewConstraint.isActive = false
+        case .trailing:
+            safeLeadingSpeedLimitViewConstraint.isActive = false
+            if CarPlayUtilities.usesSafeTrailingConstraint(for: view.safeAreaInsets) {
+                safeTrailingSpeedLimitViewConstraint.isActive = true
+                trailingSpeedLimitViewConstraint.isActive = false
+            } else {
+                safeTrailingSpeedLimitViewConstraint.isActive = false
+                trailingSpeedLimitViewConstraint.isActive = true
+            }
         }
 
         super.updateViewConstraints()
