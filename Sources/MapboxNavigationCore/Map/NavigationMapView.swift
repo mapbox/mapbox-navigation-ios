@@ -59,7 +59,7 @@ open class NavigationMapView: UIView {
     /// Set `NavigationMapView.useLegacyManualLayersOrderApproach`` to `false` in order to enable the declarative
     /// styling approach.
     public var automaticallySetDeclarativeMapContent: Bool {
-        get { !mapStyleManager.automaticallySetDeclarativeMapContent }
+        get { mapStyleManager.automaticallySetDeclarativeMapContent }
         set { mapStyleManager.automaticallySetDeclarativeMapContent = newValue }
     }
 

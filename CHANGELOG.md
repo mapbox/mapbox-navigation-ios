@@ -12,6 +12,10 @@
 * Corrected map camera state to be `.following` (re-centered) after navigation session ends.
 * Updated the default CarPlay speed-limit view positioning and visibility rules, including safe-area-aware layout with the compass view.
 
+### Map
+
+* Fixed `NavigationMapView.automaticallySetDeclarativeMapContent` getter returning the inverse of the actual value.
+
 ## 3.24.3
 
 ### Packaging
