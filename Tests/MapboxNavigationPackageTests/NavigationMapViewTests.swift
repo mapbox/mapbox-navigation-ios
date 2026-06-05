@@ -283,6 +283,14 @@ class NavigationMapViewTests: TestCase {
         XCTAssertFalse(mapboxMap.sourceExists(withId: annotation.source))
     }
 
+    func testAutomaticallySetDeclarativeMapContentGetterSetterConsistency() {
+        XCTAssertTrue(navigationMapView.automaticallySetDeclarativeMapContent)
+        navigationMapView.automaticallySetDeclarativeMapContent = false
+        XCTAssertFalse(navigationMapView.automaticallySetDeclarativeMapContent)
+        navigationMapView.automaticallySetDeclarativeMapContent = true
+        XCTAssertTrue(navigationMapView.automaticallySetDeclarativeMapContent)
+    }
+
     @MainActor
     private func loadJsonStyle() {
         let styleJSON = mapboxMap.mockJsonStyle()

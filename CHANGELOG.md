@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.25.0-rc.2
+
+### Map
+
+* Fixed `NavigationMapView.automaticallySetDeclarativeMapContent` getter returning the inverse of the actual value.
+
 ## 3.25.0-rc.1
 
 ### Packaging
