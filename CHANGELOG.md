@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.25.0-rc.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.25.0-rc.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.25.0-rc.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.25.0-rc.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.25.0-rc.2)
+
+### Map
+
+* Fixed `NavigationMapView.automaticallySetDeclarativeMapContent` getter returning the inverse of the actual value.
+
 ## 3.25.0-rc.1
 
 ### Packaging
@@ -11,10 +22,6 @@
 
 * Corrected map camera state to be `.following` (re-centered) after navigation session ends.
 * Updated the default CarPlay speed-limit view positioning and visibility rules, including safe-area-aware layout with the compass view.
-
-### Map
-
-* Fixed `NavigationMapView.automaticallySetDeclarativeMapContent` getter returning the inverse of the actual value.
 
 ## 3.24.3
 
