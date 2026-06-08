@@ -24,6 +24,8 @@ final class Navigation: ObservableObject {
     private let core: MapboxNavigation
     private var cancellables = Set<AnyCancellable>()
 
+    var routeRefreshing: AnyPublisher<RefreshingStatus, Never> { core.navigation().routeRefreshing }
+
     init() {
         let config = CoreConfig(
             credentials: .init(), // You can pass a custom token if you need to,

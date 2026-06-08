@@ -194,6 +194,7 @@ open class NavigationView: UIView {
         case createNew(
             location: AnyPublisher<CLLocation, Never>,
             routeProgress: AnyPublisher<RouteProgress?, Never>,
+            routeRefreshing: AnyPublisher<RefreshingStatus, Never>? = nil,
             heading: AnyPublisher<CLHeading, Never>? = nil,
             predictiveCacheManager: PredictiveCacheManager? = nil
         )
@@ -209,14 +210,25 @@ open class NavigationView: UIView {
         mapViewConfiguration: MapViewConfiguration
     ) {
         switch mapViewConfiguration {
-        case .createNew(let location, let routeProgress, let heading, let predictiveCacheManager):
-            self.navigationMapView = NavigationMapView(
-                location: location,
-                routeProgress: routeProgress,
-                navigationCameraType: .mobile,
-                heading: heading,
-                predictiveCacheManager: predictiveCacheManager
-            )
+        case .createNew(let location, let routeProgress, let routeRefreshing, let heading, let predictiveCacheManager):
+            if let routeRefreshing {
+                self.navigationMapView = NavigationMapView(
+                    location: location,
+                    routeProgress: routeProgress,
+                    routeRefreshing: routeRefreshing,
+                    navigationCameraType: .mobile,
+                    heading: heading,
+                    predictiveCacheManager: predictiveCacheManager
+                )
+            } else {
+                self.navigationMapView = NavigationMapView(
+                    location: location,
+                    routeProgress: routeProgress,
+                    navigationCameraType: .mobile,
+                    heading: heading,
+                    predictiveCacheManager: predictiveCacheManager
+                )
+            }
         case .existing(let navigationMapView):
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
             self.navigationMapView = navigationMapView

@@ -55,6 +55,7 @@ final class CustomFinalWaypointController: UIViewController {
             routeProgress: mapboxNavigation.navigation()
                 .routeProgress.map(\.?.routeProgress)
                 .eraseToAnyPublisher(),
+            routeRefreshing: mapboxNavigation.navigation().routeRefreshing.eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
         navigationMapView.puckType = .puck2D(.navigationDefault)

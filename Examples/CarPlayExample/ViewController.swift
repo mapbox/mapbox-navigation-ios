@@ -174,6 +174,7 @@ class ViewController: UIViewController {
             navigationMapView = NavigationMapView(
                 location: navigation.locationMatching.map(\.enhancedLocation).eraseToAnyPublisher(),
                 routeProgress: navigation.routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+                routeRefreshing: navigation.routeRefreshing.eraseToAnyPublisher(),
                 heading: navigation.heading.eraseToAnyPublisher(),
                 predictiveCacheManager: navigationProvider.predictiveCacheManager
             )
@@ -318,7 +319,7 @@ class ViewController: UIViewController {
 
     // MARK: - CarPlay navigation methods
 
-    public func beginNavigationWithCarPlay(navigationRoutes: NavigationRoutes) {
+    func beginNavigationWithCarPlay(navigationRoutes: NavigationRoutes) {
         let navigationViewController = activeNavigationViewController ??
             navigationViewController(with: navigationRoutes)
 

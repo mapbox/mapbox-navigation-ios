@@ -66,6 +66,7 @@ class RouteLineLayerPositionTests: TestCase {
     var navigationMapView: NavigationMapView!
     var mapboxMap: MapboxMap!
     var routeProgressPublisher: CurrentValueSubject<RouteProgress?, Never>!
+    var routeRefreshingPublisher: PassthroughSubject<RefreshingStatus, Never>!
     var subscriptions: Set<AnyCancellable>!
 
     override func setUp() async throws {
@@ -73,6 +74,7 @@ class RouteLineLayerPositionTests: TestCase {
 
         subscriptions = []
         routeProgressPublisher = .init(nil)
+        routeRefreshingPublisher = .init()
         routes = await Fixture.navigationRoutes(from: "route-with-instructions", options: options)
         routeProgress = RouteProgress(
             navigationRoutes: routes,
@@ -89,6 +91,7 @@ class RouteLineLayerPositionTests: TestCase {
         let navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
             routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            routeRefreshing: routeRefreshingPublisher.eraseToAnyPublisher(),
             useLegacyManualLayersOrderApproach: useLegacyManualLayersOrderApproach
         )
         navigationMapView.frame = UIScreen.main.bounds

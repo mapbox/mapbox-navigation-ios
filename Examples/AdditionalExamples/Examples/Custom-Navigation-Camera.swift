@@ -84,6 +84,7 @@ final class CustomNavigationCameraViewController: UIViewController {
             location: mapboxNavigation.navigation().locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
             routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+            routeRefreshing: mapboxNavigation.navigation().routeRefreshing.eraseToAnyPublisher(),
             predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
         )
 

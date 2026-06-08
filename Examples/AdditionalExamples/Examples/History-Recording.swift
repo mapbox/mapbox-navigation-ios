@@ -84,6 +84,7 @@ final class HistoryRecordingViewController: UIViewController {
                 routeProgress: mapboxNavigation.navigation()
                     .routeProgress.map(\.?.routeProgress)
                     .eraseToAnyPublisher(),
+                routeRefreshing: mapboxNavigation.navigation().routeRefreshing.eraseToAnyPublisher(),
                 predictiveCacheManager: mapboxNavigationProvider.predictiveCacheManager
             )
         }

@@ -18,6 +18,18 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.25.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.25.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.25.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.25.0-rc.1)
 
+### API Deprecations
+
+* Deprecated `NavigationMapView.init(location:routeProgress:navigationCameraType:heading:predictiveCacheManager:) instead` in favor of `NavigationMapView.init(location:routeProgress:routeRefreshing:navigationCameraType:heading:predictiveCacheManager:) instead`.
+
+### Routing
+
+* Fixed a race condition that could cause the latest traffic information to be missing when alternative routes are available.
+
+### Map
+
+* Fixed an issue causing traffic information and ETA data in the map view to not refresh after traffic conditions changed. A new `NavigationMapView` initializer is recommended for a better fix.
+
 ### CarPlay
 
 * Corrected map camera state to be `.following` (re-centered) after navigation session ends.
