@@ -81,6 +81,11 @@ open class NavigationMapView: UIView {
     ///   - heading: A publisher that emits current user heading. Defaults to `nil.`
     ///   - predictiveCacheManager: An instance of ``PredictiveCacheManager`` used to continuously cache upcoming map
     /// tiles.
+    @available(
+        iOS,
+        deprecated: 15.0,
+        message: "Use NavigationMapView.init(location:routeProgress:routeRefreshing:navigationCameraType:heading:predictiveCacheManager:) instead"
+    )
     public convenience init(
         location: AnyPublisher<CLLocation, Never>,
         routeProgress: AnyPublisher<RouteProgress?, Never>,
@@ -88,9 +93,21 @@ open class NavigationMapView: UIView {
         heading: AnyPublisher<CLHeading, Never>? = nil,
         predictiveCacheManager: PredictiveCacheManager? = nil
     ) {
+        let routeRefreshing = routeProgress
+            .scan((RouteProgress?.none, RouteProgress?.none)) { acc, routes in
+                (acc.1, routes)
+            }
+            .compactMap { pair -> RefreshingStatus? in
+                let (previous, current) = pair
+                guard let previous, let current,
+                      previous.navigationRoutes.areRefreshed(comparedTo: current.navigationRoutes) else { return nil }
+                return RefreshingStatus(event: RefreshingStatus.Events.Refreshed())
+            }
+            .eraseToAnyPublisher()
         self.init(
             location: location,
             routeProgress: routeProgress,
+            routeRefreshing: routeRefreshing,
             navigationCameraType: navigationCameraType,
             heading: heading,
             predictiveCacheManager: predictiveCacheManager,
@@ -102,6 +119,36 @@ open class NavigationMapView: UIView {
     /// - Parameters:
     ///   - location: A publisher that emits current user location.
     ///   - routeProgress: A publisher that emits route navigation progress.
+    ///   - routeRefreshing: A publisher that emits route refresh events.
+    ///   - navigationCameraType: The type of ``NavigationCamera``. Defaults to ``NavigationCameraType/mobile``.
+    ///   which is used for the current instance of ``NavigationMapView``.
+    ///   - heading: A publisher that emits current user heading. Defaults to `nil.`
+    ///   - predictiveCacheManager: An instance of ``PredictiveCacheManager`` used to continuously cache upcoming map
+    /// tiles.
+    public convenience init(
+        location: AnyPublisher<CLLocation, Never>,
+        routeProgress: AnyPublisher<RouteProgress?, Never>,
+        routeRefreshing: AnyPublisher<RefreshingStatus, Never>,
+        navigationCameraType: NavigationCameraType = .mobile,
+        heading: AnyPublisher<CLHeading, Never>? = nil,
+        predictiveCacheManager: PredictiveCacheManager? = nil
+    ) {
+        self.init(
+            location: location,
+            routeProgress: routeProgress,
+            routeRefreshing: routeRefreshing,
+            navigationCameraType: navigationCameraType,
+            heading: heading,
+            predictiveCacheManager: predictiveCacheManager,
+            useLegacyManualLayersOrderApproach: false
+        )
+    }
+
+    /// Initializes ``NavigationMapView`` instance.
+    /// - Parameters:
+    ///   - location: A publisher that emits current user location.
+    ///   - routeProgress: A publisher that emits route navigation progress.
+    ///   - routeRefreshing: A publisher that emits route refresh events.
     ///   - navigationCameraType: The type of ``NavigationCamera``. Defaults to ``NavigationCameraType/mobile``.
     ///   which is used for the current instance of ``NavigationMapView``.
     ///   - heading: A publisher that emits current user heading. Defaults to `nil.`
@@ -113,6 +160,7 @@ open class NavigationMapView: UIView {
     public init(
         location: AnyPublisher<CLLocation, Never>,
         routeProgress: AnyPublisher<RouteProgress?, Never>,
+        routeRefreshing: AnyPublisher<RefreshingStatus, Never>,
         navigationCameraType: NavigationCameraType = .mobile,
         heading: AnyPublisher<CLHeading, Never>? = nil,
         predictiveCacheManager: PredictiveCacheManager? = nil,
@@ -146,14 +194,15 @@ open class NavigationMapView: UIView {
         setupMapView()
         observeCamera()
         enablePredictiveCaching(with: predictiveCacheManager)
-        subscribeToNavigatonUpdates(routeProgress)
+        subscribeToRouteProgressUpdates(routeProgress)
+        subscribeToRouteRefreshUpdates(routeRefreshing: routeRefreshing, routeProgress: routeProgress)
     }
 
     private var currentRouteProgress: RouteProgress?
 
     // MARK: - Initialization
 
-    private func subscribeToNavigatonUpdates(
+    private func subscribeToRouteProgressUpdates(
         _ routeProgressPublisher: AnyPublisher<RouteProgress?, Never>
     ) {
         routeProgressPublisher
@@ -193,7 +242,27 @@ open class NavigationMapView: UIView {
             .removeDuplicates { $0.legIndex == $1.legIndex }
             .sink { [weak self] _ in
                 self?.updateWaypointsVisiblity()
-            }.store(in: &lifetimeSubscriptions)
+            }
+            .store(in: &lifetimeSubscriptions)
+    }
+
+    private func subscribeToRouteRefreshUpdates(
+        routeRefreshing: AnyPublisher<RefreshingStatus, Never>,
+        routeProgress: AnyPublisher<RouteProgress?, Never>
+    ) {
+        var latestProgress: RouteProgress?
+
+        routeProgress
+            .sink { latestProgress = $0 }
+            .store(in: &lifetimeSubscriptions)
+
+        routeRefreshing
+            .filter { $0.event is RefreshingStatus.Events.Refreshed }
+            .sink { [weak self] _ in
+                guard let self, let latestProgress else { return }
+                refreshRoutes(latestProgress)
+            }
+            .store(in: &lifetimeSubscriptions)
     }
 
     /// `PointAnnotationManager`, which is used to manage addition and removal of a final destination annotation.
@@ -700,6 +769,17 @@ open class NavigationMapView: UIView {
             config: mapStyleConfig
         )
         mapStyleManager.mapStyleDeclarativeContentUpdate()
+    }
+
+    private func refreshRoutes(_ routeProgress: RouteProgress) {
+        mapStyleManager.refreshRoutes(
+            routeProgress: routeProgress,
+            annotationKinds: routeAnnotationKinds,
+            config: mapStyleConfig,
+            routelineFeatureProvider: customRouteLineFeatureProvider,
+            routeCalloutViewProvider: routeCalloutViewProvider
+        )
+        travelAlongRouteLine(to: mapView.location.latestLocation?.coordinate)
     }
 
     // MARK: - Debug Viewport

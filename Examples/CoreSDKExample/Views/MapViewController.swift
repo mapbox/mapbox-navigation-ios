@@ -21,6 +21,7 @@ final class MapViewController: UIViewController {
         self.navigationMapView = NavigationMapView(
             location: navigation.$currentLocation.compactMap { $0 }.eraseToAnyPublisher(),
             routeProgress: navigation.$routeProgress.eraseToAnyPublisher(),
+            routeRefreshing: navigation.routeRefreshing.eraseToAnyPublisher(),
             predictiveCacheManager: navigation.predictiveCacheManager
         )
 

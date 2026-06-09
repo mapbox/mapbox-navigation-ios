@@ -12,6 +12,7 @@ class NavigationMapViewTests: TestCase {
     var navigationMapView: NavigationMapView!
     var mapboxMap: MapboxMap!
     var routeProgressPublisher: CurrentValueSubject<RouteProgress?, Never>!
+    var routeRefreshingPublisher: PassthroughSubject<RefreshingStatus, Never>!
     var subscriptions: Set<AnyCancellable>!
 
     let options: NavigationRouteOptions = .init(coordinates: [
@@ -25,10 +26,12 @@ class NavigationMapViewTests: TestCase {
         navigationRoutes = await Fixture.navigationRoutes(from: "route-with-instructions", options: options)
         subscriptions = []
         routeProgressPublisher = .init(nil)
+        routeRefreshingPublisher = .init()
 
         navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
-            routeProgress: routeProgressPublisher.eraseToAnyPublisher()
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            routeRefreshing: routeRefreshingPublisher.eraseToAnyPublisher()
         )
         navigationMapView.frame = UIScreen.main.bounds
         guard let mapboxMap = navigationMapView.mapView.mapboxMap else {
@@ -192,6 +195,7 @@ class NavigationMapViewTests: TestCase {
         let navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
             routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            routeRefreshing: routeRefreshingPublisher.eraseToAnyPublisher(),
             navigationCameraType: .carPlay
         )
         XCTAssertTrue(navigationMapView.navigationCamera.viewportDataSource is CarPlayViewportDataSource)
@@ -202,6 +206,7 @@ class NavigationMapViewTests: TestCase {
         navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
             routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            routeRefreshing: routeRefreshingPublisher.eraseToAnyPublisher(),
             predictiveCacheManager: spy
         )
         XCTAssertEqual(spy.passedMapView, navigationMapView.mapView)

@@ -18,7 +18,8 @@ final class CustomRouteCalloutsViewController: UIViewController {
         navigationMapView = .init(
             location: mapboxNavigation.navigation().locationMatching.map(\.enhancedLocation)
                 .eraseToAnyPublisher(),
-            routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher()
+            routeProgress: mapboxNavigation.navigation().routeProgress.map(\.?.routeProgress).eraseToAnyPublisher(),
+            routeRefreshing: mapboxNavigation.navigation().routeRefreshing
         )
 
         // Experimental API needs to be enabled, so that custom route callout

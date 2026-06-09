@@ -754,6 +754,7 @@ final class MapboxNavigator: @unchecked Sendable {
     private var rerouteController: RerouteController?
 
     let state = NavigatorState()
+    private let refreshQueue = SerialTaskQueue()
 
     private let locationClient: LocationClient
     private var statusTask: Task<Void, Never>?
@@ -1282,68 +1283,78 @@ final class MapboxNavigator: @unchecked Sendable {
         }
 
         Task {
-            guard case .activeGuidance = await currentSession.state else {
+            await refreshQueue.enqueue { [weak self] in
+                guard let self else { return }
+                await processRefreshAnnotations(
+                    refreshRouteResult: refreshRouteResult,
+                    legIndex: legIndex,
+                    currentNavigationRoutes: currentNavigationRoutes
+                )
+            }
+        }
+    }
+
+    private func processRefreshAnnotations(
+        refreshRouteResult: RouteRefreshResult,
+        legIndex: UInt32,
+        currentNavigationRoutes: NavigationRoutes
+    ) async {
+        guard case .activeGuidance = await currentSession.state else { return }
+
+        await send(RefreshingStatus(event: RefreshingStatus.Events.Refreshing()))
+
+        var refreshedNavigationRoutes = currentNavigationRoutes
+        let directionsOptionsType = currentNavigationRoutes.mainRoute.requestOptions.directionsOptionsType
+
+        switch refreshRouteResult {
+        case .mainRoute(let refreshedMainRoute):
+            guard let updatedMainRoute = await NavigationRoute(
+                nativeRoute: refreshedMainRoute,
+                directionsOptionsType: directionsOptionsType
+            ) else {
+                await sendFailedToRefreshEvent()
                 return
             }
+            refreshedNavigationRoutes.mainRoute = updatedMainRoute
 
-            let event = RefreshingStatus.Events.Refreshing()
-            await send(RefreshingStatus(event: event))
-
-            var refreshedNavigationRoutes = currentNavigationRoutes
-            let directionsOptionsType = currentNavigationRoutes.mainRoute.requestOptions.directionsOptionsType
-
-            switch refreshRouteResult {
-            case .mainRoute(let refreshedMainRoute):
-                guard let updatedMainRoute = await NavigationRoute(
-                    nativeRoute: refreshedMainRoute,
-                    directionsOptionsType: directionsOptionsType
-                )
-                else {
-                    await sendFailedToRefreshEvent()
-                    return
-                }
-                refreshedNavigationRoutes.mainRoute = updatedMainRoute
-
-            case .alternativeRoute(alternative: let refreshedAlternative):
-                let nativeRoute = refreshedAlternative.route
-                guard let requestOptions = nativeRoute.getResponseOptions(directionsOptionsType) ??
-                    nativeRoute.getResponseOptions(RouteOptions.self),
-                    let newAlternative = await AlternativeRoute(
-                        mainRoute: currentNavigationRoutes.mainRoute.route,
-                        nativeRouteAlternative: refreshedAlternative,
-                        requestOptions: requestOptions
-                    ), let index = currentNavigationRoutes.allAlternativeRoutesWithIgnored
-                        .firstIndex(where: { $0.nativeRoute.getRouteId() == refreshedAlternative.route.getRouteId() })
-                else {
-                    await sendFailedToRefreshEvent()
-                    return
-                }
-                refreshedNavigationRoutes.allAlternativeRoutesWithIgnored[index] = newAlternative
+        case .alternativeRoute(alternative: let refreshedAlternative):
+            let nativeRoute = refreshedAlternative.route
+            guard let requestOptions = nativeRoute.getResponseOptions(directionsOptionsType) ??
+                nativeRoute.getResponseOptions(RouteOptions.self),
+                let newAlternative = await AlternativeRoute(
+                    mainRoute: currentNavigationRoutes.mainRoute.route,
+                    nativeRouteAlternative: refreshedAlternative,
+                    requestOptions: requestOptions
+                ), let index = currentNavigationRoutes.allAlternativeRoutesWithIgnored
+                    .firstIndex(where: { $0.nativeRoute.getRouteId() == refreshedAlternative.route.getRouteId() })
+            else {
+                await sendFailedToRefreshEvent()
+                return
             }
-
-            if let status = self.navigator.mostRecentNavigationStatus {
-                refreshedNavigationRoutes.updateForkPointPassed(with: status)
-            }
-            let routeProgress = await state.privateRouteProgress
-            let refreshedMainLegIndex: Int? = switch refreshRouteResult {
-            case .mainRoute: Int(legIndex)
-            case .alternativeRoute: nil
-            }
-            let updatedRouteProgress = routeProgress?.refreshingRoute(
-                with: refreshedNavigationRoutes,
-                refreshedMainLegIndex: refreshedMainLegIndex,
-                // TODO: Pass legShapeIndex. NN should provide this value in `MBNNRouteRefreshObserver`
-                congestionConfiguration: configuration.congestionConfig
-            )
-            await state.update(privateRouteProgress: updatedRouteProgress)
-            await self.send(refreshedNavigationRoutes)
-
-            if let updatedRouteProgress {
-                await send(RouteProgressState(routeProgress: updatedRouteProgress))
-            }
-            let endEvent = RefreshingStatus.Events.Refreshed()
-            await send(RefreshingStatus(event: endEvent))
+            refreshedNavigationRoutes.allAlternativeRoutesWithIgnored[index] = newAlternative
         }
+
+        if let status = navigator.mostRecentNavigationStatus {
+            refreshedNavigationRoutes.updateForkPointPassed(with: status)
+        }
+        let routeProgress = await state.privateRouteProgress
+        let refreshedMainLegIndex: Int? = switch refreshRouteResult {
+        case .mainRoute: Int(legIndex)
+        case .alternativeRoute: nil
+        }
+        let updatedRouteProgress = routeProgress?.refreshingRoute(
+            with: refreshedNavigationRoutes,
+            refreshedMainLegIndex: refreshedMainLegIndex,
+            // TODO: Pass legShapeIndex. NN should provide this value in `MBNNRouteRefreshObserver`
+            congestionConfiguration: configuration.congestionConfig
+        )
+        await state.update(privateRouteProgress: updatedRouteProgress)
+        await send(refreshedNavigationRoutes)
+
+        if let updatedRouteProgress {
+            await send(RouteProgressState(routeProgress: updatedRouteProgress))
+        }
+        await send(RefreshingStatus(event: RefreshingStatus.Events.Refreshed()))
     }
 
     private func sendFailedToRefreshEvent() async {

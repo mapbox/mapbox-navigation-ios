@@ -250,6 +250,7 @@ open class CarPlayMapViewController: UIViewController {
         let navigationMapView = NavigationMapView(
             location: location,
             routeProgress: routeProgress,
+            routeRefreshing: core.navigation().routeRefreshing.eraseToAnyPublisher(),
             navigationCameraType: .carPlay
         )
 
@@ -570,7 +571,6 @@ open class CarPlayMapViewController: UIViewController {
         }
         searchResultAnnotations.removeAll()
         let searchAnnotations = records.map { record -> PointAnnotation in
-
             if record.id == selectedResult?.id {
                 var annotation = searchResultAnnotations.create(.init(searchResultRecord: record))
                 annotation.textColor = .init(.white)

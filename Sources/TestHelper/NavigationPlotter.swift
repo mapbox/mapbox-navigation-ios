@@ -210,11 +210,13 @@ public class NavigationPlotter: UIView {
 
     public var locationPublisher: PassthroughSubject<CLLocation, Never> = .init()
     public var routeProgressPublisher: CurrentValueSubject<RouteProgress?, Never> = .init(nil)
+    public var routeRefreshingPublisher: PassthroughSubject<RefreshingStatus, Never> = .init()
 
     func updateCoordinateBounds() {
         let navigationMapView = NavigationMapView(
             location: locationPublisher.eraseToAnyPublisher(),
-            routeProgress: routeProgressPublisher.eraseToAnyPublisher()
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            routeRefreshing: routeRefreshingPublisher.eraseToAnyPublisher()
         )
         navigationMapView.mapView.frame = bounds
         navigationMapView.frame = bounds

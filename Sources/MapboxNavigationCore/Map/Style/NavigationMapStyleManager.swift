@@ -262,25 +262,43 @@ final class NavigationMapStyleManager {
         )
         updateVoiceInstructions(route: routes.mainRoute.route, config: config)
 
-        if config.apiRouteCalloutViewProviderEnabled {
-            updateRouteCallouts(
-                navigationRoutes: routes,
-                config: config,
-                routeCalloutViewProvider: routeCalloutViewProvider
-            )
-        } else {
-            updateRouteAnnotations(
-                navigationRoutes: routes,
-                annotationKinds: annotationKinds,
-                config: config
-            )
-        }
+        updateCallouts(
+            routes,
+            config: config,
+            routeCalloutViewProvider: routeCalloutViewProvider,
+            annotationKinds: annotationKinds
+        )
 
         updateRouteAlertsAnnotations(
             navigationRoutes: routes,
             excludedRouteAlertTypes: config.excludedRouteAlertTypes
         )
         updateIntersectionAnnotations(routeProgress: routeProgress, config: config)
+    }
+
+    func refreshRoutes(
+        routeProgress: RouteProgress,
+        annotationKinds: Set<RouteAnnotationKind>,
+        config: MapStyleConfig,
+        routelineFeatureProvider: RouteLineFeatureProvider,
+        routeCalloutViewProvider: (any RouteCalloutViewProvider)?
+    ) {
+        defer { mapStyleDeclarativeContentUpdate() }
+
+        let routes = routeProgress.navigationRoutes
+        updateRoutes(
+            routes,
+            routeProgress: routeProgress,
+            config: config,
+            featureProvider: routelineFeatureProvider
+        )
+
+        updateCallouts(
+            routes,
+            config: config,
+            routeCalloutViewProvider: routeCalloutViewProvider,
+            annotationKinds: annotationKinds
+        )
     }
 
     func updateRouteLine(
@@ -303,6 +321,27 @@ final class NavigationMapStyleManager {
             updateArrows(routeProgress: routeProgress, config: config)
         }
         mapStyleDeclarativeContentUpdate()
+    }
+
+    func updateCallouts(
+        _ routes: NavigationRoutes,
+        config: MapStyleConfig,
+        routeCalloutViewProvider: (any RouteCalloutViewProvider)?,
+        annotationKinds: Set<RouteAnnotationKind>
+    ) {
+        if config.apiRouteCalloutViewProviderEnabled {
+            updateRouteCallouts(
+                navigationRoutes: routes,
+                config: config,
+                routeCalloutViewProvider: routeCalloutViewProvider
+            )
+        } else {
+            updateRouteAnnotations(
+                navigationRoutes: routes,
+                annotationKinds: annotationKinds,
+                config: config
+            )
+        }
     }
 
     private func updateRoutes(

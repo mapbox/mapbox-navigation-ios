@@ -712,6 +712,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let navigationMapView = NavigationMapView(
             location: location,
             routeProgress: routeProgress,
+            routeRefreshing: core.navigation().routeRefreshing.eraseToAnyPublisher(),
             navigationCameraType: .carPlay
         )
         navigationMapView.delegate = self
