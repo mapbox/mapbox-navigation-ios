@@ -38,7 +38,8 @@ class BaseIntegrationTest: BaseTestCase {
     func makeBaseCoreConfig(credentials: NavigationCoreApiConfiguration) -> CoreConfig {
         CoreConfig(
             credentials: credentials,
-            routingConfig: .init(routeRefreshPeriod: 1)
+            routingConfig: .init(routeRefreshPeriod: 1),
+            logLevel: .debug
         )
     }
 
@@ -74,6 +75,16 @@ class BaseIntegrationTest: BaseTestCase {
             .sink { _ in refreshExpectation.fulfill() }
             .store(in: &cancellables)
         refreshExpectation.isInverted = !shouldRefresh
+        return refreshExpectation
+    }
+
+    func failedRefreshExpectation(shouldFail: Bool = false) async -> XCTestExpectation {
+        let refreshExpectation = expectation(description: "Failed refresh expectation")
+        await navigationProvider.navigator().routeRefreshing
+            .filter { $0.event is RefreshingStatus.Events.FailedToRefresh }
+            .sink { _ in refreshExpectation.fulfill() }
+            .store(in: &cancellables)
+        refreshExpectation.isInverted = !shouldFail
         return refreshExpectation
     }
 

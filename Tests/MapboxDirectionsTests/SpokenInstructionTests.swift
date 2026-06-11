@@ -61,4 +61,42 @@ class SpokenInstructionTests: XCTestCase {
         )
         XCTAssertNotEqual(left, right)
     }
+
+    func testDecodingSucceeds() throws {
+        let data = try makeSpokenInstructionData()
+        XCTAssertNoThrow(try JSONDecoder().decode(SpokenInstruction.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDistanceAlongGeometry() throws {
+        let data = try makeSpokenInstructionData(overriding: ["distanceAlongGeometry": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(SpokenInstruction.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingAnnouncement() throws {
+        let data = try makeSpokenInstructionData(overriding: ["announcement": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(SpokenInstruction.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingSSMLAnnouncement() throws {
+        let data = try makeSpokenInstructionData(overriding: ["ssmlAnnouncement": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(SpokenInstruction.self, from: data))
+    }
+
+    // MARK: - Helpers
+
+    private func makeSpokenInstructionData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "distanceAlongGeometry": 100.0,
+            "announcement": "Test instruction",
+            "ssmlAnnouncement": "<speak>Test instruction</speak>",
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
 }

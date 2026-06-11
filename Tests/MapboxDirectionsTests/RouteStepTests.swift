@@ -85,6 +85,18 @@ class RoadTests: XCTestCase {
         XCTAssertEqual(r.exitCodes ?? [], ["123A", "123B"])
     }
 
+    func testDecodingWhenNameKeyIsAbsent() throws {
+        let data = "{}".data(using: .utf8)!
+        let road = try JSONDecoder().decode(Road.self, from: data)
+        XCTAssertNotNil(road)
+        XCTAssertNil(road.names)
+        XCTAssertNil(road.codes)
+        XCTAssertNil(road.exitCodes)
+        XCTAssertNil(road.destinations)
+        XCTAssertNil(road.destinationCodes)
+        XCTAssertNil(road.rotaryNames)
+    }
+
     func testDestinations() {
         var r: Road
 
@@ -385,5 +397,58 @@ class RouteStepTests: XCTestCase {
 
             XCTAssert(leg.steps.contains(where: { $0.exitIndex != nil }))
         }
+    }
+
+    func testDecodingSucceeds() throws {
+        let data = try makeRouteStepData()
+        XCTAssertNoThrow(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingManeuver() throws {
+        let data = try makeRouteStepData(overriding: ["maneuver": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDrivingSide() throws {
+        let data = try makeRouteStepData(overriding: ["driving_side": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDistance() throws {
+        let data = try makeRouteStepData(overriding: ["distance": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDuration() throws {
+        let data = try makeRouteStepData(overriding: ["duration": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingMode() throws {
+        let data = try makeRouteStepData(overriding: ["mode": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteStep.self, from: data))
+    }
+
+    // MARK: - Helpers
+
+    private func makeRouteStepData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "maneuver": [
+                "location": [0.0, 0.0],
+                "type": "depart",
+            ],
+            "driving_side": "right",
+            "distance": 10.0,
+            "duration": 5.0,
+            "mode": "driving",
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
     }
 }

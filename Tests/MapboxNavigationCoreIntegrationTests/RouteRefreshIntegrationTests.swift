@@ -1,6 +1,6 @@
 @testable import _MapboxNavigationTestHelpers
 import Combine
-import MapboxDirections
+@testable import MapboxDirections
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 import XCTest
@@ -10,13 +10,6 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
     let destination = CLLocationCoordinate2D(latitude: 40.75988085727627, longitude: -73.98039053825985)
 
     var navigationRoutes: NavigationRoutes!
-
-    @MainActor
-    override func setUp() {
-        super.setUp()
-
-        stubRouteRefreshResponse("profile-route-refresh")
-    }
 
     // MARK: Refresh
 
@@ -58,6 +51,80 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
             shouldRefresh: true,
             shouldUseCustomOptions: true
         )
+    }
+
+    func testRouteRefreshWithDrivingTrafficAndIncidents() async {
+        await simulateAndTestOnRoute(
+            with: .automobileAvoidingTraffic,
+            shouldRefresh: true,
+            routeRefreshFileName: "profile-route-refresh-incidents"
+        )
+        let navigation = await navigationProvider.navigation()
+        guard let currentRoute = await navigation.currentRouteProgress?.routeProgress.navigationRoutes.mainRoute,
+              let incidents = currentRoute.route.legs[0].incidents
+        else {
+            XCTFail("Not valid route")
+            return
+        }
+        let isoFormatter = ISO8601DateFormatter()
+        let refreshedGeometryIndex = incidents[0].shapeIndexRange.lowerBound
+        let expectedIncidents = [
+            Incident(
+                identifier: "9121656519571795",
+                type: .laneRestriction,
+                description: "Shoulder Work. Off Ramp facility",
+                creationDate: isoFormatter.date(from: "2026-05-22T13:55:19Z")!,
+                startDate: isoFormatter.date(from: "2026-05-22T00:00:00Z")!,
+                endDate: isoFormatter.date(from: "2030-06-30T07:00:00Z")!,
+                impact: .minor,
+                subtype: nil,
+                subtypeDescription: nil,
+                alertCodes: [520],
+                lanesBlocked: BlockedLanes(descriptions: ["LEFT"]),
+                shapeIndexRange: refreshedGeometryIndex..<(refreshedGeometryIndex + 1),
+                countryCodeAlpha3: "USA",
+                countryCode: "US",
+                roadIsClosed: false,
+                affectedRoadNames: [""]
+            ),
+            Incident(
+                identifier: "9121656519571796",
+                type: .accident,
+                description: "Accident",
+                creationDate: isoFormatter.date(from: "2026-05-22T13:55:19Z")!,
+                startDate: isoFormatter.date(from: "2026-05-22T00:00:00Z")!,
+                endDate: isoFormatter.date(from: "2030-06-30T07:00:00Z")!,
+                impact: .minor,
+                subtype: nil,
+                subtypeDescription: nil,
+                alertCodes: [],
+                lanesBlocked: BlockedLanes(descriptions: []),
+                shapeIndexRange: (refreshedGeometryIndex + 1)..<(refreshedGeometryIndex + 3),
+                roadIsClosed: false
+            ),
+        ]
+        XCTAssertEqual(incidents, expectedIncidents)
+    }
+
+    func testRouteRefreshWithDrivingTrafficAndClosures() async {
+        await simulateAndTestOnRoute(
+            with: .automobileAvoidingTraffic,
+            shouldRefresh: true,
+            routeRefreshFileName: "profile-route-refresh-closures"
+        )
+        let navigation = await navigationProvider.navigation()
+        guard let currentRoute = await navigation.currentRouteProgress?.routeProgress.navigationRoutes.mainRoute,
+              let closures = currentRoute.route.legs[0].closures
+        else {
+            XCTFail("Not valid route")
+            return
+        }
+        let refreshedGeometryIndex = closures[0].shapeIndexRange.lowerBound
+        let range = refreshedGeometryIndex..<(refreshedGeometryIndex + 2)
+        let expectedClosures = [
+            RouteLeg.Closure(shapeIndexRange: range),
+        ]
+        XCTAssertEqual(closures, expectedClosures)
     }
 
     // MARK: Refresh after reroute
@@ -151,8 +218,11 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         with profile: ProfileIdentifier,
         shouldRefresh: Bool,
         skipLocationsCount: Int = 0,
-        shouldUseCustomOptions: Bool = false
+        shouldUseCustomOptions: Bool = false,
+        routeRefreshFileName: String = "profile-route-refresh"
     ) async {
+        stubRouteRefreshResponse(routeRefreshFileName)
+
         let options = shouldUseCustomOptions ? customOptions(with: profile) : defaultOptions(with: profile)
         let routes = await NavigationRoutes.mock(options: options, fileName: "profile-route-original")
         navigationRoutes = routes
@@ -163,9 +233,10 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         let locations = routes.mainRoute.route.simulationOnRouteLocations
         let locationsToSimulate = Array(locations.dropLast(skipLocationsCount))
         let expectation = await refreshExpectation(shouldRefresh: shouldRefresh)
+        let failedRefreshExpectation = await failedRefreshExpectation(shouldFail: false)
 
         await simulateLocations(locationsToSimulate)
-        await fulfillment(of: [statusExpectation, expectation], timeout: defaultDelay)
+        await fulfillment(of: [statusExpectation, expectation, failedRefreshExpectation], timeout: defaultDelay)
     }
 
     private func simulateAndTestOffRoute(
@@ -173,6 +244,7 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
         shouldRefresh: Bool,
         shouldUseCustomOptions: Bool = false
     ) async {
+        stubRouteRefreshResponse("profile-route-refresh")
         let options = shouldUseCustomOptions ? customOptions(with: profile) : defaultOptions(with: profile)
         let routes = await NavigationRoutes.mock(options: options, fileName: "profile-route-reroute")
         navigationRoutes = routes

@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### API Deprecations
+
+* Deprecated `NavigationMapView.init(location:routeProgress:navigationCameraType:heading:predictiveCacheManager:) instead` in favor of `NavigationMapView.init(location:routeProgress:routeRefreshing:navigationCameraType:heading:predictiveCacheManager:) instead`.
+
+### Routing
+
+* Fixed a race condition that could cause the latest traffic information to be missing when alternative routes are available.
+* Fixed a possible route refresh error when the refreshed data contains an incident with an empty `alertCodes` array.
+
 ## 3.25.0-rc.2
 
 ### Packaging
@@ -17,14 +28,6 @@
 
 * MapboxNavigationCore now requires [MapboxMaps v11.25.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.25.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.25.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.25.0-rc.1)
-
-### API Deprecations
-
-* Deprecated `NavigationMapView.init(location:routeProgress:navigationCameraType:heading:predictiveCacheManager:) instead` in favor of `NavigationMapView.init(location:routeProgress:routeRefreshing:navigationCameraType:heading:predictiveCacheManager:) instead`.
-
-### Routing
-
-* Fixed a race condition that could cause the latest traffic information to be missing when alternative routes are available.
 
 ### Map
 

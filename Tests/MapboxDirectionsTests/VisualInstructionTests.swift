@@ -410,5 +410,61 @@ class VisualInstructionsTests: XCTestCase {
         }
         XCTAssertNotNil(tertiaryInstructionComponent)
     }
+
+    func testVisualInstructionDecodingSucceeds() throws {
+        let data = try makeVisualInstructionData()
+        XCTAssertNoThrow(try JSONDecoder().decode(VisualInstruction.self, from: data))
+    }
+
+    func testBannerDecodingSucceeds() throws {
+        let data = try makeVisualInstructionBannerData()
+        XCTAssertNoThrow(try JSONDecoder().decode(VisualInstructionBanner.self, from: data))
+    }
+
+    func testVisualInstructionDecodingFailsWhenMissingComponents() throws {
+        let data = try makeVisualInstructionData(overriding: ["components": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(VisualInstruction.self, from: data))
+    }
+
+    func testBannerDecodingFailsWhenMissingDistanceAlongGeometry() throws {
+        let data = try makeVisualInstructionBannerData(overriding: ["distanceAlongGeometry": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(VisualInstructionBanner.self, from: data))
+    }
+
+    func testBannerDecodingFailsWhenMissingPrimary() throws {
+        let data = try makeVisualInstructionBannerData(overriding: ["primary": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(VisualInstructionBanner.self, from: data))
+    }
+
+    // MARK: - Helpers
+
+    private func makeVisualInstructionData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "components": [[String: Any]](),
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
+
+    private func makeVisualInstructionBannerData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "distanceAlongGeometry": 100.0,
+            "primary": ["components": [[String: Any]]()],
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
 }
 #endif

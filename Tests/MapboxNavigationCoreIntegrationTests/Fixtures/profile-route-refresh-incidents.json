@@ -1,0 +1,264 @@
+{
+  "code": "Ok",
+  "route": {
+    "legs": [
+      {
+        "annotation": {
+          "maxspeed": [
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            },
+            {
+              "speed": 40,
+              "unit": "km/h"
+            }
+          ],
+          "congestion_numeric": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "duration": [
+            2.814,
+            2.508,
+            3.984,
+            49.449,
+            8.276,
+            3.75,
+            7.618,
+            11.645,
+            1.27,
+            4.589,
+            4.451,
+            5.257,
+            1.886,
+            1.29,
+            3.917,
+            8.37,
+            1.03,
+            8.715,
+            2.078,
+            7.999,
+            0.678,
+            17.408,
+            1.254,
+            4.87,
+            2.253,
+            6.12,
+            5.868,
+            1.343,
+            3.608,
+            5.182,
+            17.102,
+            8.543,
+            24.137,
+            2.633
+          ]
+        },
+        "incidents":[
+            {
+                "id":"9121656519571795",
+                "type":"lane_restriction",
+                "creation_time":"2026-05-22T13:55:19Z",
+                "start_time":"2026-05-22T00:00:00Z",
+                "end_time":"2030-06-30T07:00:00Z",
+                "iso_3166_1_alpha2":"US",
+                "iso_3166_1_alpha3":"USA",
+                "description":"Shoulder Work. Off Ramp facility",
+                "impact":"minor",
+                "alertc_codes":[520],
+                "traffic_codes":{},
+                "lanes_blocked":["LEFT"],
+                "length":677,
+                "south":40.760424,
+                "west":-73.982260,
+                "north":40.760722,
+                "east":-73.981662,
+                "geometry_index_start":0,
+                "geometry_index_end":1,
+                "affected_road_names":[
+                    ""
+                ]
+            },
+            {
+                "id":"9121656519571796",
+                "type":"accident",
+                "creation_time":"2026-05-22T13:55:19Z",
+                "start_time":"2026-05-22T00:00:00Z",
+                "end_time":"2030-06-30T07:00:00Z",
+                "description":"Accident",
+                "impact":"minor",
+                "length":677,
+                "south":40.760424,
+                "west":-73.982260,
+                "north":40.760722,
+                "east":-73.981662,
+                "geometry_index_start":1,
+                "geometry_index_end":3
+            }
+        ]
+      }
+    ],
+    "refresh_ttl": 86282
+  }
+}
