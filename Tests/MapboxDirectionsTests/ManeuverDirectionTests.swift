@@ -7,10 +7,12 @@ class ManeuverDirectionTests: XCTestCase {
             Example("sharp right", .sharpRight),
             Example("right", .right),
             Example("slight right", .slightRight),
+            Example("straight", .straightAhead),
             Example("sharp left", .sharpLeft),
             Example("left", .left),
             Example("slight left", .slightLeft),
             Example("uturn", .uTurn),
+            Example("undefined", .undefined),
             Example("incorrect value", .undefined),
         ]
 
@@ -24,6 +26,13 @@ class ManeuverDirectionTests: XCTestCase {
 
             XCTAssertEqual(decoded?.wrapped, example.expected)
         }
+    }
+
+    func testEncodingUndefined() throws {
+        let container = CodableContainer(wrapped: ManeuverDirection.undefined)
+        let data = try JSONEncoder().encode(container)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: String])
+        XCTAssertEqual(json["wrapped"], "undefined")
     }
 
     private func jsonData(type: String) -> Data {

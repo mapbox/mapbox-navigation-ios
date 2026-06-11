@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Routing
+
+* Fixed a possible route refresh error when the refreshed data contains an incident with an empty `alertCodes` array.
+
 ## 3.25.0-rc.2
 
 ### Packaging

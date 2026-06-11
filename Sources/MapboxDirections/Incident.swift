@@ -250,7 +250,7 @@ public struct Incident: Codable, Equatable, ForeignMemberContainer, Sendable {
         self.impact = try container.decodeIfPresent(Impact.self, forKey: .impact)
         self.subtype = try container.decodeIfPresent(String.self, forKey: .subtype)
         self.subtypeDescription = try container.decodeIfPresent(String.self, forKey: .subtypeDescription)
-        self.alertCodes = try container.decode(Set<Int>.self, forKey: .alertCodes)
+        self.alertCodes = try container.decodeIfPresent(Set<Int>.self, forKey: .alertCodes) ?? []
 
         self.lanesBlocked = try container.decodeIfPresent(BlockedLanes.self, forKey: .lanesBlocked)
 

@@ -207,6 +207,11 @@ class RouteNotificationTests: XCTestCase {
         XCTAssertEqual(second.details?.actualValue, "US,CA")
     }
 
+    func testDecodingFailsWhenTypeMissing() throws {
+        let json = "{}".data(using: .utf8)!
+        XCTAssertThrowsError(try JSONDecoder().decode(RouteNotification.self, from: json))
+    }
+
     func testRouteLegWithNoNotificationsDecodesAsNil() throws {
         let json = """
         {

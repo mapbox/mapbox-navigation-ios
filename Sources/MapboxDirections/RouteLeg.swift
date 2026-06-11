@@ -502,6 +502,10 @@ extension RouteLeg {
         /// The range of segments within the current leg, where the closure spans.
         public var shapeIndexRange: Range<Int>
 
+        init(shapeIndexRange: Range<Int>) {
+            self.shapeIndexRange = shapeIndexRange
+        }
+
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 

@@ -142,4 +142,60 @@ class RouteLegTests: XCTestCase {
         XCTAssertEqual(alert.stationId, "station-7")
         XCTAssertEqual(alert.reason, "occupied")
     }
+
+    func testDecodingSucceeds() throws {
+        let data = try makeRouteLegData()
+        XCTAssertNoThrow(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingSummary() throws {
+        let data = try makeRouteLegData(overriding: ["summary": nil])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDistance() throws {
+        let data = try makeRouteLegData(overriding: ["distance": nil])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingDuration() throws {
+        let data = try makeRouteLegData(overriding: ["duration": nil])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingSteps() throws {
+        let data = try makeRouteLegData(overriding: ["steps": nil])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    // MARK: - Helpers
+
+    private func makeRouteLegDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = RouteOptions(
+            waypoints: [
+                Waypoint(coordinate: .init(latitude: 0, longitude: 0)),
+                Waypoint(coordinate: .init(latitude: 1, longitude: 1)),
+            ],
+            profileIdentifier: .automobile
+        )
+        return decoder
+    }
+
+    private func makeRouteLegData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "summary": "Test Leg",
+            "distance": 100.0,
+            "duration": 60.0,
+            "steps": [Any](),
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
 }

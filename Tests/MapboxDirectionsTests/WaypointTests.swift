@@ -332,4 +332,30 @@ class WaypointTests: XCTestCase {
             LocationCoordinate2D(latitude: targetLat, longitude: targetLon)
         )
     }
+
+    func testDecodingSucceeds() throws {
+        let data = try makeWaypointData()
+        XCTAssertNoThrow(try JSONDecoder().decode(Waypoint.self, from: data))
+    }
+
+    func testDecodingFailsWhenMissingLocation() throws {
+        let data = try makeWaypointData(overriding: ["location": nil])
+        XCTAssertThrowsError(try JSONDecoder().decode(Waypoint.self, from: data))
+    }
+
+    // MARK: - Helpers
+
+    private func makeWaypointData(overriding overrides: [String: Any?] = [:]) throws -> Data {
+        var dict: [String: Any] = [
+            "location": [0.0, 0.0],
+        ]
+        for (key, value) in overrides {
+            if let value {
+                dict[key] = value
+            } else {
+                dict.removeValue(forKey: key)
+            }
+        }
+        return try JSONSerialization.data(withJSONObject: dict)
+    }
 }
