@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.21.1
+
+### Other changes
+
+* Fixed a crash that could occur when restoring cached road shield and sprite images.
+
 ## v2.21.0
 
 ### Audio

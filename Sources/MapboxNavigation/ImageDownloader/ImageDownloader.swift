@@ -14,7 +14,9 @@ actor ImageDownloader: ImageDownloaderProtocol {
 
     init(configuration: URLSessionConfiguration? = nil) {
         let defaultConfiguration = URLSessionConfiguration.default
-        defaultConfiguration.urlCache = URLCache(memoryCapacity: 5 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024)
+        // SpriteRepository owns sprite and shield persistence; avoid duplicate CFNetwork cache entries.
+        defaultConfiguration.urlCache = nil
+        defaultConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
         self.urlSession = URLSession(configuration: configuration ?? defaultConfiguration)
     }
 
