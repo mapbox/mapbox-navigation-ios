@@ -4,6 +4,8 @@ import TestHelper
 
 class URLDataCacheTest: TestCase {
     let url = ShieldImage.i280.baseURL
+    let secondURL = URL(string: "https://www.mapbox.com/second-shield.png")!
+    let data = Fixture.JSONFromFileNamed(name: "sprite-info")
     var cache: URLDataCache!
     
     private static var cacheURL: URL {
@@ -26,23 +28,16 @@ class URLDataCacheTest: TestCase {
         super.tearDown()
     }
 
-    private func exampleData() -> Data {
-        return Fixture.JSONFromFileNamed(name: "sprite-info")
-    }
-
     func testStoreCache() {
-        let data = exampleData()
-        
         cache.store(data, for: url)
         
         let cachedData = cache.data(for: url)
         XCTAssertNotNil(cachedData)
         XCTAssertEqual(cachedData, data)
+        XCTAssertGreaterThan(cache.currentMemoryUsage, 0)
     }
     
     func testClearCache() {
-        let data = exampleData()
-
         cache.store(data, for: url)
         XCTAssertEqual(cache.data(for: url), data)
 
@@ -53,18 +48,17 @@ class URLDataCacheTest: TestCase {
     }
     
     func testRemoveRequestCache() {
-        let data = exampleData()
-        
         cache.store(data, for: url)
+        cache.store(data, for: secondURL)
         XCTAssertNotNil(cache.data(for: url))
+        XCTAssertNotNil(cache.data(for: secondURL))
         
         cache.removeCache(for: url)
         XCTAssertNil(cache.data(for: url))
+        XCTAssertEqual(cache.data(for: secondURL), data)
     }
 
     func testStoreCacheInMemoryOnly() {
-        let data = exampleData()
-        
         cache.store(data, for: url)
         
         let cachedData = cache.data(for: url)
@@ -73,8 +67,6 @@ class URLDataCacheTest: TestCase {
     }
     
     func testStoreCacheWithMemoryWarning() {
-        let data = exampleData()
-
         cache.store(data, for: url)
         XCTAssertEqual(cache.data(for: url), data)
 
@@ -83,8 +75,6 @@ class URLDataCacheTest: TestCase {
     }
     
     func testStoreCacheOutOfCapacity() {
-        let data = exampleData()
-        
         let limitCapacity = 1
         XCTAssertTrue(data.count > limitCapacity)
         
@@ -102,11 +92,10 @@ class URLDataCacheTest: TestCase {
     }
 
     func testStoreCacheOnDisk() {
-        let data = exampleData()
         let diskCache = URLDataCache(diskCapacity: data.count * 2, diskCacheURL: Self.cacheURL)
 
-        diskCache.clearCache()
         diskCache.store(data, for: url)
+        XCTAssertGreaterThan(diskCache.currentDiskUsage, 0)
         cache = URLDataCache(diskCapacity: 0, diskCacheURL: Self.cacheURL)
 
         XCTAssertEqual(cache.data(for: url), data)
