@@ -112,7 +112,7 @@ internal class URLDataCache: URLCaching {
                 try data.write(to: cacheURL(withKey: key))
                 pruneDiskCacheIfNeeded()
             } catch {
-                Log.error("Failed to write data to URL cache.", category: .navigationUI)
+                Log.debug("Failed to write data to URL cache: \(error.localizedDescription).", category: .navigationUI)
             }
         }
     }
@@ -147,7 +147,7 @@ internal class URLDataCache: URLCaching {
                 do {
                     try fileManager.removeItem(at: diskCacheURL)
                 } catch {
-                    Log.error("Failed to remove URL cache directory: \(diskCacheURL)", category: .navigationUI)
+                    Log.debug("Failed to remove URL cache directory: \(diskCacheURL).", category: .navigationUI)
                 }
             }
             createCacheDirIfNeeded()
@@ -164,7 +164,7 @@ internal class URLDataCache: URLCaching {
                 do {
                     try fileManager.removeItem(at: cacheURL)
                 } catch {
-                    Log.error("Failed to remove URL cache file: \(cacheURL)", category: .navigationUI)
+                    Log.debug("Failed to remove URL cache file: \(cacheURL).", category: .navigationUI)
                 }
             }
         }
@@ -238,7 +238,7 @@ internal class URLDataCache: URLCaching {
         do {
             try fileManager.createDirectory(at: diskCacheURL, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            Log.error("Failed to create URL cache directory: \(diskCacheURL)", category: .navigationUI)
+            Log.debug("Failed to create URL cache directory: \(diskCacheURL).", category: .navigationUI)
         }
     }
 
@@ -265,7 +265,7 @@ internal class URLDataCache: URLCaching {
                 try fileManager.removeItem(at: cacheFile.url)
                 totalSize -= cacheFile.size
             } catch {
-                Log.error("Failed to remove URL cache file: \(cacheFile.url)", category: .navigationUI)
+                Log.debug("Failed to remove URL cache file: \(cacheFile.url).", category: .navigationUI)
             }
         }
     }
