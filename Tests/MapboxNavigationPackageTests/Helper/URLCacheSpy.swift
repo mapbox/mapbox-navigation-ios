@@ -2,14 +2,14 @@ import Foundation
 @testable import MapboxNavigationUIKit
 
 final class URLCacheSpy: URLCaching {
-    var cache = [URL: CachedURLResponse]()
+    var cache = [URL: Data]()
     var clearCacheCalled = false
 
-    func store(_ cachedResponse: CachedURLResponse, for url: URL) {
-        cache[url] = cachedResponse
+    func store(_ data: Data, for url: URL) {
+        cache[url] = data
     }
 
-    func response(for url: URL) -> CachedURLResponse? {
+    func data(for url: URL) -> Data? {
         return cache[url]
     }
 

@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+
+* Fixed a crash that could occur when restoring cached road shield and sprite images.
+
 ## 3.25.0
 
 ### Packaging
