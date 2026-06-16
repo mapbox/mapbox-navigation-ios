@@ -323,55 +323,6 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
         }
     }
 
-    mutating func refreshAttributes(newAttributes: Attributes, startLegShapeIndex: Int = 0) {
-        let refreshRange = PartialRangeFrom(startLegShapeIndex)
-
-        segmentDistances?.replaceIfPossible(subrange: refreshRange, with: newAttributes.segmentDistances)
-        expectedSegmentTravelTimes?.replaceIfPossible(
-            subrange: refreshRange,
-            with: newAttributes.expectedSegmentTravelTimes
-        )
-        segmentSpeeds?.replaceIfPossible(subrange: refreshRange, with: newAttributes.segmentSpeeds)
-        segmentCongestionLevels?.replaceIfPossible(subrange: refreshRange, with: newAttributes.segmentCongestionLevels)
-        segmentNumericCongestionLevels?.replaceIfPossible(
-            subrange: refreshRange,
-            with: newAttributes.segmentNumericCongestionLevels
-        )
-        segmentMaximumSpeedLimits?.replaceIfPossible(
-            subrange: refreshRange,
-            with: newAttributes.segmentMaximumSpeedLimits
-        )
-        trafficTendencies?.replaceIfPossible(subrange: refreshRange, with: newAttributes.trafficTendencies)
-    }
-
-    private func adjustShapeIndexRange(_ range: Range<Int>, startLegShapeIndex: Int) -> Range<Int> {
-        let startIndex = startLegShapeIndex + range.lowerBound
-        let endIndex = startLegShapeIndex + range.upperBound
-        return startIndex..<endIndex
-    }
-
-    mutating func refreshIncidents(newIncidents: [Incident]?, startLegShapeIndex: Int = 0) {
-        incidents = newIncidents?.map { incident in
-            var adjustedIncident = incident
-            adjustedIncident.shapeIndexRange = adjustShapeIndexRange(
-                incident.shapeIndexRange,
-                startLegShapeIndex: startLegShapeIndex
-            )
-            return adjustedIncident
-        }
-    }
-
-    mutating func refreshClosures(newClosures: [Closure]?, startLegShapeIndex: Int = 0) {
-        closures = newClosures?.map { closure in
-            var adjustedClosure = closure
-            adjustedClosure.shapeIndexRange = adjustShapeIndexRange(
-                closure.shapeIndexRange,
-                startLegShapeIndex: startLegShapeIndex
-            )
-            return adjustedClosure
-        }
-    }
-
     /// Returns the ISO 3166-1 alpha-2 region code for the administrative region through which the given intersection
     /// passes. The intersection is identified by its step index and intersection index.
     ///
@@ -511,6 +462,16 @@ extension RouteLeg {
 
             let geometryIndexStart = try container.decode(Int.self, forKey: .geometryIndexStart)
             let geometryIndexEnd = try container.decode(Int.self, forKey: .geometryIndexEnd)
+            guard geometryIndexStart >= 0, geometryIndexStart <= geometryIndexEnd else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .geometryIndexEnd,
+                    in: container,
+                    debugDescription: """
+                    geometry_index_start (\(geometryIndexStart)) must be non-negative \
+                    and less than or equal to geometry_index_end (\(geometryIndexEnd)).
+                    """
+                )
+            }
             self.shapeIndexRange = geometryIndexStart..<geometryIndexEnd
 
             try decodeForeignMembers(notKeyedBy: CodingKeys.self, with: decoder)
@@ -542,18 +503,6 @@ extension [RouteLeg] {
 
             legIndex = self.index(after: legIndex)
         }
-    }
-}
-
-extension Array {
-    fileprivate mutating func replaceIfPossible(subrange: PartialRangeFrom<Int>, with newElements: Array?) {
-        guard let newElements, !newElements.isEmpty else { return }
-        let upperBound = subrange.lowerBound + newElements.count
-
-        guard count >= upperBound else { return }
-
-        let adjustedSubrange = subrange.lowerBound..<upperBound
-        replaceSubrange(adjustedSubrange, with: newElements)
     }
 }
 

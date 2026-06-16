@@ -148,6 +148,43 @@ class RouteLegTests: XCTestCase {
         XCTAssertNoThrow(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
     }
 
+    func testDecodingSucceedsWhenClosureGeometryIndexRangeIsEmpty() throws {
+        let data = try makeRouteLegData(overriding: [
+            "closures": [
+                [
+                    "geometry_index_start": 5,
+                    "geometry_index_end": 5,
+                ],
+            ],
+        ])
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: data)
+        XCTAssertEqual(leg.closures?.first?.shapeIndexRange, 5..<5)
+    }
+
+    func testDecodingFailsWhenClosureGeometryIndexRangeIsInverted() throws {
+        let data = try makeRouteLegData(overriding: [
+            "closures": [
+                [
+                    "geometry_index_start": 5,
+                    "geometry_index_end": 0,
+                ],
+            ],
+        ])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
+    func testDecodingFailsWhenClosureGeometryIndexRangeIsNegative() throws {
+        let data = try makeRouteLegData(overriding: [
+            "closures": [
+                [
+                    "geometry_index_start": -1,
+                    "geometry_index_end": 0,
+                ],
+            ],
+        ])
+        XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
+    }
+
     func testDecodingFailsWhenMissingSummary() throws {
         let data = try makeRouteLegData(overriding: ["summary": nil])
         XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))

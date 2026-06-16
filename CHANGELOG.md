@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Routing
+
+* Fixed a crash that could occur when decoding malformed traffic incident or road closure data in route responses.
+
 ### Other changes
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.

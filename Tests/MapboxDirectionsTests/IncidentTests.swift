@@ -318,6 +318,31 @@ final class IncidentTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(Incident.self, from: data))
     }
 
+    func testDecodingSucceedsWhenGeometryIndexRangeIsEmpty() throws {
+        let data = try makeIncidentData(overriding: [
+            "geometry_index_start": 5,
+            "geometry_index_end": 5,
+        ])
+        let incident = try JSONDecoder().decode(Incident.self, from: data)
+        XCTAssertEqual(incident.shapeIndexRange, 5..<5)
+    }
+
+    func testDecodingFailsWhenGeometryIndexRangeIsInverted() throws {
+        let data = try makeIncidentData(overriding: [
+            "geometry_index_start": 5,
+            "geometry_index_end": 0,
+        ])
+        XCTAssertThrowsError(try JSONDecoder().decode(Incident.self, from: data))
+    }
+
+    func testDecodingFailsWhenGeometryIndexRangeIsNegative() throws {
+        let data = try makeIncidentData(overriding: [
+            "geometry_index_start": -1,
+            "geometry_index_end": 0,
+        ])
+        XCTAssertThrowsError(try JSONDecoder().decode(Incident.self, from: data))
+    }
+
     func testDecodingFailsWhenStartTimeHasInvalidFormat() throws {
         let data = try makeIncidentData(overriding: ["start_time": "not-a-date"])
         XCTAssertThrowsError(try JSONDecoder().decode(Incident.self, from: data))
