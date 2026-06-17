@@ -1,14 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.26.0-alpha.1
 
-### Routing
+### Packaging
 
-* Fixed a crash that could occur when decoding malformed traffic incident or road closure data in route responses.
-
-### Other changes
-
-* Fixed a crash that could occur when restoring cached road shield and sprite images.
+* MapboxNavigationCore now requires [MapboxMaps v11.26.0-alpha.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.26.0-alpha.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.26.0-alpha.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.26.0-alpha.1)
 
 ## 3.25.0
 

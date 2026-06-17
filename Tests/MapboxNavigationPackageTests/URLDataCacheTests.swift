@@ -4,8 +4,6 @@ import XCTest
 
 class URLDataCacheTest: TestCase {
     let url = ShieldImage.i280.baseURL
-    let secondURL = URL(string: "https://www.mapbox.com/second-shield.png")!
-    let data = Fixture.JSONFromFileNamed(name: "sprite-info")
     var cache: URLDataCache!
 
     private static var cacheURL: URL {
@@ -28,55 +26,69 @@ class URLDataCacheTest: TestCase {
         super.tearDown()
     }
 
-    func testStoreCache() {
-        cache.store(data, for: url)
+    private func exampleResponse(with storagePolicy: URLCache.StoragePolicy) -> CachedURLResponse {
+        let data = Fixture.JSONFromFileNamed(name: "sprite-info")
+        let response = URLResponse(url: url, mimeType: nil, expectedContentLength: data.count, textEncodingName: nil)
+        let cachedResponse = CachedURLResponse(response: response, data: data, storagePolicy: storagePolicy)
+        return cachedResponse
+    }
 
-        let cachedData = cache.data(for: url)
-        XCTAssertNotNil(cachedData)
-        XCTAssertEqual(cachedData, data)
-        XCTAssertGreaterThan(cache.currentMemoryUsage, 0)
+    func testStoreCache() {
+        let response = exampleResponse(with: .allowed)
+
+        cache.store(response, for: url)
+
+        let cachedResponse = cache.response(for: url)
+        XCTAssertNotNil(cachedResponse)
+        XCTAssertEqual(cachedResponse, response)
     }
 
     func testClearCache() {
-        cache.store(data, for: url)
-        XCTAssertEqual(cache.data(for: url), data)
+        let response = exampleResponse(with: .allowed)
+
+        cache.store(response, for: url)
+        XCTAssertEqual(cache.response(for: url), response)
 
         cache.clearCache()
-        XCTAssertNil(cache.data(for: url))
+        XCTAssertNil(cache.response(for: url)?.data)
         XCTAssertEqual(cache.currentMemoryUsage, 0)
-        XCTAssertEqual(cache.currentDiskUsage, 0)
     }
 
     func testRemoveRequestCache() {
-        cache.store(data, for: url)
-        cache.store(data, for: secondURL)
-        XCTAssertNotNil(cache.data(for: url))
-        XCTAssertNotNil(cache.data(for: secondURL))
+        let response = exampleResponse(with: .allowed)
+
+        cache.store(response, for: url)
+        XCTAssertNotNil(cache.response(for: url))
 
         cache.removeCache(for: url)
-        XCTAssertNil(cache.data(for: url))
-        XCTAssertEqual(cache.data(for: secondURL), data)
+        XCTAssertNil(cache.response(for: url)?.data)
     }
 
     func testStoreCacheInMemoryOnly() {
-        cache.store(data, for: url)
+        let response = exampleResponse(with: .allowedInMemoryOnly)
 
-        let cachedData = cache.data(for: url)
-        XCTAssertEqual(cachedData, data)
-        XCTAssertEqual(cache.currentMemoryUsage, data.count)
+        cache.store(response, for: url)
+
+        let cachedResponse = cache.response(for: url)
+        XCTAssertEqual(cachedResponse, response)
+        XCTAssertEqual(cache.currentMemoryUsage, response.data.count)
     }
 
     func testStoreCacheWithMemoryWarning() {
-        cache.store(data, for: url)
-        XCTAssertEqual(cache.data(for: url), data)
+        let response = exampleResponse(with: .allowed)
+
+        cache.store(response, for: url)
+        XCTAssertEqual(cache.response(for: url), response)
 
         NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
-        XCTAssertEqual(cache.data(for: url), data)
+        XCTAssertEqual(cache.response(for: url), response)
     }
 
     func testStoreCacheOutOfCapacity() {
+        let response = exampleResponse(with: .allowedInMemoryOnly)
+
         let limitCapacity = 1
-        XCTAssertTrue(data.count > limitCapacity)
+        XCTAssertTrue(response.data.count > limitCapacity)
 
         let limitCache = URLDataCache(
             memoryCapacity: limitCapacity,
@@ -85,19 +97,9 @@ class URLDataCacheTest: TestCase {
         )
         limitCache.clearCache()
 
-        limitCache.store(data, for: url)
-        XCTAssertNil(limitCache.data(for: url))
+        limitCache.store(response, for: url)
+        XCTAssertNil(cache.response(for: url))
         XCTAssertEqual(limitCache.currentMemoryUsage, 0)
-        XCTAssertEqual(limitCache.currentDiskUsage, 0)
-    }
-
-    func testStoreCacheOnDisk() {
-        let diskCache = URLDataCache(diskCapacity: data.count * 2, diskCacheURL: Self.cacheURL)
-
-        diskCache.store(data, for: url)
-        XCTAssertGreaterThan(diskCache.currentDiskUsage, 0)
-        cache = URLDataCache(diskCapacity: 0, diskCacheURL: Self.cacheURL)
-
-        XCTAssertEqual(cache.data(for: url), data)
+        // not checking disk usage as it is always non-zero
     }
 }

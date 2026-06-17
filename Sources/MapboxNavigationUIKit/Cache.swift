@@ -25,271 +25,70 @@ public protocol BimodalDataCache: BimodalCache {
 }
 
 protocol URLCaching {
-    func store(_ data: Data, for url: URL)
-    func data(for url: URL) -> Data?
+    func store(_ cachedResponse: CachedURLResponse, for url: URL)
+    func response(for url: URL) -> CachedURLResponse?
     func clearCache()
     func removeCache(for url: URL)
 }
 
-/// A general purpose URL data cache used by ``SpriteRepository`` implementations.
+/// A general purpose ``URLCache`` used by the SDK.
 class URLDataCache: URLCaching {
-    private static var defaultCacheDirectory: URL {
+    private static var defaultDiskCacheURL: URL {
         let fileManager = FileManager.default
         let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let identifier = Bundle.mapboxNavigation.bundleIdentifier!
-        return basePath.appendingPathComponent(identifier)
+        return basePath.appendingPathComponent(identifier).appendingPathComponent("URLDataCache")
     }
 
-    private static var defaultDiskCacheURL: URL {
-        return defaultCacheDirectory.appendingPathComponent("URLDataCache-v2")
-    }
-
-    private static var legacyDiskCacheURL: URL {
-        return defaultCacheDirectory.appendingPathComponent("URLDataCache")
-    }
-
-    private let memoryCache = NSCache<NSString, NSData>()
-    private let diskCacheURL: URL
+    private let urlCache: URLCache
     private static let defaultCapacity = 5 * 1024 * 1024
-    private let memoryCapacity: Int
-    private let diskCapacity: Int
-    private let fileManager: FileManager
-    private let diskAccessQueue: DispatchQueue
     private let cacheLock = NSLock()
-    private var memoryCosts = [String: Int]()
-    private var memoryUsage = 0
 
     var currentMemoryUsage: Int {
+        urlCache.currentMemoryUsage
+    }
+
+    var currentDiskUsage: Int {
+        urlCache.currentDiskUsage
+    }
+
+    init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
+        let memoryCapacity = memoryCapacity ?? Self.defaultCapacity
+        let diskCapacity = diskCapacity ?? Self.defaultCapacity
+        let diskCacheURL = diskCacheURL ?? Self.defaultDiskCacheURL
+        self.urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: diskCacheURL)
+    }
+
+    func store(_ cachedResponse: CachedURLResponse, for url: URL) {
         cacheLock.lock()
         defer {
             cacheLock.unlock()
         }
-        return memoryUsage
+        urlCache.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
     }
 
-    var currentDiskUsage: Int {
-        diskAccessQueue.sync {
-            return diskUsage()
+    func response(for url: URL) -> CachedURLResponse? {
+        cacheLock.lock()
+        defer {
+            cacheLock.unlock()
         }
-    }
-
-    init(memoryCapacity: Int? = nil, diskCapacity: Int? = nil, diskCacheURL: URL? = nil) {
-        // Only the default production cache has a known legacy URLCache directory to remove.
-        let shouldRemoveLegacyCache = diskCacheURL == nil
-        self.memoryCapacity = memoryCapacity ?? Self.defaultCapacity
-        self.diskCapacity = diskCapacity ?? Self.defaultCapacity
-        self.diskCacheURL = diskCacheURL ?? Self.defaultDiskCacheURL
-        self.fileManager = FileManager()
-        self
-            .diskAccessQueue = DispatchQueue(
-                label: Bundle.mapboxNavigation
-                    .bundleIdentifier! + ".URLDataCache.diskAccess"
-            )
-        memoryCache.name = "In-Memory URL Data Cache"
-        memoryCache.totalCostLimit = self.memoryCapacity
-        diskAccessQueue.sync {
-            if shouldRemoveLegacyCache {
-                // The old cache used URLCache and may contain CFNetwork metadata that can crash while being rehydrated.
-                // Remove it by file path only; do not open it through URLCache.
-                removeLegacyCacheIfNeeded()
-            }
-            createCacheDirIfNeeded()
-        }
-    }
-
-    func store(_ data: Data, for url: URL) {
-        let key = cacheKey(for: url)
-        storeDataInMemoryCache(data, forKey: key)
-
-        guard diskCapacity > 0 else {
-            return
-        }
-
-        diskAccessQueue.sync {
-            createCacheDirIfNeeded()
-            do {
-                try data.write(to: cacheURL(withKey: key))
-                pruneDiskCacheIfNeeded()
-            } catch {
-                Log.debug("Failed to write data to URL cache.", category: .navigationUI)
-            }
-        }
-    }
-
-    func data(for url: URL) -> Data? {
-        let key = cacheKey(for: url)
-
-        if let data = dataFromMemoryCache(forKey: key) {
-            return data
-        }
-
-        let diskData = diskAccessQueue.sync {
-            return dataFromDiskCache(forKey: key)
-        }
-
-        if let diskData {
-            storeDataInMemoryCache(diskData, forKey: key)
-        }
-
-        return diskData
+        return urlCache.cachedResponse(for: URLRequest(url: url))
     }
 
     func clearCache() {
         cacheLock.lock()
-        memoryCache.removeAllObjects()
-        memoryCosts.removeAll()
-        memoryUsage = 0
-        cacheLock.unlock()
-
-        diskAccessQueue.sync {
-            if fileManager.fileExists(atPath: diskCacheURL.path) {
-                do {
-                    try fileManager.removeItem(at: diskCacheURL)
-                } catch {
-                    Log.debug("Failed to remove URL cache directory: \(diskCacheURL)", category: .navigationUI)
-                }
-            }
-            createCacheDirIfNeeded()
+        defer {
+            cacheLock.unlock()
         }
+        urlCache.removeAllCachedResponses()
     }
 
     func removeCache(for url: URL) {
-        let key = cacheKey(for: url)
-        removeDataFromMemoryCache(forKey: key)
-
-        diskAccessQueue.sync {
-            let cacheURL = cacheURL(withKey: key)
-            if fileManager.fileExists(atPath: cacheURL.path) {
-                do {
-                    try fileManager.removeItem(at: cacheURL)
-                } catch {
-                    Log.debug("Failed to remove URL cache file: \(cacheURL)", category: .navigationUI)
-                }
-            }
-        }
-    }
-
-    private func storeDataInMemoryCache(_ data: Data, forKey key: String) {
-        guard data.count <= memoryCapacity else {
-            removeDataFromMemoryCache(forKey: key)
-            return
-        }
-
         cacheLock.lock()
         defer {
             cacheLock.unlock()
         }
-
-        let previousCost = memoryCosts[key] ?? 0
-        memoryCache.setObject(data as NSData, forKey: key as NSString, cost: data.count)
-        memoryCosts[key] = data.count
-        memoryUsage += data.count - previousCost
-    }
-
-    private func dataFromMemoryCache(forKey key: String) -> Data? {
-        cacheLock.lock()
-        defer {
-            cacheLock.unlock()
-        }
-
-        guard let data = memoryCache.object(forKey: key as NSString) else {
-            return nil
-        }
-        return data as Data
-    }
-
-    private func removeDataFromMemoryCache(forKey key: String) {
-        cacheLock.lock()
-        defer {
-            cacheLock.unlock()
-        }
-
-        memoryCache.removeObject(forKey: key as NSString)
-        memoryUsage -= memoryCosts.removeValue(forKey: key) ?? 0
-    }
-
-    private func dataFromDiskCache(forKey key: String) -> Data? {
-        let url = cacheURL(withKey: key)
-
-        do {
-            let data = try Data(contentsOf: url)
-            // Treat disk reads as access for oldest-file pruning.
-            try? fileManager.setAttributes([.modificationDate: Date()], ofItemAtPath: url.path)
-            return data
-        } catch {
-            return nil
-        }
-    }
-
-    private func cacheKey(for url: URL) -> String {
-        return url.absoluteString.sha256
-    }
-
-    private func cacheURL(withKey key: String) -> URL {
-        return diskCacheURL.appendingPathComponent(key)
-    }
-
-    private func createCacheDirIfNeeded() {
-        guard fileManager.fileExists(atPath: diskCacheURL.path) == false else {
-            return
-        }
-
-        do {
-            try fileManager.createDirectory(at: diskCacheURL, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            Log.debug("Failed to create URL cache directory: \(diskCacheURL)", category: .navigationUI)
-        }
-    }
-
-    private func removeLegacyCacheIfNeeded() {
-        let legacyDiskCacheURL = Self.legacyDiskCacheURL
-        guard fileManager.fileExists(atPath: legacyDiskCacheURL.path) else {
-            return
-        }
-
-        try? fileManager.removeItem(at: legacyDiskCacheURL)
-    }
-
-    private func pruneDiskCacheIfNeeded() {
-        var cacheFiles = diskCacheFiles()
-        var totalSize = cacheFiles.reduce(0) { $0 + $1.size }
-
-        guard totalSize > diskCapacity else {
-            return
-        }
-
-        cacheFiles.sort { $0.modificationDate < $1.modificationDate }
-        for cacheFile in cacheFiles where totalSize > diskCapacity {
-            do {
-                try fileManager.removeItem(at: cacheFile.url)
-                totalSize -= cacheFile.size
-            } catch {
-                Log.debug("Failed to remove URL cache file: \(cacheFile.url)", category: .navigationUI)
-            }
-        }
-    }
-
-    private func diskUsage() -> Int {
-        return diskCacheFiles().reduce(0) { $0 + $1.size }
-    }
-
-    private func diskCacheFiles() -> [(url: URL, size: Int, modificationDate: Date)] {
-        guard let urls = try? fileManager.contentsOfDirectory(
-            at: diskCacheURL,
-            includingPropertiesForKeys: [.contentModificationDateKey, .fileSizeKey],
-            options: .skipsHiddenFiles
-        ) else {
-            return []
-        }
-
-        return urls.compactMap { url in
-            guard let values = try? url.resourceValues(forKeys: [.contentModificationDateKey, .fileSizeKey]),
-                  let size = values.fileSize
-            else {
-                return nil
-            }
-            return (url, size, values.contentModificationDate ?? .distantPast)
-        }
+        urlCache.removeCachedResponse(for: URLRequest(url: url))
     }
 }
 

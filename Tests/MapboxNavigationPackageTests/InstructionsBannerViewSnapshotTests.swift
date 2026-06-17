@@ -772,10 +772,28 @@ class InstructionBannerTest: TestCase {
             return
         }
 
-        spriteRepository.requestCache.store(spriteData, for: spriteRequestURL)
+        let spriteResponse = URLResponse(
+            url: spriteRequestURL,
+            mimeType: nil,
+            expectedContentLength: spriteData.count,
+            textEncodingName: nil
+        )
+        spriteRepository.requestCache.store(
+            CachedURLResponse(response: spriteResponse, data: spriteData),
+            for: spriteRequestURL
+        )
 
         let infoData = Fixture.JSONFromFileNamed(name: "sprite-info")
-        spriteRepository.requestCache.store(infoData, for: infoRequestURL)
+        let infoResponse = URLResponse(
+            url: infoRequestURL,
+            mimeType: nil,
+            expectedContentLength: infoData.count,
+            textEncodingName: nil
+        )
+        spriteRepository.requestCache.store(
+            CachedURLResponse(response: infoResponse, data: infoData),
+            for: infoRequestURL
+        )
     }
 
     func clearDiskCache() {
@@ -797,6 +815,12 @@ class InstructionBannerTest: TestCase {
             XCTFail("Failed to cache legacy images.")
             return
         }
-        spriteRepository.requestCache.store(data, for: legacyURL)
+        let response = URLResponse(
+            url: legacyURL,
+            mimeType: nil,
+            expectedContentLength: data.count,
+            textEncodingName: nil
+        )
+        spriteRepository.requestCache.store(CachedURLResponse(response: response, data: data), for: legacyURL)
     }
 }

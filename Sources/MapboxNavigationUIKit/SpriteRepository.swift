@@ -144,7 +144,7 @@ class SpriteRepository {
                 return
             }
 
-            strongSelf.requestCache.store(cachedResponse.data, for: infoURL)
+            strongSelf.requestCache.store(cachedResponse, for: infoURL)
             completion(cachedResponse.data)
         })
     }
@@ -159,7 +159,7 @@ class SpriteRepository {
                 return
             }
 
-            strongSelf.requestCache.store(cachedResponse.data, for: imageURL)
+            strongSelf.requestCache.store(cachedResponse, for: imageURL)
             completion(image)
         })
     }
@@ -221,7 +221,7 @@ class SpriteRepository {
     }
 
     func getImage(with url: URL) -> UIImage? {
-        guard let data = requestCache.data(for: url) else {
+        guard let data = requestCache.response(for: url)?.data else {
             return nil
         }
         return UIImage(data: data, scale: VisualInstruction.Component.scale)
@@ -237,7 +237,7 @@ class SpriteRepository {
     func getSpriteInfo(styleURI: StyleURI) -> Data? {
         guard let styleID = styleID(for: styleURI),
               let infoURL = spriteURL(isImage: false, styleID: styleID) else { return nil }
-        return requestCache.data(for: infoURL)
+        return requestCache.response(for: infoURL)?.data
     }
 
     func getSpriteInfo(styleURI: StyleURI, with key: String) -> SpriteInfo? {
