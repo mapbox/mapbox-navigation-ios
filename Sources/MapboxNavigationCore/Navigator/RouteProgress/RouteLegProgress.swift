@@ -47,7 +47,7 @@ public struct RouteLegProgress: Equatable, Sendable {
         distanceTraveled = activeGuidanceInfo.legProgress.distanceTraveled
         durationRemaining = activeGuidanceInfo.legProgress.remainingDuration
         distanceRemaining = activeGuidanceInfo.legProgress.remainingDistance
-        fractionTraveled = activeGuidanceInfo.legProgress.fractionTraveled
+        fractionTraveled = activeGuidanceInfo.legProgress.fractionTraveled.safeValue()
 
         if remainingSteps.count <= 2, status.routeState == .complete {
             userHasArrivedAtWaypoint = true

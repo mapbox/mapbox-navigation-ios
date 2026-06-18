@@ -9,6 +9,7 @@
 ### Other changes
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
+* Fixed a possible crash during updating route progress, related to invalid numeric conversion.
 
 ## 3.25.0
 

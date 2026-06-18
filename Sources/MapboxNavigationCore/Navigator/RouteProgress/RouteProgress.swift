@@ -103,7 +103,7 @@ public struct RouteProgress: RouteProgressRepresentable, Equatable, Sendable {
 
         distanceTraveled = activeGuidanceInfo.routeProgress.distanceTraveled
         durationRemaining = activeGuidanceInfo.routeProgress.remainingDuration
-        fractionTraveled = activeGuidanceInfo.routeProgress.fractionTraveled
+        fractionTraveled = activeGuidanceInfo.routeProgress.fractionTraveled.safeValue()
         distanceRemaining = activeGuidanceInfo.routeProgress.remainingDistance
     }
 

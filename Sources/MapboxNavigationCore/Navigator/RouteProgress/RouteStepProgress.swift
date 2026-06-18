@@ -34,7 +34,7 @@ public struct RouteStepProgress: Equatable, Sendable {
 
         distanceTraveled = activeGuidanceInfo.stepProgress.distanceTraveled
         distanceRemaining = activeGuidanceInfo.stepProgress.remainingDistance
-        fractionTraveled = activeGuidanceInfo.stepProgress.fractionTraveled
+        fractionTraveled = activeGuidanceInfo.stepProgress.fractionTraveled.safeValue()
         durationRemaining = activeGuidanceInfo.stepProgress.remainingDuration
 
         intersectionIndex = Int(primaryRouteIndices.intersectionIndex)
