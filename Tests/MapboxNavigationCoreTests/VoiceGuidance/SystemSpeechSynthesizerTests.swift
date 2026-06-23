@@ -130,6 +130,58 @@ final class SystemSpeechSynthesizerTests: XCTestCase {
     }
 
     @MainActor
+    func testDidFinishForCurrentUtteranceSendsDidSpeak() async {
+        let utterance = await speakAndCaptureUtterance()
+        let didSpeakEmitted = expectation(description: "DidSpeak emitted")
+        synthesizer.voiceInstructions
+            .filter { $0 is VoiceInstructionEvents.DidSpeak }
+            .sink { _ in didSpeakEmitted.fulfill() }
+            .store(in: &cancellables)
+        synthesizer.speechSynthesizer(AVSpeechSynthesizer(), didFinish: utterance)
+        await fulfillment(of: [didSpeakEmitted], timeout: 0.5)
+    }
+
+    @MainActor
+    func testDidFinishForSupersededUtteranceSkipsDidSpeak() async {
+        await speakAndCaptureUtterance()
+        let didSpeakNotEmitted = expectation(description: "DidSpeak not emitted for superseded")
+        didSpeakNotEmitted.isInverted = true
+        synthesizer.voiceInstructions
+            .filter { $0 is VoiceInstructionEvents.DidSpeak }
+            .sink { _ in didSpeakNotEmitted.fulfill() }
+            .store(in: &cancellables)
+        synthesizer.speechSynthesizer(AVSpeechSynthesizer(), didFinish: AVSpeechUtterance(string: "old utterance"))
+        await fulfillment(of: [didSpeakNotEmitted], timeout: 0.3)
+    }
+
+    @MainActor
+    func testDidCancelForCurrentUtteranceSendsDidSpeak() async {
+        let utterance = await speakAndCaptureUtterance()
+        let didSpeakEmitted = expectation(description: "DidSpeak emitted")
+        synthesizer.voiceInstructions
+            .filter { $0 is VoiceInstructionEvents.DidSpeak }
+            .sink { _ in didSpeakEmitted.fulfill() }
+            .store(in: &cancellables)
+        synthesizer.speechSynthesizer(AVSpeechSynthesizer(), didCancel: utterance)
+        await fulfillment(of: [didSpeakEmitted], timeout: 0.5)
+    }
+
+    @MainActor
+    func testDidCancelForSupersededUtteranceSkipsDidSpeak() async {
+        await speakAndCaptureUtterance()
+        let didSpeakNotEmitted = expectation(description: "DidSpeak not emitted for superseded")
+        didSpeakNotEmitted.isInverted = true
+        synthesizer.voiceInstructions
+            .filter { $0 is VoiceInstructionEvents.DidSpeak }
+            .sink { _ in didSpeakNotEmitted.fulfill() }
+            .store(in: &cancellables)
+        synthesizer.speechSynthesizer(AVSpeechSynthesizer(), didCancel: AVSpeechUtterance(string: "old utterance"))
+        await fulfillment(of: [didSpeakNotEmitted], timeout: 0.3)
+    }
+
+    // MARK: - Helpers
+
+    @MainActor
     private func undefinedSpeechLocaleExpectation() -> XCTestExpectation {
         let expectation = expectation(description: "Error")
         synthesizer.voiceInstructions.sink { event in
@@ -143,5 +195,25 @@ final class SystemSpeechSynthesizerTests: XCTestCase {
             expectation.fulfill()
         }.store(in: &cancellables)
         return expectation
+    }
+
+    @MainActor
+    @discardableResult
+    private func speakAndCaptureUtterance() async -> AVSpeechUtterance {
+        let speakCalled = expectation(description: "speak called")
+        var capturedUtterance: AVSpeechUtterance?
+        var client = SystemSpeechSynthesizerClient.testValue
+        client.isSpeaking = { false }
+        client.stopSpeaking = { _ in }
+        client.speak = { utterance in
+            capturedUtterance = utterance
+            speakCalled.fulfill()
+        }
+        Environment.set(\.speechSynthesizerClientProvider, .value(with: client))
+        synthesizer = SystemSpeechSynthesizer()
+        synthesizer.managesAudioSession = false
+        synthesizer.speak(instruction, during: routeLegProgress, locale: locale)
+        await fulfillment(of: [speakCalled], timeout: 0.5)
+        return capturedUtterance!
     }
 }

@@ -54,6 +54,9 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     private var _speechSynthesizer: SendableSpeechSynthesizer
 
     private var previousInstruction: SpokenInstruction?
+    /// The utterance object most recently handed to AVSpeechSynthesizer.
+    /// Used to distinguish a completed utterance from one that was interrupted before a new one took over.
+    private var previousUtterance: AVSpeechUtterance?
 
     override public init() {
         let avSynthesizer = AVSpeechSynthesizer()
@@ -145,6 +148,7 @@ public final class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             )
         }
         previousInstruction = instruction
+        previousUtterance = utteranceToSpeak
 
         Log.debug("SystemSpeechSynthesizer: Requesting to speak: [\(utteranceToSpeak.speechString)]", category: .audio)
         Task { [weak self] in
@@ -251,11 +255,17 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             category: .audio
         )
 
-        Task {
-            await safeDeferredUnduckAudio()
-        }
-
         MainActor.assumingIsolated {
+            guard utterance.speechString == previousUtterance?.speechString else {
+                Log.debug(
+                    "\(self) SystemSpeechSynthesizer: didFinish for superseded utterance [\(utterance.speechString)], skipping deactivation",
+                    category: .audio
+                )
+                return
+            }
+            Task {
+                await safeDeferredUnduckAudio()
+            }
             guard let instruction = previousInstruction else {
                 Log.warning("SystemSpeechSynthesizer finished speaking 'nil' instruction", category: .audio)
                 return
@@ -284,11 +294,17 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             category: .audio
         )
 
-        Task {
-            await safeDeferredUnduckAudio()
-        }
-
         MainActor.assumingIsolated {
+            guard utterance.speechString == previousUtterance?.speechString else {
+                Log.debug(
+                    "\(self) SystemSpeechSynthesizer: didCancel for superseded utterance [\(utterance.speechString)], skipping deactivation",
+                    category: .audio
+                )
+                return
+            }
+            Task {
+                await safeDeferredUnduckAudio()
+            }
             guard let instruction = previousInstruction else {
                 Log.warning("SystemSpeechSynthesizer: Finished speaking 'nil' instruction", category: .audio)
                 return

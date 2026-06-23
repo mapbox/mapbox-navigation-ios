@@ -22,6 +22,7 @@ final class Navigation: ObservableObject {
     private var waypoints: [Waypoint] = []
     private var previousLegIndex: Int?
     private let core: MapboxNavigation
+    private let voiceController: RouteVoiceController
     private var cancellables = Set<AnyCancellable>()
 
     var routeRefreshing: AnyPublisher<RefreshingStatus, Never> { core.navigation().routeRefreshing }
@@ -33,6 +34,7 @@ final class Navigation: ObservableObject {
         )
         let navigationProvider = MapboxNavigationProvider(coreConfig: config)
         self.core = navigationProvider.mapboxNavigation
+        self.voiceController = navigationProvider.routeVoiceController
         self.predictiveCacheManager = navigationProvider.predictiveCacheManager
         self.state = core.tripSession().currentSession.state
         observeNavigation()

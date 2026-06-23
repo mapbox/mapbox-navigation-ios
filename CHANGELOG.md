@@ -6,6 +6,10 @@
 
 * Fixed a crash that could occur when decoding malformed traffic incident or road closure data in route responses.
 
+### Audio
+
+* Fixed an issue where voice instructions could be truncated if the previous instruction was interrupted while falling back to the offline text-to-speech synthesizer.
+
 ### Other changes
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
