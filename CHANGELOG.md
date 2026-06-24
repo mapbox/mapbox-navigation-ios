@@ -14,6 +14,7 @@
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
 * Fixed a possible crash during updating route progress, related to invalid numeric conversion.
+* Fixed an issue where the voice feedback session could get stuck in a connecting state after an audio route change (e.g. plugging in headphones or connecting to CarPlay).
 
 ## 3.25.0
 
