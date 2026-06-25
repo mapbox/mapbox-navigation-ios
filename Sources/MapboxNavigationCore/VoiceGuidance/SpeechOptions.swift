@@ -61,7 +61,11 @@ public struct SpeechOptions: Codable, Sendable, Equatable {
     /// The path of the request URL, not including the hostname or any parameters.
     var path: String {
         var characterSet = CharacterSet.urlPathAllowed
-        characterSet.remove(charactersIn: "/")
+        // Remove / and & so they are percent-encoded in the path segment. & is technically
+        // valid in paths per RFC 3986, but leaving it unencoded risks misparse by servers or
+        // proxies that don't fully respect the path/query boundary, and breaks XML entities
+        // in SSML (e.g. &amp; must arrive at the server as %26amp; then decode to &amp;).
+        characterSet.remove(charactersIn: "/&")
         return "voice/v1/speak/\(text.addingPercentEncoding(withAllowedCharacters: characterSet)!)"
     }
 

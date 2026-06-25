@@ -166,6 +166,42 @@ final class MapboxSpeechSynthesizerTests: XCTestCase {
     }
 
     @MainActor
+    func testSpeakPassesSSMLWithAmpersandEntitiesToSpeechOptionsUnchanged() async {
+        await assertSSMLPassedUnchangedToSpeechOptions { [self] instruction in
+            synthesizer.speak(instruction, during: routeLegProgress, locale: locale)
+        }
+    }
+
+    @MainActor
+    func testPrepareIncomingInstructionsPassesSSMLWithAmpersandEntitiesToSpeechOptionsUnchanged() async {
+        await assertSSMLPassedUnchangedToSpeechOptions { [self] instruction in
+            synthesizer.prepareIncomingSpokenInstructions([instruction], locale: locale)
+        }
+    }
+
+    @MainActor
+    private func assertSSMLPassedUnchangedToSpeechOptions(
+        perform: @MainActor (SpokenInstruction) -> Void
+    ) async {
+        let ssml = "<speak>Turn left toward <say-as>Chili&apos;s Bar &amp; Grill</say-as></speak>"
+        let instruction = SpokenInstruction.mock(ssmlText: ssml)
+        let callExpectation = expectation(description: "audioData called with correct SpeechOptions")
+
+        let client = RemoteSpeechSynthesizerClient { [ssml] options in
+            XCTAssertEqual(options.text, ssml, "ssmlText with XML entities must reach SpeechOptions unchanged")
+            XCTAssertEqual(options.textType, .ssml)
+            callExpectation.fulfill()
+            return self.data
+        }
+        let provider = SpeechSynthesizerClientProvider.value(with: client)
+        Environment.set(\.speechSynthesizerClientProvider, provider)
+        synthesizer = Self.makeMapboxSpeechSynthesizer()
+
+        perform(instruction)
+        await fulfillment(of: [callExpectation], timeout: 0.5)
+    }
+
+    @MainActor
     private func undefinedSpeechLocaleExpectation() -> XCTestExpectation {
         let expectation = expectation(description: "Error")
         synthesizer.voiceInstructions.sink { event in

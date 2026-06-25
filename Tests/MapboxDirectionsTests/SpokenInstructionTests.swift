@@ -82,6 +82,13 @@ class SpokenInstructionTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(SpokenInstruction.self, from: data))
     }
 
+    func testSSMLWithAmpersandEntitiesDecodesUnchanged() throws {
+        let ssml = "<speak>Turn left toward <say-as>Chili&apos;s Bar &amp; Grill</say-as></speak>"
+        let data = try makeSpokenInstructionData(overriding: ["ssmlAnnouncement": ssml])
+        let instruction = try JSONDecoder().decode(SpokenInstruction.self, from: data)
+        XCTAssertEqual(instruction.ssmlText, ssml)
+    }
+
     // MARK: - Helpers
 
     private func makeSpokenInstructionData(overriding overrides: [String: Any?] = [:]) throws -> Data {

@@ -9,6 +9,7 @@
 ### Audio
 
 * Fixed an issue where voice instructions could be truncated if the previous instruction was interrupted while falling back to the offline text-to-speech synthesizer.
+* Pre-emptively fixed an issue (identified on Android) where ampersands (`&`) in spoken text caused malformed voice synthesis requests to the voice/v1/speak API.
 
 ### Other changes
 
