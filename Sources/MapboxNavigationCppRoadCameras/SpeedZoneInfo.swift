@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-internal import MapboxNavSdkRoadCameras
+internal import MapboxNavSdk
 
 /// Information about a speed zone, including entry, middle, and exit cameras.
 /// Speed zones represent areas monitored for speed enforcement with cameras at entry, middle, and/or exit points.
@@ -47,7 +47,7 @@ public struct SpeedZoneInfo: Sendable, Equatable {
 }
 
 extension SpeedZoneInfo {
-    init(_ native: MapboxNavSdkRoadCameras.SpeedZoneInfo) {
+    init(_ native: MapboxNavSdk.SpeedZoneInfo) {
         self.init(
             zoneId: native.zoneId,
             entry: RoadCamera(native.entry),

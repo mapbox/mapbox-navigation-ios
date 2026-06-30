@@ -5,7 +5,9 @@ import CoreLocation
 import Turf
 #if !os(Linux)
 import OHHTTPStubs
+#if SWIFT_PACKAGE
 import OHHTTPStubsSwift
+#endif
 #endif
 @testable import MapboxDirections
 

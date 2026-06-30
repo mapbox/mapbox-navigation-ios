@@ -42,9 +42,6 @@ public struct History {
 ///
 /// Supports `pbf.gz` files. History files are created by ``HistoryRecording/stopRecordingHistory(writingFileWith:)``
 /// and saved to ``HistoryRecordingConfig/historyDirectoryURL``.
-///
-/// - important: Route assignment events from Map Matching API sessions are not parsed. Only Directions API
-/// turn-by-turn route assignments produce ``RouteAssignmentHistoryEvent``s.
 public struct HistoryReader: AsyncSequence, Sendable {
     public typealias Element = HistoryEvent
 

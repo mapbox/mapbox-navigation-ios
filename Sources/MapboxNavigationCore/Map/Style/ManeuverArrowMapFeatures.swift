@@ -75,9 +75,7 @@ extension Route {
                 $0.minZoom = Double(minimumZoomLevel)
                 $0.lineCap = .constant(.butt)
                 $0.lineJoin = .constant(.round)
-                $0.lineWidth = .expression(
-                    Expression.routeLineWidthExpression(0.70 * config.routeLineWidthMultiplier)
-                )
+                $0.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
                 $0.lineColor = .constant(.init(config.maneuverArrowColor))
                 $0.lineEmissiveStrength = .constant(1)
             },
@@ -85,9 +83,7 @@ extension Route {
                 $0.minZoom = Double(minimumZoomLevel)
                 $0.lineCap = .constant(.butt)
                 $0.lineJoin = .constant(.round)
-                $0.lineWidth = .expression(
-                    Expression.routeLineWidthExpression(0.80 * config.routeLineWidthMultiplier)
-                )
+                $0.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
                 $0.lineColor = .constant(.init(config.maneuverArrowStrokeColor))
                 $0.lineEmissiveStrength = .constant(1)
             },
@@ -100,9 +96,7 @@ extension Route {
                 $0.iconColor = .constant(.init(config.maneuverArrowColor))
                 $0.iconRotationAlignment = .constant(.map)
                 $0.iconRotate = .constant(.init(shaftDirection))
-                $0.iconSize = .expression(
-                    Expression.routeLineWidthExpression(0.12 * config.routeLineWidthMultiplier)
-                )
+                $0.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
                 $0.iconAllowOverlap = .constant(true)
                 $0.iconEmissiveStrength = .constant(1)
                 $0.iconRotate = .constant(.init(shaftDirection))
@@ -113,9 +107,7 @@ extension Route {
                 $0.iconColor = .constant(.init(config.maneuverArrowStrokeColor))
                 $0.iconRotationAlignment = .constant(.map)
                 $0.iconRotate = .constant(.init(shaftDirection))
-                $0.iconSize = .expression(
-                    Expression.routeLineWidthExpression(0.14 * config.routeLineWidthMultiplier)
-                )
+                $0.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
                 $0.iconAllowOverlap = .constant(true)
                 $0.iconRotate = .constant(.init(shaftDirection))
             },

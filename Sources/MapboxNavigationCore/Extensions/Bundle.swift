@@ -23,7 +23,7 @@ extension Bundle {
     }
 
 #if !SWIFT_PACKAGE
-    static let module: Bundle = .init(for: BundleToken.self)
+    private static let module: Bundle = .init(for: BundleToken.self)
 #endif
 
     /// The Mapbox Core Navigation framework bundle.

@@ -5,7 +5,6 @@ import UIKit
 extension MapStyleConfig {
     public static func mock(
         routeLineTracksTraversal: Bool = true,
-        routeLineWidthMultiplier: Double = 1.0,
         isRestrictedAreaEnabled: Bool = true,
         showsTrafficOnRouteLine: Bool = true,
         showsAlternatives: Bool = true,
@@ -42,7 +41,6 @@ extension MapStyleConfig {
             routeAnnotationTextFont: .systemFont(ofSize: 18, weight: .semibold),
             routeAnnnotationCaptionTextFont: .systemFont(ofSize: 16, weight: .regular),
             routeLineTracksTraversal: routeLineTracksTraversal,
-            routeLineWidthMultiplier: routeLineWidthMultiplier,
             isRestrictedAreaEnabled: isRestrictedAreaEnabled,
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,
             showsAlternatives: showsAlternatives,

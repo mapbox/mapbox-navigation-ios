@@ -1,87 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 3.29.0-alpha.3
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.29.0-alpha.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.0-alpha.3)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.0-alpha.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.0-alpha.3)
-
-### MapboxDirections
-
-* Changed some entities encoding behavior: `Intersection`, `RouteStep`, and `Waypoint` now round their headings-related values to the integer when encoding. Also, `Waypoint` encodes a `nil` `name` as an empty string instead.
-
-## 3.29.0-alpha.2
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.28.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.0-rc.1)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.0-rc.1)
-
-### CarPlay
-
-* Fixed an issue where the speed limit view could remain hidden during CarPlay free drive despite available speed-limit data.
-* Added the experimental `CarPlayManager.hidesSpeedLimitViewWithMapControls` property for controlling whether the speed limit view is hidden while CarPlay map controls are visible. Access this property by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
-* Adjusted the CarPlay speed limit view size to visually match CarPlay map buttons.
-
-### MapboxDirections
-
-* Added `RouteNotification.Subtype.toll` and `RouteNotification.Subtype.motorway` constants representing violation subtypes for routes that include a toll road or motorway while those were explicitly requested to be excluded via `exclude=toll` or `exclude=motorway`.
-
-## 3.28.0-rc.1
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.28.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.0-rc.1)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.0-rc.1)
-
-## 3.27.0
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.27.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.0)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.27.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.0)
-
-### CarPlay
-
-* Reduced route line and puck sizes on compact CarPlay displays (standard-sized or smaller) to better fit the map viewport.
-* Added experimental `CarPlayMapViewController.restoreDefaultPuckType()` and `CarPlayNavigationViewController.restoreDefaultPuckType()` methods for restoring the SDK-selected, resolution-dependent puck configuration after applying a custom puck. Access these methods by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
-* Fixed an issue where SDK-managed CarPlay maps were rendered using the phone display's native scale instead of the connected CarPlay display's native scale.
-* The current road name is now hidden while panning/zooming the map or previewing routes.
-
-### Map
-
-* Fixed `NavigationMapView.showcase(...)` (and other non-animated camera fits) briefly leaving the map in an "animation in progress" state and delaying it from becoming idle. A non-animated fit now sets the camera directly instead of easing with a zero duration.
-
-### Other changes
-
-* Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
-* Fixed `NavigationMapView.showcase(...)` (and other non-animated camera fits) leaving the map continuously rendering. A non-animated fit now sets the camera directly instead of running a zero-duration animation whose completion never fired, which had pinned the map in an "animation in progress" state and prevented it from becoming idle.
-* Fixed `mapbox-directions-swift` CLI tool compilation on macOS.
-* Fixed a crash when decoding a polyline geometry that contains non-ASCII bytes. Malformed input now fails gracefully instead of trapping.
-
-## 3.27.0-rc.1
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.27.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.0-rc.1)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.27.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.0-rc.1)
-
-### CarPlay
-
-* Disabled route callouts in CarPlay route preview to prevent routes from being obscured in the limited preview screen space.
-
-## 3.26.0
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.26.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.26.0)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.26.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.26.0)
-
-### Other changes
-
-* Release changelog packaging links to Mapbox Maps SDK now point to public release tags without a `v` prefix (for example, `11.26.0` instead of `v11.26.0`).
-
 ## 3.26.0-rc.1
 
 ### Packaging
@@ -102,7 +20,6 @@
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
 * Fixed a possible crash during updating route progress, related to invalid numeric conversion.
-* Corrected the Italian translation of the "Dismiss steps" title from "Vicino" to "Chiudi".
 
 ## 3.25.0
 

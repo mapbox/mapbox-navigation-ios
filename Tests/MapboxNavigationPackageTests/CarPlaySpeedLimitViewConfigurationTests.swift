@@ -39,39 +39,15 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
     func testSpeedLimitViewLayoutConfigurationUsesSignStandardSpecificPadding() {
         XCTAssertEqual(
             CarPlaySpeedLimitViewConfiguration.layout(for: nil),
-            .init(size: CGSize(width: 38, height: 38), topPadding: 3, sidePadding: 3)
+            .init(size: CGSize(width: 36, height: 36), topPadding: 3, sidePadding: 3)
         )
         XCTAssertEqual(
             CarPlaySpeedLimitViewConfiguration.layout(for: .viennaConvention),
-            .init(size: CGSize(width: 38, height: 38), topPadding: 3, sidePadding: 3)
+            .init(size: CGSize(width: 36, height: 36), topPadding: 3, sidePadding: 3)
         )
         XCTAssertEqual(
             CarPlaySpeedLimitViewConfiguration.layout(for: .mutcd),
-            .init(size: CGSize(width: 38, height: 38), topPadding: 6, sidePadding: 3)
-        )
-    }
-
-    func testMutcdTopPaddingIsReducedOnlyWhenVisibleWithMapControls() {
-        XCTAssertEqual(
-            CarPlaySpeedLimitViewConfiguration.topPadding(
-                for: .mutcd,
-                areCarPlayControlsVisible: true
-            ),
-            3
-        )
-        XCTAssertEqual(
-            CarPlaySpeedLimitViewConfiguration.topPadding(
-                for: .mutcd,
-                areCarPlayControlsVisible: false
-            ),
-            6
-        )
-        XCTAssertEqual(
-            CarPlaySpeedLimitViewConfiguration.topPadding(
-                for: .viennaConvention,
-                areCarPlayControlsVisible: true
-            ),
-            3
+            .init(size: CGSize(width: 36, height: 36), topPadding: 6, sidePadding: 3)
         )
     }
 
@@ -148,90 +124,6 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
         )
     }
 
-    func testCarPlayControlsVisibilityUsesTopInsetGrowthRelativeToBaseline() {
-        var baseline = CarPlaySafeAreaInsetsBaseline()
-        let persistentInsets = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 80)
-        baseline.update(with: persistentInsets)
-
-        XCTAssertFalse(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: persistentInsets,
-                baseline: baseline
-            )
-        )
-        XCTAssertTrue(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: UIEdgeInsets(top: 83, left: 0, bottom: 0, right: 80),
-                baseline: baseline
-            )
-        )
-        XCTAssertFalse(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: persistentInsets,
-                baseline: baseline
-            )
-        )
-    }
-
-    func testInheritedBrowsingBaselineDetectsControlsDuringNavigationStartup() {
-        var browsingBaseline = CarPlaySafeAreaInsetsBaseline()
-        let controlsInsets = UIEdgeInsets(top: 44, left: 225, bottom: 0, right: 0)
-        let activeGuidanceInsets = UIEdgeInsets(top: 0, left: 225, bottom: 0, right: 0)
-        browsingBaseline.update(with: UIEdgeInsets(top: 0, left: 49, bottom: 0, right: 0))
-
-        var navigationBaseline = browsingBaseline
-        navigationBaseline.update(with: controlsInsets)
-
-        XCTAssertTrue(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: controlsInsets,
-                baseline: navigationBaseline
-            )
-        )
-
-        navigationBaseline.update(with: activeGuidanceInsets)
-
-        XCTAssertFalse(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: activeGuidanceInsets,
-                baseline: navigationBaseline
-            )
-        )
-    }
-
-    func testCarPlayControlsVisibilityUpdatesToSmallerSettledInsets() {
-        var baseline = CarPlaySafeAreaInsetsBaseline()
-        baseline.update(with: UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 80))
-        baseline.update(with: UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 60))
-
-        XCTAssertTrue(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: UIEdgeInsets(top: 79, left: 0, bottom: 0, right: 60),
-                baseline: baseline
-            )
-        )
-        XCTAssertTrue(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: UIEdgeInsets(top: 40, left: 39, bottom: 0, right: 60),
-                baseline: baseline
-            )
-        )
-    }
-
-    func testZeroInsetsDoNotCorruptCarPlaySafeAreaBaseline() {
-        var baseline = CarPlaySafeAreaInsetsBaseline()
-        let persistentInsets = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 80)
-        baseline.update(with: persistentInsets)
-        baseline.update(with: .zero)
-
-        XCTAssertFalse(
-            CarPlayUtilities.carPlayControlsAreVisible(
-                for: persistentInsets,
-                baseline: baseline
-            )
-        )
-    }
-
     func testCarPlayControlsVisibilityDetectsHorizontalControlsOnEitherSide() {
         var leftPanelBaseline = CarPlaySafeAreaInsetsBaseline()
         leftPanelBaseline.update(with: UIEdgeInsets(top: 0, left: 80, bottom: 0, right: 0))
@@ -299,7 +191,6 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
         )
 
         var leftPanelBaseline = CarPlaySafeAreaInsetsBaseline()
-        leftPanelBaseline.update(with: UIEdgeInsets(top: 44, left: 80, bottom: 0, right: 49))
         leftPanelBaseline.update(with: UIEdgeInsets(top: 0, left: 80, bottom: 0, right: 0))
         XCTAssertEqual(
             leftPanelBaseline.mapButtonsPlacement(for: UIEdgeInsets(top: 0, left: 80, bottom: 0, right: 0)),
@@ -307,7 +198,6 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
         )
 
         var rightPanelBaseline = CarPlaySafeAreaInsetsBaseline()
-        rightPanelBaseline.update(with: UIEdgeInsets(top: 44, left: 49, bottom: 0, right: 80))
         rightPanelBaseline.update(with: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80))
         XCTAssertEqual(
             rightPanelBaseline.mapButtonsPlacement(for: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80)),
@@ -315,49 +205,12 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
         )
     }
 
-    func testMapButtonsPlacementDefaultsToTrailingBeforeSettledBaselineIsLearned() {
-        XCTAssertEqual(
-            CarPlaySafeAreaInsetsBaseline().mapButtonsPlacement(
-                for: UIEdgeInsets(top: 44, left: 40, bottom: 0, right: 49)
-            ),
-            .trailing
-        )
-    }
-
-    func testMapButtonsPlacementRemainsTrailingThroughObservedStartupSequence() {
+    func testMapButtonsPlacementUsesCurrentInsetsBeforeSettledBaselineIsLearned() {
         var baseline = CarPlaySafeAreaInsetsBaseline()
-        baseline.update(with: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40))
-        XCTAssertEqual(
-            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40)),
-            .trailing
-        )
-
-        baseline.update(with: UIEdgeInsets(top: 44, left: 49, bottom: 0, right: 40))
-        XCTAssertEqual(
-            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 44, left: 49, bottom: 0, right: 40)),
-            .trailing
-        )
-
-        baseline.update(with: UIEdgeInsets(top: 0, left: 49, bottom: 0, right: 0))
-        XCTAssertEqual(
-            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 0, left: 49, bottom: 0, right: 0)),
-            .trailing
-        )
-    }
-
-    func testMapButtonsPlacementWaitsForControlsHiddenLayoutBeforeLearningBaseline() {
-        var baseline = CarPlaySafeAreaInsetsBaseline()
-        baseline.update(with: UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 80))
+        baseline.update(with: UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 0))
 
         XCTAssertEqual(
-            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 80)),
-            .trailing
-        )
-
-        baseline.update(with: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80))
-
-        XCTAssertEqual(
-            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80)),
+            baseline.mapButtonsPlacement(for: UIEdgeInsets(top: 44, left: 40, bottom: 0, right: 49)),
             .leading
         )
     }
@@ -427,73 +280,6 @@ final class CarPlaySpeedLimitViewConfigurationTests: TestCase {
                 isCameraRecenterOffered: false
             )
         )
-        XCTAssertFalse(
-            CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
-                activity: .browsing,
-                cameraState: .following,
-                areCarPlayControlsVisible: false,
-                isCameraRecenterOffered: false
-            )
-        )
-        XCTAssertTrue(
-            CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
-                activity: .browsing,
-                cameraState: .following,
-                areCarPlayControlsVisible: false,
-                isCameraRecenterOffered: true
-            )
-        )
-    }
-
-    func testDisablingHidingWithMapControlsOnlyBypassesMapControlsVisibility() {
-        XCTAssertFalse(
-            CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
-                activity: .browsing,
-                cameraState: .following,
-                areCarPlayControlsVisible: true,
-                hidesSpeedLimitViewWithMapControls: false,
-                isCameraRecenterOffered: false
-            )
-        )
-        XCTAssertTrue(
-            CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
-                activity: .panningInBrowsingMode,
-                cameraState: .following,
-                areCarPlayControlsVisible: true,
-                hidesSpeedLimitViewWithMapControls: false,
-                isCameraRecenterOffered: false
-            )
-        )
-        XCTAssertTrue(
-            CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
-                activity: .browsing,
-                cameraState: .following,
-                areCarPlayControlsVisible: true,
-                hidesSpeedLimitViewWithMapControls: false,
-                isCameraRecenterOffered: true
-            )
-        )
-    }
-
-    func testSpeedLimitViewContainerHidesImmediatelyAndRevealsAfterDelay() async throws {
-        let coordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
-        let containerView = UIView()
-        containerView.isHidden = true
-        var shouldHide = false
-
-        coordinator.update(speedLimitViewContainer: containerView) {
-            shouldHide
-        }
-        XCTAssertTrue(containerView.isHidden)
-
-        try await Task.sleep(nanoseconds: 300000000)
-        XCTAssertFalse(containerView.isHidden)
-
-        shouldHide = true
-        coordinator.update(speedLimitViewContainer: containerView) {
-            shouldHide
-        }
-        XCTAssertTrue(containerView.isHidden)
     }
 
     func testSpeedLimitViewDrawabilityDoesNotDependOnContainerVisibility() {

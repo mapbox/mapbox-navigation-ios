@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-internal import MapboxNavSdkRoadCameras
+internal import MapboxNavSdk
 
 /// A road camera on the map.
 @_spi(ExperimentalMapboxAPI)
@@ -66,7 +66,7 @@ public struct RoadCamera: Sendable, Identifiable, Equatable {
 }
 
 extension RoadCamera {
-    init(_ native: MapboxNavSdkRoadCameras.RoadCamera) {
+    init(_ native: MapboxNavSdk.RoadCamera) {
         self.init(
             type: RoadCameraType(native.type),
             id: native.id,
@@ -82,12 +82,12 @@ extension RoadCamera {
         )
     }
 
-    var native: MapboxNavSdkRoadCameras.RoadCamera? {
+    var native: MapboxNavSdk.RoadCamera? {
         guard let nativeType = type.native else {
             return nil
         }
 
-        return MapboxNavSdkRoadCameras.RoadCamera(
+        return MapboxNavSdk.RoadCamera(
             type: nativeType,
             id: id,
             distance: distance.map(NSNumber.init(value:)),
@@ -99,7 +99,7 @@ extension RoadCamera {
             isInRoutePreview: isInRoutePreview,
             isInFreeDrive: isInFreeDrive,
             activeGuidanceInfo: activeGuidanceInfo.map {
-                MapboxNavSdkRoadCameras.RoadCameraActiveGuidanceInfo(
+                MapboxNavSdk.RoadCameraActiveGuidanceInfo(
                     routeId: $0.routeId,
                     legIndex: $0.legIndex,
                     stepIndex: $0.stepIndex.map(NSNumber.init(value:)),

@@ -102,8 +102,6 @@ public final class RouteInterfaceMock: RouteInterface {
 
     public func getResponseJsonRef() -> DataRef { responseJsonRef }
 
-    public func toJson() -> MapboxCommon.DataRef { responseJsonRef } // to be corrected in NAVIOS-2724
-
     public func getRequestUri() -> String { requestUri }
 
     public func getRouterOrigin() -> RouterOrigin { routerOrigin }

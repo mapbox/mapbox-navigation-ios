@@ -2,7 +2,9 @@ import Foundation
 @testable import MapboxDirections
 #if !os(Linux)
 import OHHTTPStubs
+#if SWIFT_PACKAGE
 import OHHTTPStubsSwift
+#endif
 #endif
 import Turf
 import XCTest

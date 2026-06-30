@@ -3,7 +3,6 @@ import Foundation
 import MapboxCommon
 import MapboxCommon_Private
 import MapboxDirections
-import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 public let customConfigKey = "com.mapbox.navigation.custom-config"
@@ -113,8 +112,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
     }
 
     private var _navigator: NavigationNativeNavigator?
-    private var _navigatorHandle: NavigatorHandle?
-
     var navigator: NavigationNativeNavigator {
         if let _navigator {
             return _navigator
@@ -141,43 +138,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
             let nativeNavigator = NavigationNativeNavigator(navigator: navigator, locale: locale)
             self._navigator = nativeNavigator
             return nativeNavigator
-        }
-    }
-
-    /// Stable handle shared by NavSDK C++ components. Its internal navigator instance is replaced on restart.
-    var navigatorHandle: NavigatorHandle {
-        onMainQueueSync {
-            if let _navigatorHandle {
-                return _navigatorHandle
-            } else {
-                let handleInstance = NavigatorHandleBuilder.build()
-                _navigatorHandle = handleInstance
-                if let historyRecorderHandle {
-                    NavigatorHandleBuilder.setHistoryRecorderFor(
-                        handleInstance,
-                        historyRecorder: historyRecorderHandle
-                    )
-                }
-                NavigatorHandleBuilder.setTilesManagerHandleAndNavigatorFor(
-                    handleInstance,
-                    tilesManager: tilesManager,
-                    navigator: navigator.native
-                )
-                return handleInstance
-            }
-        }
-    }
-
-    func updateNavigatorHandle(
-        navigator: MapboxNavigationNative_Private.Navigator,
-        tilesManager: TilesManagerHandle
-    ) {
-        onMainQueueSync {
-            NavigatorHandleBuilder.setTilesManagerHandleAndNavigatorFor(
-                navigatorHandle,
-                tilesManager: tilesManager,
-                navigator: navigator
-            )
         }
     }
 

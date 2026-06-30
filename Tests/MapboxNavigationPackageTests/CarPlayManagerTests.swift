@@ -3,8 +3,7 @@ import CarPlayTestHelper
 import MapboxDirections
 import MapboxMaps
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
-@_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
-import QuartzCore
+@testable import MapboxNavigationUIKit
 @testable import TestHelper
 import XCTest
 
@@ -57,188 +56,6 @@ class CarPlayManagerTests: TestCase {
         mapTemplateProvider = nil
 
         super.tearDown()
-    }
-
-    @MainActor
-    func testBrowsingMapUsesConnectedCarPlayDisplayScale() throws {
-        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        let navigationMapView = mapViewController.navigationMapView
-
-        XCTAssertEqual(
-            mapViewController.mapOptions.pixelRatio,
-            Float(carWindow.screen.nativeScale)
-        )
-
-        let rendererView = try XCTUnwrap(
-            navigationMapView.mapView.subviews.first { $0.layer is CAMetalLayer }
-        )
-        XCTAssertEqual(rendererView.contentScaleFactor, carWindow.screen.nativeScale)
-    }
-
-    @MainActor
-    func testNavigationMapUsesConnectedCarPlayDisplayScale() async throws {
-        await startNavigation()
-
-        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
-        let rendererView = try XCTUnwrap(
-            navigationMapView.mapView.subviews.first { $0.layer is CAMetalLayer }
-        )
-        XCTAssertEqual(rendererView.contentScaleFactor, carWindow.screen.nativeScale)
-    }
-
-    @MainActor
-    func testBrowsingMapUsesOverlaysForConnectedCarPlayDisplay() throws {
-        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        let navigationMapView = mapViewController.navigationMapView
-        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
-            forNativeScreenSize: carWindow.screen.nativeBounds.size
-        )
-
-        XCTAssertEqual(mapViewController.usesCompactMapOverlays, usesCompactMapOverlays)
-        let expectedRouteLineWidthMultiplier = usesCompactMapOverlays
-            ? CarPlayUtilities.compactRouteLineWidthMultiplier
-            : 1.0
-        XCTAssertEqual(navigationMapView.routeLineWidthMultiplier, expectedRouteLineWidthMultiplier)
-        guard case .puck2D(let puckConfiguration)? = navigationMapView.puckType else {
-            return XCTFail("Browsing map should use a 2D puck.")
-        }
-        let expectedPuckConfiguration: Puck2DConfiguration = usesCompactMapOverlays
-            ? .carPlayCompact
-            : .carPlayHD
-        XCTAssertEqual(puckConfiguration.scale, expectedPuckConfiguration.scale)
-    }
-
-    @MainActor
-    func testNavigationMapUsesOverlaysForConnectedCarPlayDisplay() async throws {
-        await startNavigation()
-
-        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
-        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
-            forNativeScreenSize: carWindow.screen.nativeBounds.size
-        )
-
-        let expectedRouteLineWidthMultiplier = usesCompactMapOverlays
-            ? CarPlayUtilities.compactRouteLineWidthMultiplier
-            : 1.0
-        XCTAssertEqual(navigationMapView.routeLineWidthMultiplier, expectedRouteLineWidthMultiplier)
-        guard case .puck3D(let puckConfiguration)? = navigationMapView.puckType else {
-            return XCTFail("Navigation map should use a 3D puck.")
-        }
-        let expectedPuckConfiguration: Puck3DConfiguration = usesCompactMapOverlays
-            ? .carPlayCompact
-            : .carPlayHD
-        XCTAssertEqual(puckConfiguration.modelScale, expectedPuckConfiguration.modelScale)
-    }
-
-    @MainActor
-    func testBrowsingMapCanResetCustomPuckToSDKDefault() throws {
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        mapViewController.navigationMapView.puckType = .puck3D(.navigationDefault)
-
-        mapViewController.restoreDefaultPuckType()
-
-        guard case .puck2D(let configuration)? = mapViewController.navigationMapView.puckType else {
-            return XCTFail("Browsing map should restore the SDK-selected 2D puck.")
-        }
-        let expectedConfiguration: Puck2DConfiguration = mapViewController.usesCompactMapOverlays
-            ? .carPlayCompact
-            : .carPlayHD
-        XCTAssertEqual(configuration.scale, expectedConfiguration.scale)
-    }
-
-    @MainActor
-    func testNavigationMapCanResetCustomPuckToSDKDefault() async throws {
-        await startNavigation()
-        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
-        navigationMapView.puckType = .puck2D(.navigationDefault)
-
-        navigationViewController.restoreDefaultPuckType()
-
-        guard case .puck3D(let configuration)? = navigationMapView.puckType else {
-            return XCTFail("Navigation map should restore the SDK-selected 3D puck.")
-        }
-        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
-            forNativeScreenSize: carWindow.screen.nativeBounds.size
-        )
-        let expectedConfiguration: Puck3DConfiguration = usesCompactMapOverlays
-            ? .carPlayCompact
-            : .carPlayHD
-        XCTAssertEqual(configuration.modelScale, expectedConfiguration.modelScale)
-    }
-
-    func testCompactMapOverlaysUseStandardDisplayHeightThreshold() {
-        XCTAssertTrue(
-            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 800, height: 480))
-        )
-        XCTAssertTrue(
-            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 480, height: 800))
-        )
-        XCTAssertFalse(
-            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 1280, height: 720))
-        )
-        XCTAssertFalse(
-            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 900, height: 1200))
-        )
-    }
-
-    @MainActor
-    func testCameraStateSubscriptionSynchronizesCurrentState() throws {
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        let navigationCamera = mapViewController.navigationMapView.navigationCamera
-        carPlayManager.unsubscribeFromCameraStateNotifications()
-        navigationCamera.stop()
-        mapViewController.recenterButton.isHidden = true
-
-        carPlayManager.subscribeForCameraStateNotifications()
-
-        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
-        XCTAssertFalse(mapViewController.recenterButton.isHidden)
-    }
-
-    @MainActor
-    func testBrowsingMapReceivesUpdatesWhenFreeDriveIsAlreadyActive() async {
-        XCTAssertEqual(
-            navigationProvider.mapboxNavigation.tripSession().currentSession.state,
-            .freeDrive(.active)
-        )
-        let mapViewController = CarPlayMapViewController(
-            core: navigationProvider.mapboxNavigation,
-            styles: [StandardDayStyle(), StandardNightStyle()]
-        )
-
-        mapViewController.loadViewIfNeeded()
-        XCTAssertNil(mapViewController.speedLimitView.signStandard)
-
-        let status = TestNavigationStatusProvider.createNavigationStatus()
-        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
-
-        XCTAssertEqual(mapViewController.speedLimitView.signStandard, .viennaConvention)
-    }
-
-    @MainActor
-    func testHidesSpeedLimitViewWithMapControlsPropagatesToCarPlayViewControllers() async throws {
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        XCTAssertTrue(carPlayManager.hidesSpeedLimitViewWithMapControls)
-        XCTAssertTrue(mapViewController.hidesSpeedLimitViewWithMapControls)
-
-        carPlayManager.hidesSpeedLimitViewWithMapControls = false
-        XCTAssertFalse(mapViewController.hidesSpeedLimitViewWithMapControls)
-
-        await startNavigation()
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        XCTAssertFalse(navigationViewController.hidesSpeedLimitViewWithMapControls)
-
-        carPlayManager.hidesSpeedLimitViewWithMapControls = true
-        XCTAssertTrue(mapViewController.hidesSpeedLimitViewWithMapControls)
-        XCTAssertTrue(navigationViewController.hidesSpeedLimitViewWithMapControls)
     }
 
     @available(*, deprecated)
@@ -477,16 +294,6 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testWayNameViewIsHiddenDuringRoutePreview() async throws {
-        let wayNameView = try browsingWayNameView()
-
-        let navigationRouteOptions = await previewRoutesOptions()
-        await carPlayManager.previewRoutes(for: navigationRouteOptions)
-
-        XCTAssertTrue(wayNameView.isHidden)
-    }
-
-    @MainActor
     func testPreviewRouteWithCustomTrip() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -570,22 +377,14 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidBeginPanGesture() async throws {
+    func testDidBeginPanGesture() async {
         let mapTemplate = CPMapTemplate()
-        let wayNameView = try browsingWayNameView()
-        wayNameView.containerView.isHidden = false
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidBeginPanGesture(mapTemplate)
         }
         await task.value
-
-        XCTAssertTrue(wayNameView.isHidden)
-        XCTAssertFalse(wayNameView.containerView.isHidden)
         XCTAssertTrue(delegate.didBeginPanGestureCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
-
-        carPlayManager.navigationCameraStateDidChange(.following)
-        XCTAssertFalse(wayNameView.isHidden)
     }
 
     func testDidEndPanGesture() {
@@ -625,11 +424,9 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidShowPanningInterfaceInBrowsingMode() async throws {
+    func testDidShowPanningInterfaceInBrowsingMode() async {
         let mapTemplate = CPMapTemplate()
         mapTemplate.currentActivity = .browsing
-        let wayNameView = try browsingWayNameView()
-        wayNameView.containerView.isHidden = false
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidShowPanningInterface(mapTemplate)
         }
@@ -637,8 +434,6 @@ class CarPlayManagerTests: TestCase {
 
         XCTAssertEqual(carPlayManager.currentActivity, .panningInBrowsingMode)
         XCTAssertEqual(mapTemplate.currentActivity, .panningInBrowsingMode)
-        XCTAssertTrue(wayNameView.isHidden)
-        XCTAssertFalse(wayNameView.containerView.isHidden)
 
         XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
         XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
@@ -648,18 +443,16 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidShowPanningInterfaceInNavigationMode() async throws {
-        await startNavigation()
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        let navigationMapTemplate = navigationViewController.mapTemplate
-        let wayNameView = try XCTUnwrap(navigationViewController.wayNameView)
-        wayNameView.containerView.isHidden = false
-        carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
+    func testDidShowPanningInterfaceInNavigationMode() async {
+        let task = Task { @MainActor in
+            let navigationMapTemplate = await startNavigation()
+            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
+            return navigationMapTemplate
+        }
+        let navigationMapTemplate = await task.value
 
         XCTAssertEqual(carPlayManager.currentActivity, .panningInNavigationMode)
         XCTAssertEqual(navigationMapTemplate.currentActivity, .panningInNavigationMode)
-        XCTAssertTrue(wayNameView.isHidden)
-        XCTAssertFalse(wayNameView.containerView.isHidden)
 
         XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
         XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
@@ -669,14 +462,12 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidDismissPanningInterfaceInBrowsingMode() async throws {
+    func testDidDismissPanningInterfaceInBrowsingMode() async {
         let mapTemplate = CPMapTemplate()
         mapTemplate.userInfo = [
             CarPlayManager.previousActivityKey: CarPlayActivity.browsing,
             CarPlayManager.currentActivityKey: CarPlayActivity.panningInBrowsingMode,
         ]
-        let wayNameView = try browsingWayNameView()
-        wayNameView.isHidden = true
 
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)
@@ -685,40 +476,23 @@ class CarPlayManagerTests: TestCase {
 
         XCTAssertEqual(carPlayManager.currentActivity, .browsing)
         XCTAssertEqual(mapTemplate.currentActivity, .browsing)
-        XCTAssertTrue(wayNameView.isHidden)
-
-        carPlayManager.navigationCameraStateDidChange(.following)
-        XCTAssertFalse(wayNameView.isHidden)
 
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
     }
 
     @MainActor
-    func testDidDismissPanningInterfaceInNavigationMode() async throws {
-        await startNavigation()
-        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
-        let navigationMapTemplate = navigationViewController.mapTemplate
-        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
-        carPlayManager.unsubscribeFromCameraStateNotifications()
-        // Starting navigation transitions the camera to following asynchronously. Make the non-following state
-        // caused by panning explicit instead of depending on whether that transition has completed.
-        navigationMapView.navigationCamera.stop()
-        carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
-        let wayNameView = try XCTUnwrap(navigationViewController.wayNameView)
-        XCTAssertTrue(wayNameView.isHidden)
-
+    func testDidDismissPanningInterfaceInNavigationMode() async {
         let task = Task { @MainActor in
+            let navigationMapTemplate = await startNavigation()
+            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
             carPlayManager.mapTemplateDidDismissPanningInterface(navigationMapTemplate)
+            return navigationMapTemplate
         }
-        await task.value
+        let navigationMapTemplate = await task.value
 
         XCTAssertEqual(carPlayManager.currentActivity, .navigating)
         XCTAssertEqual(navigationMapTemplate.currentActivity, .navigating)
-        XCTAssertTrue(wayNameView.isHidden)
-
-        carPlayManager.navigationCameraStateDidChange(.following)
-        XCTAssertFalse(wayNameView.isHidden)
 
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
@@ -732,13 +506,6 @@ class CarPlayManagerTests: TestCase {
         carPlayManager.application(.shared, didConnectCarInterfaceController: interfaceController, to: window)
         let carPlayMapViewController = carPlayManager.carPlayMapViewController
         XCTAssertEqual(carPlayMapViewController?.userInfo, eventsManagerSpy.userInfo)
-    }
-
-    @MainActor
-    private func browsingWayNameView() throws -> WayNameView {
-        let viewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        viewController.loadViewIfNeeded()
-        return try XCTUnwrap(viewController.wayNameView)
     }
 
     private func previewRoutesOptions() async -> NavigationRouteOptions {

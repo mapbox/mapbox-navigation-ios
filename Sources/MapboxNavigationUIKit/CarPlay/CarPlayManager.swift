@@ -39,19 +39,6 @@ public class CarPlayManager: NSObject {
     /// ```
     public var startFreeDriveAutomatically: Bool = true
 
-    /// Controls whether the speed limit view is hidden while the CarPlay navigation bar or map buttons are visible.
-    ///
-    /// This property is `true` by default. Setting it to `false` does not affect visibility rules for panning, route
-    /// preview, non-following camera states, or an available recenter action.
-    @_spi(ExperimentalMapboxAPI)
-    @MainActor
-    public var hidesSpeedLimitViewWithMapControls = true {
-        didSet {
-            carPlayMapViewController?.hidesSpeedLimitViewWithMapControls = hidesSpeedLimitViewWithMapControls
-            carPlayNavigationViewController?.hidesSpeedLimitViewWithMapControls = hidesSpeedLimitViewWithMapControls
-        }
-    }
-
     /// Developers should assign their own object as a delegate implementing the ``CarPlayManagerDelegate`` protocol for
     /// customization.
     public weak var delegate: CarPlayManagerDelegate?
@@ -156,20 +143,12 @@ public class CarPlayManager: NSObject {
 
     @MainActor
     func subscribeForCameraStateNotifications() {
-        guard let navigationCamera = activeNavigationMapView?.navigationCamera else {
-            cameraStateCancellable = nil
-            return
-        }
-
-        cameraStateCancellable = navigationCamera.cameraStates
+        let navigationMapView = activeNavigationMapView
+        cameraStateCancellable = navigationMapView?.navigationCamera.cameraStates
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.navigationCameraStateDidChange($0)
             }
-
-        // `cameraStates` does not replay its latest value. Synchronize immediately in case the transition
-        // completed before the subscription was installed, for example while presenting the browsing map.
-        navigationCameraStateDidChange(navigationCamera.currentCameraState)
     }
 
     func unsubscribeFromCameraStateNotifications() {
@@ -177,20 +156,10 @@ public class CarPlayManager: NSObject {
     }
 
     @MainActor
-    private func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
-        if let carPlayNavigationViewController {
-            carPlayNavigationViewController.updateWayNameViewVisibility(cameraState: cameraState)
-        } else {
-            carPlayMapViewController?.updateWayNameViewVisibility(cameraState: cameraState)
-        }
-    }
-
-    @MainActor
     private func setCurrentActivity(_ currentActivity: CarPlayActivity?) {
         self.currentActivity = currentActivity
         if let carPlayNavigationViewController {
             carPlayNavigationViewController.updateSpeedLimitViewVisibility()
-            carPlayNavigationViewController.updateWayNameViewVisibility()
             return
         }
         carPlayMapViewController?.currentActivity = currentActivity
@@ -212,7 +181,6 @@ public class CarPlayManager: NSObject {
         } else {
             carPlayMapViewController?.updateSpeedLimitViewVisibility()
         }
-        updateWayNameViewVisibility(cameraState: state)
 
         let traitCollection: UITraitCollection
         if let carPlayNavigationViewController {
@@ -439,19 +407,6 @@ extension CarPlayManager: CPTemplateApplicationSceneDelegate {
 // MARK: InterfaceController handling Methods
 
 extension CarPlayManager {
-    /// Creates map options for a map rendered on the connected CarPlay display.
-    ///
-    /// `MapOptions` otherwise uses `UIScreen.main.nativeScale`, which describes the phone screen. A map hosted by
-    /// `CPWindow` must instead use that window's screen scale; the renderer captures this value during initialization
-    /// and cannot update it after the map moves into the CarPlay window.
-    private func mapOptions(for window: UIWindow) -> MapOptions {
-        MapOptions(pixelRatio: window.screen.nativeScale)
-    }
-
-    private func usesCompactMapOverlays(for window: UIWindow) -> Bool {
-        CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: window.screen.nativeBounds.size)
-    }
-
     @MainActor
     func handleDidConnect(interfaceController: CPInterfaceController, to window: CPWindow) {
         CarPlayManager.isConnected = true
@@ -462,15 +417,9 @@ extension CarPlayManager {
         if shouldDisableIdleTimer {
             idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
-        let carPlayMapViewController = CarPlayMapViewController(
-            core: core,
-            styles: styles,
-            mapOptions: mapOptions(for: window),
-            usesCompactMapOverlays: usesCompactMapOverlays(for: window)
-        )
+        let carPlayMapViewController = CarPlayMapViewController(core: core, styles: styles)
         carPlayMapViewController.userInfo = eventsManager.userInfo
         carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
-        carPlayMapViewController.hidesSpeedLimitViewWithMapControls = hidesSpeedLimitViewWithMapControls
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window
@@ -965,7 +914,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         trip: CPTrip,
         navigationRoutes: NavigationRoutes
     ) {
-        guard let interfaceController, let carPlayMapViewController, let carWindow else {
+        guard let interfaceController, let carPlayMapViewController else {
             return
         }
         clearMapAnnotations()
@@ -991,17 +940,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
                     styles: styles,
                     navigationRoutes: navigationRoutes
                 )
-                // The navigation controller can appear while transient controls are already visible. Carry over the
-                // vehicle-specific baseline learned while browsing so that initial controls are not treated as settled
-                // safe-area insets.
-                carPlayNavigationViewController.safeAreaInsetsBaseline =
-                    carPlayMapViewController.safeAreaInsetsBaseline
-                carPlayNavigationViewController.configureMap(
-                    mapOptions: mapOptions(for: carWindow),
-                    usesCompactMapOverlays: usesCompactMapOverlays(for: carWindow)
-                )
-                carPlayNavigationViewController.hidesSpeedLimitViewWithMapControls =
-                    hidesSpeedLimitViewWithMapControls
                 carPlayNavigationViewController.startNavigationSession(for: trip)
                 carPlayNavigationViewController.delegate = self
                 carPlayNavigationViewController.modalPresentationStyle = .fullScreen
@@ -1084,7 +1022,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.showcase(
             routes,
-            routeAnnotationKinds: []
+            routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever]
         )
         self.routes = routes
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
@@ -1105,7 +1043,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
         // Whenever panning starts - stop any navigation camera updates.
         activeNavigationMapView?.navigationCamera.stop()
-        updateWayNameViewVisibility(cameraState: .idle)
         delegate?.carPlayManager(self, didBeginPanGesture: mapTemplate)
     }
 
@@ -1704,14 +1641,8 @@ extension CarPlayManager {
             idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
 
-        let carPlayMapViewController = CarPlayMapViewController(
-            core: core,
-            styles: styles,
-            mapOptions: mapOptions(for: window),
-            usesCompactMapOverlays: usesCompactMapOverlays(for: window)
-        )
+        let carPlayMapViewController = CarPlayMapViewController(core: core, styles: styles)
         carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
-        carPlayMapViewController.hidesSpeedLimitViewWithMapControls = hidesSpeedLimitViewWithMapControls
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window

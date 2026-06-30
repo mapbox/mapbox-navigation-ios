@@ -290,44 +290,6 @@ class RouteStepTests: XCTestCase {
         }
     }
 
-    func testManeuverHeadingsEncoding() {
-        let options = RouteOptions(coordinates: [
-            LocationCoordinate2D(latitude: 52.50881, longitude: 13.42467),
-            LocationCoordinate2D(latitude: 52.506794, longitude: 13.42326),
-        ])
-        options.shapeFormat = .polyline
-
-        let step = RouteStep(
-            transportType: .automobile,
-            maneuverLocation: LocationCoordinate2D(latitude: 52.50881, longitude: 13.42467),
-            maneuverType: .depart,
-            instructions: "",
-            initialHeading: 10.5,
-            finalHeading: 20.5,
-            drivingSide: .right,
-            distance: 10.0,
-            expectedTravelTime: 3.0
-        )
-
-        let encoder = JSONEncoder()
-        encoder.userInfo[.options] = options
-        encoder.userInfo[.includesForeignMembers] = true
-        var encodedStepData: Data!
-
-        XCTAssertNoThrow(encodedStepData = try encoder.encode(step))
-        XCTAssertNotNil(encodedStepData)
-
-        let decoder = JSONDecoder()
-        decoder.userInfo[.options] = options
-        decoder.userInfo[.includesForeignMembers] = true
-        var decodedStep: RouteStep?
-        XCTAssertNoThrow(decodedStep = try decoder.decode(RouteStep.self, from: encodedStepData))
-        XCTAssertNotNil(decodedStep)
-
-        XCTAssertEqual(decodedStep?.initialHeading, 11.0)
-        XCTAssertEqual(decodedStep?.finalHeading, 21.0)
-    }
-
     func testEncodingPronunciations() {
         let options = RouteOptions(coordinates: [
             LocationCoordinate2D(latitude: 0, longitude: 0),

@@ -86,14 +86,6 @@ public struct RouteNotification: Codable, Equatable, ForeignMemberContainer, Sen
         public static let unpaved: Subtype = .init(rawValue: "unpaved")
         /// The route passes through a tunnel while `exclude=tunnel` was requested.
         public static let tunnel: Subtype = .init(rawValue: "tunnel")
-        /// Toll road, while it was explicitly requested to exclude toll roads from the route.
-        ///
-        /// It is provided when `exclude=toll`.
-        public static let toll: Subtype = .init(rawValue: "toll")
-        /// Motorway, while it was explicitly requested to exclude motorways from the route.
-        ///
-        /// It is provided when `exclude=motorway`.
-        public static let motorway: Subtype = .init(rawValue: "motorway")
         /// The route passes through a road excluded by a coordinate point while `exclude=point(...)` was requested.
         public static let pointExclusion: Subtype = .init(rawValue: "pointExclusion")
         /// The route crosses a country border.

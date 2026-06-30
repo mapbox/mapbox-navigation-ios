@@ -4,9 +4,16 @@
 import PackageDescription
 import Foundation
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.29.0-alpha.3", "6131d88339ade2022d0ed8608f946f65039bb71636e3dd48d000fa281d418bc6", "5ce4a73773cd0b4503bc2ef78e3531fd1cb30cd1")
-let mapsVersion: Version = "11.29.0-alpha.3"
-let navsdkVersion: Version = "0.29.0-alpha.3"
+let roadCamerasEnabled = FileManager.default
+    .fileExists(atPath: FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".mapbox-navigation-ios.navigation_sdks_private_beta")
+        .path
+    )
+
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.26.0-rc.1", "539552cb700a48dc2dce349c3c89248995ea01f1e203d7eb2e31ba46af43b634", "a84f83c104c119e316c2bb23bd47444c1d2c8159")
+let mapsVersion: Version = "11.26.0-rc.1"
+let navsdkVersion: Version = "0.26.0-rc.1"
 
 let package = Package(
     name: "MapboxNavigation",
@@ -34,16 +41,10 @@ let package = Package(
             name: "_MapboxNavigationTestKit",
             targets: ["_MapboxNavigationTestKit"]
         ),
-        .library(
-            name: "MapboxNavigationCppRoadCameras",
-            targets: [
-                "MapboxNavigationCppRoadCameras",
-            ]
-        ),
         .executable(
             name: "mapbox-directions-swift",
             targets: ["MapboxDirectionsCLI"]),
-    ],
+    ].updatedWithBetaFeatures(),
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
         .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
@@ -51,8 +52,7 @@ let package = Package(
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
-        .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
-    ],
+    ].updatedWithBetaFeatures(),
     targets: [
         .target(
             name: "MapboxNavigationUIKit",
@@ -175,12 +175,54 @@ let package = Package(
                 "MapboxDirections",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]),
-        .target(
-            name: "MapboxNavigationCppRoadCameras",
-            dependencies: [
-                .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
-                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
-            ]
-        )
-    ]
+    ].updatedWithBetaFeatures()
 )
+
+// MARK: - Beta
+
+extension [PackageDescription.Product] {
+    func updatedWithBetaFeatures() -> Self {
+        var products = self
+        if roadCamerasEnabled {
+            products.append(
+                .library(
+                    name: "MapboxNavigationCppRoadCameras",
+                    targets: [
+                        "MapboxNavigationCppRoadCameras",
+                    ]
+                ),
+            )
+        }
+        return products
+    }
+}
+
+extension [PackageDescription.Target] {
+    func updatedWithBetaFeatures() -> Self {
+        var targets = self
+        if roadCamerasEnabled {
+            targets.append(
+                .target(
+                    name: "MapboxNavigationCppRoadCameras",
+                    dependencies: [
+                        .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
+                        .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
+                    ]
+                )
+            )
+        }
+        return targets
+    }
+}
+
+extension [PackageDescription.Package.Dependency] {
+    func updatedWithBetaFeatures() -> Self {
+        var dependencies = self
+        if roadCamerasEnabled {
+            dependencies.append(
+                .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
+            )
+        }
+        return dependencies
+    }
+}

@@ -74,7 +74,6 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
     ///
     /// A single road that passes through this intersection is represented by two items in this array: one for the
     /// segment that enters the intersection and one for the segment that exits it.
-    /// - Note: These values will be rounded to an integer during encoding.
     public let headings: [LocationDirection]
 
     /// The indices of the items in the ``headings`` array that correspond to the roads that may be used to leave the
@@ -303,7 +302,7 @@ extension Intersection: Codable {
     func encode(to encoder: Encoder, administrativeRegionIndex: Int?, geometryIndex: Int?) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(LocationCoordinate2DCodable(location), forKey: .location)
-        try container.encode(headings.map { Int($0.rounded()) }, forKey: .headings)
+        try container.encode(headings, forKey: .headings)
 
         try container.encodeIfPresent(approachIndex, forKey: .approachIndex)
         try container.encodeIfPresent(outletIndex, forKey: .outletIndex)

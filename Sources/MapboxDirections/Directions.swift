@@ -136,9 +136,7 @@ open class Directions: @unchecked Sendable {
                         return
                     }
 
-                    guard (disposition.code == nil && disposition.message == nil) || disposition
-                        .code == ResponseDisposition.OkCode
-                    else {
+                    guard (disposition.code == nil && disposition.message == nil) || disposition.code == "Ok" else {
                         let apiError = DirectionsError(
                             code: disposition.code,
                             message: disposition.message,

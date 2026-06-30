@@ -34,7 +34,6 @@ struct MapStyleConfig: Equatable {
     var routeAnnnotationCaptionTextFont: UIFont
 
     var routeLineTracksTraversal: Bool
-    var routeLineWidthMultiplier: Double
     var isRestrictedAreaEnabled: Bool
     var showsTrafficOnRouteLine: Bool
     var showsAlternatives: Bool

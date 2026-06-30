@@ -1,5 +1,5 @@
 import Foundation
-internal import MapboxNavSdkRoadCameras
+internal import MapboxNavSdk
 
 /// Road camera type.
 @_spi(ExperimentalMapboxAPI)
@@ -11,72 +11,60 @@ public struct RoadCameraType: RawRepresentable, Hashable, Sendable {
     }
 
     /// A camera that monitors and enforces speed limits.
-    public static let speedCamera = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.speedCamera
-            .rawValue
-    )
+    public static let speedCamera = RoadCameraType(rawValue: MapboxNavSdk.RoadCameraType.speedCamera.rawValue)
 
     /// A camera that checks if a vehicle stops at a red light.
-    public static let redLightCamera = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.redLightCamera
-            .rawValue
-    )
+    public static let redLightCamera = RoadCameraType(rawValue: MapboxNavSdk.RoadCameraType.redLightCamera.rawValue)
 
     /// A combined camera that monitors both speed and red light violations.
     public static let redLightSpeedCamera = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.redLightSpeedCamera
+        rawValue: MapboxNavSdk.RoadCameraType.redLightSpeedCamera
             .rawValue
     )
 
     /// A camera that monitors the entry point of a speed control zone.
     public static let speedControlZoneEnter = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.speedControlZoneEnter
+        rawValue: MapboxNavSdk.RoadCameraType.speedControlZoneEnter
             .rawValue
     )
 
     /// A camera that monitors the middle point of a speed control zone.
     public static let speedControlZoneMiddle = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType
+        rawValue: MapboxNavSdk.RoadCameraType
             .speedControlZoneMiddle.rawValue
     )
 
     /// A camera that monitors the exit point of a speed control zone.
     public static let speedControlZoneExit = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.speedControlZoneExit
+        rawValue: MapboxNavSdk.RoadCameraType.speedControlZoneExit
             .rawValue
     )
 
     /// A danger zone start, zone around a speed camera.
-    public static let dangerZoneEnter = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.dangerZoneEnter
-            .rawValue
-    )
+    public static let dangerZoneEnter = RoadCameraType(rawValue: MapboxNavSdk.RoadCameraType.dangerZoneEnter.rawValue)
 
     /// A danger zone end, zone around a speed camera.
-    public static let dangerZoneExit = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.dangerZoneExit
-            .rawValue
-    )
+    public static let dangerZoneExit = RoadCameraType(rawValue: MapboxNavSdk.RoadCameraType.dangerZoneExit.rawValue)
 
     /// A camera that monitors lane control.
     public static let laneControlCamera = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.laneControlCamera
+        rawValue: MapboxNavSdk.RoadCameraType.laneControlCamera
             .rawValue
     )
 
     /// A camera that monitors passage control.
     public static let passageControlCamera = RoadCameraType(
-        rawValue: MapboxNavSdkRoadCameras.RoadCameraType.passageControlCamera
+        rawValue: MapboxNavSdk.RoadCameraType.passageControlCamera
             .rawValue
     )
 }
 
 extension RoadCameraType {
-    init(_ native: MapboxNavSdkRoadCameras.RoadCameraType) {
+    init(_ native: MapboxNavSdk.RoadCameraType) {
         self.init(rawValue: native.rawValue)
     }
 
-    var native: MapboxNavSdkRoadCameras.RoadCameraType? {
-        MapboxNavSdkRoadCameras.RoadCameraType(rawValue: rawValue)
+    var native: MapboxNavSdk.RoadCameraType? {
+        MapboxNavSdk.RoadCameraType(rawValue: rawValue)
     }
 }

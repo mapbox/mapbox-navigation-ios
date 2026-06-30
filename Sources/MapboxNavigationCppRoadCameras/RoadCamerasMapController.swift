@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import MapboxCoreMaps
 internal import MapboxCoreMaps_Private
-internal import MapboxNavSdkRoadCameras
+internal import MapboxNavSdk
 internal import MapboxNavSdkMapComponents
 @_spi(Internal) import MapboxMaps
 @_spi(Internal) @_spi(Marshalling) import MapboxCoreMaps.Map
@@ -11,7 +11,7 @@ internal import MapboxNavSdkMapComponents
 @_spi(ExperimentalMapboxAPI)
 @MainActor
 public final class RoadCamerasMapController {
-    private let native: MapboxNavSdkRoadCameras.RoadCamerasMapController
+    private let native: MapboxNavSdk.RoadCamerasMapController
 
     /// Creates an instance of a manager.
     /// - Parameters:
@@ -24,7 +24,7 @@ public final class RoadCamerasMapController {
         config: RoadCamerasConfig
     ) {
         let coreMap: MapboxCoreMaps_Private.Map = MapboxCoreMaps.Map.Marshaller.toObjc(map.map)
-        self.native = MapboxNavSdkRoadCameras.RoadCamerasMapController(
+        self.native = MapboxNavSdk.RoadCamerasMapController(
             map: coreMap,
             manager: manager.native,
             config: config.native

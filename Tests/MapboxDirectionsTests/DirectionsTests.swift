@@ -1,7 +1,9 @@
 import XCTest
 #if !os(Linux)
 import OHHTTPStubs
+#if SWIFT_PACKAGE
 import OHHTTPStubsSwift
+#endif
 #endif
 #if canImport(CoreLocation)
 import CoreLocation

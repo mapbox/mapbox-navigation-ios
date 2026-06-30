@@ -1,13 +1,6 @@
 @testable import MapboxNavigationCore
 import XCTest
 
-#if !SWIFT_PACKAGE
-private final class BundleToken {}
-extension Bundle {
-    static let module: Bundle = .init(for: BundleToken.self)
-}
-#endif
-
 final class BundleTests: XCTestCase {
     func testMapboxNavigationCoreInvalidBundle() {
 #if SWIFT_PACKAGE

@@ -2,7 +2,7 @@ import CarPlay
 import Combine
 import Foundation
 import MapboxDirections
-@_spi(MapboxInternal) import MapboxNavigationCore
+import MapboxNavigationCore
 @_spi(Restricted) import MapboxMaps
 
 let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
@@ -226,21 +226,14 @@ open class CarPlayNavigationViewController: UIViewController {
     private var widthSpeedLimitViewConstraint: NSLayoutConstraint!
     private var heightSpeedLimitViewConstraint: NSLayoutConstraint!
     private var speedLimitViewContainer: UIView!
-    var hidesSpeedLimitViewWithMapControls = true {
-        didSet {
-            updateSpeedLimitViewVisibility()
-        }
-    }
-
     private var areCarPlayControlsVisible = false {
         didSet {
             updateSpeedLimitViewVisibility()
-            updateSpeedLimitViewLayoutIfLoaded()
         }
     }
 
     private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
-    var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
+    private var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
 
     private var safeTrailingCompassViewConstraint: NSLayoutConstraint!
     private var safeLeadingCompassViewConstraint: NSLayoutConstraint!
@@ -272,7 +265,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
         topSpeedLimitViewConstraint = speedLimitViewContainer.topAnchor.constraint(
             equalTo: view.safeTopAnchor,
-            constant: speedLimitViewTopPadding(for: speedLimitView.signStandard)
+            constant: layout.topPadding
         )
         safeTrailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
@@ -327,41 +320,19 @@ open class CarPlayNavigationViewController: UIViewController {
                 activity: mapTemplate.currentActivity,
                 cameraState: navigationMapView.navigationCamera.currentCameraState,
                 areCarPlayControlsVisible: areCarPlayControlsVisible,
-                hidesSpeedLimitViewWithMapControls: hidesSpeedLimitViewWithMapControls,
                 isCameraRecenterOffered: false
             )
         }
     }
 
-    func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
-        guard isViewLoaded, let navigationMapView, let wayNameView else { return }
-
-        wayNameView.isHidden = CarPlayWayNameViewConfiguration.shouldHideWayNameView(
-            activity: mapTemplate.currentActivity,
-            cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
-        )
-    }
-
     func updateSpeedLimitViewLayout() {
         let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
-        topSpeedLimitViewConstraint.constant = speedLimitViewTopPadding(for: speedLimitView.signStandard)
+        topSpeedLimitViewConstraint.constant = layout.topPadding
         safeTrailingSpeedLimitViewConstraint.constant = -layout.sidePadding
         trailingSpeedLimitViewConstraint.constant = -layout.sidePadding
         safeLeadingSpeedLimitViewConstraint.constant = layout.sidePadding
         widthSpeedLimitViewConstraint.constant = layout.size.width
         heightSpeedLimitViewConstraint.constant = layout.size.height
-    }
-
-    private func speedLimitViewTopPadding(for signStandard: SignStandard?) -> CGFloat {
-        CarPlaySpeedLimitViewConfiguration.topPadding(
-            for: signStandard,
-            areCarPlayControlsVisible: areCarPlayControlsVisible
-        )
-    }
-
-    private func updateSpeedLimitViewLayoutIfLoaded() {
-        guard isViewLoaded, speedLimitView != nil else { return }
-        updateSpeedLimitViewLayout()
     }
 
     func updateCarPlayControlsVisibility() {
@@ -581,20 +552,7 @@ open class CarPlayNavigationViewController: UIViewController {
     public var carPlayManager: CarPlayManager
 
     /// The map view showing the route and the user’s location.
-    ///
-    /// If you replace its ``NavigationMapView/puckType``, call ``restoreDefaultPuckType()`` to restore the SDK-selected
-    /// configuration for the connected CarPlay display.
     public fileprivate(set) var navigationMapView: NavigationMapView?
-
-    /// Restores the SDK-selected 3D puck configuration for the connected CarPlay display.
-    ///
-    /// Use this method after replacing ``NavigationMapView/puckType`` with a custom puck. The restored configuration
-    /// depends on the connected CarPlay screen resolution.
-    @_spi(ExperimentalMapboxAPI)
-    @MainActor
-    public func restoreDefaultPuckType() {
-        navigationMapView?.puckType = defaultPuckType
-    }
 
     var carSession: CPNavigationSession!
 
@@ -623,30 +581,6 @@ open class CarPlayNavigationViewController: UIViewController {
     private let core: MapboxNavigation
     private var navigationRoutes: NavigationRoutes
     private let accessToken: String
-    /// Rendering options captured by ``CarPlayManager`` from the connected CarPlay screen.
-    ///
-    /// These options must be assigned before the view loads because the map renderer's pixel ratio is immutable.
-    private var mapOptions = MapOptions()
-    /// Whether to use map overlays sized for a compact CarPlay display.
-    ///
-    /// This value must be assigned before the view loads.
-    private var usesCompactMapOverlays = false
-    private var defaultPuckType: PuckType {
-        let configuration: Puck3DConfiguration = usesCompactMapOverlays
-            ? .carPlayCompact
-            : .carPlayHD
-        return .puck3D(configuration)
-    }
-
-    @MainActor
-    func configureMap(
-        mapOptions: MapOptions,
-        usesCompactMapOverlays: Bool
-    ) {
-        precondition(!isViewLoaded, "Map configuration must be applied before loading the view.")
-        self.mapOptions = mapOptions
-        self.usesCompactMapOverlays = usesCompactMapOverlays
-    }
 
     /// Creates a new CarPlay navigation view controller for the given route controller and user interface.
     /// - Parameters:
@@ -779,12 +713,8 @@ open class CarPlayNavigationViewController: UIViewController {
             location: location,
             routeProgress: routeProgress,
             routeRefreshing: core.navigation().routeRefreshing.eraseToAnyPublisher(),
-            navigationCameraType: .carPlay,
-            mapOptions: mapOptions
+            navigationCameraType: .carPlay
         )
-        if usesCompactMapOverlays {
-            navigationMapView.routeLineWidthMultiplier = CarPlayUtilities.compactRouteLineWidthMultiplier
-        }
         navigationMapView.delegate = self
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -795,7 +725,7 @@ open class CarPlayNavigationViewController: UIViewController {
             navigationMapView.showsTrafficOnRouteLine = false
         }.store(in: &lifetimeSubscriptions)
 
-        navigationMapView.puckType = defaultPuckType
+        navigationMapView.puckType = .puck3D(.navigationCarPlayDefault)
 
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
@@ -807,7 +737,6 @@ open class CarPlayNavigationViewController: UIViewController {
         navigationMapView.pinInSuperview()
 
         self.navigationMapView = navigationMapView
-        updateWayNameViewVisibility()
     }
 
     private var directionsOptions: DirectionsOptions? {
