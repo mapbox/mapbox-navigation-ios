@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+
+* Release changelog packaging links to Mapbox Maps SDK now point to public release tags without a `v` prefix (for example, `11.26.0` instead of `v11.26.0`).
+
 ## 3.26.0-rc.1
 
 ### Packaging
