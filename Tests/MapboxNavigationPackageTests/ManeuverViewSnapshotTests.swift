@@ -52,6 +52,11 @@ class ManeuverViewSnapshotTests: TestCase {
         assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.99))
     }
 
+    func testTurnSharpRight() {
+        maneuverView.visualInstruction = maneuverInstruction(.turn, .sharpRight)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.99))
+    }
+
     func testMergeRight() {
         maneuverView.visualInstruction = maneuverInstruction(.merge, .right)
         assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.99))
