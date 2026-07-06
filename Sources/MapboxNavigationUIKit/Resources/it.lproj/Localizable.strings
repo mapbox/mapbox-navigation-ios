@@ -41,7 +41,7 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Disattiva audio";
 /* Dismiss button title on the steps view */
-"DISMISS_STEPS_TITLE" = "Vicino";
+"DISMISS_STEPS_TITLE" = "Chiudi";
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Sei arrivato";
 /* Comment Placeholder Text */

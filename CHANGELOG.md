@@ -26,6 +26,7 @@
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
 * Fixed a possible crash during updating route progress, related to invalid numeric conversion.
+* Corrected the Italian translation of the "Dismiss steps" title from "Vicino" to "Chiudi".
 
 ## 3.25.0
 
