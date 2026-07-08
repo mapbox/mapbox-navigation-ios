@@ -165,6 +165,13 @@ final class NativeHandlersFactoryTests: XCTestCase {
         XCTAssertEqual(navigatorConfig.rerouteStrategyForMatchRoute, strategy.nativeValue)
     }
 
+    func testNavigatorHandleIsStableAcrossAccesses() {
+        let firstHandle = factory.navigatorHandle
+        let secondHandle = factory.navigatorHandle
+
+        XCTAssertTrue(firstHandle === secondHandle)
+    }
+
     private func nativeHandlersFactory(
         liveIncidentsOptions: IncidentsConfig? = nil,
         navigatorPredictionInterval: TimeInterval? = nil,

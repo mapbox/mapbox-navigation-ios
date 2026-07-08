@@ -3,6 +3,7 @@ import Combine
 import Foundation
 import MapboxCommon
 import MapboxCommon_Private
+import MapboxNavigationNative
 import MapboxNavigationNative_Private
 
 public final class MapboxNavigationProvider {
@@ -388,5 +389,15 @@ extension MapboxNavigationProvider {
     @MainActor
     public var nativeNavigator: Any {
         nativeHandlersFactory.navigator.native
+    }
+
+    /// Shared ``NavigatorHandle`` for NavSDK C++ components.
+    ///
+    /// The handle instance is stable for the lifetime of this provider; its internal navigator is
+    /// updated when the native navigator is recreated (e.g. offline restart).
+    @_spi(MapboxInternal)
+    @MainActor
+    public var navigatorHandle: NavigatorHandle {
+        nativeHandlersFactory.navigatorHandle
     }
 }

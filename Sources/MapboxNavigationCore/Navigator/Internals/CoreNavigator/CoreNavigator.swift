@@ -183,6 +183,10 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         navigator = factory.navigator
 
         navigator.native.restoreNavigationSession(for: previousNavigationSessionState)
+        configuration.nativeHandlersFactory.updateNavigatorHandle(
+            navigator: navigator.native,
+            tilesManager: factory.tilesManager
+        )
         telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator, previousSession: previousSession)
         roadObjectStore.native = navigator.native.roadObjectsStore()
         rerouteController = RerouteController(
