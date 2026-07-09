@@ -1,11 +1,9 @@
 import XCTest
 #if !os(Linux)
 import CoreLocation
-import OHHTTPStubs
-#if SWIFT_PACKAGE
-import OHHTTPStubsSwift
-#endif
 @testable import MapboxDirections
+import OHHTTPStubs
+import OHHTTPStubsSwift
 
 class V5Tests: XCTestCase {
     override func tearDown() {

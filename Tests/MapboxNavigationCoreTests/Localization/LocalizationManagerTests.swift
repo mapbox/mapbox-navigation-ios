@@ -1,4 +1,4 @@
-import MapboxNavigationCore
+@testable import MapboxNavigationCore
 import XCTest
 
 final class LocalizationManagerTests: XCTestCase {

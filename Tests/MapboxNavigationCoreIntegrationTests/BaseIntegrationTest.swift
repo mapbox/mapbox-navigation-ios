@@ -173,3 +173,10 @@ extension NavigationRoutes {
         return await NavigationRoutes.mock(routeResponse: response)!
     }
 }
+
+#if !SWIFT_PACKAGE
+private final class BundleToken {}
+extension Bundle {
+    static let module: Bundle = .init(for: BundleToken.self)
+}
+#endif

@@ -8,12 +8,14 @@ extension Bundle {
 #if SWIFT_PACKAGE
         return .module
 #else
-        var frameworkBundle = Bundle(for: NavigationViewController.self)
+        let frameworkBundle = Bundle(for: NavigationViewController.self)
 
         guard let resourceBundleURL = frameworkBundle.url(
             forResource: "MapboxNavigationResources", withExtension: "bundle"
         )
-        else { fatalError("MapboxNavigationResources.bundle not found!") }
+        else {
+            return frameworkBundle
+        }
 
         guard let resourceBundle = Bundle(url: resourceBundleURL)
         else { fatalError("Cannot access MapboxNavigationResources.bundle!") }

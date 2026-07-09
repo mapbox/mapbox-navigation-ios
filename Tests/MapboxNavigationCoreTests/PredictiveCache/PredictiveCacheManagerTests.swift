@@ -26,7 +26,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
         predictiveCacheConfig = PredictiveCacheConfig()
         let path = NSTemporaryDirectory()
         tileStore = TileStore.shared(for: URL(fileURLWithPath: path))
-        tilesetDescriptor = TilesetDescriptorFactory.build(forDataset: "", version: "", includeAdas: false)
+        tilesetDescriptor = TilesetDescriptorFactory.build(forDataset: "", version: "1", includeAdas: false)
 
         predictiveCacheConfig.predictiveCacheMapsConfig.maximumConcurrentRequests = 3
         predictiveCacheConfig.predictiveCacheMapsConfig.locationConfig.currentLocationRadius = 30
@@ -45,7 +45,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
             ),
             searchTilesetDescriptor: TilesetDescriptorFactory.build(
                 forDataset: "mbx-gen2",
-                version: "",
+                version: "1",
                 includeAdas: false
             )
         )
