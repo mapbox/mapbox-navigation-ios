@@ -2,6 +2,12 @@
 
 ## v2.21.1
 
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v208._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/208.0.0). ([#4839](https://github.com/mapbox/mapbox-navigation-ios/pull/4839))
+* MapboxCoreNavigation now requires [MapboxDirections v2.14.4 - v2._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.14.4). ([#4839](https://github.com/mapbox/mapbox-navigation-ios/pull/4839))
+* MapboxNavigation now requires [MapboxMaps v10.19.6 - v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.19.6). ([#4839](https://github.com/mapbox/mapbox-navigation-ios/pull/4839))
+
 ### Other changes
 
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
