@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### CarPlay
+
+* Disabled route callouts in CarPlay route preview to prevent routes from being obscured in the limited preview screen space.
+
 ## 3.26.0
 
 ### Packaging
