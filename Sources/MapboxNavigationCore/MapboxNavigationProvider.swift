@@ -385,12 +385,6 @@ extension TTSConfig {
 }
 
 extension MapboxNavigationProvider {
-    @_spi(MapboxInternal)
-    @MainActor
-    public var nativeNavigator: Any {
-        nativeHandlersFactory.navigator.native
-    }
-
     /// Shared ``NavigatorHandle`` for NavSDK C++ components.
     ///
     /// The handle instance is stable for the lifetime of this provider; its internal navigator is

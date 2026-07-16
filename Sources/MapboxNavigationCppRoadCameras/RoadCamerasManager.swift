@@ -4,28 +4,40 @@ import MapboxNavigationNative
 internal import MapboxNavigationNative_Private
 internal import MapboxNavSdk
 internal import MapboxNavSdk_Private
-internal import MapboxNavSdkNavigation
-internal import MapboxNavSdkNavigation_Private
 
 /// Manager that monitors and manages road cameras withing the active navigation activity.
 @_spi(ExperimentalMapboxAPI)
 @MainActor
 public final class RoadCamerasManager {
-    private let navigator: MapboxNavSdkNavigation.Navigator
     let native: MapboxNavSdk.RoadCamerasManager
 
     /// Creates an instance of a manager.
     /// - Parameters:
-    ///    - navigator: ``MapboxNavigationProvider.nativeNavigator`` internal navigator instance.
+    ///    - navigatorHandle: ``MapboxNavigationProvider/navigatorHandle`` shared navigator handle instance.
+    public init(navigatorHandle: NavigatorHandle) {
+        self.native = MapboxNavSdk.RoadCamerasManager(handle: navigatorHandle)
+    }
+
+    /// Creates an instance of a manager.
+    ///
+    /// - Warning: Deprecated and non-functional. `RoadCamerasManager` is now constructed from a
+    /// ``MapboxNavigationProvider/navigatorHandle`` rather than the native navigator. This
+    /// initializer always returns `nil`; migrate to ``init(navigatorHandle:)``.
+    @available(
+        *,
+        deprecated,
+        message: """
+        RoadCamerasManager is now constructed from a NavigatorHandle. \
+        Use init(navigatorHandle:) and pass MapboxNavigationProvider.navigatorHandle \
+        instead of the native navigator. This initializer always returns nil.
+        """
+    )
     public init?(navigator: Any) {
-        guard let nativeNavigator = navigator as? MapboxNavigationNative.Navigator else {
-            return nil
-        }
-        self.navigator = MapboxNavSdkNavigation.Navigator(
-            internalNavigator: nativeNavigator,
-            historyRecorder: nil
+        assertionFailure(
+            "RoadCamerasManager(navigator:) is deprecated and non-functional. "
+                + "Use init(navigatorHandle:) with MapboxNavigationProvider.navigatorHandle."
         )
-        self.native = MapboxNavSdk.RoadCamerasManager(navigator: self.navigator)
+        return nil
     }
 
     /// Enable monitoring of road cameras.
