@@ -492,7 +492,7 @@ open class CarPlayMapViewController: UIViewController {
 
             navigationMapView.showcase(
                 routes,
-                routeAnnotationKinds: []
+                routeAnnotationKinds: [.relativeDurationsOnAlternativeManuever]
             )
         }
     }

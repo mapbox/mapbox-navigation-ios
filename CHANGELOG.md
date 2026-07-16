@@ -7,10 +7,6 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.27.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.27.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.0-rc.1)
 
-### CarPlay
-
-* Disabled route callouts in CarPlay route preview to prevent routes from being obscured in the limited preview screen space.
-
 ## 3.26.0
 
 ### Packaging
