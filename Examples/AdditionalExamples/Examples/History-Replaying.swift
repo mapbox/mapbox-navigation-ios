@@ -1,15 +1,3 @@
-/*
- This code example is part of the Mapbox Navigation SDK for iOS demo app,
- which you can build and run: https://github.com/mapbox/mapbox-navigation-ios
- To learn more about the SDK, see our docs: https://docs.mapbox.com/ios/navigation
-
- Important: History replay of map-matched routes is not supported.
- `HistoryReplayController` works with history traces recorded during Directions API
- turn-by-turn sessions. Traces from Map Matching API sessions do not produce route
- assignment events, so ``HistoryReplayDelegate/historyReplayController(_:wantsToSetRoutes:)``
- will not fire for those routes.
- */
-
 import MapboxDirections
 import MapboxMaps
 import MapboxNavigationCore
@@ -31,7 +19,6 @@ final class HistoryReplayingViewController: UIViewController {
 
     private lazy var historyReplayController: HistoryReplayController = {
         // Create a ``HistoryReplayController`` instance with required history data and setup it's delegate.
-        // Use a Directions API history file — map-matched route replay is not supported.
         var historyReplayController = HistoryReplayController(
             historyReader: HistoryReader(
                 fileUrl: Bundle.main.url(
@@ -184,8 +171,6 @@ extension HistoryReplayingViewController: HistoryReplayDelegate {
     ) {
         // This method handles cases when the history file had updated current routes set. So in order to follow the
         // replay, we should do the same.
-        // Note: this is only called for Directions API route assignments. Map Matching history traces do not
-        // produce route assignment events.
         if presentedViewController == nil {
             presentNavigationController(with: routes)
         } else {

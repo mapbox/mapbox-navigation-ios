@@ -1,11 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
-
-### Other changes
-
-* Fixed `mapbox-directions-swift` CLI tool compilation on macOS.
-
 ## 3.27.0-rc.1
 
 ### Packaging
