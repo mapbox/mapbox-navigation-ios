@@ -91,6 +91,21 @@ public struct UnitMeasurementSystem: Codable, Equatable, Sendable {
 
 extension UnitMeasurementSystem {
     public init(locale: Locale) {
+#if os(macOS)
+        if #available(macOS 13, *) {
+            switch locale.measurementSystem {
+            case .metric:
+                self = .metric
+            case .uk:
+                self = .britishImperial
+            case .us:
+                self = .imperial
+            default:
+                self = .imperial
+            }
+            return
+        }
+#else
         if #available(iOS 16.0, *) {
             switch locale.measurementSystem {
             case .metric:
@@ -102,16 +117,17 @@ extension UnitMeasurementSystem {
             default:
                 self = .imperial
             }
+            return
+        }
+#endif
+        if locale.usesMetricSystem {
+            self = .metric
         } else {
-            if locale.usesMetricSystem {
-                self = .metric
-            } else {
-                switch locale.regionCode {
-                case "GB":
-                    self = .britishImperial
-                default:
-                    self = .imperial
-                }
+            switch locale.regionCode {
+            case "GB":
+                self = .britishImperial
+            default:
+                self = .imperial
             }
         }
     }
