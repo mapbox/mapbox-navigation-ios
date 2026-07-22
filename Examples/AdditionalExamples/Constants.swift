@@ -120,7 +120,7 @@ let listOfExamples: [NamedController] = [
     ),
     .init(
         name: "History Replaying",
-        description: "Demonstrates how to replay previous trips using history files. Simulate Navigation option isn't supported here, instead it will run the replay.",
+        description: "Demonstrates how to replay previous trips using history files. Simulate Navigation option isn't supported here, instead it will run the replay. Map-matched route replay is not supported — use Directions API history traces.",
         controller: HistoryReplayingViewController.self,
         storyboard: nil,
         pushExampleToViewController: true
