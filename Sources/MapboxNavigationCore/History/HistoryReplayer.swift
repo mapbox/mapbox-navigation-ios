@@ -7,6 +7,11 @@ import Foundation
 ///
 /// This class is used together with ``LocationClient/historyReplayingValue(with:)`` to create and control history files
 /// playback. Use this instance to observe playback events, seek, pause and controll playback speed.
+///
+/// - important: Replay of map-matched routes is not supported. ``HistoryReplayController`` can replay history traces
+/// recorded during Directions API turn-by-turn sessions. Traces from Map Matching API sessions do not produce
+/// ``RouteAssignmentHistoryEvent``s, so ``HistoryReplayDelegate/historyReplayController(_:wantsToSetRoutes:)`` will
+/// not be called for those routes.
 public final class HistoryReplayController: Sendable {
     private struct State: Sendable {
         weak var delegate: HistoryReplayDelegate?
@@ -306,6 +311,8 @@ public protocol HistoryReplayDelegate: AnyObject, Sendable {
 
 extension LocationClient {
     /// Creates a simulation ``LocationClient`` which will replay locations and other events from the history file.
+    ///
+    /// - important: Replay of map-matched routes is not supported. Use history traces recorded with the Directions API.
     /// - parameter controller: ``HistoryReplayController`` instance used to control and observe the playback.
     /// - returns: ``LocationClient``, configured for replaying the history trace.
     public static func historyReplayingValue(with controller: HistoryReplayController) -> Self {
