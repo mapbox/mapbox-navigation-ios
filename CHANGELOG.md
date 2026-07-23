@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+
+* Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
+
 ## 3.27.0-rc.1
 
 ### Packaging
