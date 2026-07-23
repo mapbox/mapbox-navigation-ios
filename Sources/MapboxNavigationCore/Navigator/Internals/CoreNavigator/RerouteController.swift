@@ -42,6 +42,9 @@ class RerouteController {
 
     private weak var navigator: NavigationNativeNavigator?
 
+    // Registered as the native reroute observer in place of `self`. See `RerouteObserverProxy`.
+    private let observer = RerouteObserverProxy()
+
     @MainActor
     required init(configuration: Configuration) {
         self.rerouteConfig = configuration.rerouteConfig
@@ -49,10 +52,12 @@ class RerouteController {
         self.config = configuration.configHandle
         self.defaultInitialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
 
+        observer.controller = self
+
         let defaultRerouteController = makeDefaultRerouteController(configuration: configuration)
         self.defaultRerouteController = defaultRerouteController
         navigator?.native.setRerouteControllerForController(defaultRerouteController)
-        navigator?.native.addRerouteObserver(for: self)
+        navigator?.native.addRerouteObserver(for: observer)
 
         defer {
             self.initialManeuverAvoidanceRadius = configuration.initialManeuverAvoidanceRadius
@@ -60,7 +65,38 @@ class RerouteController {
     }
 
     deinit {
-        self.navigator?.removeRerouteObserver(for: self)
+        // Removal is asynchronous. Passing the proxy rather than `self` keeps the removal task from
+        // retaining the controller while it is being deallocated.
+        navigator?.removeRerouteObserver(for: observer)
+    }
+}
+
+// Forwards native reroute callbacks to its `RerouteController`, which it holds weakly.
+//
+// Native does not retain observers, so the observer must be removed on teardown. Registering this proxy
+// instead of the controller lets the controller's `deinit` trigger removal without the asynchronous removal
+// retaining the controller mid-deallocation.
+private final class RerouteObserverProxy: RerouteObserver {
+    weak var controller: RerouteController?
+
+    func onSwitchToAlternative(forRoute route: any RouteInterface, legIndex: UInt32) {
+        controller?.onSwitchToAlternative(forRoute: route, legIndex: legIndex)
+    }
+
+    func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
+        controller?.onRerouteDetected(forRouteRequest: routeRequest) ?? false
+    }
+
+    func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
+        controller?.onRerouteReceived(forRouteResponse: routeResponse, routeRequest: routeRequest, origin: origin)
+    }
+
+    func onRerouteCancelled() {
+        controller?.onRerouteCancelled()
+    }
+
+    func onRerouteFailed(forError error: RerouteError) {
+        controller?.onRerouteFailed(forError: error)
     }
 }
 
@@ -103,7 +139,10 @@ extension RerouteController {
     }
 }
 
-extension RerouteController: RerouteObserver {
+// Reroute event handlers, invoked via `RerouteObserverProxy`. `RerouteController` deliberately does not
+// conform to `RerouteObserver`: only the proxy is registered with native, which keeps the controller from
+// being registered directly (its `deinit` cannot safely remove itself as an observer).
+extension RerouteController {
     func onSwitchToAlternative(forRoute route: any RouteInterface, legIndex: UInt32) {
         delegate?.rerouteControllerWantsSwitchToAlternative(self, route: route, legIndex: Int(legIndex))
     }
