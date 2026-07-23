@@ -132,6 +132,50 @@ final class RerouteControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testRegisteredObserverForwardsRerouteCallbacksToDelegate() throws {
+        let observer = try XCTUnwrap(navNavigator.passedAddedRerouteObserver)
+
+        XCTAssertTrue(observer.onRerouteDetected(forRouteRequest: directionsUrl))
+        XCTAssertTrue(delegate.didDetectRerouteCalled)
+        XCTAssertTrue(delegate.passedRerouteController === rerouteController)
+
+        let route = RouteInterfaceMock()
+        observer.onSwitchToAlternative(forRoute: route, legIndex: 2)
+        XCTAssertTrue(delegate.wantsSwitchToAlternativeCalled)
+        XCTAssertTrue(delegate.passedRoute === route)
+        XCTAssertEqual(delegate.passedLegIndex, 2)
+
+        observer.onRerouteCancelled()
+        XCTAssertTrue(delegate.didCancelRerouteCalled)
+    }
+
+    // Deallocating a `RerouteController` must deallocate cleanly — its `deinit` must not retain the controller
+    // via the asynchronous observer removal — and must remove the same observer it registered.
+    @MainActor
+    func testDeinitRemovesRerouteObserverWithoutResurrectingController() async {
+        navNavigator.passedRemovedRerouteObserver = nil
+
+        var controller: RerouteController? = RerouteController(configuration: configuration)
+        weak var weakController = controller
+
+        let addedObserver = navNavigator.passedAddedRerouteObserver
+        XCTAssertNotNil(addedObserver, "Controller should register a reroute observer on init")
+
+        controller = nil
+        XCTAssertNil(weakController, "Controller should deallocate immediately, not be resurrected by deinit")
+
+        // The observer removal is dispatched asynchronously onto the main actor.
+        while navNavigator.passedRemovedRerouteObserver == nil {
+            await Task.yield()
+        }
+        XCTAssertIdentical(
+            navNavigator.passedRemovedRerouteObserver,
+            addedObserver,
+            "The registered observer must be the one removed on deinit"
+        )
+    }
+
+    @MainActor
     func testNoDidCancelRerouteCallIfRerouteDisabled() {
         let rerouteController = rerouteController(with: .init(detectsReroute: false))
         rerouteController.onRerouteCancelled()
