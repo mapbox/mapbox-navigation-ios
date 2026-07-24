@@ -3,7 +3,8 @@ import CarPlayTestHelper
 import MapboxDirections
 import MapboxMaps
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
-@testable import MapboxNavigationUIKit
+@_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
+import QuartzCore
 @testable import TestHelper
 import XCTest
 
@@ -56,6 +57,136 @@ class CarPlayManagerTests: TestCase {
         mapTemplateProvider = nil
 
         super.tearDown()
+    }
+
+    @MainActor
+    func testBrowsingMapUsesConnectedCarPlayDisplayScale() throws {
+        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        let navigationMapView = mapViewController.navigationMapView
+
+        XCTAssertEqual(
+            mapViewController.mapOptions.pixelRatio,
+            Float(carWindow.screen.nativeScale)
+        )
+
+        let rendererView = try XCTUnwrap(
+            navigationMapView.mapView.subviews.first { $0.layer is CAMetalLayer }
+        )
+        XCTAssertEqual(rendererView.contentScaleFactor, carWindow.screen.nativeScale)
+    }
+
+    @MainActor
+    func testNavigationMapUsesConnectedCarPlayDisplayScale() async throws {
+        await startNavigation()
+
+        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        let rendererView = try XCTUnwrap(
+            navigationMapView.mapView.subviews.first { $0.layer is CAMetalLayer }
+        )
+        XCTAssertEqual(rendererView.contentScaleFactor, carWindow.screen.nativeScale)
+    }
+
+    @MainActor
+    func testBrowsingMapUsesOverlaysForConnectedCarPlayDisplay() throws {
+        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        let navigationMapView = mapViewController.navigationMapView
+        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
+            forNativeScreenSize: carWindow.screen.nativeBounds.size
+        )
+
+        XCTAssertEqual(mapViewController.usesCompactMapOverlays, usesCompactMapOverlays)
+        let expectedRouteLineWidthMultiplier = usesCompactMapOverlays
+            ? CarPlayUtilities.compactRouteLineWidthMultiplier
+            : 1.0
+        XCTAssertEqual(navigationMapView.routeLineWidthMultiplier, expectedRouteLineWidthMultiplier)
+        guard case .puck2D(let puckConfiguration)? = navigationMapView.puckType else {
+            return XCTFail("Browsing map should use a 2D puck.")
+        }
+        let expectedPuckConfiguration: Puck2DConfiguration = usesCompactMapOverlays
+            ? .carPlayCompact
+            : .carPlayHD
+        XCTAssertEqual(puckConfiguration.scale, expectedPuckConfiguration.scale)
+    }
+
+    @MainActor
+    func testNavigationMapUsesOverlaysForConnectedCarPlayDisplay() async throws {
+        await startNavigation()
+
+        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
+            forNativeScreenSize: carWindow.screen.nativeBounds.size
+        )
+
+        let expectedRouteLineWidthMultiplier = usesCompactMapOverlays
+            ? CarPlayUtilities.compactRouteLineWidthMultiplier
+            : 1.0
+        XCTAssertEqual(navigationMapView.routeLineWidthMultiplier, expectedRouteLineWidthMultiplier)
+        guard case .puck3D(let puckConfiguration)? = navigationMapView.puckType else {
+            return XCTFail("Navigation map should use a 3D puck.")
+        }
+        let expectedPuckConfiguration: Puck3DConfiguration = usesCompactMapOverlays
+            ? .carPlayCompact
+            : .carPlayHD
+        XCTAssertEqual(puckConfiguration.modelScale, expectedPuckConfiguration.modelScale)
+    }
+
+    @MainActor
+    func testBrowsingMapCanResetCustomPuckToSDKDefault() throws {
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        mapViewController.navigationMapView.puckType = .puck3D(.navigationDefault)
+
+        mapViewController.restoreDefaultPuckType()
+
+        guard case .puck2D(let configuration)? = mapViewController.navigationMapView.puckType else {
+            return XCTFail("Browsing map should restore the SDK-selected 2D puck.")
+        }
+        let expectedConfiguration: Puck2DConfiguration = mapViewController.usesCompactMapOverlays
+            ? .carPlayCompact
+            : .carPlayHD
+        XCTAssertEqual(configuration.scale, expectedConfiguration.scale)
+    }
+
+    @MainActor
+    func testNavigationMapCanResetCustomPuckToSDKDefault() async throws {
+        await startNavigation()
+        let carWindow = try XCTUnwrap(carPlayManager.carWindow)
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        navigationMapView.puckType = .puck2D(.navigationDefault)
+
+        navigationViewController.restoreDefaultPuckType()
+
+        guard case .puck3D(let configuration)? = navigationMapView.puckType else {
+            return XCTFail("Navigation map should restore the SDK-selected 3D puck.")
+        }
+        let usesCompactMapOverlays = CarPlayUtilities.usesCompactMapOverlays(
+            forNativeScreenSize: carWindow.screen.nativeBounds.size
+        )
+        let expectedConfiguration: Puck3DConfiguration = usesCompactMapOverlays
+            ? .carPlayCompact
+            : .carPlayHD
+        XCTAssertEqual(configuration.modelScale, expectedConfiguration.modelScale)
+    }
+
+    func testCompactMapOverlaysUseStandardDisplayHeightThreshold() {
+        XCTAssertTrue(
+            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 800, height: 480))
+        )
+        XCTAssertTrue(
+            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 480, height: 800))
+        )
+        XCTAssertFalse(
+            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 1280, height: 720))
+        )
+        XCTAssertFalse(
+            CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: CGSize(width: 900, height: 1200))
+        )
     }
 
     @available(*, deprecated)

@@ -3,7 +3,7 @@ import Combine
 import Foundation
 import MapboxDirections
 @_spi(Restricted) import MapboxMaps
-import MapboxNavigationCore
+@_spi(MapboxInternal) import MapboxNavigationCore
 
 /// ``CarPlayMapViewController`` is responsible for administering the Mapbox map, the interface styles and the map
 /// template buttons to display on CarPlay.
@@ -47,9 +47,22 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     /// The map view showing the route and the user’s location.
+    ///
+    /// If you replace its ``NavigationMapView/puckType``, call ``restoreDefaultPuckType()`` to restore the SDK-selected
+    /// configuration for the connected CarPlay display.
     @MainActor
     public var navigationMapView: NavigationMapView {
         return view as! NavigationMapView
+    }
+
+    /// Restores the SDK-selected 2D puck configuration for the connected CarPlay display.
+    ///
+    /// Use this method after replacing ``NavigationMapView/puckType`` with a custom puck. The restored configuration
+    /// depends on the connected CarPlay screen resolution.
+    @_spi(ExperimentalMapboxAPI)
+    @MainActor
+    public func restoreDefaultPuckType() {
+        navigationMapView.puckType = defaultPuckType
     }
 
     /// An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
@@ -211,6 +224,14 @@ open class CarPlayMapViewController: UIViewController {
 
     private var mapMatchingStateCancellable: AnyCancellable?
     private let core: MapboxNavigation
+    let mapOptions: MapOptions
+    let usesCompactMapOverlays: Bool
+    private var defaultPuckType: PuckType {
+        let configuration: Puck2DConfiguration = usesCompactMapOverlays
+            ? .carPlayCompact
+            : .carPlayHD
+        return .puck2D(configuration)
+    }
 
     ///  Initializes a new CarPlay map view controller.
     /// - Parameters:
@@ -222,6 +243,32 @@ open class CarPlayMapViewController: UIViewController {
     ) {
         self.core = core
         self.styles = styles
+        self.mapOptions = MapOptions()
+        self.usesCompactMapOverlays = false
+        super.init(nibName: nil, bundle: nil)
+        self.sessionConfiguration = CPSessionConfiguration(delegate: self)
+        navigationMapView.update(navigationCameraState: .following)
+    }
+
+    /// Initializes a new CarPlay map view controller with rendering options for its map.
+    ///
+    /// The pixel ratio in `mapOptions` must match the CarPlay screen. Because the map renderer's pixel ratio is
+    /// immutable, ``CarPlayManager`` supplies these options before this view controller loads its map.
+    /// - Parameters:
+    ///   - core: The entry point for interacting with the Mapbox Navigation SDK.
+    ///   - styles: The interface styles initially available to the style manager for display.
+    ///   - mapOptions: Rendering options for the underlying map.
+    ///   - usesCompactMapOverlays: Whether to use map overlays sized for a compact CarPlay display.
+    init(
+        core: MapboxNavigation,
+        styles: [Style],
+        mapOptions: MapOptions,
+        usesCompactMapOverlays: Bool = false
+    ) {
+        self.core = core
+        self.styles = styles
+        self.mapOptions = mapOptions
+        self.usesCompactMapOverlays = usesCompactMapOverlays
         super.init(nibName: nil, bundle: nil)
         self.sessionConfiguration = CPSessionConfiguration(delegate: self)
         navigationMapView.update(navigationCameraState: .following)
@@ -252,9 +299,13 @@ open class CarPlayMapViewController: UIViewController {
             location: location,
             routeProgress: routeProgress,
             routeRefreshing: core.navigation().routeRefreshing.eraseToAnyPublisher(),
-            navigationCameraType: .carPlay
+            navigationCameraType: .carPlay,
+            mapOptions: mapOptions
         )
 
+        if usesCompactMapOverlays {
+            navigationMapView.routeLineWidthMultiplier = CarPlayUtilities.compactRouteLineWidthMultiplier
+        }
         navigationMapView.delegate = self
         navigationMapView.mapView.mapboxMap.onStyleLoaded.sink { [weak self] _ in
             guard let self else { return }
@@ -274,7 +325,7 @@ open class CarPlayMapViewController: UIViewController {
 
         }.store(in: &lifetimeSubscriptions)
 
-        navigationMapView.puckType = .puck2D(.navigationCarPlayDefault)
+        navigationMapView.puckType = defaultPuckType
 
         navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden

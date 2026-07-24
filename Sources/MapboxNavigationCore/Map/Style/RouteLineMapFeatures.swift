@@ -245,7 +245,7 @@ extension Route {
         let routeColors = isAlternative ? colors.alternativeRouteColors : colors.mainRouteColors
         return with(LineLayer(id: ids.main, source: ids.source)) {
             $0.lineColor = .constant(.init(routeColors.unknown))
-            $0.lineWidth = .expression(.routeLineWidthExpression())
+            $0.lineWidth = .expression(.routeLineWidthExpression(config.routeLineWidthMultiplier))
             $0.lineJoin = .constant(.round)
             $0.lineCap = .constant(.round)
             $0.lineGradient = trafficGradient
@@ -262,7 +262,7 @@ extension Route {
         let lineColor = isAlternative ? config.routeAlternateCasingColor : config.routeCasingColor
         return with(LineLayer(id: ids.casing, source: ids.source)) {
             $0.lineColor = .constant(.init(lineColor))
-            $0.lineWidth = .expression(.routeCasingLineWidthExpression())
+            $0.lineWidth = .expression(.routeCasingLineWidthExpression(config.routeLineWidthMultiplier))
             $0.lineJoin = .constant(.round)
             $0.lineCap = .constant(.round)
             $0.lineDepthOcclusionFactor = config.occlusionFactor
@@ -277,7 +277,7 @@ extension Route {
     ) -> LineLayer {
         return with(LineLayer(id: ids.traversedRoute, source: ids.source)) {
             $0.lineColor = .constant(.init(traversedRouteColor))
-            $0.lineWidth = .expression(.routeLineWidthExpression())
+            $0.lineWidth = .expression(.routeLineWidthExpression(config.routeLineWidthMultiplier))
             $0.lineJoin = .constant(.round)
             $0.lineCap = .constant(.round)
             $0.lineDepthOcclusionFactor = config.occlusionFactor
@@ -292,7 +292,9 @@ extension Route {
     ) -> LineLayer {
         return with(LineLayer(id: ids.restrictedArea, source: ids.restrictedAreaSource)) {
             $0.lineColor = .constant(.init(config.routeRestrictedAreaColor))
-            $0.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
+            $0.lineWidth = .expression(
+                Expression.routeLineWidthExpression(0.5 * config.routeLineWidthMultiplier)
+            )
             $0.lineJoin = .constant(.round)
             $0.lineCap = .constant(.round)
             $0.lineOpacity = .constant(0.5)

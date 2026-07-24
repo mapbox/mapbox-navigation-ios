@@ -16,7 +16,11 @@ extension Puck3DConfiguration {
         modelEmissiveStrength: .constant(0)
     )
 
-    /// Default 3D user puck configuration
+    /// A fixed-size 3D user puck configuration for customer-managed CarPlay maps.
+    ///
+    /// - Important: CarPlay view controllers in `MapboxNavigationUIKit` do not use this configuration internally. They
+    /// dynamically select puck sizing based on the connected CarPlay screen resolution. See their documentation for
+    /// how to restore the SDK-selected puck after applying a custom configuration.
     public static let navigationCarPlayDefault = Puck3DConfiguration(
         model: Model(uri: modelURL),
         modelScale: .constant([1.1, 1.1, 1.1]),
@@ -36,6 +40,11 @@ extension Puck2DConfiguration {
         opacity: 1
     )
 
+    /// A fixed-size 2D user puck configuration for customer-managed CarPlay maps.
+    ///
+    /// - Important: CarPlay view controllers in `MapboxNavigationUIKit` do not use this configuration internally. They
+    /// dynamically select puck sizing based on the connected CarPlay screen resolution. See their documentation for
+    /// how to restore the SDK-selected puck after applying a custom configuration.
     public static let navigationCarPlayDefault = Puck2DConfiguration(
         topImage: UIColor.clear.image(CGSize(width: 1.0, height: 1.0)),
         bearingImage: .init(named: "puck", in: .mapboxNavigationUXCore, compatibleWith: nil),

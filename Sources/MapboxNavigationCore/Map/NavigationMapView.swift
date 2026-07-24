@@ -11,6 +11,13 @@ open class NavigationMapView: UIView {
     private enum Constants {
         static let initialMapRect = CGRect(x: 0, y: 0, width: 64, height: 64)
         static let initialViewportPadding = UIEdgeInsets(top: 20, left: 20, bottom: 40, right: 20)
+        static let routeLineWidthMultiplierRange = 0.5...2.0
+    }
+
+    private struct InitializationComponents {
+        let mapView: MapView
+        let mapStyleManager: NavigationMapStyleManager
+        let navigationCamera: NavigationCamera
     }
 
     /// The `MapView` instance added on top of ``NavigationMapView`` renders navigation-related components.
@@ -166,29 +173,112 @@ open class NavigationMapView: UIView {
         predictiveCacheManager: PredictiveCacheManager? = nil,
         useLegacyManualLayersOrderApproach: Bool = false
     ) {
+        let components = Self.makeInitializationComponents(
+            location: location,
+            routeProgress: routeProgress,
+            navigationCameraType: navigationCameraType,
+            heading: heading,
+            mapOptions: MapOptions(),
+            customRouteLineLayerPosition: customRouteLineLayerPosition,
+            shouldUseDeclarativeApproach: !useLegacyManualLayersOrderApproach
+        )
+        self.mapView = components.mapView
+        self.mapStyleManager = components.mapStyleManager
+        self.navigationCamera = components.navigationCamera
+        navigationCamera.update(cameraState: .following)
+        super.init(frame: Constants.initialMapRect)
+
+        finishInitialization(
+            predictiveCacheManager: predictiveCacheManager,
+            routeProgress: routeProgress,
+            routeRefreshing: routeRefreshing
+        )
+    }
+
+    /// Initializes a ``NavigationMapView`` with rendering options for its underlying `MapView`.
+    ///
+    /// - Parameters:
+    ///   - location: A publisher that emits current user location.
+    ///   - routeProgress: A publisher that emits route navigation progress.
+    ///   - routeRefreshing: A publisher that emits route refresh events.
+    ///   - navigationCameraType: The type of ``NavigationCamera``.
+    ///   - heading: A publisher that emits current user heading.
+    ///   - predictiveCacheManager: An instance of ``PredictiveCacheManager`` used to continuously cache upcoming map
+    /// tiles.
+    ///   - mapOptions: Rendering options used to initialize the underlying `MapView`. The pixel ratio must match the
+    /// display that hosts the map and cannot be changed after initialization. This is particularly important for
+    /// external displays such as CarPlay.
+    @_spi(MapboxInternal)
+    public init(
+        location: AnyPublisher<CLLocation, Never>,
+        routeProgress: AnyPublisher<RouteProgress?, Never>,
+        routeRefreshing: AnyPublisher<RefreshingStatus, Never>,
+        navigationCameraType: NavigationCameraType = .mobile,
+        heading: AnyPublisher<CLHeading, Never>? = nil,
+        predictiveCacheManager: PredictiveCacheManager? = nil,
+        mapOptions: MapOptions
+    ) {
+        let components = Self.makeInitializationComponents(
+            location: location,
+            routeProgress: routeProgress,
+            navigationCameraType: navigationCameraType,
+            heading: heading,
+            mapOptions: mapOptions,
+            customRouteLineLayerPosition: customRouteLineLayerPosition,
+            shouldUseDeclarativeApproach: true
+        )
+        self.mapView = components.mapView
+        self.mapStyleManager = components.mapStyleManager
+        self.navigationCamera = components.navigationCamera
+        navigationCamera.update(cameraState: .following)
+        super.init(frame: Constants.initialMapRect)
+
+        finishInitialization(
+            predictiveCacheManager: predictiveCacheManager,
+            routeProgress: routeProgress,
+            routeRefreshing: routeRefreshing
+        )
+    }
+
+    private static func makeInitializationComponents(
+        location: AnyPublisher<CLLocation, Never>,
+        routeProgress: AnyPublisher<RouteProgress?, Never>,
+        navigationCameraType: NavigationCameraType,
+        heading: AnyPublisher<CLHeading, Never>?,
+        mapOptions: MapOptions,
+        customRouteLineLayerPosition: LayerPosition?,
+        shouldUseDeclarativeApproach: Bool
+    ) -> InitializationComponents {
         let locationDataModel = LocationDataModel(
             location: location.map { [Location(clLocation: $0)] }.eraseToAnyPublisher(),
             heading: heading?.map { Heading(from: $0) }.eraseToAnyPublisher()
         )
-        let mapInitOptions = MapInitOptions(locationDataModel: locationDataModel)
-
-        self.mapView = MapView(frame: Constants.initialMapRect, mapInitOptions: mapInitOptions).autoresizing()
-
-        self.mapStyleManager = .init(
+        let mapInitOptions = MapInitOptions(mapOptions: mapOptions, locationDataModel: locationDataModel)
+        let mapView = MapView(frame: Constants.initialMapRect, mapInitOptions: mapInitOptions).autoresizing()
+        let mapStyleManager = NavigationMapStyleManager(
             mapView: mapView,
             customRouteLineLayerPosition: customRouteLineLayerPosition,
-            shouldUseDeclarativeApproach: !useLegacyManualLayersOrderApproach
+            shouldUseDeclarativeApproach: shouldUseDeclarativeApproach
         )
-        self.navigationCamera = NavigationCamera(
+        let navigationCamera = NavigationCamera(
             mapView,
             location: location,
             routeProgress: routeProgress,
             heading: heading,
             navigationCameraType: navigationCameraType
         )
-        navigationCamera.update(cameraState: .following)
-        super.init(frame: Constants.initialMapRect)
+        return InitializationComponents(
+            mapView: mapView,
+            mapStyleManager: mapStyleManager,
+            navigationCamera: navigationCamera
+        )
+    }
 
+    private func finishInitialization(
+        predictiveCacheManager: PredictiveCacheManager?,
+        routeProgress: AnyPublisher<RouteProgress?, Never>,
+        routeRefreshing: AnyPublisher<RefreshingStatus, Never>
+    ) {
         mapStyleManager.customizedLayerProvider = customizedLayerProvider
         mapStyleManager.delegate = self
         setupMapView()
@@ -382,6 +472,19 @@ open class NavigationMapView: UIView {
     /// illusion of a disappearing route. If `false`, the whole route will be shown without traversed part disappearing
     /// effect.
     public var routeLineTracksTraversal: Bool = true
+
+    /// Multiplies the default widths of route-line and maneuver-arrow layers.
+    ///
+    /// This internal customization allows SDK-managed maps on compact external displays to use appropriately sized
+    /// overlays while preserving the public mobile defaults. Values are clamped to `0.5...2.0`.
+    @_spi(MapboxInternal)
+    public var routeLineWidthMultiplier = 1.0 {
+        didSet {
+            routeLineWidthMultiplier = routeLineWidthMultiplier.clamped(
+                to: Constants.routeLineWidthMultiplierRange
+            )
+        }
+    }
 
     /// The maximum distance (in screen points) the user can tap for a selection to be valid when selecting a POI.
     public var poiClickableAreaSize: CGFloat = 40
@@ -1037,6 +1140,7 @@ open class NavigationMapView: UIView {
             routeAnnotationTextFont: routeAnnotationTextFont,
             routeAnnnotationCaptionTextFont: routeAnnotationCaptionTextFont,
             routeLineTracksTraversal: routeLineTracksTraversal,
+            routeLineWidthMultiplier: routeLineWidthMultiplier,
             isRestrictedAreaEnabled: showsRestrictedAreasOnRoute,
             showsTrafficOnRouteLine: showsTrafficOnRouteLine,
             showsAlternatives: showsAlternatives,

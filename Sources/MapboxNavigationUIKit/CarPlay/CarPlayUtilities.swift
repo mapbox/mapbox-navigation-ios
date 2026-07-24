@@ -82,6 +82,15 @@ enum CarPlayUtilities {
     static let safeAreaControlsVisibilityThreshold: CGFloat = 38
     static let controlsDismissalVisibilityDelay: TimeInterval = 0.2
 
+    /// Derived from the 480-pixel height of the standard 800×480 CarPlay display resolution.
+    static let compactMapOverlayShortEdgeThresholdInPixels: CGFloat = 480
+    /// Keeps route-line overlays proportional to the smaller usable map area on compact CarPlay displays.
+    static let compactRouteLineWidthMultiplier = 0.7
+
+    static func usesCompactMapOverlays(forNativeScreenSize screenSize: CGSize) -> Bool {
+        min(screenSize.width, screenSize.height) <= compactMapOverlayShortEdgeThresholdInPixels
+    }
+
     static func usesSafeTrailingConstraint(for safeAreaInsets: UIEdgeInsets) -> Bool {
         max(safeAreaInsets.left, safeAreaInsets.right) > safeAreaControlsVisibilityThreshold
     }
