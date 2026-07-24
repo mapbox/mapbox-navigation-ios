@@ -9,6 +9,10 @@
 * Fixed an issue where SDK-managed CarPlay maps were rendered using the phone display's native scale instead of the connected CarPlay display's native scale.
 * The current road name is now hidden while panning/zooming the map or previewing routes.
 
+### Map
+
+* Fixed `NavigationMapView.showcase(...)` (and other non-animated camera fits) briefly leaving the map in an "animation in progress" state and delaying it from becoming idle. A non-animated fit now sets the camera directly instead of easing with a zero duration.
+
 ### Other changes
 
 * Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
