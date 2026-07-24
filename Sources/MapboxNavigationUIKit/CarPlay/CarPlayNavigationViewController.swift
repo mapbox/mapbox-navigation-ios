@@ -325,6 +325,15 @@ open class CarPlayNavigationViewController: UIViewController {
         }
     }
 
+    func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
+        guard isViewLoaded, let navigationMapView, let wayNameView else { return }
+
+        wayNameView.isHidden = CarPlayWayNameViewConfiguration.shouldHideWayNameView(
+            activity: mapTemplate.currentActivity,
+            cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
+        )
+    }
+
     func updateSpeedLimitViewLayout() {
         let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
         topSpeedLimitViewConstraint.constant = layout.topPadding
@@ -737,6 +746,7 @@ open class CarPlayNavigationViewController: UIViewController {
         navigationMapView.pinInSuperview()
 
         self.navigationMapView = navigationMapView
+        updateWayNameViewVisibility()
     }
 
     private var directionsOptions: DirectionsOptions? {

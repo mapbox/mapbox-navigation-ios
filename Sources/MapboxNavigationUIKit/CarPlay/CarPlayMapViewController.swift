@@ -203,6 +203,7 @@ open class CarPlayMapViewController: UIViewController {
     var currentActivity: CarPlayActivity? {
         didSet {
             updateSpeedLimitViewVisibility()
+            updateWayNameViewVisibility()
         }
     }
 
@@ -357,6 +358,15 @@ open class CarPlayMapViewController: UIViewController {
         }
     }
 
+    func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
+        guard isViewLoaded, let wayNameView else { return }
+
+        wayNameView.isHidden = CarPlayWayNameViewConfiguration.shouldHideWayNameView(
+            activity: currentActivity,
+            cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
+        )
+    }
+
     func updateCarPlayControlsVisibility() {
         areCarPlayControlsVisible = CarPlayUtilities.carPlayControlsAreVisible(
             for: view.safeAreaInsets,
@@ -379,6 +389,7 @@ open class CarPlayMapViewController: UIViewController {
         ])
 
         self.wayNameView = wayNameView
+        updateWayNameViewVisibility()
     }
 
     /// Starts a Free Drive session if it is not started already.

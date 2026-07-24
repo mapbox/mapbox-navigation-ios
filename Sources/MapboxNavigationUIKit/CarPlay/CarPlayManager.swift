@@ -156,10 +156,20 @@ public class CarPlayManager: NSObject {
     }
 
     @MainActor
+    private func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
+        if let carPlayNavigationViewController {
+            carPlayNavigationViewController.updateWayNameViewVisibility(cameraState: cameraState)
+        } else {
+            carPlayMapViewController?.updateWayNameViewVisibility(cameraState: cameraState)
+        }
+    }
+
+    @MainActor
     private func setCurrentActivity(_ currentActivity: CarPlayActivity?) {
         self.currentActivity = currentActivity
         if let carPlayNavigationViewController {
             carPlayNavigationViewController.updateSpeedLimitViewVisibility()
+            carPlayNavigationViewController.updateWayNameViewVisibility()
             return
         }
         carPlayMapViewController?.currentActivity = currentActivity
@@ -181,6 +191,7 @@ public class CarPlayManager: NSObject {
         } else {
             carPlayMapViewController?.updateSpeedLimitViewVisibility()
         }
+        updateWayNameViewVisibility(cameraState: state)
 
         let traitCollection: UITraitCollection
         if let carPlayNavigationViewController {
@@ -1043,6 +1054,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
         // Whenever panning starts - stop any navigation camera updates.
         activeNavigationMapView?.navigationCamera.stop()
+        updateWayNameViewVisibility(cameraState: .idle)
         delegate?.carPlayManager(self, didBeginPanGesture: mapTemplate)
     }
 
