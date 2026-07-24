@@ -4,6 +4,9 @@
 
 ### CarPlay
 
+* Reduced route line and puck sizes on compact CarPlay displays (standard-sized or smaller) to better fit the map viewport.
+* Added experimental `CarPlayMapViewController.restoreDefaultPuckType()` and `CarPlayNavigationViewController.restoreDefaultPuckType()` methods for restoring the SDK-selected, resolution-dependent puck configuration after applying a custom puck. Access these methods by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
+* Fixed an issue where SDK-managed CarPlay maps were rendered using the phone display's native scale instead of the connected CarPlay display's native scale.
 * The current road name is now hidden while panning/zooming the map or previewing routes.
 
 ### Other changes

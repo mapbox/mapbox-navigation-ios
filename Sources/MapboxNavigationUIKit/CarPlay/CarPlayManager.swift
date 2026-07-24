@@ -418,6 +418,19 @@ extension CarPlayManager: CPTemplateApplicationSceneDelegate {
 // MARK: InterfaceController handling Methods
 
 extension CarPlayManager {
+    /// Creates map options for a map rendered on the connected CarPlay display.
+    ///
+    /// `MapOptions` otherwise uses `UIScreen.main.nativeScale`, which describes the phone screen. A map hosted by
+    /// `CPWindow` must instead use that window's screen scale; the renderer captures this value during initialization
+    /// and cannot update it after the map moves into the CarPlay window.
+    private func mapOptions(for window: UIWindow) -> MapOptions {
+        MapOptions(pixelRatio: window.screen.nativeScale)
+    }
+
+    private func usesCompactMapOverlays(for window: UIWindow) -> Bool {
+        CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: window.screen.nativeBounds.size)
+    }
+
     @MainActor
     func handleDidConnect(interfaceController: CPInterfaceController, to window: CPWindow) {
         CarPlayManager.isConnected = true
@@ -428,7 +441,12 @@ extension CarPlayManager {
         if shouldDisableIdleTimer {
             idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
-        let carPlayMapViewController = CarPlayMapViewController(core: core, styles: styles)
+        let carPlayMapViewController = CarPlayMapViewController(
+            core: core,
+            styles: styles,
+            mapOptions: mapOptions(for: window),
+            usesCompactMapOverlays: usesCompactMapOverlays(for: window)
+        )
         carPlayMapViewController.userInfo = eventsManager.userInfo
         carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
         carPlayMapViewController.delegate = self
@@ -925,7 +943,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         trip: CPTrip,
         navigationRoutes: NavigationRoutes
     ) {
-        guard let interfaceController, let carPlayMapViewController else {
+        guard let interfaceController, let carPlayMapViewController, let carWindow else {
             return
         }
         clearMapAnnotations()
@@ -950,6 +968,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
                     manager: self,
                     styles: styles,
                     navigationRoutes: navigationRoutes
+                )
+                carPlayNavigationViewController.configureMap(
+                    mapOptions: mapOptions(for: carWindow),
+                    usesCompactMapOverlays: usesCompactMapOverlays(for: carWindow)
                 )
                 carPlayNavigationViewController.startNavigationSession(for: trip)
                 carPlayNavigationViewController.delegate = self
@@ -1653,7 +1675,12 @@ extension CarPlayManager {
             idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
 
-        let carPlayMapViewController = CarPlayMapViewController(core: core, styles: styles)
+        let carPlayMapViewController = CarPlayMapViewController(
+            core: core,
+            styles: styles,
+            mapOptions: mapOptions(for: window),
+            usesCompactMapOverlays: usesCompactMapOverlays(for: window)
+        )
         carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
         carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
