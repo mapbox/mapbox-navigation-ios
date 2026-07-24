@@ -951,7 +951,16 @@ open class NavigationMapView: UIView {
                 maxZoom: nil,
                 offset: nil
             )
-            mapView.camera.ease(to: cameraOptions, duration: animated ? duration : 0.0)
+            if animated {
+                mapView.camera.ease(to: cameraOptions, duration: duration)
+            } else {
+                // Set the camera directly rather than easing with a 0s duration: easing with a
+                // duration of 0 still leaves `mapboxMap.isAnimationInProgress` true for a while
+                // after this call returns, so the map keeps re-rendering as if it were still
+                // animating instead of settling right away — on every non-animated fit (e.g. every
+                // `showcase(...)` call, which fits the camera without animation by default).
+                mapView.mapboxMap.setCamera(to: cameraOptions)
+            }
         } catch {
             Log.error("Failed to fit the camera: \(error.localizedDescription)", category: .navigationUI)
         }
