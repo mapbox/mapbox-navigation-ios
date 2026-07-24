@@ -294,6 +294,16 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
+    func testWayNameViewIsHiddenDuringRoutePreview() async throws {
+        let wayNameView = try browsingWayNameView()
+
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
+
+        XCTAssertTrue(wayNameView.isHidden)
+    }
+
+    @MainActor
     func testPreviewRouteWithCustomTrip() async {
         let customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         delegate.returnedTrip = customTrip
@@ -377,14 +387,22 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidBeginPanGesture() async {
+    func testDidBeginPanGesture() async throws {
         let mapTemplate = CPMapTemplate()
+        let wayNameView = try browsingWayNameView()
+        wayNameView.containerView.isHidden = false
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidBeginPanGesture(mapTemplate)
         }
         await task.value
+
+        XCTAssertTrue(wayNameView.isHidden)
+        XCTAssertFalse(wayNameView.containerView.isHidden)
         XCTAssertTrue(delegate.didBeginPanGestureCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
+
+        carPlayManager.navigationCameraStateDidChange(.following)
+        XCTAssertFalse(wayNameView.isHidden)
     }
 
     func testDidEndPanGesture() {
@@ -424,9 +442,11 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidShowPanningInterfaceInBrowsingMode() async {
+    func testDidShowPanningInterfaceInBrowsingMode() async throws {
         let mapTemplate = CPMapTemplate()
         mapTemplate.currentActivity = .browsing
+        let wayNameView = try browsingWayNameView()
+        wayNameView.containerView.isHidden = false
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidShowPanningInterface(mapTemplate)
         }
@@ -434,6 +454,8 @@ class CarPlayManagerTests: TestCase {
 
         XCTAssertEqual(carPlayManager.currentActivity, .panningInBrowsingMode)
         XCTAssertEqual(mapTemplate.currentActivity, .panningInBrowsingMode)
+        XCTAssertTrue(wayNameView.isHidden)
+        XCTAssertFalse(wayNameView.containerView.isHidden)
 
         XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
         XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
@@ -443,16 +465,16 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidShowPanningInterfaceInNavigationMode() async {
-        let task = Task { @MainActor in
-            let navigationMapTemplate = await startNavigation()
-            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
-            return navigationMapTemplate
-        }
-        let navigationMapTemplate = await task.value
+    func testDidShowPanningInterfaceInNavigationMode() async throws {
+        let navigationMapTemplate = await startNavigation()
+        let wayNameView = try XCTUnwrap(carPlayManager.carPlayNavigationViewController?.wayNameView)
+        wayNameView.containerView.isHidden = false
+        carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
 
         XCTAssertEqual(carPlayManager.currentActivity, .panningInNavigationMode)
         XCTAssertEqual(navigationMapTemplate.currentActivity, .panningInNavigationMode)
+        XCTAssertTrue(wayNameView.isHidden)
+        XCTAssertFalse(wayNameView.containerView.isHidden)
 
         XCTAssertTrue(delegate.mapButtonsCompatibleWithCalled)
         XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
@@ -462,12 +484,14 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    func testDidDismissPanningInterfaceInBrowsingMode() async {
+    func testDidDismissPanningInterfaceInBrowsingMode() async throws {
         let mapTemplate = CPMapTemplate()
         mapTemplate.userInfo = [
             CarPlayManager.previousActivityKey: CarPlayActivity.browsing,
             CarPlayManager.currentActivityKey: CarPlayActivity.panningInBrowsingMode,
         ]
+        let wayNameView = try browsingWayNameView()
+        wayNameView.isHidden = true
 
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidDismissPanningInterface(mapTemplate)
@@ -476,23 +500,33 @@ class CarPlayManagerTests: TestCase {
 
         XCTAssertEqual(carPlayManager.currentActivity, .browsing)
         XCTAssertEqual(mapTemplate.currentActivity, .browsing)
+        XCTAssertTrue(wayNameView.isHidden)
+
+        carPlayManager.navigationCameraStateDidChange(.following)
+        XCTAssertFalse(wayNameView.isHidden)
 
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, mapTemplate)
     }
 
     @MainActor
-    func testDidDismissPanningInterfaceInNavigationMode() async {
+    func testDidDismissPanningInterfaceInNavigationMode() async throws {
+        let navigationMapTemplate = await startNavigation()
+        carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
+        let wayNameView = try XCTUnwrap(carPlayManager.carPlayNavigationViewController?.wayNameView)
+        XCTAssertTrue(wayNameView.isHidden)
+
         let task = Task { @MainActor in
-            let navigationMapTemplate = await startNavigation()
-            carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
             carPlayManager.mapTemplateDidDismissPanningInterface(navigationMapTemplate)
-            return navigationMapTemplate
         }
-        let navigationMapTemplate = await task.value
+        await task.value
 
         XCTAssertEqual(carPlayManager.currentActivity, .navigating)
         XCTAssertEqual(navigationMapTemplate.currentActivity, .navigating)
+        XCTAssertTrue(wayNameView.isHidden)
+
+        carPlayManager.navigationCameraStateDidChange(.following)
+        XCTAssertFalse(wayNameView.isHidden)
 
         XCTAssertTrue(delegate.didDismissPanningInterfaceCalled)
         XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
@@ -506,6 +540,13 @@ class CarPlayManagerTests: TestCase {
         carPlayManager.application(.shared, didConnectCarInterfaceController: interfaceController, to: window)
         let carPlayMapViewController = carPlayManager.carPlayMapViewController
         XCTAssertEqual(carPlayMapViewController?.userInfo, eventsManagerSpy.userInfo)
+    }
+
+    @MainActor
+    private func browsingWayNameView() throws -> WayNameView {
+        let viewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        viewController.loadViewIfNeeded()
+        return try XCTUnwrap(viewController.wayNameView)
     }
 
     private func previewRoutesOptions() async -> NavigationRouteOptions {

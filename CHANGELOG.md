@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### CarPlay
+
+* The current road name is now hidden while panning/zooming the map or previewing routes.
+
 ### Other changes
 
 * Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
