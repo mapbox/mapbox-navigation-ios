@@ -309,7 +309,13 @@ private func decodeSingleCoordinate(
     var component: Int32 = 0
 
     repeat {
-        currentChar = Int8(byteArray[position]) - 63
+        // Encoded polyline bytes must be ASCII 0x3F...0x7E. Reject anything else
+        // instead of narrowing with Int8(_:), which traps for values > 127.
+        let byte = byteArray[position]
+        guard (0x3F...0x7E).contains(byte) else {
+            throw PolylineError.singleCoordinateDecodingError
+        }
+        currentChar = Int8(byte) - 63
         component = Int32(currentChar & bitMask)
         coordinate |= (component << (5 * componentCounter))
         position += 1
