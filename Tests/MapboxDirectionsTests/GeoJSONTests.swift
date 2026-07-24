@@ -16,6 +16,21 @@ class GeoJSONTests: XCTestCase {
         XCTAssertEqual(lineString?.coordinates.last?.longitude ?? 0.0, -84.411148, accuracy: 1e-5)
     }
 
+    /// Non-ASCII / out-of-alphabet bytes must not trap via `Int8(UInt8)`;
+    /// `decodePolyline` returns nil and `LineString` throws instead.
+    func testNonASCIIByteDoesNotTrap() {
+        let malicious = "q|qeFbdejV\u{0080}"
+        let decoded: [LocationCoordinate2D]? = decodePolyline(malicious, precision: 1e5)
+        XCTAssertNil(decoded)
+        XCTAssertThrowsError(try LineString(encodedPolyline: malicious, precision: 1e5))
+
+        // High-bit UTF-8 sequence alone (U+0080 → C2 80)
+        let highBitOnly = "\u{0080}"
+        let decodedHighBit: [LocationCoordinate2D]? = decodePolyline(highBitOnly, precision: 1e5)
+        XCTAssertNil(decodedHighBit)
+        XCTAssertThrowsError(try LineString(encodedPolyline: highBitOnly, precision: 1e5))
+    }
+
     func testZeroLengthWorkaround() {
         var lineString: LineString? = nil
 

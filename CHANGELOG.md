@@ -10,6 +10,7 @@
 
 * Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
 * Fixed `mapbox-directions-swift` CLI tool compilation on macOS.
+* Fixed a crash when decoding a polyline geometry that contains non-ASCII bytes. Malformed input now fails gracefully instead of trapping.
 
 ## 3.27.0-rc.1
 
