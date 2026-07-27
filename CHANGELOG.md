@@ -21,6 +21,7 @@
 ### Other changes
 
 * Fixed a crash (`RerouteController.__deallocating_deinit`, "object deallocated with non-zero retain count") that could occur while switching between online and offline routing, caused by a strong reference to the reroute controller escaping its `deinit`.
+* Fixed `NavigationMapView.showcase(...)` (and other non-animated camera fits) leaving the map continuously rendering. A non-animated fit now sets the camera directly instead of running a zero-duration animation whose completion never fired, which had pinned the map in an "animation in progress" state and prevented it from becoming idle.
 * Fixed `mapbox-directions-swift` CLI tool compilation on macOS.
 * Fixed a crash when decoding a polyline geometry that contains non-ASCII bytes. Malformed input now fails gracefully instead of trapping.
 
