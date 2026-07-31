@@ -226,14 +226,21 @@ open class CarPlayNavigationViewController: UIViewController {
     private var widthSpeedLimitViewConstraint: NSLayoutConstraint!
     private var heightSpeedLimitViewConstraint: NSLayoutConstraint!
     private var speedLimitViewContainer: UIView!
-    private var areCarPlayControlsVisible = false {
+    var hidesSpeedLimitViewWithMapControls = true {
         didSet {
             updateSpeedLimitViewVisibility()
         }
     }
 
+    private var areCarPlayControlsVisible = false {
+        didSet {
+            updateSpeedLimitViewVisibility()
+            updateSpeedLimitViewLayoutIfLoaded()
+        }
+    }
+
     private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
-    private var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
+    var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
 
     private var safeTrailingCompassViewConstraint: NSLayoutConstraint!
     private var safeLeadingCompassViewConstraint: NSLayoutConstraint!
@@ -265,7 +272,7 @@ open class CarPlayNavigationViewController: UIViewController {
         let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
         topSpeedLimitViewConstraint = speedLimitViewContainer.topAnchor.constraint(
             equalTo: view.safeTopAnchor,
-            constant: layout.topPadding
+            constant: speedLimitViewTopPadding(for: speedLimitView.signStandard)
         )
         safeTrailingSpeedLimitViewConstraint = speedLimitViewContainer.trailingAnchor.constraint(
             equalTo: view.safeTrailingAnchor,
@@ -320,6 +327,7 @@ open class CarPlayNavigationViewController: UIViewController {
                 activity: mapTemplate.currentActivity,
                 cameraState: navigationMapView.navigationCamera.currentCameraState,
                 areCarPlayControlsVisible: areCarPlayControlsVisible,
+                hidesSpeedLimitViewWithMapControls: hidesSpeedLimitViewWithMapControls,
                 isCameraRecenterOffered: false
             )
         }
@@ -336,12 +344,24 @@ open class CarPlayNavigationViewController: UIViewController {
 
     func updateSpeedLimitViewLayout() {
         let layout = CarPlaySpeedLimitViewConfiguration.layout(for: speedLimitView.signStandard)
-        topSpeedLimitViewConstraint.constant = layout.topPadding
+        topSpeedLimitViewConstraint.constant = speedLimitViewTopPadding(for: speedLimitView.signStandard)
         safeTrailingSpeedLimitViewConstraint.constant = -layout.sidePadding
         trailingSpeedLimitViewConstraint.constant = -layout.sidePadding
         safeLeadingSpeedLimitViewConstraint.constant = layout.sidePadding
         widthSpeedLimitViewConstraint.constant = layout.size.width
         heightSpeedLimitViewConstraint.constant = layout.size.height
+    }
+
+    private func speedLimitViewTopPadding(for signStandard: SignStandard?) -> CGFloat {
+        CarPlaySpeedLimitViewConfiguration.topPadding(
+            for: signStandard,
+            areCarPlayControlsVisible: areCarPlayControlsVisible
+        )
+    }
+
+    private func updateSpeedLimitViewLayoutIfLoaded() {
+        guard isViewLoaded, speedLimitView != nil else { return }
+        updateSpeedLimitViewLayout()
     }
 
     func updateCarPlayControlsVisibility() {

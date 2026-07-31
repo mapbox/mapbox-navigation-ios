@@ -1,5 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### CarPlay
+
+* Fixed an issue where the speed limit view could remain hidden during CarPlay free drive despite available speed-limit data.
+* Added the experimental `CarPlayManager.hidesSpeedLimitViewWithMapControls` property for controlling whether the speed limit view is hidden while CarPlay map controls are visible. Access this property by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
+* Adjusted the CarPlay speed limit view size to visually match CarPlay map buttons.
+
 ## 3.28.0-rc.1
 
 ### Packaging

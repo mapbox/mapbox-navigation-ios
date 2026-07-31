@@ -189,6 +189,58 @@ class CarPlayManagerTests: TestCase {
         )
     }
 
+    @MainActor
+    func testCameraStateSubscriptionSynchronizesCurrentState() throws {
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        let navigationCamera = mapViewController.navigationMapView.navigationCamera
+        carPlayManager.unsubscribeFromCameraStateNotifications()
+        navigationCamera.stop()
+        mapViewController.recenterButton.isHidden = true
+
+        carPlayManager.subscribeForCameraStateNotifications()
+
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
+        XCTAssertFalse(mapViewController.recenterButton.isHidden)
+    }
+
+    @MainActor
+    func testBrowsingMapReceivesUpdatesWhenFreeDriveIsAlreadyActive() async {
+        XCTAssertEqual(
+            navigationProvider.mapboxNavigation.tripSession().currentSession.state,
+            .freeDrive(.active)
+        )
+        let mapViewController = CarPlayMapViewController(
+            core: navigationProvider.mapboxNavigation,
+            styles: [StandardDayStyle(), StandardNightStyle()]
+        )
+
+        mapViewController.loadViewIfNeeded()
+        XCTAssertNil(mapViewController.speedLimitView.signStandard)
+
+        let status = TestNavigationStatusProvider.createNavigationStatus()
+        await navigationProvider.navigator()._statusProcessor.updateMapMatching(status: status)
+
+        XCTAssertEqual(mapViewController.speedLimitView.signStandard, .viennaConvention)
+    }
+
+    @MainActor
+    func testHidesSpeedLimitViewWithMapControlsPropagatesToCarPlayViewControllers() async throws {
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        XCTAssertTrue(carPlayManager.hidesSpeedLimitViewWithMapControls)
+        XCTAssertTrue(mapViewController.hidesSpeedLimitViewWithMapControls)
+
+        carPlayManager.hidesSpeedLimitViewWithMapControls = false
+        XCTAssertFalse(mapViewController.hidesSpeedLimitViewWithMapControls)
+
+        await startNavigation()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        XCTAssertFalse(navigationViewController.hidesSpeedLimitViewWithMapControls)
+
+        carPlayManager.hidesSpeedLimitViewWithMapControls = true
+        XCTAssertTrue(mapViewController.hidesSpeedLimitViewWithMapControls)
+        XCTAssertTrue(navigationViewController.hidesSpeedLimitViewWithMapControls)
+    }
+
     @available(*, deprecated)
     @MainActor
     func testEventsSentWhenCarPlayConnectedAndDisconnected() {
