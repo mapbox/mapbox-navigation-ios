@@ -207,6 +207,50 @@ class RouteNotificationTests: XCTestCase {
         XCTAssertEqual(second.details?.actualValue, "US,CA")
     }
 
+    func testDecodeTollViolation() throws {
+        let json = """
+        {
+            "type": "violation",
+            "subtype": "toll",
+            "refresh_type": "static",
+            "geometry_index_start": 0,
+            "geometry_index_end": 3,
+            "details": {
+                "message": "The route uses a toll road."
+            }
+        }
+        """.data(using: .utf8)!
+
+        let notification = try JSONDecoder().decode(RouteNotification.self, from: json)
+
+        XCTAssertEqual(notification.kind, .violation)
+        XCTAssertEqual(notification.subtype, .toll)
+        XCTAssertEqual(notification.refreshType, .static)
+        XCTAssertEqual(notification.details, .init(message: "The route uses a toll road."))
+    }
+
+    func testDecodeMotorwayViolation() throws {
+        let json = """
+        {
+            "type": "violation",
+            "subtype": "motorway",
+            "refresh_type": "static",
+            "geometry_index_start": 1,
+            "geometry_index_end": 5,  
+            "details": {
+                "message": "The route uses a motorway."
+            }
+        }
+        """.data(using: .utf8)!
+
+        let notification = try JSONDecoder().decode(RouteNotification.self, from: json)
+
+        XCTAssertEqual(notification.kind, .violation)
+        XCTAssertEqual(notification.subtype, .motorway)
+        XCTAssertEqual(notification.refreshType, .static)
+        XCTAssertEqual(notification.details, .init(message: "The route uses a motorway."))
+    }
+
     func testDecodingFailsWhenTypeMissing() throws {
         let json = "{}".data(using: .utf8)!
         XCTAssertThrowsError(try JSONDecoder().decode(RouteNotification.self, from: json))

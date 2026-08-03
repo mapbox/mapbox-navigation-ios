@@ -8,6 +8,10 @@
 * Added the experimental `CarPlayManager.hidesSpeedLimitViewWithMapControls` property for controlling whether the speed limit view is hidden while CarPlay map controls are visible. Access this property by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
 * Adjusted the CarPlay speed limit view size to visually match CarPlay map buttons.
 
+### MapboxDirections
+
+* Added `RouteNotification.Subtype.toll` and `RouteNotification.Subtype.motorway` constants representing violation subtypes for routes that include a toll road or motorway while those were explicitly requested to be excluded via `exclude=toll` or `exclude=motorway`.
+
 ## 3.28.0-rc.1
 
 ### Packaging
