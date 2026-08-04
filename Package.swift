@@ -11,9 +11,9 @@ let roadCamerasEnabled = FileManager.default
         .path
     )
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.27.0", "38d8cdad3509b72bddc0f8383467c8410c544a03536ba2699f0717e46bee1dbf", "500de61e62c2073a5c5fd44a859af78c73134437")
-let mapsVersion: Version = "11.27.0"
-let navsdkVersion: Version = "0.27.0"
+let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.27.1", "b8094640f858ea80b23eea76fd6d6e0c78bd1b5246b6c4127cee09dde9be3ac7", "689b2bc19f0a5cb171e9db7541f94ccb963e2b97")
+let mapsVersion: Version = "11.27.1"
+let navsdkVersion: Version = "0.27.1"
 
 let package = Package(
     name: "MapboxNavigation",
