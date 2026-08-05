@@ -649,8 +649,10 @@ class CarPlayManagerTests: TestCase {
 
     @MainActor
     func testDidShowPanningInterfaceInNavigationMode() async throws {
-        let navigationMapTemplate = await startNavigation()
-        let wayNameView = try XCTUnwrap(carPlayManager.carPlayNavigationViewController?.wayNameView)
+        await startNavigation()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapTemplate = navigationViewController.mapTemplate
+        let wayNameView = try XCTUnwrap(navigationViewController.wayNameView)
         wayNameView.containerView.isHidden = false
         carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
 
@@ -694,9 +696,16 @@ class CarPlayManagerTests: TestCase {
 
     @MainActor
     func testDidDismissPanningInterfaceInNavigationMode() async throws {
-        let navigationMapTemplate = await startNavigation()
+        await startNavigation()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapTemplate = navigationViewController.mapTemplate
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        carPlayManager.unsubscribeFromCameraStateNotifications()
+        // Starting navigation transitions the camera to following asynchronously. Make the non-following state
+        // caused by panning explicit instead of depending on whether that transition has completed.
+        navigationMapView.navigationCamera.stop()
         carPlayManager.mapTemplateDidShowPanningInterface(navigationMapTemplate)
-        let wayNameView = try XCTUnwrap(carPlayManager.carPlayNavigationViewController?.wayNameView)
+        let wayNameView = try XCTUnwrap(navigationViewController.wayNameView)
         XCTAssertTrue(wayNameView.isHidden)
 
         let task = Task { @MainActor in
