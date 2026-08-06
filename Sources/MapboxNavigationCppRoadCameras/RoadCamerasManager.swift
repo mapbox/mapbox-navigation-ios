@@ -2,20 +2,20 @@ import Combine
 import Foundation
 import MapboxNavigationNative
 internal import MapboxNavigationNative_Private
-internal import MapboxNavSdk
-internal import MapboxNavSdk_Private
+internal import MapboxNavSdkRoadCameras
+internal import MapboxNavSdkRoadCameras_Private
 
 /// Manager that monitors and manages road cameras withing the active navigation activity.
 @_spi(ExperimentalMapboxAPI)
 @MainActor
 public final class RoadCamerasManager {
-    let native: MapboxNavSdk.RoadCamerasManager
+    let native: MapboxNavSdkRoadCameras.RoadCamerasManager
 
     /// Creates an instance of a manager.
     /// - Parameters:
     ///    - navigatorHandle: ``MapboxNavigationProvider/navigatorHandle`` shared navigator handle instance.
     public init(navigatorHandle: NavigatorHandle) {
-        self.native = MapboxNavSdk.RoadCamerasManager(handle: navigatorHandle)
+        self.native = MapboxNavSdkRoadCameras.RoadCamerasManager(handle: navigatorHandle)
     }
 
     /// Creates an instance of a manager.

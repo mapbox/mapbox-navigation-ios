@@ -1,7 +1,7 @@
 import Foundation
 @_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 internal import MapboxCoreMaps_Private
-internal import MapboxNavSdk
+internal import MapboxNavSdkRoadCameras
 import UIKit
 
 /// The visual style for a road camera icon.
@@ -20,8 +20,8 @@ public struct RoadCameraStyle: Sendable {
 }
 
 extension RoadCameraStyle {
-    var native: MapboxNavSdk.RoadCameraStyle? {
-        nativeImage.flatMap { MapboxNavSdk.RoadCameraStyle(image: $0, imageOffset: nativeImageOffset) }
+    var native: MapboxNavSdkRoadCameras.RoadCameraStyle? {
+        nativeImage.flatMap { MapboxNavSdkRoadCameras.RoadCameraStyle(image: $0, imageOffset: nativeImageOffset) }
     }
 
     var nativeImage: __MBXImage? {
@@ -40,14 +40,14 @@ public protocol RoadCamerasIconProvider {
 }
 
 /// Adapts a ``RoadCamerasIconProvider`` implementation to the native.
-final class RoadCamerasIconProviderAdapter: NSObject, MapboxNavSdk.RoadCamerasIconProvider {
+final class RoadCamerasIconProviderAdapter: NSObject, MapboxNavSdkRoadCameras.RoadCamerasIconProvider {
     private let provider: RoadCamerasIconProvider
 
     init(_ provider: RoadCamerasIconProvider) {
         self.provider = provider
     }
 
-    func provideIcon(for roadCamera: MapboxNavSdk.RoadCamera) -> MapboxNavSdk.RoadCameraStyle? {
+    func provideIcon(for roadCamera: MapboxNavSdkRoadCameras.RoadCamera) -> MapboxNavSdkRoadCameras.RoadCameraStyle? {
         let platformCamera = RoadCamera(roadCamera)
         guard let style = provider.provideIcon(for: platformCamera) else { return nil }
         return style.native

@@ -160,4 +160,11 @@ let listOfExamples: [NamedController] = [
         storyboard: nil,
         pushExampleToViewController: true
     ),
+    .init(
+        name: "Road Cameras",
+        description: "Demonstrates how to display road cameras on the map and observe camera events.",
+        controller: RoadCamerasViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
 ]

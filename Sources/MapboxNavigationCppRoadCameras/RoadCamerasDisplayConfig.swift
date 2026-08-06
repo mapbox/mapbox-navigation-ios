@@ -1,5 +1,5 @@
 import Foundation
-internal import MapboxNavSdk
+internal import MapboxNavSdkRoadCameras
 
 /// Configuration for displaying road cameras on the map.
 @_spi(ExperimentalMapboxAPI)
@@ -85,7 +85,7 @@ public struct RoadCamerasDisplayConfig: Sendable {
 }
 
 extension RoadCamerasDisplayConfig {
-    init(_ native: MapboxNavSdk.RoadCamerasDisplayConfig) {
+    init(_ native: MapboxNavSdkRoadCameras.RoadCamerasDisplayConfig) {
         self.init(
             startShowDistance: native.startShowDistance,
             stopShowDistance: native.stopShowDistance,
@@ -105,8 +105,8 @@ extension RoadCamerasDisplayConfig {
         )
     }
 
-    var native: MapboxNavSdk.RoadCamerasDisplayConfig {
-        MapboxNavSdk.RoadCamerasDisplayConfig(
+    var native: MapboxNavSdkRoadCameras.RoadCamerasDisplayConfig {
+        MapboxNavSdkRoadCameras.RoadCamerasDisplayConfig(
             startShowDistance: startShowDistance,
             stopShowDistance: stopShowDistance,
             startShowTravelTime: startShowTravelTime.map(NSNumber.init(value:)),

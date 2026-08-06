@@ -1,5 +1,5 @@
 import Foundation
-internal import MapboxNavSdk
+internal import MapboxNavSdkRoadCameras
 
 /// Configuration for the road cameras appearance.
 @_spi(ExperimentalMapboxAPI)
@@ -25,8 +25,8 @@ public struct RoadCamerasConfig {
 }
 
 extension RoadCamerasConfig {
-    var native: MapboxNavSdk.RoadCamerasConfig {
-        MapboxNavSdk.RoadCamerasConfig(
+    var native: MapboxNavSdkRoadCameras.RoadCamerasConfig {
+        MapboxNavSdkRoadCameras.RoadCamerasConfig(
             mapPosition: nil,
             cameraIconMinZoom: cameraIconMinZoom,
             displayConfig: displayConfig?.native,

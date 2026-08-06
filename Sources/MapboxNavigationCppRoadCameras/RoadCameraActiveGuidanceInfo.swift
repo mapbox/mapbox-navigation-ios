@@ -1,6 +1,6 @@
 import CoreLocation
 import Foundation
-internal import MapboxNavSdk
+internal import MapboxNavSdkRoadCameras
 
 /// Active guidance information for a road camera.
 @_spi(ExperimentalMapboxAPI)
@@ -46,7 +46,7 @@ public struct RoadCameraActiveGuidanceInfo: Sendable, Equatable {
 }
 
 extension RoadCameraActiveGuidanceInfo {
-    init(_ native: MapboxNavSdk.RoadCameraActiveGuidanceInfo) {
+    init(_ native: MapboxNavSdkRoadCameras.RoadCameraActiveGuidanceInfo) {
         self.init(
             routeId: native.routeId,
             legIndex: native.legIndex,
