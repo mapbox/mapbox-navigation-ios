@@ -74,7 +74,7 @@ class IntersectionTests: XCTestCase {
         intersections = [
             Intersection(
                 location: LocationCoordinate2D(latitude: 52.508068, longitude: 13.426579),
-                headings: [80.0],
+                headings: [79.5],
                 approachIndex: -1,
                 outletIndex: 0,
                 outletIndexes: IndexSet([0]),

@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.29.0-alpha.3
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.29.0-alpha.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.0-alpha.3)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.0-alpha.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.0-alpha.3)
+
+### MapboxDirections
+
+* Changed some entities encoding behavior: `Intersection`, `RouteStep`, and `Waypoint` now round their headings-related values to the integer when encoding. Also, `Waypoint` encodes a `nil` `name` as an empty string instead.
+
 ## 3.29.0-alpha.2
 
 ### Packaging

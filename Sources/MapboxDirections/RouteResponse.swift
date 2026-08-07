@@ -81,6 +81,7 @@ public struct RouteResponse: ForeignMemberContainer {
 
 extension RouteResponse: Codable {
     enum CodingKeys: String, CodingKey {
+        case code
         case message
         case error
         case identifier = "uuid"
@@ -233,6 +234,7 @@ extension RouteResponse: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(ResponseDisposition.OkCode, forKey: .code)
         try container.encodeIfPresent(identifier, forKey: .identifier)
         try container.encodeIfPresent(routes, forKey: .routes)
         try container.encodeIfPresent(waypoints, forKey: .waypoints)

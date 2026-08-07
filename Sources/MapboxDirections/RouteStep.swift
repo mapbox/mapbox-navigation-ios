@@ -483,8 +483,8 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
 
             try container.encodeIfPresent(maneuverDirection, forKey: .direction)
             try container.encode(LocationCoordinate2DCodable(maneuverLocation), forKey: .location)
-            try container.encodeIfPresent(initialHeading, forKey: .initialHeading)
-            try container.encodeIfPresent(finalHeading, forKey: .finalHeading)
+            try container.encodeIfPresent(initialHeading.map { Int($0.rounded()) }, forKey: .initialHeading)
+            try container.encodeIfPresent(finalHeading.map { Int($0.rounded()) }, forKey: .finalHeading)
 
             try encodeForeignMembers(notKeyedBy: CodingKeys.self, to: encoder)
         }
@@ -856,11 +856,13 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
     public let instructions: String
 
     /// The user’s heading immediately before performing the maneuver.
+    /// - Note: This value will be rounded to an integer during encoding.
     public let initialHeading: Turf.LocationDirection?
 
     /// The user’s heading immediately after performing the maneuver.
     ///
     /// The value of this property may differ from the user’s heading after traveling along the road past the maneuver.
+    /// - Note: This value will be rounded to an integer during encoding.
     public let finalHeading: Turf.LocationDirection?
 
     /// Indicates what side of a bidirectional road the driver must be driving on. Also referred to as the rule of the

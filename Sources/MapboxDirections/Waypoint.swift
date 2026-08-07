@@ -82,11 +82,11 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
         try container.encodeIfPresent(coordinateAccuracy, forKey: .coordinateAccuracy)
         let targetCoordinateCodable = targetCoordinate != nil ? LocationCoordinate2DCodable(targetCoordinate!) : nil
         try container.encodeIfPresent(targetCoordinateCodable, forKey: .targetCoordinate)
-        try container.encodeIfPresent(heading, forKey: .heading)
+        try container.encodeIfPresent(heading.map { Int($0.rounded()) }, forKey: .heading)
         try container.encodeIfPresent(headingAccuracy, forKey: .headingAccuracy)
         try container.encodeIfPresent(separatesLegs, forKey: .separatesLegs)
         try container.encodeIfPresent(allowsArrivingOnOppositeSide, forKey: .allowsArrivingOnOppositeSide)
-        try container.encodeIfPresent(name, forKey: .name)
+        try container.encode(name ?? "", forKey: .name)
         try container.encodeIfPresent(snappedDistance, forKey: .snappedDistance)
         try container.encodeIfPresent(layer, forKey: .layer)
         try container.encodeIfPresent(timeZone, forKey: .timeZone)
@@ -270,6 +270,7 @@ public struct Waypoint: Codable, ForeignMemberContainer, Equatable, Sendable {
     ///
     /// By default, the value of this property is `nil`, meaning that a route is considered viable regardless of the
     /// direction of approach.
+    /// - Note: This value will be rounded to an integer during encoding.
     public var heading: LocationDirection? = nil
 
     /// The maximum amount, in degrees, by which a route’s approach to a waypoint may differ from ``heading`` in either

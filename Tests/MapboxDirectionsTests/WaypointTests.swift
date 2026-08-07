@@ -180,6 +180,19 @@ class WaypointTests: XCTestCase {
         XCTAssertEqual(waypoint.headingDescription, "90.5,180.0")
     }
 
+    func testHeadingCoding() throws {
+        var waypoint = Waypoint(coordinate: LocationCoordinate2D(latitude: -180, longitude: -180))
+
+        waypoint.heading = 10.5
+
+        let encoder = JSONEncoder()
+        let encodedData = try encoder.encode(waypoint)
+        let decoder = JSONDecoder()
+        let decoded = try decoder.decode(Waypoint.self, from: encodedData)
+
+        XCTAssertEqual(decoded.heading, 11, "Waypoint heading should be rounded!")
+    }
+
     func testEquality() {
         var left = Waypoint(
             coordinate: LocationCoordinate2D(latitude: 0, longitude: 0),
