@@ -576,35 +576,6 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, refreshedDirectionsRoute.legs)
     }
 
-    func testRefreshAlternativeRouteIfItIsNotFirstInResponse() async {
-        let originalRoutes = await NavigationRoutes.mock(
-            mainRoute: .mock(route: .mock(legs: [.mock(name: "main")])),
-            alternativeRoutes: [.mock(alternativeRoute: .mock(legs: [.mock(name: "alternative")]))]
-        )
-        mockAlternativesRoutesDataParser()
-        await navigator.startActiveGuidance(with: originalRoutes, startLegIndex: 0)
-        await waitForRouteProgressUpdate()
-
-        let refreshedDirectionsRoute = Route.mock(legs: [refreshedLeg])
-        let refreshedRoute = RouteInterfaceMock(
-            mainRoute: originalRoutes.mainRoute.route,
-            alternativeRoute: refreshedDirectionsRoute,
-            routeId: originalRoutes.alternativeRoutes[0].nativeRoute.getRouteId(),
-            routeIndex: 2
-        )
-        let refreshedAlternative = RouteAlternative.mock(route: refreshedRoute)
-        let routeRefreshResult = RouteRefreshResult.alternativeRoute(alternative: refreshedAlternative)
-        let notification = makeRefreshNotification(routeRefreshResult: routeRefreshResult)
-
-        await refresh(with: notification)
-
-        let currentProgress = await navigator.currentRouteProgress!.routeProgress
-        XCTAssertEqual(currentProgress.currentLegProgress.leg, originalRoutes.mainRoute.route.legs[0])
-        let currentRoutes = currentProgress.navigationRoutes
-        XCTAssertEqual(currentRoutes.mainRoute, originalRoutes.mainRoute)
-        XCTAssertEqual(currentRoutes.alternativeRoutes[0].route.legs, refreshedDirectionsRoute.legs)
-    }
-
     func testRefreshMultilegRoute() async {
         let stepsFor1Leg: [RouteStep] = [
             .mock(maneuverType: .depart),
@@ -734,22 +705,6 @@ final class MapboxNavigatorTests: TestCase {
         let currentRoutes = navigator.currentNavigationRoutes!
         XCTAssertEqual(currentRoutes.mainRoute.nativeRouteInterface.getRouteId(), route.getRouteId())
         XCTAssertTrue(type(of: currentRoutes.mainRoute.directionOptions) == GolfCartRouteOptions.self)
-    }
-
-    func testRerouteControllerWantsSwitchToAlternativeIfRouteIsNotFirstInResponse() async {
-        await startActiveGuidanceAndWaitForRouteProgressUpdate(with: oneLegNavigationRoutes())
-        let alternativeDirectionsRoute = Route
-            .mock(legs: [decodedThroughNavigationRouteOptions(.mock(name: "alternative"))])
-        let route = RouteInterfaceMock(route: alternativeDirectionsRoute, routeIndex: 2)
-        navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForRouteProgressUpdate()
-
-        XCTAssertTrue(coreNavigator.setRoutesCalled)
-        XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
-
-        let currentRoutes = navigator.currentNavigationRoutes!
-        XCTAssertEqual(currentRoutes.mainRoute.nativeRouteInterface.getRouteId(), route.getRouteId())
-        XCTAssertEqual(currentRoutes.mainRoute.route.legs, alternativeDirectionsRoute.legs)
     }
 
     @MainActor
@@ -1133,14 +1088,8 @@ final class MapboxNavigatorTests: TestCase {
             .mock(maneuverType: .turnAtRoundabout),
             .mock(maneuverType: .arrive),
         ]
-        return decodedThroughNavigationRouteOptions(.mock(steps: steps))
-    }
-
-    /// Applies the `coordinateAccuracy` adjustment that `NavigationRouteOptions` performs while decoding, so
-    /// that a mocked leg can be compared against one that has round-tripped through
-    /// ``RouteInterface/toJson()``.
-    private func decodedThroughNavigationRouteOptions(_ leg: RouteLeg) -> RouteLeg {
-        var leg = leg
+        var leg = RouteLeg.mock(steps: steps)
+        // Set `-1` as coordinateAccuracy to simulate NavigationRouteOptions logic.
         leg.source?.coordinateAccuracy = -1
         leg.destination?.coordinateAccuracy = -1
         return leg

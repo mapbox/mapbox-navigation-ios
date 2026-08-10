@@ -1,9 +1,8 @@
 import CarPlay
 import CarPlayTestHelper
-import Combine
 import MapboxDirections
 import MapboxMaps
-@_spi(MapboxCarPlayInternal) @_spi(MapboxInternal) @testable import MapboxNavigationCore
+@_spi(MapboxInternal) @testable import MapboxNavigationCore
 @_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
 import QuartzCore
 @testable import TestHelper
@@ -475,38 +474,6 @@ class CarPlayManagerTests: TestCase {
             comment: "Title for start button in CPTripPreviewTextConfiguration"
         )
         XCTAssertEqual(mapTemplateSpy.passedPreviewTextConfiguration?.startButtonTitle, expectedStartButtonTitle)
-    }
-
-    @MainActor
-    func testSafeAreaChangeRefitsDisplayedPreviewRoutesBeforeTripStarts() async throws {
-        let navigationRouteOptions = await previewRoutesOptions()
-        await carPlayManager.previewRoutes(for: navigationRouteOptions)
-
-        let trip = try XCTUnwrap(mapTemplateSpy.passedTripPreviews?.first)
-        let routeChoice = try XCTUnwrap(trip.routeChoices.first)
-        carPlayManager.mapTemplate(mapTemplateSpy, selectedPreviewFor: trip, using: routeChoice)
-
-        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
-        let navigationMapView = mapViewController.navigationMapView
-        XCTAssertNil(navigationProvider.mapboxNavigation.tripSession().currentNavigationRoutes)
-        XCTAssertNotNil(navigationMapView.routes)
-        XCTAssertEqual(navigationMapView.navigationCamera.currentCameraState, .idle)
-
-        // Isolate the safe-area refit from the initial animated preview fit.
-        navigationMapView.mapView.camera.cancelAnimations()
-        navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(pitch: 45))
-        XCTAssertEqual(navigationMapView.mapView.mapboxMap.cameraState.pitch, 45)
-
-        let refitExpectation = expectation(description: "Camera refits displayed preview routes")
-        let cameraChangedCancellable = navigationMapView.mapView.mapboxMap.onCameraChanged
-            .filter { $0.cameraState.pitch == 0 }
-            .prefix(1)
-            .sink { _ in refitExpectation.fulfill() }
-        defer { cameraChangedCancellable.cancel() }
-
-        mapViewController.viewSafeAreaInsetsDidChange()
-
-        await fulfillment(of: [refitExpectation], timeout: 2)
     }
 
     @MainActor

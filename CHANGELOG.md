@@ -1,15 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
-
-### CarPlay
-
-* Fixed an issue where route and POI previews could appear beneath CarPlay controls after safe-area changes, and made preview camera fitting animate smoothly.
-  
-### Other changes
-
-* Fixed alternative routes being dropped, and route refresh failing, for routes whose index in the original Directions response was not 0. Every route is now decoded from its own single-route representation instead of being looked up by that index. This also fixes switching to an alternative route silently doing nothing, and restores route refresh picking up updated travel times.
-
 ## 3.29.0-alpha.3
 
 ### Packaging
