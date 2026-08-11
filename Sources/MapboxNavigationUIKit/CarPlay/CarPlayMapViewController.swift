@@ -3,7 +3,7 @@ import Combine
 import Foundation
 import MapboxDirections
 @_spi(Restricted) import MapboxMaps
-@_spi(MapboxInternal) import MapboxNavigationCore
+@_spi(MapboxCarPlayInternal) @_spi(MapboxInternal) import MapboxNavigationCore
 
 /// ``CarPlayMapViewController`` is responsible for administering the Mapbox map, the interface styles and the map
 /// template buttons to display on CarPlay.
@@ -573,20 +573,31 @@ open class CarPlayMapViewController: UIViewController {
         // Learn the persistent side inset, such as the CarPlay apps panel, before detecting transient controls.
         safeAreaInsetsBaseline.update(with: view.safeAreaInsets)
         updateCarPlayControlsVisibility()
-        guard let routes = core.tripSession().currentNavigationRoutes else {
+
+        refitPreviewCameraIfNeeded()
+    }
+
+    private func refitPreviewCameraIfNeeded() {
+        // Only preview content should be refitted here. In browsing mode, displayed routes or annotations may be stale
+        // while templates are transitioning, and the camera should remain controlled by the browsing experience.
+        guard currentActivity == .previewing else { return }
+
+        // Route and POI preview fitting stops `NavigationCamera` and controls the map camera directly. Avoid refitting
+        // while `NavigationCamera` is following, showing an overview, or transitioning between those states.
+        guard navigationMapView.navigationCamera.currentCameraState == .idle else { return }
+
+        // Preview content is displayed before a route is set on `TripSession`. Refit what is actually on the map so
+        // changes to the CarPlay safe area cannot leave routes or search results beneath the preview controls.
+        let searchResultCoordinates = searchResultAnnotations.coordinates
+        if !searchResultCoordinates.isEmpty {
+            fitCamera(to: searchResultCoordinates, animated: true)
             return
         }
 
-        if navigationMapView.navigationCamera.currentCameraState == .idle {
-            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.mapboxMap.cameraState)
-            cameraOptions.pitch = 0
-            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
-
-            navigationMapView.showcase(
-                routes,
-                routeAnnotationKinds: []
-            )
-        }
+        navigationMapView.refitDisplayedRoutes(
+            animated: true,
+            duration: CarPlayUtilities.previewCameraAnimationDuration
+        )
     }
 
     override public func updateViewConstraints() {
@@ -711,8 +722,12 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     func fitCameraToSearchResults(searchResults: [SearchResultRecord]) {
-        navigationMapView.navigationCamera.stop()
         let coordinates: [CLLocationCoordinate2D] = searchResults.map { $0.coordinate }
+        fitCamera(to: coordinates, animated: true)
+    }
+
+    private func fitCamera(to coordinates: [CLLocationCoordinate2D], animated: Bool) {
+        navigationMapView.navigationCamera.stop()
 
         let initialCameraOptions = CameraOptions(
             padding: navigationMapView.navigationCamera.viewportPadding,
@@ -727,7 +742,14 @@ open class CarPlayMapViewController: UIViewController {
                 maxZoom: nil,
                 offset: nil
             )
-            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 0.3)
+            if animated {
+                navigationMapView.mapView.camera.ease(
+                    to: cameraOptions,
+                    duration: CarPlayUtilities.previewCameraAnimationDuration
+                )
+            } else {
+                navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+            }
         } catch {
             Log.error("Failed to fit the camera: \(error.localizedDescription)", category: .navigationUI)
         }

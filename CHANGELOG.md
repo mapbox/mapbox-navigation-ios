@@ -26,6 +26,7 @@
 
 ### CarPlay
 
+* Fixed an issue where route and POI previews could appear beneath CarPlay controls after safe-area changes, and made preview camera fitting animate smoothly.
 * Fixed an issue where the speed limit view could remain hidden during CarPlay free drive despite available speed-limit data.
 * Added the experimental `CarPlayManager.hidesSpeedLimitViewWithMapControls` property for controlling whether the speed limit view is hidden while CarPlay map controls are visible. Access this property by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
 * Adjusted the CarPlay speed limit view size to visually match CarPlay map buttons.

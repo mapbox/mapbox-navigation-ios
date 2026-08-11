@@ -47,4 +47,8 @@ struct PointAnnotationsStorage<Element: PointAnnotatable> {
     var ids: Set<String> {
         Set(annotations.map(\.id))
     }
+
+    var coordinates: [CLLocationCoordinate2D] {
+        elements.values.map(\.coordinate)
+    }
 }
