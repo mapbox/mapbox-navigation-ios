@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxGeocoder
 import MapboxMaps
 import MapboxNavigationCore
-@_spi(MapboxCarPlayInternal) import MapboxNavigationUIKit
+import MapboxNavigationUIKit
 import UIKit
 
 extension NavigationGeocodedPlacemark {

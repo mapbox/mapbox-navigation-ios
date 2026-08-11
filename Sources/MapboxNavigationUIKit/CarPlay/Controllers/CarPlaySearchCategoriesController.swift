@@ -10,7 +10,7 @@ import Combine
 import MapboxDirections
 import MapboxNavigationCore
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 public protocol CarPlaySearchCategoriesControllerDelegate: AnyObject, UnimplementedLogging {
     func didSelectBackButton(_ controller: CarPlaySearchCategoriesController)
     func didSelectKeyboardInput(_ controller: CarPlaySearchCategoriesController)
@@ -18,7 +18,7 @@ public protocol CarPlaySearchCategoriesControllerDelegate: AnyObject, Unimplemen
     func didSelectCategory(_ controller: CarPlaySearchCategoriesController, category: CarPlaySearchControllerCategory)
 }
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 public final class CarPlaySearchCategoriesController {
     public struct Style {
         var title: String

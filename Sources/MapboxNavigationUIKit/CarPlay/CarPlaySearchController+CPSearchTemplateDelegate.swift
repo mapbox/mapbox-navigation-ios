@@ -5,7 +5,7 @@ import MapboxDirections
 extension CarPlaySearchController: CPSearchTemplateDelegate {
     public static let CarPlayGeocodedPlacemarkKey: String = "NavigationGeocodedPlacemark"
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public static let CarPlaySearchSuggestionRecordKey: String = "SearchSuggestionRecord"
 
     // MARK: CPSearchTemplateDelegate Implementation

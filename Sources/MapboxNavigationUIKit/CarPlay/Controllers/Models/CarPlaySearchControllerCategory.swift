@@ -8,7 +8,7 @@
 import CoreLocation
 import UIKit
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 public struct CarPlaySearchControllerCategory: Equatable, Hashable, Sendable {
     public let displayName: String
     public let icon: UIImage

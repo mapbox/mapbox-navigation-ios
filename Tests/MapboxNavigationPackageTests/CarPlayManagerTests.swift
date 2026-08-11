@@ -3,7 +3,7 @@ import CarPlayTestHelper
 import Combine
 import MapboxDirections
 import MapboxMaps
-@_spi(MapboxCarPlayInternal) @testable import MapboxNavigationCore
+@_spi(MapboxCarPlayInternal) @_spi(MapboxInternal) @testable import MapboxNavigationCore
 @_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
 import QuartzCore
 @testable import TestHelper

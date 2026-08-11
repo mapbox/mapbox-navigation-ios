@@ -9,7 +9,7 @@ import CarPlay
 import Foundation
 import MapboxNavigationCore
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 public struct CarPlayListItem: Equatable, Hashable, Sendable {
     public let text: String
     public let detailText: String?

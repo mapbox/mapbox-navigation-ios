@@ -271,19 +271,19 @@ public class CarPlayManager: NSObject {
     }
 
     @MainActor
-    @_spi(MapboxCarPlayInternal)
+    @_spi(MapboxInternal)
     public var browsingNavigationMapView: NavigationMapView? {
         return carPlayMapViewController?.navigationMapView
     }
 
     @MainActor
-    @_spi(MapboxCarPlayInternal)
+    @_spi(MapboxInternal)
     public var guidanceNavigationMapView: NavigationMapView? {
         return carPlayNavigationViewController?.navigationMapView
     }
 
     @MainActor
-    @_spi(MapboxCarPlayInternal)
+    @_spi(MapboxInternal)
     public var activeNavigationMapView: NavigationMapView? {
         guidanceNavigationMapView ?? browsingNavigationMapView
     }
@@ -340,7 +340,7 @@ public class CarPlayManager: NSObject {
         return altsButton
     }()
 
-    @_spi(MapboxCarPlayInternal)
+    @_spi(MapboxInternal)
     public func showAlternativesListTemplate() {
         guard let template = carPlayNavigationViewController?.alternativesListTemplate() else {
             return
@@ -654,7 +654,7 @@ extension CarPlayManager {
     /// Same as ``previewRoutes(to:)`` but additionally attaches a ``SearchResultRecord`` to every route choice,
     /// retrievable from `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` via
     /// ``CPRouteChoice/searchResult``.
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func previewRoutes(to destination: Waypoint, searchResultRecord: SearchResultRecord?) async {
         guard let carPlayMapViewController = await carPlayMapViewController,
               let userLocation = await carPlayMapViewController.navigationMapView.mapView.location.latestLocation
@@ -693,7 +693,7 @@ extension CarPlayManager {
         await previewRoutes(between: waypoints, searchResultRecord: nil)
     }
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func previewRoutes(between waypoints: [Waypoint], searchResultRecord: SearchResultRecord?) async {
         let options = NavigationRouteOptions(waypoints: waypoints)
         await previewRoutes(for: options, searchResultRecord: searchResultRecord)
@@ -722,7 +722,7 @@ extension CarPlayManager {
         await previewRoutes(for: options, searchResultRecord: nil)
     }
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func previewRoutes(for options: RouteOptions, searchResultRecord: SearchResultRecord?) async {
         let task = await core.routingProvider().calculateRoutes(options: options)
         await didCalculate(task, for: options, searchResultRecord: searchResultRecord)
@@ -734,7 +734,7 @@ extension CarPlayManager {
         await previewRoutes(for: routes, searchResultRecord: nil)
     }
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func previewRoutes(for routes: NavigationRoutes, searchResultRecord: SearchResultRecord?) async {
         guard shouldPreviewRoutes(for: routes) else { return }
         guard let trip = await CPTrip(
@@ -771,7 +771,7 @@ extension CarPlayManager {
     }
 
     @MainActor
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func previewRoutes(with searchResults: [SearchResultRecord]) async throws {
         guard let traitCollection = (carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
               let interfaceController
@@ -1055,7 +1055,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     @MainActor
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public func clearMapAnnotations() {
         fetchedSearchResults = []
         carPlayMapViewController?.removeSearchResultsAnnotations()
@@ -1647,7 +1647,7 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
         )
     }
 
-    @_spi(MapboxCarPlayInternal)
+    @_spi(MapboxInternal)
     public func carPlayMapViewController(
         _ carPlayMapViewController: CarPlayMapViewController,
         didSetup navigationMapView: NavigationMapView

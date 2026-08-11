@@ -23,7 +23,7 @@ extension CPRouteChoice {
         return routeResponseUserInfo?.navigationRoutes
     }
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public var searchResultRecord: SearchResultRecord? {
         return routeResponseUserInfo?.searchResultRecord
     }

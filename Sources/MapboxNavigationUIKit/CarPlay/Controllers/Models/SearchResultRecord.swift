@@ -9,7 +9,7 @@ import CoreLocation
 import Foundation
 import MapKit
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 public struct SearchResultRecord: Sendable {
     public enum Kind: Sendable {
         case POI
@@ -53,7 +53,7 @@ public struct SearchResultRecord: Sendable {
     }
 }
 
-@_spi(MapboxCarPlaySearchInternal)
+@_spi(MapboxInternal)
 extension SearchResultRecord: Equatable, Hashable {
     public static func == (lhs: SearchResultRecord, rhs: SearchResultRecord) -> Bool {
         lhs.id == rhs.id

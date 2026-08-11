@@ -11,6 +11,6 @@ public class CarPlaySearchController: NSObject {
     /// The ``CarPlaySearchController`` delegate.
     public weak var delegate: CarPlaySearchControllerDelegate?
 
-    @_spi(MapboxCarPlaySearchInternal)
+    @_spi(MapboxInternal)
     public var searchResultsLimit: UInt = 10
 }
