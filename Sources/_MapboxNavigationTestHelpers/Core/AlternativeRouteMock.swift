@@ -31,7 +31,7 @@ extension AlternativeRoute {
 extension RouteAlternative {
     public static func mock(mainRoute: Route, alternativeRoute: Route, routeIndex: Int = 0) -> Self {
         .mock(route: RouteInterfaceMock(
-            route: mainRoute,
+            mainRoute: mainRoute,
             alternativeRoute: alternativeRoute,
             routeIndex: routeIndex
         ))

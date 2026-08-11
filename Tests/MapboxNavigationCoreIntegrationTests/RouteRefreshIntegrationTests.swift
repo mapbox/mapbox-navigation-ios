@@ -84,7 +84,6 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
                 shapeIndexRange: refreshedGeometryIndex..<(refreshedGeometryIndex + 1),
                 countryCodeAlpha3: "USA",
                 countryCode: "US",
-                roadIsClosed: false,
                 affectedRoadNames: [""]
             ),
             Incident(
@@ -98,9 +97,8 @@ final class RouteRefreshIntegrationTests: BaseIntegrationTest {
                 subtype: nil,
                 subtypeDescription: nil,
                 alertCodes: [],
-                lanesBlocked: BlockedLanes(descriptions: []),
+                lanesBlocked: nil,
                 shapeIndexRange: (refreshedGeometryIndex + 1)..<(refreshedGeometryIndex + 3),
-                roadIsClosed: false
             ),
         ]
         XCTAssertEqual(incidents, expectedIncidents)
