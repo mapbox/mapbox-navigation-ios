@@ -1,7 +1,7 @@
 import Combine
 import MapboxDirections
 import MapboxMaps
-@testable import MapboxNavigationCore
+@_spi(MapboxInternal) @testable import MapboxNavigationCore
 import TestHelper
 import Turf
 import XCTest
@@ -81,6 +81,45 @@ class NavigationMapViewTests: TestCase {
         CLLocationCoordinate2D(latitude: 4, longitude: 4),
         CLLocationCoordinate2D(latitude: 5, longitude: 5),
     ]
+
+    func testRefitDisplayedRoutesAppliesUpdatedViewportPadding() throws {
+        navigationMapView.showcase(navigationRoutes)
+        navigationMapView.viewportPadding = .init(top: 5, left: 4, bottom: 7, right: 3)
+
+        let routes = [navigationRoutes.mainRoute.route] + navigationRoutes.alternativeRoutes.map(\.route)
+        let routeCoordinates = MultiLineString(routes.compactMap(\.shape?.coordinates)).coordinates.flatMap { $0 }
+        XCTAssertFalse(routeCoordinates.isEmpty)
+        let expectedCamera = try mapboxMap.camera(
+            for: routeCoordinates,
+            camera: CameraOptions(
+                padding: navigationMapView.navigationCamera.viewportPadding,
+                bearing: 0,
+                pitch: 0
+            ),
+            coordinatesPadding: nil,
+            maxZoom: nil,
+            offset: nil
+        )
+
+        navigationMapView.refitDisplayedRoutes()
+
+        let expectedCenter = try XCTUnwrap(expectedCamera.center)
+        // Applied camera values can differ slightly due to rounding. Allow about 0.1 m for coordinates and 0.001 zoom.
+        XCTAssertEqual(mapboxMap.cameraState.center.latitude, expectedCenter.latitude, accuracy: 0.000001)
+        XCTAssertEqual(mapboxMap.cameraState.center.longitude, expectedCenter.longitude, accuracy: 0.000001)
+        XCTAssertEqual(mapboxMap.cameraState.zoom, try XCTUnwrap(expectedCamera.zoom), accuracy: 0.001)
+    }
+
+    func testRefitDisplayedRoutesWithoutRoutesDoesNotUpdateCamera() {
+        let initialCameraState = mapboxMap.cameraState
+        navigationMapView.viewportPadding = .init(top: 5, left: 4, bottom: 7, right: 3)
+
+        navigationMapView.refitDisplayedRoutes()
+
+        XCTAssertEqual(mapboxMap.cameraState.center.latitude, initialCameraState.center.latitude)
+        XCTAssertEqual(mapboxMap.cameraState.center.longitude, initialCameraState.center.longitude)
+        XCTAssertEqual(mapboxMap.cameraState.zoom, initialCameraState.zoom)
+    }
 
     func testETACalloutsAlongActiveGuidanceRouteDisabled() async {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
