@@ -142,6 +142,13 @@ public struct AlternativeRoute: @unchecked Sendable {
         self.expectedTravelTimeDelta = infoFromOrigin.duration - mainRoute.expectedTravelTime
     }
 
+    /// Converts native alternatives into ``AlternativeRoute``s, decoding each from its own
+    /// ``RouteInterface/toJson()`` payload in parallel.
+    ///
+    /// Request options are taken from the matching entry in
+    /// `initialRoutes.allAlternativeRoutesWithIgnored` when one exists, and from
+    /// `initialRoutes.mainRoute.requestOptions` otherwise — so passing a ``NavigationRoutes`` with no
+    /// alternatives yet resolves every alternative against the main route.
     static func fromNative(
         alternativeRoutes: [RouteAlternative],
         initialRoutes: NavigationRoutes
