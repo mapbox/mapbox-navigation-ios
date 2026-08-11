@@ -52,10 +52,19 @@ let package = Package(
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: navNativeVersion),
         .package(url: "https://github.com/mapbox/\(mapboxMapsPackage).git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", exact: "9.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.18.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.7.0"),
         .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
+        // Not used directly by any target here: swift-snapshot-testing pulls these in transitively
+        // with range requirements, so without an explicit exact: pin they float on every nightly
+        // resolve. Declaring them purely to constrain resolution keeps the nightly lockfile diff
+        // limited to Mapbox versions instead of silently importing e.g. a new swift-syntax overnight.
+        // Pinned to the versions already in the tracked Package.resolved, so this is a no-op relative
+        // to today's resolved graph rather than an upgrade.
+        .package(url: "https://github.com/swiftlang/swift-syntax", exact: "600.0.1"),
+        .package(url: "https://github.com/pointfreeco/swift-custom-dump", exact: "1.3.3"),
+        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", exact: "1.5.2"),
     ],
     targets: [
         .target(
