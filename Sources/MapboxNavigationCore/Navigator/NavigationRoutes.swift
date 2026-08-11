@@ -37,12 +37,47 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
         mainRoute.nativeRouteInterface.getMapboxAPI()
     }
 
+    /// Builds ``NavigationRoutes`` from native ``RoutesData``.
+    ///
+    /// Every route is decoded from **its own** ``RouteInterface/toJson()`` payload, each of which is a
+    /// Directions-shaped response containing exactly one route. ``RouteInterface/getRouteIndex()`` still
+    /// refers to the original multi-route response and must not be used to index those payloads.
     init(routesData: RoutesData, options: ResponseOptions) async throws {
-        let routeResponse = try await routesData.primaryRoute().convertToDirectionsRouteResponse(options)
-        try self.init(routesData: routesData, routeResponse: routeResponse)
+        let primaryRoute = routesData.primaryRoute()
+        let routeResponse = try await primaryRoute.convertToDirectionsRouteResponse(options)
+
+        guard let mainRoute = routeResponse.routes?.first else {
+            Log.error("Unable to get the main route", category: .navigation)
+            throw NavigationRoutesError.emptyRoutes
+        }
+
+        self.mainRoute = NavigationRoute(
+            route: mainRoute,
+            nativeRoute: primaryRoute,
+            requestOptions: routeResponse.options
+        )
+        self.waypoints = routeResponse.waypoints ?? []
+        self.refreshInvalidationDate = routeResponse.refreshInvalidationDate
+        self.foreignMembers = routeResponse.foreignMembers
+        self.allAlternativeRoutesWithIgnored = []
+
+        // Each alternative is converted from its own `toJson()` payload. `fromNative` resolves
+        // per-alternative request options from `initialRoutes.allAlternativeRoutesWithIgnored`, which is
+        // intentionally still empty here, so every alternative falls back to `mainRoute.requestOptions` —
+        // i.e. `options`, exactly what this initializer used before.
+        self.allAlternativeRoutesWithIgnored = await AlternativeRoute.fromNative(
+            alternativeRoutes: routesData.alternativeRoutes(),
+            initialRoutes: self
+        )
     }
 
-    private init(routesData: RoutesData, routeResponse: RouteResponse) throws {
+    /// Builds ``NavigationRoutes`` from a **full** Directions response — one that still contains *every*
+    /// route of the original response, as delivered by the network or by `RouteParser`.
+    ///
+    /// - important: `routeResponse.routes` must be indexable by ``RouteInterface/getRouteIndex()``. Do
+    /// **not** pass a response produced by ``RouteInterface/toJson()``: those hold a single route while
+    /// route indices remain those of the original response. Use ``init(routesData:options:)`` for that case.
+    private init(routesData: RoutesData, fullRouteResponse routeResponse: RouteResponse) throws {
         guard let routes = routeResponse.routes else {
             Log.error("Unable to get routes", category: .navigation)
             throw NavigationRoutesError.emptyRoutes
@@ -125,7 +160,7 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
                 routes.remove(at: routeIndex),
                 routes
             )
-            let navigationRoutes = try NavigationRoutes(routesData: routesData, routeResponse: routeResponse)
+            let navigationRoutes = try NavigationRoutes(routesData: routesData, fullRouteResponse: routeResponse)
             self = navigationRoutes
             self.waypoints = routeResponse.waypoints ?? []
             self.refreshInvalidationDate = routeResponse.refreshInvalidationDate
@@ -458,21 +493,31 @@ extension RouteInterface {
         type.requestOptions(from: getRequestUri())
     }
 
-    fileprivate func convertToDirectionsRouteResponse(_ type: DirectionsOptions.Type) async throws -> RouteResponse {
-        guard let requestOptions = getResponseOptions(type) else {
-            throw NavigationRoutesError.noRequestData
-        }
-        return try await convertToDirectionsRouteResponse(requestOptions)
-    }
-
+    /// Decodes the receiver's ``RouteInterface/toJson()`` output into a `RouteResponse`.
+    ///
+    /// - important: The returned response contains **exactly one** route — the receiver. Take
+    /// `routes?.first`; never index it by ``RouteInterface/getRouteIndex()``, which refers to the receiver's
+    /// position in the original, multi-route response.
     fileprivate func convertToDirectionsRouteResponse(_ requestOptions: ResponseOptions) async throws
     -> RouteResponse {
         guard let requestURL = URL(string: getRequestUri()) else {
             Log.error(
-                "Couldn't extract response and request data to parse `RouteInterface` into `RouteResponse`",
+                "Couldn't extract the request URI to parse `RouteInterface` into `RouteResponse`",
                 category: .navigation
             )
             throw NavigationRoutesError.noRequestData
+        }
+
+        // `toJson()` returns an empty payload when the native side fails to compose the single-route
+        // response — that is the only failure signal it offers, so detect it here instead of letting
+        // `JSONDecoder` fail with an opaque "unexpected end of input".
+        let jsonData = toJson().data
+        guard !jsonData.isEmpty else {
+            Log.error(
+                "`RouteInterface.toJson()` produced an empty response for route \(getRouteId())",
+                category: .navigation
+            )
+            throw NavigationRoutesError.encodingError(underlyingError: nil)
         }
 
         let credentials = Credentials(requestURL: requestURL)
@@ -486,8 +531,7 @@ extension RouteInterface {
         decoder.userInfo[.credentials] = credentials
 
         do {
-            let ref = getResponseJsonRef()
-            return try decoder.decode(RouteResponse.self, from: ref.data)
+            return try decoder.decode(RouteResponse.self, from: jsonData)
         } catch {
             Log.error(
                 "Couldn't parse `RouteInterface` into `RouteResponse` with error: \(error)",
@@ -504,27 +548,20 @@ extension RouteInterface {
         return try await convertToDirectionsRoute(requestOptions)
     }
 
+    /// Converts the receiver into a `Route`.
+    ///
+    /// - note: ``RouteInterface/toJson()`` yields a Directions-shaped response holding exactly one route —
+    /// the receiver. ``RouteInterface/getRouteIndex()`` still reports the route's index in the *original*
+    /// response and must never be used to index into it.
     func convertToDirectionsRoute(_ requestOptions: ResponseOptions) async throws -> Route {
-        do {
-            guard let routes = try await convertToDirectionsRouteResponse(requestOptions).routes else {
-                Log.error("Converting to directions route yielded no routes.", category: .navigation)
-                throw NavigationRoutesError.emptyRoutes
-            }
-            guard routes.count > getRouteIndex() else {
-                Log.error(
-                    "Converting to directions route yielded incorrect number of routes (expected at least \(getRouteIndex() + 1) but have \(routes.count).",
-                    category: .navigation
-                )
-                throw NavigationRoutesError.incorrectRoutesNumber
-            }
-            return routes[Int(getRouteIndex())]
-        } catch {
+        guard let route = try await convertToDirectionsRouteResponse(requestOptions).routes?.first else {
             Log.error(
-                "Parsing `RouteInterface` into `Route` resulted in no routes",
+                "Parsing `RouteInterface` into `Route` yielded no routes.",
                 category: .navigation
             )
-            throw error
+            throw NavigationRoutesError.emptyRoutes
         }
+        return route
     }
 }
 

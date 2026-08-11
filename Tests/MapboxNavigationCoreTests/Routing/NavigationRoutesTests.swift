@@ -116,40 +116,110 @@ final class NavigationRoutesTests: TestCase {
         await fulfillment(of: [callExpectation1, callExpectation2], timeout: 0.1)
     }
 
-    func testCreateRoutesWithLessAlternatives() async throws {
-        var routeParserClient = RouteParserClient.testValue
+    /// Each alternative is decoded from its own ``RouteInterface/toJson()`` payload, so a non-zero
+    /// original response index must not cause it to be dropped.
+    func testCreateRoutesKeepsAlternativesWithNonZeroRouteIndex() async throws {
+        let mainRoute = Route.mock(legs: [.mock(name: "main")])
+        let firstAlternative = Route.mock(legs: [.mock(name: "first-alternative")])
+        let secondAlternative = Route.mock(legs: [.mock(name: "second-alternative")])
 
-        guard let routeResponse = RouteResponse.mock(
-            bundle: .module,
-            options: routeOptions,
-            fileName: "alternativesRouteResponse"
-        ) else {
-            XCTFail("Cannot create RouteResponse")
-            return
-        }
-
-        let alternativeMock = RouteInterfaceMock(route: .mock(), routeIndex: 2)
-        routeParserClient.parseDirectionsResponseForResponseDataRef = { responseDataRef, request, origin in
-            RouteParserClient.liveValue.parseDirectionsResponseForResponseDataRef(responseDataRef, request, origin)
-        }
-        routeParserClient.createRoutesData = { _, _ in
-            RoutesDataMock(alternativeRoutes: [.mock(route: alternativeMock)])
-        }
-        Environment.set(\.routeParserClient, routeParserClient)
-
-        let navigationRoutes = try await NavigationRoutes(
-            routeResponse: routeResponse,
-            routeIndex: 0,
-            responseOrigin: .online
+        let routesData = RoutesDataMock.mock(
+            primaryRoute: RouteInterfaceMock(route: mainRoute),
+            alternativeRoutes: [
+                RouteInterfaceMock(mainRoute: mainRoute, alternativeRoute: firstAlternative, routeIndex: 1),
+                RouteInterfaceMock(mainRoute: mainRoute, alternativeRoute: secondAlternative, routeIndex: 2),
+            ]
         )
-        XCTAssertNotNil(navigationRoutes)
-        XCTAssertEqual(routeResponse.routes!.count, 3)
-        XCTAssertEqual(navigationRoutes.alternativeRoutes.count, 1, "One alternative is missing")
+
+        let navigationRoutes = try await NavigationRoutes(routesData: routesData)
+
+        XCTAssertEqual(navigationRoutes.mainRoute.route.description, "main")
+        XCTAssertEqual(
+            navigationRoutes.alternativeRoutes.map(\.route.description),
+            ["first-alternative", "second-alternative"]
+        )
     }
 
-    func testCreateRoutesWithLessAlternativesIfInvalidIndex() async throws {
-        var routeParserClient = RouteParserClient.testValue
+    func testCreateRoutesDropsAlternativeWithoutRouteJson() async throws {
+        let mainRoute = Route.mock(legs: [.mock(name: "main")])
+        let goodAlternative = Route.mock(legs: [.mock(name: "good-alternative")])
 
+        let routesData = RoutesDataMock.mock(
+            primaryRoute: RouteInterfaceMock(route: mainRoute),
+            alternativeRoutes: [
+                RouteInterfaceMock(mainRoute: mainRoute, alternativeRoute: goodAlternative, routeIndex: 1),
+                RouteInterfaceMock(responseJsonRef: .init(data: Data())),
+            ]
+        )
+
+        let navigationRoutes = try await NavigationRoutes(routesData: routesData)
+
+        XCTAssertEqual(navigationRoutes.alternativeRoutes.map(\.route.description), ["good-alternative"])
+    }
+
+    /// History replay removes the primary route from the decoded response array at its recorded index
+    /// (`HistoryReader.swift:150`), which need not be 0.
+    func testCreateRoutesIfPrimaryRouteIsNotFirstInResponse() async throws {
+        let mainRoute = Route.mock(legs: [.mock(name: "main")])
+        let alternative = Route.mock(legs: [.mock(name: "alternative")])
+
+        let routesData = RoutesDataMock.mock(
+            primaryRoute: RouteInterfaceMock(route: mainRoute, routeIndex: 1),
+            alternativeRoutes: [
+                RouteInterfaceMock(mainRoute: mainRoute, alternativeRoute: alternative, routeIndex: 0),
+            ]
+        )
+
+        let navigationRoutes = try await NavigationRoutes(routesData: routesData)
+
+        XCTAssertEqual(navigationRoutes.mainRoute.route.description, "main")
+        XCTAssertEqual(navigationRoutes.alternativeRoutes.map(\.route.description), ["alternative"])
+    }
+
+    func testConvertToDirectionsRouteIfRouteIndexIsNotZero() async throws {
+        let route = Route.mock(legs: [.mock(name: "route")])
+        let nativeRoute = RouteInterfaceMock(route: route, routeIndex: 2)
+
+        let convertedRoute = try await nativeRoute.convertToDirectionsRoute(NavigationRouteOptions.self)
+
+        XCTAssertEqual(convertedRoute.description, route.description)
+    }
+
+    func testAlternativeRoutesFromNativeIfRouteIndicesAreNotZero() async throws {
+        let mainRoute = Route.mock(legs: [.mock(name: "main")])
+        let firstAlternative = Route.mock(legs: [.mock(name: "first-alternative")])
+        let secondAlternative = Route.mock(legs: [.mock(name: "second-alternative")])
+
+        let initialRoutes = await NavigationRoutes.mock(mainRoute: .mock(route: mainRoute))
+        let nativeAlternatives = [
+            RouteAlternative.mock(route: RouteInterfaceMock(
+                mainRoute: mainRoute,
+                alternativeRoute: firstAlternative,
+                routeIndex: 1
+            )),
+            RouteAlternative.mock(route: RouteInterfaceMock(
+                mainRoute: mainRoute,
+                alternativeRoute: secondAlternative,
+                routeIndex: 2
+            )),
+        ]
+
+        let alternativeRoutes = await AlternativeRoute.fromNative(
+            alternativeRoutes: nativeAlternatives,
+            initialRoutes: initialRoutes
+        )
+
+        XCTAssertEqual(
+            alternativeRoutes.map(\.route.description),
+            ["first-alternative", "second-alternative"]
+        )
+    }
+
+    /// End-to-end cover for the full-response path, using real native parsing rather than
+    /// ``RouteInterfaceMock``. ``init(routeResponse:routeIndex:responseOrigin:)`` still receives a genuinely
+    /// multi-route response and must keep resolving each route by its original index, so this guards the
+    /// contract that the `fullRouteResponse:` initializer documents.
+    func testCreateRoutesFromResponseWithTwoAlternatives() async throws {
         guard let routeResponse = RouteResponse.mock(
             bundle: .module,
             options: routeOptions,
@@ -158,14 +228,13 @@ final class NavigationRoutesTests: TestCase {
             XCTFail("Cannot create RouteResponse")
             return
         }
+        let expectedRoutes = try XCTUnwrap(routeResponse.routes)
+        XCTAssertEqual(expectedRoutes.count, 3)
 
-        let alternativeMock = RouteInterfaceMock(route: .mock(), routeIndex: 10)
-        routeParserClient.parseDirectionsResponseForResponseDataRef = { responseDataRef, request, origin in
-            RouteParserClient.liveValue.parseDirectionsResponseForResponseDataRef(responseDataRef, request, origin)
-        }
-        routeParserClient.createRoutesData = { _, _ in
-            RoutesDataMock(alternativeRoutes: [.mock(route: alternativeMock)])
-        }
+        var routeParserClient = RouteParserClient.testValue
+        routeParserClient.parseDirectionsResponseForResponseDataRef = RouteParserClient.liveValue
+            .parseDirectionsResponseForResponseDataRef
+        routeParserClient.createRoutesData = RouteParserClient.liveValue.createRoutesData
         Environment.set(\.routeParserClient, routeParserClient)
 
         let navigationRoutes = try await NavigationRoutes(
@@ -173,12 +242,12 @@ final class NavigationRoutesTests: TestCase {
             routeIndex: 0,
             responseOrigin: .online
         )
-        XCTAssertNotNil(navigationRoutes)
-        XCTAssertEqual(routeResponse.routes!.count, 3)
+
+        XCTAssertEqual(navigationRoutes.mainRoute.route.description, expectedRoutes[0].description)
         XCTAssertEqual(
-            navigationRoutes.alternativeRoutes.count,
-            0,
-            "No alternatives should be created for invalid index"
+            navigationRoutes.alternativeRoutes.map(\.route.description),
+            [expectedRoutes[1].description, expectedRoutes[2].description],
+            "Each alternative must resolve to its own route, not to the main route"
         )
     }
 }
