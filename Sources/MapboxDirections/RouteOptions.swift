@@ -62,13 +62,15 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         {
             self.speed = speed
         }
-        if let mappedValue = mappedQueryItems[CodingKeys.elementsToExclude.stringValue] {
-            let excludeComponents = mappedValue.components(separatedBy: ",")
-            self.excludedLocations = excludeComponents.compactMap(LocationCoordinate2D.init(wktPointDescription:))
-            self.roadClassesToAvoid = RoadClasses(from: excludeComponents)
+        if let mappedValue = mappedQueryItems[CodingKeys.roadClassesToAvoid.stringValue],
+           let roadClassesToAvoid = RoadClasses(descriptions: mappedValue.components(separatedBy: ","))
+        {
+            self.roadClassesToAvoid = roadClassesToAvoid
         }
-        if let mappedValue = mappedQueryItems[CodingKeys.roadClassesToAllow.stringValue] {
-            self.roadClassesToAllow = RoadClasses(from: mappedValue.components(separatedBy: ","))
+        if let mappedValue = mappedQueryItems[CodingKeys.roadClassesToAllow.stringValue],
+           let roadClassesToAllow = RoadClasses(descriptions: mappedValue.components(separatedBy: ","))
+        {
+            self.roadClassesToAllow = roadClassesToAllow
         }
         if mappedQueryItems[CodingKeys.refreshingEnabled.stringValue] == "true", profile.isAutomobileAvoidingTraffic {
             self.refreshingEnabled = true
@@ -197,7 +199,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     private enum CodingKeys: String, CodingKey {
         case allowsUTurnAtWaypoint = "continue_straight"
         case includesAlternativeRoutes = "alternatives"
-        case elementsToExclude = "exclude"
+        case roadClassesToAvoid = "exclude"
         case roadClassesToAllow = "include"
         case refreshingEnabled = "enable_refresh"
         case initialManeuverAvoidanceRadius = "avoid_maneuver_radius"
@@ -221,11 +223,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(allowsUTurnAtWaypoint, forKey: .allowsUTurnAtWaypoint)
         try container.encode(includesAlternativeRoutes, forKey: .includesAlternativeRoutes)
-        // Matching the API concept of sharing the `exclude` key for `roadClassesToAvoid` and `excludedLocations`
-        try container.encode(
-            roadClassesToAvoid.descriptionTokens + excludedLocations.map(\.wktPointDescription),
-            forKey: .elementsToExclude
-        )
+        try container.encode(roadClassesToAvoid, forKey: .roadClassesToAvoid)
         try container.encode(roadClassesToAllow, forKey: .roadClassesToAllow)
         try container.encode(refreshingEnabled, forKey: .refreshingEnabled)
         try container.encodeIfPresent(initialManeuverAvoidanceRadius, forKey: .initialManeuverAvoidanceRadius)
@@ -252,13 +250,9 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
 
         self.includesAlternativeRoutes = try container.decode(Bool.self, forKey: .includesAlternativeRoutes)
 
-        let excludeTokens = (try? container.decode([String].self, forKey: .elementsToExclude)) ?? []
-        self.excludedLocations = excludeTokens.compactMap(LocationCoordinate2D.init(wktPointDescription:))
-        self.roadClassesToAvoid = RoadClasses(from: excludeTokens)
+        self.roadClassesToAvoid = try container.decode(RoadClasses.self, forKey: .roadClassesToAvoid)
 
-        self.roadClassesToAllow = RoadClasses(
-            from: (try? container.decode([String].self, forKey: .roadClassesToAllow)) ?? []
-        )
+        self.roadClassesToAllow = try container.decode(RoadClasses.self, forKey: .roadClassesToAllow)
 
         self.refreshingEnabled = try container.decode(Bool.self, forKey: .refreshingEnabled)
 
@@ -335,11 +329,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
 
     /// The route classes that the calculated routes will avoid.
     ///
-    /// Exclusions are best-effort. When an excluded road type cannot be avoided (for example, it is the only way to
-    /// reach a waypoint), the route may still use it. These cases are reported as ``RouteNotification`` violations
-    /// with a matching subtype — such as ``RouteNotification/Subtype/toll``, ``RouteNotification/Subtype/motorway``,
-    /// ``RouteNotification/Subtype/unpaved``, or ``RouteNotification/Subtype/tunnel`` — which you can check to detect
-    /// when an exclusion was not honored.
+    /// Currently, you can only specify a single road class to avoid.
     open var roadClassesToAvoid: RoadClasses = []
 
     /// The route classes that the calculated routes will allow.
@@ -347,24 +337,6 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
     /// This property has no effect unless the profile identifier is set to ``ProfileIdentifier/automobile`` or
     /// ``ProfileIdentifier/automobileAvoidingTraffic``
     open var roadClassesToAllow: RoadClasses = []
-
-    /// Custom locations that the calculated routes will avoid.
-    ///
-    /// Each location is snapped to the nearest road, and that road segment is excluded from routing. This is useful
-    /// for avoiding dangerous entry/exit points, bridges, tunnels, low quality roads, and cross-border roads that
-    /// aren't otherwise captured by ``roadClassesToAvoid``.
-    ///
-    /// Exclusions are best-effort: if a location can't be avoided (for example, it's the only way to reach a
-    /// waypoint), the route may still pass through it. Such cases are reported as ``RouteNotification`` violations
-    /// with the ``RouteNotification/Subtype/pointExclusion`` subtype, which you can check to detect when an exclusion
-    /// was not honored. You can specify at most 50 locations.
-    ///
-    /// This property has no effect unless the profile identifier is set to ``ProfileIdentifier/automobile`` or
-    /// ``ProfileIdentifier/automobileAvoidingTraffic``.
-    ///
-    /// - Note: This is a beta feature of the Directions API and is subject to change.
-    @_spi(ExperimentalMapboxAPI)
-    open var excludedLocations: [LocationCoordinate2D] = []
 
     /// The number that influences whether the route should prefer or avoid alleys or narrow service roads between
     /// buildings.
@@ -554,12 +526,9 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
             params.append(URLQueryItem(name: CodingKeys.speed.stringValue, value: String(speed)))
         }
 
-        let excludedLocationsString = excludedLocations.map { $0.wktPointDescription }.joined(separator: ",")
-        let excludeValue = [roadClassesToAvoid.description, excludedLocationsString]
-            .filter { !$0.isEmpty }
-            .joined(separator: ",")
-        if !excludeValue.isEmpty {
-            params.append(URLQueryItem(name: CodingKeys.elementsToExclude.stringValue, value: excludeValue))
+        if !roadClassesToAvoid.isEmpty {
+            let roadClasses = roadClassesToAvoid.description
+            params.append(URLQueryItem(name: CodingKeys.roadClassesToAvoid.stringValue, value: roadClasses))
         }
 
         if !roadClassesToAllow.isEmpty {

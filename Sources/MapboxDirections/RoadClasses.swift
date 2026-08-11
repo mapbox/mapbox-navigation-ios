@@ -87,12 +87,11 @@ public struct RoadClasses: OptionSet, CustomStringConvertible, Sendable, Equatab
     /// This option can only be used with ``RouteOptions/roadClassesToAvoid``.
     public static let cashTollOnly = RoadClasses(rawValue: 1 << 10)
 
-    /// Creates a ``RoadClasses`` given an array of description strings.
-    /// Unknown description strings are droppped silently and any surrounding whitespace is ignored.
-    public init(from descriptions: [String]) {
+    /// Creates a ``RoadClasses`` given an array of strings.
+    public init?(descriptions: [String]) {
         var roadClasses: RoadClasses = []
         for description in descriptions {
-            switch description.trimmingCharacters(in: .whitespaces) {
+            switch description {
             case "toll":
                 roadClasses.insert(.toll)
             case "restricted":
@@ -116,21 +115,10 @@ public struct RoadClasses: OptionSet, CustomStringConvertible, Sendable, Equatab
             case "":
                 continue
             default:
-                continue
+                return nil
             }
         }
         self.init(rawValue: roadClasses.rawValue)
-    }
-
-    /// Creates a ``RoadClasses`` given an array of strings.
-    @available(*, deprecated, message: "Use the more gracious `init(from:)` instead.")
-    public init?(descriptions: [String]) {
-        let graciousRoadClasses = RoadClasses(from: descriptions)
-        if descriptions.count == graciousRoadClasses.descriptionTokens.count {
-            self = graciousRoadClasses
-        } else {
-            return nil
-        }
     }
 
     public var description: String {
@@ -167,23 +155,21 @@ public struct RoadClasses: OptionSet, CustomStringConvertible, Sendable, Equatab
         }
         return descriptions.joined(separator: ",")
     }
-
-    /// The individual `exclude`/`include` description tokens that make up this value, as opposed to ``description``,
-    /// which joins them with commas for direct use in a query string.
-    var descriptionTokens: [String] {
-        description.components(separatedBy: ",").filter { !$0.isEmpty }
-    }
 }
 
 extension RoadClasses: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(descriptionTokens)
+        try container.encode(description.components(separatedBy: ",").filter { !$0.isEmpty })
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let descriptions = try container.decode([String].self)
-        self.init(from: descriptions)
+        if let roadClasses = RoadClasses(descriptions: descriptions) {
+            self = roadClasses
+        } else {
+            throw DirectionsError.invalidResponse(nil)
+        }
     }
 }

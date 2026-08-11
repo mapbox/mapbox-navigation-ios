@@ -26,39 +26,6 @@ public typealias LocationAccuracy = Double
 
 extension LocationCoordinate2D {
     var requestDescription: String {
-        return "\(longitude.roundedForWKT),\(latitude.roundedForWKT)"
-    }
-
-    /// The coordinate formatted as a WKT `point(longitude latitude)` literal, as expected by the Directions API's
-    /// `exclude` parameter for excluding custom locations from routing.
-    var wktPointDescription: String {
-        return "point(\(longitude.roundedForWKT) \(latitude.roundedForWKT))"
-    }
-
-    /// Creates a coordinate from a WKT `point(longitude latitude)` literal, as produced by ``wktPointDescription``.
-    ///
-    /// Surrounding whitespace is ignored,
-    /// Returns `nil` if the string isn't a well-formed WKT point.
-    init?(wktPointDescription: some StringProtocol) {
-        let literal = wktPointDescription.trimmingCharacters(in: .whitespaces)
-        let keyword = "point("
-        guard literal.prefix(keyword.count).lowercased() == keyword, literal.hasSuffix(")") else {
-            return nil
-        }
-        let inner = literal.dropFirst(keyword.count).dropLast()
-        let components = inner.split(separator: " ")
-        guard components.count == 2,
-              let longitude = LocationDegrees(components[0]),
-              let latitude = LocationDegrees(components[1])
-        else {
-            return nil
-        }
-        self.init(latitude: latitude, longitude: longitude)
-    }
-}
-
-extension Double {
-    fileprivate var roundedForWKT: Double {
-        rounded(to: 1e6)
+        return "\(longitude.rounded(to: 1e6)),\(latitude.rounded(to: 1e6))"
     }
 }
