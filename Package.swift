@@ -4,9 +4,13 @@
 import PackageDescription
 import Foundation
 
-let (navNativeVersion, navNativeChecksum, navNativeRevision) = ("324.29.0-rc.1", "96ebfde5f421f9d007644a68621b9a2072d533c98f1fad5b654ba2d88c571a3d", "f58dacb803c18a1748ba0f18de7d422e58b28637")
+let navNativeVersion: Version = "324.29.0-rc.1"
 let mapsVersion: Version = "11.29.0-rc.1"
 let navsdkVersion: Version = "0.29.0-rc.1"
+
+let mapboxMapsPackage = mapsVersion.description.contains("SNAPSHOT")
+    ? "mapbox-maps-ios-binary"
+    : "mapbox-maps-ios"
 
 let package = Package(
     name: "MapboxNavigation",
@@ -45,8 +49,8 @@ let package = Package(
             targets: ["MapboxDirectionsCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: Version(stringLiteral: navNativeVersion)),
-        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", exact: mapsVersion),
+        .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: navNativeVersion),
+        .package(url: "https://github.com/mapbox/\(mapboxMapsPackage).git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
         .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
@@ -78,7 +82,7 @@ let package = Package(
                 "_MapboxNavigationHelpers",
                 .product(name: "MapboxNavigationNative", package: "mapbox-navigation-native-ios"),
                 "MapboxDirections",
-                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
+                .product(name: "MapboxMaps", package: mapboxMapsPackage),
             ],
             resources: [
                 .process("Resources")
@@ -179,7 +183,7 @@ let package = Package(
             name: "MapboxNavigationCppRoadCameras",
             dependencies: [
                 .product(name: "MapboxNavigationCpp", package: "mapbox-navigation-cpp-ios"),
-                .product(name: "MapboxMaps", package: "mapbox-maps-ios"),
+                .product(name: "MapboxMaps", package: mapboxMapsPackage),
             ]
         )
     ]
