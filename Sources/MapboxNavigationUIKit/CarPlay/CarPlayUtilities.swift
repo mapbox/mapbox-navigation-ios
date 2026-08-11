@@ -109,6 +109,7 @@ struct CarPlaySafeAreaInsetsBaseline {
 enum CarPlayUtilities {
     static let safeAreaControlsVisibilityThreshold: CGFloat = 38
     static let controlsDismissalVisibilityDelay: TimeInterval = 0.2
+    static let previewCameraAnimationDuration: TimeInterval = 0.3
 
     /// Derived from the 480-pixel height of the standard 800×480 CarPlay display resolution.
     static let compactMapOverlayShortEdgeThresholdInPixels: CGFloat = 480

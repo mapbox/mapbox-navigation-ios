@@ -746,6 +746,25 @@ open class NavigationMapView: UIView {
         )
     }
 
+    /// Updates the camera to fit all routes currently displayed by the map view.
+    ///
+    /// Use this method after viewport padding or safe-area insets change while the camera is idle. It only updates the
+    /// camera and does not redraw the routes. If the map view is not displaying routes, this method has no effect.
+    /// - Parameters:
+    ///   - animated: `true` to animate the camera transition, or `false` to update it immediately.
+    ///   - duration: Duration of the animation in seconds. Ignored when `animated` is `false`.
+    @_spi(MapboxInternal)
+    public func refitDisplayedRoutes(animated: Bool = false, duration: TimeInterval = 0.3) {
+        guard let routes else { return }
+
+        fitCamera(
+            routes: routes,
+            routesPresentationStyle: .all(),
+            animated: animated,
+            duration: duration
+        )
+    }
+
     /// Visualizes the given main route and its alternatives, removing any existing from the map.
     ///
     /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are
