@@ -46,6 +46,8 @@ extension RouteProgress {
 
         let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
             $0.iconAllowOverlap = .constant(false)
+            $0.iconAnchor = .constant(.bottom)
+            $0.iconOffset = .constant([0, 6])
             $0.iconImage = .expression(Exp(.get) {
                 imageNameKey
             })

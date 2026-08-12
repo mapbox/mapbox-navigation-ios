@@ -65,6 +65,8 @@ extension [RoadObjectAhead] {
 
         let layer = with(SymbolLayer(id: ids.layer, source: ids.source)) {
             $0.iconImage = .expression(Exp(.get) { RoadObjectInfo.objectImageType })
+            $0.iconAnchor = .constant(.bottom)
+            $0.iconOffset = .constant([0, 6])
             $0.minZoom = 10
 
             $0.iconSize = .expression(

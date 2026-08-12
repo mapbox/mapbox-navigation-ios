@@ -1,5 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### Other changes
+* Fixed the positioning of pole-style route annotations (traffic signals, yield signs, stop signs, lane restrictions, etc.) so their icon is anchored at the base of the pole instead of centered on the whole image, keeping them visually planted on the street as the camera rotates or pitches.
+
 ## 3.29.0-rc.1
 
 ### Packaging
