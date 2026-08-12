@@ -1,35 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.29.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.29.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.0-rc.1)
 
 ### CarPlay
 
 * Fixed an issue where route and POI previews could appear beneath CarPlay controls after safe-area changes, and made preview camera fitting animate smoothly.
-  
-### Other changes
-
-* Fixed alternative routes being dropped, and route refresh failing, for routes whose index in the original Directions response was not 0. Every route is now decoded from its own single-route representation instead of being looked up by that index. This also fixes switching to an alternative route silently doing nothing, and restores route refresh picking up updated travel times.
-
-## 3.29.0-alpha.3
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.29.0-alpha.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.0-alpha.3)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.0-alpha.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.0-alpha.3)
-
-### MapboxDirections
-
-* Changed some entities encoding behavior: `Intersection`, `RouteStep`, and `Waypoint` now round their headings-related values to the integer when encoding. Also, `Waypoint` encodes a `nil` `name` as an empty string instead.
-
-## 3.29.0-alpha.2
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.28.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.0-rc.1)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.0-rc.1)
-
-### CarPlay
-
 * Fixed an issue where the speed limit view could remain hidden during CarPlay free drive despite available speed-limit data.
 * Added the experimental `CarPlayManager.hidesSpeedLimitViewWithMapControls` property for controlling whether the speed limit view is hidden while CarPlay map controls are visible. Access this property by importing MapboxNavigationUIKit with `@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit`.
 * Adjusted the CarPlay speed limit view size to visually match CarPlay map buttons.
@@ -37,6 +17,18 @@
 ### MapboxDirections
 
 * Added `RouteNotification.Subtype.toll` and `RouteNotification.Subtype.motorway` constants representing violation subtypes for routes that include a toll road or motorway while those were explicitly requested to be excluded via `exclude=toll` or `exclude=motorway`.
+* Changed some entities encoding behavior: `Intersection`, `RouteStep`, and `Waypoint` now round their headings-related values to the integer when encoding. Also, `Waypoint` encodes a `nil` `name` as an empty string instead.
+  
+### Other changes
+
+* Fixed alternative routes being dropped, and route refresh failing, for routes whose index in the original Directions response was not 0. Every route is now decoded from its own single-route representation instead of being looked up by that index. This also fixes switching to an alternative route silently doing nothing, and restores route refresh picking up updated travel times.
+
+## 3.28.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.28.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.0)
 
 ## 3.28.0-rc.1
 
