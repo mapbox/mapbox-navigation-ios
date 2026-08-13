@@ -208,7 +208,7 @@ open class NavigationMapView: UIView {
     ///   - mapOptions: Rendering options used to initialize the underlying `MapView`. The pixel ratio must match the
     /// display that hosts the map and cannot be changed after initialization. This is particularly important for
     /// external displays such as CarPlay.
-    @_spi(MapboxInternal)
+    @_spi(MapboxCarPlayInternal)
     public init(
         location: AnyPublisher<CLLocation, Never>,
         routeProgress: AnyPublisher<RouteProgress?, Never>,
@@ -477,7 +477,7 @@ open class NavigationMapView: UIView {
     ///
     /// This internal customization allows SDK-managed maps on compact external displays to use appropriately sized
     /// overlays while preserving the public mobile defaults. Values are clamped to `0.5...2.0`.
-    @_spi(MapboxInternal)
+    @_spi(MapboxCarPlayInternal)
     public var routeLineWidthMultiplier = 1.0 {
         didSet {
             routeLineWidthMultiplier = routeLineWidthMultiplier.clamped(

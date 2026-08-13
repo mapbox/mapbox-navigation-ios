@@ -3,7 +3,7 @@ import Combine
 import Foundation
 import MapboxDirections
 @_spi(Restricted) import MapboxMaps
-@_spi(MapboxCarPlayInternal) @_spi(MapboxInternal) import MapboxNavigationCore
+@_spi(MapboxInternal) @_spi(MapboxCarPlayInternal) import MapboxNavigationCore
 
 /// ``CarPlayMapViewController`` is responsible for administering the Mapbox map, the interface styles and the map
 /// template buttons to display on CarPlay.

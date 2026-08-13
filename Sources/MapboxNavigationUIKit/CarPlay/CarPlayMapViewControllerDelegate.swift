@@ -206,7 +206,7 @@ public protocol CarPlayMapViewControllerDelegate: AnyObject, UnimplementedLoggin
         legIndex: Int
     ) -> FeatureCollection?
 
-    @_spi(MapboxInternal)
+    @_spi(MapboxCarPlayInternal)
     func carPlayMapViewController(
         _ carPlayMapViewController: CarPlayMapViewController,
         didSetup navigationMapView: NavigationMapView
@@ -292,7 +292,7 @@ extension CarPlayMapViewControllerDelegate {
         return nil
     }
 
-    @_spi(MapboxInternal)
+    @_spi(MapboxCarPlayInternal)
     public func carPlayMapViewController(
         _ carPlayMapViewController: CarPlayMapViewController,
         didSetup navigationMapView: NavigationMapView

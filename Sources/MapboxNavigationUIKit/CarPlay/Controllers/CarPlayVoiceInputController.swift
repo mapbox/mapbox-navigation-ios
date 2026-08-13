@@ -8,7 +8,7 @@
 import CarPlay
 import Foundation
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlaySearchInternal)
 public final class CarPlayVoiceInputController {
     public struct State {
         let identifier: String

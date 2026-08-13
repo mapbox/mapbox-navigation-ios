@@ -8,7 +8,7 @@
 import CarPlay
 import Foundation
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlaySearchInternal)
 public protocol CarPlaySearchItemsListControllerDelegate: AnyObject {
     func didSelectBackButton(_ controller: CarPlaySearchItemsListController)
     func didSelectItem(
@@ -18,7 +18,7 @@ public protocol CarPlaySearchItemsListControllerDelegate: AnyObject {
     )
 }
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlaySearchInternal)
 public final class CarPlaySearchItemsListController {
     public struct Style {
         var title: String

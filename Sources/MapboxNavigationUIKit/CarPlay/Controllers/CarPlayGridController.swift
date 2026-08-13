@@ -9,26 +9,26 @@ import CarPlay
 import Foundation
 import MapboxNavigationCore
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlayInternal)
 public protocol CarPlayGridItem {
     var icon: UIImage { get }
     var displayName: String { get }
 }
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlayInternal)
 public enum CarPlayNavigationItem {
     case image(UIImage)
     case text(String)
 }
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlayInternal)
 public protocol CarPlayGridControllerDelegate: AnyObject, UnimplementedLogging {
     func didSelectBackButton(_ controller: CarPlayGridController)
     func didSelectNavigationItem(_ controller: CarPlayGridController, item: CarPlayNavigationItem, button: CPBarButton)
     func didSelectItem(_ controller: CarPlayGridController, item: CarPlayGridItem, button: CPGridButton)
 }
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlayInternal)
 extension CarPlayGridControllerDelegate {
     public func didSelectBackButton(_ controller: CarPlayGridController) {
         logUnimplemented(protocolType: CarPlayGridControllerDelegate.self, level: .info)
@@ -47,7 +47,7 @@ extension CarPlayGridControllerDelegate {
     }
 }
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlayInternal)
 open class CarPlayGridController {
     public struct Style {
         var title: String

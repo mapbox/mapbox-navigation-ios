@@ -2,7 +2,7 @@ import CarPlay
 import Combine
 import Foundation
 import MapboxDirections
-@_spi(MapboxInternal) import MapboxNavigationCore
+@_spi(MapboxCarPlayInternal) import MapboxNavigationCore
 @_spi(Restricted) import MapboxMaps
 
 let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
