@@ -1,6 +1,6 @@
 import CarPlay
 
-@_spi(MapboxInternal)
+@_spi(MapboxCarPlaySearchInternal)
 public protocol CarPlaySearchControllerInternalDelegate {
     func selectSuggestion(item: CPSelectableListItem, completion: @escaping () -> Void)
 }
