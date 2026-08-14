@@ -52,13 +52,10 @@ let package = Package(
         .package(url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", exact: navNativeVersion),
         .package(url: "https://github.com/mapbox/\(mapboxMapsPackage).git", exact: mapsVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", exact: "9.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", exact: "1.18.1"),
-        .package(url: "https://github.com/apple/swift-argument-parser", exact: "1.7.0"),
+        .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.18.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
         .package(url: "https://github.com/mapbox/mapbox-navigation-cpp-ios.git", exact: navsdkVersion),
-        .package(url: "https://github.com/swiftlang/swift-syntax", exact: "600.0.1"),
-        .package(url: "https://github.com/pointfreeco/swift-custom-dump", exact: "1.3.3"),
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", exact: "1.5.2"),
     ],
     targets: [
         .target(
