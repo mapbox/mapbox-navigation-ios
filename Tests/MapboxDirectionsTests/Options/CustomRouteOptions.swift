@@ -4,7 +4,7 @@ import MapboxDirections
 import CoreLocation
 #endif
 
-final class CustomRouteOptions: RouteOptions {
+final class CustomRouteOptions: RouteOptions, @unchecked Sendable {
     var customParameters: [URLQueryItem]
 
     init(
