@@ -1,6 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
+## 3.30.0-alpha.5
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.30.0-alpha.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.30.0-alpha.5)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.30.0-alpha.5](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.30.0-alpha.5)
 
 ### Other changes
 * Fixed the positioning of pole-style route annotations (traffic signals, yield signs, stop signs, lane restrictions, etc.) so their icon is anchored at the base of the pole instead of centered on the whole image, keeping them visually planted on the street as the camera rotates or pitches.
