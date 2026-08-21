@@ -113,6 +113,28 @@ final class NavigationMapStyleManager {
         }
     }
 
+    /// When `false`, HD roads are forced off on map style load. Nav SDK iOS is currently
+    /// incompatible with HD roads.
+    var allowsHDRoads = false {
+        didSet {
+            guard allowsHDRoads != oldValue else { return }
+
+            if allowsHDRoads {
+                reloadCurrentStyle()
+            } else {
+                updateHDRoadsOverride()
+            }
+        }
+    }
+
+    private func reloadCurrentStyle() {
+        if let styleURI = mapView.mapboxMap.styleURI {
+            mapView.mapboxMap.loadStyle(styleURI, reloadPolicy: .always)
+        } else if !mapView.mapboxMap.styleJSON.isEmpty {
+            mapView.mapboxMap.loadStyle(mapView.mapboxMap.styleJSON, reloadPolicy: .always)
+        }
+    }
+
     var customizedLineLayerProvider: CustomizedTypeLayerProvider<LineLayer> {
         .init { [weak self] in
             guard let self else { return $0 }
@@ -180,6 +202,8 @@ final class NavigationMapStyleManager {
     }
 
     func onStyleLoaded() {
+        updateHDRoadsOverride()
+
         // MapsSDK removes all layers when a style is loaded, so we have to recreate MapLayersOrder.
         layersOrder = Self.makeMapLayersOrder(with: mapView, customRouteLineLayerPosition: customRouteLineLayerPosition)
         layerIds = mapView.mapboxMap.allLayerIdentifiers.map(\.id)
@@ -213,6 +237,34 @@ final class NavigationMapStyleManager {
 
     private func contains(navigationSlot: Slot) -> Bool {
         mapView.mapboxMap.allSlotIdentifiers.contains(navigationSlot)
+    }
+
+    private enum HDRoads {
+        static let importId = "basemap"
+        static let showHDRoadsConfig = "showHdRoads"
+    }
+
+    private func updateHDRoadsOverride() {
+        guard !allowsHDRoads else { return }
+
+        guard (try? mapView.mapboxMap.getStyleImportConfigProperty(
+            for: HDRoads.importId,
+            config: HDRoads.showHDRoadsConfig
+        ).value as? Bool) == true else {
+            return
+        }
+
+        try? mapView.mapboxMap.setStyleImportConfigProperty(
+            for: HDRoads.importId,
+            config: HDRoads.showHDRoadsConfig,
+            value: false
+        )
+
+        Log.warning(
+            "Style requested HD roads (\(HDRoads.importId).\(HDRoads.showHDRoadsConfig) = true), " +
+                "but Nav SDK iOS disabled them; Nav SDK iOS is currently incompatible with HD roads.",
+            category: .navigationUI
+        )
     }
 
     private(set) var mapContent: NavigationStyleContent?

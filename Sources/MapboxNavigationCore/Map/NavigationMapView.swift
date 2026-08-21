@@ -542,6 +542,15 @@ open class NavigationMapView: UIView {
         }
     }
 
+    /// When `false`, HD roads are forced off on map style load. Nav SDK iOS is currently
+    /// incompatible with HD roads.
+    @_spi(MapboxInternal)
+    public var allowsHDRoads = false {
+        didSet {
+            mapStyleManager.allowsHDRoads = allowsHDRoads
+        }
+    }
+
     // MARK: RouteLine Customization
 
     /// Configures the route line color for the main route.
