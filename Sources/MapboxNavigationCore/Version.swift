@@ -1,6 +1,6 @@
 import Foundation
 
 extension Bundle {
-    public static let mapboxNavigationVersion: String = "3.30.0-SNAPSHOT-08-20--16-03.git-83cea42"
+    public static let mapboxNavigationVersion: String = "3.30.0-SNAPSHOT-08-22--01-52.git-582f782"
     public static let mapboxNavigationUXBundleIdentifier: String = "com.mapbox.navigationUX"
 }
