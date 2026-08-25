@@ -304,7 +304,7 @@ public class Fixture: NSObject {
                                         approachLanes: nil,
                                         usableApproachLanes: nil,
                                         preferredApproachLanes: nil,
-                                        usableLaneIndication: nil)
+                                        laneValidIndications: nil)
 
         let arriveStep = RouteStep(transportType: transportType,
                                    maneuverLocation: destination,

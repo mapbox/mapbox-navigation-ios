@@ -44,7 +44,7 @@ class NavigationMapViewTests: TestCase {
                      approachLanes: nil,
                      usableApproachLanes: nil,
                      preferredApproachLanes: nil,
-                     usableLaneIndication: nil,
+                     laneValidIndications: nil,
                      yieldSign: true),
         Intersection(location: CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
                      headings: [],
@@ -54,7 +54,7 @@ class NavigationMapViewTests: TestCase {
                      approachLanes: nil,
                      usableApproachLanes: nil,
                      preferredApproachLanes: nil,
-                     usableLaneIndication: nil,
+                     laneValidIndications: nil,
                      stopSign: true),
     ]
     
