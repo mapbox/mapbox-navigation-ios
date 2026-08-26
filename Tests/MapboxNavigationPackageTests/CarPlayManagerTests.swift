@@ -406,6 +406,65 @@ class CarPlayManagerTests: TestCase {
         )
     }
 
+    @MainActor
+    func testNavigationEndByCancelingRestoresBrowsingCamera() async throws {
+        await startNavigation()
+        let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+
+        navigationViewController.exitNavigation(byCanceling: true)
+
+        await assertBrowsingCameraIsRestored(
+            mapViewController: mapViewController,
+            navigationCamera: navigationCamera
+        )
+    }
+
+    @MainActor
+    func testNavigationEndWithoutCancelingRestoresBrowsingCamera() async throws {
+        await startNavigation()
+        let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+
+        navigationViewController.exitNavigation(byCanceling: false)
+
+        await assertBrowsingCameraIsRestored(
+            mapViewController: mapViewController,
+            navigationCamera: navigationCamera
+        )
+    }
+
+    @MainActor
+    func testMapTemplateCancellationRestoresBrowsingCamera() async throws {
+        let mapTemplate = await startNavigation()
+        let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
+
+        carPlayManager.mapTemplateDidCancelNavigation(mapTemplate)
+
+        await assertBrowsingCameraIsRestored(
+            mapViewController: mapViewController,
+            navigationCamera: navigationCamera
+        )
+    }
+
+    @MainActor
+    func testNavigationCleanupRunsOnceForCompetingEndCallbacks() async throws {
+        let mapTemplate = await startNavigation()
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+
+        carPlayManager.mapTemplateDidCancelNavigation(mapTemplate)
+        let browsingMapTemplate = try XCTUnwrap(carPlayManager.mainMapTemplate)
+
+        carPlayManager.carPlayNavigationViewControllerDidDismiss(
+            navigationViewController,
+            byCanceling: true
+        )
+
+        XCTAssertIdentical(carPlayManager.mainMapTemplate, browsingMapTemplate)
+        XCTAssertTrue(delegate.didEndNavigationCalled)
+        XCTAssertFalse(delegate.passedNavigationEndedByCanceling)
+    }
+
     func testRouteRequestFailure() async {
         let routeOptions = RouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -774,6 +833,50 @@ class CarPlayManagerTests: TestCase {
         return try XCTUnwrap(viewController.wayNameView)
     }
 
+    @MainActor
+    private func prepareBrowsingCameraForNavigationEnd() throws
+    -> (CarPlayMapViewController, NavigationCamera) {
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        let navigationCamera = mapViewController.navigationMapView.navigationCamera
+        navigationCamera.viewportDataSource = FixedNavigationCameraViewportDataSource()
+        navigationCamera.cameraStateTransition = ImmediateCameraStateTransition(
+            mapViewController.navigationMapView.mapView
+        )
+        navigationCamera.stop()
+        mapViewController.recenterButton.isHidden = false
+
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
+        XCTAssertFalse(mapViewController.recenterButton.isHidden)
+
+        return (mapViewController, navigationCamera)
+    }
+
+    @MainActor
+    private func assertBrowsingCameraIsRestored(
+        mapViewController: CarPlayMapViewController,
+        navigationCamera: NavigationCamera
+    ) async {
+        XCTAssertEqual(navigationCamera.currentCameraState, .following)
+        XCTAssertTrue(mapViewController.recenterButton.isHidden)
+        XCTAssertNil(carPlayManager.carPlayNavigationViewController)
+
+        navigationCamera.stop()
+        await waitForPendingMainQueueWork()
+
+        XCTAssertFalse(
+            mapViewController.recenterButton.isHidden,
+            "The manager should observe subsequent browsing-camera state changes."
+        )
+    }
+
+    private func waitForPendingMainQueueWork() async {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                continuation.resume()
+            }
+        }
+    }
+
     private func previewRoutesOptions() async -> NavigationRouteOptions {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
@@ -810,6 +913,45 @@ class CarPlayManagerTests: TestCase {
         let waitExpectation = expectation(description: "Wait expectation.")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
     }
+}
+
+private final class FixedNavigationCameraViewportDataSource: ViewportDataSource {
+    var options: NavigationViewportDataSourceOptions = .init()
+
+    private let cameraOptions = CurrentValueSubject<NavigationCameraOptions, Never>(
+        .init(followingCamera: .init(zoom: 10))
+    )
+
+    var navigationCameraOptions: AnyPublisher<NavigationCameraOptions, Never> {
+        cameraOptions.eraseToAnyPublisher()
+    }
+
+    var currentNavigationCameraOptions: NavigationCameraOptions {
+        get {
+            cameraOptions.value
+        }
+        set {
+            cameraOptions.value = newValue
+        }
+    }
+
+    func update(using viewportState: MapboxNavigationCore.ViewportState) {}
+}
+
+private final class ImmediateCameraStateTransition: CameraStateTransition {
+    weak var mapView: MapView?
+
+    required init(_ mapView: MapView) {
+        self.mapView = mapView
+    }
+
+    func transitionTo(_ cameraOptions: CameraOptions, completion: @escaping () -> Void) {
+        completion()
+    }
+
+    func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {}
+
+    func cancelPendingTransition() {}
 }
 
 extension CarPlayMapViewController {

@@ -7,6 +7,10 @@
 * Added `RouteOptions.excludedLocations` allowing you to exclude custom locations (such as dangerous entry/exit points, low quality roads, etc.) from routing by coordinate, in addition to the existing road-class-based `RouteOptions.roadClassesToAvoid`. This expirimental feature maps to the Directions API's beta `exclude=point(longitude latitude)` parameter and is currently limited to the `mapbox/driving` and `mapbox/driving-traffic` profiles, with at most 50 locations per request.
 * Fixed `RouteOptions.roadClassesToAvoid`/`roadClassesToAllow` parsing (from a URL or from an archived/persisted `RouteOptions`) so that a single unrecognized road-class value no longer discards every other recognized value alongside it, and no longer fails decoding the entire `RouteOptions` object. Surrounding whitespace is now ignored as well, so an `exclude` or `include` parameter written the way the Directions API documents it (`toll, motorway`) is recognized in full.
 
+### CarPlay
+
+* Fixed an issue where the CarPlay browsing map could remain idle or non-centered after navigation ended.
+
 ### Other changes
 
 * Fixed the positioning of pole-style route annotations (traffic signals, yield signs, stop signs, lane restrictions, etc.) so their icon is anchored at the base of the pole instead of centered on the whole image, keeping them visually planted on the street as the camera rotates or pitches.

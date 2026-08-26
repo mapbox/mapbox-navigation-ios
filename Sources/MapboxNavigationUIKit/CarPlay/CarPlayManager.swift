@@ -71,6 +71,7 @@ public class CarPlayManager: NSObject {
     public private(set) var currentActivity: CarPlayActivity?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
     private var routes: NavigationRoutes?
+    @MainActor private var hasStartedNavigationCleanup = false
 
     /// Programatically begins a CarPlay turn-by-turn navigation session.
     /// - Parameter currentLocation: The current location of the user. This will be used to initally draw SignInViewthe
@@ -968,6 +969,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let interfaceController, let carPlayMapViewController, let carWindow else {
             return
         }
+        // Allow the new navigation session to perform its post-navigation cleanup once.
+        hasStartedNavigationCleanup = false
         clearMapAnnotations()
 
         mapTemplate.hideTripPreviews()
@@ -1094,13 +1097,15 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
     @MainActor
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController else {
-            return
+        if let carPlayNavigationViewController {
+            carPlayNavigationViewController.dismiss(animated: true) { [weak self] in
+                MainActor.assumingIsolated {
+                    self?.completeNavigationCleanup(byCanceling: false)
+                }
+            }
+        } else {
+            completeNavigationCleanup(byCanceling: false)
         }
-        removeRoutesFromMap()
-        carPlayMapViewController.subscribeForFreeDriveNotifications()
-        delegate?.carPlayManagerDidEndNavigation(self)
-        delegate?.carPlayManagerDidEndNavigation(self, byCanceling: false)
     }
 
     @MainActor
@@ -1442,14 +1447,25 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         _ carPlayNavigationViewController: CarPlayNavigationViewController,
         byCanceling canceled: Bool
     ) {
-        guard let interfaceController else {
+        completeNavigationCleanup(byCanceling: canceled)
+    }
+
+    @MainActor
+    private func completeNavigationCleanup(byCanceling canceled: Bool) {
+        guard let interfaceController, !hasStartedNavigationCleanup else {
             return
         }
+        hasStartedNavigationCleanup = true
 
         // Dismiss the template for previous arrival UI when exit the navigation.
         interfaceController.dismissTemplate(animated: true, completion: nil)
         // Unset existing main map template (fixes an issue with the buttons)
         mainMapTemplate = nil
+        carPlayNavigationViewController = nil
+        removeRoutesFromMap()
+
+        // Restore the browsing camera before rebuilding camera-state-dependent controls and subscriptions.
+        carPlayMapViewController?.navigationMapView.update(navigationCameraState: .following)
 
         // Then (re-)create and assign new map template
         let mapTemplate = browseAndFreeDriveMapTemplate()
@@ -1465,7 +1481,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                 carPlayMapViewController?.subscribeForFreeDriveNotifications()
                 subscribeForCameraStateNotifications()
 
-                self.carPlayNavigationViewController = nil
                 delegate?.carPlayManagerDidEndNavigation(self)
                 delegate?.carPlayManagerDidEndNavigation(self, byCanceling: canceled)
             }
