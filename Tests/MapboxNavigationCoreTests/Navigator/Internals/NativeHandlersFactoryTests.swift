@@ -1,5 +1,5 @@
 
-@testable import MapboxNavigationCore
+@testable @_spi(MapboxInternal) import MapboxNavigationCore
 @testable import MapboxNavigationNative_Private
 import XCTest
 
@@ -172,11 +172,35 @@ final class NativeHandlersFactoryTests: XCTestCase {
         XCTAssertTrue(firstHandle === secondHandle)
     }
 
+    func testHdNavigationConfigDisabledDoesNotEnableHdInCustomConfig() {
+        factory = nativeHandlersFactory(hdNavigationConfig: .disabled)
+        _ = factory.configHandle(by: ConfigFactorySpy.self)
+
+        let customConfig = ConfigFactorySpy.passedCustomConfig!
+        XCTAssertFalse(customConfig.contains("\"hd\""))
+        XCTAssertNil(factory.hdEndpointConfig)
+    }
+
+    func testHdNavigationConfigEnabledAddsHdToCustomConfigAndEndpoint() {
+        factory = nativeHandlersFactory(hdNavigationConfig: .init(enabled: true))
+        _ = factory.configHandle(by: ConfigFactorySpy.self)
+
+        let customConfig = ConfigFactorySpy.passedCustomConfig!
+        XCTAssertTrue(customConfig.contains("\"enabled\":true"))
+        XCTAssertTrue(customConfig.contains("\"hd\""))
+
+        let hdEndpoint = factory.hdEndpointConfig
+        XCTAssertNotNil(hdEndpoint)
+        XCTAssertEqual(hdEndpoint?.dataset, "mapbox")
+        XCTAssertEqual(hdEndpoint?.minDiffInDaysToConsiderServerVersion?.intValue, 7)
+    }
+
     private func nativeHandlersFactory(
         liveIncidentsOptions: IncidentsConfig? = nil,
         navigatorPredictionInterval: TimeInterval? = nil,
         rerouteStrategyForMatchRoute: MapboxNavigationCore.RerouteStrategyForMatchRoute = .rerouteDisabled,
-        statusUpdatingSettings: StatusUpdatingSettings? = nil
+        statusUpdatingSettings: StatusUpdatingSettings? = nil,
+        hdNavigationConfig: HdNavigationConfig = .disabled
     ) -> NativeHandlersFactory {
         NativeHandlersFactory(
             tileStorePath: "",
@@ -189,6 +213,7 @@ final class NativeHandlersFactoryTests: XCTestCase {
             utilizeSensorData: true,
             historyDirectoryURL: nil,
             initialManeuverAvoidanceRadius: 12,
+            hdNavigationConfig: hdNavigationConfig,
             locale: .current,
             rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )

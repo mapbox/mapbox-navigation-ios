@@ -91,6 +91,10 @@ public struct CoreConfig: Equatable {
     /// Options for configuring how map and navigation tiles are stored on the device.
     public let tilestoreConfig: TileStoreConfiguration
 
+    /// Navigator HD localization and HD tiles configuration for HD Lite / HD rendering.
+    @_spi(MapboxInternal)
+    public var hdNavigationConfig: HdNavigationConfig = .disabled
+
     /// Configuration for Text-To-Speech engine used.
     public var ttsConfig: TTSConfig
 

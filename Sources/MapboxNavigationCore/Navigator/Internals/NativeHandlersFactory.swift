@@ -31,6 +31,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let historyDirectoryURL: URL?
     let initialManeuverAvoidanceRadius: TimeInterval
     let electronicHorizonConfig: ElectronicHorizonConfig?
+    let hdNavigationConfig: HdNavigationConfig
     var locale: Locale {
         didSet {
             _navigator?.locale = locale
@@ -54,6 +55,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         historyDirectoryURL: URL?,
         initialManeuverAvoidanceRadius: TimeInterval,
         electronicHorizonConfig: ElectronicHorizonConfig? = nil,
+        hdNavigationConfig: HdNavigationConfig = .disabled,
         locale: Locale,
         rerouteStrategyForMatchRoute: RerouteStrategyForMatchRoute
     ) {
@@ -72,6 +74,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.historyDirectoryURL = historyDirectoryURL
         self.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius
         self.electronicHorizonConfig = electronicHorizonConfig
+        self.hdNavigationConfig = hdNavigationConfig
         self.locale = locale
         self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
     }
@@ -92,6 +95,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
             historyDirectoryURL: historyDirectoryURL,
             initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
             electronicHorizonConfig: electronicHorizonConfig,
+            hdNavigationConfig: hdNavigationConfig,
             locale: locale,
             rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
         )
@@ -216,13 +220,27 @@ final class NativeHandlersFactory: @unchecked Sendable {
     )
 
     // TODO: To be replaced with NavigationTilesConfig (NAVIOS-2531)
+    lazy var hdEndpointConfig: TileEndpointConfiguration? = {
+        guard hdNavigationConfig.enabled else { return nil }
+        return .init(
+            host: apiConfiguration.endPoint.absoluteString,
+            dataset: hdNavigationConfig.tilesDataset,
+            version: hdNavigationConfig.tilesVersion,
+            isFallback: false,
+            versionBeforeFallback: hdNavigationConfig.tilesVersion,
+            minDiffInDaysToConsiderServerVersion: hdNavigationConfig
+                .minDaysBetweenServerAndLocalTilesVersion as NSNumber
+        )
+    }()
+
+    // TODO: To be replaced with NavigationTilesConfig (NAVIOS-2531)
     lazy var tilesConfig: TilesConfig = .init(
         tilesPath: tileStorePath,
         tileStore: tileStore,
         inMemoryTileCache: nil,
         onDiskTileCache: nil,
         endpointConfig: endpointConfig,
-        hdEndpointConfig: nil
+        hdEndpointConfig: hdEndpointConfig
     )
 
     var navigatorConfig: NavigatorConfig {
@@ -274,19 +292,26 @@ final class NativeHandlersFactory: @unchecked Sendable {
     }
 
     func configHandle(by configFactoryType: ConfigFactory.Type = ConfigFactory.self) -> ConfigHandle {
+        var navigationConfig: [String: Any] = [
+            "alternativeRoutes": [
+                "dropDistance": [
+                    "maxSlightFork": 50.0,
+                ],
+            ],
+        ]
+        if hdNavigationConfig.enabled {
+            navigationConfig["hd"] = [
+                "enabled": true,
+            ]
+        }
+
         let defaultConfig = [
             customConfigFeaturesKey: [
                 "useInternalReroute": true,
                 "useInternalRouteRefresh": true,
                 "useTelemetryNavigationEvents": true,
             ],
-            "navigation": [
-                "alternativeRoutes": [
-                    "dropDistance": [
-                        "maxSlightFork": 50.0,
-                    ],
-                ],
-            ],
+            "navigation": navigationConfig,
         ]
 
         var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
