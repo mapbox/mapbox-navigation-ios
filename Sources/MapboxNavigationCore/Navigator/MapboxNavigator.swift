@@ -362,6 +362,7 @@ final class MapboxNavigator: @unchecked Sendable {
             return
         }
 
+        rerouteController?.abortReroutePipeline = navigationRoutes.isCustomExternalRoute
         locationClient.startUpdatingLocation()
         locationClient.startUpdatingHeading()
         navigator.resume()
@@ -420,7 +421,6 @@ final class MapboxNavigator: @unchecked Sendable {
                     await send(NavigatorErrors.FailedToSetRoute(underlyingError: error))
                 }
                 await state.update(setRoutesTask: nil)
-                await rerouteController?.abortReroutePipeline = navigationRoutes.isCustomExternalRoute
             }
             Task { [weak self] in
                 await self?.state.update(setRoutesTask: newTask)

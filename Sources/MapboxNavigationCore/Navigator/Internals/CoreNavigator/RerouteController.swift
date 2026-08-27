@@ -148,9 +148,9 @@ extension RerouteController {
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
-        guard rerouteConfig.detectsReroute else { return false }
+        guard rerouteConfig.detectsReroute, !abortReroutePipeline else { return false }
         delegate?.rerouteControllerDidDetectReroute(self)
-        return !abortReroutePipeline
+        return true
     }
 
     func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
