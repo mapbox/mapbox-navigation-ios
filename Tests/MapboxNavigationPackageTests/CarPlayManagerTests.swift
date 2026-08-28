@@ -569,6 +569,49 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
+    func testPreviewRefitPreservesLargestObservedViewportPaddingUntilDismissal() async throws {
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
+
+        let trip = try XCTUnwrap(mapTemplateSpy.passedTripPreviews?.first)
+        let routeChoice = try XCTUnwrap(trip.routeChoices.first)
+        carPlayManager.mapTemplate(mapTemplateSpy, selectedPreviewFor: trip, using: routeChoice)
+
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        let navigationCamera = mapViewController.navigationMapView.navigationCamera
+        let tripPanelPadding = UIEdgeInsets(top: 64, left: 264.5, bottom: 40, right: 20)
+        navigationCamera.viewportPadding = tripPanelPadding
+        mapViewController.viewSafeAreaInsetsDidChange()
+
+        navigationCamera.viewportPadding = UIEdgeInsets(top: 64, left: 69, bottom: 40, right: 20)
+        mapViewController.viewSafeAreaInsetsDidChange()
+
+        XCTAssertEqual(navigationCamera.viewportPadding, tripPanelPadding)
+
+        let dismissalPadding = UIEdgeInsets(top: 64, left: 69, bottom: 40, right: 60)
+        mapViewController.isDismissingRoutePreview = true
+        navigationCamera.viewportPadding = dismissalPadding
+        mapViewController.viewSafeAreaInsetsDidChange()
+
+        XCTAssertEqual(navigationCamera.viewportPadding, dismissalPadding)
+
+        mapViewController.isDismissingRoutePreview = false
+        let viewportPadding = mapViewController.navigationMapView.viewportPadding
+        let safeAreaInsets = mapViewController.view.safeAreaInsets
+        mapViewController.currentActivity = .browsing
+
+        XCTAssertEqual(
+            navigationCamera.viewportPadding,
+            UIEdgeInsets(
+                top: safeAreaInsets.top + viewportPadding.top,
+                left: safeAreaInsets.left + viewportPadding.left,
+                bottom: safeAreaInsets.bottom + viewportPadding.bottom,
+                right: safeAreaInsets.right + viewportPadding.right
+            )
+        )
+    }
+
+    @MainActor
     func testWayNameViewIsHiddenDuringRoutePreview() async throws {
         let wayNameView = try browsingWayNameView()
 

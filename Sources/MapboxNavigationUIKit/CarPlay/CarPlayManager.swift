@@ -753,6 +753,10 @@ extension CarPlayManager {
     @MainActor
     public func cancelRoutesPreview() async {
         guard routes != nil else { return }
+        carPlayMapViewController?.isDismissingRoutePreview = true
+        defer {
+            carPlayMapViewController?.isDismissingRoutePreview = false
+        }
         clearMapAnnotations()
         var configuration = CarPlayManagerCancelPreviewConfiguration()
         delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)

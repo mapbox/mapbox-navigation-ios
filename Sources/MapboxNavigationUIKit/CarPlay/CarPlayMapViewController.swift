@@ -219,9 +219,23 @@ open class CarPlayMapViewController: UIViewController {
 
     private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
     var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
+    private var previewViewportPadding: UIEdgeInsets?
+    var isDismissingRoutePreview = false
 
     var currentActivity: CarPlayActivity? {
         didSet {
+            if oldValue != currentActivity {
+                if currentActivity == .previewing {
+                    previewViewportPadding = nil
+                } else if oldValue == .previewing {
+                    previewViewportPadding = nil
+                    if isViewLoaded {
+                        // Reapply the current safe area instead of retaining padding preserved for the Trip panel.
+                        let viewportPadding = navigationMapView.viewportPadding
+                        navigationMapView.viewportPadding = viewportPadding
+                    }
+                }
+            }
             updateSpeedLimitViewVisibility()
             updateWayNameViewVisibility()
         }
@@ -581,6 +595,23 @@ open class CarPlayMapViewController: UIViewController {
         // Only preview content should be refitted here. In browsing mode, displayed routes or annotations may be stale
         // while templates are transitioning, and the camera should remain controlled by the browsing experience.
         guard currentActivity == .previewing else { return }
+        guard !isDismissingRoutePreview else { return }
+
+        // CarPlay can temporarily report smaller safe-area insets while the Trip panel remains visible. Preserve the
+        // largest padding observed during this preview so a later callback cannot refit content underneath the panel.
+        let currentPadding = navigationMapView.navigationCamera.viewportPadding
+        let preservedPadding = previewViewportPadding.map {
+            UIEdgeInsets(
+                top: max($0.top, currentPadding.top),
+                left: max($0.left, currentPadding.left),
+                bottom: max($0.bottom, currentPadding.bottom),
+                right: max($0.right, currentPadding.right)
+            )
+        } ?? currentPadding
+        previewViewportPadding = preservedPadding
+        if currentPadding != preservedPadding {
+            navigationMapView.navigationCamera.viewportPadding = preservedPadding
+        }
 
         // Route and POI preview fitting stops `NavigationCamera` and controls the map camera directly. Avoid refitting
         // while `NavigationCamera` is following, showing an overview, or transitioning between those states.
