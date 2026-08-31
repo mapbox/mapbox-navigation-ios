@@ -10,6 +10,7 @@
 ### CarPlay
 
 * Fixed an issue where the CarPlay browsing map could remain idle or non-centered after navigation ended.
+* Fixed an issue where the CarPlay browsing map could visibly catch up from a stale position or briefly reveal active-guidance route and camera framing after navigation ended.
 * Fixed CarPlay previews refitting beneath controls during safe-area changes.
 
 ### Other changes

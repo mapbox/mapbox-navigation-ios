@@ -613,7 +613,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         guard interfaceController?.topTemplate == mainMapTemplate,
               template == interfaceController?.rootTemplate else { return }
 
-        removeRoutesFromMap()
+        removeRoutesFromBrowsingMap()
     }
 
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -864,8 +864,8 @@ extension CarPlayManager {
         try await interfaceController.pushTemplate(previewMapTemplate, animated: !wasPreviewing)
     }
 
-    func removeRoutesFromMap() {
-        Task { @MainActor in
+    func removeRoutesFromBrowsingMap() {
+        MainActor.assumingIsolated {
             routes = nil
             guard let navigationMapView = carPlayMapViewController?.navigationMapView else { return }
             navigationMapView.removeRoutes()
@@ -1025,10 +1025,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
                     delegate?.carPlayManager(self, didPresent: carPlayNavigationViewController)
                 }
 
-                removeRoutesFromMap()
-                // For browsing map view resetting camera state to .following so that when navigation ends
-                // (and carPlayNavigationViewController is dismissed) the camera will be already in the correct state.
-                carPlayMapViewController.navigationMapView.update(navigationCameraState: .following)
+                removeRoutesFromBrowsingMap()
+                // Keep the free-drive camera idle while its map is covered by active guidance. It is positioned
+                // at the latest following target immediately before guidance is dismissed.
+                carPlayMapViewController.navigationMapView.navigationCamera.stop()
             }
         }
     }
@@ -1102,6 +1102,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     @MainActor
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
         if let carPlayNavigationViewController {
+            carPlayMapViewController?.setFreeDriveCamera(animated: false)
             carPlayNavigationViewController.dismiss(animated: true) { [weak self] in
                 MainActor.assumingIsolated {
                     self?.completeNavigationCleanup(byCanceling: false)
@@ -1443,15 +1444,19 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         _ carPlayNavigationViewController: CarPlayNavigationViewController,
         byCanceling canceled: Bool
     ) {
-        delegate?.carPlayManagerWillEndNavigation(self, byCanceling: canceled)
+        MainActor.assumingIsolated {
+            delegate?.carPlayManagerWillEndNavigation(self, byCanceling: canceled)
+            carPlayMapViewController?.setFreeDriveCamera(animated: false)
+        }
     }
 
-    @MainActor
     public func carPlayNavigationViewControllerDidDismiss(
         _ carPlayNavigationViewController: CarPlayNavigationViewController,
         byCanceling canceled: Bool
     ) {
-        completeNavigationCleanup(byCanceling: canceled)
+        MainActor.assumingIsolated {
+            completeNavigationCleanup(byCanceling: canceled)
+        }
     }
 
     @MainActor
@@ -1466,7 +1471,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         // Unset existing main map template (fixes an issue with the buttons)
         mainMapTemplate = nil
         carPlayNavigationViewController = nil
-        removeRoutesFromMap()
+        removeRoutesFromBrowsingMap()
 
         // Restore the browsing camera before rebuilding camera-state-dependent controls and subscriptions.
         carPlayMapViewController?.navigationMapView.update(navigationCameraState: .following)

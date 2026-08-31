@@ -315,7 +315,11 @@ open class CarPlayMapViewController: UIViewController {
 
     func setupNavigationMapView() {
         let location = core.navigation().locationMatching.map(\.enhancedLocation).eraseToAnyPublisher()
-        let routeProgress = core.navigation().routeProgress.map { $0?.routeProgress }.eraseToAnyPublisher()
+        // This view controller owns the browsing and route-preview map. Active guidance is rendered by
+        // `CarPlayNavigationViewController` on a separate map. Do not feed active route progress into this
+        // map, because it would redraw the guidance route and apply guidance camera framing underneath the
+        // guidance UI. Route previews are displayed explicitly by `CarPlayManager`.
+        let routeProgress = Just<RouteProgress?>(nil).eraseToAnyPublisher()
         let navigationMapView = NavigationMapView(
             location: location,
             routeProgress: routeProgress,
@@ -568,7 +572,15 @@ open class CarPlayMapViewController: UIViewController {
         // Whenever `CarPlayMapViewController` appears on a screen - switch camera to the following
         // mode.
 
-        navigationMapView.update(navigationCameraState: .following)
+        setFreeDriveCamera(animated: true)
+    }
+
+    func setFreeDriveCamera(animated: Bool) {
+        if animated {
+            navigationMapView.update(navigationCameraState: .following)
+        } else {
+            navigationMapView.updateToFollowingImmediately()
+        }
     }
 
     func applyStyleIfNeeded(_ contentStyle: CPContentStyle) {

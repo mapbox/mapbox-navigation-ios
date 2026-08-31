@@ -2,7 +2,7 @@ import _MapboxNavigationTestHelpers
 import Combine
 import MapboxDirections
 import MapboxMaps
-@testable import MapboxNavigationCore
+@_spi(MapboxCarPlayInternal) @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
 import Turf
 import XCTest
@@ -132,6 +132,20 @@ class NavigationCameraTests: BaseTestCase {
 
         await fulfillment(of: [followingCameraExpectation], timeout: 1)
         XCTAssertEqual(navigationCamera.currentCameraState, .following)
+    }
+
+    @MainActor
+    func testImmediateFollowingUpdateFailsWithoutCalculatedCameraOptions() {
+        let viewportDataSourceMock = ViewportDataSourceMock()
+        navigationCamera = NavigationCamera(
+            navigationMapView.mapView,
+            location: locationPublisher.eraseToAnyPublisher(),
+            routeProgress: routeProgressPublisher.eraseToAnyPublisher(),
+            viewportDataSource: viewportDataSourceMock
+        )
+
+        XCTAssertFalse(navigationCamera.updateToFollowingImmediately())
+        XCTAssertEqual(navigationCamera.currentCameraState, .idle)
     }
 
     @MainActor

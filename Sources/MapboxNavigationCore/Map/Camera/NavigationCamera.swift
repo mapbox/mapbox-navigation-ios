@@ -120,6 +120,30 @@ public class NavigationCamera {
         transitionCamera()
     }
 
+    /// Immediately updates the camera to the latest calculated following target.
+    /// - Returns: `true` if the camera and its state were updated; otherwise, `false`.
+    @_spi(MapboxCarPlayInternal)
+    @discardableResult
+    public func updateToFollowingImmediately() -> Bool {
+        guard let cameraOptions = calculatedCameraOptions(for: .following),
+              cameraOptions.hasAnyNonNilValue,
+              let mapView = cameraStateTransition.mapView
+        else { return false }
+
+        state.transitionState = .init(targetCameraState: .following, started: true)
+        cameraStateTransition.cancelPendingTransition()
+        mapView.mapboxMap.setCamera(to: cameraOptions)
+        // `setCamera(to:)` has applied this anchor directly to the map. Record it as the previous
+        // anchor so the next following update does not animate the same anchor again.
+        if let cameraStateTransition = cameraStateTransition as? NavigationCameraStateTransition,
+           let anchor = cameraOptions.anchor
+        {
+            cameraStateTransition.previousAnchor = anchor
+        }
+        finishCameraTransition()
+        return true
+    }
+
     /// Call to this method immediately moves ``NavigationCamera`` to ``NavigationCameraState/idle`` state and stops all
     /// pending transitions.
     public func stop() {
@@ -189,7 +213,7 @@ public class NavigationCamera {
         }
         guard let transitionState = state.transitionState,
               let cameraOptions = calculatedCameraOptions(for: transitionState.targetCameraState),
-              cameraOptions.hasNoNilValues || transitionState.targetCameraState == .overview
+              cameraOptions.hasAnyNonNilValue || transitionState.targetCameraState == .overview
         else {
             return
         }
@@ -241,7 +265,7 @@ public class NavigationCamera {
         }
 
         guard let options = cameraOptionsForCurrentState(from: navigationCameraOptions),
-              options.hasNoNilValues
+              options.hasAnyNonNilValue
         else { return }
 
         cameraStateTransition.update(to: options, state: state.cameraState)
@@ -271,7 +295,7 @@ public class NavigationCamera {
 }
 
 extension CameraOptions {
-    fileprivate var hasNoNilValues: Bool {
+    fileprivate var hasAnyNonNilValue: Bool {
         center != nil || anchor != nil || padding != nil || zoom != nil || bearing != nil || pitch != nil
     }
 }

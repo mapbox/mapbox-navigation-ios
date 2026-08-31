@@ -702,6 +702,14 @@ open class NavigationMapView: UIView {
         navigationCamera.update(cameraState: navigationCameraState)
     }
 
+    /// Immediately updates the navigation camera to the latest calculated following target.
+    /// - Returns: `true` if the camera and its state were updated; otherwise, `false`.
+    @_spi(MapboxCarPlayInternal)
+    @discardableResult
+    public func updateToFollowingImmediately() -> Bool {
+        navigationCamera.updateToFollowingImmediately()
+    }
+
     /// Updates road alerts in the free drive state. In active navigation road alerts are taken automatically from the
     /// currently set route.
     /// - Parameter roadObjects: An array of road objects to be displayed.
