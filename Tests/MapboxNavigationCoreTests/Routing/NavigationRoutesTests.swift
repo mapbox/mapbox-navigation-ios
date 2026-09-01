@@ -116,6 +116,44 @@ final class NavigationRoutesTests: TestCase {
         await fulfillment(of: [callExpectation1, callExpectation2], timeout: 0.1)
     }
 
+    func testRouteResponseNROParsing() async {
+        Environment.set(\.routeParserClient, RouteParserClient.liveValue)
+
+        guard let routeResponse else {
+            XCTFail("Cannot create RouteResponse")
+            return
+        }
+
+        do {
+            _ = try await NavigationRoutes(routeResponse: routeResponse, routeIndex: 0, responseOrigin: .online)
+
+        } catch {
+            XCTFail("Failed creating NavigationRoutes: \(error).")
+            return
+        }
+    }
+
+    func testMapMatchingResponseNROParsing() async {
+        Environment.set(\.routeParserClient, RouteParserClient.liveValue)
+
+        guard let mapMatchingResponse else {
+            XCTFail("Cannot create MapMatchingResponse")
+            return
+        }
+
+        do {
+            _ = try await NavigationRoutes(
+                mapMatchingResponse: mapMatchingResponse,
+                routeIndex: 0,
+                responseOrigin: .online
+            )
+
+        } catch {
+            XCTFail("Failed creating NavigationRoutes: \(error).")
+            return
+        }
+    }
+
     /// Each alternative is decoded from its own ``RouteInterface/toJson()`` payload, so a non-zero
     /// original response index must not cause it to be dropped.
     func testCreateRoutesKeepsAlternativesWithNonZeroRouteIndex() async throws {
