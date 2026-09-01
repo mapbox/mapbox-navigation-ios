@@ -38,6 +38,7 @@ public struct MapMatchingResponse: ForeignMemberContainer {
 
 extension MapMatchingResponse: Codable {
     private enum CodingKeys: String, CodingKey {
+        case code
         case matches = "matchings"
         case tracepoints
     }
@@ -79,6 +80,7 @@ extension MapMatchingResponse: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(ResponseDisposition.OkCode, forKey: .code)
         try container.encodeIfPresent(matches, forKey: .matches)
         try container.encodeIfPresent(tracepoints, forKey: .tracepoints)
 
