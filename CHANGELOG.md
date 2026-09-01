@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.29.2
+
+* Fixed `MapMatchingReponse` serialization bug, which blocked parsing the map matching routes.
+
 ## 3.29.1
 
 ### Packaging
