@@ -496,7 +496,7 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         }
     }
 
-    private var _initialManeuverAvoidanceRadius: LocationDistance?
+    private final var _initialManeuverAvoidanceRadius: LocationDistance?
 
     /// Toggle whether to return calculated toll cost for the route, if data is available.
     ///
@@ -511,15 +511,15 @@ open class RouteOptions: DirectionsOptions, @unchecked Sendable {
         return waypoints.map(\.headingDescription).joined(separator: ";")
     }
 
-    var closureSnapping: String? {
+    final var closureSnapping: String? {
         makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToClosedRoad)
     }
 
-    var staticClosureSnapping: String? {
+    final var staticClosureSnapping: String? {
         makeStringFromBoolProperties(of: waypoints, for: \.allowsSnappingToStaticallyClosedRoad)
     }
 
-    private func makeStringFromBoolProperties<T>(of elements: [T], for keyPath: KeyPath<T, Bool>) -> String? {
+    private final func makeStringFromBoolProperties<T>(of elements: [T], for keyPath: KeyPath<T, Bool>) -> String? {
         guard elements.contains(where: { $0[keyPath: keyPath] }) else { return nil }
         return elements.map { $0[keyPath: keyPath] ? "true" : "" }.joined(separator: ";")
     }

@@ -554,7 +554,7 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
     }
 
     /// The path of the request URL, not including the hostname or any parameters.
-    var path: String {
+    final var path: String {
         guard let coordinates else {
             assertionFailure("No query")
             return ""
@@ -649,14 +649,14 @@ open class DirectionsOptions: Codable, @unchecked Sendable {
         return accuracies.joined(separator: ";")
     }
 
-    private var approaches: String? {
+    private final var approaches: String? {
         if waypoints.filter({ !$0.allowsArrivingOnOppositeSide }).isEmpty {
             return nil
         }
         return waypoints.map { $0.allowsArrivingOnOppositeSide ? "unrestricted" : "curb" }.joined(separator: ";")
     }
 
-    private var annotations: String? {
+    private final var annotations: String? {
         if attributeOptions.isEmpty {
             return nil
         }
