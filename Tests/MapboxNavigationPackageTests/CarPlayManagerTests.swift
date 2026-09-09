@@ -390,27 +390,16 @@ class CarPlayManagerTests: TestCase {
 
         carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: true)
 
-        XCTAssertTrue(
-            delegate.legacyDidEndNavigationCalled,
-            "The CarPlayManagerDelegate should have been told that navigation ended."
-        )
-
-        XCTAssertTrue(
-            delegate.didEndNavigationCalled,
-            "The CarPlayManagerDelegate should have been told that navigation ended."
-        )
-
-        XCTAssertTrue(
-            delegate.passedNavigationEndedByCanceling,
-            "The CarPlayManagerDelegate should have been told that navigation ended by canceling."
-        )
+        assertNavigationEndCallbacks(byCanceling: true, includesWillEnd: true)
     }
 
     @MainActor
     func testNavigationEndByCancelingRestoresBrowsingCamera() async throws {
         await startNavigation()
+        try setSessionToActiveGuidance()
         let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
         let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let guidanceMapTemplate = try XCTUnwrap(carPlayManager.interfaceController?.rootTemplate)
 
         navigationViewController.exitNavigation(byCanceling: true)
 
@@ -418,13 +407,20 @@ class CarPlayManagerTests: TestCase {
             mapViewController: mapViewController,
             navigationCamera: navigationCamera
         )
+        try assertNavigationCleanupState(
+            replacing: guidanceMapTemplate,
+            byCanceling: true,
+            includesWillEnd: true
+        )
     }
 
     @MainActor
     func testNavigationEndWithoutCancelingRestoresBrowsingCamera() async throws {
         await startNavigation()
+        try setSessionToActiveGuidance()
         let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
         let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let guidanceMapTemplate = try XCTUnwrap(carPlayManager.interfaceController?.rootTemplate)
 
         navigationViewController.exitNavigation(byCanceling: false)
 
@@ -432,12 +428,21 @@ class CarPlayManagerTests: TestCase {
             mapViewController: mapViewController,
             navigationCamera: navigationCamera
         )
+        try assertNavigationCleanupState(
+            replacing: guidanceMapTemplate,
+            byCanceling: false,
+            includesWillEnd: true
+        )
     }
 
     @MainActor
     func testMapTemplateCancellationRestoresBrowsingCamera() async throws {
         let mapTemplate = await startNavigation()
+        try setSessionToActiveGuidance()
         let (mapViewController, navigationCamera) = try prepareBrowsingCameraForNavigationEnd()
+        let guidanceMapTemplate = try XCTUnwrap(carPlayManager.interfaceController?.rootTemplate)
+        mapViewController.navigationMapView.show(await createNavigationRoutes(), routeAnnotationKinds: [])
+        XCTAssertNotNil(mapViewController.navigationMapView.routes)
 
         carPlayManager.mapTemplateDidCancelNavigation(mapTemplate)
 
@@ -445,24 +450,85 @@ class CarPlayManagerTests: TestCase {
             mapViewController: mapViewController,
             navigationCamera: navigationCamera
         )
+        try assertNavigationCleanupState(
+            replacing: guidanceMapTemplate,
+            byCanceling: false,
+            includesWillEnd: false
+        )
     }
 
     @MainActor
     func testNavigationCleanupRunsOnceForCompetingEndCallbacks() async throws {
         let mapTemplate = await startNavigation()
+        try setSessionToActiveGuidance()
         let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let guidanceMapTemplate = try XCTUnwrap(carPlayManager.interfaceController?.rootTemplate)
 
         carPlayManager.mapTemplateDidCancelNavigation(mapTemplate)
         let browsingMapTemplate = try XCTUnwrap(carPlayManager.mainMapTemplate)
 
+        carPlayManager.mapTemplateDidCancelNavigation(mapTemplate)
         carPlayManager.carPlayNavigationViewControllerDidDismiss(
             navigationViewController,
             byCanceling: true
         )
 
         XCTAssertIdentical(carPlayManager.mainMapTemplate, browsingMapTemplate)
-        XCTAssertTrue(delegate.didEndNavigationCalled)
-        XCTAssertFalse(delegate.passedNavigationEndedByCanceling)
+        try assertNavigationCleanupState(
+            replacing: guidanceMapTemplate,
+            byCanceling: false,
+            includesWillEnd: false
+        )
+    }
+
+    @MainActor
+    func testConsecutiveNavigationSessionsEachCleanUpOnce() async throws {
+        await startNavigation()
+        try setSessionToActiveGuidance()
+        let firstNavigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+
+        firstNavigationViewController.exitNavigation(byCanceling: false)
+        let firstBrowsingMapTemplate = try XCTUnwrap(carPlayManager.mainMapTemplate)
+
+        await startNavigation()
+        try setSessionToActiveGuidance()
+        let secondNavigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+
+        secondNavigationViewController.exitNavigation(byCanceling: true)
+
+        XCTAssertNotIdentical(carPlayManager.mainMapTemplate, firstBrowsingMapTemplate)
+        XCTAssertEqual(delegate.willEndNavigationCallCount, 2)
+        XCTAssertEqual(delegate.legacyDidEndNavigationCallCount, 2)
+        XCTAssertEqual(delegate.didEndNavigationCallCount, 2)
+        XCTAssertEqual(
+            delegate.navigationEndEvents,
+            [
+                .willEnd(byCanceling: false),
+                .legacyDidEnd,
+                .didEnd(byCanceling: false),
+                .willEnd(byCanceling: true),
+                .legacyDidEnd,
+                .didEnd(byCanceling: true),
+            ]
+        )
+        assertSessionIsActiveGuidance()
+    }
+
+    @MainActor
+    func testDisconnectDuringNavigationPreservesSharedGuidanceSession() async throws {
+        await startNavigation()
+        try setSessionToActiveGuidance()
+        assertSessionIsActiveGuidance()
+
+        simulateCarPlayDisconnection(carPlayManager)
+
+        XCTAssertNil(carPlayManager.interfaceController)
+        XCTAssertNil(carPlayManager.mainMapTemplate)
+        XCTAssertTrue(delegate.navigationEndEvents.isEmpty)
+        XCTAssertEqual(delegate.willEndNavigationCallCount, 0)
+        XCTAssertEqual(delegate.legacyDidEndNavigationCallCount, 0)
+        XCTAssertEqual(delegate.didEndNavigationCallCount, 0)
+        assertSessionIsActiveGuidance()
     }
 
     @MainActor
@@ -938,6 +1004,60 @@ class CarPlayManagerTests: TestCase {
         let viewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
         viewController.loadViewIfNeeded()
         return try XCTUnwrap(viewController.wayNameView)
+    }
+
+    @MainActor
+    private func assertNavigationCleanupState(
+        replacing guidanceMapTemplate: CPTemplate,
+        byCanceling canceled: Bool,
+        includesWillEnd: Bool
+    ) throws {
+        let browsingMapTemplate = try XCTUnwrap(carPlayManager.mainMapTemplate)
+        let rootTemplate = try XCTUnwrap(carPlayManager.interfaceController?.rootTemplate)
+
+        XCTAssertIdentical(rootTemplate, browsingMapTemplate)
+        XCTAssertNotIdentical(browsingMapTemplate, guidanceMapTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertNil(carPlayManager.carPlayNavigationViewController)
+        XCTAssertNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+        assertNavigationEndCallbacks(byCanceling: canceled, includesWillEnd: includesWillEnd)
+        assertSessionIsActiveGuidance()
+    }
+
+    private func assertNavigationEndCallbacks(byCanceling canceled: Bool, includesWillEnd: Bool) {
+        let expectedEvents: [CarPlayNavigationEndDelegateEvent] = if includesWillEnd {
+            [
+                .willEnd(byCanceling: canceled),
+                .legacyDidEnd,
+                .didEnd(byCanceling: canceled),
+            ]
+        } else {
+            [
+                .legacyDidEnd,
+                .didEnd(byCanceling: canceled),
+            ]
+        }
+
+        XCTAssertEqual(delegate.navigationEndEvents, expectedEvents)
+        XCTAssertEqual(delegate.willEndNavigationCallCount, includesWillEnd ? 1 : 0)
+        XCTAssertEqual(delegate.legacyDidEndNavigationCallCount, 1)
+        XCTAssertEqual(delegate.didEndNavigationCallCount, 1)
+        XCTAssertEqual(delegate.passedWillEndNavigationByCanceling, includesWillEnd ? canceled : nil)
+        XCTAssertEqual(delegate.passedNavigationEndedByCanceling, canceled)
+    }
+
+    @MainActor
+    private func assertSessionIsActiveGuidance() {
+        guard case .activeGuidance = navigationProvider.mapboxNavigation.tripSession().currentSession.state else {
+            XCTFail("CarPlay UI cleanup must preserve the customer-owned active-guidance session.")
+            return
+        }
+    }
+
+    @MainActor
+    private func setSessionToActiveGuidance() throws {
+        let navigator = try XCTUnwrap(navigationProvider.mapboxNavigation.tripSession() as? MapboxNavigator)
+        navigator.privateSession.emit(Session(state: .activeGuidance(.initialized)))
     }
 
     @MainActor

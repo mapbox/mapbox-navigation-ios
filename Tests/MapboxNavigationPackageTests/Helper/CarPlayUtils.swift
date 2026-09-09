@@ -79,10 +79,19 @@ func createTrip(_ routeChoice: CPRouteChoice) -> CPTrip {
     return trip
 }
 
+enum CarPlayNavigationEndDelegateEvent: Equatable {
+    case willEnd(byCanceling: Bool)
+    case legacyDidEnd
+    case didEnd(byCanceling: Bool)
+}
+
 class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var didBeginNavigationCalled = false
     var didEndNavigationCalled = false
     var legacyDidEndNavigationCalled = false
+    var willEndNavigationCallCount = 0
+    var didEndNavigationCallCount = 0
+    var legacyDidEndNavigationCallCount = 0
     var willPresentCalled = false
     var didPresentCalled = false
     var didFailToFetchRouteCalled = false
@@ -98,8 +107,10 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
 
     var passedError: DirectionsError?
     var passedTemplate: CPMapTemplate?
+    var passedWillEndNavigationByCanceling: Bool?
     var passedNavigationEndedByCanceling = false
     var passedWillPresentNavigationViewController: CarPlayNavigationViewController?
+    var navigationEndEvents: [CarPlayNavigationEndDelegateEvent] = []
 
     var returnedTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
     var returnedTrip: CPTrip?
@@ -145,16 +156,26 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
         didBeginNavigationCalled = true
     }
 
+    func carPlayManagerWillEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool) {
+        willEndNavigationCallCount += 1
+        passedWillEndNavigationByCanceling = canceled
+        navigationEndEvents.append(.willEnd(byCanceling: canceled))
+    }
+
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool) {
         XCTAssertTrue(didBeginNavigationCalled)
         didEndNavigationCalled = true
+        didEndNavigationCallCount += 1
         passedNavigationEndedByCanceling = canceled
+        navigationEndEvents.append(.didEnd(byCanceling: canceled))
     }
 
     // TODO: This delegate method should be removed in next major release.
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         XCTAssertTrue(didBeginNavigationCalled)
         legacyDidEndNavigationCalled = true
+        legacyDidEndNavigationCallCount += 1
+        navigationEndEvents.append(.legacyDidEnd)
     }
 
     func carPlayManager(
