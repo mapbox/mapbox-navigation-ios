@@ -435,6 +435,34 @@ extension CarPlayManager: CPTemplateApplicationSceneDelegate {
     ) {
         handleDidDisconnect(interfaceController: interfaceController, from: window)
     }
+
+    @MainActor
+    @available(*, deprecated, renamed: "templateApplicationScene(_:didConnect:to:)")
+    public func templateApplicationScene(
+        _ templateApplicationScene: CPTemplateApplicationScene,
+        didConnectCarInterfaceController interfaceController: CPInterfaceController,
+        to window: CPWindow
+    ) {
+        handleDidConnect(interfaceController: interfaceController, to: window)
+    }
+
+    @available(*, deprecated, renamed: "templateApplicationScene(_:didDisconnect:from:)")
+    public func templateApplicationScene(
+        _ templateApplicationScene: CPTemplateApplicationScene,
+        didDisconnectCarInterfaceController interfaceController: CPInterfaceController,
+        from window: CPWindow
+    ) {
+        let disconnect = { @MainActor in
+            self.handleDidDisconnect(interfaceController: interfaceController, from: window)
+        }
+        if Thread.isMainThread {
+            MainActor.assumingIsolated(disconnect)
+        } else {
+            DispatchQueue.main.sync {
+                MainActor.assumingIsolated(disconnect)
+            }
+        }
+    }
 }
 
 // MARK: InterfaceController handling Methods
@@ -502,6 +530,7 @@ extension CarPlayManager {
         idleTimerCancellable = nil
 
         unsubscribeFromCameraStateNotifications()
+        routes = nil
     }
 
     @MainActor
@@ -1709,68 +1738,6 @@ extension CarPlayManager: MapTemplateProviderDelegate {
             in: mapTemplate,
             for: activity
         )
-    }
-}
-
-// MARK: CPTemplateApplicationSceneDelegate Methods
-
-extension CarPlayManager {
-    @MainActor
-    public func templateApplicationScene(
-        _ templateApplicationScene: CPTemplateApplicationScene,
-        didConnectCarInterfaceController interfaceController: CPInterfaceController,
-        to window: CPWindow
-    ) {
-        CarPlayManager.isConnected = true
-        interfaceController.delegate = self
-        self.interfaceController = interfaceController
-
-        let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) ?? true
-        if shouldDisableIdleTimer {
-            idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
-        }
-
-        let carPlayMapViewController = CarPlayMapViewController(
-            core: core,
-            styles: styles,
-            mapOptions: mapOptions(for: window),
-            usesCompactMapOverlays: usesCompactMapOverlays(for: window)
-        )
-        carPlayMapViewController.startFreeDriveAutomatically = startFreeDriveAutomatically
-        carPlayMapViewController.hidesSpeedLimitViewWithMapControls = hidesSpeedLimitViewWithMapControls
-        carPlayMapViewController.delegate = self
-        window.rootViewController = carPlayMapViewController
-        carWindow = window
-        let mapTemplate = browseAndFreeDriveMapTemplate()
-        mainMapTemplate = mapTemplate
-        interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)
-
-        eventsManager.sendCarPlayConnectEvent()
-
-        subscribeForCameraStateNotifications()
-    }
-
-    public func templateApplicationScene(
-        _ templateApplicationScene: CPTemplateApplicationScene,
-        didDisconnectCarInterfaceController interfaceController: CPInterfaceController,
-        from window: CPWindow
-    ) {
-        CarPlayManager.isConnected = false
-        self.interfaceController = nil
-
-        window.rootViewController = nil
-        window.isHidden = true
-        window.removeFromSuperview()
-
-        mainMapTemplate = nil
-        carWindow = nil
-
-        eventsManager.sendCarPlayDisconnectEvent()
-
-        idleTimerCancellable = nil
-
-        unsubscribeFromCameraStateNotifications()
-        routes = nil
     }
 }
 

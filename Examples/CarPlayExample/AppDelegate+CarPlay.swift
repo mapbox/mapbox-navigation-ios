@@ -53,7 +53,7 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         appDelegate.carPlaySearchController.delegate = appDelegate
         appDelegate.carPlayManager.templateApplicationScene(
             templateApplicationScene,
-            didConnectCarInterfaceController: interfaceController,
+            didConnect: interfaceController,
             to: window
         )
         // NOTE: When CarPlay is connected, we check if there is an active navigation in progress and start CarPlay
@@ -83,7 +83,7 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 
         appDelegate.carPlayManager.templateApplicationScene(
             templateApplicationScene,
-            didDisconnectCarInterfaceController: interfaceController,
+            didDisconnect: interfaceController,
             from: window
         )
     }

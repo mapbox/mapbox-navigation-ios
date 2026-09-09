@@ -11,9 +11,14 @@ import XCTest
 @MainActor
 func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
     let interfaceController = FakeCPInterfaceController(context: #function)
+    let scene = FakeCPTemplateApplicationScene(context: #function)
     let window = CPWindow()
 
-    carPlayManager.handleDidConnect(interfaceController: interfaceController, to: window)
+    carPlayManager.templateApplicationScene(
+        scene,
+        didConnect: interfaceController,
+        to: window
+    )
 
     if let mapViewController = carPlayManager.carWindow?.rootViewController?.view {
         carPlayManager.carWindow?.addSubview(mapViewController)
@@ -22,12 +27,18 @@ func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
 
 @MainActor
 func simulateCarPlayDisconnection(_ carPlayManager: CarPlayManager) {
-    guard let interfaceController = carPlayManager.interfaceController else {
-        preconditionFailure("Instance of CPInterfaceController should be valid.")
+    guard let interfaceController = carPlayManager.interfaceController,
+          let window = carPlayManager.carWindow as? CPWindow
+    else {
+        preconditionFailure("Connected CarPlay interface controller and window should be valid.")
     }
-    let window = CPWindow()
+    let scene = FakeCPTemplateApplicationScene(context: #function)
 
-    carPlayManager.handleDidDisconnect(interfaceController: interfaceController, from: window)
+    carPlayManager.templateApplicationScene(
+        scene,
+        didDisconnect: interfaceController,
+        from: window
+    )
 }
 
 func createNavigationRoutes() async -> NavigationRoutes {

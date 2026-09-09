@@ -205,6 +205,16 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
+    func testSceneConnectionSubscribesForCameraStateChanges() async throws {
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+
+        mapViewController.navigationMapView.navigationCamera.stop()
+        await waitForPendingMainQueueWork()
+
+        XCTAssertFalse(mapViewController.recenterButton.isHidden)
+    }
+
+    @MainActor
     func testBrowsingMapReceivesUpdatesWhenFreeDriveIsAlreadyActive() async {
         XCTAssertEqual(
             navigationProvider.mapboxNavigation.tripSession().currentSession.state,
@@ -244,25 +254,95 @@ class CarPlayManagerTests: TestCase {
 
     @available(*, deprecated)
     @MainActor
-    func testEventsSentWhenCarPlayConnectedAndDisconnected() {
-        guard let interfaceController = carPlayManager.interfaceController else {
-            XCTFail("CPInterfaceController should be valid.")
-            return
-        }
-        eventsManagerSpy.sendCarPlayConnectExpectation = expectation(description: "did connect")
-        eventsManagerSpy.sendCarPlayDisconnectExpectation = expectation(description: "did disconnect")
+    func testAllPublicLifecycleEntryPointsProduceEquivalentState() throws {
+        simulateCarPlayDisconnection(carPlayManager)
 
-        carPlayManager.application(
-            .shared,
-            didConnectCarInterfaceController: interfaceController,
-            to: CPWindow()
-        )
-        wait(for: [eventsManagerSpy.sendCarPlayConnectExpectation!], timeout: 1.0)
-        XCTAssertTrue(eventsManagerSpy.sendCarPlayConnectEventCalled)
+        for entryPoint in CarPlayLifecycleEntryPoint.allCases {
+            let manager = makeCarPlayManagerForLifecycleTest()
+            manager.startFreeDriveAutomatically = false
+            manager.hidesSpeedLimitViewWithMapControls = false
+
+            let scene = FakeCPTemplateApplicationScene(context: entryPoint.description)
+            let interfaceController = FakeCPInterfaceController(context: entryPoint.description)
+            let window = CPWindow()
+
+            connect(
+                manager,
+                via: entryPoint,
+                scene: scene,
+                interfaceController: interfaceController,
+                window: window
+            )
+
+            let mapViewController = try XCTUnwrap(manager.carPlayMapViewController)
+            XCTAssertTrue(CarPlayManager.isConnected, entryPoint.description)
+            XCTAssertIdentical(manager.interfaceController, interfaceController, entryPoint.description)
+            XCTAssertIdentical(manager.carWindow, window, entryPoint.description)
+            XCTAssertIdentical(window.rootViewController, mapViewController, entryPoint.description)
+            XCTAssertIdentical(interfaceController.rootTemplate, manager.mainMapTemplate, entryPoint.description)
+            XCTAssertEqual(mapViewController.userInfo, eventsManagerSpy.userInfo, entryPoint.description)
+            XCTAssertEqual(
+                mapViewController.mapOptions.pixelRatio,
+                Float(window.screen.nativeScale),
+                entryPoint.description
+            )
+            XCTAssertEqual(
+                mapViewController.usesCompactMapOverlays,
+                CarPlayUtilities.usesCompactMapOverlays(forNativeScreenSize: window.screen.nativeBounds.size),
+                entryPoint.description
+            )
+            XCTAssertFalse(mapViewController.startFreeDriveAutomatically, entryPoint.description)
+            XCTAssertFalse(mapViewController.hidesSpeedLimitViewWithMapControls, entryPoint.description)
+
+            disconnect(
+                manager,
+                via: entryPoint,
+                scene: scene,
+                interfaceController: interfaceController,
+                window: window
+            )
+
+            XCTAssertFalse(CarPlayManager.isConnected, entryPoint.description)
+            XCTAssertNil(manager.interfaceController, entryPoint.description)
+            XCTAssertNil(manager.carWindow, entryPoint.description)
+            XCTAssertNil(manager.mainMapTemplate, entryPoint.description)
+            XCTAssertNil(window.rootViewController, entryPoint.description)
+            XCTAssertTrue(window.isHidden, entryPoint.description)
+        }
+    }
+
+    @MainActor
+    func testDisconnectAllowsSameAppSuppliedRoutesToBePreviewedAfterReconnect() async throws {
+        let routes = await createNavigationRoutes()
+        await carPlayManager.previewRoutes(for: routes)
+
+        let trip = try XCTUnwrap(mapTemplateSpy.passedTripPreviews?.first)
+        let routeChoice = try XCTUnwrap(trip.routeChoices.first)
+        carPlayManager.mapTemplate(mapTemplateSpy, selectedPreviewFor: trip, using: routeChoice)
+        XCTAssertNotNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+        XCTAssertNil(navigationProvider.mapboxNavigation.tripSession().currentNavigationRoutes)
 
         simulateCarPlayDisconnection(carPlayManager)
-        wait(for: [eventsManagerSpy.sendCarPlayDisconnectExpectation!], timeout: 1.0)
-        XCTAssertTrue(eventsManagerSpy.sendCarPlayDisconnectEventCalled)
+        simulateCarPlayConnection(carPlayManager)
+        mapTemplateSpy.showTripPreviewsCalled = false
+
+        await carPlayManager.previewRoutes(for: routes)
+
+        XCTAssertTrue(mapTemplateSpy.showTripPreviewsCalled)
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, 1)
+    }
+
+    @MainActor
+    func testDisconnectDuringNavigationPreservesSharedActiveGuidanceSession() async throws {
+        await startNavigation()
+        let tripSession = navigationProvider.mapboxNavigation.tripSession()
+        let routes = try XCTUnwrap(tripSession.currentNavigationRoutes)
+        let sessionState = tripSession.currentSession.state
+
+        simulateCarPlayDisconnection(carPlayManager)
+
+        XCTAssertEqual(tripSession.currentNavigationRoutes?.mainRoute, routes.mainRoute)
+        XCTAssertEqual(tripSession.currentSession.state, sessionState)
     }
 
     func testReturnSourceCircleLayer() {
@@ -989,12 +1069,8 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(delegate.passedTemplate, navigationMapTemplate)
     }
 
-    @available(*, deprecated)
     @MainActor
-    func testConfigureCarPlayMapViewController() {
-        let interfaceController = FakeCPInterfaceController(context: #function)
-        let window = CPWindow()
-        carPlayManager.application(.shared, didConnectCarInterfaceController: interfaceController, to: window)
+    func testSceneConnectionConfiguresCarPlayMapViewController() {
         let carPlayMapViewController = carPlayManager.carPlayMapViewController
         XCTAssertEqual(carPlayMapViewController?.userInfo, eventsManagerSpy.userInfo)
     }
@@ -1166,6 +1242,71 @@ class CarPlayManagerTests: TestCase {
         }
     }
 
+    @MainActor
+    private func makeCarPlayManagerForLifecycleTest() -> CarPlayManager {
+        let manager = CarPlayManager(
+            navigationProvider: navigationProvider,
+            carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self
+        )
+        manager.delegate = delegate
+        manager.mapTemplateProvider = MapTemplateSpyProvider()
+        return manager
+    }
+
+    @available(*, deprecated)
+    @MainActor
+    private func connect(
+        _ manager: CarPlayManager,
+        via entryPoint: CarPlayLifecycleEntryPoint,
+        scene: CPTemplateApplicationScene,
+        interfaceController: CPInterfaceController,
+        window: CPWindow
+    ) {
+        switch entryPoint {
+        case .applicationDelegate:
+            manager.application(
+                .shared,
+                didConnectCarInterfaceController: interfaceController,
+                to: window
+            )
+        case .sceneDelegate:
+            manager.templateApplicationScene(scene, didConnect: interfaceController, to: window)
+        case .compatibilityScene:
+            manager.templateApplicationScene(
+                scene,
+                didConnectCarInterfaceController: interfaceController,
+                to: window
+            )
+        }
+    }
+
+    @available(*, deprecated)
+    @MainActor
+    private func disconnect(
+        _ manager: CarPlayManager,
+        via entryPoint: CarPlayLifecycleEntryPoint,
+        scene: CPTemplateApplicationScene,
+        interfaceController: CPInterfaceController,
+        window: CPWindow
+    ) {
+        switch entryPoint {
+        case .applicationDelegate:
+            manager.application(
+                .shared,
+                didDisconnectCarInterfaceController: interfaceController,
+                from: window
+            )
+        case .sceneDelegate:
+            manager.templateApplicationScene(scene, didDisconnect: interfaceController, from: window)
+        case .compatibilityScene:
+            manager.templateApplicationScene(
+                scene,
+                didDisconnectCarInterfaceController: interfaceController,
+                from: window
+            )
+        }
+    }
+
     private func previewRoutesOptions() async -> NavigationRouteOptions {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
@@ -1201,6 +1342,51 @@ class CarPlayManagerTests: TestCase {
     private func wait(timeout: TimeInterval = 1.0) {
         let waitExpectation = expectation(description: "Wait expectation.")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
+    }
+}
+
+final class CarPlayManagerLifecycleEventsTests: TestCase {
+    private var carPlayManager: CarPlayManager!
+
+    @MainActor
+    override func setUp() {
+        super.setUp()
+        carPlayManager = CarPlayManager(navigationProvider: navigationProvider)
+    }
+
+    override func tearDown() {
+        carPlayManager = nil
+        super.tearDown()
+    }
+
+    @MainActor
+    func testEventsSentWhenCarPlayConnectedAndDisconnected() async {
+        eventsManagerSpy.sendCarPlayConnectExpectation = expectation(description: "did connect")
+        simulateCarPlayConnection(carPlayManager)
+        await fulfillment(of: [eventsManagerSpy.sendCarPlayConnectExpectation!], timeout: 1.0)
+        XCTAssertTrue(eventsManagerSpy.sendCarPlayConnectEventCalled)
+
+        eventsManagerSpy.sendCarPlayDisconnectExpectation = expectation(description: "did disconnect")
+        simulateCarPlayDisconnection(carPlayManager)
+        await fulfillment(of: [eventsManagerSpy.sendCarPlayDisconnectExpectation!], timeout: 1.0)
+        XCTAssertTrue(eventsManagerSpy.sendCarPlayDisconnectEventCalled)
+    }
+}
+
+private enum CarPlayLifecycleEntryPoint: CaseIterable {
+    case applicationDelegate
+    case sceneDelegate
+    case compatibilityScene
+
+    var description: String {
+        switch self {
+        case .applicationDelegate:
+            "CPApplicationDelegate"
+        case .sceneDelegate:
+            "CPTemplateApplicationSceneDelegate"
+        case .compatibilityScene:
+            "Compatibility scene method"
+        }
     }
 }
 

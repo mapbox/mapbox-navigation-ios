@@ -19,6 +19,9 @@
 * Fixed an issue where the CarPlay browsing map could remain idle or non-centered after navigation ended.
 * Fixed an issue where the CarPlay browsing map could visibly catch up from a stale position or briefly reveal active-guidance route and camera framing after navigation ended.
 * Fixed CarPlay previews refitting beneath controls during safe-area changes.
+* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
 
 ### Other changes
 

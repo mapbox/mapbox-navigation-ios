@@ -12,3 +12,4 @@ FOUNDATION_EXPORT const unsigned char CarPlayTestHelperVersionString[];
 #import <CarPlayTestHelper/CPMapTemplate+MBTestable.h>
 #import <CarPlayTestHelper/CPNavigationSessionFake.h>
 #import <CarPlayTestHelper/FakeCPInterfaceController.h>
+#import <CarPlayTestHelper/FakeCPTemplateApplicationScene.h>
