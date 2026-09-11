@@ -23,9 +23,40 @@
     * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
     * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
 
+## 3.30.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.30.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.30.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.30.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.30.0-rc.1)
+
+### MapboxDirections
+
+* Added `RouteOptions.excludedLocations` allowing you to exclude custom locations (such as dangerous entry/exit points, low quality roads, etc.) from routing by coordinate, in addition to the existing road-class-based `RouteOptions.roadClassesToAvoid`. This expirimental feature maps to the Directions API's beta `exclude=point(longitude latitude)` parameter and is currently limited to the `mapbox/driving` and `mapbox/driving-traffic` profiles, with at most 50 locations per request.
+* Fixed `RouteOptions.roadClassesToAvoid`/`roadClassesToAllow` parsing (from a URL or from an archived/persisted `RouteOptions`) so that a single unrecognized road-class value no longer discards every other recognized value alongside it, and no longer fails decoding the entire `RouteOptions` object. Surrounding whitespace is now ignored as well, so an `exclude` or `include` parameter written the way the Directions API documents it (`toll, motorway`) is recognized in full.
+* Fixed `MapMatchingReponse` serialization bug, which blocked parsing the map matching routes.
+
 ### Other changes
 
 * Fixed the positioning of pole-style route annotations (traffic signals, yield signs, stop signs, lane restrictions, etc.) so their icon is anchored at the base of the pole instead of centered on the whole image, keeping them visually planted on the street as the camera rotates or pitches.
+
+## 3.29.2
+
+* Fixed `MapMatchingReponse` serialization bug, which blocked parsing the map matching routes.
+
+## 3.29.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.29.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.1)
+
+## 3.29.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.29.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.29.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.29.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.29.0)
 
 ## 3.29.0-rc.1
 
@@ -50,6 +81,34 @@
 
 * Fixed alternative routes being dropped, and route refresh failing, for routes whose index in the original Directions response was not 0. Every route is now decoded from its own single-route representation instead of being looked up by that index. This also fixes switching to an alternative route silently doing nothing, and restores route refresh picking up updated travel times.
 
+## 3.28.4
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.28.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.4)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.4](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.4)
+
+## 3.28.3
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.28.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.3)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.3)
+
+## 3.28.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.28.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.2)
+
+## 3.28.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.28.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.28.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.1)
+
 ## 3.28.0
 
 ### Packaging
@@ -63,6 +122,27 @@
 
 * MapboxNavigationCore now requires [MapboxMaps v11.28.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.28.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.28.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.28.0-rc.1)
+
+## 3.27.3
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.27.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.3)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.27.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.3)
+
+## 3.27.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.27.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.27.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.2)
+
+## 3.27.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.27.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.27.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.27.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.27.1)
 
 ## 3.27.0
 
@@ -132,6 +212,20 @@
 * Fixed a crash that could occur when restoring cached road shield and sprite images.
 * Fixed a possible crash during updating route progress, related to invalid numeric conversion.
 * Corrected the Italian translation of the "Dismiss steps" title from "Vicino" to "Chiudi".
+
+## 3.25.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.25.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.25.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.25.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.25.2)
+
+## 3.25.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.25.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v11.25.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.25.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.25.1)
 
 ## 3.25.0
 
