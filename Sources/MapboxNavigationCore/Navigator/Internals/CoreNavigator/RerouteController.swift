@@ -38,7 +38,7 @@ class RerouteController {
 
     // MARK: Internal State Management
 
-    private var defaultRerouteController: DefaultRerouteControllerInterface?
+    private var routeOptionsAdapter: RouteOptionsAdapter?
 
     private weak var navigator: NavigationNativeNavigator?
 
@@ -54,9 +54,7 @@ class RerouteController {
 
         observer.controller = self
 
-        let defaultRerouteController = makeDefaultRerouteController(configuration: configuration)
-        self.defaultRerouteController = defaultRerouteController
-        navigator?.native.setRerouteControllerForController(defaultRerouteController)
+        configureNativeRerouteController(configuration: configuration)
         navigator?.native.addRerouteObserver(for: observer)
 
         defer {
@@ -102,40 +100,37 @@ private final class RerouteObserverProxy: RerouteObserver {
 
 extension RerouteController {
     @MainActor
-    private func makeDefaultRerouteController(
-        configuration: Configuration
-    ) -> DefaultRerouteControllerInterface {
-        let nativeRerouteController = configuration.navigator.native.getRerouteController()
-
-        if let urlOptionsCustomization = configuration.rerouteConfig.urlOptionsCustomization {
-            return DefaultRerouteControllerInterface(
-                nativeInterface: nativeRerouteController,
-                routeOptionsAdapter: DefaultRouteOptionsAdapter { urlOptionsCustomization($0) ?? $0 }
-            )
-        } else if let optionsCustomization = configuration.rerouteConfig.deprecatedOptionsCustomization {
-            return DefaultRerouteControllerInterface(
-                nativeInterface: nativeRerouteController,
-                requestConfig: { [weak self] in
-                    guard let self else { return $0 }
-
-                    guard let options = delegate?.rerouteController(self, willModify: $0),
-                          let customizedOptions = optionsCustomization(options)
-                    else {
-                        return $0
-                    }
-
-                    return Directions.url(
-                        forCalculating: customizedOptions,
-                        credentials: .init(configuration.credentials)
-                    ).absoluteString
-                }
-            )
-        } else {
-            return DefaultRerouteControllerInterface(
-                nativeInterface: nativeRerouteController,
-                routeOptionsAdapter: nil
-            )
+    private func configureNativeRerouteController(configuration: Configuration) {
+        guard let nativeRerouteController = configuration.navigator.native.getRerouteController() else {
+            return
         }
+        guard let adapter = makeRouteOptionsAdapter(configuration: configuration) else {
+            return
+        }
+        routeOptionsAdapter = adapter
+        nativeRerouteController.setOptionsAdapterForRouteRequest(adapter)
+    }
+
+    @MainActor
+    private func makeRouteOptionsAdapter(configuration: Configuration) -> RouteOptionsAdapter? {
+        if let urlOptionsCustomization = configuration.rerouteConfig.urlOptionsCustomization {
+            return DefaultRouteOptionsAdapter { urlOptionsCustomization($0) ?? $0 }
+        }
+        if let optionsCustomization = configuration.rerouteConfig.deprecatedOptionsCustomization {
+            return DefaultRouteOptionsAdapter { [weak self] url in
+                guard let self else { return url }
+                guard let options = delegate?.rerouteController(self, willModify: url),
+                      let customizedOptions = optionsCustomization(options)
+                else {
+                    return url
+                }
+                return Directions.url(
+                    forCalculating: customizedOptions,
+                    credentials: .init(configuration.credentials)
+                ).absoluteString
+            }
+        }
+        return nil
     }
 }
 

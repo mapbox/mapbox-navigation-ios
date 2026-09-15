@@ -26,7 +26,6 @@ final class NativeHandlersFactoryTests: XCTestCase {
 
     let defaultConfig: [String: Any] = [
         "features": [
-            "useInternalReroute": true,
             "useInternalRouteRefresh": true,
             "useTelemetryNavigationEvents": true,
         ],
@@ -59,7 +58,6 @@ final class NativeHandlersFactoryTests: XCTestCase {
     func testMergeCustomConfig() {
         let userCustomConfig: [String: Any] = [
             "features": [
-                "useInternalReroute": false,
                 "custom_new_key": true,
             ],
             "custom": "a",
@@ -69,7 +67,6 @@ final class NativeHandlersFactoryTests: XCTestCase {
         var expectedConfig = defaultConfig
         expectedConfig["custom"] = "a"
         expectedConfig["features"] = [
-            "useInternalReroute": true,
             "useInternalRouteRefresh": true,
             "useTelemetryNavigationEvents": true,
             "custom_new_key": true,

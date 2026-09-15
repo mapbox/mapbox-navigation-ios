@@ -211,6 +211,52 @@ final class RerouteControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testDoesNotSetRouteOptionsAdapterIfNativeRerouteControllerIsNil() {
+        navNavigator.rerouteController = nil
+        XCTAssertNil(navNavigator.getRerouteController())
+
+        let customization = EquatableClosure<String, String> {
+            $0 + customQueryParam2
+        }
+        rerouteController = rerouteController(with: .init(
+            urlOptionsCustomization: customization
+        ))
+
+        XCTAssertNil(navNavigator.getRerouteController())
+    }
+
+    @available(*, deprecated)
+    @MainActor
+    func testDoesNotSetRouteOptionsAdapterIfNativeRerouteControllerIsNilAndOptionsCustomizationSet() {
+        navNavigator.rerouteController = nil
+        let customization = EquatableClosure<RouteOptions, RouteOptions> { $0 }
+        rerouteController = rerouteController(with: .init(
+            optionsCustomization: customization
+        ))
+
+        XCTAssertNil(navNavigator.getRerouteController())
+    }
+
+    @MainActor
+    func testSetsRouteOptionsAdapterOnControllerReturnedByGetter() {
+        let spy = NativeRerouteControllerSpy()
+        navNavigator.rerouteController = spy
+        let customization = EquatableClosure<String, String> {
+            $0 + customQueryParam2
+        }
+        rerouteController = rerouteController(with: .init(
+            urlOptionsCustomization: customization
+        ))
+
+        XCTAssertTrue(spy.setOptionsAdapterCalled)
+        XCTAssertTrue(navNavigator.getRerouteController() === spy)
+
+        let url = directionsUrl + customQueryParam
+        spy.reroute(forUrl: url) { _ in }
+        XCTAssertEqual(spy.passedRerouteUrl, customization(url))
+    }
+
+    @MainActor
     func testSetsRouteOptionsAdapterIfUrlOptionsCustomizationSet() {
         let customization = EquatableClosure<String, String> {
             $0 + customQueryParam2
@@ -222,9 +268,8 @@ final class RerouteControllerTests: XCTestCase {
         XCTAssertTrue(nativeRerouteController.setOptionsAdapterCalled)
 
         let url = directionsUrl + customQueryParam
-        let modifiedUrl = nativeRerouteController.passedRouteOptionsAdapter?
-            .modifyRouteRequestOptions(forUrl: url)
-        XCTAssertEqual(modifiedUrl, customization(url))
+        nativeRerouteController.reroute(forUrl: url) { _ in }
+        XCTAssertEqual(nativeRerouteController.passedRerouteUrl, customization(url))
         XCTAssertNil(delegate.passedRequestString)
     }
 
@@ -234,8 +279,8 @@ final class RerouteControllerTests: XCTestCase {
         let delegateReturnedOptions = NavigationRouteOptions.mock()
         delegate.returnedRouteOptions = delegateReturnedOptions
 
-        let modifiedUrl = URL(string: directionsUrl + customQueryParam2)!
-        let modifiedOptions = NavigationRouteOptions(url: modifiedUrl)!
+        let customizedRequestUrl = URL(string: directionsUrl + customQueryParam2)!
+        let modifiedOptions = NavigationRouteOptions(url: customizedRequestUrl)!
         let customization = EquatableClosure<RouteOptions, RouteOptions> {
             XCTAssertEqual($0, delegateReturnedOptions)
             return modifiedOptions
@@ -243,11 +288,10 @@ final class RerouteControllerTests: XCTestCase {
         rerouteController = rerouteController(with: .init(
             optionsCustomization: customization
         ))
-        XCTAssertFalse(nativeRerouteController.setOptionsAdapterCalled)
+        XCTAssertTrue(nativeRerouteController.setOptionsAdapterCalled)
 
         let url = directionsUrl + customQueryParam
-        let passedRerouteController = navNavigator.passedRerouteController!
-        passedRerouteController.reroute(forUrl: url) { _ in }
+        nativeRerouteController.reroute(forUrl: url) { _ in }
         let modifiedOptionsString = Directions.url(
             forCalculating: modifiedOptions,
             credentials: .init(configuration.credentials)

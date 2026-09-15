@@ -6,7 +6,6 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
     public var passedTileStore: TileStore?
     public var passedDescriptors: [TilesetDescriptor]?
     public var passedCacheOptions: PredictiveCacheControllerOptions?
-    public var passedRerouteController: RerouteControllerInterface?
     public var passedLeg: UInt32?
     public var returnedChangeLegResult = true
 
@@ -86,13 +85,6 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
 
     override public func removeRerouteObserver(for observer: RerouteObserver) {
         passedRemovedRerouteObserver = observer
-    }
-
-    @_implementationOnly
-    override public func setRerouteControllerForController(
-        _ controller: RerouteControllerInterface
-    ) {
-        passedRerouteController = controller
     }
 
     @_implementationOnly

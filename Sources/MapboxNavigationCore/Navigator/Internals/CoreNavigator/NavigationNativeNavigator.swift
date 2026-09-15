@@ -113,16 +113,6 @@ final class NavigationNativeNavigator: @unchecked Sendable {
         }
     }
 
-    func setRerouteControllerForController(
-        _ controller: RerouteControllerInterface,
-        completion: Completion? = nil
-    ) {
-        withNavigator {
-            $0.setRerouteControllerForController(controller)
-            completion?()
-        }
-    }
-
     func removeRerouteObserver(
         for observer: RerouteObserver,
         completion: Completion? = nil

@@ -307,7 +307,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
 
         let defaultConfig = [
             customConfigFeaturesKey: [
-                "useInternalReroute": true,
                 "useInternalRouteRefresh": true,
                 "useTelemetryNavigationEvents": true,
             ],
