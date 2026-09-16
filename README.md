@@ -27,17 +27,7 @@ The Mapbox Navigation SDK is also available [for Android](https://github.com/map
 
 ## Installation
 
-### Private token configuration
-
-To install the SDK in an application using [Swift Package Manager](https://swift.org/package-manager/):
-
-1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
-   ```
-   machine api.mapbox.com
-     login mapbox
-     password PRIVATE_MAPBOX_API_TOKEN
-   ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
+Stable releases of `MapboxNavigationCore` and `MapboxNavigationUIKit` do **not** require a secret download token. You only need a [public access token](https://account.mapbox.com/access-tokens/) in your app’s `Info.plist` (`MBXAccessToken`).
 
 ### Using Swift Package Manager
 
@@ -67,7 +57,7 @@ Now import the relevant modules and present a new `NavigationViewController`. Yo
 
 ## Examples
 
-This repository contains [a testbed application](./Examples) that exercises a variety of navigation SDK features. Configure [Private](#privat-token-configuration) and [Public](#using-swift-package-manager) tokens to run this application.
+This repository contains [a testbed application](./Examples) that exercises a variety of navigation SDK features. Configure a [public access token](#project-configuration) to run the examples.
 
 ```swift
 import MapboxDirections
