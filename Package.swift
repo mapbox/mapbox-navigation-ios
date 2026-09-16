@@ -116,6 +116,15 @@ let package = Package(
             ],
             resources: [
                 .copy("Fixtures"),
+            ]
+        ),
+        .testTarget(
+            name: "MapboxNavigationCoreADASIntegrationTests",
+            dependencies: [
+                "MapboxNavigationCore",
+                "_MapboxNavigationTestHelpers",
+            ],
+            resources: [
                 .copy("AdasTilestore"),
             ]
         ),

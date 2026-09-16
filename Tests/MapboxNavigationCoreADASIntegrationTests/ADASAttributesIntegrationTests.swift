@@ -5,15 +5,22 @@ import MapboxDirections
 import MapboxNavigationNative_Private
 import XCTest
 
-final class ADASAttributesIntegrationTests: BaseIntegrationTest {
-    override func makeInitialLocation() -> CLLocation {
-        CLLocation(latitude: 48.412623, longitude: 10.432769)
-    }
+final class ADASAttributesIntegrationTests: BaseTestCase {
+    private let defaultDelay: TimeInterval = 5
+    private let locationUpdateDelay = 50
 
-    override func makeBaseCoreConfig(credentials: NavigationCoreApiConfiguration) -> CoreConfig {
+    private var navigationProvider: MapboxNavigationProvider!
+    private var locationPublisher: CurrentValueSubject<CLLocation, Never>!
+
+    @MainActor
+    override func setUp() {
+        super.setUp()
+
+        let billingServiceMock = BillingServiceMock()
+        let billingHandler = BillingHandler.__createMockedHandler(with: billingServiceMock)
+        let credentials = NavigationCoreApiConfiguration(accessToken: .mockedAccessToken)
         let testTilestoreURL = URL(string: "AdasTilestore", relativeTo: Bundle.module.resourceURL)!
-
-        return CoreConfig(
+        var coreConfig = CoreConfig(
             credentials: credentials,
             historyRecordingConfig: .init(), // TODO: remove history recorder after NN-4537 is resolved
             electronicHorizonConfig: .init(
@@ -26,6 +33,30 @@ final class ADASAttributesIntegrationTests: BaseIntegrationTest {
             tilesVersion: "2026_02_01-14_08_13",
             tilestoreConfig: .custom(testTilestoreURL)
         )
+        locationPublisher = .init(makeInitialLocation())
+        coreConfig.__customBillingHandler = BillingHandlerProvider(billingHandler)
+        coreConfig.locationSource = .custom(.mock(locationPublisher.eraseToAnyPublisher()))
+        navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
+    }
+
+    @MainActor
+    override func tearDown() {
+        navigationProvider.tripSession().setToIdle()
+        navigationProvider = nil
+        super.tearDown()
+    }
+
+    private func makeInitialLocation() -> CLLocation {
+        CLLocation(latitude: 48.412623, longitude: 10.432769)
+    }
+
+    private func simulateLocations(_ locations: [CLLocation]) async {
+        for location in locations {
+            locationPublisher.send(location)
+            if #available(iOS 16.0, *) {
+                try? await Task.sleep(for: Duration.milliseconds(locationUpdateDelay))
+            }
+        }
     }
 
     func testAdasDataFetched() async {
