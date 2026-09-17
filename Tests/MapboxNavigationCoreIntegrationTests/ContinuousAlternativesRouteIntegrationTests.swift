@@ -166,9 +166,26 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
         )
 
         // Retain-only CA body; install it only after the original-route refresh is proven.
+        // This expectation confirms that the stub intercepted the request; Native applies the response asynchronously.
+        let alternativesRequestExpectation = expectation(description: "Retain-only CA route requested")
+        alternativesRequestExpectation.assertForOverFulfill = false
         stubRouteResponse("alternatives-route-2") {
-            shouldUseCustomOptions ? $0.contains("custom=customValue") : true
+            let matches = shouldUseCustomOptions ? $0.contains("custom=customValue") : true
+            if matches {
+                alternativesRequestExpectation.fulfill()
+            }
+            return matches
         }
+
+        // Ten points pass this fixture's alternative fork while staying away from the destination,
+        // where Native stops requesting alternatives.
+        let postCAProgressLocations = Array(locations.dropFirst(firstLocations.count).prefix(10))
+        guard let holdingLocation = postCAProgressLocations.last else {
+            XCTFail("Not enough locations to simulate the post-CA refresh")
+            return
+        }
+        await simulateLocations(postCAProgressLocations)
+        await fulfillment(of: [alternativesRequestExpectation], timeout: waitTimeout)
 
         cancellables = []
         let refreshEventExpectation2 = await refreshExpectation(shouldRefresh: shouldRefresh)
@@ -180,8 +197,11 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
             shouldRefresh: shouldRefresh,
             requestNumber: 2
         )
-        let remainingLocations = Array(locations.dropFirst(firstLocations.count).prefix(30))
-        await simulateLocations(remainingLocations)
+        // Hold position for 30 × 50 ms = 1.5 seconds, longer than the 1-second refresh period.
+        // Advance timestamps so Native does not reject repeated coordinates as stale.
+        let holdingLocations = Array(repeating: holdingLocation, count: 30)
+            .shifted(to: holdingLocation.timestamp.addingTimeInterval(1))
+        await simulateLocations(holdingLocations)
         await fulfillment(
             of: [
                 refreshRequestExpectation2,
