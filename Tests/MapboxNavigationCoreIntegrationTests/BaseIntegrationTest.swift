@@ -18,6 +18,11 @@ class BaseIntegrationTest: BaseTestCase {
     var locationPublisher: CurrentValueSubject<CLLocation, Never>!
     var cancellables: Set<AnyCancellable>!
 
+    /// TileStore's root can only be configured once per process. All tests in this target therefore share one empty,
+    /// run-specific store, while tests that require preloaded tiles run in a separate target.
+    private static let tileStoreURL = FileManager.default.temporaryDirectory
+        .appendingPathComponent("MapboxNavigationCoreIntegrationTests-\(UUID().uuidString)", isDirectory: true)
+
     @MainActor
     override func setUp() {
         super.setUp()
@@ -39,7 +44,8 @@ class BaseIntegrationTest: BaseTestCase {
         CoreConfig(
             credentials: credentials,
             routingConfig: .init(routeRefreshPeriod: 1),
-            logLevel: .debug
+            logLevel: .debug,
+            tilestoreConfig: .custom(Self.tileStoreURL)
         )
     }
 
