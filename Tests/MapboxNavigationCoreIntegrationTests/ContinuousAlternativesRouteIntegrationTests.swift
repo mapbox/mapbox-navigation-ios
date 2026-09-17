@@ -9,16 +9,25 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
     let origin = CLLocationCoordinate2D(latitude: 40.76050975068355, longitude: -73.98778274913309)
     let destination = CLLocationCoordinate2D(latitude: 40.75988085727627, longitude: -73.98039053825985)
 
-    let routeId = "JZdoNhmdt5P6NDBbQM058Z6jvVeZV_83DvFYUuc_JfcdysWHayQ==_eu-west-1"
+    /// Full Directions uuid from `alternatives-route-1.json`.
+    let routeId = "Cw-JZdoNhmdt5P6NDBbQM058Z6jvVeZV_83DvFYUuc_JfcdysWHayQ==_eu-west-1"
+
+    /// Long enough for tracking + a 1s refresh period after NN keeps CA on `setAlternativeRoutes`.
+    let refreshTimeout: TimeInterval = 15
 
     var navigationRoutes: NavigationRoutes!
 
     @MainActor
+    override func makeBaseCoreConfig(credentials: NavigationCoreApiConfiguration) -> CoreConfig {
+        var config = super.makeBaseCoreConfig(credentials: credentials)
+        config.routingConfig.alternativeRoutesDetectionConfig = .init(refreshIntervalSeconds: 3)
+        config.routingConfig.ignoreExpirationTimeInRefresh = true
+        return config
+    }
+
+    @MainActor
     override func setUp() {
         super.setUp()
-
-        coreConfig.routingConfig.alternativeRoutesDetectionConfig = .init(refreshIntervalSeconds: 3)
-        navigationProvider.apply(coreConfig: coreConfig)
         stubRouteResponse("alternatives-route-1")
     }
 
@@ -125,73 +134,82 @@ final class ContinuousAlternativesRouteIntegrationTests: BaseIntegrationTest {
         }
         navigationRoutes = routes
 
+        // Refresh schedules the primary and every alternative. Stub all of those URLs so they
+        // never hit Directions; only wait on the active index (uuid/0, or uuid/1 after selecting
+        // an alternative). A later passed-alternative CA can drop the other original indices.
+        let activeIndex = shouldSelectAlternative ? 1 : 0
+        let waitTimeout = shouldRefresh ? refreshTimeout : defaultDelay
         let tripSession = await navigationProvider.tripSession()
         let statusExpectation = await trackingStatusExpectation()
         let locations = routes.mainRoute.route.simulationOnRouteLocations
-        let locationsToSimulate = Array(locations.prefix(2))
+        let firstLocations = Array(locations.prefix(15))
         let refreshEventExpectation1 = await refreshExpectation(shouldRefresh: shouldRefresh)
         refreshEventExpectation1.assertForOverFulfill = false
-        let refreshExpectation0 = makeRouteRefreshRequestExpectation(
-            index: 0,
-            shouldRefresh: shouldRefresh
-        )
-        let refreshExpectation1 = makeRouteRefreshRequestExpectation(
-            index: 1,
-            shouldRefresh: shouldRefresh
-        )
-        let refreshExpectation2 = makeRouteRefreshRequestExpectation(
-            index: 2,
+        let refreshRequestExpectation1 = stubRouteRefreshResponses(
+            indices: [0, 1, 2],
+            assertedIndex: activeIndex,
             shouldRefresh: shouldRefresh
         )
 
         let routeProgressExpectation = await routeProgressExpectation(for: routes.mainRoute.route)
         await tripSession.startActiveGuidance(with: routes, startLegIndex: 0)
-        await simulateLocations(locationsToSimulate)
+        await simulateLocations(firstLocations)
 
+        await fulfillment(
+            of: [
+                routeProgressExpectation,
+                statusExpectation,
+                refreshRequestExpectation1,
+                refreshEventExpectation1,
+            ],
+            timeout: waitTimeout
+        )
+
+        // Retain-only CA body; install it only after the original-route refresh is proven.
         stubRouteResponse("alternatives-route-2") {
             shouldUseCustomOptions ? $0.contains("custom=customValue") : true
         }
-        let expectations1 = [
-            routeProgressExpectation,
-            statusExpectation, refreshExpectation1,
-            refreshExpectation0, refreshExpectation2,
-            refreshEventExpectation1,
-        ]
-        await fulfillment(of: expectations1, timeout: defaultDelay)
 
         cancellables = []
         let refreshEventExpectation2 = await refreshExpectation(shouldRefresh: shouldRefresh)
         refreshEventExpectation2.assertForOverFulfill = false
-        let refreshRequestExpectation = makeRouteRefreshRequestExpectation(
-            index: shouldSelectAlternative ? 1 : 0,
+        // Retain-only CA keeps primary 0 and original index 1; stub both, assert the active one.
+        let refreshRequestExpectation2 = stubRouteRefreshResponses(
+            indices: [0, 1],
+            assertedIndex: activeIndex,
             shouldRefresh: shouldRefresh,
             requestNumber: 2
         )
-        let expectations2 = [
-            refreshRequestExpectation,
-            refreshEventExpectation2,
-        ]
-        let locationsToSimulate2 = Array(locations[3..<30])
-        await simulateLocations(locationsToSimulate2)
-        await fulfillment(of: expectations2, timeout: defaultDelay)
+        let remainingLocations = Array(locations.dropFirst(firstLocations.count).prefix(30))
+        await simulateLocations(remainingLocations)
+        await fulfillment(
+            of: [
+                refreshRequestExpectation2,
+                refreshEventExpectation2,
+            ],
+            timeout: waitTimeout
+        )
     }
 
-    fileprivate func makeRouteRefreshRequestExpectation(
-        index: Int,
+    fileprivate func stubRouteRefreshResponses(
+        indices: [Int],
+        assertedIndex: Int,
         shouldRefresh: Bool,
         requestNumber: Int = 1
     ) -> XCTestExpectation {
-        let expectation = expectation(description: "Route refresh for index=\(index) called")
+        let expectation = expectation(description: "Route refresh for index=\(assertedIndex) called")
         expectation.isInverted = !shouldRefresh
         expectation.assertForOverFulfill = false
 
-        let expectedSubstring = "\(routeId)/\(index)/0"
-        stubRouteRefreshResponse("alternatives-route-\(requestNumber)-refresh-\(index)") { url in
-            let result = url.contains(expectedSubstring)
-            if result {
-                expectation.fulfill()
+        for index in indices {
+            let expectedSubstring = "\(routeId)/\(index)/0"
+            stubRouteRefreshResponse("alternatives-route-\(requestNumber)-refresh-\(index)") { url in
+                let matched = url.contains(expectedSubstring)
+                if matched, index == assertedIndex {
+                    expectation.fulfill()
+                }
+                return matched
             }
-            return result
         }
 
         return expectation
