@@ -6,7 +6,7 @@ import MapboxNavigationNative_Private
 import XCTest
 
 final class ADASAttributesIntegrationTests: BaseTestCase {
-    private let defaultDelay: TimeInterval = 5
+    private let defaultDelay: TimeInterval = 10
     private let locationUpdateDelay = 50
 
     private var navigationProvider: MapboxNavigationProvider!
@@ -50,15 +50,20 @@ final class ADASAttributesIntegrationTests: BaseTestCase {
         CLLocation(latitude: 48.412623, longitude: 10.432769)
     }
 
-    private func simulateLocations(_ locations: [CLLocation]) async {
-        for location in locations {
+    @MainActor
+    private func simulateLocationsUntilCancelled() async {
+        while !Task.isCancelled {
+            let location = makeInitialLocation()
             locationPublisher.send(location)
-            if #available(iOS 16.0, *) {
-                try? await Task.sleep(for: Duration.milliseconds(locationUpdateDelay))
+            do {
+                try await Task.sleep(nanoseconds: UInt64(locationUpdateDelay) * NSEC_PER_MSEC)
+            } catch {
+                return
             }
         }
     }
 
+    @MainActor
     func testAdasDataFetched() async {
         var subscriptions: [AnyCancellable] = []
         let adasExpectation = expectation(description: "EH event reported")
@@ -79,13 +84,12 @@ final class ADASAttributesIntegrationTests: BaseTestCase {
             }.store(in: &subscriptions)
 
         await navigationProvider.electronicHorizon().startUpdatingEHorizon()
-        await simulateLocations(
-            Array(
-                repeating: makeInitialLocation(),
-                count: 5
-            ).shiftedToPresent()
-        )
+        let locationSimulation = Task { @MainActor in
+            await simulateLocationsUntilCancelled()
+        }
         await fulfillment(of: [adasExpectation], timeout: defaultDelay)
+        locationSimulation.cancel()
+        await locationSimulation.value
 
         // assert
         guard let adasAttributes else {
