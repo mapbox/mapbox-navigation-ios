@@ -6,6 +6,10 @@
 
 * Fixed a launch-time crash (`dyld: Symbol not found: ...RouteOptions...`) in apps that consume MapboxDirections statically linked from source, caused by internal symbols becoming unresolvable after a toolchain update to Xcode 26.5.
 
+### CarPlay
+
+* Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
+
 ## ## 3.31.0-rc.1
 
 ### MapboxDirections

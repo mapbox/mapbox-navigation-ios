@@ -256,6 +256,9 @@ class CarPlayManagerTests: TestCase {
     @MainActor
     func testAllPublicLifecycleEntryPointsProduceEquivalentState() throws {
         simulateCarPlayDisconnection(carPlayManager)
+        let tripSession = navigationProvider.mapboxNavigation.tripSession()
+        tripSession.setToIdle()
+        XCTAssertEqual(tripSession.currentSession.state, .idle)
 
         for entryPoint in CarPlayLifecycleEntryPoint.allCases {
             let manager = makeCarPlayManagerForLifecycleTest()
@@ -293,6 +296,7 @@ class CarPlayManagerTests: TestCase {
             )
             XCTAssertFalse(mapViewController.startFreeDriveAutomatically, entryPoint.description)
             XCTAssertFalse(mapViewController.hidesSpeedLimitViewWithMapControls, entryPoint.description)
+            XCTAssertEqual(tripSession.currentSession.state, .idle, entryPoint.description)
 
             disconnect(
                 manager,

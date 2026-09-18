@@ -268,7 +268,6 @@ open class CarPlayMapViewController: UIViewController {
         self.usesCompactMapOverlays = false
         super.init(nibName: nil, bundle: nil)
         self.sessionConfiguration = CPSessionConfiguration(delegate: self)
-        navigationMapView.update(navigationCameraState: .following)
     }
 
     /// Initializes a new CarPlay map view controller with rendering options for its map.
@@ -292,7 +291,6 @@ open class CarPlayMapViewController: UIViewController {
         self.usesCompactMapOverlays = usesCompactMapOverlays
         super.init(nibName: nil, bundle: nil)
         self.sessionConfiguration = CPSessionConfiguration(delegate: self)
-        navigationMapView.update(navigationCameraState: .following)
     }
 
     /// Returns nil.
@@ -558,6 +556,10 @@ open class CarPlayMapViewController: UIViewController {
         setupSpeedLimitView()
         setupWayNameView()
         updateCarPlayControlsVisibility()
+
+        // Accessing `navigationMapView` from an initializer loads the view before callers can configure
+        // `startFreeDriveAutomatically`. Set the initial camera after the controller has been configured.
+        navigationMapView.update(navigationCameraState: .following)
     }
 
     override open func viewWillAppear(_ animated: Bool) {
