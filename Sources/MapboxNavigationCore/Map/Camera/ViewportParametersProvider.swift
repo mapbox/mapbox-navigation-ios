@@ -63,7 +63,9 @@ struct ViewportParametersProvider: Sendable {
     ///   - routeProgress: Current `RouteProgress`
     ///   - intersectionDensity: Lookahead distance
     /// - Returns: The lookahead distance.
-    private func lookaheadDistance(
+    // Internal rather than private so the internal `RouteParsingPerformanceTests` target can
+    // measure it directly.
+    func lookaheadDistance(
         _ navigationProgress: NavigationProgress,
         intersectionDensity: IntersectionDensity
     ) -> CLLocationDistance {

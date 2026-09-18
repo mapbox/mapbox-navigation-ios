@@ -77,7 +77,10 @@ public struct NavigationRoutes: Equatable, @unchecked Sendable {
     /// - important: `routeResponse.routes` must be indexable by ``RouteInterface/getRouteIndex()``. Do
     /// **not** pass a response produced by ``RouteInterface/toJson()``: those hold a single route while
     /// route indices remain those of the original response. Use ``init(routesData:options:)`` for that case.
-    private init(routesData: RoutesData, fullRouteResponse routeResponse: RouteResponse) throws {
+    // Internal rather than private so the internal `RouteParsingPerformanceTests` target can measure this
+    // `toJson()`-free path without the re-encode and re-parse that
+    // `init(routeResponse:routeIndex:responseOrigin:)` performs before delegating here.
+    init(routesData: RoutesData, fullRouteResponse routeResponse: RouteResponse) throws {
         guard let routes = routeResponse.routes else {
             Log.error("Unable to get routes", category: .navigation)
             throw NavigationRoutesError.emptyRoutes
