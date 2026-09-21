@@ -9,6 +9,16 @@
 ### CarPlay
 
 * Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
+* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
+
+## 3.31.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.31.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.31.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.31.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.31.0)
 
 ## ## 3.31.0-rc.1
 
@@ -23,9 +33,6 @@
 * Fixed an issue where the CarPlay browsing map could remain idle or non-centered after navigation ended.
 * Fixed an issue where the CarPlay browsing map could visibly catch up from a stale position or briefly reveal active-guidance route and camera framing after navigation ended.
 * Fixed CarPlay previews refitting beneath controls during safe-area changes.
-* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
 
 ## 3.30.0-rc.1
 
