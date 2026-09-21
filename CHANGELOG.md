@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Unreleased
+
+### CarPlay
+
+* Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
+
 ## 3.31.0
 
 ### Packaging
