@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### CarPlay
+
+* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
+
+## 3.32.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.32.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.32.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.32.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.32.0-rc.1)
+
 ### MapboxDirections
 
 * Fixed a launch-time crash (`dyld: Symbol not found: ...RouteOptions...`) in apps that consume MapboxDirections statically linked from source, caused by internal symbols becoming unresolvable after a toolchain update to Xcode 26.5.
@@ -9,9 +22,6 @@
 ### CarPlay
 
 * Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
-* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
 
 ## 3.31.0
 
