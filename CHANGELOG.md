@@ -1,13 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Unreleased
-
-### CarPlay
-
-* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
-    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
-
 ## 3.32.0-rc.1
 
 ### Packaging
@@ -22,6 +14,9 @@
 ### CarPlay
 
 * Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
+* Fixed inconsistent CarPlay connect and disconnect behavior across application and scene delegate callbacks.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)` in favor of `CarPlayManager.templateApplicationScene(_:didConnect:to:)`.
+    * Deprecated `CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)` in favor of `CarPlayManager.templateApplicationScene(_:didDisconnect:from:)`.
 
 ## 3.31.0
 
@@ -30,7 +25,7 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.31.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.31.0)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.31.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.31.0)
 
-## ## 3.31.0-rc.1
+## 3.31.0-rc.1
 
 ### MapboxDirections
 
@@ -43,6 +38,27 @@
 * Fixed an issue where the CarPlay browsing map could remain idle or non-centered after navigation ended.
 * Fixed an issue where the CarPlay browsing map could visibly catch up from a stale position or briefly reveal active-guidance route and camera framing after navigation ended.
 * Fixed CarPlay previews refitting beneath controls during safe-area changes.
+
+## 3.30.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.30.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.30.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.30.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.30.2)
+
+## 3.30.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.30.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.30.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.30.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.30.1)
+
+## 3.30.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.30.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.30.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.30.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.30.0)
 
 ## 3.30.0-rc.1
 
