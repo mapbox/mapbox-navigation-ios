@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import MapboxMaps
 import UIKit
 
@@ -97,7 +98,7 @@ final class LaneGuidanceCalloutView: UIView {
             LaneView(
                 indications: lane,
                 isUsable: laneGuidanceData.usableApproachLanes?.contains(index) ?? false,
-                direction: laneGuidanceData.usableLaneIndication
+                direction: laneGuidanceData.laneValidIndications?[safe: index] ?? nil
             )
         }
 

@@ -363,7 +363,7 @@ public class Fixture: NSObject {
             approachLanes: nil,
             usableApproachLanes: nil,
             preferredApproachLanes: nil,
-            usableLaneIndication: nil
+            laneValidIndications: nil
         )
 
         var arriveStep = RouteStep(

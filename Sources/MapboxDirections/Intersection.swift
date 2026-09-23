@@ -11,6 +11,73 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
 
     // MARK: Creating an Intersection
 
+    /// Initializes an intersection.
+    ///
+    /// - Parameter laneValidIndications: For each item in `approachLanes`, the indication that is applicable to
+    /// the current route, or `nil` for a lane that has no applicable indication.
+    public init(
+        location: LocationCoordinate2D,
+        headings: [LocationDirection],
+        approachIndex: Int,
+        outletIndex: Int,
+        outletIndexes: IndexSet,
+        approachLanes: [LaneIndication]?,
+        usableApproachLanes: IndexSet?,
+        preferredApproachLanes: IndexSet?,
+        laneValidIndications: [ManeuverDirection?]? = nil,
+        outletRoadClasses: RoadClasses? = nil,
+        tollCollection: TollCollection? = nil,
+        tunnelName: String? = nil,
+        restStop: RestStop? = nil,
+        isUrban: Bool? = nil,
+        regionCode: String? = nil,
+        outletMapboxStreetsRoadClass: MapboxStreetsRoadClass? = nil,
+        railroadCrossing: Bool? = nil,
+        trafficSignal: Bool? = nil,
+        stopSign: Bool? = nil,
+        yieldSign: Bool? = nil,
+        interchange: Interchange? = nil,
+        junction: Junction? = nil
+    ) {
+        self.location = location
+        self.headings = headings
+        self.approachIndex = approachIndex
+        self.approachLanes = approachLanes
+        self.outletIndex = outletIndex
+        self.outletIndexes = outletIndexes
+        self.usableApproachLanes = usableApproachLanes
+        self.preferredApproachLanes = preferredApproachLanes
+        self.laneValidIndications = laneValidIndications
+        self._usableLaneIndication = Intersection.collapsedLaneIndication(
+            laneValidIndications: laneValidIndications,
+            usableApproachLanes: usableApproachLanes,
+            preferredApproachLanes: preferredApproachLanes
+        )
+        self.outletRoadClasses = outletRoadClasses
+        self.tollCollection = tollCollection
+        self.tunnelName = tunnelName
+        self.isUrban = isUrban
+        self.restStop = restStop
+        self.regionCode = regionCode
+        self.outletMapboxStreetsRoadClass = outletMapboxStreetsRoadClass
+        self.railroadCrossing = railroadCrossing
+        self.trafficSignal = trafficSignal
+        self.stopSign = stopSign
+        self.yieldSign = yieldSign
+        self.interchange = interchange
+        self.junction = junction
+    }
+
+    /// Initializes an intersection whose lanes all share a single applicable maneuver direction.
+    ///
+    /// Lanes at the same intersection may legitimately have differing applicable maneuver directions, which a
+    /// single `usableLaneIndication` cannot represent. Use the initializer that takes `laneValidIndications`
+    /// instead, passing one indication per lane.
+    @available(
+        *,
+        deprecated,
+        message: "Use the initializer that takes laneValidIndications, which reflects that lanes may have differing indications."
+    )
     public init(
         location: LocationCoordinate2D,
         headings: [LocationDirection],
@@ -43,7 +110,8 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
         self.outletIndexes = outletIndexes
         self.usableApproachLanes = usableApproachLanes
         self.preferredApproachLanes = preferredApproachLanes
-        self.usableLaneIndication = usableLaneIndication
+        self.laneValidIndications = nil
+        self._usableLaneIndication = usableLaneIndication
         self.outletRoadClasses = outletRoadClasses
         self.tollCollection = tollCollection
         self.tunnelName = tunnelName
@@ -57,6 +125,30 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
         self.yieldSign = yieldSign
         self.interchange = interchange
         self.junction = junction
+    }
+
+    /// Collapses per-lane applicable maneuver directions into the single value published by the deprecated
+    /// ``usableLaneIndication`` property.
+    ///
+    /// The indication of the first preferred lane that has one is preferred, then the indication of the first
+    /// usable lane that has one, then the indication of the first lane.
+    static func collapsedLaneIndication(
+        laneValidIndications: [ManeuverDirection?]?,
+        usableApproachLanes: IndexSet?,
+        preferredApproachLanes: IndexSet?
+    ) -> ManeuverDirection? {
+        guard let laneValidIndications else { return nil }
+
+        func firstIndication(among laneIndices: IndexSet?) -> ManeuverDirection? {
+            guard let laneIndices else { return nil }
+            return laneIndices.lazy
+                .compactMap { laneValidIndications.indices.contains($0) ? laneValidIndications[$0] : nil }
+                .first
+        }
+
+        return firstIndication(among: preferredApproachLanes)
+            ?? firstIndication(among: usableApproachLanes)
+            ?? laneValidIndications.first.flatMap { $0 }
     }
 
     // MARK: Getting the Location of the Intersection
@@ -167,10 +259,34 @@ public struct Intersection: ForeignMemberContainer, Equatable, Sendable {
     /// If no lane information is available for an intersection, this property’s value is `nil`.
     public let preferredApproachLanes: IndexSet?
 
+    /// For each item in the ``approachLanes`` array, which of its ``LaneIndication``s is applicable to the
+    /// current route, when there is more than one.
+    ///
+    /// A lane's entry is `nil` if the lane has no applicable indication. Lanes at the same intersection may have
+    /// differing entries — for example, one lane may indicate a straight maneuver while an adjacent lane
+    /// indicates a slight turn, if both lanes can be used for the route.
+    ///
+    /// If no lane information is available for the intersection, this property’s value is `nil`.
+    public let laneValidIndications: [ManeuverDirection?]?
+
     /// Which of the ``LaneIndication``s is applicable to the current route when there is more than one.
     ///
-    /// If no lane information is available for the intersection, this property’s value is `nil`
-    public let usableLaneIndication: ManeuverDirection?
+    /// If no lane information is available for the intersection, this property’s value is `nil`.
+    ///
+    /// - Note: Lanes at the same intersection may legitimately have differing indications, in which case this
+    /// property collapses them to a single value (preferring a preferred lane's indication, then a usable
+    /// lane's, then the first lane's) and therefore does not represent every lane. Use
+    /// ``laneValidIndications`` instead.
+    @available(
+        *,
+        deprecated,
+        message: "Use laneValidIndications, which reflects that lanes may have differing indications."
+    )
+    public var usableLaneIndication: ManeuverDirection? {
+        _usableLaneIndication
+    }
+
+    let _usableLaneIndication: ManeuverDirection?
 
     /// Indicates whether there is a railroad crossing at the intersection.
     ///
@@ -320,23 +436,32 @@ extension Intersection: Codable {
            let usableApproachLanes,
            let preferredApproachLanes
         {
-            lanes = approachLanes.map { Lane(indications: $0) }
+            var encodedLanes = approachLanes.map { Lane(indications: $0) }
             for i in usableApproachLanes {
-                lanes?[i].isValid = true
-                if let usableLaneIndication,
-                   let validLanes = lanes,
-                   validLanes[i].indications.descriptions.contains(usableLaneIndication.rawValue)
-                {
-                    lanes?[i].validIndication = usableLaneIndication
-                }
+                encodedLanes[i].isValid = true
                 if usableApproachLanes.count == lanesForeignMembers.count {
-                    lanes?[i].foreignMembers = lanesForeignMembers[i]
+                    encodedLanes[i].foreignMembers = lanesForeignMembers[i]
                 }
             }
 
             for j in preferredApproachLanes {
-                lanes?[j].isActive = true
+                encodedLanes[j].isActive = true
             }
+
+            if let laneValidIndications {
+                for (i, laneValidIndication) in zip(encodedLanes.indices, laneValidIndications) {
+                    encodedLanes[i].validIndication = laneValidIndication
+                }
+            } else if let _usableLaneIndication {
+                // Back-compat for `Intersection`s constructed without `laneValidIndications`: broadcast the
+                // single value to every usable lane whose indications include it.
+                for i in usableApproachLanes
+                    where encodedLanes[i].indications.descriptions.contains(_usableLaneIndication.rawValue)
+                {
+                    encodedLanes[i].validIndication = _usableLaneIndication
+                }
+            }
+            lanes = encodedLanes
         }
         try container.encodeIfPresent(lanes, forKey: .lanes)
 
@@ -404,23 +529,26 @@ extension Intersection: Codable {
 
         if let lanes = try container.decodeIfPresent([Lane].self, forKey: .lanes) {
             self.lanesForeignMembers = lanes.map(\.foreignMembers)
+            // Lanes at the same intersection may legitimately have differing indications (e.g. one lane
+            // "straight", another "slight right"), so every lane keeps its own indication.
+            let laneValidIndications = lanes.map(\.validIndication)
+            let usableApproachLanes = lanes.indices { $0.isValid }
+            let preferredApproachLanes = lanes.indices { $0.isActive ?? false }
             self.approachLanes = lanes.map(\.indications)
-            self.usableApproachLanes = lanes.indices { $0.isValid }
-            self.preferredApproachLanes = lanes.indices { $0.isActive ?? false }
-            let validIndications = lanes.compactMap(\.validIndication)
-            if Set(validIndications).count > 1 {
-                let context = EncodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Inconsistent valid indications."
-                )
-                throw EncodingError.invalidValue(validIndications, context)
-            }
-            self.usableLaneIndication = validIndications.first
+            self.usableApproachLanes = usableApproachLanes
+            self.preferredApproachLanes = preferredApproachLanes
+            self.laneValidIndications = laneValidIndications
+            self._usableLaneIndication = Intersection.collapsedLaneIndication(
+                laneValidIndications: laneValidIndications,
+                usableApproachLanes: usableApproachLanes,
+                preferredApproachLanes: preferredApproachLanes
+            )
         } else {
             self.approachLanes = nil
             self.usableApproachLanes = nil
             self.preferredApproachLanes = nil
-            self.usableLaneIndication = nil
+            self.laneValidIndications = nil
+            self._usableLaneIndication = nil
         }
 
         self.outletRoadClasses = try container.decodeIfPresent(RoadClasses.self, forKey: .outletRoadClasses)
@@ -466,7 +594,8 @@ extension Intersection {
             lhs.approachLanes == rhs.approachLanes &&
             lhs.usableApproachLanes == rhs.usableApproachLanes &&
             lhs.preferredApproachLanes == rhs.preferredApproachLanes &&
-            lhs.usableLaneIndication == rhs.usableLaneIndication &&
+            lhs.laneValidIndications == rhs.laneValidIndications &&
+            lhs._usableLaneIndication == rhs._usableLaneIndication &&
             lhs.restStop == rhs.restStop &&
             lhs.regionCode == rhs.regionCode &&
             lhs.outletMapboxStreetsRoadClass == rhs.outletMapboxStreetsRoadClass &&
