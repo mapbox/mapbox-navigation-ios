@@ -5,9 +5,10 @@ import MapboxMaps
 struct IntersectionLaneGuidanceData: Equatable {
     let point: Point
     let approachLanes: [LaneIndication]
-    let preferredApproachLanes: IndexSet?
     let usableApproachLanes: IndexSet?
-    let usableLaneIndication: ManeuverDirection?
+    /// The valid indication for each item in ``approachLanes``, when available. Lanes at the same intersection
+    /// may have differing indications.
+    let laneValidIndications: [ManeuverDirection?]?
 }
 
 struct IntersectionLaneGuidanceFeature: MapFeature {

@@ -36,7 +36,7 @@ final class RouteStepProgressTests: XCTestCase {
                 approachLanes: nil,
                 usableApproachLanes: nil,
                 preferredApproachLanes: nil,
-                usableLaneIndication: nil
+                laneValidIndications: nil
             ),
             Intersection(
                 location: CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
@@ -47,7 +47,7 @@ final class RouteStepProgressTests: XCTestCase {
                 approachLanes: nil,
                 usableApproachLanes: nil,
                 preferredApproachLanes: nil,
-                usableLaneIndication: nil
+                laneValidIndications: nil
             ),
         ]
     }

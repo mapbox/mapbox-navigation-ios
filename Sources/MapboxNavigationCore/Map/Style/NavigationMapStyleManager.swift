@@ -580,9 +580,8 @@ final class NavigationMapStyleManager {
             IntersectionLaneGuidanceData(
                 point: Point($0.location),
                 approachLanes: $0.approachLanes!,
-                preferredApproachLanes: $0.preferredApproachLanes,
                 usableApproachLanes: $0.usableApproachLanes,
-                usableLaneIndication: $0.usableLaneIndication
+                laneValidIndications: $0.laneValidIndications
             )
         }
         return data

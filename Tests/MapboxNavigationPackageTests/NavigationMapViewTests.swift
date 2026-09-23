@@ -56,7 +56,7 @@ class NavigationMapViewTests: TestCase {
             approachLanes: nil,
             usableApproachLanes: nil,
             preferredApproachLanes: nil,
-            usableLaneIndication: nil,
+            laneValidIndications: nil,
             yieldSign: true
         ),
         Intersection(
@@ -68,7 +68,7 @@ class NavigationMapViewTests: TestCase {
             approachLanes: nil,
             usableApproachLanes: nil,
             preferredApproachLanes: nil,
-            usableLaneIndication: nil,
+            laneValidIndications: nil,
             stopSign: true
         ),
     ]

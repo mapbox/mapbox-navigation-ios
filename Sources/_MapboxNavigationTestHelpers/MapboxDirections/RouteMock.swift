@@ -107,7 +107,7 @@ extension Intersection {
             approachLanes: nil,
             usableApproachLanes: nil,
             preferredApproachLanes: nil,
-            usableLaneIndication: nil
+            laneValidIndications: nil
         )
     }
 }
