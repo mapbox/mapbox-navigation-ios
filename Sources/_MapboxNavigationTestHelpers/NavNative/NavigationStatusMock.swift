@@ -43,6 +43,7 @@ extension NavigationStatus {
 
     public static func mock(
         routeState: RouteState = .tracking,
+        stateOfCharging: ChargingState = .notCharging,
         locatedAlternativeRouteId: String? = nil,
         primaryRouteId: String? = "",
         stale: Bool = false,
@@ -97,6 +98,7 @@ extension NavigationStatus {
         }
         return .init(
             routeState: routeState,
+            stateOfCharging: stateOfCharging,
             stale: stale,
             location: fixLocation,
             isFallback: isFallback,
