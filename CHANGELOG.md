@@ -5,6 +5,7 @@
 ### CarPlay
 
 * Fixed CarPlay starting a Free Drive billing session when `CarPlayManager.startFreeDriveAutomatically` was set to `false`.
+* Fixed CarPlay guidance-card maneuver symbols pointing in the opposite direction for left turns and other mirrored maneuvers.
 
 ## 3.31.0
 
