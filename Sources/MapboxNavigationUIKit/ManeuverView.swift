@@ -75,9 +75,12 @@ open class ManeuverView: UIView {
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
 
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+
         let currentPrimaryColor = shouldShowHighlightedColors ? primaryColorHighlighted : primaryColor
         let currentSecondaryColor = shouldShowHighlightedColors ? secondaryColorHighlighted : secondaryColor
-        transform = .identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
 
 #if TARGET_INTERFACE_BUILDER
@@ -99,12 +102,16 @@ open class ManeuverView: UIView {
             return
         }
 
-        var flip = false
         let maneuverType = visualInstruction.maneuverType
         let maneuverDirection = visualInstruction.maneuverDirection
 
         let type = maneuverType ?? .turn
         let direction = maneuverDirection ?? .straightAhead
+
+        if shouldFlip(type: type, direction: direction) {
+            context.translateBy(x: bounds.width, y: 0)
+            context.scaleBy(x: -1, y: 1)
+        }
 
         switch type {
         case .merge:
@@ -114,7 +121,6 @@ open class ManeuverView: UIView {
                 primaryColor: currentPrimaryColor,
                 secondaryColor: currentSecondaryColor
             )
-            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeOffRamp:
             ManeuversStyleKit.drawOfframp(
                 frame: bounds,
@@ -122,7 +128,6 @@ open class ManeuverView: UIView {
                 primaryColor: currentPrimaryColor,
                 secondaryColor: currentSecondaryColor
             )
-            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .reachFork:
             ManeuversStyleKit.drawFork(
                 frame: bounds,
@@ -130,7 +135,6 @@ open class ManeuverView: UIView {
                 primaryColor: currentPrimaryColor,
                 secondaryColor: currentSecondaryColor
             )
-            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary, .exitRotary, .exitRoundabout:
             let angle = normalizedRoundaboutAngle(visualInstruction.finalHeading ?? 180)
             ManeuversStyleKit.drawRoundabout(
@@ -140,61 +144,35 @@ open class ManeuverView: UIView {
                 secondaryColor: currentSecondaryColor,
                 roundabout_angle: angle
             )
-            flip = drivingSide == .left
         case .arrive:
             switch direction {
-            case .right:
+            case .right, .left:
                 ManeuversStyleKit.drawArriveright(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor)
-            case .left:
-                ManeuversStyleKit.drawArriveright(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor)
-                flip = true
             default:
                 ManeuversStyleKit.drawArrive(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor)
             }
         default:
             switch direction {
-            case .right:
+            case .right, .left:
                 ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor)
-                flip = false
-            case .slightRight:
+            case .slightRight, .slightLeft:
                 ManeuversStyleKit.drawArrowslightright(
                     frame: bounds,
                     resizing: resizing,
                     primaryColor: currentPrimaryColor
                 )
-                flip = false
-            case .sharpRight:
+            case .sharpRight, .sharpLeft:
                 ManeuversStyleKit.drawArrowsharpright(
                     frame: bounds,
                     resizing: resizing,
                     primaryColor: currentPrimaryColor
                 )
-                flip = false
-            case .left:
-                ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor)
-                flip = true
-            case .slightLeft:
-                ManeuversStyleKit.drawArrowslightright(
-                    frame: bounds,
-                    resizing: resizing,
-                    primaryColor: currentPrimaryColor
-                )
-                flip = true
-            case .sharpLeft:
-                ManeuversStyleKit.drawArrowsharpright(
-                    frame: bounds,
-                    resizing: resizing,
-                    primaryColor: currentPrimaryColor
-                )
-                flip = true
             case .uTurn:
                 ManeuversStyleKit.drawArrow180right(
                     frame: bounds,
                     resizing: resizing,
                     primaryColor: currentPrimaryColor
                 )
-                flip = drivingSide ==
-                    .right // 180 turn is turning clockwise so we flip it if it's right-hand rule of the road
             default:
                 ManeuversStyleKit.drawArrowstraight(
                     frame: bounds,
@@ -203,8 +181,6 @@ open class ManeuverView: UIView {
                 )
             }
         }
-
-        transform = CGAffineTransform(scaleX: flip ? -1 : 1, y: 1)
     }
 
     override init(frame: CGRect) {
@@ -223,6 +199,27 @@ open class ManeuverView: UIView {
         // This is needed to obtain correct compositing since we implement our own draw function that includes
         // transparency.
         isOpaque = false
+    }
+
+    private func shouldFlip(type: ManeuverType, direction: ManeuverDirection) -> Bool {
+        switch type {
+        case .merge, .takeOffRamp, .reachFork:
+            return [.left, .slightLeft, .sharpLeft].contains(direction)
+        case .takeRoundabout, .turnAtRoundabout, .takeRotary, .exitRotary, .exitRoundabout:
+            return drivingSide == .left
+        case .arrive:
+            return direction == .left
+        default:
+            switch direction {
+            case .left, .slightLeft, .sharpLeft:
+                return true
+            case .uTurn:
+                // 180 turn is turning clockwise so we flip it if it's right-hand rule of the road
+                return drivingSide == .right
+            default:
+                return false
+            }
+        }
     }
 
     private func normalizedRoundaboutAngle(_ angle: LocationDegrees) -> CGFloat {
