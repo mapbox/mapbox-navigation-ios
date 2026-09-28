@@ -1,21 +1,24 @@
+import MapboxCommon
 @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
+
+public final class CancellableStub: Cancelable {
+    public func cancel() {}
+    public init() {}
+}
 
 extension RouterClient {
     public static var noopValue: RouterClient {
         Self(
             getRouteForDirectionsUri: { _, _, _, _ in
-                return 0
+                return CancellableStub()
             },
             getRouteRefresh: { _, _ in
-                return 0
+                return CancellableStub()
             },
             getRouteMapMatchedFor: { _, _, _ in
-                return 0
+                return CancellableStub()
             },
-            cancelRouteRequest: { _ in },
-            cancelRouteRefreshRequest: { _ in },
-            cancelRouteMapMatchedRequest: { _ in },
             cancelAll: {}
         )
     }
@@ -31,15 +34,6 @@ extension RouterClient {
                 fatalError("not implemented")
             },
             getRouteMapMatchedFor: { _, _, _ in
-                fatalError("not implemented")
-            },
-            cancelRouteRequest: { _ in
-                fatalError("not implemented")
-            },
-            cancelRouteRefreshRequest: { _ in
-                fatalError("not implemented")
-            },
-            cancelRouteMapMatchedRequest: { _ in
                 fatalError("not implemented")
             },
             cancelAll: {

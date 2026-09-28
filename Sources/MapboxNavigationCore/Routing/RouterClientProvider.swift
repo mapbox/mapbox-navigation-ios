@@ -10,7 +10,7 @@ extension RouterClientProvider {
             build: { router in
                 RouterClient(
                     getRouteForDirectionsUri: { directionsUri, options, caller, callbackDataRef in
-                        return router.getRouteForDirectionsUri(
+                        router.getRouteForDirectionsUri(
                             directionsUri,
                             options: options,
                             caller: caller,
@@ -18,23 +18,14 @@ extension RouterClientProvider {
                         )
                     },
                     getRouteRefresh: { options, callback in
-                        return router.getRouteRefresh(for: options, callback: callback)
+                        router.getRouteRefresh(for: options, callback: callback)
                     },
                     getRouteMapMatchedFor: { matchingUri, options, callbackDataRef in
-                        return router.getRouteMapMatchedFor(
+                        router.getRouteMapMatchedFor(
                             matchingUri: matchingUri,
                             options: options,
                             callbackDataRef: callbackDataRef
                         )
-                    },
-                    cancelRouteRequest: { token in
-                        router.cancelRouteRequest(forToken: token)
-                    },
-                    cancelRouteRefreshRequest: { token in
-                        router.cancelRouteRefreshRequest(forToken: token)
-                    },
-                    cancelRouteMapMatchedRequest: { token in
-                        router.cancelRouteMapMatchedRequest(forToken: token)
                     },
                     cancelAll: {
                         router.cancelAll()

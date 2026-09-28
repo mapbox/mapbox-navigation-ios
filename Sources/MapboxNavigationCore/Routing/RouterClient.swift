@@ -1,3 +1,4 @@
+import MapboxCommon
 import MapboxNavigationNative_Private
 
 struct RouterClient: Sendable {
@@ -6,22 +7,16 @@ struct RouterClient: Sendable {
         _ options: GetRouteOptions,
         _ caller: GetRouteSignature,
         _ callbackDataRef: @escaping RouterDataRefCallback
-    ) -> UInt64
+    ) -> Cancelable
 
     var getRouteRefresh: @Sendable (_ options: RouteRefreshOptions, _ callback: @escaping RouterRefreshCallback)
-        -> UInt64
+        -> Cancelable
 
     var getRouteMapMatchedFor: @Sendable (
         _ matchingUri: String,
         _ options: GetRouteOptions,
         _ callbackDataRef: @escaping RouterDataRefCallback
-    ) -> UInt64
-
-    var cancelRouteRequest: @Sendable (UInt64) -> Void
-
-    var cancelRouteRefreshRequest: @Sendable (UInt64) -> Void
-
-    var cancelRouteMapMatchedRequest: @Sendable (UInt64) -> Void
+    ) -> Cancelable
 
     var cancelAll: @Sendable () -> Void
 }

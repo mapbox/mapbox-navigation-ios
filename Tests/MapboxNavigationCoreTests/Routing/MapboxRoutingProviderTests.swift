@@ -29,11 +29,11 @@ final class MapboxRoutingProviderTests: TestCase {
         routerClient.getRouteForDirectionsUri = { _, _, _, callback in
             callExpectation.fulfill()
             callback(routeResponse, .online)
-            return 12345
+            return CancellableStub()
         }
         routerClient.getRouteMapMatchedFor = { _, _, _ in
             XCTFail("getRouteMapMatchedFor should not be called")
-            return 0
+            return CancellableStub()
         }
         let routerClientProvider = RouterClientProvider.value(with: routerClient)
         Environment.set(\.routerClientProvider, routerClientProvider)
@@ -60,12 +60,12 @@ final class MapboxRoutingProviderTests: TestCase {
         routerClient.getRouteMapMatchedFor = { _, _, callback in
             callExpectation.fulfill()
             callback(routeResponse, .online)
-            return 54321
+            return CancellableStub()
         }
         routerClient.getRouteForDirectionsUri = {
             _, _, _, _ in
             XCTFail("getRouteForDirectionsUri should not be called")
-            return 0
+            return CancellableStub()
         }
         let routerClientProvider = RouterClientProvider.value(with: routerClient)
         Environment.set(\.routerClientProvider, routerClientProvider)
