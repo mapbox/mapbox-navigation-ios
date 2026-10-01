@@ -1,5 +1,5 @@
-binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "23.11.4"
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "206.1.0"
+binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" "23.13.1"
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" "209.0.0"
 github "mapbox/mapbox-directions-swift" "v2.15.0"
 github "mapbox/turf-swift" "v2.8.0"
 github "mattgallagher/CwlPreconditionTesting" "2.2.2"

@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigationNative", ">= 206.0.1", "< 207.0.0"
+  s.dependency "MapboxNavigationNative", ">= 209.0.0", "< 210.0.0"
   s.dependency "MapboxDirections", "~> 2.15"
 
   s.swift_version = "5.5"
