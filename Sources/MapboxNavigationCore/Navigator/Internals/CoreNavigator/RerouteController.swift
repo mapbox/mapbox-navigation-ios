@@ -1,5 +1,4 @@
 import Foundation
-import MapboxCommon
 import MapboxDirections
 import MapboxNavigationNative_Private
 
@@ -85,8 +84,8 @@ private final class RerouteObserverProxy: RerouteObserver {
         controller?.onRerouteDetected(forRouteRequest: routeRequest) ?? false
     }
 
-    func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
-        controller?.onRerouteReceived(forRouteResponse: routeResponse, routeRequest: routeRequest, origin: origin)
+    func onRerouteReceived(forRoutes routes: [any RouteInterface], origin: RouterOrigin) {
+        controller?.onRerouteReceived(forRoutes: routes, origin: origin)
     }
 
     func onRerouteCancelled() {
@@ -148,7 +147,7 @@ extension RerouteController {
         return true
     }
 
-    func onRerouteReceived(forRouteResponse routeResponse: DataRef, routeRequest: String, origin: RouterOrigin) {
+    func onRerouteReceived(forRoutes routes: [any RouteInterface], origin _: RouterOrigin) {
         guard rerouteConfig.detectsReroute else {
             Log.warning(
                 "Reroute attempt fetched a route during 'rerouteConfig.detectsReroute' is disabled.",
@@ -157,28 +156,17 @@ extension RerouteController {
             return
         }
 
-        let reason = RerouteReason(routeRequest: routeRequest)
-        let routeParserClient = Environment.shared.routeParserClient
-        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback(
-            routeResponse,
-            routeRequest,
-            origin
-        ) { [weak self] result in
-            guard let self else { return }
-
-            if result.isValue(),
-               var routes = result.value as? [RouteInterface],
-               !routes.isEmpty
-            {
-                let routesData = RouteParser.createRoutesData(
-                    forPrimaryRoute: routes.remove(at: 0),
-                    alternativeRoutes: routes
-                )
-                delegate?.rerouteControllerDidReceiveReroute(self, routesData: routesData, reason: reason)
-            } else {
-                delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
-            }
+        // Navigation Native already parsed the directions response. Build route data from those
+        // routes. The primary route's request URI still carries the reroute reason.
+        guard let primaryRoute = routes.first else {
+            delegate?.rerouteControllerDidFailToReroute(self, with: DirectionsError.invalidResponse(nil))
+            return
         }
+        let alternatives = Array(routes.dropFirst())
+
+        let reason = RerouteReason(routeRequest: primaryRoute.getRequestUri())
+        let routesData = Environment.shared.routeParserClient.createRoutesData(primaryRoute, alternatives)
+        delegate?.rerouteControllerDidReceiveReroute(self, routesData: routesData, reason: reason)
     }
 
     func onRerouteCancelled() {
