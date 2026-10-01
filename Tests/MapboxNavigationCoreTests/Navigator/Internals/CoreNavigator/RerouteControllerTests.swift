@@ -310,73 +310,48 @@ final class RerouteControllerTests: XCTestCase {
         )
         rerouteController = await rerouteController(with: configuration)
 
-        let mock = RouteInterfaceMock()
-        rerouteController.onRerouteReceived(
-            forRouteResponse: mock.responseJsonRef,
-            routeRequest: directionsUrl,
-            origin: .online
-        )
+        rerouteController.onRerouteReceived(forRoutes: [RouteInterfaceMock()], origin: .online)
         XCTAssertFalse(delegate.didReceiveRerouteCalled)
         XCTAssertFalse(delegate.didFailToRerouteCalled)
     }
 
-    func testOnRerouteReceivedIfIncorrectRoute() async {
-        let delegateExpectation = expectation(description: "didFailToRerouteCalled")
-        delegate.didFailToRerouteExpectation = delegateExpectation
-
-        let callExpectation = expectation(description: "parseDirectionsResponse")
-        var routeParserClient = RouteParserClient.testValue
-        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback = { _, _, _, callback in
-            callExpectation.fulfill()
-            callback(Expected<NSArray, NSString>(error: "error"))
-        }
-        Environment.set(\.routeParserClient, routeParserClient)
-
-        let data = RouteInterfaceMock().responseJsonRef
-        rerouteController.onRerouteReceived(
-            forRouteResponse: data,
-            routeRequest: directionsUrl,
-            origin: .online
-        )
-
-        await fulfillment(of: [callExpectation, delegateExpectation], timeout: 0.5)
+    func testOnRerouteReceivedIfRoutesAreEmpty() {
+        rerouteController.onRerouteReceived(forRoutes: [], origin: .online)
+        XCTAssertTrue(delegate.didFailToRerouteCalled)
+        XCTAssertFalse(delegate.didReceiveRerouteCalled)
     }
 
-    func testOnRerouteReceivedIfCorrectRoute() async {
-        await onRerouteReceivedIfCorrectRoute(with: "&reason=deviation")
+    func testOnRerouteReceivedIfCorrectRoute() {
+        onRerouteReceivedIfCorrectRoute(with: "&reason=deviation")
 
         XCTAssertEqual(delegate.passedRerouteReason, .deviation)
     }
 
-    func testOnRerouteReceivedIfCorrectRouteWithReasonRouteInvalidated() async {
-        await onRerouteReceivedIfCorrectRoute(with: "&reason=route_invalidated")
+    func testOnRerouteReceivedIfCorrectRouteWithReasonRouteInvalidated() {
+        onRerouteReceivedIfCorrectRoute(with: "&reason=route_invalidated")
 
         XCTAssertEqual(delegate.passedRerouteReason, .routeInvalidated)
     }
 
-    private func onRerouteReceivedIfCorrectRoute(with rerouteReason: String) async {
-        let delegateExpectation = expectation(description: "didReceiveRerouteExpectation")
-        delegate.didReceiveRerouteExpectation = delegateExpectation
-
+    private func onRerouteReceivedIfCorrectRoute(with rerouteReason: String) {
         let url = directionsUrl + rerouteReason
-        let mock = RouteInterfaceMock()
-        let callExpectation = expectation(description: "parseDirectionsResponse")
+        let primary = RouteInterfaceMock(requestUri: url)
+        let alternative = RouteInterfaceMock()
+        let routesData = RoutesDataMock(primaryRoute: primary)
         var routeParserClient = RouteParserClient.testValue
-        routeParserClient.parseDirectionsResponseForResponseDataRefWithCallback = { data, request, _, callback in
-            XCTAssertEqual(data, mock.responseJsonRef)
-            XCTAssertEqual(request, url)
-            callExpectation.fulfill()
-            callback(Expected<NSArray, NSString>(value: [mock]))
+        routeParserClient.createRoutesData = { route, alternatives in
+            XCTAssertTrue((route as? RouteInterfaceMock) === primary)
+            XCTAssertEqual(alternatives.count, 1)
+            XCTAssertTrue((alternatives[0] as? RouteInterfaceMock) === alternative)
+            return routesData
         }
         Environment.set(\.routeParserClient, routeParserClient)
 
-        rerouteController.onRerouteReceived(
-            forRouteResponse: mock.responseJsonRef,
-            routeRequest: url,
-            origin: .online
-        )
+        rerouteController.onRerouteReceived(forRoutes: [primary, alternative], origin: .online)
 
-        await fulfillment(of: [callExpectation, delegateExpectation], timeout: 0.5)
+        XCTAssertTrue(delegate.didReceiveRerouteCalled)
+        XCTAssertFalse(delegate.didFailToRerouteCalled)
+        XCTAssertIdentical(delegate.passedRoutesData as? RoutesDataMock, routesData)
     }
 }
 
