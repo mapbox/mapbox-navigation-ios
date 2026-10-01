@@ -1,5 +1,20 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.32.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.32.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.32.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.32.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.32.0)
+
+### Routing
+
+* Fixed decoding of routes whose intersection reported differing `valid_indication` values across lanes. Added `Intersection.laneValidIndications`, giving each lane its own indication, and deprecated `Intersection.usableLaneIndication` in its favor.
+
+### CarPlay
+
+* Fixed CarPlay guidance-card maneuver symbols pointing in the opposite direction for left turns and other mirrored maneuvers.
+
 ## 3.32.0-rc.1
 
 ### Packaging
