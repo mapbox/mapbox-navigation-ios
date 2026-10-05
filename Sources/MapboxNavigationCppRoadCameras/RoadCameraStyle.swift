@@ -1,6 +1,8 @@
 import Foundation
 @_spi(Marshalling) @_spi(Internal) import MapboxCoreMaps
 internal import MapboxCoreMaps_Private
+internal import MapboxNavSdkMapComponents
+internal import MapboxNavSdkMapComponents_Private
 internal import MapboxNavSdkRoadCameras
 import UIKit
 
@@ -24,8 +26,10 @@ extension RoadCameraStyle {
         nativeImage.flatMap { MapboxNavSdkRoadCameras.RoadCameraStyle(image: $0, imageOffset: nativeImageOffset) }
     }
 
-    var nativeImage: __MBXImage? {
-        MBXImage(uiImage: image).flatMap { MBXImage.Marshaller.toObjc($0) }
+    var nativeImage: MapImage? {
+        MBXImage(uiImage: image).flatMap {
+            MapImage(baseImage: MBXImage.Marshaller.toObjc($0), pixelRatio: Float(image.scale))
+        }
     }
 
     var nativeImageOffset: __ScreenCoordinate {
