@@ -82,4 +82,58 @@ final class MapboxRoutingProviderTests: TestCase {
 
         wait(for: [callExpectation], timeout: 0.5)
     }
+
+    @MainActor
+    func testConcurrentCalculateRoutesBuildsRouterClientOnce() async {
+        let iterations = 100
+        let buildCount = Counter()
+        let requestCount = Counter()
+        let routeResponse = Expected<DataRef, NSArray>(value: DataRef(data: Data()))
+
+        var routerClient = RouterClient.testValue
+        routerClient.getRouteForDirectionsUri = { _, _, _, callback in
+            _ = requestCount.increment()
+            callback(routeResponse, .online)
+            return CancellableStub()
+        }
+
+        let routerClientProvider = RouterClientProvider { _ in
+            _ = buildCount.increment()
+            return routerClient
+        }
+        Environment.set(\.routerClientProvider, routerClientProvider)
+
+        let navigationProvider = MapboxNavigationProvider(coreConfig: coreConfig)
+        let routingProvider = navigationProvider.routingProvider()
+        let routeOptions = RouteOptions(
+            waypoints: [waypoint1, waypoint2],
+            profileIdentifier: .automobileAvoidingTraffic
+        )
+
+        let tasks = (0..<iterations).map { _ in routingProvider.calculateRoutes(options: routeOptions) }
+        for task in tasks {
+            _ = try? await task.value
+        }
+
+        XCTAssertEqual(buildCount.current, 1)
+        XCTAssertEqual(requestCount.current, iterations)
+    }
+}
+
+private final class Counter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+
+    func increment() -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+        value += 1
+        return value
+    }
+
+    var current: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
 }

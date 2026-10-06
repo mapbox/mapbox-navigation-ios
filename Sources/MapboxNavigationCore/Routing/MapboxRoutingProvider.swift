@@ -27,7 +27,11 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
 
     // MARK: Performing and Parsing Requests
 
-    private lazy var routerClient: RouterClient = {
+    // Main-actor isolation serializes this lazy initializer across concurrent route requests.
+    @MainActor
+    private lazy var routerClient: RouterClient = makeRouterClient()
+
+    private func makeRouterClient() -> RouterClient {
         let factory = configuration.nativeHandlersFactory
         let router = RouterFactory.build(
             for: configuration.source.nativeSource,
@@ -36,7 +40,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
             historyRecorder: factory.historyRecorderHandle
         )
         return Environment.shared.routerClientProvider.build(router)
-    }()
+    }
 
     struct ResponseDisposition: Decodable {
         var code: String?
@@ -131,6 +135,7 @@ public final class MapboxRoutingProvider: RoutingProvider, @unchecked Sendable {
     >, RouterOrigin) {
         let uri = Directions.url(forCalculating: options, credentials: configuration.credentials)
             .removingSKU().absoluteString
+        let routerClient = await routerClient
 
         let (result, origin) = await withCheckedContinuation { continuation in
             let getRouteOptions = GetRouteOptions(timeoutSeconds: nil)
