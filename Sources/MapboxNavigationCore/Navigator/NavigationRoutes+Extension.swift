@@ -1,7 +1,41 @@
 import Foundation
 import MapboxDirections
+@preconcurrency import MapboxNavigationNative_Private
 
 extension NavigationRoutes {
+    /// Builds routes from a primary-first list of native route interfaces.
+    init(routeInterfaces routes: [any RouteInterface]) async throws {
+        guard let primary = routes.first else {
+            throw NavigationRoutesError.emptyRoutes
+        }
+
+        let alternatives = Array(routes.dropFirst())
+        let routesData = Environment.shared.routeParserClient.createRoutesData(primary, alternatives)
+
+        let requestOptions: ResponseOptions
+        switch primary.getMapboxAPI() {
+        case .directions:
+            guard let options = primary.getResponseOptions(RouteOptions.self) else {
+                throw NavigationRoutesError.noRequestData
+            }
+            requestOptions = options
+        case .mapMatching:
+            guard let options = primary.getResponseOptions(MatchOptions.self) else {
+                throw NavigationRoutesError.noRequestData
+            }
+            requestOptions = options
+        @unknown default:
+            throw NavigationRoutesError.noRequestData
+        }
+
+        try await self.init(routesData: routesData, options: requestOptions)
+    }
+
+    /// Identifiers of the main route followed by the alternatives that are currently offered.
+    var routeIds: [String] {
+        [mainRoute.routeId.rawValue] + alternativeRoutes.map(\.routeId.rawValue)
+    }
+
     func areRefreshed(comparedTo other: NavigationRoutes) -> Bool {
         if mainRoute.isRefreshed(comparedTo: other.mainRoute) { return true }
 

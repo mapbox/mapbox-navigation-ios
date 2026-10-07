@@ -185,6 +185,12 @@ final class NativeHandlersFactory: @unchecked Sendable {
         }
     }
 
+    func setOperationsDelegate(_ delegate: NavigatorOperationsDelegate) {
+        onMainQueueSync {
+            NavigatorHandleBuilder.setOperationsDelegateFor(navigatorHandle, delegate: delegate)
+        }
+    }
+
     lazy var roadGraph: RoadGraph = .init(MapboxNavigationNative_Private.GraphAccessor(tilesManager: tilesManager))
 
     lazy var tileStore: TileStore = .shared(for: URL(fileURLWithPath: tileStorePath))

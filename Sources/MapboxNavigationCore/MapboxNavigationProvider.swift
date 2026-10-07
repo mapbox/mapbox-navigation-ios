@@ -152,6 +152,8 @@ public final class MapboxNavigationProvider {
     // MARK: - Internal members
 
     private weak var _sharedNavigator: MapboxNavigator?
+    private var navigatorOperationsDelegate: MapboxNavigatorOperationsDelegate?
+
     @MainActor
     func navigator() -> MapboxNavigator {
         if let sharedNavigator = _sharedNavigator {
@@ -204,6 +206,14 @@ public final class MapboxNavigationProvider {
 
             return newNavigator
         }
+    }
+
+    @MainActor
+    private func installNavigatorOperationsDelegateIfNeeded() {
+        guard navigatorOperationsDelegate == nil else { return }
+        let delegate = MapboxNavigatorOperationsDelegate(provider: self)
+        navigatorOperationsDelegate = delegate
+        nativeHandlersFactory.setOperationsDelegate(delegate)
     }
 
     private var _billingHandler: UnfairLocked<BillingHandler?> = .init(nil)
@@ -393,6 +403,7 @@ extension MapboxNavigationProvider {
     @_spi(MapboxInternal)
     @MainActor
     public var navigatorHandle: NavigatorHandle {
-        nativeHandlersFactory.navigatorHandle
+        installNavigatorOperationsDelegateIfNeeded()
+        return nativeHandlersFactory.navigatorHandle
     }
 }

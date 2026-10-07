@@ -320,6 +320,17 @@ final class MapboxNavigator: @unchecked Sendable {
 
     @MainActor
     func startActiveGuidance(with navigationRoutes: NavigationRoutes, startLegIndex: Int) {
+        startActiveGuidance(with: navigationRoutes, startLegIndex: startLegIndex, completion: nil)
+    }
+
+    /// - Parameter completion: Invoked once the native navigator accepted or rejected the routes, carrying the
+    /// identifiers of the routes that actually became active.
+    @MainActor
+    func startActiveGuidance(
+        with navigationRoutes: NavigationRoutes,
+        startLegIndex: Int,
+        completion: (@Sendable (Result<[String], Error>) -> Void)?
+    ) {
         let previousRouteProgress = currentRouteProgress?.routeProgress
         send(navigationRoutes)
         Task {
@@ -330,7 +341,8 @@ final class MapboxNavigator: @unchecked Sendable {
                 navigationRoutes: navigationRoutes,
                 startLegIndex: startLegIndex,
                 reason: .newRoute,
-                previousRouteProgress: previousRouteProgress
+                previousRouteProgress: previousRouteProgress,
+                completion: completion
             )
         }
         let profile = navigationRoutes.mainRoute.route.legs.first?.profileIdentifier
@@ -344,7 +356,8 @@ final class MapboxNavigator: @unchecked Sendable {
         navigationRoutes: NavigationRoutes,
         startLegIndex: Int,
         reason: SetRouteReason,
-        previousRouteProgress: RouteProgress?
+        previousRouteProgress: RouteProgress?,
+        completion: (@Sendable (Result<[String], Error>) -> Void)? = nil
     ) {
         verifyActiveGuidanceBillingSession(
             for: navigationRoutes,
@@ -358,7 +371,9 @@ final class MapboxNavigator: @unchecked Sendable {
                 "Failed to set routes due to missing session ID.",
                 category: .billing
             )
-            send(NavigatorErrors.FailedToSetRoute(underlyingError: nil))
+            let error = NavigatorErrors.FailedToSetRoute(underlyingError: nil)
+            send(error)
+            completion?(.failure(error))
             return
         }
 
@@ -373,10 +388,16 @@ final class MapboxNavigator: @unchecked Sendable {
             legIndex: UInt32(startLegIndex),
             reason: reason.navNativeValue
         ) { [weak self] result in
-            guard let self else { return }
+            guard let self else {
+                completion?(.failure(NavigatorErrors.FailedToSetRoute(underlyingError: nil)))
+                return
+            }
 
             let newTask = Task.detached { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    completion?(.failure(NavigatorErrors.FailedToSetRoute(underlyingError: nil)))
+                    return
+                }
 
                 switch result {
                 case .success(let info):
@@ -386,7 +407,10 @@ final class MapboxNavigator: @unchecked Sendable {
                         initialRoutes: navigationRoutes
                     )
 
-                    guard !Task.isCancelled else { return }
+                    guard !Task.isCancelled else {
+                        completion?(.failure(CancellationError()))
+                        return
+                    }
                     navigationRoutes.allAlternativeRoutesWithIgnored = alternativeRoutes
                     await updatePrivateRouteProgress(
                         with: navigationRoutes,
@@ -416,9 +440,11 @@ final class MapboxNavigator: @unchecked Sendable {
                         await send(FallbackToTilesState(usingLatestTiles: true))
                     }
                     await send(Session(state: .activeGuidance(.uncertain)))
+                    completion?(.success(navigationRoutes.routeIds))
                 case .failure(let error):
                     Log.error("Failed to set routes, error: \(error).", category: .navigation)
                     await send(NavigatorErrors.FailedToSetRoute(underlyingError: error))
+                    completion?(.failure(error))
                 }
                 await state.update(setRoutesTask: nil)
             }
@@ -430,8 +456,17 @@ final class MapboxNavigator: @unchecked Sendable {
 
     @MainActor
     func selectAlternativeRoute(at index: Int) {
+        selectAlternativeRoute(at: index, completion: nil)
+    }
+
+    /// - Parameter completion: Invoked once the native navigator accepted or rejected the alternative.
+    @MainActor
+    func selectAlternativeRoute(at index: Int, completion: (@Sendable (Result<Void, Error>) -> Void)?) {
         taskManager.cancellableTask { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                completion?(.failure(NavigatorErrors.FailedToSelectAlternativeRoute()))
+                return
+            }
 
             guard case .activeGuidance = await currentSession.state,
                   let alternativeRoutes = await currentNavigationRoutes?.selectingAlternativeRoute(at: index),
@@ -441,7 +476,9 @@ final class MapboxNavigator: @unchecked Sendable {
                     "Attempt to select invalid alternative route (index '\(index)' of alternatives - '\(String(describing: currentNavigationRoutes))').",
                     category: .navigation
                 )
-                await send(NavigatorErrors.FailedToSelectAlternativeRoute())
+                let error = NavigatorErrors.FailedToSelectAlternativeRoute()
+                await send(error)
+                completion?(.failure(error))
                 return
             }
             let alternativeLegIndex = Int(
@@ -454,21 +491,30 @@ final class MapboxNavigator: @unchecked Sendable {
                 navigationRoutes: alternativeRoutes,
                 startLegIndex: alternativeLegIndex,
                 reason: .alternatives,
-                previousRouteProgress: progress
+                previousRouteProgress: progress,
+                completion: { result in completion?(result.map { _ in () }) }
             )
         }
     }
 
     @MainActor
     func selectAlternativeRoute(with routeId: RouteId) {
+        selectAlternativeRoute(with: routeId, completion: nil)
+    }
+
+    /// - Parameter completion: Invoked once the native navigator accepted or rejected the alternative.
+    @MainActor
+    func selectAlternativeRoute(with routeId: RouteId, completion: (@Sendable (Result<Void, Error>) -> Void)?) {
         guard let index = currentNavigationRoutes?.alternativeRoutes.firstIndex(where: { $0.routeId == routeId }) else {
             Log.warning(
                 "Attempt to select invalid alternative route with '\(routeId)' available ids - '\((currentNavigationRoutes?.alternativeRoutes ?? []).map(\.routeId))'",
                 category: .navigation
-            ); return
+            )
+            completion?(.failure(NavigatorErrors.FailedToSelectAlternativeRoute()))
+            return
         }
 
-        selectAlternativeRoute(at: index)
+        selectAlternativeRoute(at: index, completion: completion)
     }
 
     func switchLeg(newLegIndex: Int) {
