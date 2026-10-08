@@ -112,7 +112,7 @@ commands:
           condition: << parameters.is_template >>
           steps:
             - save_cache:
-                key: nav-sdk-diff-cache-v8-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v9-{{ << parameters.key >> }}
                 paths:
                   - api_logs
             - store_artifacts:
@@ -122,7 +122,7 @@ commands:
           condition: << parameters.is_template >>
           steps:
             - save_cache:
-                key: nav-sdk-diff-cache-v8-<< parameters.key >>
+                key: nav-sdk-diff-cache-v9-<< parameters.key >>
                 paths:
                   - api_logs
             - store_artifacts:
@@ -140,12 +140,12 @@ commands:
           condition: << parameters.is_template >>
           steps:
             - restore_cache:
-                key: nav-sdk-diff-cache-v8-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v9-{{ << parameters.key >> }}
       - unless:
           condition: << parameters.is_template >>
           steps:
             - restore_cache:
-                key: nav-sdk-diff-cache-v8-<< parameters.key >>
+                key: nav-sdk-diff-cache-v9-<< parameters.key >>
 
   run_api_log_in_current_env:
     steps:
@@ -337,7 +337,7 @@ jobs:
         default: false
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       lint:
         type: boolean
         default: false
@@ -386,13 +386,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       device:
         type: string
-        default: "iPhone 14 Pro Max"
+        default: "iPhone 17 Pro Max"
       iOS:
         type: string
-        default: "16.4"
+        default: "26.5"
       spm:
         type: boolean
         default: false
@@ -424,15 +424,12 @@ jobs:
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - macos/install-rosetta
-      - run:
-          name: Install prerequisites
-          command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
       - when: # Simulator is needed only for tests
           condition: << parameters.test >>
           steps:
             - run:
                 name: pre-start simulator
-                command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
+                command: xcrun simctl boot "<< parameters.device >>" || true
       - when:
           condition: << parameters.verify_localization >>
           steps:
@@ -463,6 +460,9 @@ jobs:
             - run:
                 name: MapboxNavigation-Package
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" <<# parameters.codecoverage >>-enableCodeCoverage YES | xcpretty --report junit --output test-results/junit.xml<</ parameters.codecoverage >>
+            - store_artifacts:
+                path: Tests/MapboxNavigationTests/__Snapshots__
+                destination: snapshots
       # FIXME: SPM test host is currently disabled, but we should run tests on the SPM test host job. When it is reenabled, delete this section that generates the code coverage report.
       - when:
           condition: << parameters.codecoverage >>
@@ -475,7 +475,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       spm:
         type: boolean
         default: true
@@ -491,14 +491,14 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build Example app
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.4,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
+          command: xcodebuild -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
       - notify-build-finished
 
   ios-trigger-metrics:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     resource_class: m4pro.medium
@@ -512,12 +512,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       device:
         type: string
       iOS:
         type: string
-        default: "16.4"
+        default: "26.5"
       notify_success:
         type: boolean
         default: false
@@ -537,6 +537,9 @@ jobs:
       - run:
           name: Run xcodebuild for Package.swift
           command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>"
+      - store_artifacts:
+          path: Tests/MapboxNavigationTests/__Snapshots__
+          destination: snapshots
       - notify-build-finished:
           notify_success: << parameters.notify_success >>
 
@@ -544,12 +547,12 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       device:
         type: string
       iOS:
         type: string
-        default: "16.4"
+        default: "26.5"
       notify_success:
         type: boolean
         default: false
@@ -581,7 +584,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
       is_base_api:
         type: boolean
         default: false
@@ -648,7 +651,7 @@ jobs:
 
   api-diff-job:
     macos:
-      xcode: 14.3.1
+      xcode: "26.6.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     resource_class: m4pro.medium
@@ -681,7 +684,7 @@ jobs:
 
   spm-core-integration-test-job:
     macos:
-      xcode: "14.3.1"
+      xcode: "26.6.0"
     resource_class: m4pro.medium
     steps:
       - checkout
@@ -689,11 +692,11 @@ jobs:
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=16.4,name=iPhone 13 Pro Max" build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "generic/platform=iOS Simulator" build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO"
 
   spm-ui-integration-test-job:
     macos:
-      xcode: "15.4.0"
+      xcode: "26.6.0"
     resource_class: m4pro.medium
     steps:
       - checkout
@@ -710,7 +713,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     resource_class: m4pro.medium
@@ -791,7 +794,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -820,7 +823,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -845,7 +848,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     resource_class: m4pro.medium
@@ -858,7 +861,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "14.3.1"
+        default: "26.6.0"
     macos:
       xcode: << parameters.xcode >>
     resource_class: m4pro.medium
@@ -874,21 +877,21 @@ workflows:
   extended-workflow:
     jobs:
       - spm-test-job:
-          name: "swift test; Xcode 14.3.1; iOS 16.4"
-          xcode: "14.3.1"
-          iOS: "16.4"
-          device: "iPhone 14 Pro Max"
+          name: "swift test; Xcode 26.6; iOS 26.5"
+          xcode: "26.6.0"
+          iOS: "26.5"
+          device: "iPhone 17 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-test-job:
-          name: "swift test; Xcode 14.3.1; iOS 15.5"
-          xcode: "14.3.1"
-          iOS: "15.5"
-          device: "iPhone 13 Pro Max"
+          name: "swift test; Xcode 26.6; iOS 18.6"
+          xcode: "26.6.0"
+          iOS: "18.6"
+          device: "iPhone 16 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-ui-integration-test-job:
-          name: "Xcode 15.4.0; SPM UI test"
+          name: "Xcode 26.6; SPM UI test"
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00
@@ -913,10 +916,10 @@ workflows:
   main-workflow:
       jobs:
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4_Debug"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Xcode_26.6_iOS_26.5_Debug"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             codecoverage: true
             context: Slack Orb
         - build-job:
@@ -929,69 +932,69 @@ workflows:
             context: Slack Orb
             scheme: "MapboxNavigation"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4_SPM_Debug"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Xcode_26.6_iOS_26.5_SPM_Debug"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             spm: true
             codecoverage: true
             context: Slack Orb
             scheme: "MapboxNavigation"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4_Release"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Xcode_26.6_iOS_26.5_Release"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             codecoverage: false
             context: Slack Orb
             configuration: "Release"
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4_SPM_Release"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Xcode_26.6_iOS_26.5_SPM_Release"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
             configuration: "Release"
         - build-job:
-            name: "Xcode_14.3.1_iOS_15.5"
-            xcode: "14.3.1"
-            iOS: "15.5"
-            device: "iPhone 13 Pro Max"
+            name: "Xcode_26.6_iOS_18.6"
+            xcode: "26.6.0"
+            iOS: "18.6"
+            device: "iPhone 16 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
         - build-job:
-            name: "Xcode_14.3.1_iOS_16.4"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Xcode_26.6_iOS_26.5"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             spm: true
             codecoverage: false
             context: Slack Orb
         - pod-job:
-            name: "Xcode_14.3.1 pod install"
+            name: "Xcode_26.6 pod install"
             update: false
-            xcode: "14.3.1"
+            xcode: "26.6.0"
             archive: true
             context: Slack Orb
         - pod-job:
-            name: "Xcode_14.3.1 pod update"
+            name: "Xcode_26.6 pod update"
             update: true
-            xcode: "14.3.1"
+            xcode: "26.6.0"
             lint: true
             context: Slack Orb
         - build-example:
             name: "Build Example"
             context: Slack Orb
         - spm-core-integration-test-job:
-            name: "Xcode 14.3.1; iOS 16.4; SPM Core test"
+            name: "Xcode 26.6; SPM Core test"
         - build-job:
-            name: "Core integration test; Xcode 14.3.1; iOS 16.4"
-            xcode: "14.3.1"
-            iOS: "16.4"
-            device: "iPhone 14 Pro Max"
+            name: "Core integration test; Xcode 26.6; iOS 26.5"
+            xcode: "26.6.0"
+            iOS: "26.5"
+            device: "iPhone 17 Pro Max"
             scheme: "MapboxCoreNavigationIntegrationTests"
             codecoverage: false
             clean_build: false
