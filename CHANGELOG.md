@@ -7,6 +7,7 @@
 * MapboxNavigationCore now requires [MapboxMaps v11.32.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.32.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.32.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.32.1)
 
+
 ## 3.32.0
 
 ### Packaging
