@@ -9,7 +9,8 @@ extension RoadGraph.Edge {
         public let speedLimit: [SpeedLimitInfo]
         /// List of slope values with their positions on the edge.
         ///
-        /// `Double` value represents a slope in degrees.
+        /// `Double` value is the slope as rise over run, the tangent of the road angle.
+        /// `0.05` means 5% uphill. A negative value means downhill.
         public let slopes: [ValueOnEdge<Double>]
         /// List of elevation values with their positions on the edge.
         ///

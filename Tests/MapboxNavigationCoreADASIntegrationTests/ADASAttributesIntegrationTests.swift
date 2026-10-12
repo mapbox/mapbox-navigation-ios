@@ -124,7 +124,7 @@ final class ADASAttributesIntegrationTests: BaseTestCase {
                     fractionFromStart: 0.0006070188754218256
                 ),
                 edgeShapeIndex: 0.5600000023841858,
-                value: -0.10949931456485504
+                value: -0.0019111258945620677
             ),
             "The first slope is not correct"
         )
