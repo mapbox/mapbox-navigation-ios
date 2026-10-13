@@ -10,7 +10,7 @@ final class MonitorConnectivityTypeProviderTests: TestCase {
     class NWPathMonitorSpy: NetworkMonitor {
         var startCalled = false
 
-        var pathUpdateHandler: ((NWPath) -> Void)?
+        var pathUpdateHandler: (@Sendable (NWPath) -> Void)?
 
         func start(queue: DispatchQueue) {
             startCalled = true

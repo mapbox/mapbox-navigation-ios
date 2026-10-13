@@ -140,7 +140,7 @@ extension EventDetails {
     }
 }
 
-extension UIApplication.State: Encodable {
+extension UIKit.UIApplication.State: Swift.Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         let stringRepresentation: String

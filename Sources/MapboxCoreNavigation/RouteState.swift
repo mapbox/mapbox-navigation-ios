@@ -2,7 +2,7 @@ import Foundation
 import MapboxNavigationNative
 
 /// :nodoc:
-extension RouteState: CustomStringConvertible {
+extension MapboxNavigationNative.RouteState: Swift.CustomStringConvertible {
     public var description: String {
         switch self {
         case .invalid:
