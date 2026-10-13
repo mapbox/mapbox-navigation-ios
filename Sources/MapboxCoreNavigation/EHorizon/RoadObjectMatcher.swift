@@ -160,7 +160,7 @@ final public class RoadObjectMatcher {
     }
 }
 
-extension MapboxNavigationNative.RoadObjectMatcherError: Error {}
+extension MapboxNavigationNative.RoadObjectMatcherError: Swift.Error {}
 
 extension CLLocation {
     convenience init(coordinate: CLLocationCoordinate2D) {
