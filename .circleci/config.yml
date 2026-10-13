@@ -376,7 +376,15 @@ jobs:
           condition: << parameters.lint >>
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
-            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec --allow-warnings
+            - run:
+                name: Lint MapboxCoreNavigation.podspec
+                command: |
+                  bundle exec pod lib lint MapboxCoreNavigation.podspec --allow-warnings --no-ansi | tee lint.log
+                  # Known warnings, remove the filter and --allow-warnings once the @_implementationOnly imports are migrated.
+                  if grep -E '^ *- WARN' lint.log | grep -v "using '@_implementationOnly' without enabling library evolution"; then
+                    echo "pod lib lint reported new warnings, see above."
+                    exit 1
+                  fi
       - *save-cache-podmaster
       - *save-cache-cocoapods
       - *save-cache-gems

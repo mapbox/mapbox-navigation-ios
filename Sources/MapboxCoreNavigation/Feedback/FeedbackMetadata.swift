@@ -57,7 +57,7 @@ extension FeedbackMetadata: Codable {
 
 /// :nodoc:
 @_spi(MapboxInternal)
-extension UserFeedbackMetadata: Encodable {
+extension MapboxNavigationNative.UserFeedbackMetadata: Swift.Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: FeedbackMetadata.CodingKeys.self)
         let eventLocationsAfter: [EventFixLocation] = locationsAfter.map { .init($0) }
