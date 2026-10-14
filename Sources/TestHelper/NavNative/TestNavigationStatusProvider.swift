@@ -102,6 +102,7 @@ public enum TestNavigationStatusProvider {
         let mapMatcherOutput = MapMatcherOutput(matches: [mapMatch], isTeleport: false, totalCandidatesCount: 1)
         return .init(
             routeState: routeState,
+            stateOfCharging: .notCharging,
             stale: false,
             location: fixLocation,
             isFallback: false,
