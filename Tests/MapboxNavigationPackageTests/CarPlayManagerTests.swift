@@ -91,6 +91,32 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
+    func testNavigationMapShowsTrafficOnRouteLineByDefaultAfterStyleReload() async throws {
+        await startNavigation()
+
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        XCTAssertTrue(navigationMapView.showsTrafficOnRouteLine)
+
+        try await reloadStyle(on: navigationMapView)
+
+        XCTAssertTrue(navigationMapView.showsTrafficOnRouteLine)
+    }
+
+    @MainActor
+    func testNavigationMapPreservesDisabledTrafficOnRouteLineAfterStyleReload() async throws {
+        await startNavigation()
+
+        let navigationViewController = try XCTUnwrap(carPlayManager.carPlayNavigationViewController)
+        let navigationMapView = try XCTUnwrap(navigationViewController.navigationMapView)
+        navigationMapView.showsTrafficOnRouteLine = false
+
+        try await reloadStyle(on: navigationMapView)
+
+        XCTAssertFalse(navigationMapView.showsTrafficOnRouteLine)
+    }
+
+    @MainActor
     func testBrowsingMapUsesOverlaysForConnectedCarPlayDisplay() throws {
         let carWindow = try XCTUnwrap(carPlayManager.carWindow)
         let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
@@ -1346,6 +1372,17 @@ class CarPlayManagerTests: TestCase {
     private func wait(timeout: TimeInterval = 1.0) {
         let waitExpectation = expectation(description: "Wait expectation.")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
+    }
+
+    @MainActor
+    private func reloadStyle(on navigationMapView: NavigationMapView) async throws {
+        let styleLoadedExpectation = expectation(description: "Style loaded")
+        let mapboxMap = try XCTUnwrap(navigationMapView.mapView.mapboxMap)
+        mapboxMap.loadStyle(mapboxMap.mockJsonStyle()) { error in
+            XCTAssertNil(error)
+            styleLoadedExpectation.fulfill()
+        }
+        await fulfillment(of: [styleLoadedExpectation], timeout: 1.0)
     }
 }
 

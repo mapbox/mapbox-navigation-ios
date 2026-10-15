@@ -792,7 +792,6 @@ open class CarPlayNavigationViewController: UIViewController {
         navigationMapView.mapView.mapboxMap.onStyleLoaded.sink { [weak self] _ in
             guard let self else { return }
             self.navigationMapView?.localizeLabels()
-            navigationMapView.showsTrafficOnRouteLine = false
         }.store(in: &lifetimeSubscriptions)
 
         navigationMapView.puckType = defaultPuckType
