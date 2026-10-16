@@ -64,7 +64,7 @@ open class NextBannerView: UIView, NavigationComponent {
         instructionLabel.availableBounds = { [weak self] in
             guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
-            let availableWidth = bounds.width - BaseInstructionsBannerView.maneuverViewSize
+            let availableWidth = bounds.inset(by: safeAreaInsets).width - BaseInstructionsBannerView.maneuverViewSize
                 .width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.instructionLabel.font.lineHeight)
         }
@@ -127,14 +127,14 @@ open class NextBannerView: UIView, NavigationComponent {
         heightConstraint.isActive = true
 
         let midX = BaseInstructionsBannerView.padding + BaseInstructionsBannerView.maneuverViewSize.width / 2
-        maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: midX).isActive = true
+        maneuverView.centerXAnchor.constraint(equalTo: safeLeadingAnchor, constant: midX).isActive = true
         maneuverView.heightAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.widthAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
-        instructionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70).isActive = true
+        instructionLabel.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 70).isActive = true
         instructionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        instructionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        instructionLabel.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -16).isActive = true
 
         bottomSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         bottomSeparatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

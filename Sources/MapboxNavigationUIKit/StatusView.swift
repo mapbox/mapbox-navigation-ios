@@ -77,7 +77,7 @@ public class StatusView: UIControl {
         let heightConstraint = heightAnchor.constraint(equalToConstant: 30)
         heightConstraint.priority = UILayoutPriority(rawValue: 999)
         heightConstraint.isActive = true
-        textLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        textLabel.centerXAnchor.constraint(equalTo: safeCenterXAnchor).isActive = true
         textLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         activityIndicatorView.rightAnchor.constraint(equalTo: safeRightAnchor, constant: -10).isActive = true

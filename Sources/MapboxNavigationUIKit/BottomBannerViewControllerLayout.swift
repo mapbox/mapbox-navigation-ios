@@ -68,7 +68,7 @@ extension BottomBannerViewController {
         layoutConstraints.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 60))
 
         layoutConstraints.append(timeRemainingLabel.leadingAnchor.constraint(
-            equalTo: bottomBannerView.leadingAnchor,
+            equalTo: bottomBannerView.safeLeadingAnchor,
             constant: 10
         ))
         layoutConstraints.append(timeRemainingLabel.lastBaselineAnchor.constraint(
@@ -91,7 +91,7 @@ extension BottomBannerViewController {
 
         layoutConstraints.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
         layoutConstraints.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.safeTrailingAnchor))
         layoutConstraints.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
 
         layoutConstraints.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
@@ -125,7 +125,7 @@ extension BottomBannerViewController {
         layoutConstraints.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 80))
 
         layoutConstraints.append(timeRemainingLabel.leadingAnchor.constraint(
-            equalTo: bottomBannerView.leadingAnchor,
+            equalTo: bottomBannerView.safeLeadingAnchor,
             constant: 10
         ))
         layoutConstraints.append(timeRemainingLabel.lastBaselineAnchor.constraint(
@@ -148,7 +148,7 @@ extension BottomBannerViewController {
 
         layoutConstraints.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
         layoutConstraints.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.safeTrailingAnchor))
         layoutConstraints.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
 
         layoutConstraints.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))

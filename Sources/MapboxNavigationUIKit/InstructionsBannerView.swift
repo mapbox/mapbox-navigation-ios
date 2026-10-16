@@ -312,11 +312,11 @@ open class BaseInstructionsBannerView: UIControl {
 
         // Distance label
         distanceLabel.leadingAnchor.constraint(
-            greaterThanOrEqualTo: leadingAnchor,
+            greaterThanOrEqualTo: safeLeadingAnchor,
             constant: BaseInstructionsBannerView.padding / 2
         ).isActive = true
         distanceLabel.trailingAnchor.constraint(
-            lessThanOrEqualTo: trailingAnchor,
+            lessThanOrEqualTo: safeTrailingAnchor,
             constant: -BaseInstructionsBannerView.padding / 2
         ).isActive = true
         distanceLabel.centerXAnchor.constraint(
@@ -339,14 +339,14 @@ open class BaseInstructionsBannerView: UIControl {
             constant: BaseInstructionsBannerView.padding
         ).isActive = true
         maneuverView.centerXAnchor.constraint(
-            equalTo: leadingAnchor,
+            equalTo: safeLeadingAnchor,
             constant: firstColumnWidth / 2
         ).isActive = true
 
         // Primary Label
         primaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
         primaryLabel.trailingAnchor.constraint(
-            equalTo: trailingAnchor,
+            equalTo: safeTrailingAnchor,
             constant: -18
         ).isActive = true
         baselineConstraints.append(primaryLabel.topAnchor.constraint(
@@ -358,7 +358,7 @@ open class BaseInstructionsBannerView: UIControl {
         // Secondary Label
         secondaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
         secondaryLabel.trailingAnchor.constraint(
-            equalTo: trailingAnchor,
+            equalTo: safeTrailingAnchor,
             constant: -18
         ).isActive = true
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(
@@ -393,7 +393,7 @@ open class BaseInstructionsBannerView: UIControl {
 
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
         dividerView.leadingAnchor.constraint(
-            equalTo: leadingAnchor,
+            equalTo: safeLeadingAnchor,
             constant: firstColumnWidth
         ).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
@@ -439,8 +439,8 @@ open class BaseInstructionsBannerView: UIControl {
             guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = primaryLabel.viewForAvailableBoundsCalculation?.bounds.width
-                ?? bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView
-                .padding * 3
+                ?? bounds.inset(by: safeAreaInsets).width - BaseInstructionsBannerView.maneuverViewSize.width
+                - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: primaryLabel.font.lineHeight)
         }
 
@@ -448,8 +448,8 @@ open class BaseInstructionsBannerView: UIControl {
             guard let self else { return .zero }
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = secondaryLabel.viewForAvailableBoundsCalculation?.bounds.width
-                ?? bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView
-                .padding * 3
+                ?? bounds.inset(by: safeAreaInsets).width - BaseInstructionsBannerView.maneuverViewSize.width
+                - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: secondaryLabel.font.lineHeight)
         }
     }

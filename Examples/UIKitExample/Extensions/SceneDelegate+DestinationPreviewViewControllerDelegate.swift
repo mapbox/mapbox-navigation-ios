@@ -41,6 +41,8 @@ extension SceneDelegate: DestinationPreviewViewControllerDelegate {
                 routes,
                 routeAnnotationKinds: [.relativeDurationsOnAlternative]
             )
+            // Restored when active navigation ends.
+            initialRoutes = routes
             startActiveNavigation(for: routes)
         }
     }

@@ -25,7 +25,7 @@ extension BannerDismissalViewController {
             ),
             backButton.trailingAnchor.constraint(
                 lessThanOrEqualTo: topBannerView.safeTrailingAnchor,
-                constant: 10.0
+                constant: -10.0
             ),
             backButton.topAnchor.constraint(
                 equalTo: topBannerView.topAnchor,

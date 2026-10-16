@@ -45,23 +45,8 @@ open class StepTableViewCell: UITableViewCell {
     }
 
     func setupLayout() {
-        // In case if iOS device has notch and is in `.landscapeRight` orientation - take into account
-        // safe area, otherwise use just leading anchor. This is needed to prevent adding additional
-        // spacing for `InstructionsView` in case if it's not really needed.
-        let instructionsViewLeadingLayoutConstraint: NSLayoutConstraint = if interfaceOrientation == .landscapeRight {
-            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                instructionsView.leadingAnchor.constraint(equalTo: leadingAnchor)
-            } else {
-                instructionsView.leadingAnchor.constraint(equalTo: safeLeadingAnchor)
-            }
-        } else {
-            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                instructionsView.leadingAnchor.constraint(equalTo: safeLeadingAnchor)
-            } else {
-                instructionsView.leadingAnchor.constraint(equalTo: leadingAnchor)
-            }
-        }
-
+        let instructionsViewLeadingLayoutConstraint = instructionsView.leadingAnchor
+            .constraint(equalTo: safeLeadingAnchor)
         let instructionsViewTrailingLayoutConstraint = instructionsView.trailingAnchor
             .constraint(equalTo: safeTrailingAnchor)
         let instructionsViewTopLayoutConstraint = instructionsView.topAnchor.constraint(equalTo: topAnchor)

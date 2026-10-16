@@ -198,7 +198,7 @@ open class LanesView: UIView, NavigationComponent {
 
         stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: safeCenterXAnchor).isActive = true
 
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false

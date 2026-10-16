@@ -92,6 +92,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0.0
         layout.minimumLineSpacing = 0.0
+        layout.sectionInsetReference = .fromSafeArea
         return layout
     }()
 
@@ -305,7 +306,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let availableWidth = collectionView.bounds.width
+        let availableWidth = collectionView.bounds.inset(by: collectionView.safeAreaInsets).width
         // 3 columns and 2 rows in portrait mode.
         // 6 columns and 1 row in landscape mode.
         let width = traitCollection.verticalSizeClass == .compact

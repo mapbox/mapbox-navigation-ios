@@ -19,7 +19,7 @@ extension DestinationPreviewViewController {
         let startButtonLayoutConstraints = [
             startButton.widthAnchor.constraint(equalToConstant: buttonWidth),
             startButton.trailingAnchor.constraint(
-                equalTo: bottomBannerView.trailingAnchor,
+                equalTo: bottomBannerView.safeTrailingAnchor,
                 constant: -10.0
             ),
             startButton.topAnchor.constraint(
@@ -54,7 +54,7 @@ extension DestinationPreviewViewController {
 
         let destinationLabelLayoutConstraints = [
             destinationLabel.leadingAnchor.constraint(
-                equalTo: bottomBannerView.leadingAnchor,
+                equalTo: bottomBannerView.safeLeadingAnchor,
                 constant: 10.0
             ),
             destinationLabel.trailingAnchor.constraint(

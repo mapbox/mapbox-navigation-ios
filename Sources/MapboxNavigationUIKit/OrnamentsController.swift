@@ -180,8 +180,9 @@ class OrnamentsController: NavigationComponentDelegate {
             let x: CGFloat = 10.0
             let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
 
+            // Margins are relative to the map view's safe area, `y` is derived from the bounds though.
             navigationView.navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(
-                x: x - navigationView.safeAreaInsets.left,
+                x: x,
                 y: y - navigationView.safeAreaInsets.bottom
             )
 
@@ -190,24 +191,14 @@ class OrnamentsController: NavigationComponentDelegate {
                 fallthrough
             case .regular:
                 navigationView.navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(
-                    x: -navigationView.safeAreaInsets.right,
+                    x: 0,
                     y: y - navigationView.safeAreaInsets.bottom
                 )
             case .compact:
-                if navigationMapView?.interfaceOrientation == .landscapeRight {
-                    navigationView.navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(
-                        x: x - navigationView.safeAreaInsets.right,
-                        y: defaultOffset - navigationView.safeAreaInsets.bottom
-                    )
-                } else {
-                    navigationView.navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(
-                        x: x,
-                        y: defaultOffset -
-                            navigationView
-                            .safeAreaInsets
-                            .bottom
-                    )
-                }
+                navigationView.navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(
+                    x: x,
+                    y: defaultOffset - navigationView.safeAreaInsets.bottom
+                )
             @unknown default:
                 break
             }

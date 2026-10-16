@@ -46,6 +46,13 @@ open class NavigationView: UIView {
     var compactConstraints = [NSLayoutConstraint]()
     var regularConstraints = [NSLayoutConstraint]()
 
+    /// Content area of the top and bottom banners in compact layout, starting at the leading safe area edge.
+    lazy var compactBannerContentLayoutGuide: UILayoutGuide = {
+        let layoutGuide = UILayoutGuide()
+        addLayoutGuide(layoutGuide)
+        return layoutGuide
+    }()
+
     // MARK: Data Configuration
 
     weak var delegate: NavigationViewDelegate?

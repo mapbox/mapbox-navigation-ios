@@ -35,13 +35,16 @@ extension SceneDelegate: NavigationViewControllerDelegate {
 
                     navigationMapView.removeRoutes()
 
-                    guard let initialRoutes else { return }
+                    // `NavigationViewController` stops the trip session when it gets dismissed.
+                    navigationProvider.tripSession().startFreeDrive()
 
-                    showcase(
-                        navigationRoutes: initialRoutes,
-                        animated: shouldAnimate,
-                        duration: animationDuration
-                    )
+                    if let initialRoutes {
+                        showcase(
+                            navigationRoutes: initialRoutes,
+                            animated: shouldAnimate,
+                            duration: animationDuration
+                        )
+                    }
 
                     navigationView.topBannerContainerView.show(
                         animated: shouldAnimate,

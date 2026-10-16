@@ -19,7 +19,7 @@ extension RoutePreviewViewController {
         NSLayoutConstraint.activate([
             startButton.widthAnchor.constraint(equalToConstant: buttonWidth),
             startButton.trailingAnchor.constraint(
-                equalTo: bottomBannerView.trailingAnchor,
+                equalTo: bottomBannerView.safeTrailingAnchor,
                 constant: -10.0
             ),
             startButton.topAnchor.constraint(
@@ -34,7 +34,7 @@ extension RoutePreviewViewController {
 
         NSLayoutConstraint.activate([
             timeRemainingLabel.leadingAnchor.constraint(
-                equalTo: bottomBannerView.leadingAnchor,
+                equalTo: bottomBannerView.safeLeadingAnchor,
                 constant: 10.0
             ),
             timeRemainingLabel.lastBaselineAnchor.constraint(
@@ -42,11 +42,11 @@ extension RoutePreviewViewController {
                 constant: 0.0
             ),
             timeRemainingLabel.leadingAnchor.constraint(
-                equalTo: bottomBannerView.leadingAnchor,
+                equalTo: bottomBannerView.safeLeadingAnchor,
                 constant: 10.0
             ),
             timeRemainingLabel.trailingAnchor.constraint(
-                equalTo: bottomBannerView.trailingAnchor,
+                equalTo: bottomBannerView.safeTrailingAnchor,
                 constant: -10.0
             ),
         ])
@@ -58,7 +58,7 @@ extension RoutePreviewViewController {
         NSLayoutConstraint.activate([
             distanceRemainingLabel.heightAnchor.constraint(equalToConstant: 20.0),
             distanceRemainingLabel.leadingAnchor.constraint(
-                equalTo: bottomBannerView.leadingAnchor,
+                equalTo: bottomBannerView.safeLeadingAnchor,
                 constant: 10.0
             ),
             distanceRemainingLabel.topAnchor.constraint(
