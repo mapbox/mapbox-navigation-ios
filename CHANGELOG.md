@@ -1,5 +1,33 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.34.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.34.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.34.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.34.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.34.0-rc.1)
+* MapboxNavigationCore now requires [Turf v4.1.0](https://github.com/mapbox/turf-swift/releases/tag/v4.1.0).
+
+### Routing
+
+* Fixed a crash when concurrent calls to `calculateRoutes` on the same `MapboxRoutingProvider` initialize its router client.
+
+### CarPlay
+
+* Fixed route-line traffic not being displayed during active CarPlay navigation.
+
+### User interface
+
+* Fixed the maneuver arrow, instruction text, banner buttons and map ornaments being laid out under the camera housing on devices with horizontal safe area insets, such as iPhone Duo, including right-to-left layouts. UIKit components now always lay out their content within the safe area instead of guessing the notch position from the interface orientation. In landscape, the top and bottom banners grow by the leading safe area inset so their content keeps its width, and the floating buttons, speed limit, resume button and attribution button also keep clear of the safe area on the side opposite the notch.
+
+### Electronic horizon
+
+* `RoadGraph.Edge.ADASAttributes.slopes` reports road slope as rise over run instead of degrees. `0.05` means 5% uphill.
+
+### Other changes
+
+* `JunctionView` and CarPlay guidance views now add the access token to the guidance view image URL only when the URL points to `https://api.mapbox.com`.
+
 ## 3.33.0
 
 ### Packaging
