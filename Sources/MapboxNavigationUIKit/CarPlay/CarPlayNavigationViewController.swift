@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import CarPlay
 import Combine
 import Foundation
@@ -1136,14 +1137,12 @@ open class CarPlayNavigationViewController: UIViewController {
             return cachedImage
         } else {
             guard case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView,
-                  let guidanceImageURL = guidanceViewImageRepresentation.imageURL,
-                  let guidanceViewImageURL = URL(
-                      string: guidanceImageURL
-                          .absoluteString + "&access_token=" + accessToken
-                  )
+                  let guidanceImageURL = guidanceViewImageRepresentation.imageURL
             else {
                 return nil
             }
+
+            let guidanceViewImageURL = guidanceImageURL.addingMapboxAccessToken(accessToken)
 
             ImageRepository.shared.imageWithURL(
                 guidanceViewImageURL,

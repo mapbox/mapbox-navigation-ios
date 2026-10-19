@@ -1,3 +1,4 @@
+import _MapboxNavigationHelpers
 import MapboxDirections
 import UIKit
 
@@ -54,11 +55,8 @@ public class JunctionView: UIImageView {
                 show(animated: true)
             } else {
                 guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
-                let baseURLString = imageURL.absoluteString
                 guard let accessToken else { return }
-                let stringURL = baseURLString + "&access_token=" + accessToken
-
-                guard let guidanceViewImageURL = URL(string: stringURL) else { return }
+                let guidanceViewImageURL = imageURL.addingMapboxAccessToken(accessToken)
                 imageRepository
                     .imageWithURL(
                         guidanceViewImageURL,
