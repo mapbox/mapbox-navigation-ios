@@ -5,7 +5,8 @@ import Turf
 
 /// Additional reasonable routes besides the main roure that visit waypoints.
 public struct AlternativeRoute: @unchecked Sendable {
-    let nativeRoute: RouteInterface
+    @_spi(MapboxInternal)
+    public let nativeRoute: RouteInterface
     let requestOptions: ResponseOptions
 
     var isForkPointPassed: Bool = false
