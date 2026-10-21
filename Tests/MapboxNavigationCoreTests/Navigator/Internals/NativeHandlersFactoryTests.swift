@@ -28,6 +28,7 @@ final class NativeHandlersFactoryTests: XCTestCase {
         "features": [
             "useInternalRouteRefresh": true,
             "useTelemetryNavigationEvents": true,
+            "allowTilesCacheReset": true,
         ],
         "navigation": [
             "alternativeRoutes": [
@@ -69,6 +70,7 @@ final class NativeHandlersFactoryTests: XCTestCase {
         expectedConfig["features"] = [
             "useInternalRouteRefresh": true,
             "useTelemetryNavigationEvents": true,
+            "allowTilesCacheReset": true,
             "custom_new_key": true,
         ]
         let expectedCustomConfigData = try! JSONSerialization.data(

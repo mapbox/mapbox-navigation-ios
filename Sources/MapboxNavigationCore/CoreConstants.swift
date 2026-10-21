@@ -1,25 +1,6 @@
 import Foundation
 
 extension Notification.Name {
-    // MARK: Switching Navigation Tile Versions
-
-    /// Posted when Navigator has not enough tiles for map matching on current tiles version, but there are suitable
-    /// older versions inside underlying Offline Regions. Navigator has restarted when this notification is issued.
-    ///
-    /// Such action invalidates all existing matched ``RoadObject`` which should be re-applied manually.
-    /// The user info dictionary contains the key ``Navigator/NotificationUserInfoKey/tilesVersionKey``
-    @_documentation(visibility: internal)
-    public static let navigationDidSwitchToFallbackVersion: Notification
-        .Name = .init(rawValue: "NavigatorDidFallbackToOfflineVersion")
-
-    /// Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again.
-    /// Navigator has restarted when this notification is issued.
-    /// Such action invalidates all existing matched ``RoadObject``s which should be re-applied manually.
-    /// The user info dictionary contains the key ``NativeNavigator/NotificationUserInfoKey/tilesVersionKey``
-    @_documentation(visibility: internal)
-    public static let navigationDidSwitchToTargetVersion: Notification
-        .Name = .init(rawValue: "NavigatorDidRestoreToOnlineVersion")
-
     /// Posted when NavNative sends updated navigation status.
     ///
     /// The user info dictionary contains the keys ``Navigator.NotificationUserInfoKey.originKey`` and
@@ -111,15 +92,6 @@ extension NativeNavigator {
         static let refreshedRoutesResultKey: NotificationUserInfoKey = .init(rawValue: "refreshedRoutesResultKey")
         static let legIndexKey: NotificationUserInfoKey = .init(rawValue: "legIndex")
         static let refreshRequestErrorKey: NotificationUserInfoKey = .init(rawValue: "refreshRequestError")
-
-        ///  A key in the user info dictionary of a
-        /// ``Foundation/NSNotification/Name/navigationDidSwitchToFallbackVersion`` or
-        /// ``Foundation/NSNotification/Name/navigationDidSwitchToTargetVersion`` notification. The corresponding value
-        /// is a string representation of selected tiles version.
-        ///
-        /// For internal use only.
-        @_documentation(visibility: internal)
-        public static let tilesVersionKey: NotificationUserInfoKey = .init(rawValue: "tilesVersion")
 
         static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
 

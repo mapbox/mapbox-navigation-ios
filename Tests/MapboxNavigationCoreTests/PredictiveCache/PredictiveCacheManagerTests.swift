@@ -114,22 +114,6 @@ final class PredictiveCacheManagerTests: XCTestCase {
     }
 
     @MainActor
-    // TODO: handle navigationDidSwitchToTargetVersion in PredictiveCache
-    func disable_testCreateNavigationAndMapsControllerWhenDidSwitchToTargetVersion() {
-        let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
-        manager.updateNavigationController(with: navigator)
-        manager.updateMapControllers(mapView: mapView)
-
-        navNavigator.passedDescriptorsTrackerOptions = nil
-        navNavigator.passedNavigationTrackerOptions = nil
-
-        NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion, object: nil)
-
-        XCTAssertNotNil(navNavigator.passedDescriptorsTrackerOptions, "Recreate map controller")
-        XCTAssertNotNil(navNavigator.passedNavigationTrackerOptions, "Recreate navigation controller")
-    }
-
-    @MainActor
     // TODO: handle dataset controllers in PredictiveCache
     func disable_testCreateDatasetController() {
         let manager = PredictiveCacheManager(

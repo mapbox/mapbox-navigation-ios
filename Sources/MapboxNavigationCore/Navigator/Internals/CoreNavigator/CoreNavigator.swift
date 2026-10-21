@@ -74,9 +74,7 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private(set) var tileStore: TileStore
 
     // Current Navigator status in terms of tile versioning.
-    var tileVersionState: NavigatorFallbackVersionsObserver.TileVersionState {
-        navigatorFallbackVersionsObserver?.tileVersionState ?? .nominal
-    }
+    var isOnLatestTileVersion = true
 
     @MainActor
     private lazy var routeCoordinator: RoutesCoordinator = .init(
@@ -162,48 +160,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         subscribeToNotifications()
     }
 
-    /// Destroys and creates new instance of Navigator together with other related entities.
-    ///
-    /// Typically, this method is used to restart a Navigator with a specific Version during switching to offline or
-    /// online modes.
-    /// - Parameter version: String representing a tile version name. `nil` value means "latest". Specifying exact
-    /// version also enables `fallback` mode which will passively monitor newer version available and will notify
-    /// `tileVersionState` if found.
-    @MainActor
-    func restartNavigator(forcing version: String? = nil) {
-        let previousNavigationSessionState = navigator.native.storeNavigationSession()
-        let previousSession = telemetrySessionManager as? NavigationSessionManagerImp
-        unsubscribeNavigator()
-        navigator.native.shutdown()
-
-        let factory = configuration.nativeHandlersFactory.targeting(version: version)
-
-        tileStore = factory.tileStore
-        roadGraph = factory.roadGraph
-        navigator = factory.navigator
-
-        navigator.native.restoreNavigationSession(for: previousNavigationSessionState)
-        configuration.nativeHandlersFactory.updateNavigatorHandle(
-            navigator: navigator.native,
-            tilesManager: factory.tilesManager
-        )
-        telemetrySessionManager = NavigationSessionManagerImp(navigator: navigator, previousSession: previousSession)
-        roadObjectStore.native = navigator.native.roadObjectsStore()
-        rerouteController = RerouteController(
-            configuration: .init(
-                credentials: configuration.credentials,
-                navigator: navigator,
-                configHandle: factory.configHandle(),
-                rerouteConfig: configuration.routingConfig.rerouteConfig,
-                initialManeuverAvoidanceRadius: configuration.routingConfig.initialManeuverAvoidanceRadius
-            )
-        )
-
-        subscribeNavigator()
-        setupAlternativesControllerIfNeeded()
-        setupPredictiveCacheIfNeeded()
-    }
-
     @MainActor
     var navigationStatus: NavigationStatus {
         navigator.navigationStatus
@@ -212,14 +168,13 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     // MARK: - Subscriptions
 
     private weak var navigatorStatusObserver: NavigatorStatusObserver?
-    private weak var navigatorFallbackVersionsObserver: NavigatorFallbackVersionsObserver?
     private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
     private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
     private weak var navigatorRouteRefreshObserver: NavigatorRouteRefreshObserver?
 
     private func setupPredictiveCacheIfNeeded() {
         guard let predictiveCacheManager = configuration.predictiveCacheManager,
-              case .nominal = tileVersionState else { return }
+              isOnLatestTileVersion else { return }
 
         Task { @MainActor in
             predictiveCacheManager.updateNavigationController(with: navigator)
@@ -266,15 +221,14 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     @MainActor
     fileprivate func subscribeFallbackObserver() {
-        let versionsObserver = NavigatorFallbackVersionsObserver(restartCallback: { [weak self] targetVersion in
-            if let self {
-                _Concurrency.Task { @MainActor in
-                    self.restartNavigator(forcing: targetVersion)
-                }
+        configuration.nativeHandlersFactory.tilesManager.subscribeOnVersionChanged { [weak self] _, changeReason in
+            switch changeReason {
+            case .returnToLatest, .returnToPinned:
+                self?.isOnLatestTileVersion = true
+            default:
+                self?.isOnLatestTileVersion = false
             }
-        })
-        navigatorFallbackVersionsObserver = versionsObserver
-        navigator.native.setFallbackVersionsObserverFor(versionsObserver)
+        }
     }
 
     @MainActor
@@ -355,12 +309,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         self.navigatorAlternativesObserver = nil
     }
 
-    fileprivate func unsubscribeFallbackObserver() {
-        navigator.setFallbackVersionsObserverFor(
-            nil
-        )
-    }
-
     fileprivate func unsubscribeStatusObserver() {
         if let navigatorStatusObserver {
             navigator.removeObserver(
@@ -372,7 +320,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private func unsubscribeNavigator() {
         stopUpdatingElectronicHorizon(on: navigator)
         unsubscribeStatusObserver()
-        unsubscribeFallbackObserver()
         unsubscribeContinuousAlternatives()
         unsubscribeRouteRefreshing()
     }

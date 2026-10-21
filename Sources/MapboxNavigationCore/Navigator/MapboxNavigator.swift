@@ -918,8 +918,6 @@ final class MapboxNavigator: @unchecked Sendable {
 
         [
             // Navigator
-            (Notification.Name.navigationDidSwitchToFallbackVersion, MapboxNavigator.fallbackToOffline(_:)),
-            (Notification.Name.navigationDidSwitchToTargetVersion, MapboxNavigator.restoreToOnline(_:)),
             (Notification.Name.navigationStatusDidChange, MapboxNavigator.navigationStatusDidChange(_:)),
             (
                 Notification.Name.navigatorDidChangeAlternativeRoutes,
@@ -1072,51 +1070,6 @@ final class MapboxNavigator: @unchecked Sendable {
 
     private func unsubscribeNotifications() {
         subscriptions.removeAll()
-    }
-
-    func fallbackToOffline(_ notification: Notification) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-
-            rerouteController = configuration.navigator.rerouteController
-            rerouteController?.delegate = self
-
-            let routeProgress = await state.privateRouteProgress
-            guard let navigationRoutes = currentNavigationRoutes,
-                  let routeProgress else { return }
-            taskManager.cancellableTask { [weak self] in
-                guard !Task.isCancelled else { return }
-                await self?.setRoutes(
-                    navigationRoutes: navigationRoutes,
-                    startLegIndex: routeProgress.legIndex,
-                    reason: .fallbackToOffline,
-                    previousRouteProgress: routeProgress
-                )
-            }
-        }
-    }
-
-    func restoreToOnline(_ notification: Notification) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-
-            rerouteController = configuration.navigator.rerouteController
-            rerouteController?.delegate = self
-
-            let routeProgress = await state.privateRouteProgress
-
-            guard let navigationRoutes = currentNavigationRoutes,
-                  let routeProgress else { return }
-            taskManager.cancellableTask { [weak self] in
-                guard !Task.isCancelled else { return }
-                await self?.setRoutes(
-                    navigationRoutes: navigationRoutes,
-                    startLegIndex: routeProgress.legIndex,
-                    reason: .restoreToOnline,
-                    previousRouteProgress: routeProgress
-                )
-            }
-        }
     }
 
     private func navigationStatusDidChange(_ notification: Notification) {

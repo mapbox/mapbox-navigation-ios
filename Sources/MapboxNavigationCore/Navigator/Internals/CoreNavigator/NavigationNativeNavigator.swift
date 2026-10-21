@@ -73,16 +73,6 @@ final class NavigationNativeNavigator: @unchecked Sendable {
         }
     }
 
-    func setFallbackVersionsObserverFor(
-        _ observer: FallbackVersionsObserver?,
-        completion: Completion? = nil
-    ) {
-        withNavigator {
-            $0.setFallbackVersionsObserverFor(observer)
-            completion?()
-        }
-    }
-
     func removeObserver(
         for observer: NavigatorObserver,
         completion: Completion? = nil

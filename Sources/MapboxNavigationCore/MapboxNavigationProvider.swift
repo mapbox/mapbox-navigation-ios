@@ -234,7 +234,6 @@ public final class MapboxNavigationProvider {
         tileStorePath: coreConfig.tilestoreConfig.navigatorLocation.tileStoreURL?.path ?? "",
         apiConfiguration: coreConfig.credentials.navigation,
         tilesVersion: coreConfig.tilesVersion,
-        targetVersion: nil,
         configFactoryType: ConfigFactory.self,
         datasetProfileIdentifier: coreConfig.routingConfig.datasetProfileIdentifier ??
             coreConfig.deprecatedProfileIdentifier,

@@ -19,7 +19,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
     let tileStorePath: String
     let apiConfiguration: ApiConfiguration
     let tilesVersion: String
-    let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     let datasetProfileIdentifier: ProfileIdentifier
     let routingProviderSource: MapboxNavigationNative_Private.RouterType?
@@ -44,7 +43,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
         tileStorePath: String,
         apiConfiguration: ApiConfiguration,
         tilesVersion: String,
-        targetVersion: String? = nil,
         configFactoryType: ConfigFactory.Type = ConfigFactory.self,
         datasetProfileIdentifier: ProfileIdentifier,
         routingProviderSource: MapboxNavigationNative_Private.RouterType? = nil,
@@ -62,7 +60,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.tileStorePath = tileStorePath
         self.apiConfiguration = apiConfiguration
         self.tilesVersion = tilesVersion
-        self.targetVersion = targetVersion
         self.configFactoryType = configFactoryType
         self.datasetProfileIdentifier = datasetProfileIdentifier
         self.routingProviderSource = routingProviderSource
@@ -77,28 +74,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
         self.hdNavigationConfig = hdNavigationConfig
         self.locale = locale
         self.rerouteStrategyForMatchRoute = rerouteStrategyForMatchRoute
-    }
-
-    func targeting(version: String?) -> NativeHandlersFactory {
-        return .init(
-            tileStorePath: tileStorePath,
-            apiConfiguration: apiConfiguration,
-            tilesVersion: tilesVersion,
-            targetVersion: version,
-            configFactoryType: configFactoryType,
-            datasetProfileIdentifier: datasetProfileIdentifier,
-            routingProviderSource: routingProviderSource,
-            liveIncidentsOptions: liveIncidentsOptions,
-            navigatorPredictionInterval: navigatorPredictionInterval,
-            statusUpdatingSettings: statusUpdatingSettings,
-            utilizeSensorData: utilizeSensorData,
-            historyDirectoryURL: historyDirectoryURL,
-            initialManeuverAvoidanceRadius: initialManeuverAvoidanceRadius,
-            electronicHorizonConfig: electronicHorizonConfig,
-            hdNavigationConfig: hdNavigationConfig,
-            locale: locale,
-            rerouteStrategyForMatchRoute: rerouteStrategyForMatchRoute
-        )
     }
 
     // MARK: - Native Handlers
@@ -172,19 +147,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
         }
     }
 
-    func updateNavigatorHandle(
-        navigator: MapboxNavigationNative_Private.Navigator,
-        tilesManager: TilesManagerHandle
-    ) {
-        onMainQueueSync {
-            NavigatorHandleBuilder.setTilesManagerHandleAndNavigatorFor(
-                navigatorHandle,
-                tilesManager: tilesManager,
-                navigator: navigator
-            )
-        }
-    }
-
     func setOperationsDelegate(_ delegate: NavigatorOperationsDelegate) {
         onMainQueueSync {
             NavigatorHandleBuilder.setOperationsDelegateFor(navigatorHandle, delegate: delegate)
@@ -221,7 +183,6 @@ final class NativeHandlersFactory: @unchecked Sendable {
         apiConfiguration: apiConfiguration,
         tilesVersion: tilesVersion,
         minimumDaysToPersistVersion: nil,
-        targetVersion: targetVersion,
         datasetProfileIdentifier: datasetProfileIdentifier
     )
 
@@ -315,6 +276,7 @@ final class NativeHandlersFactory: @unchecked Sendable {
             customConfigFeaturesKey: [
                 "useInternalRouteRefresh": true,
                 "useTelemetryNavigationEvents": true,
+                "allowTilesCacheReset": true,
             ],
             "navigation": navigationConfig,
         ]
@@ -361,22 +323,19 @@ extension TileEndpointConfiguration {
     ///   - tilesVersion: Routing tile version.
     ///   - minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can
     /// be requested from the tile endpoint.
-    ///   - targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes
-    /// available
     ///   - datasetProfileIdentifier profile setting, used for selecting tiles type for navigation.
     convenience init(
         apiConfiguration: ApiConfiguration,
         tilesVersion: String,
         minimumDaysToPersistVersion: Int?,
-        targetVersion: String?,
         datasetProfileIdentifier: ProfileIdentifier
     ) {
         self.init(
             host: apiConfiguration.endPoint.absoluteString,
             dataset: datasetProfileIdentifier.rawValue,
             version: tilesVersion,
-            isFallback: targetVersion != nil,
-            versionBeforeFallback: targetVersion ?? tilesVersion,
+            isFallback: false,
+            versionBeforeFallback: tilesVersion,
             minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?
         )
     }

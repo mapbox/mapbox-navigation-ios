@@ -5,7 +5,6 @@ protocol HandlerData {
     var tileStorePath: String { get }
     var apiConfiguration: ApiConfiguration { get }
     var tilesVersion: String { get }
-    var targetVersion: String? { get }
     var configFactoryType: ConfigFactory.Type { get }
     var datasetProfileIdentifier: ProfileIdentifier { get }
 }
@@ -23,7 +22,6 @@ class HandlerFactory<HandlerType, Arguments> {
         let tileStorePath: String
         let apiConfiguration: ApiConfiguration
         let tilesVersion: String
-        let targetVersion: String?
         let configFactoryType: ConfigFactory.Type
         let datasetProfileIdentifier: ProfileIdentifier
 
@@ -31,7 +29,6 @@ class HandlerFactory<HandlerType, Arguments> {
             self.tileStorePath = data.tileStorePath
             self.apiConfiguration = data.apiConfiguration
             self.tilesVersion = data.tilesVersion
-            self.targetVersion = data.targetVersion
             self.configFactoryType = data.configFactoryType
             self.datasetProfileIdentifier = data.datasetProfileIdentifier
         }
@@ -40,7 +37,6 @@ class HandlerFactory<HandlerType, Arguments> {
             return lhs.tileStorePath != rhs.tileStorePath ||
                 lhs.apiConfiguration != rhs.apiConfiguration ||
                 lhs.tilesVersion != rhs.tilesVersion ||
-                lhs.targetVersion != rhs.targetVersion ||
                 lhs.configFactoryType != rhs.configFactoryType ||
                 lhs.datasetProfileIdentifier != rhs.datasetProfileIdentifier
         }
