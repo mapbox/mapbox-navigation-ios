@@ -175,6 +175,8 @@ extension RerouteController {
     }
 
     func onRerouteFailed(forError error: RerouteError) {
+        // A custom route is rerouted by the app, so a refused native reroute is not reported as a failure.
+        guard !abortReroutePipeline else { return }
         guard rerouteConfig.detectsReroute else {
             Log.warning(
                 "Reroute attempt failed with an error during 'rerouteConfig.detectsReroute' is disabled. Error: \(error.message)",

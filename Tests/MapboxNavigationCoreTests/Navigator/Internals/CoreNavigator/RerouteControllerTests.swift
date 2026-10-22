@@ -176,6 +176,15 @@ final class RerouteControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testNoDidFailToRerouteCallIfReroutePipelineIsAborted() {
+        rerouteController.abortReroutePipeline = true
+        rerouteController.onRerouteFailed(
+            forError: RerouteError(message: "Not supported", type: .notSupported, routerErrors: [])
+        )
+        XCTAssertFalse(delegate.didFailToRerouteCalled)
+    }
+
+    @MainActor
     func testNoDidCancelRerouteCallIfRerouteDisabled() {
         let rerouteController = rerouteController(with: .init(detectsReroute: false))
         rerouteController.onRerouteCancelled()

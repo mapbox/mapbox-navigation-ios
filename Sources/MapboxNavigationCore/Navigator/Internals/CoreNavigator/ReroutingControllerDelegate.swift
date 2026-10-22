@@ -48,6 +48,10 @@ public enum ReroutingError: Error {
             self = .wrongRequest
         case .rerouteInProgress:
             self = .anotherRerouteInProgress
+        case .notSupported:
+            // Returns nil so the native error does not reach the assertion below.
+            // `RerouteController` hides it for custom routes.
+            return nil
         @unknown default:
             assertionFailure("Unknown MapboxNavigationNative_Private.RerouteError value.")
             return nil
