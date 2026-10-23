@@ -4,9 +4,9 @@
 import PackageDescription
 import Foundation
 
-let navNativeVersion: Version = "324.31.1-SNAPSHOT-10-22--08-38.git-22e30d2"
-let mapsVersion: Version = "11.31.1-SNAPSHOT-10-22--08-38.git-22e30d2"
-let navsdkVersion: Version = "0.31.1-SNAPSHOT-10-22--08-38.git-22e30d2"
+let navNativeVersion: Version = "324.31.1-SNAPSHOT-10-23--13-28.git-ae86545"
+let mapsVersion: Version = "11.31.1-SNAPSHOT-10-23--13-28.git-ae86545"
+let navsdkVersion: Version = "0.31.1-SNAPSHOT-10-23--13-28.git-ae86545"
 
 let mapboxMapsPackage = mapsVersion.description.contains("SNAPSHOT")
     ? "mapbox-maps-ios-binary"
