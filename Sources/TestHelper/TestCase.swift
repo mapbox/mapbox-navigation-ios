@@ -2,6 +2,7 @@ import Combine
 import CoreLocation
 import MapboxCommon
 import MapboxDirections
+@_spi(Internal) import MapboxMaps
 @testable import MapboxNavigationCore
 import XCTest
 
@@ -19,6 +20,8 @@ open class TestCase: XCTestCase {
     override open class func setUp() {
         super.setUp()
         Credentials.injectSharedToken()
+        resolveDefaultStylesOffline()
+        HttpServiceFactory.setHttpServiceInterceptorForInterceptor(StyleRequestInterceptor())
         initializeIfNeeded()
     }
 
@@ -51,7 +54,34 @@ open class TestCase: XCTestCase {
 
     override open class func tearDown() {
         Credentials.clearInjectSharedToken()
+        MapStyle._overrides = [:]
+        HttpServiceFactory.setHttpServiceInterceptorForInterceptor(nil)
         super.tearDown()
+    }
+
+    /// Lets style requests reach the network layer again, for a suite that asserts on the request
+    /// rather than on the style.
+    public static func restoreLiveStyleRequests() {
+        MapStyle._overrides = [:]
+        HttpServiceFactory.setHttpServiceInterceptorForInterceptor(nil)
+    }
+
+    /// Resolve the styles a `MapView` loads by default to an empty local style, so no style
+    /// request is ever issued.
+    private static func resolveDefaultStylesOffline() {
+        let implicitlyLoadedStyleURIs: [StyleURI] = [
+            .standard,
+            .standardSatellite,
+            // MapboxNavigationUIKit's navigationMapStyleUrl and its satellite counterpart,
+            // by raw value so this stays character-identical to the other copy.
+            StyleURI(rawValue: "mapbox://styles/mapbox-dash/standard-navigation")!,
+            StyleURI(rawValue: "mapbox://styles/mapbox-dash/standard-satellite-navigation")!,
+        ]
+        var overrides: [StyleURI: MapStyle] = [:]
+        for uri in implicitlyLoadedStyleURIs {
+            overrides[uri] = .empty
+        }
+        MapStyle._overrides = overrides
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.

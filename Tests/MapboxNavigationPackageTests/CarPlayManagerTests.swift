@@ -33,6 +33,7 @@ class CarPlayManagerTests: TestCase {
         CarPlayMapViewController.swizzleMethods()
         carPlayManager = CarPlayManager(
             navigationProvider: navigationProvider,
+            styles: [TestableDayStyle(), TestableNightStyle()],
             carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self
         )
 
@@ -1276,6 +1277,7 @@ class CarPlayManagerTests: TestCase {
     private func makeCarPlayManagerForLifecycleTest() -> CarPlayManager {
         let manager = CarPlayManager(
             navigationProvider: navigationProvider,
+            styles: [TestableDayStyle(), TestableNightStyle()],
             carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self
         )
         manager.delegate = delegate

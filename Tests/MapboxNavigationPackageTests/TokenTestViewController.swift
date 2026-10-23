@@ -73,9 +73,10 @@ class TokenTestViewController: UIViewController {
 
             DispatchQueue.main.async {
                 HTTPStubs.removeAllStubs()
-                if self.mapViewToken != nil {
-                    self.tokenExpectation?.fulfill()
-                }
+                // Fulfil whether or not a token turned up. Gating this on mapViewToken
+                // says nothing about whether the request never came, came without an sku, or was
+                // merely slow. The caller asserts on mapViewToken instead.
+                self.tokenExpectation?.fulfill()
             }
         }
     }

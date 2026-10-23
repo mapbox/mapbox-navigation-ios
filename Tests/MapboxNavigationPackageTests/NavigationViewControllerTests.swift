@@ -205,7 +205,7 @@ class NavigationViewControllerTests: TestCase {
         styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
         styleRefreshedAppearanceExpectation.isInverted = true
         let navigationViewController = createViewController(
-            styles: [DayStyle()],
+            styles: [TestableDayStyle()],
             styleManagerDelegate: self
         )
         _ = navigationViewController.view
@@ -284,7 +284,7 @@ class NavigationViewControllerTests: TestCase {
 
     private func completeLeg(in routes: NavigationRoutes, legIndex: Int) async {
         let leg = routes.mainRoute.route.legs[legIndex]
-        let locations = Fixture.generateTrace(for: leg.shape)
+        let locations = Fixture.generateTrace(for: leg.shape).qualified().shifted(to: Date())
         for location in locations {
             let status = TestNavigationStatusProvider.createNavigationStatus(
                 routeState: .tracking,
@@ -363,7 +363,7 @@ class NavigationViewControllerTests: TestCase {
         isInTunnel = true
         styleRefreshedAppearanceExpectation = XCTestExpectation(description: "Navigation style refreshed.")
         let navigationViewController = createViewController(
-            styles: [DayStyle(), NightStyle()],
+            styles: [TestableDayStyle(), TestableNightStyle()],
             styleManagerDelegate: self,
             automaticallyAdjustsStyleForTimeOfDay: false,
             usesNightStyleInDarkMode: false,
@@ -686,6 +686,8 @@ class NavigationViewControllerTests: TestCase {
         )
         injected.mapView.mapboxMap.styleURI = dayStyleURI
 
+        // The real DayStyle, not TestableDayStyle: the assertion below compares the injected
+        // map's style URI against this style's mapStyleURL
         let subject = createViewController(styles: [DayStyle()], navigationMapView: injected)
         _ = subject.view // trigger view load
 

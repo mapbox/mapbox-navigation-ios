@@ -5,6 +5,13 @@ import MapboxDirections
 import MapboxNavigationNative_Private
 import XCTest
 
+#if !SWIFT_PACKAGE
+private final class BundleToken {}
+extension Bundle {
+    static let module: Bundle = .init(for: BundleToken.self)
+}
+#endif
+
 final class ADASAttributesIntegrationTests: BaseTestCase {
     private let defaultDelay: TimeInterval = 10
     private let locationUpdateDelay = 50
@@ -74,11 +81,10 @@ final class ADASAttributesIntegrationTests: BaseTestCase {
 
         await navigationProvider.electronicHorizon().eHorizonEvents
             .compactMap { $0.event as? EHorizonStatus.Events.PositionUpdated }
-            .sink { event in
-                let edgeIdentifier = event.startingEdge.identifier
-                guard let attributes = roadGraph.adasAttributes(edgeIdentifier: edgeIdentifier) else {
-                    return
-                }
+            .receive(on: DispatchQueue.main)
+            .compactMap { roadGraph.adasAttributes(edgeIdentifier: $0.startingEdge.identifier) }
+            .first()
+            .sink { attributes in
                 adasAttributes = attributes
                 adasExpectation.fulfill()
             }.store(in: &subscriptions)

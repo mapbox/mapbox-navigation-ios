@@ -13,6 +13,11 @@ class SKUTests: TestCase {
     override func setUp() {
         super.setUp()
 
+        // testSKUTokensMatch reads the sku query item off the MapView's own request, so this
+        // suite needs that request to reach the URLProtocol stub TokenTestViewController
+        // installs.
+        Self.restoreLiveStyleRequests()
+
         urlSessionSpy = URLSessionSpy()
         expectedSkuToken = UUID().uuidString
         billingServiceMock.onGetSKUTokenIfValid = { _ in
@@ -63,6 +68,10 @@ class SKUTests: TestCase {
 
         wait(for: [tokenExpectation], timeout: 5)
 
+        XCTAssertNotNil(
+            viewController.mapViewToken,
+            "No Mapbox request carrying an sku query item was observed, so there is no map token to compare"
+        )
         XCTAssertNotEqual(viewController.mapViewToken, viewController.serviceSkuToken)
         XCTAssertEqual(viewController.serviceSkuToken, skuToken)
     }

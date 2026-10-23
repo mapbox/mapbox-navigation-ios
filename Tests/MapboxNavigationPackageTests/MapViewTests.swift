@@ -321,8 +321,11 @@ class MapViewTests: TestCase {
     }
 
     func testCreateTilesetDescriptor() {
-        let tilesetDescriptor = mapView.tilesetDescriptor(zoomRange: 3...10)
-        XCTAssertNotNil(tilesetDescriptor)
+        // Set the mapbox:// style explicitly rather than leaning on MapView's default: tests
+        // resolve the default styles to a local empty style (TestCase), which has no style
+        // URI for a tileset descriptor to be derived from.
+        mapboxMap.styleURI = .streets
+        XCTAssertNotNil(mapView.tilesetDescriptor(zoomRange: 3...10))
 
         mapboxMap.styleURI = StyleURI(rawValue: "https://url")
         XCTAssertNil(mapView.tilesetDescriptor(zoomRange: 3...10), "Should ignore non mapbox sources")

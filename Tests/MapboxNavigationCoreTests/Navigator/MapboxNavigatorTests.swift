@@ -710,7 +710,7 @@ final class MapboxNavigatorTests: TestCase {
         await startActiveGuidanceAndWaitForRouteProgressUpdate(with: oneLegNavigationRoutes())
         let route = RouteInterfaceMock()
         navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForRouteProgressUpdate()
+        await waitForCurrentRoute(toMatch: route.getRouteId())
 
         XCTAssertTrue(coreNavigator.setRoutesCalled)
         XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
@@ -726,7 +726,7 @@ final class MapboxNavigatorTests: TestCase {
         await startActiveGuidanceAndWaitForRouteProgressUpdate(with: initialRoutes)
         let route = RouteInterfaceMock()
         navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForRouteProgressUpdate()
+        await waitForCurrentRoute(toMatch: route.getRouteId())
 
         XCTAssertTrue(coreNavigator.setRoutesCalled)
         XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
@@ -742,7 +742,7 @@ final class MapboxNavigatorTests: TestCase {
             .mock(legs: [decodedThroughNavigationRouteOptions(.mock(name: "alternative"))])
         let route = RouteInterfaceMock(route: alternativeDirectionsRoute, routeIndex: 2)
         navigator.rerouteControllerWantsSwitchToAlternative(rerouteController, route: route, legIndex: 0)
-        await waitForRouteProgressUpdate()
+        await waitForCurrentRoute(toMatch: route.getRouteId())
 
         XCTAssertTrue(coreNavigator.setRoutesCalled)
         XCTAssertEqual(coreNavigator.passedSetReason, .alternative)
@@ -1190,6 +1190,17 @@ final class MapboxNavigatorTests: TestCase {
     private func waitForRouteProgressUpdate() async {
         routeProgressUpdateExpectation = XCTestExpectation(description: "navigator callback startActiveGuidance")
         await fulfillment(of: [routeProgressUpdateExpectation!], timeout: timeout)
+    }
+
+    /// Waits until the navigator's current main route is `routeId`.
+    @MainActor
+    private func waitForCurrentRoute(toMatch routeId: String) async {
+        let deadline = Date().addingTimeInterval(5)
+        while navigator.currentNavigationRoutes?.mainRoute.nativeRouteInterface.getRouteId() != routeId,
+              Date() < deadline
+        {
+            try? await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
+        }
     }
 
     private func mockAlternativesRoutesDataParser() {

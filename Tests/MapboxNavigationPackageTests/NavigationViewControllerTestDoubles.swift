@@ -5,10 +5,24 @@ import MapboxNavigationCore
 @testable import MapboxNavigationUIKit
 import TestHelper
 
+// DayStyle and NightStyle point at mapbox:// styles that 403 under the mocked access
+// token. Use these wherever a test feeds styles to something that owns a map and does
+// not assert on the style URL. The standard-* styles need no counterpart: TestCase
+// resolves those offline already.
+
 class TestableDayStyle: DayStyle {
     required init() {
         super.init()
         mapStyleURL = Fixture.blankStyle
+        previewMapStyleURL = Fixture.blankStyle
+    }
+}
+
+class TestableNightStyle: NightStyle {
+    required init() {
+        super.init()
+        mapStyleURL = Fixture.blankStyle
+        previewMapStyleURL = Fixture.blankStyle
     }
 }
 
