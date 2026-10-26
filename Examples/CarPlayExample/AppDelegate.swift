@@ -1,4 +1,5 @@
 import CarPlay
+import Combine
 import MapboxNavigationCore
 import MapboxNavigationUIKit
 import UIKit
@@ -21,7 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var _carPlayManager: Any? = nil
     var carPlayManager: CarPlayManager {
         if _carPlayManager == nil {
-            _carPlayManager = CarPlayManager(navigationProvider: navigationProvider)
+            let carPlayManager = CarPlayManager(navigationProvider: navigationProvider)
+            // By default, `CarPlayManager` starts Free Drive when CarPlay connects, which counts the device as a
+            // billable Navigation SDK MAU. Disable that automatic start here; the "Start Free Drive" button calls
+            // `CarPlayMapViewController.startFreeDriveNavigation()` deliberately.
+            //
+            // This setting controls only `CarPlayManager`. This example's phone `ViewController` starts the shared
+            // trip session in `viewDidLoad()`, so launching from Xcode or the phone starts Free Drive independently.
+            // To test a CarPlay-first launch, disconnect CarPlay, terminate the app on the phone, reconnect CarPlay,
+            // then launch CarPlayExample from the CarPlay interface (Simulator or head unit) without opening the phone
+            // app first. CarPlay remains idle and shows "Start Free Drive" until the user selects it.
+            carPlayManager.startFreeDriveAutomatically = false
+            _carPlayManager = carPlayManager
         }
 
         return _carPlayManager as! CarPlayManager
@@ -56,6 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var recentItems: [RecentItem] = RecentItem.loadDefaults()
     var recentSearchText: String? = ""
+    var carPlayFreeDriveLocationCancellable: AnyCancellable?
+    var carPlayFreeDriveLocationAvailable = false
 
     func application(
         _ application: UIApplication,
