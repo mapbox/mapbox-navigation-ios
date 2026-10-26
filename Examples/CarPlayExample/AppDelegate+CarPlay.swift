@@ -56,6 +56,7 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
             didConnect: interfaceController,
             to: window
         )
+        appDelegate.observeFreeDriveLocationForCarPlayControls()
         // NOTE: When CarPlay is connected, we check if there is an active navigation in progress and start CarPlay
         // navigation as well, otherwise, CarPlay will be in passive navigation and stay out of sync with iOS app.
         if appDelegate.currentAppRootViewController?.activeNavigationViewController != nil {
@@ -76,6 +77,8 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 
         appDelegate.carPlayManager.delegate = nil
         appDelegate.carPlaySearchController.delegate = nil
+        appDelegate.carPlayFreeDriveLocationCancellable = nil
+        appDelegate.carPlayFreeDriveLocationAvailable = false
 
         if let navigationViewController = appDelegate.currentAppRootViewController?.activeNavigationViewController {
             navigationViewController.didDisconnectFromCarPlay()
@@ -92,6 +95,126 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 // MARK: - CarPlayManagerDelegate methods
 
 extension AppDelegate: CarPlayManagerDelegate {
+    private enum CarPlayBrowsingControlsState {
+        case startFreeDrive
+        case startingFreeDrive
+        case locationAvailable
+        case unavailable
+    }
+
+    private var carPlayBrowsingControlsState: CarPlayBrowsingControlsState {
+        switch navigationProvider.tripSession().currentSession.state {
+        case .idle:
+            return .startFreeDrive
+        case .freeDrive(.active):
+            return carPlayFreeDriveLocationAvailable ? .locationAvailable : .startingFreeDrive
+        case .freeDrive(.paused), .activeGuidance:
+            return .unavailable
+        }
+    }
+
+    func observeFreeDriveLocationForCarPlayControls() {
+        if case .freeDrive(.active) = navigationProvider.tripSession().currentSession.state,
+           navigationProvider.navigation().currentLocationMatching != nil,
+           carPlayManager.carPlayMapViewController?.navigationMapView.mapView.location.latestLocation != nil
+        {
+            carPlayFreeDriveLocationAvailable = true
+            refreshCarPlayBrowsingNavigationBarButtons()
+        }
+
+        guard carPlayFreeDriveLocationCancellable == nil else { return }
+
+        carPlayFreeDriveLocationCancellable = navigationProvider.navigation().locationMatching
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                DispatchQueue.main.async { [weak self] in
+                    guard let self,
+                          case .freeDrive(.active) = navigationProvider.tripSession().currentSession.state,
+                          carPlayManager.carPlayMapViewController?
+                              .navigationMapView.mapView.location.latestLocation != nil
+                    else {
+                        return
+                    }
+
+                    carPlayFreeDriveLocationAvailable = true
+                    refreshCarPlayBrowsingNavigationBarButtons()
+                    carPlayFreeDriveLocationCancellable = nil
+                }
+            }
+    }
+
+    private func refreshCarPlayBrowsingNavigationBarButtons() {
+        guard carPlayManager.currentActivity == .browsing,
+              let mapTemplate = carPlayManager.mainMapTemplate,
+              let traitCollection = carPlayManager.carWindow?.traitCollection
+        else {
+            return
+        }
+
+        mapTemplate.leadingNavigationBarButtons =
+            browsingLeadingNavigationBarButtons(compatibleWith: traitCollection) ?? []
+        mapTemplate.trailingNavigationBarButtons = browsingTrailingNavigationBarButtons() ?? []
+    }
+
+    private func browsingLeadingNavigationBarButtons(
+        compatibleWith traitCollection: UITraitCollection
+    ) -> [CPBarButton]? {
+        switch carPlayBrowsingControlsState {
+        case .startFreeDrive:
+            let button = CPBarButton(title: "Start Free Drive") { [weak self] button in
+                guard let self,
+                      case .idle = navigationProvider.tripSession().currentSession.state,
+                      let carPlayMapViewController = carPlayManager.carPlayMapViewController
+                else {
+                    return
+                }
+
+                button.title = "Starting Free Drive…"
+                button.isEnabled = false
+                carPlayFreeDriveLocationAvailable = false
+                observeFreeDriveLocationForCarPlayControls()
+                carPlayMapViewController.startFreeDriveNavigation()
+            }
+            return [button]
+        case .startingFreeDrive:
+            let button = CPBarButton(title: "Starting Free Drive…")
+            button.isEnabled = false
+            return [button]
+        case .locationAvailable:
+            guard let interfaceController = carPlayManager.interfaceController else {
+                return nil
+            }
+
+            let searchTemplate = CPSearchTemplate()
+            searchTemplate.delegate = carPlaySearchController
+            let searchButton = carPlaySearchController.searchTemplateButton(
+                searchTemplate: searchTemplate,
+                interfaceController: interfaceController,
+                traitCollection: traitCollection
+            )
+            return [searchButton]
+        case .unavailable:
+            return nil
+        }
+    }
+
+    private func browsingTrailingNavigationBarButtons() -> [CPBarButton]? {
+        guard case .locationAvailable = carPlayBrowsingControlsState else {
+            return nil
+        }
+
+        let configuration = UIImage.SymbolConfiguration(pointSize: 24)
+        let image = UIImage(systemName: "star.fill", withConfiguration: configuration) ?? UIImage()
+
+        let favoriteTemplateButton = CPBarButton(image: image) { [weak self] _ in
+            guard let self else { return }
+            let listTemplate = favoritesListTemplate()
+            carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true, completion: nil)
+        }
+
+        return [favoriteTemplateButton]
+    }
+
     func carPlayManager(
         _ carPlayManager: MapboxNavigationUIKit.CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
@@ -167,6 +290,8 @@ extension AppDelegate: CarPlayManagerDelegate {
     ) {
         // Dismiss NavigationViewController if it's present in the navigation stack
         navigationProvider.tripSession().setToIdle()
+        carPlayFreeDriveLocationAvailable = false
+        refreshCarPlayBrowsingNavigationBarButtons()
         currentAppRootViewController?.dismissActiveNavigationViewController()
     }
 
@@ -180,20 +305,9 @@ extension AppDelegate: CarPlayManagerDelegate {
         in template: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
-        guard let interfaceController = self.carPlayManager.interfaceController else {
-            return nil
-        }
-
         switch activity {
         case .browsing:
-            let searchTemplate = CPSearchTemplate()
-            searchTemplate.delegate = carPlaySearchController
-            let searchButton = carPlaySearchController.searchTemplateButton(
-                searchTemplate: searchTemplate,
-                interfaceController: interfaceController,
-                traitCollection: traitCollection
-            )
-            return [searchButton]
+            return browsingLeadingNavigationBarButtons(compatibleWith: traitCollection)
         case .navigating, .previewing, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
@@ -270,16 +384,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     ) -> [CPBarButton]? {
         switch activity {
         case .browsing:
-            let configuration = UIImage.SymbolConfiguration(pointSize: 24)
-            let image = UIImage(systemName: "star.fill", withConfiguration: configuration) ?? UIImage()
-
-            let favoriteTemplateButton = CPBarButton(image: image) { [weak self] _ in
-                guard let self else { return }
-                let listTemplate = favoritesListTemplate()
-                carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true, completion: nil)
-            }
-
-            return [favoriteTemplateButton]
+            return browsingTrailingNavigationBarButtons()
         case .navigating, .panningInBrowsingMode, .panningInNavigationMode, .previewing:
             return nil
         }
