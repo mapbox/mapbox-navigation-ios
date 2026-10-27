@@ -69,6 +69,13 @@
 
 * Fixed CarPlay browsing-map speed-limit and road-name overlays not updating when the application starts Free Drive through `SessionController` while `CarPlayManager.startFreeDriveAutomatically` is set to `false`.
 
+## 3.33.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.33.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.33.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.33.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.33.1)
+
 ## 3.33.0
 
 ### Packaging
