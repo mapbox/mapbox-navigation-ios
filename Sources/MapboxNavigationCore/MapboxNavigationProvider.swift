@@ -116,9 +116,9 @@ public final class MapboxNavigationProvider {
     public func getLatestNavigationTilesetDescriptor() -> TilesetDescriptor {
         nativeHandlersFactory.tilesManager
             .tilesetDescriptor(forDomains: [
-                TileDataDomain.navigation,
-                TileDataDomain.navigationHD,
-//                TileDataDomain.adas, // TODO: (NAVIOS-2231) Add support for adas tiles
+                TilesDomain.navigation,
+                TilesDomain.navigationHD,
+//                TilesDomain.adas, // TODO: (NAVIOS-2231) Add support for adas tiles
             ].map {
                 $0.rawValue as NSNumber
             })
