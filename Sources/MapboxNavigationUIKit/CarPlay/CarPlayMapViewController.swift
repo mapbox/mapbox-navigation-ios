@@ -243,7 +243,8 @@ open class CarPlayMapViewController: UIViewController {
 
     // MARK: Initialization Methods
 
-    private var mapMatchingStateCancellable: AnyCancellable?
+    private var locationMatchingCancellable: AnyCancellable?
+    private var hasLocationOverlayData = false
     private let core: MapboxNavigation
     let mapOptions: MapOptions
     let usesCompactMapOverlays: Bool
@@ -302,7 +303,7 @@ open class CarPlayMapViewController: UIViewController {
     }
 
     deinit {
-        unsubscribeFromFreeDriveNotifications()
+        unsubscribeFromLocationMatchingUpdates()
     }
 
     private var pointAnnotationManager: PointAnnotationManager?
@@ -434,6 +435,7 @@ open class CarPlayMapViewController: UIViewController {
 
         speedLimitViewVisibilityCoordinator.update(speedLimitViewContainer: speedLimitViewContainer) { [weak self] in
             guard let self else { return true }
+            guard hasLocationOverlayData else { return true }
 
             return CarPlaySpeedLimitViewConfiguration.shouldHideSpeedLimitView(
                 activity: currentActivity,
@@ -448,10 +450,12 @@ open class CarPlayMapViewController: UIViewController {
     func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
         guard isViewLoaded, let wayNameView else { return }
 
-        wayNameView.isHidden = CarPlayWayNameViewConfiguration.shouldHideWayNameView(
-            activity: currentActivity,
-            cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
-        )
+        // The inner container tracks road-name availability; the outer view tracks contextual visibility.
+        wayNameView.isHidden = !hasLocationOverlayData
+            || CarPlayWayNameViewConfiguration.shouldHideWayNameView(
+                activity: currentActivity,
+                cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
+            )
     }
 
     func updateCarPlayControlsVisibility() {
@@ -487,19 +491,74 @@ open class CarPlayMapViewController: UIViewController {
     /// - Note: Paused Free Drive sessions are not resumed by this method.
     public func startFreeDriveNavigation() {
         core.tripSession().startFreeDrive()
-        subscribeForFreeDriveNotifications()
     }
 
-    // MARK: Notifications Observer Methods
+    private func startFreeDriveAutomaticallyIfNeeded() {
+        guard startFreeDriveAutomatically,
+              core.tripSession().currentSession.state == .idle
+        else {
+            return
+        }
 
-    func subscribeForFreeDriveNotifications() {
-        mapMatchingStateCancellable = core.navigation().locationMatching.sink { [weak self] state in
-            self?.didUpdatePassiveLocation(state)
+        startFreeDriveNavigation()
+    }
+
+    // MARK: Location Observation
+
+    private func subscribeToLocationMatchingUpdates() {
+        locationMatchingCancellable = core.navigation().locationMatching.sink { [weak self] state in
+            guard let self,
+                  locationMatchingIsActive(for: core.tripSession().currentSession.state)
+            else {
+                return
+            }
+
+            didUpdatePassiveLocation(state)
         }
     }
 
-    func unsubscribeFromFreeDriveNotifications() {
-        mapMatchingStateCancellable?.cancel()
+    private func subscribeToSessionUpdates() {
+        core.tripSession().session.sink { [weak self] session in
+            guard let self,
+                  !locationMatchingIsActive(for: session.state)
+            else {
+                return
+            }
+
+            clearPassiveLocation()
+        }
+        .store(in: &lifetimeSubscriptions)
+    }
+
+    private func unsubscribeFromLocationMatchingUpdates() {
+        locationMatchingCancellable?.cancel()
+    }
+
+    private func locationMatchingIsActive(for sessionState: Session.State) -> Bool {
+        switch sessionState {
+        case .freeDrive(.active), .activeGuidance:
+            return true
+        case .idle, .freeDrive(.paused):
+            return false
+        }
+    }
+
+    private func updateLocationOverlayDataAvailability(isAvailable: Bool) {
+        guard hasLocationOverlayData != isAvailable else { return }
+
+        hasLocationOverlayData = isAvailable
+        updateSpeedLimitViewVisibility()
+        updateWayNameViewVisibility()
+    }
+
+    private func clearPassiveLocation() {
+        speedLimitView?.speedLimit = nil
+        speedLimitView?.currentSpeed = nil
+        wayNameView?.text = nil
+        // Reset road-name availability before hiding the outer view based on the session state.
+        wayNameView?.containerView.isHidden = true
+
+        updateLocationOverlayDataAvailability(isAvailable: false)
     }
 
     func didUpdatePassiveLocation(_ state: MapMatchingState) {
@@ -528,25 +587,14 @@ open class CarPlayMapViewController: UIViewController {
                 wayNameView.containerView.isHidden = true
             }
         }
+
+        updateLocationOverlayDataAvailability(isAvailable: true)
     }
 
     // MARK: UIViewController Lifecycle Methods
 
     override public func loadView() {
         setupNavigationMapView()
-
-        guard startFreeDriveAutomatically else { return }
-
-        let sessionState = core.tripSession().currentSession.state
-        switch sessionState {
-        case .idle:
-            startFreeDriveNavigation()
-        case .freeDrive(.active):
-            // Free Drive may already have been started by the phone UI before CarPlay connected.
-            subscribeForFreeDriveNotifications()
-        case .freeDrive(.paused), .activeGuidance:
-            break
-        }
     }
 
     override public func viewDidLoad() {
@@ -555,6 +603,9 @@ open class CarPlayMapViewController: UIViewController {
         setupStyleManager()
         setupSpeedLimitView()
         setupWayNameView()
+        subscribeToSessionUpdates()
+        subscribeToLocationMatchingUpdates()
+        startFreeDriveAutomaticallyIfNeeded()
         updateCarPlayControlsVisibility()
 
         // Accessing `navigationMapView` from an initializer loads the view before callers can configure

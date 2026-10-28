@@ -8,6 +8,34 @@ import MapboxMaps
 import TestHelper
 import XCTest
 
+func makeMapMatchingState(
+    location: CLLocation = CLLocation(
+        coordinate: CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
+        altitude: 5,
+        horizontalAccuracy: 10,
+        verticalAccuracy: 5,
+        course: 20,
+        speed: 15,
+        timestamp: Date()
+    ),
+    roadName: RoadName? = RoadName(text: "Test road", language: "")
+) -> MapMatchingState {
+    MapMatchingState(
+        location: location,
+        mapMatchingResult: MapMatchingResult(
+            enhancedLocation: location,
+            keyPoints: [],
+            isOffRoad: false,
+            offRoadProbability: 0,
+            isTeleport: false,
+            roadEdgeMatchProbability: 1
+        ),
+        speedLimit: SpeedLimit(value: nil, signStandard: .mutcd),
+        currentSpeed: Measurement(value: location.speed, unit: UnitSpeed.metersPerSecond),
+        roadName: roadName
+    )
+}
+
 @MainActor
 func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
     let interfaceController = FakeCPInterfaceController(context: #function)
