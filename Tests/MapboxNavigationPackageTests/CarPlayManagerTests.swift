@@ -853,7 +853,7 @@ class CarPlayManagerTests: TestCase {
 
     @MainActor
     func testWayNameViewIsHiddenDuringRoutePreview() async throws {
-        let wayNameView = try browsingWayNameView()
+        let wayNameView = try browsingWayNameViewWithLocationData()
 
         let navigationRouteOptions = await previewRoutesOptions()
         await carPlayManager.previewRoutes(for: navigationRouteOptions)
@@ -947,8 +947,7 @@ class CarPlayManagerTests: TestCase {
     @MainActor
     func testDidBeginPanGesture() async throws {
         let mapTemplate = CPMapTemplate()
-        let wayNameView = try browsingWayNameView()
-        wayNameView.containerView.isHidden = false
+        let wayNameView = try browsingWayNameViewWithLocationData()
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidBeginPanGesture(mapTemplate)
         }
@@ -1003,8 +1002,7 @@ class CarPlayManagerTests: TestCase {
     func testDidShowPanningInterfaceInBrowsingMode() async throws {
         let mapTemplate = CPMapTemplate()
         mapTemplate.currentActivity = .browsing
-        let wayNameView = try browsingWayNameView()
-        wayNameView.containerView.isHidden = false
+        let wayNameView = try browsingWayNameViewWithLocationData()
         let task = Task { @MainActor in
             carPlayManager.mapTemplateDidShowPanningInterface(mapTemplate)
         }
@@ -1050,7 +1048,7 @@ class CarPlayManagerTests: TestCase {
             CarPlayManager.previousActivityKey: CarPlayActivity.browsing,
             CarPlayManager.currentActivityKey: CarPlayActivity.panningInBrowsingMode,
         ]
-        let wayNameView = try browsingWayNameView()
+        let wayNameView = try browsingWayNameViewWithLocationData()
         wayNameView.isHidden = true
 
         let task = Task { @MainActor in
@@ -1106,9 +1104,10 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
-    private func browsingWayNameView() throws -> WayNameView {
+    private func browsingWayNameViewWithLocationData() throws -> WayNameView {
         let viewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
         viewController.loadViewIfNeeded()
+        viewController.didUpdatePassiveLocation(makeMapMatchingState())
         return try XCTUnwrap(viewController.wayNameView)
     }
 

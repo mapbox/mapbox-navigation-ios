@@ -1516,7 +1516,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         ) { _, _ in
             MainActor.assumingIsolated { [weak self] in
                 guard let self else { return }
-                carPlayMapViewController?.subscribeForFreeDriveNotifications()
                 subscribeForCameraStateNotifications()
 
                 delegate?.carPlayManagerDidEndNavigation(self)
