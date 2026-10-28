@@ -450,12 +450,10 @@ open class CarPlayMapViewController: UIViewController {
     func updateWayNameViewVisibility(cameraState: NavigationCameraState? = nil) {
         guard isViewLoaded, let wayNameView else { return }
 
-        // The inner container tracks road-name availability; the outer view tracks contextual visibility.
-        wayNameView.isHidden = !hasLocationOverlayData
-            || CarPlayWayNameViewConfiguration.shouldHideWayNameView(
-                activity: currentActivity,
-                cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
-            )
+        wayNameView.isHidden = CarPlayWayNameViewConfiguration.shouldHideWayNameView(
+            activity: currentActivity,
+            cameraState: cameraState ?? navigationMapView.navigationCamera.currentCameraState
+        )
     }
 
     func updateCarPlayControlsVisibility() {
@@ -548,14 +546,12 @@ open class CarPlayMapViewController: UIViewController {
 
         hasLocationOverlayData = isAvailable
         updateSpeedLimitViewVisibility()
-        updateWayNameViewVisibility()
     }
 
     private func clearPassiveLocation() {
         speedLimitView?.speedLimit = nil
         speedLimitView?.currentSpeed = nil
         wayNameView?.text = nil
-        // Reset road-name availability before hiding the outer view based on the session state.
         wayNameView?.containerView.isHidden = true
 
         updateLocationOverlayDataAvailability(isAvailable: false)

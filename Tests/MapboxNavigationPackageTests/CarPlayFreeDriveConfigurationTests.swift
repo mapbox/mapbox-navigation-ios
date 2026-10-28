@@ -106,7 +106,6 @@ final class CarPlayFreeDriveConfigurationTests: TestCase {
         XCTAssertNil(mapViewController.speedLimitView.currentSpeed)
         XCTAssertNil(mapViewController.wayNameView.text)
         XCTAssertTrue(mapViewController.wayNameView.containerView.isHidden)
-        XCTAssertTrue(mapViewController.wayNameView.isHidden)
     }
 
     @MainActor
