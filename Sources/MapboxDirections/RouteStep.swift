@@ -765,7 +765,7 @@ public struct RouteStep: Codable, ForeignMemberContainer, Equatable, Sendable {
         {
             for index in 0..<rawIntersections!.count {
                 if let regionIndex = rawAdminIndicies[index],
-                   administrativeRegions.count > regionIndex
+                   administrativeRegions.indices.contains(regionIndex)
                 {
                     rawIntersections![index].updateRegionCode(administrativeRegions[regionIndex].countryCode)
                 }

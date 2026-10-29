@@ -328,11 +328,12 @@ public struct RouteLeg: Codable, ForeignMemberContainer, Equatable, Sendable {
     ///
     /// - SeeAlso: ``Intersection/regionCode``
     public func regionCode(atStepIndex stepIndex: Int, intersectionIndex: Int) -> String? {
-        // check index ranges
         guard let administrativeRegions,
-              stepIndex < steps.count,
-              intersectionIndex < steps[stepIndex].administrativeAreaContainerByIntersection?.count ?? -1,
-              let adminIndex = steps[stepIndex].administrativeAreaContainerByIntersection?[intersectionIndex]
+              steps.indices.contains(stepIndex),
+              let adminIndices = steps[stepIndex].administrativeAreaContainerByIntersection,
+              adminIndices.indices.contains(intersectionIndex),
+              let adminIndex = adminIndices[intersectionIndex],
+              administrativeRegions.indices.contains(adminIndex)
         else {
             return nil
         }

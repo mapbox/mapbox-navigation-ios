@@ -205,7 +205,73 @@ class RouteLegTests: XCTestCase {
         XCTAssertThrowsError(try makeRouteLegDecoder().decode(RouteLeg.self, from: data))
     }
 
+    func testDecodingSetsRegionCodeForValidAdminIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: 0))
+        XCTAssertEqual(leg.steps.first?.intersections?.first?.regionCode, "US")
+        XCTAssertEqual(leg.regionCode(atStepIndex: 0, intersectionIndex: 0), "US")
+    }
+
+    func testDecodingSkipsRegionCodeForNegativeAdminIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: -1))
+        XCTAssertNil(leg.steps.first?.intersections?.first?.regionCode)
+    }
+
+    func testRegionCodeReturnsNilForNegativeAdminIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: -1))
+        XCTAssertNil(leg.regionCode(atStepIndex: 0, intersectionIndex: 0))
+    }
+
+    func testRegionCodeReturnsNilForOutOfBoundsAdminIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: 1))
+        XCTAssertNil(leg.regionCode(atStepIndex: 0, intersectionIndex: 0))
+    }
+
+    func testRegionCodeReturnsNilForNegativeStepIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: 0))
+        XCTAssertNil(leg.regionCode(atStepIndex: -1, intersectionIndex: 0))
+    }
+
+    func testRegionCodeReturnsNilForNegativeIntersectionIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: 0))
+        XCTAssertNil(leg.regionCode(atStepIndex: 0, intersectionIndex: -1))
+    }
+
+    func testRegionCodeReturnsNilForOutOfBoundsStepAndIntersectionIndex() throws {
+        let leg = try makeRouteLegDecoder().decode(RouteLeg.self, from: makeRouteLegData(adminIndex: 0))
+        XCTAssertNil(leg.regionCode(atStepIndex: 1, intersectionIndex: 0))
+        XCTAssertNil(leg.regionCode(atStepIndex: 0, intersectionIndex: 1))
+    }
+
     // MARK: - Helpers
+
+    private func makeRouteLegData(adminIndex: Int) throws -> Data {
+        try makeRouteLegData(overriding: [
+            "admins": [
+                ["iso_3166_1": "US", "iso_3166_1_alpha3": "USA"],
+            ],
+            "steps": [
+                [
+                    "maneuver": [
+                        "location": [0.0, 0.0],
+                        "type": "depart",
+                    ],
+                    "driving_side": "right",
+                    "distance": 10.0,
+                    "duration": 5.0,
+                    "mode": "driving",
+                    "intersections": [
+                        [
+                            "location": [0.0, 0.0],
+                            "bearings": [90],
+                            "entry": [true],
+                            "out": 0,
+                            "admin_index": adminIndex,
+                        ],
+                    ],
+                ],
+            ],
+        ])
+    }
 
     private func makeRouteLegDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
