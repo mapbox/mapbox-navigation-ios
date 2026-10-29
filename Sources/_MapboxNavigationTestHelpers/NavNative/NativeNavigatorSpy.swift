@@ -18,6 +18,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
 
     public var passedNavigationTrackerOptions: PredictiveLocationTrackerOptions?
     public var passedDescriptorsTrackerOptions: PredictiveLocationTrackerOptions?
+    public var descriptorsCacheControllerCreationCount = 0
     public var passedDatasetTrackerOptions: PredictiveLocationTrackerOptions?
     public var passedRemovedRerouteObserver: RerouteObserver?
     public var passedAddedRerouteObserver: RerouteObserver?
@@ -66,6 +67,7 @@ public class NativeNavigatorSpy: MapboxNavigationNative_Private.Navigator {
         passedTileStore = tileStore
         passedDescriptors = descriptors
         passedDescriptorsTrackerOptions = locationTrackerOptions
+        descriptorsCacheControllerCreationCount += 1
         return super.createPredictiveCacheController(for: locationTrackerOptions)
     }
 

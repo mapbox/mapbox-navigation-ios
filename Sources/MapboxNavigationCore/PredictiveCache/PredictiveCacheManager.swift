@@ -13,20 +13,12 @@ public class PredictiveCacheManager {
     private let predictiveCacheOptions: PredictiveCacheConfig
     private let tileStore: TileStore
 
-    private weak var navigator: NavigationNativeNavigator? {
-        didSet {
-            _ = mapTilesetDescriptor.map { descriptor in
-                Task { @MainActor in
-                    self.mapController = createMapController(descriptor)
-                }
-            }
-        }
-    }
+    private(set) weak var navigator: NavigationNativeNavigator?
 
     private var mapTilesetDescriptor: TilesetDescriptor?
-    private var navigationController: PredictiveCacheController?
-    private var mapController: PredictiveCacheController?
-    private var searchController: PredictiveCacheController?
+    private(set) var navigationController: PredictiveCacheController?
+    private(set) var mapController: PredictiveCacheController?
+    private(set) var searchController: PredictiveCacheController?
 
     init(
         predictiveCacheOptions: PredictiveCacheConfig,
@@ -45,16 +37,15 @@ public class PredictiveCacheManager {
         mapController = createMapController(tilesetDescriptor)
     }
 
+    /// Starts predictive caching driven by `navigator`. Calling it again with the same navigator does nothing.
     @MainActor
-    func updateNavigationController(with navigator: NavigationNativeNavigator?) {
+    func attach(_ navigator: NavigationNativeNavigator) {
+        guard self.navigator !== navigator else { return }
+
         self.navigator = navigator
         navigationController = createNavigationController(for: navigator)
-    }
-
-    @MainActor
-    func updateSearchController(with navigator: NavigationNativeNavigator?) {
-        self.navigator = navigator
         searchController = createSearchController(for: navigator)
+        mapController = createMapController(mapTilesetDescriptor)
     }
 
     @MainActor
@@ -72,10 +63,8 @@ public class PredictiveCacheManager {
 
     @MainActor
     private func createNavigationController(
-        for navigator: NavigationNativeNavigator?
+        for navigator: NavigationNativeNavigator
     ) -> PredictiveCacheController? {
-        guard let navigator else { return nil }
-
         let locationOptions = predictiveCacheOptions.predictiveCacheNavigationConfig.locationConfig
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(locationOptions)
         return navigator.native.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
@@ -87,10 +76,8 @@ public class PredictiveCacheManager {
     /// debug output
     /// - Returns: A predictive cache controller configured for search functionality.
     @MainActor
-    private func createSearchController(for navigator: NavigationNativeNavigator?) -> PredictiveCacheController? {
-        guard let navigator,
-              let predictiveCacheSearchConfig = predictiveCacheOptions.predictiveCacheSearchConfig
-        else {
+    private func createSearchController(for navigator: NavigationNativeNavigator) -> PredictiveCacheController? {
+        guard let predictiveCacheSearchConfig = predictiveCacheOptions.predictiveCacheSearchConfig else {
             return nil
         }
 

@@ -90,6 +90,38 @@ final class MapboxNavigationProviderTests: TestCase {
         await fulfillment(of: [playExpectation3], timeout: 0.1)
     }
 
+    @MainActor
+    func testPredictiveCacheManagerIsSharedWithNavigator() throws {
+        let manager = try XCTUnwrap(navigationProvider.predictiveCacheManager)
+        XCTAssertTrue(navigationProvider.predictiveCacheManager === manager)
+
+        _ = navigationProvider.navigation()
+
+        XCTAssertTrue(manager.navigator === navigationProvider.nativeHandlersFactory.navigator)
+    }
+
+    @MainActor
+    func testNavigationCalledTwiceAttachesOnce() throws {
+        let manager = try XCTUnwrap(navigationProvider.predictiveCacheManager)
+        _ = navigationProvider.navigation()
+        let navigationController = manager.navigationController
+
+        _ = navigationProvider.navigation()
+
+        XCTAssertNotNil(navigationController)
+        XCTAssertTrue(manager.navigationController === navigationController)
+    }
+
+    @MainActor
+    func testPredictiveCacheManagerIsNilWithoutPredictiveCacheConfig() {
+        navigationProvider = nil
+        var config: CoreConfig = coreConfig
+        config.predictiveCacheConfig = nil
+        navigationProvider = MapboxNavigationProvider(coreConfig: config)
+
+        XCTAssertNil(navigationProvider.predictiveCacheManager)
+    }
+
     private func routeVoiceControllerRerouteSoundTrigger(on rerouteReason: RerouteReason?) async {
         let navigator = await navigationProvider.navigation() as! MapboxNavigator
         _ = await navigationProvider.routeVoiceController

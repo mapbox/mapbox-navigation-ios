@@ -57,7 +57,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         let credentials: ApiConfiguration
         let nativeHandlersFactory: NativeHandlersFactory
         let routingConfig: RoutingConfig
-        let predictiveCacheManager: PredictiveCacheManager?
     }
 
     let configuration: Configuration
@@ -72,9 +71,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private(set) var rawLocation: UnfairLocked<CLLocation?> = .init(nil, lock: UnfairLock())
 
     private(set) var tileStore: TileStore
-
-    // Current Navigator status in terms of tile versioning.
-    var isOnLatestTileVersion = true
 
     @MainActor
     private lazy var routeCoordinator: RoutesCoordinator = .init(
@@ -156,7 +152,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
-        setupPredictiveCacheIfNeeded()
         subscribeToNotifications()
     }
 
@@ -171,16 +166,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
     private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
     private weak var navigatorRouteRefreshObserver: NavigatorRouteRefreshObserver?
-
-    private func setupPredictiveCacheIfNeeded() {
-        guard let predictiveCacheManager = configuration.predictiveCacheManager,
-              isOnLatestTileVersion else { return }
-
-        Task { @MainActor in
-            predictiveCacheManager.updateNavigationController(with: navigator)
-            predictiveCacheManager.updateSearchController(with: navigator)
-        }
-    }
 
     @MainActor
     private func setupAlternativesControllerIfNeeded() {
@@ -216,18 +201,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
         } else if let navigatorAlternativesObserver {
             navigator.native.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
             self.navigatorAlternativesObserver = nil
-        }
-    }
-
-    @MainActor
-    fileprivate func subscribeFallbackObserver() {
-        configuration.nativeHandlersFactory.tilesManager.subscribeOnVersionChanged { [weak self] _, changeReason in
-            switch changeReason {
-            case .returnToLatest, .returnToPinned:
-                self?.isOnLatestTileVersion = true
-            default:
-                self?.isOnLatestTileVersion = false
-            }
         }
     }
 
@@ -285,7 +258,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
     private func subscribeNavigator() {
         subscribeElectornicHorizon()
         subscribeStatusObserver()
-        subscribeFallbackObserver()
         subscribeContinuousAlternatives()
         subscribeRouteRefreshing()
     }
@@ -436,12 +408,6 @@ final class NativeNavigator: CoreNavigator, @unchecked Sendable {
 
     deinit {
         unsubscribeNavigator()
-        if let predictiveCacheManager = configuration.predictiveCacheManager {
-            Task { @MainActor in
-                predictiveCacheManager.updateNavigationController(with: nil)
-                predictiveCacheManager.updateSearchController(with: nil)
-            }
-        }
     }
 
     private func subscribeToNotifications() {

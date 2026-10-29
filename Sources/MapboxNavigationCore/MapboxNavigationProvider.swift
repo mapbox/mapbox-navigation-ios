@@ -13,14 +13,12 @@ public final class MapboxNavigationProvider {
         billingHandler.skuTokenProvider()
     }
 
-    public var predictiveCacheManager: PredictiveCacheManager? {
-        coreConfig.predictiveCacheConfig.map {
-            PredictiveCacheManager(
-                predictiveCacheOptions: $0,
-                tileStore: coreConfig.tilestoreConfig.navigatorLocation.tileStore
-            )
-        }
-    }
+    /// The predictive cache manager shared by the navigator and every ``NavigationMapView`` that uses it.
+    ///
+    /// Created from the configuration passed to ``MapboxNavigationProvider/init(coreConfig:)``. `nil` when
+    /// ``CoreConfig/predictiveCacheConfig`` is `nil`.
+    // TODO: Rebuild when apply(coreConfig:) changes predictiveCacheConfig or tilestoreConfig.
+    public let predictiveCacheManager: PredictiveCacheManager?
 
     private var _sharedRouteVoiceController: RouteVoiceController?
     @MainActor
@@ -62,6 +60,12 @@ public final class MapboxNavigationProvider {
     public init(coreConfig: CoreConfig) {
         Self.checkInstanceIsUnique()
         self._coreConfig = .init(coreConfig)
+        self.predictiveCacheManager = coreConfig.predictiveCacheConfig.map {
+            PredictiveCacheManager(
+                predictiveCacheOptions: $0,
+                tileStore: coreConfig.tilestoreConfig.navigatorLocation.tileStore
+            )
+        }
         self.multiplexLocationClient = MultiplexLocationClient(source: coreConfig.locationSource)
         apply(coreConfig: coreConfig)
         SdkInfoRegistryFactory.getInstance().registerSdkInformation(forInfo: SdkInfo.navigationCore.native)
@@ -163,10 +167,10 @@ public final class MapboxNavigationProvider {
                 with: .init(
                     credentials: coreConfig.credentials.navigation,
                     nativeHandlersFactory: nativeHandlersFactory,
-                    routingConfig: coreConfig.routingConfig,
-                    predictiveCacheManager: predictiveCacheManager
+                    routingConfig: coreConfig.routingConfig
                 )
             )
+            predictiveCacheManager?.attach(nativeHandlersFactory.navigator)
             let fasterRouteController = coreConfig.routingConfig.fasterRouteDetectionConfig.map {
                 return $0.customFasterRouteProvider ?? FasterRouteController(
                     configuration: .init(

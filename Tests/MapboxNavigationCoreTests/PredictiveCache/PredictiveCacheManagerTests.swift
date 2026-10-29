@@ -54,8 +54,9 @@ final class PredictiveCacheManagerTests: XCTestCase {
 
     @MainActor
     func testCreateNavigationController() async {
+        predictiveCacheConfig.predictiveCacheSearchConfig = nil
         let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
-        manager.updateNavigationController(with: navigator)
+        manager.attach(navigator)
 
         let expectedOptions = predictiveCacheConfig.predictiveCacheNavigationConfig.locationConfig
         XCTAssertNil(navNavigator.passedTileStore)
@@ -83,7 +84,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
     @MainActor
     func testCreateNavigationAndMapController() {
         let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
-        manager.updateNavigationController(with: navigator)
+        manager.attach(navigator)
         manager.updateMapControllers(mapView: mapView)
 
         let expectedMapOptions = predictiveCacheConfig.predictiveCacheMapsConfig.locationConfig
@@ -119,7 +120,7 @@ final class PredictiveCacheManagerTests: XCTestCase {
         let manager = PredictiveCacheManager(
             predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore, styleSourcePaths: ["first"]
         )
-        manager.updateNavigationController(with: navigator)
+        manager.attach(navigator)
         manager.updateMapControllers(mapView: mapView)
 
         let expectedMapOptions = predictiveCacheConfig.predictiveCacheMapsConfig.locationConfig
@@ -159,12 +160,11 @@ final class PredictiveCacheManagerTests: XCTestCase {
             "Requires predictiveCacheConfig to contain a search tileset descriptor"
         )
 
-        manager.updateSearchController(with: navigator)
+        manager.attach(navigator)
 
         let expectedOptions = try XCTUnwrap(predictiveCacheConfig.predictiveCacheSearchConfig?.locationConfig)
         XCTAssertNotNil(navNavigator.passedTileStore)
         XCTAssertNil(navNavigator.passedDatasetTrackerOptions)
-        XCTAssertNil(navNavigator.passedNavigationTrackerOptions)
 
         XCTAssertNotNil(navNavigator.passedDescriptorsTrackerOptions)
         XCTAssertEqual(
@@ -180,10 +180,38 @@ final class PredictiveCacheManagerTests: XCTestCase {
             UInt32(expectedOptions.routeBufferRadius)
         )
 
-        navNavigator.passedDatasetTrackerOptions = nil
+        navNavigator.passedNavigationTrackerOptions = nil
 
         manager.updateMapControllers(mapView: mapView)
 
         XCTAssertNil(navNavigator.passedNavigationTrackerOptions, "Does not recreate navigation controller")
+    }
+
+    @MainActor
+    func testCreateMapControllerWhenNavigatorAttachesAfterMap() {
+        predictiveCacheConfig.predictiveCacheSearchConfig = nil
+        let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
+
+        manager.updateMapControllers(mapView: mapView)
+        XCTAssertNil(manager.mapController, "No navigator to create the map controller with yet")
+
+        manager.attach(navigator)
+
+        XCTAssertNotNil(manager.mapController)
+        XCTAssertEqual(navNavigator.descriptorsCacheControllerCreationCount, 1)
+        XCTAssertEqual(navNavigator.passedDescriptors?.count, 1)
+    }
+
+    @MainActor
+    func testAttachSameNavigatorTwiceCreatesControllersOnce() {
+        let manager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheConfig, tileStore: tileStore)
+        manager.updateMapControllers(mapView: mapView)
+        manager.attach(navigator)
+        let navigationController = manager.navigationController
+
+        manager.attach(navigator)
+
+        XCTAssertEqual(navNavigator.descriptorsCacheControllerCreationCount, 2, "Map and search controllers")
+        XCTAssertTrue(manager.navigationController === navigationController)
     }
 }

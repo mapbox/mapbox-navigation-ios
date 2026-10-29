@@ -28,8 +28,7 @@ final class NativeNavigatorTests: XCTestCase {
         navigator = await .init(with: .init(
             credentials: .mock(),
             nativeHandlersFactory: nativeHandlersFactory,
-            routingConfig: .init(),
-            predictiveCacheManager: nil
+            routingConfig: .init()
         ))
     }
 
