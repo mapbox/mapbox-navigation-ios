@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.34.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.34.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.34.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.34.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.34.1)
+
+### CarPlay
+
+* Fixed CarPlay browsing-map speed-limit and road-name overlays not updating when the application starts Free Drive through `SessionController` while `CarPlayManager.startFreeDriveAutomatically` is set to `false`.
+
 ## 3.33.0
 
 ### Packaging
