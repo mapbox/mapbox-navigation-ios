@@ -58,6 +58,13 @@
 
 * `JunctionView` and CarPlay guidance views now add the access token to the guidance view image URL only when the URL points to `https://api.mapbox.com`.
 
+## 3.34.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.34.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.34.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.34.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.34.2)
+
 ## 3.34.1
 
 ### Packaging
