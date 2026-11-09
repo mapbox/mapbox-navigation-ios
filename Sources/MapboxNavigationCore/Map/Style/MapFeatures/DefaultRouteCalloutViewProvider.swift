@@ -43,6 +43,16 @@ public final class DefaultRouteCalloutViewProvider: RouteCalloutViewProvider {
     @MainActor
     var mapStyleConfig: MapStyleConfig?
 
+    /// Styles callouts with the ``NavigationMapView`` defaults, for maps that are not a ``NavigationMapView``.
+    ///
+    /// ``NavigationMapView`` supplies its own style when the provider is assigned to it; until a style is supplied the
+    /// provider creates no callouts.
+    @_spi(MapboxInternal)
+    @MainActor
+    public func applyDefaultStyle() {
+        mapStyleConfig = .routeCalloutDefaults
+    }
+
     /// The configurations for how route callout views should be anchored to the map.
     ///
     /// These configurations determine which anchor positions are available for positioning the callouts
@@ -235,6 +245,49 @@ extension Route {
 extension TimeInterval {
     fileprivate var wholeMinutes: Int {
         Int(self / 60)
+    }
+}
+
+extension MapStyleConfig {
+    /// The ``NavigationMapView`` defaults; only the route annotation values are read by route callouts.
+    fileprivate static var routeCalloutDefaults: MapStyleConfig {
+        MapStyleConfig(
+            routeCasingColor: .defaultRouteCasing,
+            routeAlternateCasingColor: .defaultAlternateLineCasing,
+            routeRestrictedAreaColor: .defaultRouteRestrictedAreaColor,
+            traversedRouteColor: nil,
+            maneuverArrowColor: .defaultManeuverArrow,
+            maneuverArrowStrokeColor: .defaultManeuverArrowStroke,
+            routeAnnotationSelectedColor: .defaultSelectedRouteAnnotationColor,
+            routeAnnotationColor: .defaultRouteAnnotationColor,
+            routeAnnotationSelectedTextColor: .defaultSelectedRouteAnnotationTextColor,
+            routeAnnotationTextColor: .defaultRouteAnnotationTextColor,
+            routeAnnotationSelectedCaptionTextColor: .defaultSelectedRouteAnnotationCaptionTextColor,
+            routeAnnotationCaptionTextColor: .defaultRouteAnnotationCaptionTextColor,
+            routeAnnotationMoreTimeTextColor: .defaultRouteAnnotationMoreTimeTextColor,
+            routeAnnotationLessTimeTextColor: .defaultRouteAnnotationLessTimeTextColor,
+            routeAnnotationTextFont: .defaultRouteAnnotationTextFont,
+            routeAnnnotationCaptionTextFont: .defaultRouteAnnotationCaptionTextFont,
+            routeLineTracksTraversal: false,
+            routeLineWidthMultiplier: 1.0,
+            isRestrictedAreaEnabled: false,
+            showsTrafficOnRouteLine: true,
+            showsAlternatives: true,
+            showsIntermediateWaypoints: true,
+            showsVoiceInstructionsOnMap: false,
+            showsIntersectionAnnotations: true,
+            showsIntersectionLaneGuidance: false,
+            showsDebugIntersectionMarks: false,
+            occlusionFactor: nil,
+            congestionConfiguration: .default,
+            excludedRouteAlertTypes: [],
+            waypointColor: .defaultWaypointColor,
+            waypointStrokeColor: .defaultWaypointStrokeColor,
+            routeCalloutAnchors: [.bottomLeft, .bottomRight, .topLeft, .topRight],
+            fixedRouteCalloutPosition: .disabled,
+            useLegacyEtaRouteAnnotations: false,
+            apiRouteCalloutViewProviderEnabled: true
+        )
     }
 }
 

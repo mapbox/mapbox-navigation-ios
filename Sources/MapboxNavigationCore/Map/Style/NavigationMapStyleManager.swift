@@ -630,7 +630,6 @@ final class NavigationMapStyleManager {
 
         let calloutsFeature = ExperimentalRouteCalloutsFeature(
             for: navigationRoutes,
-            mapStyleConfig: config,
             routeCalloutViewProvider: routeCalloutViewProvider
         )
         subscribeToRedrawableFeature(calloutsFeature)

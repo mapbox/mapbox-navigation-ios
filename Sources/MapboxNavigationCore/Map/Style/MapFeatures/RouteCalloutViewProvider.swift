@@ -48,6 +48,14 @@ public struct RouteCalloutViewContainer {
     /// Default range is 0.2...0.8, which means callouts will be placed between 20% and 80% along the route.
     public static let defaultAllowedRouteOffsetRange: ClosedRange<Double> = 0.2...0.8
 
+    /// Where a callout is placed within ``RouteCalloutViewContainer/allowedRouteOffsetRange``.
+    public enum Placement: Equatable, Sendable {
+        /// The map picks the position anywhere within the range.
+        case automatic
+        /// A fixed fraction of the range, from 0.0 (its start) to 1.0 (its end).
+        case fixed(Double)
+    }
+
     /// The view that will be displayed as a route callout.
     public let view: UIView
 
@@ -55,6 +63,11 @@ public struct RouteCalloutViewContainer {
     ///
     /// Values are clamped between 0.0 (start of route) and 1.0 (end of route).
     public let allowedRouteOffsetRange: ClosedRange<Double>
+
+    /// Where the callout is placed within ``allowedRouteOffsetRange``.
+    ///
+    /// A ``Placement/fixed(_:)`` fraction is clamped between 0.0 and 1.0.
+    public let placement: Placement
 
     /// A closure that's called when the anchor configuration for this callout changes.
     ///
@@ -67,14 +80,20 @@ public struct RouteCalloutViewContainer {
     ///   - view: The view to display as a route callout.
     ///   - allowedRouteOffsetRange: The range along the route where this callout can be positioned.
     ///     Defaults to `defaultAllowedRouteOffsetRange`.
+    ///   - placement: Where the callout is placed within `allowedRouteOffsetRange`. Defaults to `.automatic`.
     ///   - onAnchorConfigChanged: A closure that's called when the anchor configuration changes.
     public init(
         view: UIView,
         allowedRouteOffsetRange: ClosedRange<Double> = defaultAllowedRouteOffsetRange,
+        placement: Placement = .automatic,
         onAnchorConfigChanged: @escaping (ViewAnnotationAnchorConfig) -> Void
     ) {
         self.view = view
         self.allowedRouteOffsetRange = allowedRouteOffsetRange.clamped(to: 0.0...1.0)
+        self.placement = switch placement {
+        case .automatic: .automatic
+        case .fixed(let fraction): .fixed(fraction.clamped(to: 0.0...1.0))
+        }
         self.onAnchorConfigChanged = onAnchorConfigChanged
     }
 }
