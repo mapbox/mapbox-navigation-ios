@@ -74,9 +74,17 @@ public final class MapboxNavigationProvider {
     /// Updates the SDK configuration.
     ///
     /// It is not recommended to do so due to some updates may be propagated incorrectly.
+    ///
+    /// The current live or custom location client and the speech synthesizer are kept if
+    /// ``CoreConfig/locationSource``, ``CoreConfig/ttsConfig`` and the speech credentials are unchanged.
     /// - Parameter coreConfig: The configuration for the SDK.
     public func apply(coreConfig: CoreConfig) {
-        _coreConfig.update(coreConfig)
+        // Reads and replaces the config under one lock.
+        let previousCoreConfig = _coreConfig.mutate { currentCoreConfig in
+            let previousCoreConfig = currentCoreConfig
+            currentCoreConfig = coreConfig
+            return previousCoreConfig
+        }
 
         let logLevel = NSNumber(value: coreConfig.logLevel.rawValue)
         LogConfiguration.setLoggingLevelForCategory("nav-native", upTo: logLevel)
@@ -91,6 +99,9 @@ public final class MapboxNavigationProvider {
         let locale = coreConfig.locale
         let speechApiConfiguration = coreConfig.credentials.speech
         let skuTokenProvider = skuTokenProvider
+        let speechSynthesizerChanged = ttsConfig != previousCoreConfig.ttsConfig
+            || speechApiConfiguration != previousCoreConfig.credentials.speech
+        let localeChanged = locale != previousCoreConfig.locale
 
         nativeHandlersFactory.locale = coreConfig.locale
         Task { @MainActor [_copilot, _sharedRouteVoiceController] in
@@ -98,11 +109,15 @@ public final class MapboxNavigationProvider {
             if locationClient.isInitialized {
                 locationClient.setLocationSource(locationSource)
             }
-            _sharedRouteVoiceController?.speechSynthesizer = ttsConfig.speechSynthesizer(
-                with: locale,
-                apiConfiguration: speechApiConfiguration,
-                skuTokenProvider: skuTokenProvider
-            )
+            if speechSynthesizerChanged {
+                _sharedRouteVoiceController?.speechSynthesizer = ttsConfig.speechSynthesizer(
+                    with: locale,
+                    apiConfiguration: speechApiConfiguration,
+                    skuTokenProvider: skuTokenProvider
+                )
+            } else if localeChanged {
+                _sharedRouteVoiceController?.speechSynthesizer.locale = locale
+            }
         }
     }
 

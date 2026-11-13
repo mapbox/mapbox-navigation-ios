@@ -10,7 +10,9 @@ import Foundation
 public final class MultiplexLocationClient: @unchecked Sendable {
     private let locations = PassthroughSubject<CLLocation, Never>()
     private let headings = PassthroughSubject<CLHeading, Never>()
-    private var currentLocationClient: LocationClient = .empty
+    private(set) var currentLocationClient: LocationClient = .empty
+    private var currentSource: LocationSource?
+    private lazy var liveLocationClient: LocationClient = .liveValue
     private var isUpdating = false
     private var isUpdatingHeading = false
     private var routeProgress: AnyPublisher<RouteProgressState?, Never> = Just(nil).eraseToAnyPublisher()
@@ -84,6 +86,8 @@ public final class MultiplexLocationClient: @unchecked Sendable {
             let newLocationClient: LocationClient
             switch source {
             case .simulation(let location):
+                // Always recreated: it is bound to the current navigator, and re-applying the source resets the
+                // simulated location.
                 newLocationClient = .simulatedLocationManager(
                     routeProgress: routeProgress,
                     rerouteEvents: rerouteEvents,
@@ -93,10 +97,13 @@ public final class MultiplexLocationClient: @unchecked Sendable {
                     locations.send(location)
                 }
             case .live:
-                newLocationClient = .liveValue
+                guard source != currentSource else { return }
+                newLocationClient = liveLocationClient
             case .custom(let customClient):
+                guard source != currentSource else { return }
                 newLocationClient = customClient
             }
+            currentSource = source
 
             currentLocationClient.stopUpdatingHeading()
             currentLocationClient.stopUpdatingLocation()

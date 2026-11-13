@@ -5,9 +5,10 @@ public enum TTSConfig: Equatable, Sendable {
     public static func == (lhs: TTSConfig, rhs: TTSConfig) -> Bool {
         switch (lhs, rhs) {
         case (.default, .default),
-             (.localOnly, .localOnly),
-             (.custom, .custom):
+             (.localOnly, .localOnly):
             return true
+        case (.custom(let lhs), .custom(let rhs)):
+            return lhs === rhs
         default:
             return false
         }

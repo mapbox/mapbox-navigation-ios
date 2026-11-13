@@ -1,3 +1,5 @@
+import Combine
+import CoreLocation
 @testable import MapboxNavigationCore
 import TestHelper
 import XCTest
@@ -91,6 +93,116 @@ final class MapboxNavigationProviderTests: TestCase {
     }
 
     @MainActor
+    func testApplyingSameLocationSourceKeepsLocationClient() async {
+        _ = navigationProvider.navigation()
+        navigationProvider.multiplexLocationClient.startUpdatingLocation()
+        await waitForPendingMainQueueWork()
+
+        var deliveredLocations: [CLLocation] = []
+        let subscription = navigationProvider.multiplexLocationClient.locationClient.locations
+            .sink { deliveredLocations.append($0) }
+        defer { subscription.cancel() }
+
+        let locationClient = LocationClientCounter(location: CLLocation(latitude: 1, longitude: 1))
+        coreConfig.locationSource = .custom(locationClient.client)
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { deliveredLocations.count == 1 }
+        for _ in 0..<2 {
+            navigationProvider.apply(coreConfig: coreConfig)
+            for _ in 0..<3 {
+                await waitForPendingMainQueueWork()
+            }
+        }
+
+        let nextLocationClient = LocationClientCounter(location: CLLocation(latitude: 2, longitude: 2))
+        coreConfig.locationSource = .custom(nextLocationClient.client)
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { deliveredLocations.last === nextLocationClient.location }
+
+        XCTAssertEqual(locationClient.startCount, 1)
+        XCTAssertEqual(locationClient.stopCount, 1)
+        XCTAssertEqual(locationClient.subscriptionCount, 1)
+        XCTAssertEqual(nextLocationClient.startCount, 1)
+        XCTAssertEqual(nextLocationClient.stopCount, 0)
+        XCTAssertEqual(deliveredLocations, [locationClient.location, nextLocationClient.location])
+    }
+
+    @MainActor
+    func testReapplyingLiveLocationSourceReusesLocationClient() async {
+        let multiplexLocationClient = MultiplexLocationClient(source: .live)
+        await waitForPendingMainQueueWork()
+        let liveLocationClient = multiplexLocationClient.currentLocationClient
+
+        let customLocationClient = LocationClientCounter(location: CLLocation(latitude: 1, longitude: 1))
+        multiplexLocationClient.setLocationSource(.live)
+        multiplexLocationClient.setLocationSource(.custom(customLocationClient.client))
+        multiplexLocationClient.setLocationSource(.live)
+        await waitUntil { customLocationClient.stopCount == 2 }
+
+        XCTAssertEqual(multiplexLocationClient.currentLocationClient, liveLocationClient)
+        XCTAssertEqual(customLocationClient.subscriptionCount, 1)
+    }
+
+    @MainActor
+    func testReapplyingSimulationLocationSourceRecreatesLocationClient() async {
+        let multiplexLocationClient = MultiplexLocationClient(source: .simulation())
+        await waitForPendingMainQueueWork()
+        let simulatedLocationClient = multiplexLocationClient.currentLocationClient
+
+        multiplexLocationClient.setLocationSource(.simulation())
+        await waitUntil { multiplexLocationClient.currentLocationClient != simulatedLocationClient }
+    }
+
+    @MainActor
+    func testApplyingSameSpeechConfigKeepsSpeechSynthesizer() async {
+        let routeVoiceController = navigationProvider.routeVoiceController
+        let speechSynthesizer = routeVoiceController.speechSynthesizer
+
+        navigationProvider.apply(coreConfig: coreConfig)
+        navigationProvider.apply(coreConfig: coreConfig)
+        coreConfig.locale = Locale(identifier: "fr_CA")
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { routeVoiceController.speechSynthesizer.locale == Locale(identifier: "fr_CA") }
+        XCTAssertTrue(routeVoiceController.speechSynthesizer === speechSynthesizer)
+
+        coreConfig.ttsConfig = .localOnly
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { routeVoiceController.speechSynthesizer !== speechSynthesizer }
+        XCTAssertEqual(routeVoiceController.speechSynthesizer.locale, Locale(identifier: "fr_CA"))
+    }
+
+    @MainActor
+    func testApplyingCustomSpeechSynthesizerReplacesPreviousOne() async {
+        let routeVoiceController = navigationProvider.routeVoiceController
+        let customSpeechSynthesizer = MultiplexedSpeechSynthesizer(speechSynthesizers: [])
+        coreConfig.ttsConfig = .custom(speechSynthesizer: customSpeechSynthesizer)
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { routeVoiceController.speechSynthesizer === customSpeechSynthesizer }
+
+        let nextCustomSpeechSynthesizer = MultiplexedSpeechSynthesizer(speechSynthesizers: [])
+        coreConfig.ttsConfig = .custom(speechSynthesizer: nextCustomSpeechSynthesizer)
+        navigationProvider.apply(coreConfig: coreConfig)
+        await waitUntil { routeVoiceController.speechSynthesizer === nextCustomSpeechSynthesizer }
+    }
+
+    @MainActor
+    private func waitUntil(_ condition: () -> Bool, timeout: TimeInterval = 1) async {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition(), Date() < deadline {
+            await waitForPendingMainQueueWork()
+        }
+        XCTAssertTrue(condition())
+    }
+
+    private func waitForPendingMainQueueWork() async {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                continuation.resume()
+            }
+        }
+    }
+
+    @MainActor
     func testPredictiveCacheManagerIsSharedWithNavigator() throws {
         let manager = try XCTUnwrap(navigationProvider.predictiveCacheManager)
         XCTAssertTrue(navigationProvider.predictiveCacheManager === manager)
@@ -140,5 +252,27 @@ final class MapboxNavigationProviderTests: TestCase {
             return true
         }
         return playExpectation
+    }
+}
+
+private final class LocationClientCounter {
+    let location: CLLocation
+    private(set) var startCount = 0
+    private(set) var stopCount = 0
+    private(set) var subscriptionCount = 0
+
+    private(set) lazy var client = LocationClient(
+        locations: Just(location)
+            .handleEvents(receiveSubscription: { [weak self] _ in self?.subscriptionCount += 1 })
+            .eraseToAnyPublisher(),
+        headings: Empty().eraseToAnyPublisher(),
+        startUpdatingLocation: { [weak self] in self?.startCount += 1 },
+        stopUpdatingLocation: { [weak self] in self?.stopCount += 1 },
+        startUpdatingHeading: {},
+        stopUpdatingHeading: {}
+    )
+
+    init(location: CLLocation) {
+        self.location = location
     }
 }
