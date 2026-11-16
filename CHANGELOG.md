@@ -1,5 +1,20 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.36.0-rc.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.36.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.36.0-rc.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.36.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.36.0-rc.1)
+
+### Map
+
+* Added `RouteCalloutViewContainer.placement` to the experimental route callouts API. Set it to `.fixed(_:)` to pin a callout at a fraction of its `allowedRouteOffsetRange`, or keep the default `.automatic` to let the map pick the position within the range.
+
+### Core Navigation
+
+* `MapboxNavigationProvider.apply(coreConfig:)` no longer restarts location updates or recreates the speech synthesizer when the location source and voice settings are unchanged. The live location source now reuses one `CLLocationManager`, and a changed `CoreConfig.locale` updates the existing speech synthesizer. `TTSConfig.custom` values are now equal only if they wrap the same speech synthesizer.
+
 ## 3.35.0
 
 ### Packaging
