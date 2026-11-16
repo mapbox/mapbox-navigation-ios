@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 import MapboxMaps
 import MapboxNavigationCore
-import MapboxNavigationUIKit
+@_spi(ExperimentalMapboxAPI) import MapboxNavigationUIKit
 import UIKit
 
 class ViewController: UIViewController {
@@ -431,6 +431,9 @@ class ViewController: UIViewController {
         )
         navigationViewController.delegate = self
         navigationViewController.usesNightStyleInDarkMode = true
+        // The app ends the session itself in `navigationViewControllerDidDismiss(_:byCanceling:)` and
+        // `carPlayManagerDidEndNavigation(_:byCanceling:)`, so closing the phone UI keeps guidance running on CarPlay.
+        navigationViewController.stopsActiveGuidanceOnDismiss = false
         return navigationViewController
     }
 

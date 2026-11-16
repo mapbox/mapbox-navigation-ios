@@ -1,7 +1,9 @@
+import CarPlay
+import CarPlayTestHelper
 import Combine
 import MapboxMaps
 @testable import MapboxNavigationCore
-@testable import MapboxNavigationUIKit
+@_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
 @testable import TestHelper
 import Turf
 import XCTest
@@ -848,6 +850,169 @@ extension NavigationViewControllerTests {
             course: 20,
             speed: 15,
             timestamp: Date()
+        )
+    }
+}
+
+// MARK: - Stopping Active Guidance on dismiss
+
+/// Pretends to be dismissed, since the test runner can't present view controllers.
+private final class DismissedNavigationViewController: NavigationViewController {
+    override var isBeingDismissed: Bool { true }
+}
+
+extension NavigationViewControllerTests {
+    @MainActor
+    func testDeinitStopsActiveGuidanceByDefault() async {
+        var navigationViewController: NavigationViewController? = autoreleasepool { createViewController() }
+        weak var weakNavigationViewController = navigationViewController
+        await waitForSessionState(description: "Active Guidance started", isActiveGuidance)
+
+        autoreleasepool { navigationViewController = nil }
+        XCTAssertNil(weakNavigationViewController)
+
+        await waitForSessionState(description: "Session is idle", isIdle)
+    }
+
+    @MainActor
+    func testDismissStopsActiveGuidanceByDefault() async {
+        let navigationViewController = DismissedNavigationViewController(
+            navigationRoutes: initialRoutes,
+            navigationOptions: makeNavigationOptions()
+        )
+        navigationViewController.loadViewIfNeeded()
+        await waitForSessionState(description: "Active Guidance started", isActiveGuidance)
+
+        navigationViewController.dismiss(animated: false)
+
+        await waitForSessionState(description: "Session is idle", isIdle)
+    }
+
+    @MainActor
+    func testDismissKeepsActiveGuidanceIfStoppingIsDisabled() async {
+        let navigationViewController = DismissedNavigationViewController(
+            navigationRoutes: initialRoutes,
+            navigationOptions: makeNavigationOptions()
+        )
+        navigationViewController.stopsActiveGuidanceOnDismiss = false
+        navigationViewController.loadViewIfNeeded()
+        await waitForSessionState(description: "Active Guidance started", isActiveGuidance)
+
+        navigationViewController.dismiss(animated: false)
+
+        await assertActiveGuidanceKept(on: initialRoutes)
+    }
+
+    @MainActor
+    func testReleasingSecondViewControllerKeepsActiveGuidanceIfStoppingIsDisabled() async {
+        let navigationViewController = createViewController()
+        await waitForSessionState(description: "Active Guidance started", isActiveGuidance)
+
+        weak var weakSecondViewController: NavigationViewController?
+        autoreleasepool {
+            let secondViewController = makeViewController(navigationRoutes: initialRoutes)
+            secondViewController.stopsActiveGuidanceOnDismiss = false
+            // Accessing the floating buttons loads the view, which starts Active Guidance.
+            _ = secondViewController.floatingButtons
+            weakSecondViewController = secondViewController
+        }
+        XCTAssertNil(weakSecondViewController)
+
+        await assertActiveGuidanceKept(on: initialRoutes)
+        withExtendedLifetime(navigationViewController) {}
+    }
+
+    @MainActor
+    func testReleasingViewControllerKeepsCarPlayGuidanceIfStoppingIsDisabled() async {
+        let carPlayNavigationViewController = makeCarPlayNavigationViewController()
+        carPlayNavigationViewController.loadViewIfNeeded()
+        await waitForSessionState(description: "Active Guidance started", isActiveGuidance)
+
+        weak var weakNavigationViewController: NavigationViewController?
+        autoreleasepool {
+            let navigationViewController = makeViewController(navigationRoutes: initialRoutes)
+            navigationViewController.stopsActiveGuidanceOnDismiss = false
+            navigationViewController.loadViewIfNeeded()
+            weakNavigationViewController = navigationViewController
+        }
+        XCTAssertNil(weakNavigationViewController)
+
+        await assertActiveGuidanceKept(on: initialRoutes)
+        withExtendedLifetime(carPlayNavigationViewController) {}
+    }
+
+    @MainActor
+    private func makeCarPlayNavigationViewController() -> CarPlayNavigationViewController {
+        let mapTemplate = CarPlayNavigationViewControllerTests.MapTemplateMock()
+        mapTemplate.navigationSession = CPNavigationSessionFake(maneuvers: [CPManeuver()])
+        let carPlayNavigationViewController = CarPlayNavigationViewController(
+            accessToken: .mockedAccessToken,
+            core: navigationProvider.mapboxNavigation,
+            mapTemplate: mapTemplate,
+            interfaceController: FakeCPInterfaceController(context: #function),
+            manager: CarPlayManager(navigationProvider: navigationProvider),
+            navigationRoutes: initialRoutes
+        )
+        let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
+        carPlayNavigationViewController.startNavigationSession(for: trip)
+        return carPlayNavigationViewController
+    }
+
+    @MainActor
+    private func makeViewController(navigationRoutes: NavigationRoutes) -> NavigationViewController {
+        NavigationViewController(navigationRoutes: navigationRoutes, navigationOptions: makeNavigationOptions())
+    }
+
+    @MainActor
+    private func makeNavigationOptions() -> NavigationOptions {
+        NavigationOptions(
+            mapboxNavigation: navigationProvider.mapboxNavigation,
+            voiceController: navigationProvider.routeVoiceController,
+            eventsManager: navigationProvider.eventsManager()
+        )
+    }
+
+    private nonisolated func isIdle(_ state: Session.State) -> Bool {
+        state == .idle
+    }
+
+    private nonisolated func isActiveGuidance(_ state: Session.State) -> Bool {
+        if case .activeGuidance = state { true } else { false }
+    }
+
+    @MainActor
+    private func waitForSessionState(
+        description: String,
+        isInverted: Bool = false,
+        timeout: TimeInterval = 2,
+        _ predicate: @escaping (Session.State) -> Bool
+    ) async {
+        let expectation = XCTestExpectation(description: description)
+        expectation.isInverted = isInverted
+        let cancellable = navigationProvider.tripSession().session
+            .filter { predicate($0.state) }
+            .first()
+            .sink { _ in expectation.fulfill() }
+        await fulfillment(of: [expectation], timeout: timeout)
+        cancellable.cancel()
+    }
+
+    @MainActor
+    private func assertActiveGuidanceKept(
+        on navigationRoutes: NavigationRoutes,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
+        await waitForSessionState(description: "Session is not stopped", isInverted: true, timeout: 1) {
+            !self.isActiveGuidance($0)
+        }
+        let tripSession = navigationProvider.tripSession()
+        XCTAssertTrue(isActiveGuidance(tripSession.currentSession.state), file: file, line: line)
+        XCTAssertEqual(
+            tripSession.currentNavigationRoutes?.mainRoute.routeId,
+            navigationRoutes.mainRoute.routeId,
+            file: file,
+            line: line
         )
     }
 }

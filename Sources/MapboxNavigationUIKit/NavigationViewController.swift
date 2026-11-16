@@ -245,6 +245,18 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /// Defaults to `true`.
     public var sendsNotifications: Bool = true
 
+    /// Controls whether the view controller stops Active Guidance when it is dismissed, popped or deallocated.
+    ///
+    /// Set it to `false` if another component still presents Active Guidance when this view controller goes away, for
+    /// example `CarPlayNavigationViewController`, or if you create view controllers that are never presented. You are
+    /// then responsible for ending the session, for example with `MapboxNavigation.tripSession().setToIdle()`. This
+    /// includes the cancel button and the arrival at the final destination: end the session in
+    /// ``NavigationViewControllerDelegate/navigationViewControllerDidDismiss(_:byCanceling:)``.
+    ///
+    /// Defaults to `true`.
+    @_spi(ExperimentalMapboxAPI)
+    public var stopsActiveGuidanceOnDismiss: Bool = true
+
     var tunnelAuthority: TunnelAuthority = .liveValue
     private var isTraversingTunnel = false
 
@@ -294,7 +306,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 
     deinit {
-        guard let mapboxNavigation = navigationOptions?.mapboxNavigation else { return }
+        guard stopsActiveGuidanceOnDismiss,
+              let mapboxNavigation = navigationOptions?.mapboxNavigation else { return }
         Task { @MainActor in
             Self.setToIdle(with: mapboxNavigation)
         }
@@ -303,7 +316,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     @MainActor
     override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
-        if isBeingDismissed {
+        if isBeingDismissed, stopsActiveGuidanceOnDismiss {
             Self.setToIdle(with: navigationOptions?.mapboxNavigation)
         }
     }
@@ -439,7 +452,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if isMovingFromParent {
+        if isMovingFromParent, stopsActiveGuidanceOnDismiss {
             Self.setToIdle(with: mapboxNavigation)
         }
 
