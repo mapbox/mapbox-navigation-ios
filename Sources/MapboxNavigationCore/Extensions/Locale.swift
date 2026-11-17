@@ -3,18 +3,26 @@ import Foundation
 extension Locale {
     /// Given the app's localized language setting, returns a string representing the user's localization.
     public static var preferredLocalLanguageCountryCode: String {
-        let firstBundleLocale = Bundle.main.preferredLocalizations.first!
-        let bundleLocale = firstBundleLocale.components(separatedBy: "-")
+        languageCountryCode(
+            localization: Bundle.main.preferredLocalizations.first!,
+            regionCode: (Locale.current as NSLocale).object(forKey: .countryCode) as? String
+        )
+    }
 
-        if bundleLocale.count > 1 {
-            return firstBundleLocale
+    /// Returns a BCP 47 language tag for `localization`. Adds `regionCode` if `localization` contains only a language.
+    static func languageCountryCode(localization: String, regionCode: String?) -> String {
+        // Localizations can use underscores (`zh_Hant_TW`), but Mapbox APIs accept only hyphens.
+        let languageTag = localization.replacingOccurrences(of: "_", with: "-")
+
+        if languageTag.contains("-") {
+            return languageTag
         }
 
-        if let countryCode = (Locale.current as NSLocale).object(forKey: .countryCode) as? String {
-            return "\(bundleLocale.first!)-\(countryCode)"
+        if let regionCode {
+            return "\(languageTag)-\(regionCode)"
         }
 
-        return firstBundleLocale
+        return languageTag
     }
 
     /// Returns a `Locale` from ``Foundation/Locale/preferredLocalLanguageCountryCode``.
