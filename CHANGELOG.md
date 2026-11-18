@@ -15,6 +15,13 @@
 
 * `MapboxNavigationProvider.apply(coreConfig:)` no longer restarts location updates or recreates the speech synthesizer when the location source and voice settings are unchanged. The live location source now reuses one `CLLocationManager`, and a changed `CoreConfig.locale` updates the existing speech synthesizer. `TTSConfig.custom` values are now equal only if they wrap the same speech synthesizer.
 
+## 3.35.1
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.35.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.35.1)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.35.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.35.1)
+
 ## 3.35.0
 
 ### Packaging
