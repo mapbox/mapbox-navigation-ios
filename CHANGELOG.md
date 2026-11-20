@@ -1,26 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 3.34.5
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.34.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.34.5)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.34.5](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.34.5)
-
-## 3.33.4
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.33.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.33.4)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.33.4](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.33.4)
-
-## 3.32.5
-
-### Packaging
-
-* MapboxNavigationCore now requires [MapboxMaps v11.32.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.32.5)
-* MapboxNavigationCore now requires [MapboxNavigationNative v324.32.5](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.32.5)
-
 ## 3.36.0-rc.1
 
 ### Packaging
@@ -35,6 +14,13 @@
 ### Core Navigation
 
 * `MapboxNavigationProvider.apply(coreConfig:)` no longer restarts location updates or recreates the speech synthesizer when the location source and voice settings are unchanged. The live location source now reuses one `CLLocationManager`, and a changed `CoreConfig.locale` updates the existing speech synthesizer. `TTSConfig.custom` values are now equal only if they wrap the same speech synthesizer.
+
+## 3.35.2
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.35.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.35.2)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.35.2](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.35.2)
 
 ## 3.35.1
 
@@ -86,6 +72,13 @@
 
 * `JunctionView` and CarPlay guidance views now add the access token to the guidance view image URL only when the URL points to `https://api.mapbox.com`.
 
+## 3.34.4
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.34.4](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.34.4)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.34.4](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.34.4)
+
 ## 3.34.3
 
 ### Packaging
@@ -110,6 +103,13 @@
 ### CarPlay
 
 * Fixed CarPlay browsing-map speed-limit and road-name overlays not updating when the application starts Free Drive through `SessionController` while `CarPlayManager.startFreeDriveAutomatically` is set to `false`.
+
+## 3.33.3
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.33.3](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.33.3)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.33.3](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.33.3)
 
 ## 3.33.2
 
@@ -138,6 +138,13 @@
 
 * MapboxNavigationCore now requires [MapboxMaps v11.33.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.33.0-rc.1)
 * MapboxNavigationCore now requires [MapboxNavigationNative v324.33.0-rc.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.33.0-rc.1)
+
+## 3.32.5
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.32.5](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.32.5)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.32.5](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.32.5)
 
 ## 3.32.4
 
