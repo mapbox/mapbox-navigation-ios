@@ -48,6 +48,12 @@ class TelemetrySpy: Telemetry {
     func onChangeApplicationState(forAppState appState: ApplicationState) {
         onChangeApplicationStateCalled = true
     }
+
+    func isRouteLatencyTrackingEnabled() -> Bool {
+        false
+    }
+
+    func postRouteLatencyPlatformStageInfo(forEvent event: RouteLatencyPlatformStageInfo) {}
 }
 
 extension UserFeedbackMetadata {
