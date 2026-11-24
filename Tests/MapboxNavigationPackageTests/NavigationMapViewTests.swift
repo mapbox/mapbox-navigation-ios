@@ -121,6 +121,26 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(mapboxMap.cameraState.zoom, initialCameraState.zoom)
     }
 
+    func testRedrawRoutesPreservesDisplayedRoutesAndAnnotations() {
+        let annotationKinds: Set<RouteAnnotationKind> = [
+            .routeDurations,
+            .relativeDurationsOnAlternative,
+        ]
+        navigationMapView.show(navigationRoutes, routeAnnotationKinds: annotationKinds)
+
+        navigationMapView.redrawRoutes()
+
+        XCTAssertEqual(navigationMapView.routes, navigationRoutes)
+        XCTAssertEqual(navigationMapView.routeAnnotationKinds, annotationKinds)
+    }
+
+    func testRedrawRoutesWithoutDisplayedRoutesDoesNothing() {
+        navigationMapView.redrawRoutes()
+
+        XCTAssertNil(navigationMapView.routes)
+        XCTAssertTrue(navigationMapView.routeAnnotationKinds.isEmpty)
+    }
+
     func testETACalloutsAlongActiveGuidanceRouteDisabled() async {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.330536, longitude: -122.030373),

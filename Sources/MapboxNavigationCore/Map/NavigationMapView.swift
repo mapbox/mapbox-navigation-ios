@@ -782,6 +782,15 @@ open class NavigationMapView: UIView {
         )
     }
 
+    /// Redraws the currently displayed routes with their existing annotation configuration.
+    ///
+    /// Does nothing when no routes are displayed.
+    @_spi(MapboxInternal)
+    public func redrawRoutes() {
+        guard let routes else { return }
+        show(routes, routeAnnotationKinds: routeAnnotationKinds)
+    }
+
     /// Visualizes the given main route and its alternatives, removing any existing from the map.
     ///
     /// Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are
