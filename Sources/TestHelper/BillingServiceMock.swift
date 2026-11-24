@@ -99,7 +99,19 @@ public final class BillingServiceMock: BillingService {
 
     /// Assert that generated events are equal to `events`. This excludes MAU events to simplify testing.
     public func assertEvents(_ events: [Event]) {
-        XCTAssertEqual(events, _events.filter { $0 != .mau })
+        XCTAssertEqual(events, recordedEvents.filter { $0 != .mau })
+    }
+
+    /// Assert that all generated events, including MAU events, are equal to `events`.
+    public func assertAllEvents(_ events: [Event], file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(events, recordedEvents, file: file, line: line)
+    }
+
+    private var recordedEvents: [Event] {
+        lock.lock(); defer {
+            lock.unlock()
+        }
+        return _events
     }
 
     private func generateEvent(_ event: Event) {

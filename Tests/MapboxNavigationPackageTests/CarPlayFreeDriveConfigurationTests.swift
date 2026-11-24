@@ -7,9 +7,6 @@ import XCTest
 final class CarPlayFreeDriveConfigurationTests: TestCase {
     @MainActor
     func testSceneConnectionDoesNotStartFreeDriveWhenAutomaticStartIsDisabled() {
-        var mauEventCount = 0
-        billingServiceMock.onTriggerBillingEvent = { _ in mauEventCount += 1 }
-
         let carPlayManager = CarPlayManager(navigationProvider: navigationProvider)
         carPlayManager.startFreeDriveAutomatically = false
 
@@ -20,15 +17,11 @@ final class CarPlayFreeDriveConfigurationTests: TestCase {
         XCTAssertNotNil(mapViewController)
         mapViewController?.loadViewIfNeeded()
         XCTAssertEqual(navigationProvider.mapboxNavigation.tripSession().currentSession.state, .idle)
-        XCTAssertEqual(mauEventCount, 0)
-        billingServiceMock.assertEvents([])
+        billingServiceMock.assertAllEvents([])
     }
 
     @MainActor
     func testDirectMapViewControllerCanDisableAutomaticFreeDriveBeforeViewLoading() {
-        var mauEventCount = 0
-        billingServiceMock.onTriggerBillingEvent = { _ in mauEventCount += 1 }
-
         let mapViewController = CarPlayMapViewController(
             core: navigationProvider.mapboxNavigation,
             styles: [StandardDayStyle(), StandardNightStyle()]
@@ -39,8 +32,7 @@ final class CarPlayFreeDriveConfigurationTests: TestCase {
         mapViewController.loadViewIfNeeded()
 
         XCTAssertEqual(navigationProvider.mapboxNavigation.tripSession().currentSession.state, .idle)
-        XCTAssertEqual(mauEventCount, 0)
-        billingServiceMock.assertEvents([])
+        billingServiceMock.assertAllEvents([])
     }
 
     @MainActor
@@ -109,10 +101,42 @@ final class CarPlayFreeDriveConfigurationTests: TestCase {
     }
 
     @MainActor
-    func testSceneConnectionStartsFreeDriveOnceByDefault() {
-        var mauEventCount = 0
-        billingServiceMock.onTriggerBillingEvent = { _ in mauEventCount += 1 }
+    func testAutomaticStartDoesNotAffectRunningActiveGuidance() throws {
+        try assertAutomaticStartLeavesSessionUntouched(.activeGuidance(.uncertain))
+    }
 
+    @MainActor
+    func testAutomaticStartDoesNotResumePausedFreeDrive() throws {
+        try assertAutomaticStartLeavesSessionUntouched(.freeDrive(.paused))
+    }
+
+    @MainActor
+    private func assertAutomaticStartLeavesSessionUntouched(
+        _ sessionState: Session.State,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        let navigator = try XCTUnwrap(navigationProvider.mapboxNavigation.tripSession() as? MapboxNavigator)
+        navigator.privateSession.emit(Session(state: sessionState))
+
+        let mapViewController = CarPlayMapViewController(
+            core: navigationProvider.mapboxNavigation,
+            styles: [StandardDayStyle(), StandardNightStyle()]
+        )
+        XCTAssertTrue(mapViewController.startFreeDriveAutomatically, file: file, line: line)
+        mapViewController.loadViewIfNeeded()
+
+        XCTAssertEqual(
+            navigationProvider.mapboxNavigation.tripSession().currentSession.state,
+            sessionState,
+            file: file,
+            line: line
+        )
+        billingServiceMock.assertAllEvents([], file: file, line: line)
+    }
+
+    @MainActor
+    func testSceneConnectionStartsFreeDriveOnceByDefault() {
         let carPlayManager = CarPlayManager(navigationProvider: navigationProvider)
 
         simulateCarPlayConnection(carPlayManager)
@@ -123,7 +147,9 @@ final class CarPlayFreeDriveConfigurationTests: TestCase {
             navigationProvider.mapboxNavigation.tripSession().currentSession.state,
             .freeDrive(.active)
         )
-        XCTAssertEqual(mauEventCount, 1)
-        billingServiceMock.assertEvents([.beginBillingSession(.freeDrive)])
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+        ])
     }
 }

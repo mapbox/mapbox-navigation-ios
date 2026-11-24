@@ -4,6 +4,7 @@ import CoreLocation
 import MapboxDirections
 @_spi(MapboxInternal) @testable import MapboxNavigationCore
 import MapboxNavigationNative_Private
+import UIKit
 import XCTest
 
 final class MapboxNavigatorTests: TestCase {
@@ -316,6 +317,11 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertFalse(locationClientState.updatingLocation)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .stopped)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .paused)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+        ])
     }
 
     @MainActor
@@ -333,6 +339,11 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertFalse(locationClientState.updatingLocation)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .paused)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+        ])
     }
 
     @MainActor
@@ -348,7 +359,8 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertTrue(locationClientState.updatingLocation)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
-        billingServiceMock.assertEvents([
+        billingServiceMock.assertAllEvents([
+            .mau,
             .beginBillingSession(.activeGuidance),
         ])
         await fulfillment(of: [activeGuidanceExpectation, routeProgressUpdateExpectation!], timeout: timeout)
@@ -362,6 +374,104 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertTrue(locationClientState.updatingHeading)
         XCTAssertTrue(locationClientState.updatingLocation)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+        ])
+    }
+
+    @MainActor
+    func testPauseAndResumeFreeDriveSession() async {
+        await startFreeDriveAndWaitForState()
+
+        navigator.pauseFreeDrive()
+
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.paused))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .paused)
+        XCTAssertFalse(locationClientState.updatingHeading)
+        XCTAssertFalse(locationClientState.updatingLocation)
+
+        navigator.startFreeDrive()
+
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+        XCTAssertTrue(locationClientState.updatingHeading)
+        XCTAssertTrue(locationClientState.updatingLocation)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .resumeBillingSession(.freeDrive),
+        ])
+    }
+
+    @MainActor
+    func testBackgroundAndForegroundTrackingTransitionsFreeDriveBilling() async {
+        await startFreeDriveAndWaitForState()
+        defer {
+            billingServiceMock.onPauseBillingSession = nil
+            billingServiceMock.onResumeBillingSession = nil
+        }
+
+        // The navigator must not react to lifecycle notifications on its own. Any reaction would be asynchronous, so
+        // wait for it instead of asserting right after posting.
+        let unexpectedPauseExpectation = expectation(description: "Lifecycle notifications do not pause billing")
+        unexpectedPauseExpectation.isInverted = true
+        billingServiceMock.onPauseBillingSession = { _ in unexpectedPauseExpectation.fulfill() }
+
+        NotificationCenter.default.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+
+        await fulfillment(of: [unexpectedPauseExpectation], timeout: 0.5)
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+        XCTAssertTrue(locationClientState.updatingHeading)
+        XCTAssertTrue(locationClientState.updatingLocation)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+        ])
+
+        let backgroundStateExpectation = expectation(description: "Free Drive remains active in background")
+        navigator.session
+            .dropFirst()
+            .filter { $0.state == .freeDrive(.active) }
+            .first()
+            .sink { _ in backgroundStateExpectation.fulfill() }
+            .store(in: &subscriptions)
+        let pauseExpectation = expectation(description: "Free Drive billing pauses")
+        billingServiceMock.onPauseBillingSession = { sessionType in
+            XCTAssertEqual(sessionType, .freeDrive)
+            pauseExpectation.fulfill()
+        }
+
+        navigator.disableTrackingBackgroundLocationIfNeeded()
+
+        await fulfillment(of: [pauseExpectation, backgroundStateExpectation], timeout: timeout)
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .paused)
+        XCTAssertFalse(locationClientState.updatingHeading)
+        XCTAssertFalse(locationClientState.updatingLocation)
+
+        let resumeExpectation = expectation(description: "Free Drive billing resumes")
+        billingServiceMock.onResumeBillingSession = { sessionType, _ in
+            XCTAssertEqual(sessionType, .freeDrive)
+            resumeExpectation.fulfill()
+        }
+
+        navigator.restoreTrackingLocationIfNeeded()
+
+        await fulfillment(of: [resumeExpectation], timeout: timeout)
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+        XCTAssertTrue(locationClientState.updatingHeading)
+        XCTAssertTrue(locationClientState.updatingLocation)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .resumeBillingSession(.freeDrive),
+        ])
     }
 
     func testPauseAndResumeActiveGuidanceSession() async {
@@ -369,9 +479,13 @@ final class MapboxNavigatorTests: TestCase {
         await setToIdleAndWaitForState()
         await startActiveGuidanceAndWaitForState(with: .mock())
 
+        guard case .activeGuidance = await navigator.currentSession.state else {
+            return XCTFail("Restarting guidance must end in Active Guidance.")
+        }
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
         XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
-        billingServiceMock.assertEvents([
+        billingServiceMock.assertAllEvents([
+            .mau,
             .beginBillingSession(.activeGuidance),
             .pauseBillingSession(.activeGuidance),
             .resumeBillingSession(.activeGuidance),
@@ -416,20 +530,41 @@ final class MapboxNavigatorTests: TestCase {
     }
 
     @MainActor
-    func testPauseAndStartActiveGuidanceSessionWhenFreeDrive() async {
+    func testStartFreeDriveAfterPausingActiveGuidance() async {
         await startActiveGuidanceAndWaitForState(with: .mock(), startLegIndex: 0)
         await setToIdleAndWaitForState()
         await startFreeDriveAndWaitForState()
-        await startActiveGuidanceAndWaitForState(with: .mock(), startLegIndex: 0)
 
-        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
-        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
-        billingServiceMock.assertEvents([
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .stopped)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .running)
+        billingServiceMock.assertAllEvents([
+            .mau,
             .beginBillingSession(.activeGuidance),
             .pauseBillingSession(.activeGuidance),
             .stopBillingSession(.activeGuidance),
+            .mau,
             .beginBillingSession(.freeDrive),
+        ])
+    }
+
+    @MainActor
+    func testStartActiveGuidanceAfterPausingFreeDrive() async {
+        await startFreeDriveAndWaitForState()
+        await setToIdleAndWaitForState()
+        await startActiveGuidanceAndWaitForState(with: .mock(), startLegIndex: 0)
+
+        guard case .activeGuidance = navigator.currentSession.state else {
+            return XCTFail("Starting guidance after paused Free Drive must end in Active Guidance.")
+        }
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .activeGuidance), .running)
+        XCTAssertEqual(billingServiceMock.getSessionStatus(for: .freeDrive), .stopped)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
             .stopBillingSession(.freeDrive),
+            .mau,
             .beginBillingSession(.activeGuidance),
         ])
     }
@@ -478,7 +613,14 @@ final class MapboxNavigatorTests: TestCase {
         await startActiveGuidanceAndWaitForState(with: oneLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
-        billingServiceMock.assertEvents([.beginBillingSession(.activeGuidance)])
+        guard case .activeGuidance = navigator.currentSession.state else {
+            return XCTFail("Setting a new route must preserve Active Guidance.")
+        }
+
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     @MainActor
@@ -494,9 +636,15 @@ final class MapboxNavigatorTests: TestCase {
         await startActiveGuidanceAndWaitForState(with: twoLegNavigationRoutes())
         await setRoutes(with: oneLegNavigationRoutes(), reason: .newRoute)
 
-        billingServiceMock.assertEvents([
+        guard case .activeGuidance = navigator.currentSession.state else {
+            return XCTFail("Setting a new route must preserve Active Guidance.")
+        }
+
+        billingServiceMock.assertAllEvents([
+            .mau,
             .beginBillingSession(.activeGuidance),
             .stopBillingSession(.activeGuidance),
+            .mau,
             .beginBillingSession(.activeGuidance),
         ])
     }
@@ -660,6 +808,10 @@ final class MapboxNavigatorTests: TestCase {
 
         XCTAssertEqual(resultSession, .init(state: .freeDrive(.active)))
         XCTAssertEqual(eventsCounter, 2)
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+        ])
     }
 
     @MainActor
@@ -856,6 +1008,15 @@ final class MapboxNavigatorTests: TestCase {
         let nextExpectation = setupRouteProgressExpectation(for: routes.mainRoute.route)
         nextExpectation.isInverted = true
         await postStatusUpdateAndVerifyRouteProgress(for: routes.mainRoute.route, expectation: nextExpectation)
+
+        XCTAssertEqual(navigator.currentSession.state, .freeDrive(.active))
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .mau,
+            .beginBillingSession(.freeDrive),
+        ])
     }
 
     @MainActor
@@ -867,6 +1028,17 @@ final class MapboxNavigatorTests: TestCase {
 
         await startActiveGuidanceAndWaitForRouteProgressUpdate(with: routes)
         await fulfillment(of: [expectation], timeout: timeout)
+
+        guard case .activeGuidance = navigator.currentSession.state else {
+            return XCTFail("Expected Active Guidance after leaving Free Drive.")
+        }
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.freeDrive),
+            .stopBillingSession(.freeDrive),
+            .mau,
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     // MARK: - Select Alternative Route Tests
@@ -949,6 +1121,13 @@ final class MapboxNavigatorTests: TestCase {
 
         let progress = await navigator.currentRouteProgress?.routeProgress
         XCTAssertEqual(progress?.legIndex, 0)
+        guard case .activeGuidance = await navigator.currentSession.state else {
+            return XCTFail("A failed leg switch must preserve Active Guidance.")
+        }
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     func testSwitchLegWithCorrectLegIndex() async {
@@ -968,6 +1147,14 @@ final class MapboxNavigatorTests: TestCase {
         XCTAssertEqual(progress?.legIndex, 1)
         XCTAssertTrue(coreNavigator.updateRouteLegCalled)
         XCTAssertEqual(coreNavigator.passedUpdatedLegIndex, 1)
+        guard case .activeGuidance = await navigator.currentSession.state else {
+            return XCTFail("A successful leg switch must preserve Active Guidance.")
+        }
+        billingServiceMock.assertAllEvents([
+            .mau,
+            .beginBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     func testSwitchLegWithCorrectLegIndexWithoutRouteProgressWaiting() async {
