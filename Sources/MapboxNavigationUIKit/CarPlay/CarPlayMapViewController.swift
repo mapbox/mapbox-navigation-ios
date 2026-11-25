@@ -220,7 +220,13 @@ open class CarPlayMapViewController: UIViewController {
     private let speedLimitViewVisibilityCoordinator = CarPlaySpeedLimitViewVisibilityCoordinator()
     var safeAreaInsetsBaseline = CarPlaySafeAreaInsetsBaseline()
     private var previewViewportPadding: UIEdgeInsets?
+    // Prevents safe-area updates from refitting preview content while that content is being removed.
     var isDismissingRoutePreview = false
+
+    // Allows CarPlayManager to include externally managed annotations in defensive preview cleanup.
+    var hasSearchResultAnnotations: Bool {
+        !searchResultAnnotations.isEmpty
+    }
 
     var currentActivity: CarPlayActivity? {
         didSet {

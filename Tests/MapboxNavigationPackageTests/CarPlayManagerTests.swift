@@ -4,7 +4,9 @@ import Combine
 import MapboxDirections
 import MapboxMaps
 @_spi(MapboxCarPlayInternal) @testable import MapboxNavigationCore
-@_spi(ExperimentalMapboxAPI) @testable import MapboxNavigationUIKit
+@_spi(ExperimentalMapboxAPI)
+@_spi(MapboxCarPlaySearchInternal)
+@testable import MapboxNavigationUIKit
 import QuartzCore
 @testable import TestHelper
 import XCTest
@@ -742,6 +744,747 @@ class CarPlayManagerTests: TestCase {
     }
 
     @MainActor
+    func testCancelRoutesPreviewCleansPartialStateWithoutEmittingLegacyCallbacks() async throws {
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let navigationMapView = try XCTUnwrap(carPlayManager.carPlayMapViewController?.navigationMapView)
+        navigationMapView.show(await createNavigationRoutes(), routeAnnotationKinds: [])
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertEqual(interfaceController.templates.count, 2)
+        XCTAssertNotNil(navigationMapView.routes)
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+        XCTAssertNil(navigationMapView.routes)
+
+        let hideCallCount = mapTemplateSpy.hideTripPreviewsCallCount
+        let popToRootCallCount = interfaceController.popToRootTemplateCallCount
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(mapTemplateSpy.hideTripPreviewsCallCount, hideCallCount)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, popToRootCallCount)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewClearsSearchAnnotationsWithoutRoutes() async throws {
+        let searchResults = createSearchResultRecords()
+        try await carPlayManager.previewRoutes(with: searchResults)
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+        XCTAssertTrue(mapViewController.hasSearchResultAnnotations)
+        XCTAssertNil(mapViewController.navigationMapView.routes)
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertFalse(mapViewController.hasSearchResultAnnotations)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewPreservesRouteBackedCallbackOrder() async throws {
+        try await previewAndSelectRoute()
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let navigationMapView = try XCTUnwrap(carPlayManager.carPlayMapViewController?.navigationMapView)
+
+        delegate.willCancelPreviewHandler = {
+            XCTAssertNotNil(navigationMapView.routes)
+        }
+        delegate.didCancelPreviewHandler = {
+            XCTAssertNil(navigationMapView.routes)
+            XCTAssertEqual(self.carPlayManager.currentActivity, .browsing)
+            XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+        }
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(delegate.cancelPreviewEvents, ["willCancel", "didCancel"])
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, 1)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewKeepsTemplateWhenPopToRootIsDisabled() async throws {
+        try await previewAndSelectRoute()
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        delegate.cancelPreviewPopToRoot = false
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertIdentical(interfaceController.topTemplate, mapTemplateSpy)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, 0)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertEqual(mapTemplateSpy.currentActivity, .browsing)
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+        XCTAssertEqual(delegate.cancelPreviewEvents, ["willCancel", "didCancel"])
+    }
+
+    @MainActor
+    func testRootTemplateAppearanceClearsPreviewStateWithoutCancelCallbacks() async throws {
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let rootTemplate = try XCTUnwrap(interfaceController.rootTemplate)
+        let mapViewController = try XCTUnwrap(carPlayManager.carPlayMapViewController)
+
+        _ = try await interfaceController.popToRootTemplate(animated: false)
+        carPlayManager.templateDidAppear(rootTemplate, animated: false)
+
+        XCTAssertFalse(mapViewController.hasSearchResultAnnotations)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewRemovesPreviewTemplateWhenPopToRootFails() async throws {
+        try await previewAndSelectRoute()
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.nextPopToRootTemplateError = previewTestError()
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+        XCTAssertEqual(interfaceController.popTemplateCallCount, 1)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+        XCTAssertEqual(delegate.cancelPreviewEvents, ["willCancel", "didCancel"])
+    }
+
+    @MainActor
+    func testFailedInitialPreviewPushRestoresBrowsingState() async {
+        let interfaceController = carPlayManager.interfaceController as? FakeCPInterfaceController
+        interfaceController?.nextPushTemplateError = previewTestError()
+
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
+
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertIdentical(interfaceController?.topTemplate, interfaceController?.rootTemplate)
+        XCTAssertTrue(mapTemplateSpy.hideTripPreviewsCalled)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testPOIPreviewContinuesWhenInitialPopToRootFails() async throws {
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.nextPopToRootTemplateError = previewTestError()
+        let searchResults = createSearchResultRecords()
+
+        try await carPlayManager.previewRoutes(with: searchResults)
+
+        XCTAssertIdentical(interfaceController.topTemplate, mapTemplateSpy)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, 1)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, searchResults.count)
+    }
+
+    @MainActor
+    func testPOIToRoutePreviewUpdateReusesPresentedTemplateWithoutStackMutation() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+        let popCallCount = interfaceController.popTemplateCallCount
+        let popToRootCallCount = interfaceController.popToRootTemplateCallCount
+        delegate.leadingNavigationBarButtonsCompatibleWithCalled = false
+        delegate.trailingNavigationBarButtonsCompatibleWithCalled = false
+        delegate.returnedLeadingBarButtons = [CPBarButton(title: "Updated leading")]
+        delegate.returnedTrailingBarButtons = [CPBarButton(title: "Updated trailing")]
+        let routeChoice = await createValidRouteChoice()
+
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        XCTAssertIdentical(interfaceController.topTemplate, firstPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertFalse(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 1)
+        XCTAssertEqual(firstPreviewTemplate.showTripPreviewsCallCount, 2)
+        XCTAssertFalse(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertFalse(firstPreviewTemplate.hideTripPreviewsCalled)
+        XCTAssertNotNil(firstPreviewTemplate.backButton)
+        XCTAssertEqual(firstPreviewTemplate.leadingNavigationBarButtons.count, 1)
+        XCTAssertEqual(firstPreviewTemplate.trailingNavigationBarButtons.count, 1)
+        XCTAssertTrue(delegate.leadingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertTrue(delegate.trailingNavigationBarButtonsCompatibleWithCalled)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount)
+        XCTAssertEqual(interfaceController.popTemplateCallCount, popCallCount)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, popToRootCallCount)
+    }
+
+    @MainActor
+    func testRouteToRoutePreviewUpdateReusesPresentedTemplateWithoutStackMutation() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let routeChoice = await createValidRouteChoice()
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+        let popCallCount = interfaceController.popTemplateCallCount
+
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        XCTAssertIdentical(interfaceController.topTemplate, firstPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 1)
+        XCTAssertEqual(firstPreviewTemplate.showTripPreviewsCallCount, 2)
+        XCTAssertFalse(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount)
+        XCTAssertEqual(interfaceController.popTemplateCallCount, popCallCount)
+    }
+
+    @MainActor
+    func testRouteToPOIPreviewUpdateReusesPresentedTemplateAndResetsBackButton() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let routeChoice = await createValidRouteChoice()
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+        let popCallCount = interfaceController.popTemplateCallCount
+        XCTAssertNotNil(firstPreviewTemplate.backButton)
+
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+
+        XCTAssertIdentical(interfaceController.topTemplate, firstPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 1)
+        XCTAssertEqual(firstPreviewTemplate.showTripPreviewsCallCount, 2)
+        XCTAssertFalse(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertFalse(firstPreviewTemplate.hideTripPreviewsCalled)
+        XCTAssertNil(firstPreviewTemplate.backButton)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount)
+        XCTAssertEqual(interfaceController.popTemplateCallCount, popCallCount)
+    }
+
+    @MainActor
+    func testPOIToPOIPreviewUpdateReusesPresentedTemplateWithoutStackMutation() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+        let popCallCount = interfaceController.popTemplateCallCount
+        let popToRootCallCount = interfaceController.popToRootTemplateCallCount
+
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+
+        XCTAssertIdentical(interfaceController.topTemplate, firstPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 1)
+        XCTAssertEqual(firstPreviewTemplate.showTripPreviewsCallCount, 2)
+        XCTAssertFalse(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertNil(firstPreviewTemplate.backButton)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount)
+        XCTAssertEqual(interfaceController.popTemplateCallCount, popCallCount)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, popToRootCallCount)
+    }
+
+    @MainActor
+    func testCancelWhilePreviewPushIsPendingDoesNotRestorePreviewState() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.suspendNextPushTemplateCompletion = true
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        let previewTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPushTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPushTemplate)
+
+        await carPlayManager.cancelRoutesPreview()
+        let queuedPreviewTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        await Task.yield()
+        interfaceController.completePendingPushTemplate()
+
+        do {
+            try await previewTask.value
+            XCTFail("Expected the canceled preview presentation to be invalidated.")
+        } catch is CancellationError {}
+        try await queuedPreviewTask.value
+
+        XCTAssertIdentical(interfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(firstPreviewTemplate.hideTripPreviewsCalled)
+        XCTAssertTrue(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testLatestPreviewRequestRunsAfterPendingInitialPush() async throws {
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.suspendNextPushTemplateCompletion = true
+        let routeChoice = await createValidRouteChoice()
+        let previewTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+        }
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPushTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPushTemplate)
+
+        let searchResults = createSearchResultRecords()
+        let latestTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(with: searchResults)
+        }
+        await Task.yield()
+        interfaceController.completePendingPushTemplate()
+
+        try await previewTask.value
+        try await latestTask.value
+
+        XCTAssertIdentical(interfaceController.topTemplate, mapTemplateSpy)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(mapTemplateSpy.passedTripPreviews?.count, searchResults.count)
+    }
+
+    @MainActor
+    func testStartedTripConsumesPreviewSessionSoNextPreviewIsPushed() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        try await previewAndStartTrip()
+
+        carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: true)
+        wait()
+        XCTAssertNil(carPlayManager.carPlayNavigationViewController)
+        let rootTemplate = try XCTUnwrap(interfaceController.rootTemplate)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+
+        let routeChoice = await createValidRouteChoice()
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        XCTAssertIdentical(interfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertNotIdentical(interfaceController.topTemplate, rootTemplate)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount + 1)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 2)
+        XCTAssertTrue(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewDuringNavigationIsNoOp() async throws {
+        let previewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [previewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        try await previewAndStartTrip()
+        let guidanceMapView = try XCTUnwrap(carPlayManager.carPlayNavigationViewController?.navigationMapView)
+        XCTAssertNotNil(guidanceMapView.routes)
+        let hideCallCount = previewTemplate.hideTripPreviewsCallCount
+        let popToRootCallCount = interfaceController.popToRootTemplateCallCount
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(carPlayManager.currentActivity, .navigating)
+        XCTAssertNotNil(guidanceMapView.routes)
+        XCTAssertEqual(previewTemplate.hideTripPreviewsCallCount, hideCallCount)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, popToRootCallCount)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewWhileNavigationStartupIsPendingIsNoOp() async throws {
+        let previewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [previewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        carPlayManager.mapTemplate(previewTemplate, selectedPreviewFor: trip, using: routeChoice)
+        XCTAssertNotNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+
+        interfaceController.suspendNextPopToRootTemplateCompletion = true
+        carPlayManager.mapTemplate(previewTemplate, startedTrip: trip, using: routeChoice)
+        XCTAssertTrue(interfaceController.hasPendingPopToRootTemplate)
+        let hideCallCount = previewTemplate.hideTripPreviewsCallCount
+        let popToRootCallCount = interfaceController.popToRootTemplateCallCount
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(carPlayManager.currentActivity, .navigating)
+        XCTAssertNotNil(carPlayManager.carPlayMapViewController?.navigationMapView.routes)
+        XCTAssertEqual(previewTemplate.hideTripPreviewsCallCount, hideCallCount)
+        XCTAssertEqual(interfaceController.popToRootTemplateCallCount, popToRootCallCount)
+        XCTAssertTrue(delegate.cancelPreviewEvents.isEmpty)
+
+        interfaceController.completePendingPopToRootTemplate()
+        XCTAssertNotNil(carPlayManager.carPlayNavigationViewController)
+    }
+
+    @MainActor
+    func testDisconnectDuringPendingPreviewPushAllowsPreviewAfterReconnect() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.suspendNextPushTemplateCompletion = true
+        let routeChoice = await createValidRouteChoice()
+        let previewTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+        }
+
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPushTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPushTemplate)
+
+        simulateCarPlayDisconnection(carPlayManager)
+        simulateCarPlayConnection(carPlayManager)
+        let reconnectedInterfaceController = try XCTUnwrap(
+            carPlayManager.interfaceController as? FakeCPInterfaceController
+        )
+
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        XCTAssertTrue(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+
+        // A push completing late on the disconnected controller must not affect the new preview.
+        interfaceController.completePendingPushTemplate()
+        do {
+            try await previewTask.value
+            XCTFail("Expected the interrupted preview presentation to be invalidated.")
+        } catch is CancellationError {}
+
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertFalse(secondPreviewTemplate.hideTripPreviewsCalled)
+    }
+
+    @MainActor
+    func testFailedPendingPushAfterReconnectDoesNotDiscardNewPreview() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        interfaceController.suspendNextPushTemplateCompletion = true
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        let previewTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPushTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPushTemplate)
+
+        simulateCarPlayDisconnection(carPlayManager)
+        simulateCarPlayConnection(carPlayManager)
+        let reconnectedInterfaceController = try XCTUnwrap(
+            carPlayManager.interfaceController as? FakeCPInterfaceController
+        )
+        try await carPlayManager.previewRoutes(for: trip)
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+
+        interfaceController.completePendingPushTemplate(error: previewTestError())
+        do {
+            try await previewTask.value
+            XCTFail("Expected the disconnected preview presentation to be invalidated.")
+        } catch is CancellationError {}
+
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(secondPreviewTemplate.showTripPreviewsCalled)
+        XCTAssertFalse(secondPreviewTemplate.hideTripPreviewsCalled)
+    }
+
+    @MainActor
+    func testPOIPreviewKeepsDelegateProvidedBackButton() async throws {
+        delegate.leadingNavigationBarButtonsHandler = { template in
+            template.backButton = CPBarButton(title: "Close")
+        }
+
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+        XCTAssertEqual(mapTemplateSpy.backButton?.title, "Close")
+
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+        XCTAssertEqual(mapTemplateSpy.backButton?.title, "Close")
+
+        let routeChoice = await createValidRouteChoice()
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+        XCTAssertNotNil(mapTemplateSpy.backButton)
+        XCTAssertNotEqual(mapTemplateSpy.backButton?.title, "Close")
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewNeverRestoresPreviewingActivity() async throws {
+        // Preview content left behind without a tracked session, together with a stale previewing activity on the
+        // main template, must not be restored as another preview.
+        carPlayManager.carPlayMapViewController?.showSearchResultsAnnotations(
+            with: createSearchResultRecords(),
+            selectedResult: nil
+        )
+        carPlayManager.mainMapTemplate?.currentActivity = .previewing
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+        XCTAssertEqual(carPlayManager.mainMapTemplate?.currentActivity, .browsing)
+    }
+
+    @MainActor
+    func testCancelRoutesPreviewPreservesBrowsingPanningHistory() async throws {
+        let rootTemplate = try XCTUnwrap(carPlayManager.mainMapTemplate)
+        rootTemplate.currentActivity = .browsing
+        carPlayManager.mapTemplateDidShowPanningInterface(rootTemplate)
+        XCTAssertEqual(rootTemplate.currentActivity, .panningInBrowsingMode)
+        XCTAssertEqual(rootTemplate.previousActivity, .browsing)
+
+        try await carPlayManager.previewRoutes(with: createSearchResultRecords())
+        await carPlayManager.cancelRoutesPreview()
+
+        XCTAssertEqual(rootTemplate.currentActivity, .panningInBrowsingMode)
+        XCTAssertEqual(rootTemplate.previousActivity, .browsing)
+
+        carPlayManager.mapTemplateDidDismissPanningInterface(rootTemplate)
+        await waitForPendingMainQueueWork()
+
+        XCTAssertEqual(rootTemplate.currentActivity, .browsing)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+    }
+
+    @MainActor
+    func testPreviewUpdatePopsTemplatesPushedAboveThePreview() async throws {
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+        let previewTemplate = try XCTUnwrap(interfaceController.topTemplate as? MapTemplateSpy)
+
+        let hostTemplate = CPListTemplate(title: "Host", sections: [])
+        try await interfaceController.pushTemplate(hostTemplate, animated: false)
+        XCTAssertIdentical(interfaceController.topTemplate, hostTemplate)
+        let pushCallCount = interfaceController.pushTemplateCallCount
+
+        try await carPlayManager.previewRoutes(for: createTrip(routeChoice))
+
+        XCTAssertIdentical(interfaceController.topTemplate, previewTemplate)
+        XCTAssertEqual(interfaceController.popToTemplateCallCount, 1)
+        XCTAssertEqual(interfaceController.pushTemplateCallCount, pushCallCount)
+        XCTAssertEqual(interfaceController.templates.count, 2)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+    }
+
+    @MainActor
+    func testLatestPreviewRequestWinsWhilePopToPreviewIsPending() async throws {
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        let previewTemplate = try XCTUnwrap(interfaceController.topTemplate as? MapTemplateSpy)
+        try await interfaceController.pushTemplate(CPListTemplate(title: "Host", sections: []), animated: false)
+
+        interfaceController.suspendNextPopToTemplateCompletion = true
+        let updateTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPopToTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPopToTemplate)
+
+        let supersededTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        await Task.yield()
+        let searchResults = createSearchResultRecords()
+        let latestTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(with: searchResults)
+        }
+        await Task.yield()
+
+        do {
+            try await supersededTask.value
+            XCTFail("Expected the superseded preview request to be canceled.")
+        } catch is CancellationError {}
+
+        interfaceController.completePendingPopToTemplate()
+        try await updateTask.value
+        try await latestTask.value
+
+        XCTAssertIdentical(interfaceController.topTemplate, previewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+        XCTAssertTrue(carPlayManager.carPlayMapViewController?.hasSearchResultAnnotations == true)
+        XCTAssertEqual(previewTemplate.passedTripPreviews?.count, searchResults.count)
+    }
+
+    @MainActor
+    func testCancellationWinsOverPendingPopToPreviewCompletion() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        try await interfaceController.pushTemplate(CPListTemplate(title: "Host", sections: []), animated: false)
+
+        interfaceController.suspendNextPopToTemplateCompletion = true
+        let updateTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPopToTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPopToTemplate)
+
+        await carPlayManager.cancelRoutesPreview()
+        XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+
+        interfaceController.completePendingPopToTemplate()
+        do {
+            try await updateTask.value
+            XCTFail("Expected the canceled preview update to be invalidated.")
+        } catch is CancellationError {}
+
+        XCTAssertIdentical(interfaceController.topTemplate, interfaceController.rootTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .browsing)
+
+        try await carPlayManager.previewRoutes(for: trip)
+        XCTAssertIdentical(interfaceController.topTemplate, secondPreviewTemplate)
+    }
+
+    @MainActor
+    func testDisconnectWinsOverPendingPopToPreviewCompletion() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        try await interfaceController.pushTemplate(CPListTemplate(title: "Host", sections: []), animated: false)
+
+        interfaceController.suspendNextPopToTemplateCompletion = true
+        let updateTask = Task { @MainActor in
+            try await carPlayManager.previewRoutes(for: trip)
+        }
+        for _ in 0..<100 {
+            if interfaceController.hasPendingPopToTemplate {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertTrue(interfaceController.hasPendingPopToTemplate)
+
+        simulateCarPlayDisconnection(carPlayManager)
+        simulateCarPlayConnection(carPlayManager)
+        let reconnectedInterfaceController = try XCTUnwrap(
+            carPlayManager.interfaceController as? FakeCPInterfaceController
+        )
+        try await carPlayManager.previewRoutes(for: trip)
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+
+        interfaceController.completePendingPopToTemplate()
+        do {
+            try await updateTask.value
+            XCTFail("Expected the disconnected preview update to be invalidated.")
+        } catch is CancellationError {}
+
+        XCTAssertIdentical(reconnectedInterfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+    }
+
+    @MainActor
+    func testFailedPopToPreviewRestoresPresentedSessionForRetry() async throws {
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        let previewTemplate = try XCTUnwrap(interfaceController.topTemplate as? CPMapTemplate)
+        let hostTemplate = CPListTemplate(title: "Host", sections: [])
+        try await interfaceController.pushTemplate(hostTemplate, animated: false)
+        interfaceController.nextPopToTemplateError = previewTestError()
+
+        do {
+            try await carPlayManager.previewRoutes(for: trip)
+            XCTFail("Expected the preview update to propagate the pop failure.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, "CarPlayManagerTests")
+        }
+        XCTAssertIdentical(interfaceController.topTemplate, hostTemplate)
+
+        try await carPlayManager.previewRoutes(for: trip)
+
+        XCTAssertIdentical(interfaceController.topTemplate, previewTemplate)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 1)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+    }
+
+    @MainActor
+    func testDetachedPreviewSessionPushesFreshTemplate() async throws {
+        let firstPreviewTemplate = MapTemplateSpy()
+        let secondPreviewTemplate = MapTemplateSpy()
+        mapTemplateProvider.queuedMapTemplates = [firstPreviewTemplate, secondPreviewTemplate]
+        let interfaceController = try XCTUnwrap(carPlayManager.interfaceController as? FakeCPInterfaceController)
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+
+        let replacementRoot = CPListTemplate(title: "Replacement", sections: [])
+        interfaceController.setRootTemplate(replacementRoot, animated: false, completion: nil)
+        XCTAssertFalse(interfaceController.templates.contains(where: { $0 === firstPreviewTemplate }))
+
+        try await carPlayManager.previewRoutes(for: trip)
+
+        XCTAssertTrue(firstPreviewTemplate.hideTripPreviewsCalled)
+        XCTAssertIdentical(interfaceController.topTemplate, secondPreviewTemplate)
+        XCTAssertEqual(mapTemplateProvider.createdMapTemplates.count, 2)
+        XCTAssertEqual(carPlayManager.currentActivity, .previewing)
+    }
+
+    @MainActor
     func testPreviewRouteWithDefault() async {
         let navigationRouteOptions = await previewRoutesOptions()
         let previewExpectation = XCTestExpectation(description: "preview expectation")
@@ -1337,6 +2080,33 @@ class CarPlayManagerTests: TestCase {
                 from: window
             )
         }
+    }
+
+    @MainActor
+    private func previewAndStartTrip() async throws {
+        let routeChoice = await createValidRouteChoice()
+        let trip = createTrip(routeChoice)
+        try await carPlayManager.previewRoutes(for: trip)
+        let previewTemplate = try XCTUnwrap(carPlayManager.interfaceController?.topTemplate as? CPMapTemplate)
+        carPlayManager.mapTemplate(previewTemplate, startedTrip: trip, using: routeChoice)
+        // TODO: handle async methods properly, remove wait
+        wait()
+        _ = carPlayManager.carPlayNavigationViewController?.view
+        carPlayManager.carPlayNavigationViewController?.loadViewIfNeeded()
+        XCTAssertNotNil(carPlayManager.carPlayNavigationViewController)
+    }
+
+    @MainActor
+    private func previewAndSelectRoute() async throws {
+        let navigationRouteOptions = await previewRoutesOptions()
+        await carPlayManager.previewRoutes(for: navigationRouteOptions)
+        let trip = try XCTUnwrap(mapTemplateSpy.passedTripPreviews?.first)
+        let routeChoice = try XCTUnwrap(trip.routeChoices.first)
+        carPlayManager.mapTemplate(mapTemplateSpy, selectedPreviewFor: trip, using: routeChoice)
+    }
+
+    private func previewTestError() -> NSError {
+        NSError(domain: "CarPlayManagerTests", code: 1)
     }
 
     private func previewRoutesOptions() async -> NavigationRouteOptions {

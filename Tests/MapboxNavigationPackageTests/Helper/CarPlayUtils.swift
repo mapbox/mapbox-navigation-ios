@@ -4,7 +4,7 @@ import Foundation
 @testable import MapboxDirections
 import MapboxMaps
 @testable import MapboxNavigationCore
-@testable import MapboxNavigationUIKit
+@_spi(MapboxCarPlaySearchInternal) @testable import MapboxNavigationUIKit
 import TestHelper
 import XCTest
 
@@ -75,6 +75,33 @@ func createNavigationRoutes() async -> NavigationRoutes {
         CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
     ])
     return await Fixture.navigationRoutes(from: "route-with-banner-instructions", options: navigationRouteOptions)
+}
+
+func createSearchResultRecords() -> [SearchResultRecord] {
+    [
+        SearchResultRecord(
+            id: "first-result",
+            serverIndex: 0,
+            coordinate: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+            placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)),
+            name: "First result",
+            descriptionText: nil,
+            estimatedTime: 60,
+            estimatedDistance: 100,
+            kind: .POI
+        ),
+        SearchResultRecord(
+            id: "second-result",
+            serverIndex: 1,
+            coordinate: CLLocationCoordinate2D(latitude: 37.7849, longitude: -122.4094),
+            placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.7849, longitude: -122.4094)),
+            name: "Second result",
+            descriptionText: nil,
+            estimatedTime: 120,
+            estimatedDistance: 200,
+            kind: .POI
+        ),
+    ]
 }
 
 func createValidRouteChoice() async -> CPRouteChoice {
@@ -154,10 +181,15 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     var returnedTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
     var returnedTrip: CPTrip?
     var returnedLeadingBarButtons: [CPBarButton]?
+    var leadingNavigationBarButtonsHandler: ((CPMapTemplate) -> Void)?
     var returnedTrailingBarButtons: [CPBarButton]?
     var returnedMapButtons: [CPMapButton]?
     var symbolLayer: SymbolLayer?
     var circleLayer: CircleLayer?
+    var cancelPreviewPopToRoot = true
+    var cancelPreviewEvents: [String] = []
+    var willCancelPreviewHandler: (() -> Void)?
+    var didCancelPreviewHandler: (() -> Void)?
 
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
@@ -189,6 +221,20 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     )
     -> CPTripPreviewTextConfiguration {
         return returnedTripPreviewTextConfiguration ?? previewTextConfiguration
+    }
+
+    func carPlayManagerWillCancelPreview(
+        _ carPlayManager: CarPlayManager,
+        configuration: inout CarPlayManagerCancelPreviewConfiguration
+    ) {
+        cancelPreviewEvents.append("willCancel")
+        configuration.popToRoot = cancelPreviewPopToRoot
+        willCancelPreviewHandler?()
+    }
+
+    func carPlayManagerDidCancelPreview(_ carPlayManager: CarPlayManager) {
+        cancelPreviewEvents.append("didCancel")
+        didCancelPreviewHandler?()
     }
 
     func carPlayManagerDidBeginNavigation(_ carPlayManager: CarPlayManager) {
@@ -247,10 +293,11 @@ class CarPlayManagerDelegateSpy: CarPlayManagerDelegate {
     func carPlayManager(
         _ carPlayManager: CarPlayManager,
         leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
-        in: CPMapTemplate,
+        in template: CPMapTemplate,
         for activity: CarPlayActivity
     ) -> [CPBarButton]? {
         leadingNavigationBarButtonsCompatibleWithCalled = true
+        leadingNavigationBarButtonsHandler?(template)
         return returnedLeadingBarButtons
     }
 
@@ -416,22 +463,42 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
 
 final class MapTemplateSpy: CPMapTemplate, @unchecked Sendable {
     private(set) var passedTripPreviews: [CPTrip]?
+    private(set) var passedSelectedTrip: CPTrip?
     private(set) var passedPreviewTextConfiguration: CPTripPreviewTextConfiguration?
 
     var showTripPreviewsCalled = false
+    var showTripPreviewsCallCount = 0
     var hideTripPreviewsCalled = false
+    var hideTripPreviewsCallCount = 0
+    var hideTripPreviewsHandler: (() -> Void)?
     var startNavigationSessionCalled = false
 
     var returnedSession: CPNavigationSession!
 
     override func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?) {
         showTripPreviewsCalled = true
+        showTripPreviewsCallCount += 1
         passedTripPreviews = tripPreviews
+        passedSelectedTrip = nil
+        passedPreviewTextConfiguration = textConfiguration
+    }
+
+    override func showTripPreviews(
+        _ tripPreviews: [CPTrip],
+        selectedTrip: CPTrip?,
+        textConfiguration: CPTripPreviewTextConfiguration?
+    ) {
+        showTripPreviewsCalled = true
+        showTripPreviewsCallCount += 1
+        passedTripPreviews = tripPreviews
+        passedSelectedTrip = selectedTrip
         passedPreviewTextConfiguration = textConfiguration
     }
 
     override func hideTripPreviews() {
         hideTripPreviewsCalled = true
+        hideTripPreviewsCallCount += 1
+        hideTripPreviewsHandler?()
     }
 
     override func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
@@ -442,8 +509,14 @@ final class MapTemplateSpy: CPMapTemplate, @unchecked Sendable {
 
 public class MapTemplateSpyProvider: MapTemplateProvider {
     var returnedMapTemplate = MapTemplateSpy()
+    var queuedMapTemplates: [MapTemplateSpy] = []
+    private(set) var createdMapTemplates: [MapTemplateSpy] = []
 
     override public func createMapTemplate() -> CPMapTemplate {
-        return returnedMapTemplate
+        let mapTemplate = queuedMapTemplates.isEmpty
+            ? returnedMapTemplate
+            : queuedMapTemplates.removeFirst()
+        createdMapTemplates.append(mapTemplate)
+        return mapTemplate
     }
 }

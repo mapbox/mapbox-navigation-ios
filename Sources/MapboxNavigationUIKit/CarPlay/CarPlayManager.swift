@@ -99,7 +99,101 @@ public class CarPlayManager: NSObject {
     private let navigationProvider: MapboxNavigationProvider
     private let core: MapboxNavigation
     private var cameraStateCancellable: AnyCancellable?
-    private var fetchedSearchResults: [SearchResultRecord] = []
+
+    // Intentionally a reference type: object identity is the transaction token checked after each await.
+    @MainActor
+    private final class PreviewTransition {
+        let template: CPMapTemplate
+        let activityBeforePreview: CarPlayActivity?
+        var searchResults: [SearchResultRecord]
+
+        init(
+            template: CPMapTemplate,
+            activityBeforePreview: CarPlayActivity?,
+            searchResults: [SearchResultRecord]
+        ) {
+            self.template = template
+            self.activityBeforePreview = activityBeforePreview
+            self.searchResults = searchResults
+        }
+    }
+
+    @MainActor
+    private struct PreviewSession {
+        let template: CPMapTemplate
+        let activityBeforePreview: CarPlayActivity?
+        var searchResults: [SearchResultRecord]
+    }
+
+    // Intentionally a reference type: object identity prevents overlapping updates from committing out of order.
+    @MainActor
+    private final class PreviewUpdate {
+        var session: PreviewSession
+
+        init(session: PreviewSession) {
+            self.session = session
+        }
+    }
+
+    @MainActor
+    private final class PreviewCancellation {
+        let transition: PreviewTransition?
+        let update: PreviewUpdate?
+        let template: CPMapTemplate?
+        let activityBeforePreview: CarPlayActivity?
+        let popToRoot: Bool
+        // Cancellation and an in-flight CarPlay operation can finish in either order. Remain in `.cancelling`
+        // until both sides have completed.
+        var operationFinished: Bool
+        var cancellationFinished = false
+
+        init(
+            transition: PreviewTransition? = nil,
+            update: PreviewUpdate? = nil,
+            template: CPMapTemplate?,
+            activityBeforePreview: CarPlayActivity?,
+            popToRoot: Bool
+        ) {
+            self.transition = transition
+            self.update = update
+            self.template = template
+            self.activityBeforePreview = activityBeforePreview
+            self.popToRoot = popToRoot
+            self.operationFinished = transition == nil && update == nil
+        }
+    }
+
+    @MainActor
+    private enum PreviewState {
+        case inactive
+        case presenting(PreviewTransition)
+        case presented(PreviewSession)
+        case updating(PreviewUpdate)
+        case cancelling(PreviewCancellation)
+    }
+
+    @MainActor
+    private enum PreviewRequest {
+        case searchResults([SearchResultRecord])
+        case trip(CPTrip)
+    }
+
+    @MainActor
+    private final class PendingPreviewRequest {
+        let request: PreviewRequest
+        let continuation: CheckedContinuation<Void, Error>
+
+        init(
+            request: PreviewRequest,
+            continuation: CheckedContinuation<Void, Error>
+        ) {
+            self.request = request
+            self.continuation = continuation
+        }
+    }
+
+    @MainActor private var previewState: PreviewState = .inactive
+    @MainActor private var pendingPreviewRequest: PendingPreviewRequest?
 
     var coreConfig: CoreConfig {
         navigationProvider.coreConfig
@@ -289,7 +383,11 @@ public class CarPlayManager: NSObject {
         guidanceNavigationMapView ?? browsingNavigationMapView
     }
 
-    var mapTemplateProvider: MapTemplateProvider
+    var mapTemplateProvider: MapTemplateProvider {
+        didSet {
+            mapTemplateProvider.delegate = self
+        }
+    }
 
     // MARK: Customizing the Bar Buttons
 
@@ -515,6 +613,12 @@ extension CarPlayManager {
 
     @MainActor
     func handleDidDisconnect(interfaceController: CPInterfaceController, from window: CPWindow) {
+        cancelPendingPreviewRequest()
+        clearPreviewState()
+        // A push that was in flight on the disconnected interface controller may never complete. Do not keep the
+        // manager in `.cancelling` waiting for it; a late completion is rejected by its transition identity check.
+        previewState = .inactive
+
         CarPlayManager.isConnected = false
         self.interfaceController = nil
 
@@ -530,7 +634,6 @@ extension CarPlayManager {
         idleTimerCancellable = nil
 
         unsubscribeFromCameraStateNotifications()
-        routes = nil
     }
 
     @MainActor
@@ -639,10 +742,17 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         delegate?.carPlayManager(self, templateDidAppear: template, animated: animated)
 
-        guard interfaceController?.topTemplate == mainMapTemplate,
-              template == interfaceController?.rootTemplate else { return }
-
-        removeRoutesFromBrowsingMap()
+        MainActor.assumingIsolated {
+            // Initial preview presentation can briefly expose the root template. Wait for that transaction instead
+            // of treating the intermediate appearance as a manual return to browsing.
+            guard interfaceController?.topTemplate == mainMapTemplate,
+                  template == interfaceController?.rootTemplate,
+                  !isPreviewTransitioning
+            else {
+                return
+            }
+            clearPreviewState()
+        }
     }
 
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -660,7 +770,9 @@ extension CarPlayManager {
     /// Calculates routes to the given destination using the [Mapbox Directions
     /// API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
     ///
-    /// Upon successful calculation a new template will be pushed onto the template navigation hierarchy.
+    /// Upon successful calculation a preview template is pushed onto the template navigation hierarchy if no preview
+    /// is currently presented. Otherwise the presented preview template is updated in place, and any templates pushed
+    /// above it are popped first.
     /// - Parameters:
     ///   - destination: A final destination `Waypoint`.
     ///   - completionHandler: A closure to be executed when the calculation completes.
@@ -674,7 +786,9 @@ extension CarPlayManager {
     /// Calculates routes to the given destination using the [Mapbox Directions
     /// API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
     ///
-    /// Upon successful calculation a new template will be pushed onto the template navigation hierarchy.
+    /// Upon successful calculation a preview template is pushed onto the template navigation hierarchy if no preview
+    /// is currently presented. Otherwise the presented preview template is updated in place, and any templates pushed
+    /// above it are popped first.
     /// - Parameters:
     ///   - destination: A final destination `Waypoint`.
     public func previewRoutes(to destination: Waypoint) async {
@@ -781,22 +895,59 @@ extension CarPlayManager {
     /// Allows to cancel routes preview on CarPlay .
     @MainActor
     public func cancelRoutesPreview() async {
-        guard routes != nil else { return }
+        // Guidance has already consumed the preview, even while its template transition is still in flight.
+        guard currentActivity != .navigating, hasPreviewState else { return }
+
+        // Historically these callbacks were emitted only after a route was selected. Cleanup now also handles previews
+        // canceled before route selection, interrupted presentations, and POI-only previews without changing that
+        // callback contract.
+        let shouldNotifyDelegate = routes != nil
         carPlayMapViewController?.isDismissingRoutePreview = true
         defer {
             carPlayMapViewController?.isDismissingRoutePreview = false
         }
+
         clearMapAnnotations()
         var configuration = CarPlayManagerCancelPreviewConfiguration()
-        delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
-        routes = nil
-        mainMapTemplate?.hideTripPreviews()
-        if configuration.popToRoot {
-            _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: true)
+        if shouldNotifyDelegate {
+            delegate?.carPlayManagerWillCancelPreview(self, configuration: &configuration)
         }
-        setCurrentActivity(mainMapTemplate?.currentActivity ?? .browsing)
-        navigationMapView?.navigationCamera.update(cameraState: .following)
-        delegate?.carPlayManagerDidCancelPreview(self)
+
+        let cancellation = beginPreviewCancellation(popToRoot: configuration.popToRoot)
+        discardPreviewContent(template: cancellation.template, clearAnnotations: false)
+        restoreActivityAfterPreview(
+            cancellation.activityBeforePreview,
+            template: cancellation.template
+        )
+
+        if configuration.popToRoot {
+            do {
+                _ = try await popToRootTemplate(interfaceController: interfaceController, animated: true)
+            } catch {
+                Log.error(
+                    "Failed to pop to the CarPlay root template while canceling preview: \(error.localizedDescription)",
+                    category: .carPlay
+                )
+                if interfaceController?.topTemplate === cancellation.template {
+                    do {
+                        try await interfaceController?.popTemplate(animated: true)
+                    } catch {
+                        Log.error(
+                            "Failed to remove the CarPlay preview template after popping to root failed: "
+                                + error.localizedDescription,
+                            category: .carPlay
+                        )
+                    }
+                }
+            }
+        }
+        cancellation.cancellationFinished = true
+        finishPreviewCancellationIfPossible(cancellation)
+
+        if shouldNotifyDelegate {
+            delegate?.carPlayManagerDidCancelPreview(self)
+        }
+        await performPendingPreviewRequestIfPossible()
     }
 
     func shouldPreviewRoutes(for routes: NavigationRoutes) -> Bool {
@@ -805,18 +956,536 @@ extension CarPlayManager {
     }
 
     @MainActor
+    private var hasPreviewState: Bool {
+        if case .inactive = previewState {
+            // Keep defensive checks for content created by delegates or older lifecycle paths.
+            return routes != nil
+                || currentActivity == .previewing
+                || carPlayMapViewController?.hasSearchResultAnnotations == true
+        }
+        return true
+    }
+
+    @MainActor
+    private var isPreviewTransitioning: Bool {
+        switch previewState {
+        case .presenting, .updating, .cancelling:
+            return true
+        case .inactive, .presented:
+            return false
+        }
+    }
+
+    @MainActor
+    private func submitPreviewRequest(_ request: PreviewRequest) async throws {
+        if isPreviewTransitioning {
+            try await withCheckedThrowingContinuation { continuation in
+                pendingPreviewRequest?.continuation.resume(throwing: CancellationError())
+                pendingPreviewRequest = PendingPreviewRequest(
+                    request: request,
+                    continuation: continuation
+                )
+            }
+            return
+        }
+
+        // A request submitted after a transition settled is newer than one waiting for its scheduled drain.
+        cancelPendingPreviewRequest()
+        do {
+            try await performPreviewRequest(request)
+            await performPendingPreviewRequestIfPossible()
+        } catch {
+            await performPendingPreviewRequestIfPossible()
+            throw error
+        }
+    }
+
+    @MainActor
+    private func performPreviewRequest(_ request: PreviewRequest) async throws {
+        switch request {
+        case .searchResults(let searchResults):
+            try await performPreviewRoutes(with: searchResults)
+        case .trip(let trip):
+            try await performPreviewRoutes(for: trip)
+        }
+    }
+
+    @MainActor
+    private func performPendingPreviewRequestIfPossible() async {
+        guard !isPreviewTransitioning else { return }
+        guard currentActivity != .navigating, interfaceController != nil else {
+            cancelPendingPreviewRequest()
+            return
+        }
+        guard let pendingPreviewRequest else { return }
+        self.pendingPreviewRequest = nil
+
+        do {
+            try await performPreviewRequest(pendingPreviewRequest.request)
+            pendingPreviewRequest.continuation.resume()
+        } catch {
+            pendingPreviewRequest.continuation.resume(throwing: error)
+        }
+        await performPendingPreviewRequestIfPossible()
+    }
+
+    @MainActor
+    private func schedulePendingPreviewRequestIfPossible() {
+        Task { @MainActor [weak self] in
+            await self?.performPendingPreviewRequestIfPossible()
+        }
+    }
+
+    @MainActor
+    private func cancelPendingPreviewRequest() {
+        pendingPreviewRequest?.continuation.resume(throwing: CancellationError())
+        pendingPreviewRequest = nil
+    }
+
+    @MainActor
+    private var fetchedSearchResults: [SearchResultRecord] {
+        get {
+            switch previewState {
+            case .presenting(let transition):
+                return transition.searchResults
+            case .presented(let session):
+                return session.searchResults
+            case .updating(let update):
+                return update.session.searchResults
+            case .cancelling(let cancellation):
+                return cancellation.transition?.searchResults
+                    ?? cancellation.update?.session.searchResults
+                    ?? []
+            case .inactive:
+                return []
+            }
+        }
+        set {
+            switch previewState {
+            case .presenting(let transition):
+                transition.searchResults = newValue
+            case .presented(var session):
+                session.searchResults = newValue
+                previewState = .presented(session)
+            case .updating(let update):
+                update.session.searchResults = newValue
+            case .cancelling(let cancellation):
+                if let transition = cancellation.transition {
+                    transition.searchResults = newValue
+                } else {
+                    cancellation.update?.session.searchResults = newValue
+                }
+            case .inactive:
+                break
+            }
+        }
+    }
+
+    @MainActor
+    private func beginPreviewCancellation(popToRoot: Bool) -> PreviewCancellation {
+        if case .cancelling(let cancellation) = previewState {
+            return cancellation
+        }
+
+        let cancellation: PreviewCancellation
+        switch previewState {
+        case .presenting(let transition):
+            cancellation = PreviewCancellation(
+                transition: transition,
+                template: transition.template,
+                activityBeforePreview: transition.activityBeforePreview,
+                popToRoot: popToRoot
+            )
+        case .presented(let session):
+            cancellation = PreviewCancellation(
+                template: session.template,
+                activityBeforePreview: session.activityBeforePreview,
+                popToRoot: popToRoot
+            )
+        case .updating(let update):
+            cancellation = PreviewCancellation(
+                update: update,
+                template: update.session.template,
+                activityBeforePreview: update.session.activityBeforePreview,
+                popToRoot: popToRoot
+            )
+        case .inactive:
+            let topPreviewTemplate = (interfaceController?.topTemplate as? CPMapTemplate).flatMap {
+                $0.currentActivity == .previewing ? $0 : nil
+            }
+            cancellation = PreviewCancellation(
+                template: topPreviewTemplate,
+                activityBeforePreview: mainMapTemplate?.currentActivity,
+                popToRoot: popToRoot
+            )
+        case .cancelling:
+            preconditionFailure("Handled above.")
+        }
+
+        previewState = .cancelling(cancellation)
+        return cancellation
+    }
+
+    @MainActor
+    private func finishPreviewCancellationIfPossible(_ cancellation: PreviewCancellation) {
+        guard cancellation.operationFinished, cancellation.cancellationFinished,
+              case .cancelling(let currentCancellation) = previewState,
+              currentCancellation === cancellation
+        else {
+            return
+        }
+        previewState = .inactive
+        schedulePendingPreviewRequestIfPossible()
+    }
+
+    @MainActor
+    private func discardPreviewContent(
+        template: CPMapTemplate?,
+        clearAnnotations: Bool = true
+    ) {
+        template?.hideTripPreviews()
+        // A failed or interrupted presentation may have placed a preview on the stack before it was committed above.
+        if let topMapTemplate = interfaceController?.topTemplate as? CPMapTemplate,
+           topMapTemplate !== template,
+           topMapTemplate.currentActivity == .previewing
+        {
+            topMapTemplate.hideTripPreviews()
+        }
+
+        routes = nil
+        navigationMapView?.removeRoutes()
+        if clearAnnotations {
+            clearMapAnnotations()
+        }
+    }
+
+    @MainActor
+    private func restoreActivityAfterPreview(
+        _ activityBeforePreview: CarPlayActivity?,
+        template: CPMapTemplate?
+    ) {
+        var restoredActivity = mainMapTemplate?.currentActivity ?? activityBeforePreview ?? .browsing
+        // Preserve the root template's live state, including its panning history. Only rewrite it when stale preview
+        // state leaked onto the browsing template.
+        if restoredActivity == .previewing {
+            restoredActivity = activityBeforePreview == .previewing
+                ? .browsing
+                : activityBeforePreview ?? .browsing
+            mainMapTemplate?.currentActivity = restoredActivity
+        }
+        if template !== mainMapTemplate {
+            template?.currentActivity = restoredActivity
+        }
+        setCurrentActivity(restoredActivity)
+        navigationMapView?.navigationCamera.update(cameraState: .following)
+    }
+
+    @MainActor
+    private func clearPreviewState() {
+        guard hasPreviewState else { return }
+
+        let cancellation = beginPreviewCancellation(popToRoot: true)
+        let wasDismissingRoutePreview = carPlayMapViewController?.isDismissingRoutePreview ?? false
+        carPlayMapViewController?.isDismissingRoutePreview = true
+        discardPreviewContent(template: cancellation.template)
+        restoreActivityAfterPreview(
+            cancellation.activityBeforePreview,
+            template: cancellation.template
+        )
+        carPlayMapViewController?.isDismissingRoutePreview = wasDismissingRoutePreview
+        cancellation.cancellationFinished = true
+        finishPreviewCancellationIfPossible(cancellation)
+    }
+
+    // POI previews discard search/list templates before their initial push; route previews preserve the existing stack.
+    private enum InitialPreviewStackPreparation: Equatable {
+        case currentStack
+        case popToRoot
+    }
+
+    @MainActor
+    private func presentInitialPreviewTemplate(
+        _ template: CPMapTemplate,
+        using interfaceController: CPInterfaceController,
+        stackPreparation: InitialPreviewStackPreparation,
+        searchResults: [SearchResultRecord]
+    ) async throws {
+        guard case .inactive = previewState else {
+            template.hideTripPreviews()
+            throw CancellationError()
+        }
+
+        let transition = PreviewTransition(
+            template: template,
+            activityBeforePreview: currentActivity,
+            searchResults: searchResults
+        )
+        previewState = .presenting(transition)
+
+        do {
+            if stackPreparation == .popToRoot {
+                do {
+                    _ = try await popToRootTemplate(interfaceController: interfaceController, animated: false)
+                } catch {
+                    try await ensurePreviewPresentationIsCurrent(
+                        transition,
+                        interfaceController: interfaceController
+                    )
+                    Log.error(
+                        "Failed to prepare the CarPlay template stack before presenting a preview; "
+                            + "continuing with the current stack: \(error.localizedDescription)",
+                        category: .carPlay
+                    )
+                }
+            }
+            try await ensurePreviewPresentationIsCurrent(
+                transition,
+                interfaceController: interfaceController
+            )
+
+            try await interfaceController.pushTemplate(template, animated: true)
+            try await ensurePreviewPresentationIsCurrent(
+                transition,
+                interfaceController: interfaceController
+            )
+
+            previewState = .presented(
+                PreviewSession(
+                    template: template,
+                    activityBeforePreview: transition.activityBeforePreview,
+                    searchResults: transition.searchResults
+                )
+            )
+            setCurrentActivity(.previewing)
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            template.hideTripPreviews()
+            if case .cancelling(let cancellation) = previewState,
+               cancellation.transition === transition
+            {
+                await discardInvalidatedPreviewOperation(
+                    cancellation,
+                    using: interfaceController
+                )
+                throw CancellationError()
+            }
+
+            guard case .presenting(let currentTransition) = previewState,
+                  currentTransition === transition
+            else {
+                throw CancellationError()
+            }
+            if interfaceController.topTemplate === template {
+                try? await interfaceController.popTemplate(animated: false)
+            }
+            if stackPreparation == .popToRoot {
+                _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: false)
+            }
+            previewState = .inactive
+            discardPreviewContent(template: template)
+            restoreActivityAfterPreview(
+                transition.activityBeforePreview,
+                template: template
+            )
+            Log.error(
+                "Failed to present a CarPlay preview; discarded incomplete preview state: \(error.localizedDescription)",
+                category: .carPlay
+            )
+            throw error
+        }
+    }
+
+    @MainActor
+    private func ensurePreviewPresentationIsCurrent(
+        _ transition: PreviewTransition,
+        interfaceController: CPInterfaceController
+    ) async throws {
+        if case .presenting(let currentTransition) = previewState,
+           currentTransition === transition
+        {
+            return
+        }
+
+        if case .cancelling(let cancellation) = previewState,
+           cancellation.transition === transition
+        {
+            await discardInvalidatedPreviewOperation(
+                cancellation,
+                using: interfaceController
+            )
+        }
+        throw CancellationError()
+    }
+
+    @MainActor
+    private func discardInvalidatedPreviewOperation(
+        _ cancellation: PreviewCancellation,
+        using interfaceController: CPInterfaceController
+    ) async {
+        cancellation.template?.hideTripPreviews()
+
+        do {
+            if cancellation.popToRoot {
+                _ = try await popToRootTemplate(interfaceController: interfaceController, animated: false)
+            } else if interfaceController.topTemplate === cancellation.template {
+                try await interfaceController.popTemplate(animated: false)
+            }
+        } catch {
+            Log.error(
+                "Failed to remove an invalidated CarPlay preview operation: \(error.localizedDescription)",
+                category: .carPlay
+            )
+            if interfaceController.topTemplate === cancellation.template {
+                try? await interfaceController.popTemplate(animated: false)
+            }
+        }
+        cancellation.operationFinished = true
+        finishPreviewCancellationIfPossible(cancellation)
+    }
+
+    @MainActor
+    private func previewTemplate(
+        traitCollection: UITraitCollection,
+        interfaceController: CPInterfaceController
+    ) async throws -> (template: CPMapTemplate, isPresented: Bool) {
+        switch previewState {
+        case .inactive:
+            return (
+                mapTemplateProvider.previewMapTemplate(
+                    traitCollection: traitCollection,
+                    mapDelegate: self
+                ),
+                false
+            )
+        case .presented(let session):
+            guard interfaceController.templates.contains(where: { $0 === session.template }) else {
+                // The application may have replaced the stack without revealing the root template. Do not keep
+                // updating a detached preview session that can no longer become visible.
+                session.template.hideTripPreviews()
+                previewState = .inactive
+                return (
+                    mapTemplateProvider.previewMapTemplate(
+                        traitCollection: traitCollection,
+                        mapDelegate: self
+                    ),
+                    false
+                )
+            }
+
+            // Templates pushed above the preview are popped before it is updated, so the update is visible. This
+            // matches the previous behavior, where the top template was popped before a fresh preview was pushed.
+            var currentSession = session
+            if interfaceController.topTemplate !== session.template {
+                currentSession = try await revealPreviewSession(session, using: interfaceController)
+            }
+            // Reset route-only state before the delegate reconfigures the template so that a back button provided by
+            // the delegate survives the update.
+            currentSession.template.backButton = nil
+            mapTemplateProvider.configurePreviewMapTemplate(
+                currentSession.template,
+                traitCollection: traitCollection,
+                mapDelegate: self
+            )
+            return (currentSession.template, true)
+        case .presenting, .updating, .cancelling:
+            throw CancellationError()
+        }
+    }
+
+    @MainActor
+    private func revealPreviewSession(
+        _ session: PreviewSession,
+        using interfaceController: CPInterfaceController
+    ) async throws -> PreviewSession {
+        let update = PreviewUpdate(session: session)
+        previewState = .updating(update)
+
+        do {
+            _ = try await interfaceController.pop(to: session.template, animated: false)
+            try await ensurePreviewUpdateIsCurrent(update, interfaceController: interfaceController)
+            let updatedSession = update.session
+            previewState = .presented(updatedSession)
+            return updatedSession
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            if case .cancelling(let cancellation) = previewState,
+               cancellation.update === update
+            {
+                await discardInvalidatedPreviewOperation(
+                    cancellation,
+                    using: interfaceController
+                )
+                throw CancellationError()
+            }
+
+            guard case .updating(let currentUpdate) = previewState,
+                  currentUpdate === update
+            else {
+                throw CancellationError()
+            }
+            previewState = .presented(update.session)
+            throw error
+        }
+    }
+
+    @MainActor
+    private func ensurePreviewUpdateIsCurrent(
+        _ update: PreviewUpdate,
+        interfaceController: CPInterfaceController
+    ) async throws {
+        if case .updating(let currentUpdate) = previewState,
+           currentUpdate === update
+        {
+            return
+        }
+
+        if case .cancelling(let cancellation) = previewState,
+           cancellation.update === update
+        {
+            await discardInvalidatedPreviewOperation(
+                cancellation,
+                using: interfaceController
+            )
+        }
+        throw CancellationError()
+    }
+
+    @MainActor
+    private func commitUpdatedPreview(
+        _ template: CPMapTemplate,
+        searchResults: [SearchResultRecord]
+    ) {
+        guard case .presented(var session) = previewState,
+              session.template === template
+        else {
+            return
+        }
+        session.searchResults = searchResults
+        previewState = .presented(session)
+        setCurrentActivity(.previewing)
+    }
+
+    @MainActor
     @_spi(MapboxCarPlaySearchInternal)
     public func previewRoutes(with searchResults: [SearchResultRecord]) async throws {
+        try await submitPreviewRequest(.searchResults(searchResults))
+    }
+
+    @MainActor
+    private func performPreviewRoutes(with searchResults: [SearchResultRecord]) async throws {
         guard let traitCollection = (carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
               let interfaceController
         else {
             return
         }
 
-        let template = mapTemplateProvider.previewMapTemplate(
+        let preview = try await previewTemplate(
             traitCollection: traitCollection,
-            mapDelegate: self
+            interfaceController: interfaceController
         )
+        let template = preview.template
 
         struct DataForPreview {
             let trip: CPTrip
@@ -853,16 +1522,29 @@ extension CarPlayManager {
             template.updateEstimates(estimates, for: dataForPreview.trip)
         }
 
-        fetchedSearchResults = searchResults
-        _ = try? await popToRootTemplate(interfaceController: interfaceController, animated: false)
-        setCurrentActivity(.previewing)
-        try await interfaceController.pushTemplate(template, animated: true)
+        if preview.isPresented {
+            commitUpdatedPreview(template, searchResults: searchResults)
+        } else {
+            try await presentInitialPreviewTemplate(
+                template,
+                using: interfaceController,
+                stackPreparation: .popToRoot,
+                searchResults: searchResults
+            )
+        }
 
+        routes = nil
+        navigationMapView?.removeRoutes()
         carPlayMapViewController?.showSearchResultsAnnotations(with: searchResults, selectedResult: searchResults.first)
     }
 
     @MainActor
     func previewRoutes(for trip: CPTrip) async throws {
+        try await submitPreviewRequest(.trip(trip))
+    }
+
+    @MainActor
+    private func performPreviewRoutes(for trip: CPTrip) async throws {
         guard let traitCollection = (carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
               let interfaceController
         else {
@@ -871,10 +1553,11 @@ extension CarPlayManager {
 
         let modifiedTrip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
-        let previewMapTemplate = mapTemplateProvider.previewMapTemplate(
+        let preview = try await previewTemplate(
             traitCollection: traitCollection,
-            mapDelegate: self
+            interfaceController: interfaceController
         )
+        let previewMapTemplate = preview.template
 
         var previewText = defaultTripPreviewTextConfiguration()
         if let customPreviewText = delegate?.carPlayManager(self, willPreview: modifiedTrip, with: previewText) {
@@ -884,13 +1567,17 @@ extension CarPlayManager {
         previewMapTemplate.backButton = defaultTripPreviewBackButton()
         previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
 
-        let wasPreviewing = currentActivity == .previewing
-        setCurrentActivity(.previewing)
-
-        if wasPreviewing {
-            try await interfaceController.popTemplate(animated: false)
+        if preview.isPresented {
+            commitUpdatedPreview(previewMapTemplate, searchResults: [])
+        } else {
+            try await presentInitialPreviewTemplate(
+                previewMapTemplate,
+                using: interfaceController,
+                stackPreparation: .currentStack,
+                searchResults: []
+            )
         }
-        try await interfaceController.pushTemplate(previewMapTemplate, animated: !wasPreviewing)
+        clearMapAnnotations()
     }
 
     func removeRoutesFromBrowsingMap() {
@@ -1007,6 +1694,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         clearMapAnnotations()
 
         mapTemplate.hideTripPreviews()
+        // Starting the trip consumes the preview session. Its template is popped below and must not be reused by
+        // a later preview or torn down by a later cancellation.
+        cancelPendingPreviewRequest()
+        previewState = .inactive
+        routes = nil
         setCurrentActivity(.navigating)
 
         popToRootTemplate(interfaceController: interfaceController, animated: false) { [self] _, _ in
