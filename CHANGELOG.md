@@ -1,5 +1,16 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 3.36.0
+
+### Packaging
+
+* MapboxNavigationCore now requires [MapboxMaps v11.36.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/11.36.0)
+* MapboxNavigationCore now requires [MapboxNavigationNative v324.36.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/v324.36.0)
+
+### Routing
+
+* Fixed an invalid `language` in route requests when the app's localization name contains underscores, for example `zh_Hant_TW`. `Locale.preferredLocalLanguageCountryCode` and `Locale.nationalizedCurrent` now return a BCP 47 language tag such as `zh-Hant-TW`. Before this fix, the Directions API did not recognize the language and returned instructions and voice guidance in a fallback language.
+
 ## 3.36.0-rc.1
 
 ### Packaging
